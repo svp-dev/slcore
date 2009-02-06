@@ -1,0 +1,150 @@
+==================================
+ Inventory of SVP implementations
+==================================
+
+Compiler components
+===================
+
+Translators
+-----------
+
+================= ============================ =========== =============
+Source language   Target language              Tag         Notes
+================= ============================ =========== =============
+proto-µTC         µTC (actual compiler input)  utc0        ready
+proto-µTC         "desired" µTC                utc         ready
+proto-µTC         C with inline alpha asm      bc-alpha    WIP, est. 2009-02
+proto-µTC         C with inline sparc asm      bc-sparc    est. 2009-06
+proto-µTC         C++ with µTC-ptl calls       ptl         ready
+proto-µTC         C++ with µTC-ptl, diff. sem. ptlx        WIP, est. 2009-03
+proto-µTC         C (plain standalone C)       seqc        ready
+Any               Same (passthrough)           pass        ready
+================= ============================ =========== =============
+
+Compilers
+---------
+
+================= ============================ =========== =============
+Source language   Target language              Tag         Notes
+================= ============================ =========== =============
+C                 Alpha assembly               c-alpha     stock GCC compiler, ready
+C                 Sparc assembly               c-sparc     stock GCC compiler, ready
+C                 Host's assembly              c-host      stock GCC compiler, ready
+C++               Host's assembly              cxx-host    stock GCC compiler, ready
+µTC               MT-Alpha assembly            utc-mtalpha Microgrids core compiler, WIP, est. 2009-03
+µTC               MT-Sparc assembly            utc-mtsparc est. 2009-12
+================= ============================ =========== =============
+
+Assembly translators (post-translators)
+---------------------------------------
+
+================= ============================ =========== =============
+Source language   Target language              Tag         Notes
+================= ============================ =========== =============
+Any               Same (pass through)          pass        ready
+Alpha assembly    MT-Alpha assembly            ac-alpha    WIP, est. 2009-02
+Sparc assembly    MT-Sparc assembly            ac-sparc    est. 2009-06
+================= ============================ =========== =============
+
+Assemblers
+----------
+
+================= ============================ =========== =============
+Source language   Target language              Tag         Notes
+================= ============================ =========== =============
+Host's assembly   Host's object format         host        ready
+MT-Alpha assembly MT-Alpha ELF object          mtalpha     ready
+MT-Sparc assembly MT-Sparc ELF object          mtsparc     WIP, est. 2009-02
+================= ============================ =========== =============
+
+Runners
+=======
+
+================== ======================= =========== =========
+Executable format  Execution environment   Tag         Notes
+================== ======================= =========== =========
+Host executable    Host                    host        ready
+MT-Alpha ELF       MG Simulator            mgsim-alpha ready
+MT-Sparc ELF       MG Simulator            mgsim-sparc WIP, est 2009-06
+MT-Sparc ELF       FPGA                    (TBD)
+================== ======================= =========== =========
+
+
+Environment support
+===================
+
+Runtime environments
+--------------------
+
+========================== ========= ============
+Program start convention   Tag       Notes
+========================== ========= ============
+main -> t_main             main      ready
+main -> init ptl, t_main   ptlinit   ready
+_start create() t_main     create    ready
+_start goto t_main         jump      ready
+-> main                    stdc      ready
+========================== ========= ============
+
+Basic operating system services in library
+------------------------------------------
+
+================ ======= ========================== ========
+Implementation   Tag     API visible to std lib     Notes
+================ ======= ========================== ========
+Host OS          host    function declarations      ready
+Simple functions simple  function declarations      WIP, est 2009-03
+None             inline  CPP macros                 ready, used in dev only
+Microgrid OS     mgos    (TBD)                      est. 2010
+================ ======= ========================== ========
+
+Default relationships
+=====================
+
+When a trnalsator tag is specified, the following
+default compiler, post-translator and assembler are implied:
+
+=========== =========== ========= =========
+Trans. tag  Compiler    Post-tr.  Asm.
+=========== =========== ========= =========
+utc0        utc-mtalpha pass      mtalpha
+utc         (none)      (none)    (none)
+bc-alpha    c-alpha     ac-alpha  mtalpha
+seqc        c-host      pass      host
+ptl         cxx-host    pass      host
+ptlx        (none)      (none)    (none)
+=========== =========== ========= =========
+
+When a pair (translator, runner) is specified, the following default
+runtime and I/O library are implied:
+
+============ =========== ============ ==========
+Trans. tag   Runner tag  Runtime      I/O
+============ =========== ============ ==========
+utc0         mgsim-alpha jump         inline
+bc-alpha     mgsim-alpha create       simple
+seqc         host        main         host
+ptl          host        ptlinit      host
+(others)     (none)      (none)       (none)
+============ =========== ============ ==========
+
+
+
+Supported toolchains
+====================
+
+======== =========== ======== ======= ======= ====== =========== ============
+Trans.   Compiler    Post-tr. Asm.    Runtime I/O    Runner      Notes
+======== =========== ======== ======= ======= ====== =========== ============
+pass     c-host      pass     host    stdc    host   host        ready (standard C chain)
+pass     cxx-host    pass     host    stdc    host   host        ready (standard C++ chain)
+seqc     c-host      pass     host    main    host   host        ready
+ptl      cxx-host    pass     host    ptlinit host   host        ready
+bc-alpha c-alpha     ac-alpha mtalpha create  inline mgsim-alpha prototype OK, est. 2009-02
+seqc     c-alpha     ac-alpha mtalpha jump    inline mgsim-alpha est. 2009-02
+bc-alpha c-alpha     ac-alpha mtalpha create  simple mgsim-alpha WIP, est. 2009-03
+bc-sparc c-sparc     ac-sparc mtsparc create  simple mgsim-sparc est. 2009-06
+utc0     utc-mtalpha pass     mtalpha jump    inline mgsim-alpha WIP, est. 2009-04
+utc0     utc-mtalpha pass     mtalpha create  simple mgsim-alpha planned
+======== =========== ======== ======= ======= ====== =========== ============
+
