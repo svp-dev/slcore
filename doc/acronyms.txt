@@ -1,0 +1,35 @@
+====================================
+  SLC-related commands and acronyms
+====================================
+
+cce
+===
+
+Acronym for: Configuration Chain Expander
+
+Role: Canonicalize a slc configuration name.
+
+Rationale: the SLC toolchain is specified by a septuplet of component
+tags (see SVP inventory); because specifying all 7 is tedious the cce
+utility is provided and expands commonly used aliases or partly
+misspelled strings to the full and correct form.
+
+Additionally it can check (-c) if configurations are supported or
+describe (-d) what is used for each component.
+
+slc
+===
+
+Acronym for: SVP Language Compiler
+
+Role: invoke the compiler toolchain.
+
+sgr
+===
+
+Acronym:
+
+
+
+
+
