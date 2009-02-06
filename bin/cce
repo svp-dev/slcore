@@ -3,7 +3,7 @@
 set -e
 root=$(cd $(dirname "$0"); pwd)
 basename=$(basename "$0")
-libdir=$(cd $root/../lib/sldata; pwd)
+libdir=$(cd "$root"/../lib/sldata; pwd)
 timestamp=$(echo '$Date$'|cut -d' ' -f2)
 version=1
 
@@ -44,7 +44,7 @@ do_version() {
   cat <<EOF
 $basename $version.$rev ($timestamp)
 
-This script is copyright (C) 2008, 2009 the CSA group - Universiteit
+This script is copyright (C) 2009 the CSA group - Universiteit
 van Amsterdam.
 EOF
   exit 0
@@ -77,7 +77,8 @@ for arg in "$@"; do
       -c|--check) check=1 ;;
       -s|--set-vars) set_vars=1 ;;
       -d|--describe) check=1 ; describe=1 ;;
-      -h|--help|-*) do_usage ;;
+      -h|--help) do_usage;;
+      -*) echo "$0: unrecognized command-line argument: $arg (try -h)" >&2; exit 1;;
       *) alias=$arg
    esac
 done
@@ -245,7 +246,7 @@ if test "x$check" != x; then
 	    *-x) ;; # do nothing
 	    *)
 		if test -f "$libdir/cfg/$i"; then
-		    SLC_DESCRIBE=1 $SHELL "$libdir/cfg/$i"
+		    SLC_MODE=describe $SHELL "$libdir/cfg/$i"
 		else
 		    invalid="$invalid $i"
 		fi
@@ -257,7 +258,7 @@ fi
 if test "x$invalid" != x; then
     echo "$0: configurations not found in $libdir/cfg:" >&2
     echo "$invalid" >&2
-    exit 1
+    exit 2
 fi
 
 if test "x$set_vars" = x; then
