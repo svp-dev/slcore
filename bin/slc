@@ -3,9 +3,10 @@
 set -e
 root=$(dirname "$0")
 basename=$(basename "$0")
+libdir=$(cd "$root/../lib/sldata" && pwd)
 
 # Interface version number
-version=1
+version=2
 
 # Load defaults
 impl=seq-c
@@ -14,9 +15,6 @@ outfile=
 m4trace=
 synclines=1
 check=
-extracompflags=
-compflags=
-slsources=
 prev_arg=
 display_help=
 display_version=
@@ -46,6 +44,14 @@ cleanup() {
 }
 trap cleanup 0 ERR INT TERM QUIT
 
+in_slt=
+in_cpp=
+in_cxxpp=
+in_cc=
+in_cxx=
+in_as=
+in_ld=
+
 # Command line analysis
 for arg in "$@"; do
   # if the previous option needs an argument, assign it
@@ -58,8 +64,9 @@ for arg in "$@"; do
   case $arg in
       -check)	check=yes;;
       -EE)	slcmode=trans;;
-      -E)	slcmode=pp; compflags="$compflags $arg";;
-      -c|-S)	slcmode=cc; compflags="$compflags $arg";;
+      -E)	slcmode=pp;;
+      -S)	slcmode=cc;;
+      -c)       slcmode=as;;
       -b)	prev_arg=impl;;
       -I*)	includes="$includes $arg";;
       -P)	synclines=; compflags="$compflags -P";;
@@ -67,15 +74,16 @@ for arg in "$@"; do
       -ftrace-m4=*) m4trace=$(echo "$arg"|cut -d= -f2-);;
       -save-temps) keep=yes;;
       -v)	verbose=yes; compflags="$compflags $arg";;
-      *.c.sl)	slsources="$slsources $arg";;
-      *.c)	csources="$csources $arg";;
-      *.cc|*.cp|*.C|*.cpp|*.CPP|*.c++|*.cxx) ccsources="$ccsources $arg";;
-      *.i)      isources="$isources $arg";;
-      *.ii)     iisources="$iisources $arg";;
+      *.c.sl)	in_slt="$in_slt $arg";;
+      *.c|*.S)	in_cpp="$in_cpp $arg";;
+      *.cc|*.cp|*.C|*.cpp|*.CPP|*.c++|*.cxx) in_cxxpp="$in_cxxpp $arg";;
+      *.i)      in_cc="$in_cc $arg";;
+      *.ii)     in_cxx="$in_cxx $arg";;
+      *.s)      in_as="$in_as $arg";;
+      *.o|-l*)  in_ld="$in_ld $arg";; 
       --version)	display_version=yes;;
       -h|--help)	display_help=yes;;
-      --cc-help)	compflags="$compflags --help" ;;
-      --cc-version)	compflags="$compflags --version" ;;
+      -x)       echo "$0: -x not supported yet" >&2; exit 1;; 
       *)	compflags="$compflags $arg";;
   esac
 done
@@ -225,6 +233,10 @@ if ! test -d "$root/impl/$impl"; then
    echo "unknown configuration: $impl" >&2
    exit 1
 fi  
+
+# Expand transformations
+for f in $in_slt; do
+  
 
 ###################################
 # Settings common to M4 & Compiler
