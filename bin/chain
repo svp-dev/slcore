@@ -1,0 +1,163 @@
+#! /bin/sh
+# $Id$
+# Chain: decompose compilation chain based on
+# toolchain tag and file names 
+set -e
+root=$(cd $(dirname "$0") && pwd)
+basename=$(basename "$0")
+libdir=$(cd "$root"/../lib/sldata && pwd)
+
+mode=${1:?}
+tmpdir=${2:?}
+combine=${3:?}
+finalstage=${4:?}
+finalname=${5:?}
+shift 5
+
+COMBINED=_combined_
+
+
+# Item lists:
+# *_spec: specified on command lne
+# *_ind: derivatives
+in_slt_spec=
+in_pp_spec=
+in_pp_ind=
+in_cc_spec=
+in_cc_ind=
+in_filt_spec=
+in_filt_ind=
+in_as_spec=
+in_as_ind=
+in_ld_spec=
+in_ld_ind=
+transforms=
+
+
+prepare_chain() {
+    local inputs addext stage indvar specfiles phrase
+    local f first f final target some
+    
+    inputs=$1
+    addext=$2
+    stage=$3
+    indvar=$4
+    specfiles=$5
+    phrase=$6
+    
+    target=
+    if test "x$skip" = "x"; then
+	if ! expr "$combine" : ".*$stage" >/dev/null; then
+	    for f in $inputs; do
+		fn=$(basename "$f"|sed -e 's/^\(.*\)\.[^.]*$/\1/g')
+		case $f in
+		    *.S) 
+			target=$tmpdir/$fn.s
+			in_as_ind="$in_as_ind $target"
+			;;
+		    *)
+			target=$tmpdir/$fn.$addext
+			eval "$indvar=\$$indvar' $target'"
+		esac
+		transforms="R:$target $transforms $stage:$target:$f"
+	    done
+	else
+	    transform=
+	    first=
+	    for f in $inputs; do
+		if test -z "$first"; then first=$f; fi
+		transform="$transform:$f"
+	    done
+	    if test -n "$transform"; then 
+		fn=$(basename "$first"|sed -e 's/^\(.*\)\.[^.]*$/\1/g')
+		targetbase=$fn.$addext
+		if test "x$finalstage" = "x$stage"; then
+		    if test "x$finalname" = "x-"; then
+			target=$targetbase
+		    else
+			target=$finalname
+		    fi
+		else
+		    target=$tmpdir/$targetbase
+		    transforms="R:$target $transforms"
+		fi
+		transforms="$transforms $stage:$target$transform"
+	    fi
+	    if test "x$finalstage" = "x$stage"; then skip=1; fi
+	    eval "$indvar=\$$indvar' $target'"
+	fi
+    else
+	for f in $specfiles; do
+	    echo "$0: $f: $phrase input file unused because $phrase not run" >&2
+	done
+    fi
+}
+
+chain_splitargs() {
+
+    case $mode in
+	c)
+	    cc_ext=i
+	    pp_ext=c
+	    ;;
+	cpp)
+	    cc_ext=ii
+	    pp_ext=cc
+	    ;;
+	*)
+	    echo "$0: unrecognized mode $mode" >&2; exit 1;;
+    esac
+
+    for arg in "$@"; do
+	case $arg in
+# Legacy file types
+	    *.i|*.ii) in_cc_spec="$in_cc_spec $arg";;
+	    *.C|*.cxx|*.c++|*.cc|*.cp|*.cpp) in_pp_spec="$in_pp_spec $arg";;
+	    *.S|*.c) in_pp_spec="$in_pp_spec $arg";;
+	    *.s) in_as_spec="$in_as_spec $arg";;
+	    *.o|*.a) in_ld_spec="$in_ld_spec $arg";;
+# SLC file types
+	    *.sl)  in_slt_spec="$in_slt_spec $arg";;
+	    *.s0)  in_filt_spec="$in_filt_spec $arg";;
+	    *) echo "$0: unrecognized file type: $arg" >&2; exit 1;;
+	esac
+    done
+
+    skip=
+    prepare_chain "$in_slt_spec" $pp_ext T in_pp_ind "$in_slt_spec" "transformation"
+    prepare_chain "$in_pp_ind $in_pp_spec" $cc_ext P in_cc_ind "$in_pp_spec" "preprocessor"
+    prepare_chain "$in_cc_ind $in_cc_spec" s0 C in_filt_ind "$in_cc_spec" "compiler"
+    prepare_chain "$in_filt_ind $in_filt_spec" s F in_as_ind "$in_filt_spec" "post-filter"
+    prepare_chain "$in_as_ind $in_as_spec" o A in_ld_ind "$in_as_spec" "assembler"
+    prepare_chain "$in_ld_ind $in_ld_spec" x L unused "$in_ld_spec" "linker"
+}
+
+chain_splitargs "$@"
+for t in $transforms; do
+    echo "$t"
+done
+
+# Print out Makefile
+# printf 'all: %s\n\n' "$out_x"
+# printf 'ls_sl:\n\t@echo %s\n\n' "$in_slt_spec"
+# printf 'ls_p:\n\t@echo %s\n\n' "$in_cpp_spec $in_cxxpp_spec $in_cpp_ind $in_cxxpp_ind"
+# printf 'ls_c:\n\t@echo %s\n\n' "$in_cc_spec $in_cxx_spec $in_cc_ind $in_cxx_ind"
+# printf 'ls_f:\n\t@echo %s\n\n' "$in_filt_spec $in_filt_ind"
+# printf 'ls_a:\n\t@echo %s\n\n' "$in_as_spec $in_as_ind"
+# printf 'ls_l:\n\t@echo %s\n\n' "$in_ld_spec $in_ld_ind"
+# printf 'ls_x:\n\t@echo %s\n\n' "$out_x"
+
+# for t in $transforms; do
+#   IFS=: read mode engine target deps <<EOF
+# $t
+# EOF
+#   echo "$target: " $(echo "$deps"|tr ':' ' ')
+#   printf '\t$(%s) "%s" $@ $^\n' "$mode" "$engine"
+#   echo
+# done
+
+#echo $transforms
+
+
+#temporaries="$in_cxxpp_ind $in_cpp_ind $in_cxx_ind $in_cc_ind $in_filt_ind $in_as_ind $in_ld_ind"
+#echo $temporaries
