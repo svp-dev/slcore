@@ -1,0 +1,381 @@
+#! /bin/sh
+# $Id$
+set -e
+root=$(dirname "$0")
+basename=$(basename "$0")
+
+# Interface version number
+version=1
+
+# Load defaults
+impl=seq-c
+slcmode=ld
+outfile=
+m4trace=
+synclines=1
+check=
+extracompflags=
+compflags=
+slsources=
+prev_arg=
+display_help=
+display_version=
+UCC=${UCC:-mtalpha-linux-gnu-gcc}
+ACC=${ACC:-alpha-linux-gnu-gcc}
+CC=${CC:-gcc}
+CXX=${CXX:-g++}
+M4=${M4:-m4}
+UCFLAGS=${UCFLAGS:--O1}
+verbose=
+tempfiles=
+inflight=
+keep=$KEEP
+
+# Setting up some cleanup mechanism
+cleanup() {
+  for f in $inflight $tempfiles; do
+    if test -z "$keep"; then 
+      test -n "$verbose" && echo "removing intermediate file: $f" >&2
+      rm -f "$f"
+    else
+      test -e "$f" && echo "left over intermediate file: $f" >&2
+    fi
+  done
+  inflight=
+  tempfiles=
+}
+trap cleanup 0 ERR INT TERM QUIT
+
+# Command line analysis
+for arg in "$@"; do
+  # if the previous option needs an argument, assign it
+  if test -n "$prev_arg"; then
+     eval "$prev_arg=\$arg"
+     prev_arg=
+     continue
+  fi
+
+  case $arg in
+      -check)	check=yes;;
+      -EE)	slcmode=trans;;
+      -E)	slcmode=pp; compflags="$compflags $arg";;
+      -c|-S)	slcmode=cc; compflags="$compflags $arg";;
+      -b)	prev_arg=impl;;
+      -I*)	includes="$includes $arg";;
+      -P)	synclines=; compflags="$compflags -P";;
+      -o)	prev_arg=outfile;;
+      -ftrace-m4=*) m4trace=$(echo "$arg"|cut -d= -f2-);;
+      -save-temps) keep=yes;;
+      -v)	verbose=yes; compflags="$compflags $arg";;
+      *.c.sl)	slsources="$slsources $arg";;
+      *.c)	csources="$csources $arg";;
+      *.cc|*.cp|*.C|*.cpp|*.CPP|*.c++|*.cxx) ccsources="$ccsources $arg";;
+      *.i)      isources="$isources $arg";;
+      *.ii)     iisources="$iisources $arg";;
+      --version)	display_version=yes;;
+      -h|--help)	display_help=yes;;
+      --cc-help)	compflags="$compflags --help" ;;
+      --cc-version)	compflags="$compflags --version" ;;
+      *)	compflags="$compflags $arg";;
+  esac
+done
+
+# Special actions that do not require processing
+if test -n "$display_version"; then
+   rev='$Rev$'
+   rev=$(echo "$rev"|cut -d' ' -f2)
+   cat <<EOF
+$basename $version.$rev
+
+This script is copyright (C) 2008 the CSA group - Universiteit van
+Amsterdam.
+
+Script front-end written by Raphael Poss. muTC implementations
+provided by Thomas Bernard, Mike Lankamp, Simon Polstra, Michiel
+W. van Tol and others. GNU C and C++ compilers courtesy of the Free
+Software Foundation, Inc.
+EOF
+   exit 0
+elif test -n "$display_help"; then
+   cat <<EOF
+Usage: $0 [ARG]...
+
+Compile SVP programs.
+
+Execution modes:
+  -check             Check the environment; do not process anything. In
+                     this mode $basename checks that the required tools
+                     are available.
+
+  -EE                Stop after the transformation stage; do not preprocess.
+                     The output is in the form of transformed source code,
+                     which is sent to the standard output.
+
+  -E                 Stop after the preprocessing stage; do not compile.
+                     The output is in the form of preprocessed source code,
+                     which is sent to the standard output.
+
+  -S                 Stop after the stage of compilation proper; do not
+                     assemble. The output is in the form of an assembler code
+                     file for each non-assembler input file specified.
+
+  -c                 Compile or assemble the source files, but do not link.
+                     The linking stage is not done. The output is in the
+                     form of an object file for each source file.
+
+SVP implementation selection:
+  -b spec            Generate code for the SVP implementation specified by
+                     "spec". "spec" is passed through "cce" for validation
+                     and alias expansion. See "cce --help" for details.
+
+General options:
+  -Idir              Add the directory "dir" to the list of directories
+                     to be searched for header files. This applies
+                     both to the initial transformation by m4 and to the
+                     underlying compiler.
+
+  -P                 Inhibit generation of linemarkers in the output
+                     from both the initial transformation by m4 and the C
+                     preprocessor.
+
+  -o file            Place output in "file". This applies regardless to
+                     whatever sort of output is being produced.
+
+Compiler debugging options:
+  -v                 Print (on standard error output) the commands executed
+                     to run the stages of compilation. Also print the
+                     settings and version number of the tools involved.
+
+  -ftrace-m4=file    Dump the m4 macro expansion trace to file "file".
+
+  -save-temps        Keep intermediate files. If this option is not set,
+                     intermediate files generated during compilation are
+                     deleted before the program terminates.
+
+Other options:
+  -h, --help         Print this help; do not process anything.
+
+  --version          Print $basename's version number; do not process 
+                     anything.
+
+All other options are passed transparently to the underlying C/C++
+compiler; in particular, the following options may prove useful:
+
+  -Wa,option         Pass "option" as an option to the assembler.
+
+  -Wl,option         Pass "option" as an option to the linker.
+
+  -llibrary          Search the library named "library" when linking.
+
+Environment variables:
+  M4                 M4 preprocessor to use. Default is "m4".
+
+  CC                 C compiler to use. Default is "gcc".
+
+  CXX                C++ compiler to use. Default is "g++".
+
+  UCC                Core muTC compiler to use.
+                     Default is "mtalpha-linux-gnu-gcc"
+
+  ACC                Stock Alpha-GCC compiler.
+                     Default is "alpha-linux-gnu-gcc"
+
+  KEEP               If set and not empty, implies option -save-temps.
+
+Examples:
+
+  $basename test.c.sl
+
+  $basename -o test test1.c.sl test2.c.sl
+
+  $basename -EE test.c.sl
+
+  $basename -S -o test.s test.c.sl
+
+  $basename -o test test.c.sl ccode.c
+
+Report bugs and suggestions to the CSA Trac issue tracker, 
+or to <r.c.poss@uva.nl>.
+EOF
+   exit 0
+elif test -n "$check"; then
+  # perform sanity check.
+  if ! $CC --version >/dev/null 2>&1; then
+     echo "$CC: not found - maybe set CC or PATH?" >&2
+     exit 1
+  else echo "Found C compiler: $CC"; fi
+  if ! $CXX --version >/dev/null 2>&1; then
+     echo "$CXX: not found - maybe set CXX or PATH?" >&2
+     exit 1
+  else echo "Found C++ compiler: $CXX"; fi
+  if ! $UCC --version >/dev/null 2>&1; then
+     echo "$UCC: not found - maybe set UCC or PATH?" >&2
+     exit 1
+  else echo "Found utc-alpha compiler: $UCC"; fi
+  if ! $ACC --version >/dev/null 2>&1; then
+     echo "$ACC: not found - maybe set ACC or PATH?" >&2
+     exit 1
+  else echo "Found alpha compiler: $ACC"; fi
+  echo "Good."
+  exit 0
+fi
+
+# check if the implementation is recognized
+if ! test -d "$root/impl/$impl"; then
+   echo "unknown configuration: $impl" >&2
+   exit 1
+fi  
+
+###################################
+# Settings common to M4 & Compiler
+###################################
+# Include directories
+includes="-I$root/impl/$impl -I$root/include"
+
+# Select file extension for intermediate source files
+case $impl in
+  *-cpp)	utext=cc;;
+  *)		utext=c;;
+esac
+
+# Filter and convert uT source names
+for s in $slsources; do
+  utdir=$(dirname "$s")
+  uttrans=$utdir/$(basename "$s" .c.sl).$utext
+  case $utext in
+    c)  csources="$csources $uttrans";;
+    cc) ccsources="$ccources $uttrans";;
+  esac
+done
+
+###################################
+# Settings special for M4
+###################################
+m4flags="-P"
+if test -n "$synclines"; then
+  m4flags="$m4flags -s"
+fi
+if test -n "$m4trace"; then
+  m4flags="$m4flags -dV -o $m4trace"
+fi
+
+###################################
+# Settings special for compiler
+###################################
+
+# Select actual compiler
+case $impl in
+   *-cpp) 
+      command=$CXX
+      ;;
+   *core-sim)
+      command=$UCC
+      ;;
+   pp-sim)
+      command=$ACC
+      ;;
+   *)
+      if test -n "$ccsources"; then
+	  command=$CXX
+      else
+	  command=$CC
+      fi
+      ;;
+esac
+
+# Add the cruft around the program
+rootimpl="$root/impl/$impl"
+warnings="-Wall -W -Wcast-qual -Wwrite-strings -Wconversion -Wno-unused -Wsign-compare -Wmissing-field-initializers -Wno-multichar -Wno-long-long -Werror"
+cwarnings="-Wbad-function-cast -Wstrict-prototypes -Waggregate-return -Wold-style-definition"
+case $impl in
+    ptl-cpp)
+        ldflags="-lpthread"
+        for extra in ptl_debug.cc ptl_vars.cc ptl_svp.cc; do
+            ldflags="$ldflags $rootimpl/$extra"
+        done
+        extracompflags="$extracompflags $warnings"
+        ;;
+    seq-c)
+	extracompflags="$extracompflags --std=c99 $warnings $cwarnings"
+	ldflags="$rootimpl/main.c"
+	;;
+    oldcore-sim)
+        extracompflags="$extracompflags $UCFLAGS --std=utc -nostdinc $warnings $cwarnings"
+        ldflags="-Wl,-Ttext -Wl,0 -nostdlib -nodefaultlibs $rootimpl/utcrt.s"
+	;;
+    pp-sim)
+	extracompflags="$extracompflags $UCFLAGS -nostdinc $warnings $cwarnings"
+        ldflags="-Wl,-Ttext -Wl,0 -nostdlib -nodefaultlibs $rootimpl/utcrt.s"
+	;;
+esac
+
+##############################################
+# Start processing
+
+# Print configuration if requested
+if test -n "$verbose"; then
+  echo "---- $basename: options and settings ----" >&2
+  for i in root keep impl slcmode \
+           M4 m4flags command includes compflags extracompflags ldflags \
+           outfile slsources csources ccsources; do
+    eval "echo '  ' $i '->' \$$i" >&2
+  done
+fi
+
+# Translate
+test -n "$verbose" && echo "---- $basename: translation ----" >&2
+for s in $slsources; do
+  utdir=$(dirname "$s")
+  uttrans=$utdir/$(basename "$s" .c.sl).$utext
+  if test "$slcmode" = "trans"; then
+    if test -n "$outfile"; then
+      uttrans=$outfile
+    fi
+  else
+    tempfiles="$tempfiles $uttrans"
+  fi
+  if test -n "$uttrans"; then
+    test -n "$verbose" && echo "removing stale file: $uttrans" >&2
+    rm -f "$uttrans"
+  fi
+  extrainc=-I$utdir
+  cmd="$M4 $m4flags $includes $extrainc"
+  test -n "$verbose" && echo "$cmd $s >>$uttrans" >&2
+  inflight="$uttrans"
+  $cmd "$s" >>"$uttrans"
+  inflight=
+
+  if test "$slcmode" = "trans" -a -z "$outfile"; then
+    cat "$uttrans" 
+    rm -f "$uttrans"
+  fi
+done
+
+if test "$slcmode" = trans; then
+  test -n "$verbose" && echo "only translating, nothing else to do." >&2
+  exit 0
+fi
+
+############################################
+# Compile
+
+test -n "$verbose" && echo "---- $basename: compilation ----" >&2
+if test -n "$outfile"; then
+  compflags="-o $outfile $compflags"
+fi
+if test $slcmode = ld; then
+  compflags="$ldflags $compflags"
+fi
+compflags="$includes $extracompflags $compflags"
+
+
+cmd="$command $compflags $ccsources $csources"
+test -n "$verbose" && echo "$cmd" >&2
+test -n "$outfile" && inflight="$outfile"
+$cmd
+res=$?
+inflight=
+test -n "$verbose" && echo "---- $basename: done. ----" >&2
+exit $res
+
+
