@@ -1,56 +1,62 @@
-#! /bin/sh
+#! /bin/bash
 # $Id$
 set -e
-root=$(dirname "$0")
+root=$(cd $(dirname "$0") && pwd)
 basename=$(basename "$0")
-libdir=$(cd "$root/../lib/sldata" && pwd)
+incdir=$(cd "$root/../include" && pwd)
+libdir=$(cd "$root/../lib" && pwd)
 
 # Interface version number
 version=2
 
 # Load defaults
-impl=seq-c
-slcmode=ld
-outfile=
+slc_mode=ld
+impl=seqc
 m4trace=
-synclines=1
+synclines=yes
+combine=
+verbose=
+
 check=
 prev_arg=
-display_help=
-display_version=
-UCC=${UCC:-mtalpha-linux-gnu-gcc}
-ACC=${ACC:-alpha-linux-gnu-gcc}
-CC=${CC:-gcc}
-CXX=${CXX:-g++}
-M4=${M4:-m4}
-UCFLAGS=${UCFLAGS:--O1}
-verbose=
+
+inputs=
 tempfiles=
+tempdirs=
 inflight=
+outfile=
+tmpdir=
+
 keep=$KEEP
+
+extra_ppflags=
+extra_asflags=
+extra_cflags=
+extra_ldflags=
+
+M4=${M4:-m4}
 
 # Setting up some cleanup mechanism
 cleanup() {
-  for f in $inflight $tempfiles; do
+  for f in $inflight $tempfiles $tempdirs; do
     if test -z "$keep"; then 
-      test -n "$verbose" && echo "removing intermediate file: $f" >&2
-      rm -f "$f"
+      test -n "$verbose" && echo "$0: $f: deleting temporary" >&2
+      if test -d "$f"; then 
+	  if ! rmdir "$f" ; then
+	      echo "$0: $f: warning: could not delete directory" >&2
+	  fi
+      else 
+	  rm -f "$f"
+      fi
     else
-      test -e "$f" && echo "left over intermediate file: $f" >&2
+      test -e "$f" && echo "$0: $f: left over temporary" >&2
     fi
   done
   inflight=
   tempfiles=
+  tempdirs=
 }
 trap cleanup 0 ERR INT TERM QUIT
-
-in_slt=
-in_cpp=
-in_cxxpp=
-in_cc=
-in_cxx=
-in_as=
-in_ld=
 
 # Command line analysis
 for arg in "$@"; do
@@ -62,34 +68,55 @@ for arg in "$@"; do
   fi
 
   case $arg in
+      --version) slc_mode=display_version ;;
+      -h|--help) slc_mode=display_help ;;
+
       -check)	check=yes;;
-      -EE)	slcmode=trans;;
-      -E)	slcmode=pp;;
-      -S)	slcmode=cc;;
-      -c)       slcmode=as;;
+
+      -EE)	slc_mode=trans;;
+      -E)	slc_mode=pp;;
+      -S0)      slc_mode=cc;;
+      -S)	slc_mode=filt;;
+      -c)       slc_mode=as;;
+
       -b)	prev_arg=impl;;
-      -I*)	includes="$includes $arg";;
-      -P)	synclines=; compflags="$compflags -P";;
+
+      -t)       prev_arg=tmpdir;;
+
+      -P)	synclines= ;;
       -o)	prev_arg=outfile;;
       -ftrace-m4=*) m4trace=$(echo "$arg"|cut -d= -f2-);;
-      -save-temps) keep=yes;;
-      -v)	verbose=yes; compflags="$compflags $arg";;
-      *.c.sl)	in_slt="$in_slt $arg";;
-      *.c|*.S)	in_cpp="$in_cpp $arg";;
-      *.cc|*.cp|*.C|*.cpp|*.CPP|*.c++|*.cxx) in_cxxpp="$in_cxxpp $arg";;
-      *.i)      in_cc="$in_cc $arg";;
-      *.ii)     in_cxx="$in_cxx $arg";;
-      *.s)      in_as="$in_as $arg";;
-      *.o|-l*)  in_ld="$in_ld $arg";; 
-      --version)	display_version=yes;;
-      -h|--help)	display_help=yes;;
+      -save-temps) keep=yes ;;
+      -v)       verbose=yes ;;
+      -combine=*) combine=$(echo "$arg"|cut -d= -f2);;
+      -combine)   combine=TPCFAL ;;
+
+# Legacy file types
+      *.i|*.ii) in_cc_spec="$in_cc_spec $arg";;
+      *.C|*.cxx|*.c++|*.cc|*.cp|*.cpp) in_pp_spec="$in_pp_spec $arg";;
+      *.S|*.c) in_pp_spec="$in_pp_spec $arg";;
+      *.s) in_as_spec="$in_as_spec $arg";;
+      *.o|*.a|-l*) in_ld_spec="$in_ld_spec $arg";;
+# SLC file types
+      *.iu)  in_cc_spec="$in_cc_spec $arg";;
+      *.utc) in_pp_spec="$in_pp_spec $arg";;
+      *.sl)  in_slt_spec="$in_slt_spec $arg";;
+      *.s0)  in_filt_spec="$in_filt_spec $arg";;
+
+      -L*|-Wl,*)     extra_ldflags="$extra_ldflags $arg" ;;
+      -I*|-D*|-U*)  extra_ppflags="$extra_ppflags $arg" ;;
+      -Wa,*)         extra_asflags="$extra_asflags $arg" ;;
+
       -x)       echo "$0: -x not supported yet" >&2; exit 1;; 
-      *)	compflags="$compflags $arg";;
+
+      -mutc*)   echo "$0: -mutc is deprecated, used -b instead" >&2; exit 1;;
+
+      *)	extra_cflags="$extra_cflags $arg";;
   esac
 done
 
 # Special actions that do not require processing
-if test -n "$display_version"; then
+if test "x$slc_mode" = xdisplay_version; then
    rev='$Rev$'
    rev=$(echo "$rev"|cut -d' ' -f2)
    cat <<EOF
@@ -104,7 +131,7 @@ W. van Tol and others. GNU C and C++ compilers courtesy of the Free
 Software Foundation, Inc.
 EOF
    exit 0
-elif test -n "$display_help"; then
+elif test "x$slc_mode" = xdisplay_help; then
    cat <<EOF
 Usage: $0 [ARG]...
 
@@ -123,9 +150,14 @@ Execution modes:
                      The output is in the form of preprocessed source code,
                      which is sent to the standard output.
 
-  -S                 Stop after the stage of compilation proper; do not
-                     assemble. The output is in the form of an assembler code
+  -S0                Stop after the first stage of compilation proper; do not
+                     perform post-compilation filtering on assembly. 
+                     The output is in the form of an unprocessed assembler code
                      file for each non-assembler input file specified.
+
+  -S                 Stop after the second stage of compilation proper;
+                     do not assemble. The output is in the form of an assembler
+                     code file for each non-assembler input file specified.
 
   -c                 Compile or assemble the source files, but do not link.
                      The linking stage is not done. The output is in the
@@ -178,148 +210,214 @@ compiler; in particular, the following options may prove useful:
 Environment variables:
   M4                 M4 preprocessor to use. Default is "m4".
 
-  CC                 C compiler to use. Default is "gcc".
-
-  CXX                C++ compiler to use. Default is "g++".
-
-  UCC                Core muTC compiler to use.
-                     Default is "mtalpha-linux-gnu-gcc"
-
-  ACC                Stock Alpha-GCC compiler.
-                     Default is "alpha-linux-gnu-gcc"
-
   KEEP               If set and not empty, implies option -save-temps.
 
 Examples:
 
-  $basename test.c.sl
+  $basename test.sl
 
-  $basename -o test test1.c.sl test2.c.sl
+  $basename -o test test1.sl test2.sl
 
-  $basename -EE test.c.sl
+  $basename -EE test.sl
 
-  $basename -S -o test.s test.c.sl
+  $basename -S -o test.s test.sl
 
-  $basename -o test test.c.sl ccode.c
+  $basename -o test test.sl ccode.c
 
 Report bugs and suggestions to the CSA Trac issue tracker, 
 or to <r.c.poss@uva.nl>.
 EOF
    exit 0
-elif test -n "$check"; then
-  # perform sanity check.
-  if ! $CC --version >/dev/null 2>&1; then
-     echo "$CC: not found - maybe set CC or PATH?" >&2
-     exit 1
-  else echo "Found C compiler: $CC"; fi
-  if ! $CXX --version >/dev/null 2>&1; then
-     echo "$CXX: not found - maybe set CXX or PATH?" >&2
-     exit 1
-  else echo "Found C++ compiler: $CXX"; fi
-  if ! $UCC --version >/dev/null 2>&1; then
-     echo "$UCC: not found - maybe set UCC or PATH?" >&2
-     exit 1
-  else echo "Found utc-alpha compiler: $UCC"; fi
-  if ! $ACC --version >/dev/null 2>&1; then
-     echo "$ACC: not found - maybe set ACC or PATH?" >&2
-     exit 1
-  else echo "Found alpha compiler: $ACC"; fi
-  echo "Good."
-  exit 0
 fi
 
-# check if the implementation is recognized
-if ! test -d "$root/impl/$impl"; then
-   echo "unknown configuration: $impl" >&2
-   exit 1
-fi  
+# Here check the configuration
+eval $("$root"/cce -s "$impl")
 
-# Expand transformations
-for f in $in_slt; do
-  
+# If we were requested to test the configuration, do it now
+if test -n "$check"; then
+    if ! test -d $slc_trans; then
+	echo "$slc_trans: does not exist or is not a directory" >&2
+	exit 1
+    else echo "Found translator: $slc_trans"; fi
+    if ! $slc_compiler --version >/dev/null 2>&1; then
+	echo "$slc_compiler: cannot run" >&2
+	exit 1
+    else echo "Found compiler: $slc_compiler"; fi
+    if ! $slc_aslink --version >/dev/null 2>&1; then
+	echo "$slc_aslink: cannot run" >&2
+	exit 1
+    else echo "Found assembler/linker compiler: $slc_aslink"; fi
+    
+    echo "Good." >&2
+fi
+
 
 ###################################
-# Settings common to M4 & Compiler
+# Command line additions
 ###################################
 # Include directories
-includes="-I$root/impl/$impl -I$root/include"
+includes="-I$slc_trans -I$incdir"
 
-# Select file extension for intermediate source files
-case $impl in
-  *-cpp)	utext=cc;;
-  *)		utext=c;;
+slc_ppflags="$slc_ppflags $includes"
+case $slc_complang in
+    cpp) 
+	slc_cflags="$slc_cflags $CXXFLAGS" 
+	slc_ppflags="$slc_ppflags $CXXPPFLAGS"
+	;;
+    c)  
+	slc_cflags="$slc_cflags $CFLAGS"
+	slc_ppflags="$slc_ppflags $CPPFLAGS"
+	;;
+    utc) 
+	slc_cflags="$slc_cflags $UTCFLAGS"
+	slc_cppflags="$slc_ppflags $UTCPPFLAGS"
+	;;
 esac
+slc_ppflags="$slc_ppflags $extra_ppflags"
+slc_cflags="$slc_cflags $extra_cflags"
+slc_asflags="$slc_asflags $slc_cflags $ASFLAGS $extra_asflags"
+slc_ldflags="$slc_ldflags $slc_cflags $LDFLAGS $extra_ldflags"
 
-# Filter and convert uT source names
-for s in $slsources; do
-  utdir=$(dirname "$s")
-  uttrans=$utdir/$(basename "$s" .c.sl).$utext
-  case $utext in
-    c)  csources="$csources $uttrans";;
-    cc) ccsources="$ccources $uttrans";;
-  esac
-done
 
 ###################################
 # Settings special for M4
 ###################################
+
+# m4 -P: prefix M4 builtins with m4_
 m4flags="-P"
+
 if test -n "$synclines"; then
   m4flags="$m4flags -s"
+else
+  # cpp -P: do not generate synclines
+  slc_ppflags="$slc_ppflags -P"
 fi
+
 if test -n "$m4trace"; then
   m4flags="$m4flags -dV -o $m4trace"
 fi
 
+m4flags="$m4flags $slc_ppflags"
+
 ###################################
-# Settings special for compiler
+# Construction of compilation chain
 ###################################
 
-# Select actual compiler
-case $impl in
-   *-cpp) 
-      command=$CXX
-      ;;
-   *core-sim)
-      command=$UCC
-      ;;
-   pp-sim)
-      command=$ACC
-      ;;
-   *)
-      if test -n "$ccsources"; then
-	  command=$CXX
-      else
-	  command=$CC
-      fi
-      ;;
+# Select file extension for intermediate source files
+case $slc_complang in
+    c)
+	cc_ext=i
+	pp_ext=c
+	;;
+    cpp)
+	cc_ext=ii
+	pp_ext=cc
+	;;
+    utc)
+	cc_ext=iu
+	pp_ext=utc
+	;;
+    *)
+	echo "$0: unrecognized mode $mode" >&2; exit 1;;
 esac
 
-# Add the cruft around the program
-rootimpl="$root/impl/$impl"
-warnings="-Wall -W -Wcast-qual -Wwrite-strings -Wconversion -Wno-unused -Wsign-compare -Wmissing-field-initializers -Wno-multichar -Wno-long-long -Werror"
-cwarnings="-Wbad-function-cast -Wstrict-prototypes -Waggregate-return -Wold-style-definition"
-case $impl in
-    ptl-cpp)
-        ldflags="-lpthread"
-        for extra in ptl_debug.cc ptl_vars.cc ptl_svp.cc; do
-            ldflags="$ldflags $rootimpl/$extra"
-        done
-        extracompflags="$extracompflags $warnings"
-        ;;
-    seq-c)
-	extracompflags="$extracompflags --std=c99 $warnings $cwarnings"
-	ldflags="$rootimpl/main.c"
-	;;
-    oldcore-sim)
-        extracompflags="$extracompflags $UCFLAGS --std=utc -nostdinc $warnings $cwarnings"
-        ldflags="-Wl,-Ttext -Wl,0 -nostdlib -nodefaultlibs $rootimpl/utcrt.s"
-	;;
-    pp-sim)
-	extracompflags="$extracompflags $UCFLAGS -nostdinc $warnings $cwarnings"
-        ldflags="-Wl,-Ttext -Wl,0 -nostdlib -nodefaultlibs $rootimpl/utcrt.s"
-	;;
+# Create temporary directory if necessary
+if test -n "$tmpdir"; then
+    if ! test -d "$tmpdir" -a -w "$tmpdir"; then
+	echo "$0: $tmpdir: cannot write to directory" >&2
+	exit 1
+    fi
+else
+    tmpdir=$(mktemp -d -t slc)
+    tempdirs=$tmpdir
+fi
+
+# Decide what phases to do and where to stop
+defout=-
+case $slc_mode in 
+    trans) finalstage=T;;
+    pp) finalstage=P;;
+    cc) finalstage=C;;
+    filt) finalstage=F;;
+    as) finalstage=A;;
+    ld) finalstage=L; defout=a.out;;
 esac
+combine="$finalstage$combine"
+finalname=${outfile:-$defout}
+
+prepare_chain() {
+    local inputs addext stage indvar specfiles phrase
+    local f first f final target some
+    
+    inputs=$1
+    addext=$2
+    stage=$3
+    indvar=$4
+    specfiles=$5
+    phrase=$6
+    
+    target=
+    if test "x$skip" = "x"; then
+	if ! expr "$combine" : ".*$stage" >/dev/null; then
+	    for f in $inputs; do
+		fn=${f##*/}; fn=${fn%*.*}
+
+		case $f in
+		    *.S) 
+			target=$tmpdir/$fn.s
+			in_as_ind="$in_as_ind $target"
+			;;
+		    *)
+			target=$tmpdir/$fn.$addext
+			eval "$indvar=\$$indvar' $target'"
+		esac
+		transforms="R:$target $transforms $stage:$target:$f"
+	    done
+	else
+	    transform=
+	    first=
+	    for f in $inputs; do
+		if test -z "$first"; then first=$f; fi
+		transform="$transform:$f"
+	    done
+	    if test -n "$transform"; then 
+		fn=${first##*/}; fn=${fn%*.*}
+#		fn=$(basename "$first"|sed -e 's/^\(.*\)\.[^.]*$/\1/g')
+		targetbase=$fn.$addext
+		if test "x$finalstage" = "x$stage"; then
+		    if test "x$finalname" = "x-"; then
+			target=$targetbase
+		    else
+			target=$finalname
+		    fi
+		else
+		    target=$tmpdir/$targetbase
+		    transforms="R:$target $transforms"
+		fi
+		transforms="$transforms $stage:$target$transform"
+	    fi
+	    if test "x$finalstage" = "x$stage"; then skip=1; fi
+	    eval "$indvar=\$$indvar' $target'"
+	fi
+    else
+	for f in $specfiles; do
+	    echo "$0: $f: $phrase input file unused because $phrase not run" >&2
+	done
+    fi
+}
+
+
+# Item lists:
+# *_spec: specified on command lne
+# *_ind: derivatives
+
+skip=
+prepare_chain "$in_slt_spec" $pp_ext T in_pp_ind "$in_slt_spec" "transformation"
+prepare_chain "$in_pp_ind $in_pp_spec" $cc_ext P in_cc_ind "$in_pp_spec" "preprocessor"
+prepare_chain "$in_cc_ind $in_cc_spec" s0 C in_filt_ind "$in_cc_spec" "compiler"
+prepare_chain "$in_filt_ind $in_filt_spec" s F in_as_ind "$in_filt_spec" "post-filter"
+prepare_chain "$in_as_ind $in_as_spec" o A in_ld_ind "$in_as_spec" "assembler"
+prepare_chain "$in_ld_ind $in_ld_spec" x L unused "$in_ld_spec" "linker"
 
 ##############################################
 # Start processing
@@ -327,67 +425,67 @@ esac
 # Print configuration if requested
 if test -n "$verbose"; then
   echo "---- $basename: options and settings ----" >&2
-  for i in root keep impl slcmode \
-           M4 m4flags command includes compflags extracompflags ldflags \
-           outfile slsources csources ccsources; do
+  for i in root keep impl \
+           M4 m4flags \
+           combine outfile tmpdir; do
     eval "echo '  ' $i '->' \$$i" >&2
   done
+  set | grep '^slc_'
+  echo "---- $basename: build plan -----" >&2
+  for i in $transforms; do echo $i >&2; done
+  echo "---- $basename: processing... ----" >&2
 fi
 
-# Translate
-test -n "$verbose" && echo "---- $basename: translation ----" >&2
-for s in $slsources; do
-  utdir=$(dirname "$s")
-  uttrans=$utdir/$(basename "$s" .c.sl).$utext
-  if test "$slcmode" = "trans"; then
-    if test -n "$outfile"; then
-      uttrans=$outfile
-    fi
-  else
-    tempfiles="$tempfiles $uttrans"
-  fi
-  if test -n "$uttrans"; then
-    test -n "$verbose" && echo "removing stale file: $uttrans" >&2
-    rm -f "$uttrans"
-  fi
-  extrainc=-I$utdir
-  cmd="$M4 $m4flags $includes $extrainc"
-  test -n "$verbose" && echo "$cmd $s >>$uttrans" >&2
-  inflight="$uttrans"
-  $cmd "$s" >>"$uttrans"
-  inflight=
+for t in $transforms; do
+  IFS=':' read action target deps <<EOF 
+$t
+EOF
+  deps=${deps/:/ }
+  capturestdout=
+  case $action in
+      R) tempfiles="$tempfiles $target"; continue ;;
+      T) 
+	  res=2
+	  cmd="$M4 $m4flags $deps"
+	  if ! test "$slc_mode" = "trans" -a -z "$outfile"; then capturestdout=1; fi
+	  ;;
+      P)
+	  res=3
+	  cmd="$slc_compiler -E $deps $slc_ppflags"
+	  if ! test "$slc_mode" = "pp" -a -z "$outfile"; then capturestdout=1; fi
+	  ;;
+      C)
+	  res=4
+	  cmd="$slc_compiler -S -o $target $deps $slc_cflags"
+	  ;;
+      F)
+	  res=5
+	  cmd="$slc_filter $target $deps"
+	  ;;
+      A)
+	  res=6
+	  cmd="$slc_aslink -c -o $target $deps $slc_asflags"
+	  ;;
+      L)
+	  res=7
+	  cmd="$slc_aslink -o $target $deps $slc_ldflags"
+	  ;;
+  esac
 
-  if test "$slcmode" = "trans" -a -z "$outfile"; then
-    cat "$uttrans" 
-    rm -f "$uttrans"
+  inflight=$target
+  export SLC_PHASE=$action
+  if test -n "$capturestdout"; then
+      if test -n "$verbose"; then echo "$cmd >>$target" >&2; fi
+      $cmd >>"$target" || exit $res
+  else
+      if test -n "$verbose"; then echo "$cmd" >&2; fi
+      $cmd || exit $res
   fi
+  inflight=
 done
 
-if test "$slcmode" = trans; then
-  test -n "$verbose" && echo "only translating, nothing else to do." >&2
-  exit 0
-fi
 
-############################################
-# Compile
-
-test -n "$verbose" && echo "---- $basename: compilation ----" >&2
-if test -n "$outfile"; then
-  compflags="-o $outfile $compflags"
-fi
-if test $slcmode = ld; then
-  compflags="$ldflags $compflags"
-fi
-compflags="$includes $extracompflags $compflags"
-
-
-cmd="$command $compflags $ccsources $csources"
-test -n "$verbose" && echo "$cmd" >&2
-test -n "$outfile" && inflight="$outfile"
-$cmd
-res=$?
-inflight=
 test -n "$verbose" && echo "---- $basename: done. ----" >&2
-exit $res
+exit 0
 
 
