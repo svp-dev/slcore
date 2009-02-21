@@ -1,0 +1,17 @@
+#ifndef SVP_LIB_SLH
+#define SVP_LIB_SLH
+
+#include "primitives.h"
+
+#define svp_abort __abort
+
+#ifdef __GNUC__
+#define likely(X) __builtin_expect(!!(X), 1)
+#define unlikely(X) __builtin_expect(!(X), 1)
+#else
+#define likely(X) /*likely*/(X)
+#define unlikely(X) /*unlikely*/(X)
+#endif
+
+#endif
+

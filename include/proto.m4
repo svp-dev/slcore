@@ -94,6 +94,8 @@ m4_ifelse([[$1]],0,
 
 m4_define([[ut_breakable]],[[m4_ifelse([[$1]],void,0,m4_ifelse([[$1]],,0,1))]])
 
+m4_define([[ut_proccall]],[[do { ut_create(,,,,,,,$@); ut_sync(); } while(0)]])
+
 m4_include([[protoimpl.m4]])
 
 m4_changecom([[m4_comment]])

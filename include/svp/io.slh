@@ -1,0 +1,35 @@
+#ifndef SVP_IO_SLH
+#define SVP_IO_SLH
+
+typedef union {
+  char c;
+  signed long long s;
+  unsigned long long u;
+  double d;
+  void *ptr;
+} svp_arg_slot;
+
+ut_decl(svp_io_putc, void, 
+	ut_glparm(char, c));
+
+ut_decl(svp_io_puts, void,
+	ut_glparm(const char *, gstr));	
+
+ut_decl(svp_io_putf, void,
+	ut_glparm(double, gx),
+	ut_glparm(unsigned, gprec),
+	ut_glparm(unsigned, gbase));
+
+ut_decl(svp_io_putun, void,
+	ut_glparm(unsigned long long, gn),
+	ut_glparm(unsigned, gbase));
+
+ut_decl(svp_io_putn, void,	
+	ut_glparm(long long, gn),
+	ut_glparm(unsigned, gbase));
+
+ut_decl(svp_io_printf, void,
+	ut_glparm(const char*, gfmt),
+	ut_glparm(svp_arg_slot*, gdata));
+
+#endif

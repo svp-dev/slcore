@@ -1,0 +1,70 @@
+#ifndef SVP_SUGAR_SLH
+#define SVP_SUGAR_SLH
+
+m4_include(svp/io.slh)
+
+#define putc(C) ({ ut_proccall(svp_io_putc, ut_glarg(char, c, (C))); })
+
+#define puts(S) ({ ut_proccall(svp_io_puts, ut_glarg(const char*, s, (S))); })
+
+#define putf(F, Prec) ({						\
+      ut_proccall(svp_io_putf, ut_glarg(double, d, (F)), ut_glarg(unsigned, gprec, (Prec)), ut_glarg(unsigned, gbase, 10)); \
+    })
+
+#define putn(N) ({ \
+      ut_proccall(svp_io_putn, ut_glarg(long long, n, (N)), ut_glarg(unsigned, gbase, 10)); \
+    })
+
+#define putu(N) ({ \
+      ut_proccall(svp_io_putun, ut_glarg(unsigned long long, n, (N)), ut_glarg(unsigned, gbase, 10)); \
+    })
+
+#define printf1(Fmt, X) ({						\
+      struct {								\
+	union { __typeof__(X) __arg; svp_arg_slot __slot; } __a0;	\
+      } __pf_args = {							\
+	{ (X) }								\
+      };								\
+      ut_proccall(svp_io_printf, ut_glarg(const char*, gfmt, (Fmt)), ut_glarg(svp_arg_slot*, gdata, (svp_arg_slot*)(void*)&__pf_args)); \
+    })
+
+#define printf2(Fmt, X, Y) ({						\
+      struct {								\
+	union { __typeof__(X) __arg; svp_arg_slot __slot; } __a0;	\
+	union { __typeof__(Y) __arg; svp_arg_slot __slot; } __a1;	\
+      } __pf_args = {							\
+	{ (X) },							\
+	{ (Y) }								\
+      };								\
+      ut_proccall(svp_io_printf, ut_glarg(const char*, gfmt, (Fmt)), ut_glarg(svp_arg_slot*, gdata, (svp_arg_slot*)(void*)&__pf_args)); \
+    })
+
+#define printf3(Fmt, X, Y, Z) ({						\
+      struct {								\
+	union { __typeof__(X) __arg; svp_arg_slot __slot; } __a0;	\
+	union { __typeof__(Y) __arg; svp_arg_slot __slot; } __a1;	\
+	union { __typeof__(Z) __arg; svp_arg_slot __slot; } __a2;	\
+      } __pf_args = {							\
+	{ (X) },							\
+	{ (Y) },							\
+	{ (Z) }								\
+      };								\
+      ut_proccall(svp_io_printf, ut_glarg(const char*, gfmt, (Fmt)), ut_glarg(svp_arg_slot*, gdata, (svp_arg_slot*)(void*)&__pf_args)); \
+    })
+
+#define printf4(Fmt, W, X, Y, Z) ({					\
+      struct {								\
+	union { __typeof__(W) __arg; svp_arg_slot __slot; } __a0;	\
+	union { __typeof__(X) __arg; svp_arg_slot __slot; } __a1;	\
+	union { __typeof__(Y) __arg; svp_arg_slot __slot; } __a2;	\
+	union { __typeof__(Z) __arg; svp_arg_slot __slot; } __a3;	\
+      } __pf_args = {							\
+	{ (W) },							\
+	{ (X) },							\
+	{ (Y) },							\
+	{ (Z) }								\
+      };								\
+      ut_proccall(svp_io_printf, ut_glarg(const char*, gfmt, (Fmt)), ut_glarg(svp_arg_slot*, gdata, (svp_arg_slot*)(void*)&__pf_args)); \
+    })
+
+#endif

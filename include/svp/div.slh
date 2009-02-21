@@ -1,0 +1,73 @@
+#ifndef SVP_DIV_SLH
+#define SVP_DIV_SLH
+
+#ifdef HAVE_C_DIVIDE
+
+#define divu(X, Y) \
+  (__typeof__((X) / (Y)))				\
+  ((unsigned long long)(X) / (unsigned long long)(Y))
+
+#define modu(X, Y)					\
+  (__typeof__((X) % (Y)))				\
+  ((unsigned long long)(X) % (unsigned long long)(Y))
+
+#define divs(X, Y) \
+  (__typeof__((X) / (Y)))				\
+  ((signed long long)(X) / (signed long long)(Y))
+
+#define mods(X, Y) \
+  (__typeof__((X) % (Y)))				\
+  ((signed long long)(X) % (signed long long)(Y))
+
+#define divmodu(X, Y) do {						\
+    unsigned long long __divmod_dividend = (X), __divmod_divisor = (Y); \
+    unsigned long long __divmod_mod = __divmod_dividend % __divmod_divisor; \
+    unsigned long long __divmod_res = __divmod_dividend / __divmod_divisor; \
+    (X) = (__typeof__ (X))__divmod_mod; (Y) = (__typeof__ (Y))__divmod_res;	\
+  } while(0)
+
+#define divmods(X, Y) do {						\
+    signed long long __divmod_dividend = (X), __divmod_divisor = (Y); \
+    signed long long __divmod_mod = __divmod_dividend % __divmod_divisor; \
+    signed long long __divmod_res = __divmod_dividend / __divmod_divisor; \
+    (X) = (__typeof__ (X))__divmod_mod; (Y) = (__typeof__ (Y))__divmod_res;	\
+  } while(0)
+
+#else /* !HAVE_C_DIVIDE */
+
+#include "svp_asmdiv.h"
+
+#define divmodu(X, Y) __asm_divmodu(X, Y)
+#define divmods(X, Y) __asm_divmods(X, Y)
+
+#define divu(X, Y)				       \
+  ({						       \
+    unsigned long long __divu_x = (X), __divu_y = (Y); \
+    divmodu(__divu_x, __divu_y);		       \
+    (__typeof__((X) / (Y)))__divu_y;		       \
+  })
+
+#define divs(X, Y)				       \
+  ({						       \
+    long long __divs_x = (X), __divs_y = (Y);	       \
+    divmods(__divs_x, __divs_y);		       \
+    (__typeof__((X) / (Y)))__divs_y;		       \
+  })
+
+#define modu(X, Y)				       \
+  ({						       \
+    unsigned long long __modu_x = (X), __modu_y = (Y); \
+    divmodu(__modu_x, __modu_y);		       \
+    (__typeof__((X) % (Y)))__modu_x;		       \
+  })
+
+#define mods(X, Y)				       \
+  ({						       \
+    long long __mods_x = (X), __mods_y = (Y);	       \
+    divmods(__mods_x, __mods_y);		       \
+    (__typeof__((X) % (Y)))__mods_x;		       \
+  })
+
+#endif
+
+#endif
