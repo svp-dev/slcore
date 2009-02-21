@@ -1,9 +1,9 @@
 #! /bin/sh
 # $Id$
 set -e
-root=$(cd $(dirname "$0"); pwd)
+root=$(cd $(dirname "$0") && pwd)
 basename=$(basename "$0")
-libdir=$(cd "$root"/../lib/sldata; pwd)
+libdir=$(cd "$root"/../lib/slc && pwd)
 timestamp=$(echo '$Date$'|cut -d' ' -f2)
 version=1
 
@@ -14,7 +14,7 @@ Usage: $0 [OPTION] PROGRAM [ARGS]...
 Run a compiled SVP program.
 
 Options:
-  -r runner      Use the specified runner (may be cce string).
+  -r runner      Use the specified runner.
 
   -x             Show configuration string embedded in program (if any).
 
@@ -32,7 +32,7 @@ do_version() {
   rev='$Rev$'
   rev=$(echo "$rev"|cut -d' ' -f2)
   cat <<EOF
-$basename $version.$rev ($timestamp)
+$basename $version.$rev
 
 This script is copyright (C) 2009 the CSA group - Universiteit
 van Amsterdam.
@@ -68,12 +68,18 @@ shift
 
 # does the program exist?
 if ! test -f "$program"; then
-  echo "$0: program not found: $program" >&2
+  echo "$0: no such file or directory: $program" >&2
   exit 127
 fi
 
+# is it executable?
+if ! test -x "$program"; then
+  echo "$0: permission denied: $program" >&2
+  exit 126
+fi
+
 if test -n "$show_embedded" -o -z "$runner"; then
-  tag=$(strings "$program"|grep 'sc-tag:.*:'|tail -n1|cut -d: -f2)
+  tag=$(strings "$program"|grep '^sgr_runner:.*:'|tail -n1|cut -d: -f2)
   if test "x$tag" = "x"; then
     if test -n "$show_embedded"; then
        echo "(none found)"
@@ -84,17 +90,24 @@ if test -n "$show_embedded" -o -z "$runner"; then
        echo "$tag"
        exit 0    
     fi
-    runner=$(echo "$tag"|cut -d- -f7)
   fi
 fi
 
-if test -n "$runner"; then
-  # Runner specified, check it
-  if ! test -f "$libdir/cfg/r-$runner"; then
-     # try CCE instead
-     str=$("$root"/cce -c "$runner")
-     runner=$(echo "$str"|cut -d- -f7)
+if test -z "$runner"; then
+  # Not specified, use tag if found
+  if test -n "$tag"; then
+     runner=$tag
+  else
+     echo "$0: can't determine runner (try -r)" >&2
+     exit 1
   fi
 fi
 
-SLC_MODE=run exec $SHELL "$libdir/cfg/r-$runner" "$program" "$@"
+# check it
+if ! test -x "$libdir/r-$runner"; then
+    echo "$0: unknown runner: $runner" >&2
+    exit 1
+fi
+
+exec "$libdir/r-$runner" "$program" "$@"
+

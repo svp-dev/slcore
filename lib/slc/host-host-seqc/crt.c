@@ -5,9 +5,12 @@
 //
 // $Id$
 //
-#include "../t-seqc/utcimpl.h"
+#include "include/sl_support.h"
 
 extern void t_main(struct sl_famdata*);
+
+// configuration tag for sgr runner
+static const char *__tag__ = "sgr_runner:host:";
 
 int main(void) {
   struct { } args;

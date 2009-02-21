@@ -9,4 +9,6 @@ _start:
         nop
         end
 	.end _start
-	
+
+	.section .rodata
+	.ascii "\0sgr_runner:mtalpha-sim-proto:\0"

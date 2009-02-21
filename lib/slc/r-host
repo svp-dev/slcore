@@ -1,0 +1,12 @@
+#! /bin/sh
+# $Id$
+
+# Run script for native executables.
+
+# For now, just run the command.
+program=$1
+shift
+
+d=$(dirname "$program")
+
+exec "$d/$program" "$@"

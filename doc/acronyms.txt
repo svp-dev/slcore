@@ -21,6 +21,14 @@ Acronym for: SVP Language Compiler
 
 Role: invoke the compiler toolchain.
 
+scu
+===
+
+Acronym for: SLC Configuration Unknown
+
+Role: serve as a placeholder for SVP languages that do not have a
+compilation chain yet.
+
 sgr
 ===
 
