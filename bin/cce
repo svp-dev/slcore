@@ -136,7 +136,7 @@ basearchvar=$(echo "$basearch"|tr a-z A-Z)
 
 # Language mode selection
 case $slc_dialect in
-    ptl)      slc_complang=cpp;;
+    ptl*)     slc_complang=cpp;;
     seqc|ppp) slc_complang=c;;
     utc*)     slc_complang=utc;;
     *) 
@@ -151,7 +151,7 @@ slc_trans=$libdir/slc/t-$slc_trans
 
 # Compiler selection
 case $slc_dialect-$slc_arch in
-    *-x) slc_compiler=$root/scu ;;
+    *-x) slc_compiler="$root/scu compile" ;;
     *-host)
 	case $slc_complang in
 	    cpp) slc_compiler=${CXX:-g++} ;;
@@ -181,7 +181,7 @@ slc_cflags="$slc_cflags -O2"
 
 # Assembler and linker selection
 case $slc_complang-$slc_arch in
-    *-x)      slc_aslink=$root/scu ;;
+    *-x)      slc_aslink="$root/scu assemble/link" ;;
     cpp-host) slc_aslink=${CXX:-g++} ;;
     *-host)   slc_aslink=${CC:-gcc} ;;
     cpp-*)    slc_aslink=$(eval "echo \${CXX_$archvar:-$slc_arch-linux-gnu-g++}") ;;

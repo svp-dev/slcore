@@ -1,0 +1,7 @@
+#! /bin/sh
+say=
+if test -n "$1"; then
+   say=" (cannot $1)"
+fi
+echo "$0: nothing to see here.$say" >&2
+exit 1
