@@ -29,6 +29,7 @@ tmpdir=
 
 keep=$KEEP
 
+extra_inc=
 extra_ppflags=
 extra_asflags=
 extra_cflags=
@@ -57,6 +58,11 @@ cleanup() {
   tempdirs=
 }
 trap cleanup 0 ERR INT TERM QUIT
+
+die() {
+    echo "$0:" "$@" >&2
+    exit 1
+}
 
 # Command line analysis
 for arg in "$@"; do
@@ -104,14 +110,17 @@ for arg in "$@"; do
       *.s0)  in_filt_spec="$in_filt_spec $arg";;
 
       -L*|-Wl,*)     extra_ldflags="$extra_ldflags $arg" ;;
-      -I*|-D*|-U*)  extra_ppflags="$extra_ppflags $arg" ;;
+      -D*|-U*)       extra_ppflags="$extra_ppflags $arg" ;;
+      -I*)           extra_inc="$extra_inc $arg" ;;
       -Wa,*)         extra_asflags="$extra_asflags $arg" ;;
 
       -x)       die "-x not supported yet" ;;
 
       -mutc*)   die "-mutc is deprecated, used -b instead" ;;
 
-      *)	extra_cflags="$extra_cflags $arg";;
+      -*)	extra_cflags="$extra_cflags $arg";;
+
+      *)  die "$arg: unrecognized argument" ;;
   esac
 done
 
@@ -258,7 +267,8 @@ fi
 # Include directories
 includes="-I$slc_trans -I$incdir"
 
-slc_ppflags="$slc_ppflags $includes"
+slc_ppflags="$slc_ppflags $includes $extra_inc"
+slc_tflags="$slc_tflags $includes $extra_inc"
 case $slc_complang in
     cpp) 
 	slc_cflags="$slc_cflags $CXXFLAGS" 
@@ -270,7 +280,7 @@ case $slc_complang in
 	;;
     utc) 
 	slc_cflags="$slc_cflags $UTCFLAGS"
-	slc_cppflags="$slc_ppflags $UTCPPFLAGS"
+	slc_ppflags="$slc_ppflags $UTCPPFLAGS"
 	;;
 esac
 slc_ppflags="$slc_ppflags -DSVP_ARCH=$slc_arch -DSVP_DIALECT=$slc_dialect -DSVP_OS=$slc_os $extra_ppflags"
@@ -297,7 +307,7 @@ if test -n "$m4trace"; then
   m4flags="$m4flags -dV -o $m4trace"
 fi
 
-m4flags="$m4flags $slc_ppflags"
+m4flags="$m4flags $slc_tflags"
 
 ###################################
 # Construction of compilation chain

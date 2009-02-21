@@ -73,8 +73,8 @@ if test -z "$alias"; then do_usage; fi
 # Expand one-word aliases to some arbitrary
 # pre-defined configurations
 case $alias in
-   seqc)  alias=seqc-host-host ;;
-   ptl)   alias=ptl-host-host ;;
+   seqc)  alias=seqc-host-host-seqc ;;
+   ptl)   alias=ptl-host-host-ptl ;;
    utc0)  alias=utc0-mtalpha-sim-proto ;;
    ppp)   alias=ppp-mtalpha-sim ;;
    ptlx)  alias=ptlx-x-x ;;
@@ -185,6 +185,14 @@ case $slc_complang-$slc_arch in
     *-*)      slc_aslink=$(eval "echo \${CC_$archvar:-$slc_arch-linux-gnu-gcc}") ;;
 esac
 
+# Extra defines
+case $slc_arch in
+    mtalpha) ;;
+    *)
+	slc_ppflags="$slc_ppflags -DHAVE_C_DIVIDE"
+	;;
+esac
+
 # Extra ldflags selection
 case $slc_arch in
     mt*)
@@ -199,17 +207,15 @@ case $slc_os in
     x) ;;
     *) 
 	osdir=$libdir/slc/$slc_arch-$slc_os
+	slc_ppflags="$slc_ppflags -I$osdir/include"
 	slc_ldflags="$slc_ldflags -L$osdir -lslos $osdir/crt.o"
 	;;
 esac
 
 # Program entry selection
-case $slc_dialect-$slc_os in
-    ptl-host)
-	slc_ldflags="$slc_ldflags -lutc-ptl -lpthread"
-	;;
-    seqc-*)
-	slc_ldflags="$slc_ldflags -lseqc"
+case $slc_os in
+    host-ptl)
+	slc_ldflags="$slc_ldflags -lpthread"
 	;;
     *)  ;;
 esac
