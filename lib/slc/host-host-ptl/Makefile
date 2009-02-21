@@ -1,5 +1,5 @@
 SLC = ../../../bin/slc
-CXXFLAGS=-I../t-ptl
+CXXFLAGS=-Iinclude
 
 all: crt.o libslos.a
 
