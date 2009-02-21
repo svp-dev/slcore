@@ -7,15 +7,12 @@ cce
 
 Acronym for: Configuration Chain Expander
 
-Role: Canonicalize a slc configuration name.
+Role: Manage toolchains for slc.
 
-Rationale: the SLC toolchain is specified by a septuplet of component
-tags (see SVP inventory); because specifying all 7 is tedious the cce
-utility is provided and expands commonly used aliases or partly
-misspelled strings to the full and correct form.
-
-Additionally it can check (-c) if configurations are supported or
-describe (-d) what is used for each component.
+Rationale: the SLC toolchain is composed of many tools each with
+specific options. Because specifying all tools and flags may be
+error-prone the cce utility is provided and expands configuration
+aliases to complete configuration information.
 
 slc
 ===
@@ -27,7 +24,10 @@ Role: invoke the compiler toolchain.
 sgr
 ===
 
-Acronym:
+Acronym: SVP Generic Runner
+
+Role: execute a SVP binary in its intended run environment.
+
 
 
 

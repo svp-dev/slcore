@@ -1,13 +1,13 @@
 
-all: inventory.pdf
+all: inventory.pdf tests.pdf
 
-inventory.pdf: inventory.ltx
+%.pdf: %.ltx
 	pdflatex $<
 	pdflatex $<
 
-inventory.ltx: inventory.txt
+%.ltx: %.txt
 	rst2latex.py --documentoptions=a4paper,landscape $< >$@
 
 clean:
-	rm -f inventory.pdf inventory.ltx
+	rm -f *.pdf *.ltx
 
