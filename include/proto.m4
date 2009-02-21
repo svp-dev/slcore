@@ -1,4 +1,7 @@
 m4_divert(-1)
+m4_changequote()
+m4_changequote([[,]])
+m4_changecom([[#]])
 # $Id$
 # ###################################################
 #  This is proto-muTC, a front-end for muTC programs.
@@ -82,7 +85,6 @@ m4_divert(-1)
 #  with C's character constants. [[ and ]] should not appear
 #  in valid C programs except in character constants, where
 #  m4 substitutions are (mostly) harmless.
-m4_changequote([[,]])
 
 m4_define([[m4_shiftn]],[[m4_dnl
 m4_ifelse([[$1]],0,
@@ -95,4 +97,4 @@ m4_define([[ut_breakable]],[[m4_ifelse([[$1]],void,0,m4_ifelse([[$1]],,0,1))]])
 m4_include([[protoimpl.m4]])
 
 m4_changecom([[m4_comment]])
-m4_divert/* this is a preprocessed file */m4_dnl
+m4_divert(0)

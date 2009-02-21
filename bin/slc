@@ -89,7 +89,7 @@ for arg in "$@"; do
       -save-temps) keep=yes ;;
       -v)       verbose=yes ;;
       -combine=*) combine=$(echo "$arg"|cut -d= -f2);;
-      -combine)   combine=TPCFAL ;;
+      -combine)   combine=C ;;
 
 # Legacy file types
       *.i|*.ii) in_cc_spec="$in_cc_spec $arg";;
@@ -452,7 +452,7 @@ EOF
       R) tempfiles="$tempfiles $target"; continue ;;
       T) 
 	  res=2
-	  cmd="$M4 $m4flags $deps"
+	  cmd="$M4 $m4flags $incdir/proto.m4 $deps"
 	  if ! test "$slc_mode" = "trans" -a -z "$outfile"; then capturestdout=1; fi
 	  ;;
       P)
@@ -462,7 +462,7 @@ EOF
 	  ;;
       C)
 	  res=4
-	  cmd="$slc_compiler -S -o $target $deps $slc_cflags"
+	  cmd="$slc_compiler -o $target -combine -S $deps $slc_cflags"
 	  ;;
       F)
 	  res=5

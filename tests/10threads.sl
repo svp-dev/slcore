@@ -1,4 +1,3 @@
-// m4_include(proto.m4)
 #include <libutc.h>
 #include <utcdebug.h>
 
