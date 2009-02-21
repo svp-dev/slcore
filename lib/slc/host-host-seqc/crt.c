@@ -9,7 +9,7 @@
 
 extern void t_main(struct ut_famdata*);
 
-void lib_main(void) {
+int main(void) {
   struct { } args;
   struct ut_famdata root;
   root.ix = root.be = 0;
@@ -18,4 +18,5 @@ void lib_main(void) {
   root.a = &args;
   root.ex = 0;
   t_main(&root);
+  return 0;
 }
