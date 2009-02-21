@@ -1,24 +1,21 @@
 #! /bin/sh
 # $Id$
 set -e
-root=$(cd $(dirname "$0"); pwd)
+root=$(cd $(dirname "$0") && pwd)
 basename=$(basename "$0")
-libdir=$(cd "$root"/../lib/sldata; pwd)
+libdir=$(cd "$root"/../lib && pwd)
 timestamp=$(echo '$Date$'|cut -d' ' -f2)
 version=1
 
 do_usage() {
   cat <<EOF
-Usage: $0 [OPTION] TRANS-COMP-FILTER-ASM-RT-IO-RUNNER
-       $0 [OPTION] TRANS-RUNNER
+Usage: $0 [OPTION] DIALECT-ARCH-OS
        $0 [OPTION] ALIAS
 
 Canonicalize a slc configuration name.
 
 Operation modes:
-  -s, --set-vars     print canonicalization as variable initializers
-  -c, --check        check that components exist
-  -d, --describe     print description of all components used (implies -c)
+  -s, --set-vars     print configuration variables for configuration
   -h, --help         print this help, then exit
   -t, --time-stamp   print date of last modification, then exit
   -v, --version      print version number, then exit
@@ -26,11 +23,7 @@ Operation modes:
 Example aliases for SVP implementations:
 
   utc0 seqc ptl ppp utcx ptlx
-  seqc-simalpha ppp-mgsimsparc
-
-Example aliases to use the legacy C/C++ toolchains:
-
-  c cxx
+  seqc-mtalpha-sim ppp-mtsparc-sim
 
 Report bugs and patches to the CSA Trac issue tracker, or to
 <r.c.poss@.uva.nl>.
@@ -55,13 +48,8 @@ do_timestamp() {
   exit 0
 }
 
-do_unknown() {
-  echo "$0: unknown alias $1" >&2
-  exit 1
-}
-
-do_invalid() {
-  echo "$0: unsupported combination " $@ >&2
+die() {
+  echo "$0:" "$@" >&2
   exit 1
 }
   
@@ -74,9 +62,7 @@ for arg in "$@"; do
    case $arg in
       -v|--version) do_version ;;
       -t|--timestamp) do_timestamp ;;
-      -c|--check) check=1 ;;
       -s|--set-vars) set_vars=1 ;;
-      -d|--describe) check=1 ; describe=1 ;;
       -h|--help) do_usage;;
       -*) echo "$0: unrecognized command-line argument: $arg (try -h)" >&2; exit 1;;
       *) alias=$arg
@@ -87,189 +73,148 @@ if test -z "$alias"; then do_usage; fi
 # Expand one-word aliases to some arbitrary
 # pre-defined configurations
 case $alias in
-   c)     alias=pass-chost-pass-host-stdc-host-host ;;
-   cxx)   alias=pass-cxxhost-pass-host-stdc-host-host ;;
-   seqc)  alias=seqc-chost-pass-host-main-host-host ;;
-   ptl)   alias=ptl-cxxhost-pass-host-ptlinit-host-host ;;
-   utc0)  alias=utc0-utcmtalpha-pass-mtalpha-jump-none-mgsimalpha ;;
-   ppp)   alias=bcalpha-calpha-acalpha-mtalpha-create-simple-mgsimalpha ;;
-   ptlx)  alias=ptlx-x-x-x-x-x-x ;;
-   utcx)  alias=utc-x-x-x-x-x-x ;;
+   seqc)  alias=seqc-host-host ;;
+   ptl)   alias=ptl-host-host ;;
+   utc0)  alias=utc0-mtalpha-sim-proto ;;
+   ppp)   alias=ppp-mtalpha-sim ;;
+   ptlx)  alias=ptlx-x-x ;;
+   utcx)  alias=utc-x-x ;;
    *-*)   ;; # more than one word: pass to next stage
-   *)     # remaining single-world aliases
-          do_unknown "$alias" ;;
+   *)     # remaining single-word aliases
+          die "$alias: unknown alias" ;;
 esac
 
 # Expand two-word aliases according to inventory
 case $alias in
     *-*-*)   ;; # more than two word: pass to next stage
     *) 
-	IFS='-' read trans runner <<EOF
+	IFS='-' read dialect arch <<EOF
 $alias
 EOF
 	case $alias in
-	    utc0-*sim*)
-		arch=$(echo "$runner"|sed -e 's/^.*sim\(.*\)$/\1/g')
-		alias=$trans-utcmt$arch-pass-mt$arch-jump-none-mgsim$arch 
+	    utc0-*)
+		alias=$alias-sim-proto
 		;;
-	    bc-*sim|ppp-*sim)
-		alias=bcalpha-calpha-acalpha-mtalpha-create-simple-mgsimalpha 
+	    ppp-mt*)
+		alias=$alias-sim
 		;;
-	    bc*-*sim*|ppp-*sim*) 
-		arch=$(echo "$runner"|sed -e 's/^.*sim\(.*\)$/\1/g')
-                alias=bc$arch-c$arch-ac$arch-mt$arch-create-simple-mgsim$arch 
-		;;
-	    seqc-host)
-		alias=seqc-chost-pass-host-main-host-host 
-		;;
-	    seqc-*sim*) 
-		arch=$(echo "$runner"|sed -e 's/^.*sim\(.*\)$/\1/g')
-                alias=seqc-c$arch-pass-mt$arch-jump-inline-mgsim$arch
-		;;
-	    c-*sim*)
-		arch=$(echo "$runner"|sed -e 's/^.*sim\(.*\)$/\1/g')
-                alias=pass-c$arch-pass-mt$arch-jump-inline-mgsim$arch
+	    *-host)
+		alias=$alias-host
 		;;
 	    *)
-		do_unknown "$alias" ;;
+		die "$alias: unknown alias" ;;
 	esac
   ;;
 esac
 
 # Other cases
 case $alias in
-   *-*-*-*-*-*-*)
-     # 7 parts, use them
-     IFS='-' read trans comp filt asm crt io runner <<EOF
+   *-*-*)
+     # 3 or more parts, use them
+     IFS='-' read slc_dialect slc_arch slc_os <<EOF
 $alias
 EOF
    ;;
    *) 
      # Any other form, unrecognized for now
-     do_unknown "$alias" ;;
+     die "$alias: unknown alias" ;;
 esac
 
-invalid=
-
-# Type checking: check translator is compatible with compiler and filter
-case $trans-$comp in
-   *-none)    ;; # always OK
-   pass-*)    ;; # always OK
-   *-x)       ;; # always OK
-   # if the input is µTC, it can only be compiled by a µTC compiler
-   utc*-utc*) ;;
-   utc*-*)    invalid=1 ;;
-   # plain C (with inline assembly) is compiled by the C/C++ compiler.
-   bc*-c*)    ;;
-   bc*-*)     invalid=1 ;;
-   seqc*-c*)  ;;
-   seqc*-*)   invalid=1 ;;
-   # ptl requires a C++ compiler
-   ptl*-cxx*) ;;
-   ptl*-*)    ;;
-   # otherwise
-   *)         invalid=1 ;;
-esac
-if test "x$invalid" != x; then do_invalid "translator $trans" "compiler $comp"; fi
-
-# Type checking: check compiler, filter and assembler are consistent
-case $comp-$filt-$asm in
-    c*-ac*-mt*)
-            arch1=$(echo "$comp"|cut -c2-)
-            arch2=$(echo "$filt"|cut -c3-)
-            arch3=$(echo "$asm"|cut -c3-)
-            if test "x$arch1" != "x$arch2" -o "x$arch1" != "x$arch3"; then invalid=1; fi
-            ;;
-    utc*-ac*-*)
-            arch1=$(echo "$comp"|cut -c4-)
-            arch2=$(echo "$filt"|cut -c3-)
-            arch3=$asm
-            if test "x$arch1" != "x$arch2" -o "x$arch1" != "x$arch3"; then invalid=1; fi
-            ;;
-    utc*-pass-*)
-            arch1=$(echo "$comp"|cut -c4-)
-            arch2=$asm
-            if test "x$arch1" != "x$arch2"; then invalid=1; fi
-            ;;
-    c*host-pass-host) ;; # always OK
-    c*-pass-mt*)
-            arch1=$(echo "$comp"|cut -c2-)
-            arch2=$(echo "$asm"|cut -c3-)
-            if test "x$arch1" != "x$arch2"; then invalid=1; fi
-            ;;
-    *) ;;
-esac
-if test "x$invalid" != x; then do_invalid "compiler $comp" "filter $filt" "assembler $asm"; fi
-
-# Type checking: check translator and filter are consistent
-case $trans-$filt in
-    pass-*)   ;; # always OK
-    bc*-ac*)  
-            arch1=$(echo "$trans"|cut -c3-)
-            arch2=$(echo "$filt"|cut -c3-)
-            if test "x$arch1" != "x$arch2"; then invalid=1; fi
-            ;;
-    bc*-*)  invalid=1 ;; # bc requires ac
-    *)      ;;
-esac
-if test "x$invalid" != x; then do_invalid "translator $trans" "filter $filt"; fi
-
-# Type checking: check assembler and runner are consistent
-case $asm-$runner in
-   host-host) ;; # always OK
-   mt*-mgsim*)
-            arch1=$(echo "$asm"|cut -c3-)
-            arch2=$(echo "$runner"|cut -c6-)
-            if test "x$arch1" != "x$arch2"; then invalid=1; fi
-            ;;
-   x-x) ;; # always OK
-   *) invalid=1 ;;
-esac
-if test "x$invalid" != x; then do_invalid "assembler $asm" "runner $runner"; fi
-
-# Type checking: check runner and crt are consistent
-case $crt-$runner in
-   x-x)           ;;
-   stdc-host)     ;; 
-   main-host)     ;; 
-   ptlinit-host)  ;; 
-   jump-mgsim*)   ;;
-   create-mgsim*) ;;
-   *) invalid=1 ;;
-esac
-if test "x$invalid" != x; then do_invalid "crt $crt" "runner $runner"; fi
-
-if test "x$check" != x; then
-# Are all the components defined?
-    for i in t-$trans c-$comp f-$filt a-$asm i-$crt o-$io r-$runner; do
-	case $i in
-	    *-x) ;; # do nothing
-	    *)
-		if test -f "$libdir/cfg/$i"; then
-		    SLC_MODE=describe $SHELL "$libdir/cfg/$i"
-		else
-		    invalid="$invalid $i"
-		fi
-		;;
-	esac
-    done
-fi
-
-if test "x$invalid" != x; then
-    echo "$0: configurations not found in $libdir/cfg:" >&2
-    echo "$invalid" >&2
-    exit 2
-fi
+slc_tag=$slc_dialect-$slc_arch-$slc_os
 
 if test "x$set_vars" = x; then
-   echo $trans-$comp-$filt-$asm-$crt-$io-$runner
-else
-   echo "SLC_TRANSLATOR=$trans"
-   echo "SLC_COMPILER=$comp"
-   echo "SLC_POSTFILTER=$filt"
-   echo "SLC_ASSEMBLER=$asm"
-   echo "SLC_CRT=$crt"
-   echo "SLC_BASEIO=$io"
-   echo "SLC_RUNNER=$runner"
+    echo $slc_tag
+    exit 0
 fi
+
+archvar=$(echo "$slc_arch"|tr a-z A-Z)
+basearch=$(echo "$slc_arch"|cut -c3-)
+basearchvar=$(echo "$basearch"|tr a-z A-Z)
+
+# Language mode selection
+case $slc_dialect in
+    ptl)      slc_complang=cpp;;
+    seqc|ppp) slc_complang=c;;
+    utc*)     slc_complang=utc;;
+    *) 
+esac
+
+# Transformation selection
+case $slc_dialect-$slc_arch in
+    utc*|seqc*|ptl*) slc_trans=$slc_dialect	;;
+    ppp-*)           slc_trans=ppp$basearch ;;
+esac
+slc_trans=$libdir/slc/t-$slc_trans
+
+# Compiler selection
+case $slc_dialect-$slc_arch in
+    *-x) slc_compiler=$root/scu ;;
+    *-host)
+	case $slc_complang in
+	    cpp) slc_compiler=${CXX:-g++} ;;
+	    c)   slc_compiler=${CC:-gcc} ;;
+	    utc) die "no compiler for $dialect-$arch" ;;
+	esac
+	slc_filter=cp
+	;;
+    ppp-*)
+	spp=$(echo "$root/spp" "$arch" $(eval "echo \${CC_$basearchvar:-$basearch-linux-gnu-gcc}"))
+	slc_compiler="$spp compile"
+	slc_filter="$spp filter"
+	;;
+    *-*)
+	case $slc_complang in
+	    cpp) slc_compiler=$(eval "echo \${CXX_$basearchvar:-$basearch-linux-gnu-g++}") ;;
+	    c)   slc_compiler=$(eval "echo \${CC_$basearchvar:-$basearch-linux-gnu-gcc}") ;;
+	    utc) slc_compiler=$(eval "echo \${UTCC_$archvar:-$slc_arch-linux-gnu-gcc}") ;;
+	esac
+	slc_filter=cp
+	;;
+	
+esac
+
+# Compiler flags selection; default to optimize
+slc_cflags="$slc_cflags -O2"
+
+# Assembler and linker selection
+case $slc_complang-$slc_arch in
+    *-x)      slc_aslink=$root/scu ;;
+    cpp-host) slc_aslink=${CXX:-g++} ;;
+    *-host)   slc_aslink=${CC:-gcc} ;;
+    cpp-*)    slc_aslink=$(eval "echo \${CXX_$archvar:-$slc_arch-linux-gnu-g++}") ;;
+    *-*)      slc_aslink=$(eval "echo \${CC_$archvar:-$slc_arch-linux-gnu-gcc}") ;;
+esac
+
+# Extra ldflags selection
+case $slc_arch in
+    mt*)
+	slc_ldflags="$slc_ldflags -Wl,-Ttext -Wl,0 -nostdlib -nodefaultlibs"
+	;;
+    *)
+	;;
+esac
+
+# OS selection
+case $slc_os in
+    x) ;;
+    *) 
+	slc_ldflags="$slc_ldflags -L$libdir/slc/$slc_arch-$slc_os -lslos"
+	;;
+esac
+
+# Program entry selection
+case $slc_dialect-$slc_os in
+    ptl-host)
+	slc_ldflags="$slc_ldflags -lutc-ptl -lpthreads"
+	;;
+    seqc-*)
+	slc_ldflags="$slc_ldflags -lseqc"
+	;;
+    *)  ;;
+esac
+
+set | grep '^slc_'
+
+
+
 
