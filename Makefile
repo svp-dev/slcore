@@ -2,6 +2,7 @@ LIBDIRS = lib/slc/host-host-ptl/include \
 	  lib/slc/host-host-ptl \
 	  lib/slc/host-host-seqc \
 	  lib/slc/div \
+	  lib/slc/mtalpha-sim \
 	  lib/slc/mtalpha-sim-proto
 
 .PHONY: all clean doc test
