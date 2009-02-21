@@ -1,5 +1,6 @@
 LIBDIRS = lib/slc/t-ptl \
-	  lib/slc/host-host \
+	  lib/slc/host-host-ptl \
+	  lib/slc/host-host-seqc \
 	  lib/slc/div \
 	  lib/slc/mtalpha-sim-proto
 

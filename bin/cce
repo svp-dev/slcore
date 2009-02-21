@@ -98,8 +98,11 @@ EOF
 	    ppp-mt*)
 		alias=$alias-sim
 		;;
-	    *-host)
-		alias=$alias-host
+	    ptl-host)
+		alias=$alias-host-ptl
+		;;
+	    seqc-host)
+		alias=$alias-host-seqc
 		;;
 	    *)
 		die "$alias: unknown alias" ;;
