@@ -1,5 +1,5 @@
-#ifndef SVP_PRIMITIVES_H
-#define SVP_PRIMITIVES_H
+#ifndef SVP_OS_H
+#define SVP_OS_H
 
 #define __write1(C) __asm__ __volatile__("print %0, 1" : : "r"(C))
 #define __abort() while(1) __asm__ __volatile__(".int 0x74000000")

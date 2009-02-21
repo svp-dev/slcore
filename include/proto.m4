@@ -100,4 +100,6 @@ m4_define([[sl_include]], m4_defn([[m4_include]]))
 m4_include([[protoimpl.m4]])
 
 m4_changecom([[m4_comment]])
-m4_divert(0)
+m4_divert(0)m4_dnl
+#include "sl_support.h"
+

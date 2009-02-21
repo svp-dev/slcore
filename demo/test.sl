@@ -1,4 +1,3 @@
-#include <libutc.h>
 sl_include(svp/iomacros.slh)
 
 sl_def(inc, int,
@@ -36,14 +35,14 @@ sl_def(t_main, void)
   
   {
     puts("Test #2:\n");
-    family cf;
+    sl_family_t cf;
     sl_create(f,,1,10,2,3,,
 	      inc3, sl_sharg(int, n, 0), sl_glarg(int, incr, 1));
     cf = sl_getfid(f);
     sl_kill(cf);
     sl_sync(f,r);
 
-    if (r == EXIT_KILLED) 
+    if (r == SVP_EKILLED) 
       puts("killed!\n");
     else {
       printf1("counter: %d\n", sl_geta(n));
@@ -53,7 +52,7 @@ sl_def(t_main, void)
     
   {
     puts("Test #3:\n");
-    sl_create(,PLACE_LOCAL,,,,, void,
+    sl_create(,SVP_LOCAL,,,,, void,
 	      inc3, sl_sharg(int, n2), sl_glarg(int, i, 2));
     sl_seta(n2, 0);
     sl_sync();
@@ -65,7 +64,7 @@ sl_def(t_main, void)
     sl_create(fx,,1,20,2,3, int,
 	      inc, sl_sharg(int, n, 0));
     sl_sync(fx,r);
-    if (r == EXIT_BROKEN) {
+    if (r == SVP_EBROKEN) {
       printf1("broken, brk = %d\n", sl_getbr(fx));
     } else {
       printf1("output count: %d\n", sl_geta(n));

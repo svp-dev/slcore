@@ -1,4 +1,3 @@
-#include <libutc.h>
 sl_include(svp/iomacros.slh)
 
 #define number unsigned long long

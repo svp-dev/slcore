@@ -71,7 +71,7 @@ __fid.be = _sl_start; m4_dnl
 __fid.li = _sl_limit; m4_dnl
 __fid.st = _sl_step; m4_dnl
 __fid.ch = 0; m4_dnl
-__fid.ex = EXIT_NORMAL; m4_dnl
+__fid.ex = SVP_ENOERR; m4_dnl
 __fid.f = ([[$8]]); m4_dnl
 __fid.a = &_sl_fid[[]]_args m4_dnl
 ]])
@@ -84,9 +84,9 @@ m4_define([[sl_glarg]],m4_defn([[sl_sharg]]))
 # Pass transparently the sync construct.
 m4_define([[sl_sync]],[[m4_dnl
 m4_define([[_sl_body]],[[{ m4_dnl
-if (__fid.ex != EXIT_NORMAL) break; m4_dnl
+if (__fid.ex != SVP_ENOERR) break; m4_dnl
 __fid.f(&__fid); m4_dnl
-if (__fam->ex == EXIT_KILLED) return; m4_dnl
+if (__fam->ex == SVP_EKILLED) return; m4_dnl
 } m4_dnl
 ]])m4_dnl
 do { m4_dnl
@@ -108,10 +108,18 @@ m4_define([[sl_seta]],[[(*__a_$1) = $2]])
 
 # Pass transparently break and kill
 m4_define([[sl_break]],[[m4_dnl
-do { __args->__breakv = ([[$1]]); __fam->ex = EXIT_BROKEN; return; } while(0)m4_dnl
+do { __args->__breakv = ([[$1]]); __fam->ex = SVP_EBROKEN; return; } while(0)m4_dnl
 ]])
 
-m4_define([[sl_kill]],[[kill($1)]])
+m4_define([[sl_kill]],[[m4_dnl
+  do {m4_dnl
+    struct sl_famdata *__p;m4_dnl					
+    for (__p = ([[$1]]); __p; __p = __p->ch)m4_dnl
+      __p->ex = SVP_EKILLED;m4_dnl
+    if (__fam->ex == SVP_EKILLED) return;m4_dnl
+  } while(0)m4_dnl
+]])
+
 
 # Pass transparently sl_getfid
 m4_define([[sl_getfid]],[[$1]])

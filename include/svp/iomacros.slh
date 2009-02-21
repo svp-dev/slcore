@@ -1,5 +1,5 @@
-#ifndef SVP_SUGAR_SLH
-#define SVP_SUGAR_SLH
+#ifndef SVP_IOMACROS_SLH
+#define SVP_IOMACROS_SLH
 
 sl_include(svp/io.slh)
 

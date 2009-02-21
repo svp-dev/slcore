@@ -1,5 +1,5 @@
-#ifndef SVP_PRIMITIVES_H
-#define SVP_PRIMITIVES_H
+#ifndef SVP_OS_H
+#define SVP_OS_H
 
 #include <iostream>
 #include <cstdlib>

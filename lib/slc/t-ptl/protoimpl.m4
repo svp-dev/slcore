@@ -47,13 +47,13 @@ m4_define([[_sl_crcnt]],m4_incr(_sl_crcnt))m4_dnl
 m4_define([[_sl_lbl]],__child[[]]_sl_crcnt)m4_dnl
 m4_define([[_sl_fid]],m4_ifelse([[$1]],,_sl_lbl,[[$1]]))m4_dnl
 m4_define([[_sl_brk]],_sl_fid[[]]_brk)m4_dnl
-m4_define([[_sl_place]],m4_ifelse([[$2]],,[[PLACE_LOCAL]],[[$2]]))m4_dnl
+m4_define([[_sl_place]],m4_ifelse([[$2]],,[[SVP_LOCAL]],[[$2]]))m4_dnl
 m4_define([[_sl_start]],m4_ifelse([[$3]],,0,[[$3]]))m4_dnl
 m4_define([[_sl_limit]],m4_ifelse([[$4]],,1,[[$4]]))m4_dnl
 m4_define([[_sl_step]],m4_ifelse([[$5]],,1,[[$5]]))m4_dnl
 m4_define([[_sl_block]],m4_ifelse([[$6]],,0,[[$6]]))m4_dnl
 m4_define([[_sl_brkref]],m4_ifelse(sl_breakable([[$7]]),1,[[_sl_brk[[,]]]],[[]]))m4_dnl
-family _sl_fid; m4_dnl
+sl_family_t _sl_fid; m4_dnl
 m4_ifelse(sl_breakable([[$7]]),1,[[[[$7]] _sl_brk;]],) m4_dnl
 sl_pulldecls(m4_shiftn(8,$@))m4_dnl
 uTC::create(_sl_fid,_sl_place,_sl_start,_sl_limit,_sl_step,_sl_block,_sl_brkref NULL,m4_dnl
@@ -75,7 +75,7 @@ m4_define([[sl_setp]],[[__p_[[$1]] = [[$2]]]])
 
 # Pass transparently break and kill
 m4_define([[sl_break]],[[uTC::Break($1)]])
-m4_define([[sl_kill]],[[kill($1)]])
+m4_define([[sl_kill]],[[uTC::kill($1)]])
 
 # Pass transparently the family id
 m4_define([[sl_getfid]],[[$1]])
@@ -83,4 +83,3 @@ m4_define([[sl_getfid]],[[$1]])
 # Pass transparently the break id
 m4_define([[sl_getbr]],[[$1]]_brk)
 
-# ## End macros for core compiler syntax ###

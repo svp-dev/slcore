@@ -1,9 +1,9 @@
 #ifndef SVP_LIB_SLH
 #define SVP_LIB_SLH
 
-#include "primitives.h"
+#include "svp_os.h"
 
-#define svp_abort __abort
+#define svp_abort __svp_abort
 
 #ifdef __GNUC__
 #define likely(X) __builtin_expect(!!(X), 1)

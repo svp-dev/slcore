@@ -1,9 +1,6 @@
-#include <libutc.h>
 sl_include(svp/lib.slh)
 sl_include(svp/div.slh)
 sl_include(svp/io.slh)
-
-#include "primitives.h"
 
 static const char *digits = "0123456789abcdef";
 

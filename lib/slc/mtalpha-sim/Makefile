@@ -1,7 +1,7 @@
 AS = mtalpha-linux-gnu-as
 AR = mtalpha-linux-gnu-ar
 
-all: libslos.a
+all: libslos.a crt.o
 
 clean:
 	rm -f *.a *.o

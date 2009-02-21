@@ -48,7 +48,7 @@ m4_define([[_sl_crcnt]],m4_incr(_sl_crcnt))m4_dnl
 m4_define([[_sl_lbl]],__child[[]]_sl_crcnt)m4_dnl
 m4_define([[_sl_fid]],m4_ifelse([[$1]],,_sl_lbl,[[$1]]))m4_dnl
 m4_define([[_sl_brk]],m4_ifelse(sl_breakable([[$7]]),1,[[_sl_fid[[]]_brk]],))m4_dnl
-register family _sl_fid = 0; m4_dnl #(ticket #33: work around bug in core compiler)
+register sl_family_t _sl_fid = 0; m4_dnl #(ticket #33: work around bug in core compiler)
 m4_ifelse(sl_breakable([[$7]]),1,[[register [[$7]] _sl_brk;]],) m4_dnl
 sl_pulldecls(m4_shiftn(8,$@))m4_dnl
 create(_sl_fid;[[$2]];[[$3]];[[$4]];[[$5]];[[$6]];_sl_brk)m4_dnl
@@ -58,7 +58,7 @@ create(_sl_fid;[[$2]];[[$3]];[[$4]];[[$5]];[[$6]];_sl_brk)m4_dnl
 
 # Pass transparently the sync construct.
 m4_define([[sl_sync]],[[m4_dnl
-m4_ifelse([[$2]],,,[[$2 = ]])__builtin_sl_sync(m4_ifelse([[$1]],,_sl_fid,[[$1]]))m4_dnl
+m4_ifelse([[$2]],,,[[$2 = ]])__builtin_ut_sync(m4_ifelse([[$1]],,_sl_fid,[[$1]]))m4_dnl
 ]])
 
 # Pass transparently all references to argument/parameter
@@ -70,7 +70,7 @@ m4_define([[sl_setp]],[[__p_$1 = $2]])
 
 # Pass transparently break and kill
 m4_define([[sl_break]],[[break ($1)]])
-m4_define([[sl_kill]],[[__builtin_sl_kill($1)]])
+m4_define([[sl_kill]],[[__builtin_ut_kill($1)]])
 
 # Pass transparently the family id
 m4_define([[sl_getfid]],[[$1]])
