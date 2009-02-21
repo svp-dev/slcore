@@ -1,8 +1,8 @@
 #! /bin/sh
 # $Id$
-
+#
 copyright="Copyright (C) 2009 the CSA group - The SL project."
-
+#
 # This program is free software: you can redistribute it and/or modify 
 # it under the terms of the GNU General Public License as published by   
 # the Free Software Foundation; either version 2, or (at your option)    
@@ -17,7 +17,6 @@ copyright="Copyright (C) 2009 the CSA group - The SL project."
 # along with this program; if not, write to the Free Software 
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA     
 # 02110-1301, USA.    
-
 set -e
 root=$(cd $(dirname "$0") && pwd)
 basename=$(basename "$0")
@@ -29,7 +28,7 @@ do_usage() {
     cat <<EOF
 Configuration Chain Expander.
 
-The \`cce' utility manages configurations for \`slc'. It expands
+The \`$basename' utility manages configurations for \`slc'. It expands
 configuration aliases (short names) into complete strings and provides
 shell variables to drive compilation in \`slc'.
 
@@ -37,15 +36,20 @@ Usage: $0 [OPTION] DIALECT-ARCH-OS
    or: $0 [OPTION] ALIAS
 
 Options:
-  -s, --set-vars     print shell variables for slc
+  -s, --set-vars     print shell variables for \`slc'
   -t, --time-stamp   print date of last modification, then exit
-  -h, --help   print this help, then exit
-  -v, --versionprint version number, then exit
+  -h, --help         print this help, then exit
+  -v, --version      print version number, then exit
+
+Environment variables:
+  CC CXX
+  CC_ALPHA CC_MTALPHA UTCC_MTALPHA
+  CC_SPARC CC_MTSPARC UTCC_MTSPARC  
 
 Examples:
 
-  seqc ptl utc0 ppp utcx ptlx
-  ppp-mtsparc-sim
+seqc ptl utc0 ppp utcx ptlx
+ppp-mtsparc-sim
 
 Report bugs and patches to the CSA group.
 EOF

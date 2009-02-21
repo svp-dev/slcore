@@ -1,29 +1,56 @@
 #! /bin/sh
 # $Id$
+#
+copyright="Copyright (C) 2009 the CSA group - The SL project."
+#
+# This program is free software: you can redistribute it and/or modify 
+# it under the terms of the GNU General Public License as published by   
+# the Free Software Foundation; either version 2, or (at your option)    
+# any later version.  
+#   
+# This program is distributed in the hope that it will be useful,   
+# but WITHOUT ANY WARRANTY; without even the implied warranty of    
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the     
+# GNU General Public License for more details.    
+#   
+# You should have received a copy of the GNU General Public License 
+# along with this program; if not, write to the Free Software 
+# Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA     
+# 02110-1301, USA.    
 set -e
 root=$(cd $(dirname "$0") && pwd)
 basename=$(basename "$0")
-libdir=$(cd "$root"/../lib/slc && pwd)
+libdir=$(cd "$root"/../lib && pwd)
 timestamp=$(echo '$Date$'|cut -d' ' -f2)
 version=1
 
 do_usage() {
   cat <<EOF
+SVP Generic Runner.
+
+The \`sgr' utility provides a single interface to run a SVP program
+compiled with \`slc'. \`sgr' analyses the executable file to determine
+how to run the program, and invokes the simulator if needed.
+
 Usage: $0 [OPTION] PROGRAM [ARGS]...
 
-Run a compiled SVP program.
-
 Options:
-  -r runner      Use the specified runner.
+  -r runner      use the specified runner (use when autodetect fails)
+  -x             show configuration string embedded in program (if any)
+  -h, --help     print this help, then exit
+  -v, --version  print version number, then exit
 
-  -x             Show configuration string embedded in program (if any).
+Examples:
 
-  -h, --help     Print this help, then exit.
+  # show runner string stored in \`a.out':
 
-  -v, --version  Print version number, then exit.
+  $basename -x a.out 
 
-Report bugs and patches to the CSA Trac issue tracker, or to
-<r.c.poss@.uva.nl>.
+  # run fibo.x, possibly using the MT simulator:
+
+  $basename fibo.x 
+
+Report bugs and patches to the CSA group.
 EOF
   exit 0
 }
@@ -34,8 +61,11 @@ do_version() {
   cat <<EOF
 $basename $version.$rev
 
-This script is copyright (C) 2009 the CSA group - Universiteit
-van Amsterdam.
+$copyright
+This is free software; see the source for copying conditions.  There is NO
+warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+
+Written by Raphael 'kena' Poss.
 EOF
   exit 0
 }
@@ -104,10 +134,10 @@ if test -z "$runner"; then
 fi
 
 # check it
-if ! test -x "$libdir/r-$runner"; then
+if ! test -x "$libdir/slc/r-$runner"; then
     echo "$0: unknown runner: $runner" >&2
     exit 1
 fi
 
-exec "$libdir/r-$runner" "$program" "$@"
+exec "$libdir/slc/r-$runner" "$program" "$@"
 

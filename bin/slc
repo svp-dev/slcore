@@ -1,5 +1,22 @@
 #! /bin/bash
 # $Id$
+#
+copyright="Copyright (C) 2009 the CSA group - The SL project."
+#
+# This program is free software: you can redistribute it and/or modify 
+# it under the terms of the GNU General Public License as published by   
+# the Free Software Foundation; either version 2, or (at your option)    
+# any later version.  
+#   
+# This program is distributed in the hope that it will be useful,   
+# but WITHOUT ANY WARRANTY; without even the implied warranty of    
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the     
+# GNU General Public License for more details.    
+#   
+# You should have received a copy of the GNU General Public License 
+# along with this program; if not, write to the Free Software 
+# Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA     
+# 02110-1301, USA.    
 set -e
 root=$(cd $(dirname "$0") && pwd)
 basename=$(basename "$0")
@@ -97,19 +114,8 @@ for arg in "$@"; do
       -combine=*) combine=$(echo "$arg"|cut -d= -f2);;
       -combine)   combine=C ;;
 
-# Legacy file types
-      *.i|*.ii) in_cc_spec="$in_cc_spec $arg";;
-      *.C|*.cxx|*.c++|*.cc|*.cp|*.cpp) in_pp_spec="$in_pp_spec $arg";;
-      *.S|*.c) in_pp_spec="$in_pp_spec $arg";;
-      *.s) in_as_spec="$in_as_spec $arg";;
-      *.o|*.a|-l*) in_ld_spec="$in_ld_spec $arg";;
-# SLC file types
-      *.iu)  in_cc_spec="$in_cc_spec $arg";;
-      *.utc) in_pp_spec="$in_pp_spec $arg";;
-      *.sl)  in_slt_spec="$in_slt_spec $arg";;
-      *.s0)  in_filt_spec="$in_filt_spec $arg";;
-
       -L*|-Wl,*)     extra_ldflags="$extra_ldflags $arg" ;;
+      -l*)           in_ld_spec="$in_ld_spec $arg" ;;
       -D*|-U*)       extra_ppflags="$extra_ppflags $arg" ;;
       -I*)           extra_inc="$extra_inc $arg" ;;
       -Wa,*)         extra_asflags="$extra_asflags $arg" ;;
@@ -120,7 +126,18 @@ for arg in "$@"; do
 
       -*)	extra_cflags="$extra_cflags $arg";;
 
-      *)  die "$arg: unrecognized argument" ;;
+# Legacy file types
+      *.i|*.ii) in_cc_spec="$in_cc_spec $arg";;
+      *.C|*.cxx|*.c++|*.cc|*.cp|*.cpp) in_pp_spec="$in_pp_spec $arg";;
+      *.S|*.c) in_pp_spec="$in_pp_spec $arg";;
+      *.s)     in_as_spec="$in_as_spec $arg";;
+# SLC file types
+      *.iu)  in_cc_spec="$in_cc_spec $arg";;
+      *.utc) in_pp_spec="$in_pp_spec $arg";;
+      *.sl)  in_slt_spec="$in_slt_spec $arg";;
+      *.s0)  in_filt_spec="$in_filt_spec $arg";;
+# Default behavior: feed input to linker
+      *) in_ld_spec="$in_ld_spec $arg";;
   esac
 done
 
@@ -131,28 +148,56 @@ if test "x$slc_mode" = xdisplay_version; then
    cat <<EOF
 $basename $version.$rev
 
-This script is copyright (C) 2008 the CSA group - Universiteit van
-Amsterdam.
+$copyright
+This is free software; see the source for copying conditions.  There is NO
+warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 
-Script front-end written by Raphael Poss. muTC implementations
-provided by Thomas Bernard, Mike Lankamp, Simon Polstra, Michiel
-W. van Tol and others. GNU C and C++ compilers courtesy of the Free
-Software Foundation, Inc.
+Written by Raphael 'kena' Poss.
 EOF
    exit 0
 elif test "x$slc_mode" = xdisplay_help; then
    cat <<EOF
+SVP Language Compiler.
+
+\`$basename' is a generic compiler driver for SVP programs. It provides a
+unified command line interface for compiling SVP code. The actual
+tools used for compilations are selected automatically depending on
+the selected SVP implementation, using the separate utility \`cce'.
+
+The following transforms are applied depending on the type of the
+input (determined by the file name suffix):
+
+- translate: the SVP language is translated to an actual SVP
+dialect. This transform uses the M4 preprocessor.
+
+- preprocess: the source code is filtered by the C/C++ preprocessor.
+
+- compile: the source code is transformed to raw assembly; the
+compiler used depends on the SVP dialect and the target
+architecture.
+
+- filter: (for the Microgrids implementations) the raw assembly is
+further distilled.
+
+- assemble; the assembler used depends on the target architecture.
+
+- link; the linker used depends on the target architecture.
+
+Except for the two additional transforms (translate and filter),
+\`$basename' mimics the driver of the GNU Compiler Collection (\`gcc'). For
+general information about default behavior, additional flags and
+processing order, see gcc(1).
+
 Usage: $0 [ARG]...
 
-Compile SVP programs.
+Options:
 
-Execution modes:
   -check             Check the environment; do not process anything. In
                      this mode $basename checks that the required tools
                      are available.
 
-  -EE                Stop after the transformation stage; do not preprocess.
-                     The output is in the form of transformed source code,
+  -EE                Stop after the translation stage; do not preprocess.
+                     The output is in the form of translated source code,
                      which is sent to the standard output.
 
   -E                 Stop after the preprocessing stage; do not compile.
@@ -174,21 +219,40 @@ Execution modes:
 
 SVP implementation selection:
   -b spec            Generate code for the SVP implementation specified by
-                     "spec". "spec" is passed through "cce" for validation
-                     and alias expansion. See "cce --help" for details.
+                     "spec". "spec" is passed through \`cce' for validation
+                     and alias expansion. See \`cce --help' for details. The
+                     default implementation is "seqc".
+
+Input file types:
+  file.sl            SVP code which must be translated.
+
+  file.utc           muTC source code which must be preprocessed.
+
+  file.iu            muTC source code which should not be preprocessed.
+
+  file.s0            Assembler code which should be further distilled.
+
+The regular GCC file types are also recognized and are transformed
+accordingly.
 
 General options:
   -Idir              Add the directory "dir" to the list of directories
                      to be searched for header files. This applies
-                     both to the initial transformation by m4 and to the
+                     both to the initial translation by M4 and to the
                      underlying compiler.
 
   -P                 Inhibit generation of linemarkers in the output
-                     from both the initial transformation by m4 and the C
+                     from both the initial translation by M4 and the C
                      preprocessor.
 
-  -o file            Place output in "file". This applies regardless to
-                     whatever sort of output is being produced.
+  -combine=[PHASES]  Group input files into a single output for each of
+                     the specified PHASES.
+
+  -combine           Synonymous with -combine=C (behavior similar to \`gcc').
+
+  -o file            Place output in "file". This implies -combine for the
+                     phase where \`$basename' is configured to stop.
+
 
 Compiler debugging options:
   -v                 Print (on standard error output) the commands executed
@@ -207,19 +271,45 @@ Other options:
   --version          Print $basename's version number; do not process 
                      anything.
 
-All other options are passed transparently to the underlying C/C++
-compiler; in particular, the following options may prove useful:
+All other options are passed transparently to the appropriate
+tools; in particular, the following options may prove useful:
+
+  -Dmacro, -Umacro   Set/unset C/C++ preprocessor macros.
 
   -Wa,option         Pass "option" as an option to the assembler.
 
   -Wl,option         Pass "option" as an option to the linker.
 
-  -llibrary          Search the library named "library" when linking.
+  -Ldir              Search "dir" for libraries when linking.
+
+  -llibrary          Link with the library named "library".
 
 Environment variables:
   M4                 M4 preprocessor to use. Default is "m4".
 
   KEEP               If set and not empty, implies option -save-temps.
+
+Diagnostics:
+  0                  No error occured.
+
+  1                  Invalid parameters passed to \`$basename' or 
+                     invalid configuration.
+
+  2                  Translation failed.
+
+  3                  Preprocessing failed.
+
+  4                  Compilation failed.
+
+  5                  Post-compilation filtering failed.
+
+  6                  Assembly failed.
+
+  7                  Linking failed.
+
+  127                A tool was not found.
+
+  126                A program could not be executed.
 
 Examples:
 
@@ -233,8 +323,7 @@ Examples:
 
   $basename -o test test.sl ccode.c
 
-Report bugs and suggestions to the CSA Trac issue tracker, 
-or to <r.c.poss@uva.nl>.
+Report bugs and suggestions to the CSA issue tracker.
 EOF
    exit 0
 fi
@@ -260,6 +349,12 @@ if test -n "$check"; then
     echo "Good." >&2
 fi
 
+########################
+# Set KEEP if specified
+########################
+if test -n "$keep"; then
+   export KEEP=1
+fi
 
 ###################################
 # Command line additions
@@ -422,7 +517,7 @@ prepare_chain() {
 # *_ind: derivatives
 
 skip=
-prepare_chain "$in_slt_spec" $pp_ext T in_pp_ind "$in_slt_spec" "transformation"
+prepare_chain "$in_slt_spec" $pp_ext T in_pp_ind "$in_slt_spec" "translation"
 prepare_chain "$in_pp_ind $in_pp_spec" $cc_ext P in_cc_ind "$in_pp_spec" "preprocessor"
 prepare_chain "$in_cc_ind $in_cc_spec" s0 C in_filt_ind "$in_cc_spec" "compiler"
 prepare_chain "$in_filt_ind $in_filt_spec" s F in_as_ind "$in_filt_spec" "post-filter"

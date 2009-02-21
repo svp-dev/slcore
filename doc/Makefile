@@ -1,13 +1,22 @@
+COMMANDS = cce sgr slc
 
-all: inventory.pdf tests.pdf
+all: acronyms.pdf tests.pdf $(COMMANDS:%=%.html) $(COMMANDS:%=%.ps)
+
+clean:
+	rm -f *.pdf *.ltx *.aux *.out *.aux *.html *.ps
+
+.SUFFIXES: .pdf .ltx .1
 
 %.pdf: %.ltx
 	pdflatex $<
 	pdflatex $<
+	rm -f $(@:%.pdf=%.log) $(@:%.pdf=%.out) $(@:%.pdf=%.aux)
 
 %.ltx: %.txt
-	rst2latex.py --documentoptions=a4paper,landscape $< >$@
+	rst2latex.py $< >$@
 
-clean:
-	rm -f *.pdf *.ltx
+%.ps: %.1
+	groff -T ps -mandoc $< >$@
 
+%.html: %.1
+	groff -T html -mandoc $< >$@

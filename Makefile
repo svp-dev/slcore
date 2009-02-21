@@ -29,6 +29,7 @@ all:
 	@echo "Use --help for more details on each script."
 
 clean:
+	find . -name '*~' -o -name '#*#' | xargs rm -f
 	@echo "Cleaning libraries..."
 	@set -e; \
 	for d in $(LIBDIRS); do \
@@ -39,8 +40,10 @@ clean:
 
 
 doc:
-	cd doc && make
+	help2man -N bin/cce >doc/cce.1
+	help2man -N bin/sgr >doc/sgr.1
 	help2man -N bin/slc >doc/slc.1
+	cd doc && make
 
 test:
 	cd tests && ../test-all
