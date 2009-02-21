@@ -273,7 +273,7 @@ case $slc_complang in
 	slc_cppflags="$slc_ppflags $UTCPPFLAGS"
 	;;
 esac
-slc_ppflags="$slc_ppflags $extra_ppflags"
+slc_ppflags="$slc_ppflags -DSVP_ARCH=$slc_arch -DSVP_DIALECT=$slc_dialect -DSVP_OS=$slc_os $extra_ppflags"
 slc_cflags="$slc_cflags $extra_cflags"
 slc_asflags="$slc_asflags $slc_cflags $ASFLAGS $extra_asflags"
 slc_ldflags="$slc_ldflags $slc_cflags $LDFLAGS $extra_ldflags"
@@ -436,10 +436,17 @@ if test -n "$verbose"; then
 fi
 
 for t in $transforms; do
-  IFS=':' read action target deps <<EOF 
+  IFS=':' read action target indeps <<EOF 
 $t
 EOF
-  deps=${deps/:/ }
+  indeps=${indeps/:/ }
+  deps=
+  for d in $indeps; do
+      case $d in
+	  *.iu) deps="$deps -x cpp-output $d -x none";;
+	  *) deps="$deps $d" ;;
+      esac
+  done
   capturestdout=
   case $action in
       R) tempfiles="$tempfiles $target"; continue ;;
@@ -459,7 +466,12 @@ EOF
 	  ;;
       F)
 	  res=5
-	  cmd="$slc_filter $target $deps"
+	  if test "x$slc_filter" = "xcp"; then
+	      cmd="cat $deps"
+	      capturestdout=1
+	  else
+	      cmd="$slc_filter $target $deps"
+	  fi
 	  ;;
       A)
 	  res=6
@@ -474,22 +486,25 @@ EOF
   inflight=$target
   export SLC_PHASE=$action
   if test -n "$capturestdout"; then
-      if test -n "$verbose"; then echo "$cmd >>$target" >&2; fi
+      if test -n "$verbose"; then echo "$action: $cmd >$target" >&2; fi
       set +e
-      $cmd >>"$target"
+      $cmd >"$target"
       cmdcode=$?
       set -e
   else
-      if test -n "$verbose"; then echo "$cmd" >&2; fi
+      if test -n "$verbose"; then echo "$action: $cmd" >&2; fi
       set +e
       $cmd
       cmdcode=$?
       set -e
   fi
   inflight=
+  if test -n "$verbose"; then echo "=> $cmdcode" >&2; fi
   if test $cmdcode -gt 126; then
+      if test -n "$verbose"; then echo "signal or command not found: exit $cmdcode" >&2; fi
       exit $cmdcode
   elif test $cmdcode -gt 0; then
+      if test -n "$verbose"; then echo "$action failed: exit $res" >&2; fi
       exit $res
   fi
 done
