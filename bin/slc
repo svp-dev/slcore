@@ -294,7 +294,8 @@ slc_ldflags="$slc_ldflags $slc_cflags $LDFLAGS $extra_ldflags"
 ###################################
 
 # m4 -P: prefix M4 builtins with m4_
-m4flags="-P"
+# -E: stop after errors
+m4flags="-E -P"
 
 if test -n "$synclines"; then
   m4flags="$m4flags -s"

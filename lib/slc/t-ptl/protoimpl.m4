@@ -2,9 +2,10 @@
 #  Macro definitions for the muTC-ptl syntax
 # ###############################################
 
+m4_define([[_ut_crcnt]],0)
+
 # Pass transparently thread definitions.
 m4_define([[ut_def]],[[m4_dnl
-m4_define([[_ut_crcnt]],0)m4_dnl
 m4_define([[ut_thparms]],[[m4_shiftn(2,$@)]])m4_dnl
 void [[$1]]m4_ifelse((ut_thparms),(),(void),(ut_thparms))m4_dnl
 ]])

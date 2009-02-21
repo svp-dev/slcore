@@ -2,6 +2,8 @@
 #  Macro definitions for the sequential C syntax
 # ###############################################
 
+m4_define([[_ut_crcnt]],0)
+
 # Thread definitions
 
 m4_define([[ut_shparm]], [[[[$1]] [[$2]]]])
@@ -15,7 +17,6 @@ $0(m4_shift($@))m4_dnl
 ]])
 
 m4_define([[ut_def]],[[m4_dnl
-m4_define([[_ut_crcnt]],0)m4_dnl
 m4_define([[ut_thparms]],[[m4_shiftn(2,$@)]])m4_dnl
 void [[$1]](struct ut_famdata *__fam) { m4_dnl
 struct { m4_dnl 

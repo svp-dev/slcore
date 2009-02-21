@@ -1,4 +1,4 @@
-LIBDIRS = lib/slc/t-ptl \
+LIBDIRS = lib/slc/host-host-ptl/include \
 	  lib/slc/host-host-ptl \
 	  lib/slc/host-host-seqc \
 	  lib/slc/div \
