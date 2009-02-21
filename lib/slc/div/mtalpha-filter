@@ -1,0 +1,91 @@
+#! /bin/bash
+ARG=$1
+
+
+iregs=$(cat <<EOF
+0:l13/rv
+1:l0/idx
+2:l1/ag0
+3:l2/ag1
+4:l3/ag2
+5:l4/ag3
+6:l5/ag4
+7:l6/ag5
+8:l7/as0
+9:g5
+10:g4
+11:g3
+12:g2
+13:g1
+14:g0
+15:l14/fp
+16:s0
+17:d0
+18:s1
+19:d1
+20:s2
+21:d2
+22:l8/as1
+23:l9/as2
+24:l10/sync
+25:l11/brk
+26:l15/ra
+27:l16/pv
+28:l12/ap
+29:l17/gp
+30:l18/sp
+31:zero
+EOF)
+
+pat=""
+for m in $iregs; do
+    p1=$(echo $m|cut -d: -f1)
+    p2=$(echo $m|cut -d: -f2|tr / _)
+    regchar="%"
+    if test "x$ARG" = "x1"; then
+      p2=$(echo $p2|cut -d_ -f1)
+      regchar='$'
+    fi
+    pat="s,\\\$$p1,$regchar$p2,g;$pat"
+done
+if test "x$ARG" = "x1"; then
+   pat="$pat;s/\\\$zero/\$31/g"
+fi
+
+IFS="
+"
+infunc=0
+toren=''
+while read -r line; do
+  if test $infunc = 0; then
+    if expr "$line" : '.*\.globl _x_' >/dev/null \
+    || expr "$line" : '.*\.weak _x_' >/dev/null; then
+       infunc=1
+    fi
+  fi
+  if test $infunc = 1; then
+    printf '# IGNORE: %s\n' "$line"
+    if expr "$line" : '.*\.end _x_' >/dev/null; then
+       infunc=0
+    fi
+  else
+    if test "x$ARG" = "x1" && expr "$line" : '.*# [0-9][0-9]* ' >/dev/null; then
+      false
+    elif expr "$line" : '.*setstep.*, *1[^0-9]' >/dev/null; then false;
+    elif expr "$line" : '.*setstart.*, *0[^0-9]' >/dev/null; then false;
+    elif expr "$line" : '.*setlimit.*, *1[^0-9]' >/dev/null; then false;
+    elif expr "$line" : '.*setblock.*, *0[^0-9]' >/dev/null; then false;
+    elif expr "$line" : '.*# RENAME_END' >/dev/null; then
+      toren=$(echo "$line"|cut -d'#' -f2 |cut -d' ' -f3)
+    elif expr "$line" : '.*\.end' >/dev/null; then
+      if test "x$toren" != "x"; then
+         printf '\t.end %s\n' "$toren"
+         toren=''
+      else
+         printf '%s\n' "$line"
+      fi
+    else
+      printf '%s\n' "$line" |sed -e "$pat"
+    fi
+  fi
+done
