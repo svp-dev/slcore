@@ -7,7 +7,7 @@ clean:
 
 CXXFLAGS=-I../t-ptl
 
-libslos.a: entry.o
+libslos.a: crt.o
 	$(AR) -crus $@ $^
 
 libseqc.a: seqc-main.o
