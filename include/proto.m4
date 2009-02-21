@@ -16,24 +16,24 @@ m4_changecom([[#]])
 #  The following input language is defined:
 # 
 #  - thread definition:
-#      ut_def(name, breaktype, formals...)
+#      sl_def(name, breaktype, formals...)
 #      {
-#           ut_index(ix);
+#           sl_index(ix);
 #           ...
 #      }
-#      ut_enddef
+#      sl_enddef
 # 
 #    where "formals" is a comma-separated list of
-#        ut_shparm(type, name)   // for shared parameters
-#        ut_glparm(type, name)   // for global parameters
+#        sl_shparm(type, name)   // for shared parameters
+#        sl_glparm(type, name)   // for global parameters
 # 
-#    ut_index() may be omitted.
+#    sl_index() may be omitted.
 #  
 #  - thread declaration:
-#      ut_decl(name, breaktype, args...)
+#      sl_decl(name, breaktype, args...)
 # 
 #  - thread family creation:
-#      ut_create(lbl, place, start, limit, step, block, btype,
+#      sl_create(lbl, place, start, limit, step, block, btype,
 #                threxp, args...)
 # 
 #  
@@ -44,39 +44,39 @@ m4_changecom([[#]])
 #      - btype is the type of the break value (void if none)
 #      - threxp is an expression
 #      - args is a comma-separated list of
-#          ut_sharg(type, name, init) // for shared arguments
-#          ut_glarg(type, name, init) // for global arguments
+#          sl_sharg(type, name, init) // for shared arguments
+#          sl_glarg(type, name, init) // for global arguments
 #        the "init" is an initializer, may be omitted
 #
-#    use ut_createb for breakable threads, ut_create
+#    use sl_createb for breakable threads, sl_create
 #    for non-breakable threads.
 # 
 #  - synchronization on termination: 
-#      ut_sync(lbl, exit)
+#      sl_sync(lbl, exit)
 #  
 #    where:
 #      - lbl is an identifier, may be omitted
 #      - exit is an lvalue, may be omitted.
 # 
 #  - accessing thread arguments in the parent thread:
-#      ut_geta(name)
-#      ut_seta(name, value)
+#      sl_geta(name)
+#      sl_seta(name, value)
 # 
 #  - accessing thread parameters:
-#      ut_getp(name)
-#      ut_setp(name, value)
+#      sl_getp(name)
+#      sl_setp(name, value)
 #
 #  - accessing the break value:
-#      ut_getbr(name)
+#      sl_getbr(name)
 #
 #  - accessing the family identifier:
-#      ut_getfid(lbl)
+#      sl_getfid(lbl)
 #
 #  - breaking from a family:
-#      ut_break(value)
+#      sl_break(value)
 #
 #  - killing a family:
-#      ut_kill(fid)
+#      sl_kill(fid)
 #
 # ###########################
 # Common definitions
@@ -92,10 +92,11 @@ m4_ifelse([[$1]],0,
 [[$0(m4_eval([[$1]]-1), m4_shift(m4_shift($@)))]])m4_dnl
 ]])
 
-m4_define([[ut_breakable]],[[m4_ifelse([[$1]],void,0,m4_ifelse([[$1]],,0,1))]])
+m4_define([[sl_breakable]],[[m4_ifelse([[$1]],void,0,m4_ifelse([[$1]],,0,1))]])
 
-m4_define([[ut_proccall]],[[do { ut_create(,,,,,,,$@); ut_sync(); } while(0)]])
+m4_define([[sl_proccall]],[[do { sl_create(,,,,,,,$@); sl_sync(); } while(0)]])
 
+m4_define([[sl_include]], m4_defn([[m4_include]]))
 m4_include([[protoimpl.m4]])
 
 m4_changecom([[m4_comment]])

@@ -7,11 +7,11 @@
 //
 #include "../t-seqc/utcimpl.h"
 
-extern void t_main(struct ut_famdata*);
+extern void t_main(struct sl_famdata*);
 
 int main(void) {
   struct { } args;
-  struct ut_famdata root;
+  struct sl_famdata root;
   root.ix = root.be = 0;
   root.li = root.st = 1;
   root.f = t_main;

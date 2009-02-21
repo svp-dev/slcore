@@ -1,54 +1,54 @@
 #include <libutc.h>
-m4_include(svp/iomacros.slh)
+sl_include(svp/iomacros.slh)
 
 #define number unsigned long long
 
-ut_def(fibo_compute, void, 
-       ut_shparm(number, prev), ut_shparm(number, prev2), ut_glparm(number*, fibo))
+sl_def(fibo_compute, void, 
+       sl_shparm(number, prev), sl_shparm(number, prev2), sl_glparm(number*, fibo))
 {
-  ut_index(i);
+  sl_index(i);
 
-  number n = ut_getp(prev) + ut_getp(prev2);
-  ut_setp(prev2, ut_getp(prev));
-  ut_setp(prev, n);
-  ut_getp(fibo)[i] = n;
+  number n = sl_getp(prev) + sl_getp(prev2);
+  sl_setp(prev2, sl_getp(prev));
+  sl_setp(prev, n);
+  sl_getp(fibo)[i] = n;
 }
-ut_enddef
+sl_enddef
 
-ut_def(fibo_print, void,
-       ut_shparm(number, guard), ut_glparm(number*, fibo))
+sl_def(fibo_print, void,
+       sl_shparm(number, guard), sl_glparm(number*, fibo))
 {
-  ut_index(i);
+  sl_index(i);
 
-  number p1 = ut_getp(fibo)[i - 2];
-  number p2 = ut_getp(fibo)[i - 1];
-  number p3 = ut_getp(fibo)[i];
+  number p1 = sl_getp(fibo)[i - 2];
+  number p2 = sl_getp(fibo)[i - 1];
+  number p3 = sl_getp(fibo)[i];
 
-  number n = ut_getp(guard);
+  number n = sl_getp(guard);
   printf4("The %uth Fibonacci number is %u + %u = %u\n", (unsigned)i, p1, p2, p3);
-  ut_setp(guard, n);
+  sl_setp(guard, n);
 }
-ut_enddef
+sl_enddef
 
 #define N 45
 number fibonums[N];
 
-ut_def(t_main, void)
+sl_def(t_main, void)
 {
   // first, compute the numbers.
   fibonums[0] = fibonums[1] = 1;
-  ut_create(fid,,2,N,,,, 
+  sl_create(fid,,2,N,,,, 
 	    fibo_compute, 
-	    ut_sharg(number, prev, 1), 
-	    ut_sharg(number, prev2, 1),
-	    ut_glarg(number*, fibo, fibonums));
-  ut_sync(fid);
+	    sl_sharg(number, prev, 1), 
+	    sl_sharg(number, prev2, 1),
+	    sl_glarg(number*, fibo, fibonums));
+  sl_sync(fid);
 
   // then, print them.
-  ut_create(,,2,N,,,,
+  sl_create(,,2,N,,,,
 	    fibo_print, 
-	    ut_sharg(number, guard, 0), ut_glarg(number*, t, fibonums));
-  ut_sync();
+	    sl_sharg(number, guard, 0), sl_glarg(number*, t, fibonums));
+  sl_sync();
   
 }
-ut_enddef
+sl_enddef

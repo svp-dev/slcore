@@ -1,22 +1,22 @@
 #ifndef SVP_SUGAR_SLH
 #define SVP_SUGAR_SLH
 
-m4_include(svp/io.slh)
+sl_include(svp/io.slh)
 
-#define putc(C) ({ ut_proccall(svp_io_putc, ut_glarg(char, c, (C))); })
+#define putc(C) ({ sl_proccall(svp_io_putc, sl_glarg(char, c, (C))); })
 
-#define puts(S) ({ ut_proccall(svp_io_puts, ut_glarg(const char*, s, (S))); })
+#define puts(S) ({ sl_proccall(svp_io_puts, sl_glarg(const char*, s, (S))); })
 
 #define putf(F, Prec) ({						\
-      ut_proccall(svp_io_putf, ut_glarg(double, d, (F)), ut_glarg(unsigned, gprec, (Prec)), ut_glarg(unsigned, gbase, 10)); \
+      sl_proccall(svp_io_putf, sl_glarg(double, d, (F)), sl_glarg(unsigned, gprec, (Prec)), sl_glarg(unsigned, gbase, 10)); \
     })
 
 #define putn(N) ({ \
-      ut_proccall(svp_io_putn, ut_glarg(long long, n, (N)), ut_glarg(unsigned, gbase, 10)); \
+      sl_proccall(svp_io_putn, sl_glarg(long long, n, (N)), sl_glarg(unsigned, gbase, 10)); \
     })
 
 #define putu(N) ({ \
-      ut_proccall(svp_io_putun, ut_glarg(unsigned long long, n, (N)), ut_glarg(unsigned, gbase, 10)); \
+      sl_proccall(svp_io_putun, sl_glarg(unsigned long long, n, (N)), sl_glarg(unsigned, gbase, 10)); \
     })
 
 #define printf1(Fmt, X) ({						\
@@ -25,7 +25,7 @@ m4_include(svp/io.slh)
       } __pf_args = {							\
 	{ (X) }								\
       };								\
-      ut_proccall(svp_io_printf, ut_glarg(const char*, gfmt, (Fmt)), ut_glarg(svp_arg_slot*, gdata, (svp_arg_slot*)(void*)&__pf_args)); \
+      sl_proccall(svp_io_printf, sl_glarg(const char*, gfmt, (Fmt)), sl_glarg(svp_arg_slot*, gdata, (svp_arg_slot*)(void*)&__pf_args)); \
     })
 
 #define printf2(Fmt, X, Y) ({						\
@@ -36,7 +36,7 @@ m4_include(svp/io.slh)
 	{ (X) },							\
 	{ (Y) }								\
       };								\
-      ut_proccall(svp_io_printf, ut_glarg(const char*, gfmt, (Fmt)), ut_glarg(svp_arg_slot*, gdata, (svp_arg_slot*)(void*)&__pf_args)); \
+      sl_proccall(svp_io_printf, sl_glarg(const char*, gfmt, (Fmt)), sl_glarg(svp_arg_slot*, gdata, (svp_arg_slot*)(void*)&__pf_args)); \
     })
 
 #define printf3(Fmt, X, Y, Z) ({						\
@@ -49,7 +49,7 @@ m4_include(svp/io.slh)
 	{ (Y) },							\
 	{ (Z) }								\
       };								\
-      ut_proccall(svp_io_printf, ut_glarg(const char*, gfmt, (Fmt)), ut_glarg(svp_arg_slot*, gdata, (svp_arg_slot*)(void*)&__pf_args)); \
+      sl_proccall(svp_io_printf, sl_glarg(const char*, gfmt, (Fmt)), sl_glarg(svp_arg_slot*, gdata, (svp_arg_slot*)(void*)&__pf_args)); \
     })
 
 #define printf4(Fmt, W, X, Y, Z) ({					\
@@ -64,7 +64,7 @@ m4_include(svp/io.slh)
 	{ (Y) },							\
 	{ (Z) }								\
       };								\
-      ut_proccall(svp_io_printf, ut_glarg(const char*, gfmt, (Fmt)), ut_glarg(svp_arg_slot*, gdata, (svp_arg_slot*)(void*)&__pf_args)); \
+      sl_proccall(svp_io_printf, sl_glarg(const char*, gfmt, (Fmt)), sl_glarg(svp_arg_slot*, gdata, (svp_arg_slot*)(void*)&__pf_args)); \
     })
 
 #endif

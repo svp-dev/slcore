@@ -1,9 +1,9 @@
 #include <libutc.h>
-m4_include(svp/iomacros.slh)
+sl_include(svp/iomacros.slh)
 
-ut_def(t_main, void)
+sl_def(t_main, void)
 {
   puts("hello, world!\n");
 }
-ut_enddef
+sl_enddef
 
