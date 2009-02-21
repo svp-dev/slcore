@@ -107,9 +107,9 @@ for arg in "$@"; do
       -I*|-D*|-U*)  extra_ppflags="$extra_ppflags $arg" ;;
       -Wa,*)         extra_asflags="$extra_asflags $arg" ;;
 
-      -x)       echo "$0: -x not supported yet" >&2; exit 1;; 
+      -x)       die "-x not supported yet" ;;
 
-      -mutc*)   echo "$0: -mutc is deprecated, used -b instead" >&2; exit 1;;
+      -mutc*)   die "-mutc is deprecated, used -b instead" ;;
 
       *)	extra_cflags="$extra_cflags $arg";;
   esac
@@ -318,14 +318,13 @@ case $slc_complang in
 	pp_ext=utc
 	;;
     *)
-	echo "$0: unrecognized mode $mode" >&2; exit 1;;
+	die "unrecognized mode $mode" ;;
 esac
 
 # Create temporary directory if necessary
 if test -n "$tmpdir"; then
     if ! test -d "$tmpdir" -a -w "$tmpdir"; then
-	echo "$0: $tmpdir: cannot write to directory" >&2
-	exit 1
+	die "$tmpdir: cannot write to directory"
     fi
 else
     tmpdir=$(mktemp -d -t slc)
@@ -476,14 +475,24 @@ EOF
   export SLC_PHASE=$action
   if test -n "$capturestdout"; then
       if test -n "$verbose"; then echo "$cmd >>$target" >&2; fi
-      $cmd >>"$target" || exit $res
+      set +e
+      $cmd >>"$target"
+      cmdcode=$?
+      set -e
   else
       if test -n "$verbose"; then echo "$cmd" >&2; fi
-      $cmd || exit $res
+      set +e
+      $cmd
+      cmdcode=$?
+      set -e
   fi
   inflight=
+  if test $cmdcode -gt 126; then
+      exit $cmdcode
+  elif test $cmdcode -gt 0; then
+      exit $res
+  fi
 done
-
 
 test -n "$verbose" && echo "---- $basename: done. ----" >&2
 exit 0
