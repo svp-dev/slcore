@@ -18,9 +18,8 @@ copyright="Copyright (C) 2009 the CSA group - The SL project."
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA     
 # 02110-1301, USA.    
 set -e
-root=$(cd $(dirname "$0") && pwd)
-basename=$(basename "$0")
-libdir=$(cd "$root"/../lib && pwd)
+root=@bindir@
+libdir=@pkglibdir@
 timestamp=$(echo '$Date$'|cut -d' ' -f2)
 version=1
 
@@ -44,11 +43,11 @@ Examples:
 
   # show runner string stored in \`a.out':
 
-  $basename -x a.out 
+  sgr -x a.out 
 
   # run fibo.x, possibly using the MT simulator:
 
-  $basename fibo.x 
+  sgr fibo.x 
 
 Report bugs and patches to the CSA group.
 EOF
@@ -59,7 +58,7 @@ do_version() {
   rev='$Rev$'
   rev=$(echo "$rev"|cut -d' ' -f2)
   cat <<EOF
-$basename $version.$rev
+sgr $version.$rev
 
 $copyright
 This is free software; see the source for copying conditions.  There is NO
@@ -134,10 +133,10 @@ if test -z "$runner"; then
 fi
 
 # check it
-if ! test -x "$libdir/slc/r-$runner"; then
+if ! test -x "$libdir/r-$runner"; then
     echo "$0: unknown runner: $runner" >&2
     exit 1
 fi
 
-exec "$libdir/slc/r-$runner" "$program" "$@"
+exec "$libdir/r-$runner" "$program" "$@"
 

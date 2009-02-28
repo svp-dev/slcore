@@ -18,10 +18,9 @@ copyright="Copyright (C) 2009 the CSA group - The SL project."
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA     
 # 02110-1301, USA.    
 set -e
-root=$(cd $(dirname "$0") && pwd)
+cce_helper=@cce_helper@
 basename=$(basename "$0")
-incdir=$(cd "$root/../include" && pwd)
-libdir=$(cd "$root/../lib" && pwd)
+incdir=@pkgdatadir@/include
 
 # Interface version number
 version=2
@@ -329,7 +328,7 @@ EOF
 fi
 
 # Here check the configuration
-eval $("$root"/cce -s "$impl")
+eval $("$cce_helper" -s "$impl")
 
 # If we were requested to test the configuration, do it now
 if test -n "$check"; then
@@ -558,7 +557,7 @@ EOF
       R) tempfiles="$tempfiles $target"; continue ;;
       T) 
 	  res=2
-	  cmd="$M4 $m4flags $incdir/proto.m4 $deps"
+	  cmd="$M4 $m4flags $incdir/slc.m4 $deps"
 	  if ! test "$slc_mode" = "trans" -a -z "$outfile"; then capturestdout=1; fi
 	  ;;
       P)
