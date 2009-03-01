@@ -44,7 +44,6 @@ AC_PROG_RANLIB
 
 AC_CONFIG_FILES([
 	Makefile
-	include/Makefile
 	bin/Makefile
 	lib/Makefile
 	doc/Makefile

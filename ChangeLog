@@ -1,3 +1,7 @@
+2009-03-02  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
+	* configure.ac: Remove spurious reference to "include/Makefile".
+
 2009-03-01  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
 	* ChangeLog: initialize.
