@@ -1,6 +1,6 @@
 dist_man1_MANS = cce.1 slc.1 sgr.1
-dist_pdf_DATA = acronyms.pdf tests.pdf
-EXTRA_DIST = acronyms.txt tests.txt
+dist_pdf_DATA = acronyms.pdf README.pdf
+dist_doc_DATA = acronyms.txt README.txt
 
 SUFFIXES = .txt .tex .pdf
 TEXI2PDF_FLAGS = --tidy --batch --build-dir=tmp.t2d

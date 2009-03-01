@@ -10,12 +10,14 @@ edit_base = $(SED) \
 
 edit_src = $(edit_base) \
 	       -e 's|@pkgdatadir[@]|$(abs_top_srcdir)|g' \
-	       -e 's|@pkglibdir[@]|$(abs_top_srcdir)/lib|g' \
+	       -e 's|@pkglibdir[@]|$(abs_top_builddir)/lib|g' \
+	       -e 's|@srclibdir[@]|$(abs_top_srcdir)/lib|g' \
 	       -e 's|@cce_helper[@]|$(abs_builddir)/cce.local|g' 
 
 edit_inst = $(edit_base) \
 	       -e 's|@pkgdatadir[@]|$(pkgdatadir)|g' \
 	       -e 's|@pkglibdir[@]|$(pkglibdir)|g' \
+	       -e 's|@srclibdir[@]|$(pkglibdir)|g' \
 	       -e 's|@cce_helper[@]|$(bindir)/cce|g'
 
 cce sgr slc: Makefile

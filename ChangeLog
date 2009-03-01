@@ -1,0 +1,31 @@
+2009-03-01  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
+	* ChangeLog: initialize.
+
+	* configure.ac: Check for CC, CXX, RANLIB, perl.
+
+	* doc/README.txt: Add.
+	* doc/Makefile.am,
+	* Makefile.am: Change accordingly.
+
+	* include/Makefile.am: move contents to...
+	* Makefile.am: here, so that the include/ base is kept during
+	install.
+
+	* lib/Makefile.am: Add.
+	* configure.ac: Change accordingly.
+	* lib/host-host-seqc/Makefile,
+	* lib/host-host-ptl/Makefile,
+	* lib/host-host-ptl/include/Makefile: Remove, as is now obsolete.
+
+	* lib/host-host-ptl/crt.c: Rename to...
+	* lib/host-host-ptl/slcrt.c: here.
+
+	* lib/host-host-seqc/crt.c: Rename to...
+	* lib/host-host-seqc/slcrt.c: here.
+
+	* demo/Makefile.am: Distribute more demos. Compile each demo for
+	multiple targets.
+
+	* bin/cce.in: Allow for includes spread over separate source dir
+	and build dir.

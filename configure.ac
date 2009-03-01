@@ -11,7 +11,9 @@ AC_CHECK_PROGS(m4_toupper([$1]), [m4_default([$3], [$1])],
                [$am_aux_dir/missing $1])
 ])
 
-
+SLC_PROGS([perl],
+	  [Perl interpreter],
+	  [perl])
 SLC_PROGS([rst2latex],
           [reStructuredText to LaTeX converter],
           [rst2latex rst2latex.py])
@@ -36,11 +38,15 @@ AC_SUBST([SBASH], [$ac_cv_path_SBASH])
 
 AC_PROG_EGREP
 AC_PROG_SED
+AC_PROG_CC
+AC_PROG_CXX
+AC_PROG_RANLIB
 
 AC_CONFIG_FILES([
 	Makefile
 	include/Makefile
 	bin/Makefile
+	lib/Makefile
 	doc/Makefile
 	demo/Makefile
 ])
