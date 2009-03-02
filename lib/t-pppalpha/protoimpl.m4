@@ -1,5 +1,5 @@
 # ###############################################
-#  Macro definitions for the sequential C syntax
+#  Macro definitions for the PPP-Alpha compiler
 # ###############################################
 
 m4_define([[_sl_crcnt]],0)
@@ -11,27 +11,28 @@ m4_define([[sl_glparm]], [[[[$1]] [[$2]]]])
 
 m4_define([[sl_declparms]], [[m4_dnl
 m4_ifelse([[$1]],,,[[m4_dnl
-[[$1]]; m4_dnl
+ SHARG[[]]__sl_argcnt[[]]([[$1]]); m4_dnl
 $0(m4_shift($@))m4_dnl
 ]])m4_dnl
 ]])
 
 m4_define([[sl_def]],[[m4_dnl
+m4_define([[__sl_funcname]],[[$1]])m4_dnl
+BEGIN_FUNC([[$1]])m4_dnl
+m4_define([[__sl_argcnt]],0)m4_dnl
 m4_define([[sl_thparms]],[[m4_shiftn(2,$@)]])m4_dnl
-void [[$1]](struct sl_famdata *__fam) { m4_dnl
-struct { m4_dnl 
-m4_ifelse(sl_breakable([[$2]]),1,[[[[$2]] __breakv; ]],)m4_dnl
 sl_declparms(sl_thparms)m4_dnl
-} *__args = __fam->a; struct sl_famdata __fid; m4_dnl
 ]])
 
-m4_define([[sl_enddef]],[[}]])
+m4_define([[sl_enddef]],[[
+END_FUNC(__sl_funcname)
+]])
 
-m4_define([[sl_decl]], [[void [[$1]](struct sl_famdata *__fam)]])
+m4_define([[sl_decl]], [[void [[$1]](void)]])
 
-m4_define([[sl_index]], [[const int [[$1]] = (__fam->ix)]])
-m4_define([[sl_getp]],[[(__args->[[$1]])]])
-m4_define([[sl_setp]],[[(__args->[[$1]]) = [[$2]]]])
+m4_define([[sl_index]], [[INDEX([[$1]])]])
+m4_define([[sl_getp]],[[GETSH([[$1]])]])
+m4_define([[sl_setp]],[[SETSH([[$1]], [[$2]])]])
 
 
 m4_define([[sl_declargs]],[[m4_dnl
@@ -103,28 +104,26 @@ m4_ifelse([[$2]],,,[[$2 = __fid.ex;]])m4_dnl
 
 # Pass transparently all references to argument/parameter
 # names.
-m4_define([[sl_geta]],[[(*__a_$1)]])
-m4_define([[sl_seta]],[[(*__a_$1) = $2]])
+m4_define([[sl_geta]],[[[[$1]]]])
+m4_define([[sl_seta]],[[[[$2]] = [[$1]]]])
 
 # Pass transparently break and kill
 m4_define([[sl_break]],[[m4_dnl
-do { __args->__breakv = ([[$1]]); __fam->ex = SVP_EBROKEN; return; } while(0)m4_dnl
+m4_ifelse(__sl_breakt,[[int]],
+[[__ppp_break([[$1]])]],
+m4_ifelse(__sl_breakt,[[float]]
+[[__ppp_breakf([[$1]])]],
+[[#error cannot use break here
+]]))m4_dnl
 ]])
 
-m4_define([[sl_kill]],[[m4_dnl
-  do {m4_dnl
-    struct sl_famdata *__p;m4_dnl					
-    for (__p = ([[$1]]); __p; __p = __p->ch)m4_dnl
-      __p->ex = SVP_EKILLED;m4_dnl
-    if (__fam->ex == SVP_EKILLED) return;m4_dnl
-  } while(0)m4_dnl
-]])
+m4_define([[sl_kill]],[[__ppp_kill([[$1]])]])
 
 
 # Pass transparently sl_getfid
 m4_define([[sl_getfid]],[[$1]])
 
 # Pass transparently sl_getbr
-m4_define([[sl_getbr]],(*[[$1]]_brk))
+m4_define([[sl_getbr]],[[$1]]_brk)
 
 # ## End macros for new muTC syntax ###

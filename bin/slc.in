@@ -359,10 +359,8 @@ fi
 # Command line additions
 ###################################
 # Include directories
-includes="-I$slc_trans -I$incdir"
-
-slc_ppflags="$slc_ppflags $includes $extra_inc"
-slc_tflags="$slc_tflags $includes $extra_inc"
+slc_ppflags="$slc_ppflags $extra_inc"
+slc_tflags="$slc_tflags $extra_inc"
 case $slc_complang in
     cpp) 
 	slc_cflags="$slc_cflags $CXXFLAGS" 
@@ -387,9 +385,8 @@ slc_ldflags="$slc_ldflags $slc_cflags $LDFLAGS $extra_ldflags"
 # Settings special for M4
 ###################################
 
-# m4 -P: prefix M4 builtins with m4_
 # -E: stop after errors
-m4flags="-E -P"
+m4flags="-E"
 
 if test -n "$synclines"; then
   m4flags="$m4flags -s"
@@ -557,7 +554,7 @@ EOF
       R) tempfiles="$tempfiles $target"; continue ;;
       T) 
 	  res=2
-	  cmd="$M4 $m4flags $incdir/slc.m4 $deps"
+	  cmd="$M4 $m4flags $deps"
 	  if ! test "$slc_mode" = "trans" -a -z "$outfile"; then capturestdout=1; fi
 	  ;;
       P)

@@ -1,5 +1,40 @@
 2009-03-02  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	Start using m4sugar.
+	
+	* include/m4sugar_transform.sed: Rename dnl to m4_dnl. Remove
+	dependency on m4sugar's version.m4.
+
+	* bin/slc.in: Make "cce" in charge of loading the m4 files.
+	* bin/cce.in: Modify accordingly.
+	
+	* include/slc.m4: Modify to use m4sugar; initialize diversions
+	properly. Change comment style to C++ (//). Load
+	implementation-specific macros from "slimpl.m4" instead of
+	"protoimpl.m4".
+
+	* lib/t-seqc/protoimpl.m4: Rename to...
+	* lib/t-seqc/slimpl.m4: here.
+
+	* lib/t-ptl/protoimpl.m4: Rename to...
+	* lib/t-ptl/slimpl.m4: here.
+
+	* lib/t-utc/protoimpl.m4: Rename to...
+	* lib/t-utc/slimpl.m4: here.
+
+	* lib/t-utc0/protoimpl.m4: Rename to...
+	* lib/t-utc0/slimpl.m4: here.
+
+	* lib/Makefile.am: Modify accordingly.
+
+	* lib/t-seqc/slimpl.m4,
+	* lib/t-ptl/slimpl.m4,
+	* lib/t-utc/slimpl.m4,	
+	* lib/t-utc0/slimpl.m4: Start using m4sugar: use m4_if and
+	m4_bregexp instead of m4_ifelse and m4_regexp.
+
+2009-03-02  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	* doc/lang.txt: Add.
 	
 	* doc/Makefile.am: Update accordingly. Set MAINTAINERCLEANFILES.

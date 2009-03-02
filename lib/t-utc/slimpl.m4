@@ -5,7 +5,7 @@
 # Pass transparently thread definitions.
 m4_define([[sl_def]],[[m4_dnl
 m4_define([[sl_thparms]],[[m4_shiftn(2,$@)]])m4_dnl
-thread [[$2]] [[$1]]m4_ifelse((sl_thparms),(),(void),(sl_thparms))m4_dnl
+thread [[$2]] [[$1]]m4_if((sl_thparms),(),(void),(sl_thparms))m4_dnl
 ]])
 
 # No special action at the end of a definition
@@ -24,7 +24,7 @@ m4_define([[sl_index]], [[index [[$1]]]])
 # Pass transparently the create statement; auto-generate
 # break variable names.
 m4_define([[sl_create]], [[m4_dnl
-m4_define([[_sl_brk]],m4_ifelse(sl_breakable([[$7]]),1,[[[[$1]]_brk]],))m4_dnl
+m4_define([[_sl_brk]],m4_if(sl_breakable([[$7]]),1,[[[[$1]]_brk]],))m4_dnl
 create([[$1]];[[$2]];[[$3]];[[$4]];[[$5]];[[$6]];_sl_brk)m4_dnl
  [[$8]](m4_shiftn(8,$@)) m4_dnl
 ]])
@@ -32,13 +32,13 @@ create([[$1]];[[$2]];[[$3]];[[$4]];[[$5]];[[$6]];_sl_brk)m4_dnl
 
 # Pass transparently shared and global argument declarations.
 m4_define([[sl_sharg]],[[m4_dnl
-[[$2]]m4_ifelse([[$3]],,,[[ = $3]]) m4_dnl
+[[$2]]m4_if([[$3]],,,[[ = $3]]) m4_dnl
 ]])
 m4_define([[sl_glarg]],m4_defn([[sl_sharg]]))
 
 # Pass transparently the sync construct.
 m4_define([[sl_sync]],[[m4_dnl
-m4_ifelse([[$2]],,,[[$2 = ]])sync([[$1]])m4_dnl
+m4_if([[$2]],,,[[$2 = ]])sync([[$1]])m4_dnl
 ]])
 
 # Pass transparently all references to argument/parameter

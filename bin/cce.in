@@ -19,6 +19,8 @@ copyright="Copyright (C) 2009 the CSA group - The SL project."
 # 02110-1301, USA.    
 set -e
 root=@bindir@
+srcincdir=@srcincdir@
+incdir=@incdir@
 pkgdatadir=@pkgdatadir@
 srcdatadir=@srcdatadir@
 pkglibdir=@pkglibdir@
@@ -177,6 +179,13 @@ case $slc_dialect-$slc_arch in
     ppp-*)     slc_trans=ppp$basearch ;;
 esac
 slc_trans=$srcdatadir/t-$slc_trans
+if test -r "$srcincdir/slc_m4sugar.m4"; then
+  slc_tflags="$slc_tflags $srcincdir/slc_m4sugar.m4"
+else
+  slc_tflags="$slc_tflags $incdir/slc_m4sugar.m4"
+fi
+slc_tflags="$slc_tflags $srcincdir/slc.m4 -I$slc_trans -I$incdir -I$srcincdir"
+slc_ppflags="$slc_ppflags -I$incdir -I$srcincdir"
 
 # Compiler selection
 case $slc_dialect-$slc_arch in

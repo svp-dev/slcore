@@ -10,10 +10,10 @@ nobase_dist_pkglib_SCRIPTS = \
 	r-mtalpha-sim
 
 nobase_dist_pkgdata_DATA = \
-	t-seqc/protoimpl.m4 \
-	t-ptl/protoimpl.m4 \
-	t-utc/protoimpl.m4 \
-	t-utc0/protoimpl.m4 \
+	t-seqc/slimpl.m4 \
+	t-ptl/slimpl.m4 \
+	t-utc/slimpl.m4 \
+	t-utc0/slimpl.m4 \
 	host-host-seqc/include/sl_support.h \
 	host-host-seqc/include/svp_os.h \
 	host-host-ptl/include/ptl_create.h \
