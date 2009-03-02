@@ -7,6 +7,8 @@
 program=$1
 shift
 
+b=$(basename "$program")
 d=$(dirname "$program")
+d=$(cd "$d" && pwd)
 
-exec "$d/$program" "$@"
+exec "$d/$b" "$@"

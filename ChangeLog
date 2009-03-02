@@ -1,5 +1,24 @@
 2009-03-02  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	* lib/Makefile.am: Distribute t-utc, t-utc0,
+	r-mtalpha-sim. Reorganize targets to separate data
+	stuff (pkgdatadir) from libraries and objects (libdir).
+
+	* lib/host-host-ptl/slrt.c,
+	* lib/host-host-seqc/slrt.c: Prevent compiler from optimizing away
+	__tag__.
+
+	* bin/sgr.in: Kill $root (was unused). Use Bash explicitly to run
+	the runner script.
+
+	* lib/r-host: Fix handling of relative paths. 
+
+	* bin/cce.in: Fix splitting of build dir and source dir (again).
+
+	* bin/Makefile.am: Propagate more directory variables to scripts.
+	
+2009-03-02  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	* configure.ac: Remove spurious reference to "include/Makefile".
 
 2009-03-01  Raphael 'kena' Poss  <r.c.poss@uva.nl>

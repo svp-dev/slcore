@@ -1,4 +1,4 @@
-#! /bin/sh
+#! @SBASH@
 # $Id$
 #
 copyright="Copyright (C) 2009 the CSA group - The SL project."
@@ -18,8 +18,7 @@ copyright="Copyright (C) 2009 the CSA group - The SL project."
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA     
 # 02110-1301, USA.    
 set -e
-root=@bindir@
-libdir=@pkglibdir@
+libdir=@srclibdir@
 timestamp=$(echo '$Date$'|cut -d' ' -f2)
 version=1
 
@@ -133,10 +132,10 @@ if test -z "$runner"; then
 fi
 
 # check it
-if ! test -x "$libdir/r-$runner"; then
+if ! test -r "$libdir/r-$runner"; then
     echo "$0: unknown runner: $runner" >&2
     exit 1
 fi
 
-exec "$libdir/r-$runner" "$program" "$@"
+exec @SBASH@ "$libdir/r-$runner" "$program" "$@"
 

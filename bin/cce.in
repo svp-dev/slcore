@@ -19,7 +19,8 @@ copyright="Copyright (C) 2009 the CSA group - The SL project."
 # 02110-1301, USA.    
 set -e
 root=@bindir@
-srclibdir=@srclibdir@
+pkgdatadir=@pkgdatadir@
+srcdatadir=@srcdatadir@
 pkglibdir=@pkglibdir@
 timestamp=$(echo '$Date$'|cut -d' ' -f2)
 version=1
@@ -175,7 +176,7 @@ case $slc_dialect-$slc_arch in
     utc*|seqc*|ptl*) slc_trans=$slc_dialect	;;
     ppp-*)     slc_trans=ppp$basearch ;;
 esac
-slc_trans=$srclibdir/t-$slc_trans
+slc_trans=$srcdatadir/t-$slc_trans
 
 # Compiler selection
 case $slc_dialect-$slc_arch in
@@ -237,10 +238,11 @@ esac
 case $slc_os in
     x) ;;
     *) 
-	osdir1=$srclibdir/$slc_arch-$slc_os
-	osdir2=$pkglibdir/$slc_arch-$slc_os
-	slc_ppflags="$slc_ppflags -I$osdir1/include -I$osdir2/include"
-	slc_ldflags="$slc_ldflags -L$osdir2 -lslos $osdir2/slrt.o"
+	incdir1=$pkgdatadir/$slc_arch-$slc_os/include
+	incdir2=$srcdatadir/$slc_arch-$slc_os/include
+	osdir=$pkglibdir/$slc_arch-$slc_os
+	slc_ppflags="$slc_ppflags -I$incdir1 -I$incdir2"
+	slc_ldflags="$slc_ldflags -L$osdir -lslos $osdir/slrt.o"
 	;;
 esac
 

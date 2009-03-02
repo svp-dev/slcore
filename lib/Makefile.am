@@ -1,14 +1,19 @@
 EXTRA_DIST = \
-	r-host \
-	t-seqc/protoimpl.m4 \
 	host-host-seqc/slrt.c \
-	t-ptl/protoimpl.m4 \
 	host-host-ptl/slrt.c \
 	host-host-ptl/include/create.tpl \
 	host-host-ptl/include/template.pl \
 	svplib/io.sl
 
+nobase_dist_pkglib_SCRIPTS = \
+	r-host \
+	r-mtalpha-sim
+
 nobase_dist_pkgdata_DATA = \
+	t-seqc/protoimpl.m4 \
+	t-ptl/protoimpl.m4 \
+	t-utc/protoimpl.m4 \
+	t-utc0/protoimpl.m4 \
 	host-host-seqc/include/sl_support.h \
 	host-host-seqc/include/svp_os.h \
 	host-host-ptl/include/ptl_create.h \
@@ -20,11 +25,11 @@ nobase_dist_pkgdata_DATA = \
 	host-host-ptl/include/sl_support.h \
 	host-host-ptl/include/svp_os.h
 
-nobase_pkgdata_DATA = \
+nobase_pkglib_DATA = \
 	host-host-seqc/slrt.o \
 	host-host-ptl/slrt.o
 
-nobase_pkgdata_LIBRARIES = \
+nobase_pkglib_LIBRARIES = \
 	host-host-ptl/libslos.a \
 	host-host-seqc/libslos.a
 
