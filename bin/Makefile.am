@@ -9,6 +9,7 @@ edit_base = $(SED) \
 	       -e 's|@SBASH[@]|$(SBASH)|g'
 
 edit_src = $(edit_base) \
+	       -e 's|@incdir[@]|$(abs_top_srcdir)/include|g' \
 	       -e 's|@srcdatadir[@]|$(abs_top_srcdir)/lib|g' \
 	       -e 's|@pkgdatadir[@]|$(abs_top_builddir)/lib|g' \
 	       -e 's|@srclibdir[@]|$(abs_top_srcdir)/lib|g' \
@@ -16,6 +17,7 @@ edit_src = $(edit_base) \
 	       -e 's|@cce_helper[@]|$(abs_builddir)/cce.local|g' 
 
 edit_inst = $(edit_base) \
+	       -e 's|@incdir[@]|$(pkgdatadir)/include|g' \
 	       -e 's|@srcdatadir[@]|$(pkgdatadir)|g' \
 	       -e 's|@pkgdatadir[@]|$(pkgdatadir)|g' \
 	       -e 's|@srclibdir[@]|$(pkglibdir)|g' \

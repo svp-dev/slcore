@@ -20,7 +20,7 @@ copyright="Copyright (C) 2009 the CSA group - The SL project."
 set -e
 cce_helper=@cce_helper@
 basename=$(basename "$0")
-incdir=@pkgdatadir@/include
+incdir=@incdir@
 
 # Interface version number
 version=2

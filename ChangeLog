@@ -1,5 +1,11 @@
 2009-03-02  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	* bin/Makefile.am (edit_inst, edit_src): Substitute @incdir@.
+
+	* bin/slc.in: Use @incdir@.
+	
+2009-03-02  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	* lib/Makefile.am: Distribute t-utc, t-utc0,
 	r-mtalpha-sim. Reorganize targets to separate data
 	stuff (pkgdatadir) from libraries and objects (libdir).
