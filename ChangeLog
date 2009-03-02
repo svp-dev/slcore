@@ -1,5 +1,11 @@
 2009-03-02  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	* doc/lang.txt: Add.
+	
+	* doc/Makefile.am: Update accordingly. Set MAINTAINERCLEANFILES.
+
+2009-03-02  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	* bin/Makefile.am (edit_inst, edit_src): Substitute @incdir@.
 
 	* bin/slc.in: Use @incdir@.
