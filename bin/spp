@@ -1,0 +1,585 @@
+#! /usr/bin/env python
+
+import pprint
+import sys
+
+def die(msg):
+   print >>sys.stderr, msg
+   sys.exit(1)
+
+
+class pppalpha(object):
+
+   legacy_fregs = {
+      # Scratch registers
+      'ft0' : 10,
+      'ft1' : 11,
+      'ft2' : 12,
+      'ft3' : 13,
+      'ft4' : 14,
+      'ft5' : 15,
+      'ft6' : 22,
+      'ft7' : 23,
+      'ft8' : 24,
+      'ft9' : 25,
+      'ft10' : 26,
+      'ft11' : 27,
+      'ft12' : 28,
+      'ft13' : 29,
+      'ft14' : 30,
+      # Return value registers
+      'frv' : 0,
+      'frv2' : 1,
+      # Incoming parameters
+      'fa0' : 16,
+      'fa1' : 17,
+      'fa2' : 18,
+      'fa3' : 19,
+      'fa4' : 20,
+      'fa5' : 21,
+      # Call-save registers
+      'fs0' : 2,
+      'fs1' : 3,
+      'fs2' : 4,
+      'fs3' : 5,
+      'fs4' : 6,
+      'fs5' : 7,
+      'fs6' : 8,
+      'fs7' : 9,
+      # Zero 
+      'fzero' : 31,
+      }
+
+   legacy_regs = {
+      # function temporaries
+      't0' : 1,
+      't1' : 2,
+      't2' : 3,
+      't3' : 4,
+      't4' : 5,
+      't5' : 6,
+      't6' : 7,
+      't7' : 8,
+      't8' : 22,
+      't9' : 23,
+      't10' : 24,
+      't11' : 25,
+      # assembly scratch
+      'at' : 28,
+      # return value
+      'rv' : 0,
+      # incoming parameters
+      'a5' : 21,
+      'a4' : 20,
+      'a3' : 19,
+      'a2' : 18,
+      'a1' : 17,
+      'a0' : 16,
+      # procedure function / temporary
+      'pv' : 27,
+      't12' : 27,
+      # Callee-save registers
+      's0' : 9,
+      's1' : 10,
+      's2' : 11,
+      's3' : 12,
+      's4' : 13,
+      's5' : 14,
+      # Return address
+      'ra' : 26,
+      # Frame pointer / callee save
+      'fp' : 15,
+      's6' : 15,
+      # Global pointer
+      'gp' : 29,
+      # Stack pointer
+      'sp' : 30,
+      # Zero
+      'zero' : 31
+      }
+
+
+    ######################
+    # GCC Allocation order
+    ######################
+    # #define REG_ALLOC_ORDER {
+    #    1, 2, 3, 4, 5, 6, 7, 8,      /* nonsaved integer registers */
+    #    22, 23, 24, 25, 28,          /* likewise */
+    #    0,                           /* likewise, but return value */
+    #    21, 20, 19, 18, 17, 16,      /* likewise, but input args */
+    #    27,                          /* likewise, but OSF procedure value */
+    #    f10, f11, f12, f13, f14, f15,      /* nonsaved floating-point registers */
+    #    f22, f23, f24, f25, f26, f27,      /* likewise */
+    #    f28, f29, f30,                  /* likewise */
+    #    f0, f1,                      /* likewise, but return values */
+    #    f21, f20, f19, f18, f17, f16,      /* likewise, but input args */
+    #    9, 10, 11, 12, 13, 14,       /* saved integer registers */
+    #    26,                          /* return address */
+    #    15,                          /* hard frame pointer */
+    #    f2, f3, f4, f5, f6, f7,      /* saved floating-point registers */
+    #    f8, f9,                      /* likewise */
+    #    29, 30, 31, f31               /* gp, sp, ap, sfp */
+    # }
+
+
+   reg_mapping = {
+      # Globals
+      'g0' : 's5',
+      'g1' : 's4',
+      'g2' : 's3',
+      'g3' : 's2',
+      'g4' : 's1',
+      'g5' : 's0',
+      'g6' : 'a0',
+      'g7' : 'a1',
+      'g8' : 'a2',
+      'g9' : 'a3',
+      'g10' : 'a4',
+      'g11' : 'a5',
+
+      'gf0' : 'fs7',
+      'gf1' : 'fs6',
+      'gf2' : 'fs5',
+      'gf3' : 'fs4',
+      'gf4'  : 'fs3',
+      'gf5' : 'fs2',
+      'gf6' : 'fs1',
+      'gf7' : 'fs0',
+      'gf8' : 'fa0',
+      'gf9' : 'fa1',
+      'gf10' : 'fa2',
+      'gf11' : 'fa3',
+      
+      # Shareds
+      's0' : 'a5',
+      'd0' : 'a4',
+      's1' : 'a3',
+      'd1' : 'a2',
+      's2' : 'a1',
+      'd2' : 'a0',
+      's3' : 's0',
+      'd3' : 's1',
+      's4' : 's2',
+      'd4' : 's3',
+
+      'sf0' : 'fa3',
+      'df0' : 'fa2',
+      'sf1' : 'fa1',
+      'df1' : 'fa0',
+      'sf2' : 'fs0',
+      'df2' : 'fs1',
+      'sf3' : 'fs2',
+      'df3' : 'fs3',
+      'sf4' : 'fs4',
+      'df4' : 'fs5',
+      
+      'lf31' : 'fzero',
+      
+      'lf0' : 'ft0',
+      'lf1' : 'ft1',
+      'lf2' : 'ft2',
+      'lf3' : 'ft3',
+      'lf4' : 'ft4',
+      'lf5' : 'ft5',
+      'lf6' : 'ft6',
+      'lf7' : 'ft7',
+      'lf8' : 'ft8',
+      'lf9' : 'ft9',
+      'lf10' : 'ft10',
+      'lf11' : 'ft11',
+      'lf12' : 'ft12',
+      'lf13' : 'ft13',
+      'lf14' : 'ft14',
+      'lf15' : 'frv',
+      'lf16' : 'frv2',
+      'lf17' : 'fa4',
+      'lf18' : 'fa5',
+
+      # Special locals
+      'l31' : 'zero',
+      'l18' : 'sp',
+      'l17' : 'gp',
+      'l16' : 'pv',
+      'l15' : 'ra',
+      'l14' : 'fp',
+      'l13' : 'rv',
+      # "Normal" locals
+      'l12' : 'at',
+      'l11' : 't11',
+      'l10' : 't10',
+      'l9' : 't9',
+      'l8' : 't8',
+      'l7' : 't7',
+      'l6' : 't6',
+      'l5' : 't5',
+      'l4' : 't4',
+      'l3' : 't3',
+      'l2' : 't2',
+      'l1' : 't1',
+      'l0' : 't0'
+      }
+
+   reg_aliases = {
+      'tlsp' : 'l18',
+      'gp' : 'l17',
+      'pv' : 'l16',
+      'ra' : 'l15',
+      'fp' : 'l14',
+      'rv' : 'l13',
+      'idx_init' : 'l0',
+      'tlsp_init' : 'l1',
+      'basearg' : 'l1',
+      'zero' : 'l31',
+      'fzero' : 'lf31',
+      'fbasearg' : 'lf1'
+      }
+
+   def __init__(self):
+      regs = { 
+         'i' : { 'l' : [None]*32, 'g' : [None]*32, 's' : [None]*32, 'd' : [None]*32 },
+         'f' : { 'l' : [None]*32, 'g' : [None]*32, 's' : [None]*32, 'd' : [None]*32 },
+         }
+      reg_inv = map(lambda x:[], xrange(32))
+      freg_inv = map(lambda x:[], xrange(32))
+      aliases = {}
+
+      for r,t in self.reg_mapping.items():
+         cat = r[0]
+         if r[1] == 'f':
+            species = 'f'
+            nr = int(r[2:])
+            legnr = self.legacy_fregs[t]
+            inv_dic = reg_inv
+         else:
+            species = 'i'
+            nr = int(r[1:])
+            legnr = self.legacy_regs[t]
+            inv_dic = freg_inv
+         
+         reg = { 'species' : species, 'cat' : cat, 'name' : r, 'legname' : t, 'nr' : nr, 'legnr' : legnr }
+         if aliases.has_key(r):
+            die("alias %s already defined" % r)
+         aliases[r] = reg
+         if regs[species][cat][nr] is not None:
+            die("register %s already defined" % r)
+         regs[species][cat][nr] = reg
+         inv_dic[legnr].append(reg)
+
+      for a,k in self.reg_aliases.items():
+         if aliases.has_key(a):
+            die("alias %s already defined" % a)
+         aliases[a] = aliases[k]
+      
+      # Consistency check
+      for i in reg_inv:
+         if len(i) == 0:
+            die("all legacy integer registers are not used")
+      if i in freg_inv:
+         if len(i) == 0:
+            die("all legacy fp registers are not used")
+
+      self.reg_inv = reg_inv
+      self.freg_inv = freg_inv
+      self.regs = regs
+      self.aliases = aliases
+
+   def makedic(self):
+      dic = {}
+      for a,r in self.aliases.items():
+         dic["mtreg_%s_nr"] = r["nr"]
+         dic["mtreg_%s_legnr"] = r["legnr"]
+      for a,r in self.legacy_fregs.items():
+         dic["legfreg_%s_legnr"] = r
+      for a,r in self.legacy_regs.items():
+         dic["legreg_%s_legnr"] = r
+      return dic
+
+   def mapcall(self, args):
+      dic = { 
+         'i' : { 'sh' : [], 'gl' : [] },
+         'f' : { 'sh' : [], 'gl' : [] },
+         }
+      for a in args:
+         cat, species, ctype, name, init = (a.split(':') + [None])[:5]
+         if init == "":
+            init = None
+         dic[species][cat].append({'ctype':ctype, 'name':name, 'init':init})
+
+      # Magic numbers
+      iargregs = 3 # 1 reserved for PV
+      fargregs = 2
+      #iargregs = 11 # 1 reserved for PV
+      #fargregs = 12
+
+      # Check if some parameters will use memory passing
+      escape = 0      
+      if len(dic['f']['sh']) * 2 + len(dic['f']['gl']) > fargregs:
+         escape = 1
+      if len(dic['i']['sh']) * 2 + len(dic['i']['gl']) > (iargregs - escape):
+         escape = 1
+
+      # Start allocate
+
+      islots_avail = iargregs - escape
+      fslots_avail = fargregs
+
+      # Allocate shareds first
+      if len(dic['i']['sh']) > islots_avail:
+         die("too many int shareds, cannot pass them via memory yet")
+      shc = 0
+      for s in dic['i']['sh']:
+         s['mode'] = 'reg'
+         s['regnr'] = shc
+         shc += 1
+         islots_avail -= 1
+      nrishareds = shc
+
+      if len(dic['f']['sh']) > fslots_avail:
+         die("too many float shareds, cannot pass them via memory yet")
+      shc = 0
+      for s in dic['f']['sh']:
+         s['mode'] = 'reg'
+         s['regnr'] = shc
+         shc += 1
+         fslots_avail -= 1
+      nrfshareds = shc
+   
+      # Allocate fp globals
+      glc = 0
+      memlayout = []
+      offset = 0
+      for s in dic['f']['gl']:
+         if fslots_avail > 0:
+            s['mode'] = 'reg'
+            s['regnr'] = glc
+            glc += 1
+            fslots_avail -= 1
+         else:
+            s['mode'] = 'mem'
+            s['offset'] = offset
+            offset += 1
+            memlayout.append({'cat':'glf','ctype':s['ctype'],'name':s['name'],'init':s['init']})
+      nrfglobals = glc
+
+      glc = 0
+      for s in dic['i']['gl']:
+         if islots_avail > 0:
+            s['mode'] = 'reg'
+            s['regnr'] = glc
+            glc += 1
+            islots_avail -= 1
+         else:
+            s['mode'] = 'mem'
+            s['offset'] = offset
+            offset += 1
+            memlayout.append({'cat':'gli','ctype':s['ctype'],'name':s['name'],'init':s['init']})
+      nriglobals = glc
+
+      ret = {}
+      if escape == 0:
+         ret['gl_mem_offset'] = None
+         ret['gl_pv_offset'] = glc
+      else:
+         nriglobals = glc + 1
+         ret['gl_mem_offset'] = glc
+         ret['gl_pv_offset'] = glc + 1
+
+      ret['nrargregs'] = { 'gli' : nriglobals, 'shi' : nrishareds,
+                           'glf' : nrfglobals, 'shf' : nrfshareds }
+      ret['args'] = dic
+      ret['memlayout'] = memlayout
+      return ret
+
+   def create(self, funcname, tag, br, *args):
+      # DEBUG:
+      #print >>sys.stderr, args
+      if len(args) == 1 and args[0] == "":
+         args = ()
+
+      c = self.mapcall(args)
+
+      aliases = self.aliases
+      nrargregs = c['nrargregs']
+
+      rregs = []
+      names = []
+      glfbase = aliases['fbasearg']['nr']
+      shfbase = glfbase + nrargregs['glf']
+      glibase = aliases['basearg']['nr']
+      shibase = glibase + c['gl_pv_offset'] + 1
+      if br == "float":
+         brf = shfbase + nrargregs['shf']
+         cri = shibase + nrargregs['shi']
+      elif br == "int":
+         bri = shibase + nrargregs['shi']
+         cri = bri + 1
+      else: # no break
+         cri = shibase + nrargregs['shi']
+
+      print "__sl_allocate(%s, %d, %d, %d, %d);" % \
+          (tag, glibase, shibase, glfbase, shfbase)
+
+
+      for species,d1 in c['args'].items():
+         for cat,d2 in d1.items():
+            for a in d2:
+               name = a['name']
+               names.append(name)
+               ctype = a['ctype']
+               if a['mode'] == 'mem':
+                  assert cat == 'gl'
+                  print "__sl_declgla_noreg(%s, %s, %s, %s);" % (tag, ctype, name, a['init'])
+                  print "m4_define([[__sl_geta_%s]],[[__sl_glarg_%s__%s]])m4_dnl" % (name,tag,name)
+                  print "m4_define([[__sl_seta_%s]],[[\n#error cannot set global %s\n]])m4_dnl" % (name, name)
+               else: # mode: reg
+                  regnr = a['regnr']
+                  if cat == "sh":
+                     if species == "f":
+                        reg = "f%d" % aliases['lf%d' % (shfbase + regnr)]['legnr']
+                     else:
+                        reg = "%d" % aliases['l%d' % (shibase + regnr)]['legnr']
+                        
+                     if a['init'] is None:
+                        print '__sl_declsha_empty(%s, %s, %s, "$%s")' % (tag, ctype, name, reg)
+                     else:
+                        print '__sl_declsha(%s, %s, %s, "$%s", %s)' % (tag, ctype, name, reg, a['init'])
+                     print 'm4_define([[__sl_geta_%s]],[[__sl_getsha(%s)]])m4_dnl' % (name, name)
+                     print 'm4_define([[__sl_seta_%s]],[[__sl_setsha(%s, [[$1]])]])m4_dnl' % (name, name)
+                  else: # cat: gl
+                     if species == "f":
+                        reg = "f%d" % aliases['lf%d' % (glfbase + regnr)]['legnr']
+                     else:
+                        reg = "%d" % aliases['l%d' % (glibase + regnr)]['legnr']
+
+                     print '__sl_declgla(%s, %s, %s, "$%s", %s)' % (tag, ctype, name, reg, a['init'])
+                     print 'm4_define([[__sl_geta_%s]],[[__sl_glarg_%s__%s]])m4_dnl' % (name, tag, name)
+                     print "m4_define([[__sl_seta_%s]],[[\n#error cannot set global %s\n]])m4_dnl" % (name, name)
+
+      pvreg = str(aliases['l%d' % (glibase + c['gl_pv_offset'])]['legnr'])
+      print '__sl_declgla(%s, __sl_fptr_t, __fptr__, "$%s", %s)' % (tag, pvreg, funcname)
+
+      if c['gl_mem_offset'] is not None:
+         print "const struct __sl_ma_t_%s {" % tag
+         for d in c['memlayout']:
+            print d['ctype'], d['name'], ';'
+         print '} __sl_ma_data_%s = {' % tag
+         for d in c['memlayout']:
+            print '__sl_glarg_%s__%s,' % (tag, d['name'])
+         print '};'
+         
+         nr = aliases['basearg']['nr'] + c['gl_mem_offset']
+         reg = aliases['l%d' % nr]['legnr']
+         print "register const struct __sl_ma_t_%s" % tag, \
+             '*const restrict __sl_ma_p_%s __asm__("$%d")' % (tag, reg), \
+             "= &__sl_ma_data_%s;" % tag
+
+      if br == 'int':
+         brreg = aliases['l%d' % bri]['legnr']
+         print '__sl_setbreak(%s, %d);' % (tag, bri)
+         print '__sl_declbr(%s, long long, "$%d");' % (tag, brreg)
+      elif br == 'float':
+         brreg = aliases['lf%d' % brf]['legnr']
+         print '__sl_setbreakf(%s, %d);' % (tag, brf)
+         print '__sl_declbr(%s, double, "$f%d");' % (tag, brreg)
+
+      crreg = aliases['l%d' % cri]['legnr']
+      print '__sl_declsync(%s, "$%d");' % (tag, cri)
+
+
+   def fundef(self, funcname, counter, *args):
+
+      # DEBUG:
+      #print >>sys.stderr, args
+      if len(args) == 1 and args[0] == "":
+         args = ()
+
+      c = self.mapcall(args)
+
+      mapping = []
+
+      aliases = self.aliases
+      print '__sl_prologue(%s, %d, %d, %d, %d, "$%d", "$%d", "$%d", "$%d", "$%d", "$%d", %s)' % \
+          (funcname, \
+              c['nrargregs']['gli'], \
+              c['nrargregs']['shi'], \
+              c['nrargregs']['glf'], \
+              c['nrargregs']['shf'], \
+              aliases['gp']['legnr'], \
+              aliases['idx_init']['legnr'], \
+              aliases['g%d' % c['gl_pv_offset']]['legnr'], \
+              aliases['tlsp_init']['legnr'], \
+              aliases['pv']['legnr'], \
+              aliases['tlsp']['legnr'], \
+              counter)
+      
+      # DEBUG:
+      # pprint.pprint(c)
+
+      if c['gl_mem_offset'] is not None:
+         glreg = 'g%d' % c['gl_mem_offset']
+         legnr = aliases[glreg]['legnr']
+         mapping.append("%d:%s" % (legnr, glreg))
+         print "register const struct {"
+         for d in c['memlayout']:
+            print d['ctype'], d['name'], ';'
+         print '} * const restrict __sl_ma __asm__("$%d");' % legnr
+      
+      names = []
+      for species,d1 in c['args'].items():
+         for cat,d2 in d1.items():
+            for a in d2:
+               name = a['name']
+               names.append(name)
+               ctype = a['ctype']
+               if a['mode'] == 'mem':
+                  assert cat == 'gl'
+                  print "m4_define([[__sl_getp_%s]],[[(__sl_ma->%s)]])m4_dnl" % (name,name)
+                  print "m4_define([[__sl_setp_%s]],[[\n#error cannot set global %s\n]])m4_dnl" % (name, name)
+               else: # mode: reg
+                  regnr = a['regnr']
+                  if cat == "sh":
+                     if species == "f":
+                        dreg = "df%d" % regnr
+                        dlegnr = aliases[dreg]['legnr']
+                        sreg = "sf%d" % regnr
+                        slegnr = aliases[sreg]['legnr']
+                        leg1 = "f%d" % dlegnr
+                        leg2 = "f%d" % slegnr
+                     else:
+                        dreg = "d%d" % regnr
+                        dlegnr = aliases[dreg]['legnr']
+                        sreg = "s%d" % regnr
+                        slegnr = aliases[sreg]['legnr']
+                        leg1 = "%d" % dlegnr
+                        leg2 = "%d" % slegnr
+                     mapping.append("%d:%s" % (dlegnr, dreg))
+                     mapping.append("%d:%s" % (slegnr, sreg))
+                     
+                     print '__sl_declshp(%s, %s, "$%s", "$%s");' % (ctype, name, leg1, leg2)
+                     print 'm4_define([[__sl_getp_%s]],[[__sl_getshp(%s)]])m4_dnl' % (name, name)
+                     print 'm4_define([[__sl_setp_%s]],[[__sl_setshp(%s, [[$1]])]])m4_dnl' % (name, name)
+                  else: # cat: gl
+                     if species == "f":
+                        reg = "gf%d" % regnr
+                        legnr = aliases[reg]['legnr']
+                        leg = "f%d" % legnr
+                     else:
+                        reg = "g%d" % regnr
+                        legnr = aliases[reg]['legnr']
+                        leg = "%d" % legnr
+                     mapping.append("%d:%s" % (legnr, reg))
+
+                     print '__sl_declglp(%s, %s, "$%s")' % (ctype, name, leg)
+                     print 'm4_define([[__sl_getp_%s]],[[__sl_glparm_%s]])m4_dnl' % (name, name)
+                     print "m4_define([[__sl_setp_%s]],[[\n#error cannot set global %s\n]])m4_dnl" % (name, name)
+      print "m4_define([[__sl_parmnames]],[[%s]])m4_dnl" % ','.join(names)
+      print 'm4_define([[__sl_parmspec]],[["%s"]])m4_dnl' % ','.join(mapping)
+
+
+if __name__ == "__main__":
+   module = sys.argv[1]
+   function = sys.argv[2]
+   rest = sys.argv[3:]
+   c = eval(module + "()")
+   getattr(c,function)(*rest)
+

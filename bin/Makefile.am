@@ -1,6 +1,6 @@
 bin_SCRIPTS = cce slc sgr
 noinst_SCRIPTS = cce.local slc.local sgr.local
-dist_bin_SCRIPTS = scu
+dist_bin_SCRIPTS = scu spp
 
 EXTRA_DIST = cce.in slc.in sgr.in
 CLEANFILES = $(bin_SCRIPTS) $(noinst_SCRIPTS)

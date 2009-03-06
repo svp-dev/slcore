@@ -1,5 +1,16 @@
 2009-03-06  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	Start implementing ppp "compiler".
+
+	* lib/t-pppalpha/slimpl.m4: Add.
+	* lib/t-pppalpha/include/sl_support.h: Add.
+	* lib/Makefile.am (nobase_dist_pkgdata_DATA): Update accordingly.
+
+	* bin/spp: Add.
+	* bin/Makefile.am (dist_bin_SCRIPTS): Update accordingly.
+
+2009-03-06  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	Re-organize layout of sl_support.h.
 
 	* lib/host-host-ptl/include/sl_support.h: Rename to...

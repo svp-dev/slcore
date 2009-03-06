@@ -11,10 +11,14 @@ nobase_dist_pkglib_SCRIPTS = \
 
 nobase_dist_pkgdata_DATA = \
 	t-seqc/slimpl.m4 \
+	t-seqc/include/sl_support.h \
 	t-ptl/slimpl.m4 \
+	t-ptl/include/sl_support.h \
 	t-utc/slimpl.m4 \
 	t-utc0/slimpl.m4 \
-	host-host-seqc/include/sl_support.h \
+	t-utc0/include/sl_support.h \
+	t-pppalpha/slimpl.m4 \
+	t-pppalpha/include/sl_support.h \
 	host-host-seqc/include/svp_os.h \
 	host-host-ptl/include/ptl_create.h \
 	host-host-ptl/include/ptl_config.h \
@@ -22,7 +26,6 @@ nobase_dist_pkgdata_DATA = \
 	host-host-ptl/include/ptl_deps.h \
 	host-host-ptl/include/ptl_svp.h \
 	host-host-ptl/include/ptl_vars.h \
-	host-host-ptl/include/sl_support.h \
 	host-host-ptl/include/svp_os.h
 
 nobase_pkglib_DATA = \
@@ -62,7 +65,7 @@ host-host-seqc/io.o: $(srcdir)/svplib/io.sl
 
 host-host-seqc/slrt.o: $(srcdir)/host-host-seqc/slrt.c
 	$(MKDIR_P) host-host-seqc
-	$(CC) $(CFLAGS) -c -o $@ $<
+	$(CC) $(CFLAGS) -I$(srcdir)/t-seqc/include -c -o $@ $<
 
 CLEANFILES += \
 	host-host-seqc/io.o \
@@ -75,8 +78,8 @@ host-host-ptl/io.o: $(srcdir)/svplib/io.sl
 	$(SLC) -b ptl -c -o $@ $<
 
 host-host-ptl/slrt.o: $(srcdir)/host-host-ptl/slrt.c
-	$(MKDIR_P) host-host-seqc
-	$(CC) $(CFLAGS) -c -o $@ $<
+	$(MKDIR_P) host-host-ptl
+	$(CC) $(CFLAGS) -I$(srcdir)/t-ptl/include -c -o $@ $<
 
 CLEANFILES += \
 	host-host-ptl/io.o \
