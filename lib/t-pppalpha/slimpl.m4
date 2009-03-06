@@ -17,7 +17,7 @@ m4_define([[__sl_funcname]], [[$1]])
 m4_define([[__sl_breaktype]], [[$2]])
 m4_step([[__sl_dispcount]])
 m4_define([[__sl_thparms]],"m4_join([[" "]],m4_shiftn(2,$@))")
-m4_esyscmd([[../../bin/spp pppalpha fundef ]]__sl_funcname __sl_dispcount __sl_thparms)
+m4_esyscmd(m4_quote(PYTHON SPP_PY pppalpha fundef __sl_funcname __sl_dispcount __sl_thparms))
 ]])
 m4_define([[sl_enddef]],[[
 m4_foreach([[__sl_parmname]],m4_quote(__sl_parmnames),[[
@@ -35,6 +35,9 @@ m4_define([[sl_glarg]],[[gl:i:[[$1]]:[[$2]]:[[$3]]]])
 m4_define([[sl_shfarg]],[[sh:f:[[$1]]:[[$2]]:[[$3]]]])
 m4_define([[sl_glfarg]],[[gl:f:[[$1]]:[[$2]]:[[$3]]]])
 
+m4_define([[sl_geta]],[[__sl_geta_$1]])
+m4_define([[sl_seta]],[[__sl_seta_$1([[$2]])]])
+
 m4_define([[sl_create]],[[
 m4_step([[__sl_crcnt]])
 m4_define([[__sl_autotag]],__child[[]]__sl_crcnt[[]]__)
@@ -47,7 +50,7 @@ m4_define([[_sl_block]],m4_if([[$6]],,0,[[$6]]))
 m4_define([[__sl_crbrktype]],"[[$7]]")
 m4_define([[__sl_crfuncname]],"[[$8]]")
 m4_define([[__sl_thargs]],"m4_join([[" "]],m4_shiftn(8,$@))")
-m4_esyscmd([[../../bin/spp pppalpha create ]]__sl_crfuncname __sl_tag __sl_crbrktype __sl_thargs)
+m4_esyscmd(m4_quote(PYTHON SPP_PY pppalpha create __sl_crfuncname __sl_tag __sl_crbrktype __sl_thargs))
 __sl_setplace(__sl_tag, _sl_place);
 __sl_setstart(__sl_tag, _sl_start);
 __sl_setlimit(__sl_tag, _sl_limit);

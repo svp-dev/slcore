@@ -24,6 +24,7 @@ incdir=@incdir@
 pkgdatadir=@pkgdatadir@
 srcdatadir=@srcdatadir@
 pkglibdir=@pkglibdir@
+python=@python@
 timestamp=$(echo '$Date$'|cut -d' ' -f2)
 version=1
 
@@ -184,7 +185,7 @@ if test -r "$srcincdir/slc_m4sugar.m4"; then
 else
   slc_tflags="$slc_tflags $incdir/slc_m4sugar.m4"
 fi
-slc_tflags="$slc_tflags $srcincdir/slc.m4 -I$slc_trans -I$incdir -I$srcincdir"
+slc_tflags="$slc_tflags $srcincdir/slc.m4 -I$slc_trans -I$incdir -I$srcincdir -DPYTHON=$python -DSPP_PY=$root/spp"
 slc_ppflags="$slc_ppflags -I$slc_trans/include -I$incdir -I$srcincdir"
 
 # Compiler selection
@@ -199,7 +200,7 @@ case $slc_dialect-$slc_arch in
 	slc_filter=cp
 	;;
     ppp-*)
-	spp=$(echo "$root/spp" "$arch" $(eval "echo \${CC_$basearchvar:-$basearch-linux-gnu-gcc}"))
+	spp=$(echo "$python" "$root/spp" "$arch" $(eval "echo \${CC_$basearchvar:-$basearch-linux-gnu-gcc}"))
 	slc_compiler="$spp compile"
 	slc_filter="$spp filter"
 	;;

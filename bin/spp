@@ -283,17 +283,6 @@ class pppalpha(object):
       self.regs = regs
       self.aliases = aliases
 
-   def makedic(self):
-      dic = {}
-      for a,r in self.aliases.items():
-         dic["mtreg_%s_nr"] = r["nr"]
-         dic["mtreg_%s_legnr"] = r["legnr"]
-      for a,r in self.legacy_fregs.items():
-         dic["legfreg_%s_legnr"] = r
-      for a,r in self.legacy_regs.items():
-         dic["legreg_%s_legnr"] = r
-      return dic
-
    def mapcall(self, args):
       dic = { 
          'i' : { 'sh' : [], 'gl' : [] },
@@ -428,8 +417,8 @@ class pppalpha(object):
                ctype = a['ctype']
                if a['mode'] == 'mem':
                   assert cat == 'gl'
-                  print "__sl_declgla_noreg(%s, %s, %s, %s);" % (tag, ctype, name, a['init'])
-                  print "m4_define([[__sl_geta_%s]],[[__sl_glarg_%s__%s]])m4_dnl" % (name,tag,name)
+                  print "__sl_declgla_noreg(%s, %s, %s);" % (ctype, name, a['init'])
+                  print "m4_define([[__sl_geta_%s]],[[__sl_glarg_%s]])m4_dnl" % (name,name)
                   print "m4_define([[__sl_seta_%s]],[[\n#error cannot set global %s\n]])m4_dnl" % (name, name)
                else: # mode: reg
                   regnr = a['regnr']
@@ -440,9 +429,9 @@ class pppalpha(object):
                         reg = "%d" % aliases['l%d' % (shibase + regnr)]['legnr']
                         
                      if a['init'] is None:
-                        print '__sl_declsha_empty(%s, %s, %s, "$%s")' % (tag, ctype, name, reg)
+                        print '__sl_declsha_empty(%s, %s, "$%s")' % (ctype, name, reg)
                      else:
-                        print '__sl_declsha(%s, %s, %s, "$%s", %s)' % (tag, ctype, name, reg, a['init'])
+                        print '__sl_declsha(%s, %s, "$%s", %s)' % (ctype, name, reg, a['init'])
                      print 'm4_define([[__sl_geta_%s]],[[__sl_getsha(%s)]])m4_dnl' % (name, name)
                      print 'm4_define([[__sl_seta_%s]],[[__sl_setsha(%s, [[$1]])]])m4_dnl' % (name, name)
                   else: # cat: gl
@@ -451,12 +440,12 @@ class pppalpha(object):
                      else:
                         reg = "%d" % aliases['l%d' % (glibase + regnr)]['legnr']
 
-                     print '__sl_declgla(%s, %s, %s, "$%s", %s)' % (tag, ctype, name, reg, a['init'])
-                     print 'm4_define([[__sl_geta_%s]],[[__sl_glarg_%s__%s]])m4_dnl' % (name, tag, name)
+                     print '__sl_declgla(%s, %s, "$%s", %s)' % (ctype, name, reg, a['init'])
+                     print 'm4_define([[__sl_geta_%s]],[[__sl_glarg_%s]])m4_dnl' % (name, name)
                      print "m4_define([[__sl_seta_%s]],[[\n#error cannot set global %s\n]])m4_dnl" % (name, name)
 
       pvreg = str(aliases['l%d' % (glibase + c['gl_pv_offset'])]['legnr'])
-      print '__sl_declgla(%s, __sl_fptr_t, __fptr__, "$%s", %s)' % (tag, pvreg, funcname)
+      print '__sl_declgla(__sl_fptr_t, __fptr%s, "$%s", %s)' % (tag, pvreg, funcname)
 
       if c['gl_mem_offset'] is not None:
          print "const struct __sl_ma_t_%s {" % tag

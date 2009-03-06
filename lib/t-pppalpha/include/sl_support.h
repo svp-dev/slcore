@@ -19,6 +19,14 @@
 			 : "0"(__sl_shparm_out_ ## Name));		\
   })
 
+#define __sl_getsha(Name) __sl_sharg_ ## Name
+#define __sl_setsha(Name, Val) do {				\
+    __sl_sharg_ ## Name = (Val);				\
+    __asm__ __volatile__("# MT: shared " # Name " ready (%0)"	\
+			 : "=r"(__sl_sharg_ ## Name)		\
+			 : "0"(__sl_sharg_ ## Name));		\
+  } while(0)
+
 #define __sl_declindex(Name) register const long long Name = __sl_index
 
 #define __sl_prologue(Name, GI, SI, GF, SF, GPREG, IDXREG, IPVREG, ITLSREG, PVREG, TLSREG, LN) \
@@ -96,18 +104,18 @@
 #define __sl_declglp(Type, Name, Reg) \
   register Type const __sl_glparm_ ## Name __asm__(Reg)
 
-#define __sl_declgla_noreg(Tag, Type, Name, Init)		\
-  register Type const __sl_glarg_ ## Tag ## __ ## Name = (Init)
+#define __sl_declgla_noreg(Type, Name, Init)		\
+  register Type const __sl_glarg_ ## Name = (Init)
 
-#define __sl_declgla(Tag, Type, Name, Reg, Init)			\
-  register Type const __sl_glarg_ ## Tag ## __ ## Name __asm__(Reg) = (Init)
+#define __sl_declgla(Type, Name, Reg, Init)			\
+  register Type const __sl_glarg_ ## Name __asm__(Reg) = (Init)
 
-#define __sl_declsha_empty(Tag, Type, Name, Reg) \
-  register Type __sl_sharg_ ## Tag ## __ ## Name __asm__(Reg); \
-  __asm__ ("setempty %0 # EMPTY " # Name : "=r"(__sl_sharg_ ## Tag ## __ ## Name))
+#define __sl_declsha_empty(Type, Name, Reg) \
+  register Type __sl_sharg_ ## Name __asm__(Reg); \
+  __asm__ ("setempty %0 # EMPTY " # Name : "=r"(__sl_sharg_ ## Name))
 
-#define __sl_declsha(Tag, Type, Name, Reg, Init)		\
-  register Type __sl_sharg_ ## Tag ## __ ## Name __asm__(Reg) = (Init)
+#define __sl_declsha(Type, Name, Reg, Init)		\
+  register Type __sl_sharg_ ## Name __asm__(Reg) = (Init)
 
 #define __sl_setbreak(Tag, BRI) \
   __asm__ ("setbreak %0, %1\t# CREATE " # Tag \

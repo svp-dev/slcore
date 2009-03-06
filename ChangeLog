@@ -1,5 +1,20 @@
 2009-03-06  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	Cleanup & bugfix.
+	
+	* configure.ac: Configure Python.
+	* bin/cce.in,
+	* bin/Makefile.am,
+	* lib/t-pppalpha/slimpl.m4: Use configured Python.
+
+	* lib/t-pppalpha/include/sl_support.h,
+	* bin/spp: Remove family tag from argument names (they should all
+	be in the same namespace).
+
+	* bin/spp (pppalpha.makedic): Kill unused function.
+
+2009-03-06  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	Start implementing ppp "compiler".
 
 	* lib/t-pppalpha/slimpl.m4: Add.
