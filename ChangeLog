@@ -1,3 +1,15 @@
+2009-03-06  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
+	Upgrade m4sugar.
+	
+	* include/slc.m4: Implement m4_step. Use m4_wrap_lifo to fix
+	undivert order.
+
+	* include/m4sugar.m4: Upgrade from Autoconf 2.59.
+	* include/m4sugar_version.m4: Add.
+	* include/m4sugar_foreach.m4: Add.
+	* include/m4sugar_transform.sed: Update accordingly.
+	
 2009-03-02  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
 	Start using m4sugar.
