@@ -185,7 +185,7 @@ else
   slc_tflags="$slc_tflags $incdir/slc_m4sugar.m4"
 fi
 slc_tflags="$slc_tflags $srcincdir/slc.m4 -I$slc_trans -I$incdir -I$srcincdir"
-slc_ppflags="$slc_ppflags -I$incdir -I$srcincdir"
+slc_ppflags="$slc_ppflags -I$slc_trans/include -I$incdir -I$srcincdir"
 
 # Compiler selection
 case $slc_dialect-$slc_arch in

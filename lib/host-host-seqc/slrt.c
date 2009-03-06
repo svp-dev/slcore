@@ -5,7 +5,7 @@
 //
 // $Id$
 //
-#include "include/sl_support.h"
+#include "sl_support.h"
 
 extern void t_main(struct sl_famdata*);
 
