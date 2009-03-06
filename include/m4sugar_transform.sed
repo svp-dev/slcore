@@ -11,5 +11,6 @@ s/dnl/m4_dnl/g
 s/^m4_rename_m4(\[\[ifdef\]\])/m4_rename_m4([[ifdef]])m4_rename_m4([[dnl]])/g
 
 
-# Remove dependency on version.m4
-s/^.*version\.m4.*$//g
+# Rewrite includes
+s,m4sugar/version\.m4,slc_m4sversion.m4,g
+s,m4sugar/foreach\.m4,slc_m4sforeach.m4,g
