@@ -1,5 +1,13 @@
 2009-03-06  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	Complete previous commit; add bootstrap
+	script to initialize the dev environment.
+	
+	* Makefile.am: Update after upgrade of m4sugar.
+	* bootstrap: Add.
+
+2009-03-06  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	Upgrade m4sugar.
 	
 	* include/slc.m4: Implement m4_step. Use m4_wrap_lifo to fix
