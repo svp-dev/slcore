@@ -51,11 +51,25 @@ m4_define([[__sl_crbrktype]],"[[$7]]")
 m4_define([[__sl_crfuncname]],"[[$8]]")
 m4_define([[__sl_thargs]],"m4_join([[" "]],m4_shiftn(8,$@))")
 m4_esyscmd(m4_quote(PYTHON SPP_PY pppalpha create __sl_crfuncname __sl_tag __sl_crbrktype __sl_thargs))
-__sl_setplace(__sl_tag, _sl_place);
-__sl_setstart(__sl_tag, _sl_start);
-__sl_setlimit(__sl_tag, _sl_limit);
-__sl_setstep(__sl_tag, _sl_step);
-__sl_setblock(__sl_tag, _sl_block);
+]])
+
+m4_define([[__sl_makewreg]],[["=rf"([[$1]])]])
+m4_define([[__sl_makerreg]],[["rf"([[$1]])]])
+
+m4_define([[sl_sync]],[[
+m4_if([[$1]],,[[
+m4_define([[__sl_syncsrc]],[[%__sl_nrwrites]])
+m4_define([[__sl_syncdst]],[[$[[]]31]])
+]],[[
+m4_define([[__sl_wqueue_sync]], m4_join([[,]], m4_quote(__sl_wqueue_sync), [["=r"([[$1]])]]))
+m4_define([[__sl_syncsrc]],[[%m4_incr(__sl_nrwrites)]])
+m4_define([[__sl_syncdst]],[[%__sl_nrwrites]])
+]])
+m4_define([[__sl_rqueue_sync]], 
+m4_join([[,]], [["r"(__sl_sync_[[]]__sl_tag), "r"(__sl_glarg___fptr[[]]__sl_tag)]], __sl_rqueue_sync))
+__asm__ __volatile__("bis __sl_syncsrc, $[[]]31, __sl_syncdst\n\tswch"
+: __sl_wqueue_sync
+: __sl_rqueue_sync)
 ]])
 
 m4_define([[sl_break]],[[

@@ -57,7 +57,7 @@
 #define __sl_allocate(Tag, GI, SI, GF, SF)				\
   register long long __sl_fid_ ## Tag;					\
   __asm__ __volatile__ ("allocate %0, %1, %2, %3, %4\t# CREATE " #Tag \
-			: "=r"(__sl__fid_ ## Tag)		      \
+			: "=r"(__sl_fid_ ## Tag)		      \
 			: "I"(GI), "I"(SI), "I"(GF), "I"(SF))
 
 #define __sl_setstart(Tag, Start) \
@@ -129,6 +129,19 @@
 
 #define __sl_declbr(Tag, Type, Reg)		\
   register Type const __sl_br_ ## Tag __asm__(Reg)
+
+#define __sl_declsync(Tag, Reg) \
+  register long long __sl_sync_ ## Tag __asm__(Reg) = __sl_fid_ ## Tag
+
+#define __sl_docreate(Tag, ...)					\
+  __asm__ __volatile__("crei %0, 0(%2)\t# CREATE " #Tag "\n\tswch"	\
+		       : "=r"(__sl_sync_ ## Tag)			\
+		       : "0"(__sl_sync_ ## Tag),  			\
+		       "r"(__sl_glarg___fptr ## Tag ), ## __VA_ARGS__	\
+		       )
+
+
+
 
 typedef long long sl_family_t;
 typedef long long sl_place_t;

@@ -387,10 +387,13 @@ class pppalpha(object):
 
       c = self.mapcall(args)
 
+      #pprint.pprint(c)
+
       aliases = self.aliases
       nrargregs = c['nrargregs']
 
       rregs = []
+      wregs = []
       names = []
       glfbase = aliases['fbasearg']['nr']
       shfbase = glfbase + nrargregs['glf']
@@ -429,9 +432,10 @@ class pppalpha(object):
                         reg = "%d" % aliases['l%d' % (shibase + regnr)]['legnr']
                         
                      if a['init'] is None:
-                        print '__sl_declsha_empty(%s, %s, "$%s")' % (ctype, name, reg)
+                        print '__sl_declsha_empty(%s, %s, "$%s");' % (ctype, name, reg)
                      else:
-                        print '__sl_declsha(%s, %s, "$%s", %s)' % (ctype, name, reg, a['init'])
+                        print '__sl_declsha(%s, %s, "$%s", %s);' % (ctype, name, reg, a['init'])
+                     wregs.append('__sl_sharg_%s' % name)
                      print 'm4_define([[__sl_geta_%s]],[[__sl_getsha(%s)]])m4_dnl' % (name, name)
                      print 'm4_define([[__sl_seta_%s]],[[__sl_setsha(%s, [[$1]])]])m4_dnl' % (name, name)
                   else: # cat: gl
@@ -439,13 +443,14 @@ class pppalpha(object):
                         reg = "f%d" % aliases['lf%d' % (glfbase + regnr)]['legnr']
                      else:
                         reg = "%d" % aliases['l%d' % (glibase + regnr)]['legnr']
-
-                     print '__sl_declgla(%s, %s, "$%s", %s)' % (ctype, name, reg, a['init'])
+                     rregs.append('__sl_glarg_%s' % name)
+                     print '__sl_declgla(%s, %s, "$%s", %s);' % (ctype, name, reg, a['init'])
                      print 'm4_define([[__sl_geta_%s]],[[__sl_glarg_%s]])m4_dnl' % (name, name)
                      print "m4_define([[__sl_seta_%s]],[[\n#error cannot set global %s\n]])m4_dnl" % (name, name)
 
       pvreg = str(aliases['l%d' % (glibase + c['gl_pv_offset'])]['legnr'])
-      print '__sl_declgla(__sl_fptr_t, __fptr%s, "$%s", %s)' % (tag, pvreg, funcname)
+      print '__sl_declgla(__sl_fptr_t, __fptr%s, "$%s", %s);' % (tag, pvreg, funcname)
+      # rregs.append('__sl_glarg___fptr%s' % tag)
 
       if c['gl_mem_offset'] is not None:
          print "const struct __sl_ma_t_%s {" % tag
@@ -462,19 +467,41 @@ class pppalpha(object):
              '*const restrict __sl_ma_p_%s __asm__("$%d")' % (tag, reg), \
              "= &__sl_ma_data_%s;" % tag
 
+         rregs.append('__sl_ma_p_%s' % tag)
+
       if br == 'int':
          brreg = aliases['l%d' % bri]['legnr']
          print '__sl_setbreak(%s, %d);' % (tag, bri)
          print '__sl_declbr(%s, long long, "$%d");' % (tag, brreg)
+         wregs.append('__sl_br_%s' % tag)
       elif br == 'float':
          brreg = aliases['lf%d' % brf]['legnr']
          print '__sl_setbreakf(%s, %d);' % (tag, brf)
          print '__sl_declbr(%s, double, "$f%d");' % (tag, brreg)
+         wregs.append('__sl_br_%s' % tag)
+
+      print """
+      __sl_setplace(__sl_tag, _sl_place);
+      __sl_setstart(__sl_tag, _sl_start);
+      __sl_setlimit(__sl_tag, _sl_limit);
+      __sl_setstep(__sl_tag, _sl_step);
+      __sl_setblock(__sl_tag, _sl_block);
+      """
 
       crreg = aliases['l%d' % cri]['legnr']
-      print '__sl_declsync(%s, "$%d");' % (tag, cri)
-
-
+      print '__sl_declsync(%s, "$%d");' % (tag, crreg)
+      
+      wqueue = ", ".join(['"=rf"(%s)' % x for x in wregs])
+      rqueue1 = ", ".join(['"%d"(%s)' % i for i in enumerate(wregs)] + ['"rf"(%s)' % x for x in rregs])
+      if not rregs:
+         rqueue2 = ""
+      else:
+         rqueue2 = ", " + ", ".join(['"rf"(%s)' % x for x in rregs])
+      print "__sl_docreate(%s%s)" % (tag, rqueue2)
+      print "m4_define([[__sl_rqueue_sync]],[[%s]])" % rqueue1
+      print "m4_define([[__sl_nrwrites]],[[%d]])" % len(wregs)
+      print "m4_define([[__sl_wqueue_sync]],[[%s]])" % wqueue
+      
    def fundef(self, funcname, counter, *args):
 
       # DEBUG:
