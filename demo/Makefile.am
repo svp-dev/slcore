@@ -1,4 +1,4 @@
-DEMOS = 10threads.sl answer.sl fibo.sl helloworld.sl test.sl
+DEMOS = 10threads.sl answer.sl fibonacci.sl helloworld.sl test.sl
 
 check_DATA = $(DEMOS:.sl=.ptl-x) $(DEMOS:.sl=.seqc-x)
 EXTRA_DIST = $(DEMOS)
