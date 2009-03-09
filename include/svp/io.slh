@@ -1,5 +1,4 @@
-#ifndef SVP_IO_SLH
-#define SVP_IO_SLH
+m4_ifndef([[SVP_IO_SLH]],[[m4_define([[SVP_IO_SLH]],1)
 
 typedef union {
   char c;
@@ -32,4 +31,5 @@ sl_decl(svp_io_printf, void,
 	sl_glparm(const char*, gfmt),
 	sl_glparm(svp_arg_slot*, gdata));
 
-#endif
+]])
+

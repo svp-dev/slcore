@@ -231,7 +231,7 @@ esac
 case $slc_arch in
     mtalpha) ;;
     *)
-	slc_ppflags="$slc_ppflags -DHAVE_C_DIVIDE"
+	slc_tflags="$slc_tflags -DHAVE_C_DIVIDE"
 	;;
 esac
 

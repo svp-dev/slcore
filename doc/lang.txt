@@ -100,7 +100,7 @@ counter. The counter is printed when the thread family has terminated.
 
 Source code::
 
-  sl_include(svp/iomacros.slh)
+  m4_include(svp/iomacros.slh)
 
   sl_def(foo, void, sl_shparm(int, a)) 
   {
@@ -127,7 +127,27 @@ When this program is run it should produce the following output::
 
   ..........
   10
-  
+
+About the preprocessor
+======================
+
+The preprocessor for the SL language is M4, augmented with the M4
+macros from GNU Autoconf's "m4sugar". The C preprocessor features many
+not be used.
+
+In order to share data across source files, "header" files as in C can
+be simulated with m4's ``m4_include`` and ``m4_ifndef``, as follows::
+
+   // in foo.slh:
+   m4_ifndef(FOO_SLH, [[
+   m4_define(FOO_SLH,[[]])
+
+   // declarations here
+ 
+   ]])
+
+   // in foo.sl:
+   m4_include(foo.slh)
 
 Syntax and semantics
 ====================

@@ -1,20 +1,18 @@
-#ifndef SVP_ASSERT_SLH
-#define SVP_ASSERT_SLH
+m4_ifndef([[SVP_ASSERT_SLH]],[[m4_define(SVP_ASSERT_SLH,1)
 
-sl_include(svp/io.slh)
-sl_include(svp/lib.slh)
+m4_include(svp/io.slh)
+m4_include(svp/lib.slh)
 
-#ifndef NDEBUG
-#define svp_assert(e)						\
-  ((void) ((e) ? 0 : svp__assert (#e, __FILE__, __LINE__)))
-#define svp__assert(e, file, line) svp___assert(e, file, line)
-#define svp___assert(e, file, line)		\
-  ({									\
-    sl_proccall(svp_io_puts, sl_glarg(const char*, str,  file ":" #line ": failed assertion '" e "\n")); \
-    svp_abort();							\
+m4_ifndef([[NDEBUG]],[[
+m4_define([[svp__assert]], [[
+  ({
+    sl_proccall(svp_io_puts, sl_glarg(const char*, str,  "[[$2]]:[[$3]]: failed assertion [[$1]]\n"));
+    svp_abort();
   })
-#else /* NDEBUG */
-#define svp_assert(ignore) ((void)0)
-#endif
+]])
+m4_define([[svp_assert]],[[((void) (([[$1]]) ? 0 : svp__assert([[$1]], __file__, __line__)))]])
+]], [[ /* !NDEBUG */
+m4_define([[svp__assert]], ((void)0))
+]])
 
-#endif
+]])

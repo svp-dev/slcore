@@ -24,13 +24,13 @@ m4_define([[sl_glparm]], [[uTC::global<[[$1]]>& __p_[[$2]]]])
 m4_define([[sl_index]], [[uTC::index [[$1]]]])
 
 # Pull shared and global argument declarations.
-m4_define([[sl_sharg]],[[&::[[$1]]:[[$2]]:m4_if([[$3]],,,[[= $3]])]])
-m4_define([[sl_glarg]],[[:const:[[$1]]:[[$2]]:m4_if([[$3]],,,[[= $3]])]])
+m4_define([[sl_sharg]],[[&::[[$1]]:[[$2]]:m4_if([[$3]],,,[[= [[$3]]]])]])
+m4_define([[sl_glarg]],[[:const:[[$1]]:[[$2]]:m4_if([[$3]],,,[[= [[$3]]]])]])
 
 
 m4_define([[sl_pulldecls]],[[m4_dnl
 m4_if([[$1]],,,[[m4_dnl
-m4_bregexp([[$1]],[[\([^:]*\):\([^:]*\):\([^:]*\):\([^:]*\):\([^:]*\)]],[[\3 \2 __a_\4 \5;]]) m4_dnl
+m4_bregexp([[$1]],[[\([^:]*\):\([^:]*\):\([^:]*\):\([^:]*\):\(.*\)]],[[\3 \2 __a_\4 \5;]]) m4_dnl
 $0(m4_shift($@))m4_dnl
 ]])m4_dnl
 ]])

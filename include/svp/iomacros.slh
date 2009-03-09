@@ -1,70 +1,47 @@
-#ifndef SVP_IOMACROS_SLH
-#define SVP_IOMACROS_SLH
+m4_ifndef([[SV_IOMACROS_SLH]], [[m4_define([[SVP_IOMACROS_SLH]],1)
 
-sl_include(svp/io.slh)
+m4_include(svp/io.slh)
 
-#define putc(C) ({ sl_proccall(svp_io_putc, sl_glarg(char, c, (C))); })
+m4_define([[putc]],[[({ sl_proccall(svp_io_putc, sl_glarg(char, c, ([[$1]]))); })]])
+m4_define([[puts]],[[({ sl_proccall(svp_io_puts, sl_glarg(const char*, s, ([[$1]]))); })]])
 
-#define puts(S) ({ sl_proccall(svp_io_puts, sl_glarg(const char*, s, (S))); })
+m4_define([[putf]],[[({
+sl_proccall(svp_io_putf, 
+            sl_glarg(double, d, ([[$1]])),
+            sl_glarg(unsigned, gprec, ([[$2]])), 
+	    sl_glarg(unsigned, gbase, 10));
+})]])
 
-#define putf(F, Prec) ({						\
-      sl_proccall(svp_io_putf, sl_glarg(double, d, (F)), sl_glarg(unsigned, gprec, (Prec)), sl_glarg(unsigned, gbase, 10)); \
-    })
+m4_define([[putn]], [[({
+sl_proccall(svp_io_putn, 
+	    sl_glarg(long long, n, ([[$1]])),
+            sl_glarg(unsigned, gbase, 10));
+})]])
 
-#define putn(N) ({ \
-      sl_proccall(svp_io_putn, sl_glarg(long long, n, (N)), sl_glarg(unsigned, gbase, 10)); \
-    })
+m4_define([[putu]], [[({
+sl_proccall(svp_io_putun, 
+            sl_glarg(unsigned long long, n, ([[$1]])), 
+            sl_glarg(unsigned, gbase, 10));
+})]])
 
-#define putu(N) ({ \
-      sl_proccall(svp_io_putun, sl_glarg(unsigned long long, n, (N)), sl_glarg(unsigned, gbase, 10)); \
-    })
+m4_define([[printf]], [[({
+struct {
+m4_pushdef([[printf_argcount]],0)
+m4_foreach([[printf_arg]],m4_dquote(m4_shift($@)),[[
+ union { __typeof__(printf_arg) __arg; svp_arg_slot __slot; } __a[[]]printf_argcount;
+ m4_step([[printf_argcount]])
+]])
+} __pf_args = {
+m4_foreach([[printf_arg]],m4_dquote(m4_shift($@)),[[
+ { (printf_arg) },
+]])
+};
+sl_proccall(svp_io_printf,
+            sl_glarg(const char*, gfmt, ([[$1]])),
+            sl_glarg(svp_arg_slot*, gdata, (svp_arg_slot*)(void*)&__pf_args));
+m4_popdef([[printf_argcount]])
+})]])
 
-#define printf1(Fmt, X) ({						\
-      struct {								\
-	union { __typeof__(X) __arg; svp_arg_slot __slot; } __a0;	\
-      } __pf_args = {							\
-	{ (X) }								\
-      };								\
-      sl_proccall(svp_io_printf, sl_glarg(const char*, gfmt, (Fmt)), sl_glarg(svp_arg_slot*, gdata, (svp_arg_slot*)(void*)&__pf_args)); \
-    })
 
-#define printf2(Fmt, X, Y) ({						\
-      struct {								\
-	union { __typeof__(X) __arg; svp_arg_slot __slot; } __a0;	\
-	union { __typeof__(Y) __arg; svp_arg_slot __slot; } __a1;	\
-      } __pf_args = {							\
-	{ (X) },							\
-	{ (Y) }								\
-      };								\
-      sl_proccall(svp_io_printf, sl_glarg(const char*, gfmt, (Fmt)), sl_glarg(svp_arg_slot*, gdata, (svp_arg_slot*)(void*)&__pf_args)); \
-    })
+]])
 
-#define printf3(Fmt, X, Y, Z) ({						\
-      struct {								\
-	union { __typeof__(X) __arg; svp_arg_slot __slot; } __a0;	\
-	union { __typeof__(Y) __arg; svp_arg_slot __slot; } __a1;	\
-	union { __typeof__(Z) __arg; svp_arg_slot __slot; } __a2;	\
-      } __pf_args = {							\
-	{ (X) },							\
-	{ (Y) },							\
-	{ (Z) }								\
-      };								\
-      sl_proccall(svp_io_printf, sl_glarg(const char*, gfmt, (Fmt)), sl_glarg(svp_arg_slot*, gdata, (svp_arg_slot*)(void*)&__pf_args)); \
-    })
-
-#define printf4(Fmt, W, X, Y, Z) ({					\
-      struct {								\
-	union { __typeof__(W) __arg; svp_arg_slot __slot; } __a0;	\
-	union { __typeof__(X) __arg; svp_arg_slot __slot; } __a1;	\
-	union { __typeof__(Y) __arg; svp_arg_slot __slot; } __a2;	\
-	union { __typeof__(Z) __arg; svp_arg_slot __slot; } __a3;	\
-      } __pf_args = {							\
-	{ (W) },							\
-	{ (X) },							\
-	{ (Y) },							\
-	{ (Z) }								\
-      };								\
-      sl_proccall(svp_io_printf, sl_glarg(const char*, gfmt, (Fmt)), sl_glarg(svp_arg_slot*, gdata, (svp_arg_slot*)(void*)&__pf_args)); \
-    })
-
-#endif

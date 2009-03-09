@@ -1,4 +1,4 @@
-sl_include(svp/iomacros.slh)
+m4_include(svp/iomacros.slh)
 
 sl_def(foo, void, sl_shparm(int, a)) 
 {
@@ -15,6 +15,6 @@ sl_def(t_main, void)
   sl_seta(x, 0);
   sl_sync();
 
-  printf1("\n%d\n", sl_geta(x));
+  printf("\n%d\n", sl_geta(x));
 } 
 sl_enddef

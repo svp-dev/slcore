@@ -1,3 +1,40 @@
+2009-03-09  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
+	Remove the C preprocessor from the set of usable
+	SL features.
+	
+	* doc/lang.txt: Document use of m4 preprocessor.
+
+	* include/slc.m4: Remove definition of sl_include: since we
+	officially advertise m4 there is no need to hide m4_include. Push
+	definition of sl_proccall to after initialization.
+
+	* bin/spp, 
+	* lib/t-pppalpha/slimpl.m4: Escape quotes in C before sending to
+	shell; be careful with extra ':' characters.
+
+	* lib/t-ptl/slimpl.m4,
+	* lib/t-seqc/slimpl.m4: Allow for global initializers containing
+	":".
+
+	* include/svp/div.slh,
+	* include/svp/io.slh,
+	* include/svp/assert.slh,
+	* include/svp/iomacros.slh: 
+	* include/svp/lib.slh: Use m4 macros instead of CPP.
+
+	* bin/cce.in: Put -DHAVE_C_DIVIDE in tflags instead of ppflags
+	since it is now used during translation.
+
+	* include/svp/io.slh: Remove printfN macros; replace by a single
+	printf macro definition which supports a variable argument list.
+	
+	* demo/10threads.sl,
+	* demo/helloworld.sl,
+	* demo/answer.sl,
+	* demo/test.sl: Update accordingly. Avoid commas in text strings
+	since we are not quoting macro arguments to keep code simple.	
+
 2009-03-08  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
 	Migrate fibonacci example to sl-apps.

@@ -288,8 +288,11 @@ class pppalpha(object):
          'i' : { 'sh' : [], 'gl' : [] },
          'f' : { 'sh' : [], 'gl' : [] },
          }
+      #print args
       for a in args:
-         cat, species, ctype, name, init = (a.split(':') + [None])[:5]
+         la = a.split(':')
+         cat, species, ctype, name = la[:4]
+         init = ':'.join(la[4:])
          if init == "":
             init = None
          dic[species][cat].append({'ctype':ctype, 'name':name, 'init':init})

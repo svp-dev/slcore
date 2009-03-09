@@ -43,9 +43,9 @@ $0(m4_shift($@))m4_dnl
 
 m4_define([[sl_initargs]],[[m4_dnl
 m4_if([[$1]],,,[[m4_dnl
-m4_define([[sl_arginit]],m4_bregexp([[$1]],[[[^:]*:[^:]*:\([^:]*\)]],[[\1]]))m4_dnl
-m4_if((sl_arginit),(),,[[m4_bregexp([[$1]],[[[^:]*:\([^:]*\):\([^:]*\)]],[[_sl_fid[[]]_args.\1 = (\2); ]])]])m4_dnl
-m4_bregexp([[$1]],[[\([^:]*\):\([^:]*\):[^:]*]],[[register \1 *const __a_\2 = &_sl_fid[[]]_args.\2; ]])m4_dnl
+m4_define([[sl_arginit]],m4_quote(m4_bregexp([[$1]],[[[^:]*:[^:]*:\(.*\)]],[[[[\1]]]])))m4_dnl
+m4_if(m4_quote(sl_arginit),,,[[m4_bregexp([[$1]],[[[^:]*:\([^:]*\):\(.*\)]],[[_sl_fid[[]]_args.\1 = (\2); ]])]])m4_dnl
+m4_bregexp([[$1]],[[\([^:]*\):\([^:]*\):.*]],[[register \1 *const __a_\2 = &_sl_fid[[]]_args.\2; ]])m4_dnl
 $0(m4_shift($@))m4_dnl
 ]])m4_dnl
 ]])
@@ -58,13 +58,13 @@ m4_define([[_sl_place]],m4_if([[$2]],,[[PLACE_LOCAL]],[[$2]]))m4_dnl
 m4_define([[_sl_start]],m4_if([[$3]],,0,[[$3]]))m4_dnl
 m4_define([[_sl_limit]],m4_if([[$4]],,1,[[$4]]))m4_dnl
 m4_define([[_sl_step]],m4_if([[$5]],,1,[[$5]]))m4_dnl
-m4_define([[sl_thargs]],[[m4_shiftn(8,$@)]])m4_dnl
+m4_define([[sl_thargs]],m4_dquote(m4_shiftn(8,$@)))m4_dnl
 struct { m4_dnl
 m4_if(sl_breakable([[$7]]),1,[[[[$7]] __breakv; ]])m4_dnl
-sl_declargs(sl_thargs)m4_dnl
+sl_declargs(sl_thargs) m4_dnl
 } _sl_fid[[]]_args; m4_dnl
 m4_if(sl_breakable([[$7]]),1,[[[[$7]] *_sl_fid[[]]_brk = &_sl_fid[[]]_args.__breakv; ]])m4_dnl
-sl_initargs(sl_thargs)m4_dnl
+sl_initargs(sl_thargs) m4_dnl
 register struct sl_famdata *_sl_fid = &__fid;m4_dnl
 __fam->ch = _sl_fid; m4_dnl
 __fid.be = _sl_start; m4_dnl

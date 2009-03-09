@@ -1,9 +1,8 @@
-#ifndef SVP_LIB_SLH
-#define SVP_LIB_SLH
+m4_ifndef([[SVP_LIB_SLH]],[[m4_define([[SVP_LIB_SLH]],1)
 
 #include "svp_os.h"
 
-#define svp_abort __svp_abort
+m4_define([[svp_abort]], [[__svp_abort]])
 
 #ifdef __GNUC__
 #define likely(X) __builtin_expect(!!(X), 1)
@@ -13,5 +12,6 @@
 #define unlikely(X) /*unlikely*/(X)
 #endif
 
-#endif
+]])
+
 

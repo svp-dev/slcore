@@ -1,73 +1,74 @@
-#ifndef SVP_DIV_SLH
-#define SVP_DIV_SLH
+m4_ifndef([[SVP_DIV_SLH]],[[m4_define([[SVP_DIV_SLH]],1)
 
-#ifdef HAVE_C_DIVIDE
+m4_ifdef([[HAVE_C_DIVIDE]],[[
 
-#define divu(X, Y) \
-  (__typeof__((X) / (Y)))				\
-  ((unsigned long long)(X) / (unsigned long long)(Y))
+m4_define([[divu]],[[
+  (__typeof__(([[$1]]) / ([[$2]])))
+  ((unsigned long long)([[$1]]) / (unsigned long long)([[$2]]))
+]])
 
-#define modu(X, Y)					\
-  (__typeof__((X) % (Y)))				\
-  ((unsigned long long)(X) % (unsigned long long)(Y))
+m4_define([[modu]],[[
+  (__typeof__(([[$1]]) % ([[$2]])))
+  ((unsigned long long)([[$1]]) % (unsigned long long)([[$2]]))
+]])
 
-#define divs(X, Y) \
-  (__typeof__((X) / (Y)))				\
-  ((signed long long)(X) / (signed long long)(Y))
+m4_define([[divs]],[[
+  (__typeof__(([[$1]]) / ([[$2]])))
+  ((signed long long)([[$1]]) / (signed long long)([[$2]]))
+]])
 
-#define mods(X, Y) \
-  (__typeof__((X) % (Y)))				\
-  ((signed long long)(X) % (signed long long)(Y))
+m4_define([[mods]],[[
+  (__typeof__(([[$1]]) % ([[$2]])))
+  ((signed long long)([[$1]]) % (signed long long)([[$2]]))
+]])
 
-#define divmodu(X, Y) do {						\
-    unsigned long long __divmod_dividend = (X), __divmod_divisor = (Y); \
-    unsigned long long __divmod_mod = __divmod_dividend % __divmod_divisor; \
-    unsigned long long __divmod_res = __divmod_dividend / __divmod_divisor; \
-    (X) = (__typeof__ (X))__divmod_mod; (Y) = (__typeof__ (Y))__divmod_res;	\
-  } while(0)
+m4_define([[divmodu]],[[do {
+    unsigned long long __divmod_dividend = ([[$1]]), __divmod_divisor = ([[$2]]);
+    unsigned long long __divmod_mod = __divmod_dividend % __divmod_divisor;
+    unsigned long long __divmod_res = __divmod_dividend / __divmod_divisor;
+    ([[$1]]) = (__typeof__ ([[$1]]))__divmod_mod; 
+    ([[$2]]) = (__typeof__ ([[$2]]))__divmod_res;
+  } while(0)]])
 
-#define divmods(X, Y) do {						\
-    signed long long __divmod_dividend = (X), __divmod_divisor = (Y); \
-    signed long long __divmod_mod = __divmod_dividend % __divmod_divisor; \
-    signed long long __divmod_res = __divmod_dividend / __divmod_divisor; \
-    (X) = (__typeof__ (X))__divmod_mod; (Y) = (__typeof__ (Y))__divmod_res;	\
-  } while(0)
+m4_define([[divmods]],[[do {
+    signed long long __divmod_dividend = ([[$1]]), __divmod_divisor = ([[$2]]);
+    signed long long __divmod_mod = __divmod_dividend % __divmod_divisor;
+    signed long long __divmod_res = __divmod_dividend / __divmod_divisor;
+    ([[$1]]) = (__typeof__ ([[$1]]))__divmod_mod; 
+    ([[$2]]) = (__typeof__ ([[$2]]))__divmod_res;
+  } while(0)]])
 
-#else /* !HAVE_C_DIVIDE */
+]], [[ /* !HAVE_C_DIVIDE */ 
 
 #include "svp_asmdiv.h"
 
-#define divmodu(X, Y) __asm_divmodu(X, Y)
-#define divmods(X, Y) __asm_divmods(X, Y)
+m4_define([[divmodu]], [[__asm_divmodu(([[$1]]),([[$2]]))]])
+m4_define([[divmods]], [[__asm_divmods(([[$1]]),([[$2]]))]])
 
-#define divu(X, Y)				       \
-  ({						       \
-    unsigned long long __divu_x = (X), __divu_y = (Y); \
-    divmodu(__divu_x, __divu_y);		       \
-    (__typeof__((X) / (Y)))__divu_y;		       \
-  })
+m4_define([[divu]], [[({
+    unsigned long long __divu_x = ([[$1]]), __divu_y = ([[$2]]);
+    divmodu(__divu_x, __divu_y);
+    (__typeof__(([[$1]]) / ([[$2]])))__divu_y;
+  })]])
 
-#define divs(X, Y)				       \
-  ({						       \
-    long long __divs_x = (X), __divs_y = (Y);	       \
-    divmods(__divs_x, __divs_y);		       \
-    (__typeof__((X) / (Y)))__divs_y;		       \
-  })
+m4_define([[divs]], [[({
+    long long __divs_x = ([[$1]]), __divs_y = ([[$2]]);
+    divmods(__divs_x, __divs_y);
+    (__typeof__(([[$1]]) / ([[$2]])))__divs_y;
+  })]])
 
-#define modu(X, Y)				       \
-  ({						       \
-    unsigned long long __modu_x = (X), __modu_y = (Y); \
-    divmodu(__modu_x, __modu_y);		       \
-    (__typeof__((X) % (Y)))__modu_x;		       \
-  })
+m4_define([[modu]], [[({
+    unsigned long long __modu_x = ([[$1]]), __modu_y = ([[$2]]);
+    divmodu(__modu_x, __modu_y);
+    (__typeof__(([[$1]]) % ([[$2]])))__modu_x;
+  })]])
 
-#define mods(X, Y)				       \
-  ({						       \
-    long long __mods_x = (X), __mods_y = (Y);	       \
-    divmods(__mods_x, __mods_y);		       \
-    (__typeof__((X) % (Y)))__mods_x;		       \
-  })
+m4_define([[mods]], [[({
+    long long __mods_x = ([[$1]]), __mods_y = ([[$2]]);
+    divmods(__mods_x, __mods_y);
+    (__typeof__(([[$1]]) % ([[$2]])))__mods_x;
+  })]])
 
-#endif
+]])
 
-#endif
+]])

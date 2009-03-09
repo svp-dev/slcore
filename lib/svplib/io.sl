@@ -1,6 +1,6 @@
-sl_include(svp/lib.slh)
-sl_include(svp/div.slh)
-sl_include(svp/io.slh)
+m4_include(svp/lib.slh)
+m4_include(svp/div.slh)
+m4_include(svp/io.slh)
 
 static const char *digits = "0123456789abcdef";
 

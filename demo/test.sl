@@ -1,4 +1,4 @@
-sl_include(svp/iomacros.slh)
+m4_include(svp/iomacros.slh)
 
 sl_def(inc, int,
        sl_shparm(int, x))
@@ -30,7 +30,7 @@ sl_def(t_main, void)
     sl_create(f1,,1,20,2,3, void,
 	      inc3, sl_sharg(int, n, 0), sl_glarg(int, g, 1));
     sl_sync(f1);
-    printf1("output count: %d\n", sl_geta(n));
+    printf("output count: %d\n", sl_geta(n));
   }
   
   {
@@ -45,7 +45,7 @@ sl_def(t_main, void)
     if (r == SVP_EKILLED) 
       puts("killed!\n");
     else {
-      printf1("counter: %d\n", sl_geta(n));
+      printf("counter: %d\n", sl_geta(n));
     }
   }
 
@@ -65,9 +65,9 @@ sl_def(t_main, void)
 	      inc, sl_sharg(int, n, 0));
     sl_sync(fx,r);
     if (r == SVP_EBROKEN) {
-      printf1("broken, brk = %d\n", sl_getbr(fx));
+      printf("broken: brk = %d\n", sl_getbr(fx));
     } else {
-      printf1("output count: %d\n", sl_geta(n));
+      printf("output count: %d\n", sl_geta(n));
     }
   }
 }
