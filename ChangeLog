@@ -1,5 +1,12 @@
 2009-03-11  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	Add missing directory creation in maintainer mode.
+	
+ 	* Makefile.am (include/slc_*.m4): Create the "include" directory
+	in case it was not created before.
+
+2009-03-11  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	Correct paths in included dirs.
 	
 	* bin/Makefile.am (edit_inst): Use $(includedir), not $(incdir).
