@@ -21,8 +21,8 @@ edit_src = $(edit_base) \
 
 edit_inst = $(edit_base) \
 	       -e 's|@bindir[@]|$(bindir)|g' \
-	       -e 's|@incdir[@]|$(incdir)|g' \
-	       -e 's|@srcincdir[@]|$(incdir)|g' \
+	       -e 's|@incdir[@]|$(includedir)|g' \
+	       -e 's|@srcincdir[@]|$(includedir)|g' \
 	       -e 's|@srcdatadir[@]|$(pkgdatadir)|g' \
 	       -e 's|@pkgdatadir[@]|$(pkgdatadir)|g' \
 	       -e 's|@srclibdir[@]|$(pkglibdir)|g' \
