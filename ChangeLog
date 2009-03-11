@@ -1,3 +1,10 @@
+2009-03-11  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
+	Add formal language specification.
+	
+	* doc/spec.txt: Add.
+	* doc/Makefile.am: Update accordingly.
+
 2009-03-09  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
 	Remove the C preprocessor from the set of usable

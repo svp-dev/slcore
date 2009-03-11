@@ -1,0 +1,503 @@
+============================
+ SL: Language specification
+============================
+
+:Date: 2009-03-11
+:Version: 0.91
+:Status: Draft
+
+Prologue
+========
+
+This document should be read next to the ISO/IEC 9899:1999 standard
+(ISO C99). It contains references to terms and definitions from the C
+formal specification.
+
+Environment
+===========
+
+SL's translation and processing environments are defined like C's
+environment, except that it uses M4 as a preprocessor instead of the C
+preprocessor.
+
+Also, the semantics of the SL abstract machine are altered by SVP; notably:
+
+- signals and interrupts are not defined;
+
+- memory consistency is defined differently;
+
+- there exists synchronizing storage.
+
+When program startup occurs, a family of a single thread is created
+running thread function ``t_main``. ``t_main`` must be declared to take no parameters, with break type ``void``.
+
+Translation limits
+------------------
+
+C's translation limits apply. Also:
+
+- the number of shared thread parameters or arguments that can be
+  declared in a single declaration or create is
+  *implementation-defined*;
+
+- whether any other type than ``void``, ``int`` or ``float`` can be
+  used as a thread function's break type is left *unspecified*.
+
+Language
+========
+
+Concepts
+--------
+
+Scopes of identifiers
+``````````````````````
+
+Identifiers can denote a "normal C object"; a function; a tag or
+member of a structure, union or enumeration; a typedef name; a label
+name; a synchronizing object.
+
+Identifiers have the same *visibility* and *scope* semantics in SL as
+they have in C.
+
+Linkage of identifiers
+````````````````````````
+
+*Linkage* is defined in SL as in C; identifiers for synchronizing objects
+have no linkage.
+
+Name space of identifiers
+```````````````````````````
+
+*Name spaces* are defined in SL as in C for all identifiers except
+those to synchronizing objects.
+
+It is *unspecified* whether SL shares the same namespace for C's
+"ordinary identifiers" and identifiers that denote synchronizing
+storage. (i.e. never assume the existence or absence of a shadowing
+effect between the two sorts of identifier.)
+
+It is also *unspecified* whether SL shares the same namespace for
+identifiers that denote thread parameters and those that denote
+arguments. (i.e. never assume the existence or absence of a shadowing
+effect between the two sorts of identifiers).
+
+
+Storage duration of objects
+````````````````````````````
+
+*Storage duration* is defined in SL as in C for "normal C objects". 
+
+For synchronizing objects:
+
+- the storage duration of a shared thread function parameter extends
+  from the point execution starts in the thread function, to the point
+  the execution of the thread ends or the next adjacent thread reads
+  the object, whichever comes last.
+
+- the storage duration of a thread function argument extends from the
+  point of "create" in the parent, to the point execution leaves the
+  block enclosing the "create" construct.
+
+Binding between objects and identifiers
+````````````````````````````````````````
+
+See CSA notes [utc1], [utc2].
+
+Types
+``````
+
+*Types* are defined in SL as in C. 
+
+However SL adds a new type category: *thread function types*, which
+are separate from C's function types. A thread function type is
+characterized by its break type, and the number, class (shared/global)
+and type of its parameters. A thread function type shall not be
+incomplete. Thread function types can be used for type derivation like
+function types.
+
+Synchronizing objects can have any of C's *scalar types* (see ISO C99
+for a definition). 
+
+It is left *unspecified* whether a synchronizing object can have any
+of C's other types (array, structure, union, function).
+
+.. note:: in C a pointer-to-array type is a scalar type.
+
+Representation of types
+`````````````````````````
+
+The *representation of types* is defined in SL as in C.
+
+Compatible types and composite types
+`````````````````````````````````````
+
+*Compatible and composite types* are defined in SL as in C.
+
+Additionally, compatibility and composition is extended to *thread
+function types*. However:
+
+- thread function types and C's function types are not mutually
+  compatible;
+
+- two thread function types are not compatible if their argument class
+  and type differ in any manner when compared one to one in their
+  order of appearance in the function's prototype.
+
+Conversions
+-----------
+
+*Conversions* are defined in SL as in C.
+
+Lexical elements
+----------------
+
+*Lexical elements* are defined in SL as in C, with the exception of
+everything related to the C preprocessor.  SL's processor is M4.
+
+Aditionally:
+
+- all identifiers beginning with ``__sl_`` and ``_sl_`` are reserved
+  and cannot be used in programs.
+
+- the identifiers ``__file__``, ``__FILE__``, ``__line__``,
+  ``__LINE__`` are reserved and their semantics are left
+  *unspecified*.
+
+- it is left *unspecified* whether SL supports
+  *universal characters* as defined in ISO C99.
+
+- the following preprocessor macros have pervasive semantics and must
+  be considered as keywords (i.e. they must not be redefined, and they
+  can be assumed to have the same semantics everywhere they appear)::
+
+     sl_def sl_enddef sl_create sl_sync
+     sl_shparm sl_glparm sl_shfparm sl_glfparm
+     sl_glarg sl_glarg sl_shfarg sl_glfarg
+     sl_seta sl_geta sl_setp sl_getp
+     sl_break sl_kill sl_index
+
+- the following additional keywords are reserved in SL and cannot be
+  used in programs::
+
+     create sync thread shared index kill family place
+
+- any keyword in C++ not covered above is reserved in SL and cannot be
+  used in programs.
+
+
+Expressions
+-----------
+
+*Expressions* are defined in SL as in C, provided that any use of
+objects described in their definition in C is considered restricted to
+"normal C objects".
+
+However, the following is left *unspecified*:
+
+- whether C's function calls are valid SL expressions;
+
+- whether C's use of ``/`` to divide two non-floating values is a
+  valid SL expression. (see the section "Library" below for a substitute)
+
+Additionally, the constructs ``sl_geta(x)`` and ``sl_getp(y)`` are
+valid expressions if ``x`` and ``y`` are identifiers that refer to a
+thread argument and parameter, respectively; as for semantics:
+
+- they are defined to generate a *side effect* (i.e. their evaluation
+  cannot be avoided even if their result is not used);
+
+- they cause a read operation to the corresponding synchronizing
+  object (see CSA notes for details);
+
+- the result of their evaluation is a *rvalue* with the type and value
+  of the synchronizing object after the read succeeds.
+
+.. note:: the *identifiers* themselves that denote thread arguments
+   and parameters are not valid expressions.
+
+Constant expressions
+--------------------
+
+*Constant expressions* are defined in SL as in C.
+
+Declarations
+------------
+
+The following *declarations* are defined in SL:
+
+- any C-like declarations containing the storage type specifier
+  ``typedef``, built upon any of C's types (i.e. not thread function
+  types); these have the same semantics in SL as in C;
+
+- any C-like declarations that declare or define a "normal C object";
+  these have the same semantics in SL as in C;
+
+- any C-like declaration that declare a structure, enum or union type;
+  these have the same semantics in SL as in C;
+
+- declarations of the form:
+
+    ``sl_decl(`` *identifier* ``,`` *break-type* [ ``,`` *thread-param-list* ] ``)`` ``;``
+
+  These *declare* a thread function with the specified identifier and prototype, with external linkage.
+
+It is left *unspecified* whether any other of C's declarations exists in SL.
+
+Statements and blocks
+---------------------
+
+*Statements and blocks* are defined in SL as in C.
+
+Additionally:
+
+- a construct of the following form is a block item (not statement):
+
+    ``sl_create(`` *create-parameters* ``,`` *expression* [ ``,`` *thread-arg-list* ] ``)`` ``;``
+
+    *block-item-list*
+
+    ``sl_sync(`` [ *expression* ] ``)`` ``;``
+
+  Its semantics, and the restrictions on their composition with other
+  C constructs, are defined in CSA notes.
+
+  It is left *unspecified* whether the create construct is well-formed
+  when any of the expressions used in the create construct has
+  side-effects and is not a simple assignment.
+
+  .. note:: As this is "merely" a block item, braces are mandatory to
+     turn it into a statement.
+
+- a construct of the following form is a statement:
+
+    ``sl_kill(`` *expression* ``)`` ``;``
+
+  Its semantics are defined in CSA notes.
+
+- a construct of the following form is a statement:
+
+    ``sl_break(`` *expression* ``)`` ``;``
+
+  Its semantics are defined in CSA notes.
+
+- a construct of either the following form is a statement:
+
+    ``sl_seta(`` *identifier* ``,``  *expression* ``)`` ``;``
+
+  or:
+
+    ``sl_setp(`` *identifier* ``,``  *expression* ``)`` ``;``
+
+  As statements, when they are executed they cause the evaluation of
+  the expression then a write to the synchronizing object denoted by
+  the identifier (resp. thread argument or parameter) using the value
+  of the expression.
+
+  .. note:: as described in CSA notes the position (and number) of reads and
+     writes to synchronizing objects is restricted.
+
+- The ``return`` statement cannot be used in a thread function
+  definition.
+
+.. note:: when passing an expression, the expression must not
+   contain any commas, or it should be quoted with ``[[`` and
+   ``]]``.
+
+External definitions
+--------------------
+
+At the top level of a translation unit, the following of C's *external
+declarations* are defined in SL as in C:
+
+- declarations that declare or define "normal C objects";
+
+- declarations with the storage class specifier ``typedef``.
+
+- declarations that declare a structure, enum or union type;
+
+- *thread function definitions* of the form:
+
+    ``sl_def(`` *identifier* ``,`` *break-type* [ ``,`` *thread-param-list* ] ``)``
+
+    *thread-function-body*
+
+    ``sl_enddef``
+
+  Their semantics are defined in CSA notes.
+
+It is left *unspecified* whether SL supports C's function declarations and definitions.
+
+Preprocessing directives
+------------------------
+
+SL does not use the C preprocessor so C's semantics w.r.t. preprocessing do not apply.
+
+
+Instead SL uses mainly the M4 preprocessor. It is left *unspecified*
+whether the C preprocessor is run on the program after it has been
+filtered through M4. 
+
+Additionally, M4's standard behavior is augmented with:
+
+- GNU Autoconf's "m4sugar" macros (see Autoconf's documentation for details);
+
+- some other "helper" macros (``m4_step``, ...) not documented here;
+
+- an auxiliary macro ``sl_proccall`` defined as follows::
+
+   m4_define([[sl_proccall]],
+             [[do { 
+                 sl_create(,,,,,,,$@); 
+                 sl_sync(); 
+               } while(0)]])
+
+.. note:: M4's quotes in SL are ``[[`` and ``]]``.
+
+
+Thread argument declarations
+----------------------------
+
+*Thread argument declarations* and *thread parameter declaration* have
+either of the following syntactic form:
+
+  ``sl_glarg(`` *declaration-specifiers* ``,`` *identifier* ``,`` *expression* ``)``
+
+  ``sl_glfarg(`` *declaration-specifiers* ``,`` *identifier* ``,`` *expression* ``)``
+
+  ``sl_sharg(`` *declaration-specifiers* ``,`` *identifier* [ ``,`` *expression* ] ``)``
+
+  ``sl_shfarg(`` *declaration-specifiers* ``,`` *identifier* [ ``,`` *expression* ] ``)``
+
+  ``sl_glparm(`` *declaration-specifiers* ``,`` *identifier* ``)``
+
+  ``sl_glfparm(`` *declaration-specifiers* ``,`` *identifier* ``)``
+
+  ``sl_shparm(`` *declaration-specifiers* ``,`` *identifier* ``)``
+
+  ``sl_shfparm(`` *declaration-specifiers* ``,`` *identifier* ``)``
+
+Restricted by the following *lexical* constraints: the
+*declaration-specifiers* part must not contain any commas, unbalanced
+parentheses nor colons. (if in doubt, use ``typedef`` before to
+simplify the type to a single identifier)
+
+.. note:: for the form that accept an expression, the expression must
+  not contain any commas, or it should be quoted with ``[[`` and ``]]``.
+
+Semantic constraints:
+
+- the declaration specifiers must not contain any storage class specifier;
+
+- the type qualifier ``volatile`` must not be used;
+
+- the forms ``sl_glf*`` and ``sl_shf*`` must be used if and only if
+  the declaration specifiers indicate any of C's real floating
+  points;
+
+- as described in the section "Concepts" above it is left *unspecified*
+  whether a non-scalar type can be used for a thread argument
+  declaration;
+
+- additionally, it is left *unspecified* whether a thread argument
+  declaration is valid if the expression (if it appears in the syntax)
+  has side effects.
+
+The semantics are described in CSA notes.
+
+Thread function body
+--------------------
+
+A *thread function body* has the following form:
+
+  ``{`` [ ``sl_index(`` *identifier* ``)`` ``;`` ] *block-item-list* ``}``
+
+It has the same semantics as a compound statement in C except that the
+first block item may be a thread index declaration.
+
+(See the CSA notes for more information about thread indexes.)
+
+Library
+=======
+
+Introduction
+------------
+
+All of C's reserved identifiers are reserved in SL.
+
+Additionally, the identifier ``main`` is reserved for top-level declarations.
+
+Predefined types
+----------------
+
+The following types are predefined:
+
+- ``sl_family_t``: opaque type suitable to declare any object
+  (including synchronizing objects) that can hold a SVP family
+  identifier. The only operations defined for this type are comparison
+  (equality) and assignment.
+
+- ``sl_place_t``: opaque type suitable to declare any object
+  (including synchronizing objects) that can hold a SVP place
+  identifier. The only operations defined for this type are comparison
+  (equality) and assignment.
+
+Diagnostics
+-----------
+
+SL provides a construct ``svp_assert`` in the header
+``svp/assert.slh`` with similar semantics as C's ``assert``.
+
+Integer divide
+--------------
+
+The following definitions are available in ``svp/div.slh``:
+
+- "Expression" macros (can be used as expressions, but may perform a
+  side effect):
+
+  ``divu(X, Y)``
+    returns result of unsigned integer divide of ``X`` by ``Y``
+
+  ``modu(X, Y)``
+    returns remainder of unsigned integer divide of ``X`` by ``Y``
+
+  ``divs(X, Y)``
+    returns result of signed integer divide of ``X`` by ``Y``
+
+  ``mods(X, Y)``
+    returns remainder of signed integer divide of ``X`` by ``Y``
+
+- "Statement" macros (can be used as statements):
+
+  ``divmodu(X, Y)``
+    performs unsigned integer divide of ``X`` by ``Y``, then assign back
+    the remainder to the first operand and the result to the second
+    operand
+
+  ``divmods(X, Y)``
+    performs signed integer divide of ``X`` by ``Y``, then assign back
+    the remainder to the first operand and the result to the second
+    operand
+
+.. note:: when passing an expression, the expression must not
+   contain any commas, or it should be quoted with ``[[`` and
+   ``]]``.
+
+
+Console output
+--------------
+
+See ``svp/io.slh`` and ``svp/iomacros.slh`` for details.
+
+Common definitions
+------------------
+
+Any of C's standard definitions from ``stddef.h`` can be reached by
+including ``cstddef.slh`` in SL.
+
+
+Integer types
+-------------
+
+Any of C's standard definitions from ``stdint.h`` can be reached by
+including ``cstdint.slh`` in SL.
