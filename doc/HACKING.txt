@@ -1,0 +1,115 @@
+====================
+ SLC Hacking  guide
+====================
+
+.. contents::
+
+Maintainer mode
+===============
+
+When checking out the repository from Subversion, the source tree does
+not "look and feel" like the one that is distributed to users. 
+
+Getting started
+---------------
+
+1. Read ``doc/README.txt`` and ``doc/HACKING.txt`` thoroughly.
+
+2. Ensure you did #1, really. 
+
+3. Check all the requirements are available, install/upgrade as needed.
+
+4. Run::
+
+     ./boostrap
+     mkdir build
+     cd build
+     ../configure --enable-maintainer-mode
+     make
+     make check
+
+5. Enjoy!
+
+Special requirements
+--------------------
+
+When working from SVN, the following *additional* requirements apply:
+
+- Autoconf 2.63 or later
+
+- Automake 1.10 or later
+
+- Docutils 0.5 or later
+
+- GNU Texinfo 4.13 or later
+
+Extra Makefile rules
+--------------------
+
+A number of Makefile rules are enabled only in "maintainer mode",
+which is the state of the software between a checkout from SVN and a
+distribution package. The idea is that the outcome of these rules is
+packaged along during a distribution, so they do not need to be
+enabled in the final package.
+
+To enable these rules, use::
+
+   configure --enable-maintainer-mode
+
+Working from the source directory
+=================================
+
+The ``slc`` and ``sgr`` scripts are generated during
+``make``. However, they contain absolute paths relative to their
+installation directory. This means they cannot be used "as-is" before
+``make install`` is run.
+
+This may be a hassle during development (would require to re-run ``make
+install`` after each change). To balance this, a "local" version of
+all the derived scripts is generated as well, with the extension
+``.local``. These can be run from the build directory without the need
+for ``make install``. For example: ``slc.local``, ``sgr.local``, etc.
+
+
+Committing work
+===============
+
+When committing to the ``trunk`` branch of the repository:
+
+1. ensure that ``make distcheck`` succeeds.
+
+2. update the ``ChangeLog`` with a detailed description of your
+   changes. (use ``C-x 4 a`` in Emacs from an edited file to get the
+   entry automatically generated)
+
+3. save the output of ``svn diff`` to a file.
+
+4. perform the commit, ensuring that the latest ``ChangeLog`` entry is
+   pasted into the commit message.
+
+5. send the contents of the file from step #3 to the mailing list,
+   ensuring that the changes to the ``ChangeLog`` appear first in the
+   e-mail.
+
+
+Distributing
+============
+
+To package a copy of SLC for use by users who do not have access to
+the SVN repository, perform the following steps:
+
+1. ensure that the documentation is consistent with the state of the
+   software;
+
+2. ensure that ``doc/NEWS.txt`` contains the latest major changes;
+
+3. ensure that ``make distcheck`` succeeds.
+
+After step #3 has completed, ``make distcheck`` will have output two
+archives (``.tar.gz`` and ``.tar.bz2``) suitable for distribution.
+
+
+
+.. Local Variables:
+.. mode: rst
+.. End:

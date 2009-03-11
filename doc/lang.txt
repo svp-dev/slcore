@@ -1,6 +1,6 @@
-============================
- SL: Language specification
-============================
+=======================
+ SL: Language overview
+=======================
 
 :Authors: Raphael "kena" Poss
 :Date: 2008-03-02
@@ -637,37 +637,5 @@ using the syntax currently accepted by the core compiler::
 Standard library
 ================
 
-Integer divide
---------------
-
-Because SL has at least one implementation where the regular integer
-divide syntax ("/") is not supported, programs should make use of the
-macros defined in ``svp/div.slh``:
-
-``divu(X, Y)``, ``divs(X, Y)``
-  Return the result of ``X / Y``, respectively unsigned or signed.
-
-``modu(X, Y)``, ``mods(X, Y)``
-  Return the result of ``X % Y``, respectively unsigned or signed.
-
-``divmodu(X, Y)``, ``divmods(X, Y)`` 
-  Modify ``X`` and ``Y`` in-place to be the result of ``X % Y`` and
-  ``X / Y``, respectively.
-
-Text output
------------
-
-Some I/O primitives are provided:
-
-- as threaded functions declared in ``svp/io.slh``;
-
-- as procedure-like macros defined in ``svp/iomacros.slh``.
-
-See the corresponding headers for more information.
-
-Assertions
-----------
-
-The procedure-like macro ``svp_assert`` is provided with similar
-semantics as C's ``assert``. It is declared in ``svp/assert.slh``.
+See the separate language specification for details.
 

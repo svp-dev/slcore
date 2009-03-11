@@ -5,7 +5,11 @@ Copyright (C) 2008, 2009 the CSA group, The SL project
  Introduction to SLC
 =====================
 
-:Date: 2009-03-01
+SLC, a generic SVP_ compiler.
+
+.. _SVP: http://www.svp-home.org/
+
+.. contents::
 
 Installation
 ============
@@ -50,6 +54,18 @@ Using slc
 slc comes with several demo programs. Looking at them is a good way to
 see what slc can support. They can be found in the ``demos``
 subdirectory.
+
+See also
+========
+
+There are other sources of interest in the distribution:
+
+- Headlines about the project can be found in the file ``NEWS`` at the
+  root of the source tree.
+
+- Documentation about the input language SL and the accompanying
+  software library can be found in the ``doc/`` subdirectory.
+
 
 
 .. Local Variables:

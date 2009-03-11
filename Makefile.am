@@ -6,6 +6,11 @@ README: $(srcdir)/doc/README.txt
 	cp $(srcdir)/doc/README.txt $@
 	chmod -w $@
 
+NEWS: $(srcdir)/doc/NEWS.txt
+	rm -f $@
+	cp $(srcdir)/doc/NEWS.txt $@
+	chmod -w $@
+
 nobase_dist_pkgdata_DATA = \
 	include/slc.m4 \
 	include/slc_m4sugar.m4 \

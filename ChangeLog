@@ -1,5 +1,22 @@
 2009-03-11  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	More documentation.
+	
+	* doc/README.txt: Update with additional references.
+	
+	* doc/NEWS.txt: Document last two batches of major changes.
+	
+	* doc/HACKING.txt: Document maintainer mode. Document additional
+	requirements for developer. Document using scripts without
+	installing. Document distribution.
+
+	* doc/lang.txt: Remove section about library since this is now
+	covered by the separate specification.
+
+	* Makefile.am (NEWS): Copy from src/NEWS.txt.
+
+2009-03-11  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	Add missing directory creation in maintainer mode.
 	
  	* Makefile.am (include/slc_*.m4): Create the "include" directory

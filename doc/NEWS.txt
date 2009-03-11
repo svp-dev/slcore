@@ -1,0 +1,43 @@
+=======================
+ Release notes for SLC
+=======================
+
+This document describes major updates to SLC, the generic SVP_
+compiler.
+
+.. _SVP: http://www.svp-home.org/
+
+SLC 2.x, 2009
+=============
+
+- Development version only.
+
+- Better documentation, including a formal SL language specification
+  derived from C99.
+
+- Alternate SL to MT-Alpha compiler.
+
+- Initial "standard SL library".
+
+- "utcc" renamed to "slc", to reflect the additional generality.
+
+The unit test suite and demo code applications were removed from the
+compiler tree. Only a few small programs are left for documentation
+purposes.
+
+SLC 1.x (utcc), December 2008
+=============================
+
+- Development version only.
+
+- Include a unit test suite and demo applications together with the
+  compiler.
+
+
+
+
+
+
+.. Local Variables:
+.. mode: rst
+.. End:
