@@ -31,7 +31,6 @@ edit_inst = $(edit_base) \
 	       -e 's|@python[@]|$(PYTHON)|g' 
 
 cce sgr slc: Makefile
-	$(MKDIR_P) bin
 	rm -f $@ $@.tmp
 	$(edit_inst) $(srcdir)/$@.in >$@.tmp
 	chmod +x $@.tmp

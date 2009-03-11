@@ -1,5 +1,11 @@
 2009-03-11  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	Code cleanup. Add more svn:ignore patterns.
+	
+	* bin/Makefile.am (cce sgr slc): Remove extraneous use of mkdir.
+
+2009-03-11  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	More documentation.
 	
 	* doc/README.txt: Update with additional references.
