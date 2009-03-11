@@ -3,7 +3,7 @@
 ============================
 
 :Date: 2009-03-11
-:Version: 0.91
+:Version: $Rev$
 :Status: Draft
 
 Prologue
@@ -36,12 +36,9 @@ Translation limits
 
 C's translation limits apply. Also:
 
-- the number of shared thread parameters or arguments that can be
-  declared in a single declaration or create is
+- the relative number of shared and global thread parameters or
+  arguments that can be declared in a single declaration or create is
   *implementation-defined*;
-
-- whether any other type than ``void``, ``int`` or ``float`` can be
-  used as a thread function's break type is left *unspecified*.
 
 Language
 ========
@@ -268,6 +265,16 @@ Additionally:
   .. note:: As this is "merely" a block item, braces are mandatory to
      turn it into a statement.
 
+  .. note:: the whole construct (from ``sl_create`` to the semicolon
+     after ``sl_sync``) is a block item; however it can "contain"
+     additional block items inside itself (whose execution is bounded
+     on entry by the create event and on exit by the sync event). With
+     a restriction though: it is left *unspecified* whether the
+     construct is valid if the block items inside it contain any
+     expression with side effects other than simple assignments or
+     uses of ``sl_set*``, or if it contains another "create" block
+     item.
+
 - a construct of the following form is a statement:
 
     ``sl_kill(`` *expression* ``)`` ``;``
@@ -323,9 +330,16 @@ declarations* are defined in SL as in C:
 
     ``sl_enddef``
 
-  Their semantics are defined in CSA notes.
+  The break type must be specified with one of the three lexical words
+  ``void``, ``int`` or ``float``. Despite the names, an actual break
+  value type is guaranteed to be large enough to hold a pointer (for
+  break type ``int``) or a C's ``double`` (for break type ``float``).
+
+  The semantics of thread function definitions are defined in CSA notes.
 
 It is left *unspecified* whether SL supports C's function declarations and definitions.
+
+
 
 Preprocessing directives
 ------------------------

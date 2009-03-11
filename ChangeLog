@@ -1,5 +1,12 @@
 2009-03-11  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	Clarify language spec.
+	
+	* doc/spec.txt: Rephrase break type properly. Place restriction on
+	contents of "create".
+	
+2009-03-11  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	Add formal language specification.
 	
 	* doc/spec.txt: Add.
