@@ -60,7 +60,7 @@ their meaning as defined in C:
 
   *block item*
   - *compound statement*
-  - constant expression*
+  - *constant expression*
   - conversion
   - *declaration specifier*
   - *declaration*

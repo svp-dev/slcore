@@ -21,7 +21,7 @@ m4_define([[puts]],
 m4_define([[putf]],
 [[do {
   sl_proccall(svp_io_putf, 
-              sl_glarg(double, d, ([[$1]])),
+              sl_glfarg(double, d, ([[$1]])),
               sl_glarg(unsigned, gprec, ([[$2]])), 
               sl_glarg(unsigned, gbase, 10));
 } while(0)]])

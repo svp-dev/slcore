@@ -22,7 +22,7 @@ sl_def(svp_io_puts, void,
 sl_enddef
 
 sl_def(svp_io_putf, void,
-       sl_glparm(double, gx),
+       sl_glfparm(double, gx),
        sl_glparm(unsigned, gprec),
        sl_glparm(unsigned, gbase))
 {

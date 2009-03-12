@@ -1,5 +1,16 @@
 2009-03-12  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	Clean up code.
+	
+	* lib/svplib/io.sl, 
+	* include/svp/io.slh,	
+	* include/svp/iomacros.slh: Use the "f" parameter/argument form
+	where applicable.
+
+	* doc/spec.txt: Fix typo.
+
+2009-03-12  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	More language specification, as requested by UH.
 	
 	* doc/spec.txt: List external document references. Add
