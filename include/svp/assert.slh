@@ -4,15 +4,15 @@ m4_include(svp/io.slh)
 m4_include(svp/lib.slh)
 
 m4_ifndef([[NDEBUG]],[[
-m4_define([[svp__assert]], [[
-  ({
+m4_define([[svp__assert]], 
+[[do {
     sl_proccall(svp_io_puts, sl_glarg(const char*, str,  "[[$2]]:[[$3]]: failed assertion [[$1]]\n"));
     svp_abort();
-  })
-]])
-m4_define([[svp_assert]],[[((void) (([[$1]]) ? 0 : svp__assert([[$1]], __file__, __line__)))]])
+   } while(0)]])
+
+m4_define([[svp_assert]],[[if (unlikely(!([[$1]]))) svp__assert([[$1]], __file__, __line__)]])
 ]], [[ /* !NDEBUG */
-m4_define([[svp__assert]], ((void)0))
+m4_define([[svp__assert]], [[]])
 ]])
 
 ]])

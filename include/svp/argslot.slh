@@ -1,0 +1,14 @@
+m4_ifndef([[SVP_ARGSLOT_SLH]],[[m4_define([[SVP_ARGSLOT_SLH]],1)
+
+/* argument slot suitable to simulate
+   C's variable argument lists */ 
+
+typedef union {
+  char c;
+  signed long long s;
+  unsigned long long u;
+  double d;
+  void *ptr;
+} svp_arg_slot;
+
+]])

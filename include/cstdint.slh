@@ -1,0 +1,5 @@
+m4_ifndef([[CSTDINT_SLH]], [[m4_define([[CSTDINT_SLH]], 1)
+
+#include <stdint.h>
+
+]])

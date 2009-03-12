@@ -23,6 +23,22 @@ sgr.1: $(top_srcdir)/bin/sgr.in
 
 MAINTAINERCLEANFILES = $(dist_man1_MANS) $(dist_pdf_DATA)
 
+if MAINTAINER_MODE
+
+BUILT_SOURCES = io.rst iomacros.rst
+
+spec.tex: io.rst iomacros.rst
+
+io.rst iomacros.rst: $(srcdir)/Makefile.am
+	rm -f $@
+	echo "- **contents of $(@:.rst=.slh)**::" >$@
+	echo >>$@
+	$(SED) -e 's/^/    /g' <$(top_srcdir)/include/svp/$(@:.rst=.slh) >>$@
+
+io.rst: $(top_srcdir)/include/svp/io.slh
+iomacros.rst: $(top_srcdir)/include/svp/iomacros.slh
+
+endif
 
 
 

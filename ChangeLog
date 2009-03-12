@@ -1,3 +1,27 @@
+2009-03-12  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
+	More language specification, as requested by UH.
+	
+	* doc/spec.txt: List external document references. Add
+	glossary. Clarify thread function type compatibility. List
+	referenced CSA notes explicitly. Add missing definition of SVP
+	constants. Include io.slh and iomacros.slh litterally to document
+	the library. Document svp_assert better. Document svp/lib.slh.
+
+	* doc/Makefile.am: Update accordingly.
+	
+	* include/std/io.slh: Document.
+
+	* include/std/assert.slh,
+	* include/std/iomacros.slh: Clean up macros.
+	
+	* include/std/io.slh: Move argslot definition to...
+	* include/std/argslot.slh: here.
+	* include/cstddef.slh,
+	* include/cstdint.slh: Implement.
+
+	* Makefile.am: Update accordingly.
+	
 2009-03-11  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
 	Code cleanup. Add more svn:ignore patterns.

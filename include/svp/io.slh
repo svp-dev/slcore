@@ -1,32 +1,57 @@
 m4_ifndef([[SVP_IO_SLH]],[[m4_define([[SVP_IO_SLH]],1)
 
-typedef union {
-  char c;
-  signed long long s;
-  unsigned long long u;
-  double d;
-  void *ptr;
-} svp_arg_slot;
+m4_include(svp/argslot.slh)
 
+/* Print a single character to the console output. */
 sl_decl(svp_io_putc, void, 
 	sl_glparm(char, c));
 
+/* Print a nul-terminated string to the console output. */
 sl_decl(svp_io_puts, void,
 	sl_glparm(const char *, gstr));	
 
+/* Print a floating point number to the console output. */
+/* Note: the floating point is normalized before printing. */
 sl_decl(svp_io_putf, void,
 	sl_glparm(double, gx),
 	sl_glparm(unsigned, gprec),
 	sl_glparm(unsigned, gbase));
 
+/* Print an unsigned integer to the console output. */
 sl_decl(svp_io_putun, void,
 	sl_glparm(unsigned long long, gn),
 	sl_glparm(unsigned, gbase));
 
+sl_decl(svp_io_putc, void, 
+	sl_glparm(char, c));
+
+/* Print a nul-terminated string to the console output. */
+sl_decl(svp_io_puts, void,
+	sl_glparm(const char *, gstr));	
+
+/* Print a floating point number to the console output. */
+/* Note: the floating point is normalized before printing. */
+sl_decl(svp_io_putf, void,
+	sl_glparm(double, gx),
+	sl_glparm(unsigned, gprec),
+	sl_glparm(unsigned, gbase));
+
+/* Print a signed integer to the console output. */
 sl_decl(svp_io_putn, void,	
 	sl_glparm(long long, gn),
 	sl_glparm(unsigned, gbase));
 
+/* Format an print arguments to the console output. */
+/* Recognized formats:
+   %c - single character
+   %s - nul-terminated string
+   %f - floating point number in base 10 with 7 digits of precision
+   %g - floating point number in base 10 with 15 digits of precision
+   %d - signed integer in base 10
+   %u - unsigned integer in base 10
+   %x - unsigned integer in base 16
+   %% - the character % itself.
+*/
 sl_decl(svp_io_printf, void,
 	sl_glparm(const char*, gfmt),
 	sl_glparm(svp_arg_slot*, gdata));

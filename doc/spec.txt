@@ -9,9 +9,102 @@
 Prologue
 ========
 
-This document should be read next to the ISO/IEC 9899:1999 standard
-(ISO C99). It contains references to terms and definitions from the C
-formal specification.
+This document contains references to terms, definitions and concepts
+defined in the following related documents, which should therefore be
+considered bound to this specification:
+
+- ISO/IEC 9899:1999: C language specification.
+
+- GNU M4 manual: http://www.gnu.org/software/m4/manual
+
+- GNU Autoconf manual: http://www.gnu.org/software/autoconf/manual
+
+- CSA note [glo2]: glossary of SVP terms.
+
+- CSA note [utc1]: semantics of C objects.
+
+- CSA note [svp10]: the SVP model.
+
+- CSA note [svp14]: semantics of thread indices.
+
+- CSA note [utc13]: developer's view of the µTC language.
+
+- CSA note [utc10]: semantics of "create" and "sync".
+
+- CSA note [utc11]: syntax and constraints of µTC.
+
+- CSA note [svp11]: models for synchronizing storage in SVP. Related
+  to notes [svp12], [svp13], [svp17].
+
+- CSA note [svp6]: visibility of shared arguments in the parent thread.
+
+Terms and definitions
+=====================
+
+The following terms are defined in section 3 of the C standard and are
+reused in this specification with their meaning as defined in C:
+
+  argument
+  - constraint
+  - implementation
+  - implementation limit
+  - object
+  - parameter
+  - undefined behavior
+  - unspecified behavior
+  - value
+
+The following terms are syntactic / semantic constructs defined in
+section 6 of the C standard and are reused in this specification with
+their meaning as defined in C:
+
+  *block item*
+  - *compound statement*
+  - constant expression*
+  - conversion
+  - *declaration specifier*
+  - *declaration*
+  - *definition*
+  - *expression*
+  - *identifier*
+  - linkage
+  - name space
+  - processing environment
+  - scope
+  - side effect
+  - *statement*
+  - *storage class specifier*
+  - storage duration
+  - translation environment
+  - type
+  - type compatibility
+  - *type specifier*
+  - universal characters
+  - visibility
+
+The semantics of C with regards to objects, storage duration
+(lifetime), addressability and mutability are clarified and detailed
+in CSA note [utc1].
+
+The following SVP terms are defined in CSA note [glo2] and reused in
+this specification:
+
+  adjacent threads
+  - break
+  - break type
+  - continutation create
+  - create
+  - default place
+  - family
+  - global thread argument
+  - global thread parameter
+  - local place
+  - place
+  - shared thread argument
+  - shared thread parameter
+  - thread
+  - thread function
+  - thread index
 
 Environment
 ===========
@@ -29,7 +122,8 @@ Also, the semantics of the SL abstract machine are altered by SVP; notably:
 - there exists synchronizing storage.
 
 When program startup occurs, a family of a single thread is created
-running thread function ``t_main``. ``t_main`` must be declared to take no parameters, with break type ``void``.
+running thread function ``t_main``. ``t_main`` must be declared to
+take no parameters, with break type ``void``.
 
 Translation limits
 ------------------
@@ -49,7 +143,7 @@ Concepts
 Scopes of identifiers
 ``````````````````````
 
-Identifiers can denote a "normal C object"; a function; a tag or
+*Identifiers* can denote a "normal C object"; a function; a tag or
 member of a structure, union or enumeration; a typedef name; a label
 name; a synchronizing object.
 
@@ -136,9 +230,10 @@ function types*. However:
 - thread function types and C's function types are not mutually
   compatible;
 
-- two thread function types are not compatible if their argument class
-  and type differ in any manner when compared one to one in their
-  order of appearance in the function's prototype.
+- two thread function types are not compatible if their break type
+  differ, of is their argument class and type differ in any manner
+  when compared one to one in their order of appearance in the
+  function's prototype.
 
 Conversions
 -----------
@@ -204,7 +299,7 @@ thread argument and parameter, respectively; as for semantics:
   cannot be avoided even if their result is not used);
 
 - they cause a read operation to the corresponding synchronizing
-  object (see CSA notes for details);
+  object (see CSA notes [svp11], [svp6] for details);
 
 - the result of their evaluation is a *rvalue* with the type and value
   of the synchronizing object after the read succeeds.
@@ -236,18 +331,19 @@ The following *declarations* are defined in SL:
 
     ``sl_decl(`` *identifier* ``,`` *break-type* [ ``,`` *thread-param-list* ] ``)`` ``;``
 
-  These *declare* a thread function with the specified identifier and prototype, with external linkage.
+  These *declare* a thread function with the specified identifier and
+  prototype, with external linkage.
 
 It is left *unspecified* whether any other of C's declarations exists in SL.
 
 Statements and blocks
 ---------------------
 
-*Statements and blocks* are defined in SL as in C.
+*Statements and compound statements* are defined in SL as in C.
 
 Additionally:
 
-- a construct of the following form is a block item (not statement):
+- a construct of the following form is a *block item* (not statement):
 
     ``sl_create(`` *create-parameters* ``,`` *expression* [ ``,`` *thread-arg-list* ] ``)`` ``;``
 
@@ -255,8 +351,9 @@ Additionally:
 
     ``sl_sync(`` [ *expression* ] ``)`` ``;``
 
-  Its semantics, and the restrictions on their composition with other
-  C constructs, are defined in CSA notes.
+  Its constraints, semantics, and the restrictions on their
+  composition with other C constructs, are defined in CSA notes
+  [utc10], [utc11] and [utc13].
 
   It is left *unspecified* whether the create construct is well-formed
   when any of the expressions used in the create construct has
@@ -266,26 +363,29 @@ Additionally:
      turn it into a statement.
 
   .. note:: the whole construct (from ``sl_create`` to the semicolon
-     after ``sl_sync``) is a block item; however it can "contain"
+     after ``sl_sync``) is a *block item*; however it can "contain"
      additional block items inside itself (whose execution is bounded
      on entry by the create event and on exit by the sync event). With
      a restriction though: it is left *unspecified* whether the
      construct is valid if the block items inside it contain any
      expression with side effects other than simple assignments or
-     uses of ``sl_set*``, or if it contains another "create" block
-     item.
+     uses of ``sl_set*``.
+
+  .. note:: there cannot be a ``sl_create`` construct between a pair
+     of ``sl_create`` and ``sl_sync``. (i.e. no nesting)
 
 - a construct of the following form is a statement:
 
     ``sl_kill(`` *expression* ``)`` ``;``
 
-  Its semantics are defined in CSA notes.
+  Its semantics are defined in CSA note [svp10].
 
 - a construct of the following form is a statement:
 
     ``sl_break(`` *expression* ``)`` ``;``
 
-  Its semantics are defined in CSA notes.
+  Its semantics and constraints are defined in CSA notes [utc11] and
+  [svp10].
 
 - a construct of either the following form is a statement:
 
@@ -300,8 +400,9 @@ Additionally:
   the identifier (resp. thread argument or parameter) using the value
   of the expression.
 
-  .. note:: as described in CSA notes the position (and number) of reads and
-     writes to synchronizing objects is restricted.
+  .. note:: as described in CSA note [svp11] and [svp6] the position
+     (and number) of reads and writes to synchronizing objects is
+     restricted.
 
 - The ``return`` statement cannot be used in a thread function
   definition.
@@ -335,17 +436,19 @@ declarations* are defined in SL as in C:
   value type is guaranteed to be large enough to hold a pointer (for
   break type ``int``) or a C's ``double`` (for break type ``float``).
 
-  The semantics of thread function definitions are defined in CSA notes.
+  The constraints and semantics of thread function definitions are
+  defined in CSA notes [svp10], [utc11].
 
-It is left *unspecified* whether SL supports C's function declarations and definitions.
+It is left *unspecified* whether SL supports C's function declarations
+and definitions.
 
 
 
 Preprocessing directives
 ------------------------
 
-SL does not use the C preprocessor so C's semantics w.r.t. preprocessing do not apply.
-
+SL does not use the C preprocessor so C's semantics
+w.r.t. preprocessing do not apply.
 
 Instead SL uses mainly the M4 preprocessor. It is left *unspecified*
 whether the C preprocessor is run on the program after it has been
@@ -371,8 +474,7 @@ Additionally, M4's standard behavior is augmented with:
 Thread argument declarations
 ----------------------------
 
-*Thread argument declarations* and *thread parameter declaration* have
-either of the following syntactic form:
+*Thread argument declarations* have either of the following forms:
 
   ``sl_glarg(`` *declaration-specifiers* ``,`` *identifier* ``,`` *expression* ``)``
 
@@ -382,6 +484,8 @@ either of the following syntactic form:
 
   ``sl_shfarg(`` *declaration-specifiers* ``,`` *identifier* [ ``,`` *expression* ] ``)``
 
+*Thread parameter declarations* have either of the following syntactic forms:
+
   ``sl_glparm(`` *declaration-specifiers* ``,`` *identifier* ``)``
 
   ``sl_glfparm(`` *declaration-specifiers* ``,`` *identifier* ``)``
@@ -390,13 +494,13 @@ either of the following syntactic form:
 
   ``sl_shfparm(`` *declaration-specifiers* ``,`` *identifier* ``)``
 
-Restricted by the following *lexical* constraints: the
+The following *lexical* constraints apply: the
 *declaration-specifiers* part must not contain any commas, unbalanced
 parentheses nor colons. (if in doubt, use ``typedef`` before to
 simplify the type to a single identifier)
 
 .. note:: for the form that accept an expression, the expression must
-  not contain any commas, or it should be quoted with ``[[`` and ``]]``.
+   not contain any commas, or it should be quoted with ``[[`` and ``]]``.
 
 Semantic constraints:
 
@@ -416,7 +520,8 @@ Semantic constraints:
   declaration is valid if the expression (if it appears in the syntax)
   has side effects.
 
-The semantics are described in CSA notes.
+The semantics of thread arguments and parameters are described in CSA
+notes [utc13], [utc11], [svp11] and [svp6].
 
 Thread function body
 --------------------
@@ -428,7 +533,9 @@ A *thread function body* has the following form:
 It has the same semantics as a compound statement in C except that the
 first block item may be a thread index declaration.
 
-(See the CSA notes for more information about thread indexes.)
+See CSA note [utc11] for more information about the syntax and note
+[svp14] for more information about index values.
+
 
 Library
 =======
@@ -440,8 +547,8 @@ All of C's reserved identifiers are reserved in SL.
 
 Additionally, the identifier ``main`` is reserved for top-level declarations.
 
-Predefined types
-----------------
+Predefined SVP types and constants
+----------------------------------
 
 The following types are predefined:
 
@@ -455,11 +562,53 @@ The following types are predefined:
   identifier. The only operations defined for this type are comparison
   (equality) and assignment.
 
+The following constants are predefined:
+
+- ``SVP_ENOERR``: equivalent to ``EXIT_NORMAL`` in µTC. Termination
+  status when a family terminates normally.
+
+- ``SVP_EKILLED``: equivalent to ``EXIT_KILLED`` in µTC. Termination
+  status when a family terminates asynchronously due to the kill
+  operation.
+
+- ``SVP_EBROKEN``: equivalent to ``EXIT_BROKEN`` in µTC. Termination
+  status when a family terminates asynchronously due to the break
+  operation.
+
+- ``PLACE_LOCAL``: specifier for the local place.
+
+- ``PLACE_DEFAULT``: specifier for the default place. (note, this is
+  the default when no place is specified in ``sl_create``)
+
+General utilities
+-----------------
+
+The following definitions are available in ``svp/lib.slh``:
+
+- "statement"-like macro ``svp_abort()``: causes the entire SVP
+  environment to stop with an error condition when it is reached
+  during execution of a thread.
+
+- "expression"-like macros ``likely(X)`` and ``unlikely(X)`` that can
+  be used to guide branch optimization. See the provided macro
+  definition and the description of ``__builtin_expect`` in the
+  section "Other built-in functions provided by GCC" in the GCC
+  documentation.
+
 Diagnostics
 -----------
 
-SL provides a construct ``svp_assert`` in the header
-``svp/assert.slh`` with similar semantics as C's ``assert``.
+The following definition is available in ``svp/assert.slh``:
+
+- "statement"-like macro ``svp_assert(X)`` where ``X`` can be any
+  scalar expression.
+
+  If the preprocessor macro ``NDEBUG`` is not defined, ``svp_assert``
+  expands to an empty statement. If the preprocessor macro ``NDEBUG``
+  is defined, and execution reaches the point where ``svp_assert`` is
+  used, and if the expression is false, then the macro writes
+  information about the particular test that failed, then terminates
+  the environment as per ``svp_abort()``.
 
 Integer divide
 --------------
@@ -502,6 +651,10 @@ Console output
 --------------
 
 See ``svp/io.slh`` and ``svp/iomacros.slh`` for details.
+
+.. include:: io.rst
+
+.. include:: iomacros.rst
 
 Common definitions
 ------------------
