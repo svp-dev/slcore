@@ -18,6 +18,8 @@ m4_define([[sl_decl]], m4_defn([[sl_def]]))
 # Pass transparently parameter declarations.
 m4_define([[sl_shparm]], [[shared [[$1]] __p_[[$2]]]])
 m4_define([[sl_glparm]], [[/*global*/ [[$1]] __p_[[$2]]]])
+m4_copy([[sl_shparm]],[[sl_shfparm]])
+m4_copy([[sl_glparm]],[[sl_glfparm]])
 
 # Pass transparently the index declaration. Work around bug #34 where core compiler
 # does not have a type for "index".
@@ -26,6 +28,8 @@ m4_define([[sl_index]], [[index int [[$1]]]])
 # Pull shared and global argument declarations.
 m4_define([[sl_sharg]],[[[[$1]]:__a_[[$2]]:m4_if([[$3]],,,[[= $3]])]])
 m4_define([[sl_glarg]],[[[[$1]] const:__a_[[$2]]:m4_if([[$3]],,,[[= $3]])]])
+m4_copy([[sl_sharg]],[[sl_shfarg]])
+m4_copy([[sl_glarg]],[[sl_glfarg]])
 
 
 m4_define([[sl_pulldecls]],[[m4_dnl

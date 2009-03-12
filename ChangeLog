@@ -1,5 +1,15 @@
 2009-03-12  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	Add missing macro definitions.
+	
+	* lib/t-ptl/slimpl.m4,
+	* lib/t-seqc/slimpl.m4,
+	* lib/t-utc0/slimpl.m4,	
+	* lib/t-utc/slimpl.m4: Add missing definition of "f"
+	parameter/argument declarations.
+
+2009-03-12  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	Clean up code.
 	
 	* lib/svplib/io.sl, 

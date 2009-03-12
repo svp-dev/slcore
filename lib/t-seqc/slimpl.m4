@@ -8,6 +8,8 @@ m4_define([[_sl_crcnt]],0)
 
 m4_define([[sl_shparm]], [[[[$1]] [[$2]]]])
 m4_define([[sl_glparm]], [[[[$1]] [[$2]]]])
+m4_copy([[sl_shparm]],[[sl_shfparm]])
+m4_copy([[sl_glparm]],[[sl_glfparm]])
 
 m4_define([[sl_declparms]], [[m4_dnl
 m4_if([[$1]],,,[[m4_dnl
@@ -80,6 +82,8 @@ __fid.a = &_sl_fid[[]]_args m4_dnl
 # Pass transparently shared and global argument declarations.
 m4_define([[sl_sharg]],[[$1:$2:$3]])
 m4_define([[sl_glarg]],m4_defn([[sl_sharg]]))
+m4_copy([[sl_sharg]],[[sl_shfarg]])
+m4_copy([[sl_glarg]],[[sl_glfarg]])
 
 # Pass transparently the sync construct.
 m4_define([[sl_sync]],[[m4_dnl

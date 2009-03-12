@@ -19,6 +19,8 @@ m4_define([[sl_decl]], m4_defn([[sl_def]]))
 # Pass transparently parameter declarations.
 m4_define([[sl_shparm]], [[uTC::shared<[[$1]]>& __p_[[$2]]]])
 m4_define([[sl_glparm]], [[uTC::global<[[$1]]>& __p_[[$2]]]])
+m4_copy([[sl_shparm]],[[sl_shfparm]])
+m4_copy([[sl_glparm]],[[sl_glfparm]])
 
 # Pass transparently the index declaration.
 m4_define([[sl_index]], [[uTC::index [[$1]]]])
@@ -26,6 +28,8 @@ m4_define([[sl_index]], [[uTC::index [[$1]]]])
 # Pull shared and global argument declarations.
 m4_define([[sl_sharg]],[[&::[[$1]]:[[$2]]:m4_if([[$3]],,,[[= [[$3]]]])]])
 m4_define([[sl_glarg]],[[:const:[[$1]]:[[$2]]:m4_if([[$3]],,,[[= [[$3]]]])]])
+m4_copy([[sl_sharg]],[[sl_shfarg]])
+m4_copy([[sl_glarg]],[[sl_glfarg]])
 
 
 m4_define([[sl_pulldecls]],[[m4_dnl

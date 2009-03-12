@@ -17,6 +17,9 @@ m4_define([[sl_decl]], m4_defn([[sl_def]]))
 # Pass transparently parameter declarations.
 m4_define([[sl_shparm]], [[shared [[$1]] [[$2]]]])
 m4_define([[sl_glparm]], [[/*global*/ [[$1]] [[$2]]]])
+m4_copy([[sl_shparm]],[[sl_shfparm]])
+m4_copy([[sl_glparm]],[[sl_glfparm]])
+
 
 # Pass transparently the index declaration.
 m4_define([[sl_index]], [[index [[$1]]]])
@@ -35,6 +38,8 @@ m4_define([[sl_sharg]],[[m4_dnl
 [[$2]]m4_if([[$3]],,,[[ = $3]]) m4_dnl
 ]])
 m4_define([[sl_glarg]],m4_defn([[sl_sharg]]))
+m4_copy([[sl_sharg]],[[sl_shfarg]])
+m4_copy([[sl_glarg]],[[sl_glfarg]])
 
 # Pass transparently the sync construct.
 m4_define([[sl_sync]],[[m4_dnl
