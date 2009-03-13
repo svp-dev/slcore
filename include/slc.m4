@@ -24,4 +24,4 @@ m4_divert_push(0)
 #include "sl_support.h"
 
 // sl_proccall() - helper macro, encapsulate a singleton create
-m4_define([[sl_proccall]],[[({ sl_create(,,,,,,,$@); sl_sync(); })]])
+m4_define([[sl_proccall]],[[do { sl_create(,,,,,,,$@); sl_sync(); } while(0)]])

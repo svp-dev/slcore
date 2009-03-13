@@ -9,36 +9,36 @@ m4_include(svp/io.slh)
  */
 
 m4_define([[putc]],
-[[do { 
-  sl_proccall(svp_io_putc, sl_glarg(char, c, ([[$1]]))); 
-} while(0)]])
+[[
+sl_proccall(svp_io_putc, sl_glarg(char, c, ([[$1]])))
+]])
 
 m4_define([[puts]],
-[[do { 
-  sl_proccall(svp_io_puts, sl_glarg(const char*, s, ([[$1]]))); 
-} while(0)]])
+[[
+sl_proccall(svp_io_puts, sl_glarg(const char*, s, ([[$1]])))
+]])
 
 m4_define([[putf]],
-[[do {
-  sl_proccall(svp_io_putf, 
+[[
+sl_proccall(svp_io_putf, 
               sl_glfarg(double, d, ([[$1]])),
               sl_glarg(unsigned, gprec, ([[$2]])), 
-              sl_glarg(unsigned, gbase, 10));
-} while(0)]])
+              sl_glarg(unsigned, gbase, 10))
+]])
 
 m4_define([[putn]], 
-[[do {
+[[
 sl_proccall(svp_io_putn, 
 	    sl_glarg(long long, n, ([[$1]])),
-            sl_glarg(unsigned, gbase, 10));
-} while(0)]])
+            sl_glarg(unsigned, gbase, 10))
+]])
 
 m4_define([[putu]], 
-[[do {
+[[
 sl_proccall(svp_io_putun, 
             sl_glarg(unsigned long long, n, ([[$1]])), 
-            sl_glarg(unsigned, gbase, 10));
-} while(0)]])
+            sl_glarg(unsigned, gbase, 10))
+]])
 
 m4_define([[printf]], 
 [[do {

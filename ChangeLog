@@ -1,3 +1,13 @@
+2009-03-13  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
+	Clean up code.
+	
+	* include/slc.m4: Make sl_proccall a statement, not an expression.
+	
+	* include/lib/iomacros.slh: Simplify wrapper macros since
+	sl_proccall already encapsulate the argument declarations in a
+	scope.
+	
 2009-03-12  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
 	Add missing macro definitions.
