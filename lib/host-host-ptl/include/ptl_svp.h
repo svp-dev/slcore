@@ -63,7 +63,7 @@ namespace uTC
 
         SharedBase* m_prev; // Previous shared in the family
         SharedBase* m_next; // Next shared in the thread
-		void read();
+        void read();
         void kill();
 
     protected:
@@ -80,7 +80,7 @@ namespace uTC
         SharedBase(ThreadInfo* info, SharedBase* prev);
         virtual ~SharedBase();
 
-	public:
+    public:
         void block();
     };
 
@@ -103,7 +103,6 @@ namespace uTC
     class ThreadInfo : public ThreadCreateInfo
     {
     	friend class SharedBase;
-
         SharedBase*  m_shareds;
 
     public:
@@ -145,21 +144,23 @@ namespace uTC
         unsigned int    m_blockSize;
 
         // Family tree
-        FamilyBase	   *m_parent;
-        FamilyBase 	   *m_firstChild, *m_nextSibling, *m_prevSibling;
+        FamilyBase     *m_parent;
+        FamilyBase     *m_firstChild, *m_nextSibling, *m_prevSibling;
 
-        ExitCode			       m_exitCode;
+        ExitCode                   m_exitCode;
         ThreadInfo*                m_lastCreated;
         std::map<int, ThreadInfo*> m_threads;
-        bool				       m_allCreated;
-        bool				       m_killed;
+        bool                       m_root;
+        bool                       m_continuation;
+        bool                       m_allCreated;
+        bool                       m_killed;
         bool                       m_killbusy;
 
         pthread_mutex_t m_data_mutex;
         pthread_cond_t  m_thread_completed;
         pthread_cond_t  m_created;
         pthread_cond_t  m_child_cleanup;
-        pthread_cond_t	m_termination;
+        pthread_cond_t  m_termination;
         pthread_cond_t  m_thread_cleanup;
         int             m_nThreadsRunning;  // Must be signed!
 
@@ -178,10 +179,13 @@ namespace uTC
 
         virtual ~FamilyBase();
         public:
-    	static void  thread_cleanup(void* arg);
+        static void  thread_cleanup(void* arg);
 
         // Friendly readable Family ID
         DEXEC(std::string		m_id);
+
+        inline bool is_root();
+        inline bool is_continuation();
 
         void     kill(ExitCode code);
         int      squeeze();
@@ -191,8 +195,8 @@ namespace uTC
         place           m_place;
         int*    m_pSqueezeValue;
 
-	public:
-        FamilyBase(int start, int end, int step, unsigned int blockSize, place place_id, int* pSqueezeVal);
+    public:
+        FamilyBase(int start, int end, int step, unsigned int blockSize, place place_id, bool root, bool nosync, int* pSqueezeVal);
     };
 
     template <typename T>
@@ -287,18 +291,19 @@ namespace uTC
         }
 
         shared(ThreadInfo* info, T* &parent, shared* prev)
-        	: SharedBase(info, prev), m_parent(parent), m_prev(prev)
+            : SharedBase(info, prev), m_parent(parent), m_prev(prev)
         {
         }
     };
 
-	template <typename T>
-	class global
-	{
-		T m_value;
+    template <typename T>
+    class global
+    {
+        T m_value;
 
     public:
-		void block() {}
+
+        void block() {}
 
         operator T()                      { return m_value; }
         global& operator=(const T& value) { m_value = value; return *this; }
@@ -307,7 +312,8 @@ namespace uTC
 
         global(ThreadInfo* info, global<T> parent, global* prev) : m_value(parent.m_value) {}
         global(ThreadInfo* info, T         parent, global* prev) : m_value(parent) {}
-	};
+
+    };
 
     // Index variable class
     class index

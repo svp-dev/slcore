@@ -44,8 +44,8 @@ private:
     }
 	
 public:
-    Family_$n(int* pSqueezeVal, place place_id, int start, int end, int step, unsigned int blockSize, ThreadFunc func $template_ctor_ref)
-        : FamilyBase(start, end, step, blockSize, place_id, pSqueezeVal), m_func(func) $template_init
+    Family_$n(int* pSqueezeVal, place place_id, bool root, bool nosync, int start, int end, int step, unsigned int blockSize, ThreadFunc func $template_ctor_ref)
+        : FamilyBase(start, end, step, blockSize, place_id, root, nosync, pSqueezeVal), m_func(func) $template_init
     {
     }
 };
@@ -54,31 +54,35 @@ $template_def_break
 class Family_B$n : public Family_$n $template_bare_nobreak, public BreakableFamily<BreakT>
 {
 public:
-    Family_B$n(BreakT* pBreakVal, int* pSqueezeVal, place place_id, int start, int end, int step, unsigned int blockSize, typename Family_$n $template_bare_nobreak :: ThreadFunc func $template_ctor_ref)
-        : Family_$n $template_bare_nobreak(pSqueezeVal, place_id, start, end, step, blockSize, func $template_passon), BreakableFamily<BreakT>(pBreakVal)
+    Family_B$n(BreakT* pBreakVal, int* pSqueezeVal, place place_id, bool root, bool nosync,  int start, int end, int step, unsigned int blockSize, typename Family_$n $template_bare_nobreak :: ThreadFunc func $template_ctor_ref)
+        : Family_$n $template_bare_nobreak(pSqueezeVal, place_id, root, nosync, start, end, step, blockSize, func $template_passon), BreakableFamily<BreakT>(pBreakVal)
     {
     }
 };
 
 $template_def_break
-static inline void create(family& f, place place_id, int start, int end, int step, unsigned int blockSize, BreakT& pBreakVal, int* pSqueezeVal, void (*func)($template_ref_typedef) $template_ctor)
+static inline void create(family& f, place place_id, bool root, bool nosync, int start, int end, int step, unsigned int blockSize, BreakT& pBreakVal, int* pSqueezeVal, void (*func)($template_ref_typedef) $template_ctor)
 {
     // Don't allow kills when we create a family; and don't create families when a kill is in progress.
     // Otherwise, the possibility exists that a kill never catches up to the creates.
     ProtectKill();
-    f = new Family_B$n $template_bare(&pBreakVal, pSqueezeVal, place_id, start, end, step, blockSize, func $template_passon);
+    f = new Family_B$n $template_bare(&pBreakVal, pSqueezeVal, place_id, root, nosync, start, end, step, blockSize, func $template_passon);
+
     f->start_creating();
+
     UnprotectKill();
 }
 
 $template_def
-static inline void create(family& f, place place_id, int start, int end, int step, unsigned int blockSize, int* pSqueezeVal, void (*func)($template_ref_typedef) $template_ctor)
+static inline void create(family& f, place place_id, bool root, bool nosync, int start, int end, int step, unsigned int blockSize, int* pSqueezeVal, void (*func)($template_ref_typedef) $template_ctor)
 {
     // Don't allow kills when we create a family; and don't create families when a kill is in progress.
     // Otherwise, the possibility exists that a kill never catches up to the creates.
     ProtectKill();
-    f = new Family_$n $template_bare_nobreak(pSqueezeVal, place_id, start, end, step, blockSize, func $template_passon);
+    f = new Family_$n $template_bare_nobreak(pSqueezeVal, place_id, root, nosync, start, end, step, blockSize, func $template_passon);
+
     f->start_creating();
+    
     UnprotectKill();
 }
 

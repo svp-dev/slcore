@@ -182,6 +182,10 @@
 // INT_MAX might be used in a create definition created by the translator
 #include <climits>
 
+// fputs and abort are used on errors, so we need the standard libs
+#include <stdio.h>
+#include <stdlib.h>
+
 // Signal only needs to be included when signal handlers are installed or
 // the Solaris 8 ALARM signal bug workaround is enabled
 #if defined UTC_CONFIG_SOLARIS_8 || defined UTC_CONFIG_SIGNALS

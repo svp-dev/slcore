@@ -244,6 +244,15 @@ namespace uTC
 
     ExitCode sync(family f)
     {
+        // If we attempt to sync on a family that is a continuation,
+        // we sync immediately with a normal exit code. Also since the
+        // creatorthread syncs on it automatically, and we dont want a 
+        // race-condition of sync that both try to access and delete FB!
+        if (f->is_continuation())
+        {
+            return EXIT_NORMAL;
+        }
+
         ExitCode res = EXIT_NORMAL;
         if (f == NULL)
         {
@@ -662,7 +671,34 @@ namespace uTC
     extern "C" void* FamilyBase::thread_creation_func(void* param)
     {
         FamilyBase* f = (FamilyBase*)param;
+
+        // If it is not a continuation family the creator thread
+        // will sync on it. The FamilyBase::sync() function calls
+        // the FamilyBase::destroy() which in turn "deletes" the family.
+        // This can happen before the creation thread running this function
+        // checks after calling FamilyBase::create_loop() whether this family
+        // is a continuation resulting in some cases "f" pointing to a deleted
+        // object and "is_continuation()" returning the wrong value (returning true
+        // for a family that is not a continuation one) resulting in segfaults and
+        // deadlock (because sync() is called again). For this reason we call
+        // the function is_continuation() before we create any threads for this
+        // family and cache its value thus getting the correct value always (the 
+        // sync() function calls destroy() which deletes the object only
+        // after all threads have been created thus at this point we are sure
+        // the object is valid). If it is a continuation create we do not
+        // have this problem because the global sync() function (the one
+        // called from the uTC program) does not call FamilyBase::sync() but 
+        // returns immediately. Thus in this case the object is always valid.
+        bool is_continuation = f->is_continuation();
+
         f->create_loop();
+
+        
+        if (is_continuation)
+        {
+            f->sync();
+        }
+        
         return 0;
     }
 
@@ -836,8 +872,19 @@ namespace uTC
         //destroy();
     }
 
-    FamilyBase::FamilyBase(int start, int end, int step, unsigned int blockSize, place place_id, int* pSqueezeVal)
-        : m_start(start), m_end(end), m_step(step), m_index(start), m_place(place_id), m_pSqueezeValue(pSqueezeVal)
+
+    inline bool FamilyBase::is_root()
+    {
+        return m_root;
+    }
+
+    inline bool FamilyBase::is_continuation()
+    {
+        return m_continuation;
+    }
+   
+    FamilyBase::FamilyBase(int start, int end, int step, unsigned int blockSize, place place_id, bool root, bool nosync, int* pSqueezeVal)
+        : m_start(start), m_end(end), m_step(step), m_index(start), m_root(root), m_continuation(nosync), m_place(place_id), m_pSqueezeValue(pSqueezeVal)
     {
         m_lastCreated     = NULL;
         m_firstChild      = NULL;
@@ -872,7 +919,26 @@ namespace uTC
         ThreadInfo* ti = GetThreadInfo();
         if (ti != NULL)
         {
-            m_parent = ti->f;
+            // Depending on if we are a continuation create or not,
+            // we need to select the right parent family
+            if (!m_continuation)
+            {
+                m_parent = ti->f;
+            }
+            else
+            {
+                // Find parent to link to, by searching up the family tree
+                // until we reach the root or a family marked as 'root'
+                FamilyBase* pf = ti->f;
+
+                while (!pf->m_root && pf->m_parent != NULL)
+                {
+                    pf = pf->m_parent;
+                }
+
+                m_parent = pf;
+            }
+
             LOCK(&m_parent->m_data_mutex);
 
             // Attach to parent by linking child into children list
@@ -999,7 +1065,9 @@ namespace uTC
 
         // Create the root family
         family f;
-        create(f, PLACE_LOCAL, 0, 1, 1, 0, NULL, t_main);
+
+        create(f, PLACE_LOCAL, true, false, 0, 1, 1, 0, NULL, t_main);
+
         sync(f);
 
         DPRINT("UTC_PTL: User program complete, cleaning up and exiting");

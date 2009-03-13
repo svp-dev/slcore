@@ -1,5 +1,23 @@
 2009-03-13  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	Upgrade the µTC-PTL back-end.
+	
+	* lib/t-ptl/include/sl_support.h: Allow to use an external PTL
+	implementation.
+
+	* lib/t-ptl/slimpl.m4,
+	* lib/host-host-ptl/ptl_debug.cc,
+	* lib/host-host-ptl/ptl_svp.cc,
+	* lib/host-host-ptl/ptl_vars.cc,
+	* lib/host-host-ptl/include/create.tpl,
+	* lib/host-host-ptl/include/template.pl,
+	* lib/host-host-ptl/include/ptl_debug.h,
+	* lib/host-host-ptl/include/ptl_svp.h,
+	* lib/host-host-ptl/include/ptl_vars.h,
+	* lib/host-host-ptl/include/ptl_deps.h: Update to latest utc-ptl code.
+
+2009-03-13  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	Clean up code.
 	
 	* include/slc.m4: Make sl_proccall a statement, not an expression.
