@@ -53,7 +53,6 @@ m4_define([[_sl_block]],m4_if([[$6]],,0,[[$6]]))
 m4_define([[__sl_crbrktype]],"[[$7]]")
 m4_define([[__sl_crfuncname]],"[[$8]]")
 m4_define([[__sl_thargs]], m4_mapall_sep([[m4_sh_escape]],[[ ]], m4_dquote(m4_shiftn(8, $@))))
-__sl_thargs
 m4_esyscmd(m4_quote(PYTHON SPP_PY pppalpha create __sl_crfuncname __sl_tag __sl_crbrktype __sl_thargs))
 m4_assert(m4_sysval == 0)
 ]])

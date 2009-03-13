@@ -1,5 +1,15 @@
 2009-03-13  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	Continue implementation of alternate "compiler".
+
+	* bin/cce.bin: Clean up command line to "spp".
+	
+	* lib/t-pppalpha/slimpl.m4,
+	* lib/t-pppalpha/include/sl_support.h,
+	* bin/spp: Implement features.
+
+2009-03-13  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	* doc/spec.txt: Add missing reference to [utc2].
 
 2009-03-13  Raphael 'kena' Poss  <r.c.poss@uva.nl>

@@ -176,10 +176,10 @@ esac
 
 # Transformation selection
 case $slc_dialect-$slc_arch in
-    utc*|seqc*|ptl*) slc_trans=$slc_dialect	;;
-    ppp-*)     slc_trans=ppp$basearch ;;
+    utc*|seqc*|ptl*) slc_transbase=$slc_dialect	;;
+    ppp-*)     slc_transbase=ppp$basearch ;;
 esac
-slc_trans=$srcdatadir/t-$slc_trans
+slc_trans=$srcdatadir/t-$slc_transbase
 if test -r "$srcincdir/slc_m4sugar.m4"; then
   slc_tflags="$slc_tflags $srcincdir/slc_m4sugar.m4"
 else
@@ -200,9 +200,9 @@ case $slc_dialect-$slc_arch in
 	slc_filter=cp
 	;;
     ppp-*)
-	spp=$(echo "$python" "$root/spp" "$arch" $(eval "echo \${CC_$basearchvar:-$basearch-linux-gnu-gcc}"))
-	slc_compiler="$spp compile"
-	slc_filter="$spp filter"
+        archcomp=$(eval "echo \${CC_$basearchvar:-$basearch-linux-gnu-gcc}")
+	slc_compiler="$python $root/spp $slc_transbase compile $slc_arch $archcomp"
+	slc_filter="$python $root/spp $slc_transbase filter $slc_arch $archcomp"
 	;;
     *-*)
 	case $slc_complang in

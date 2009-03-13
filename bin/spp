@@ -2,11 +2,15 @@
 
 import pprint
 import sys
+import subprocess
+import re
 
 def die(msg):
    print >>sys.stderr, msg
    sys.exit(1)
 
+class NotFound(Exception):
+   pass
 
 class pppalpha(object):
 
@@ -234,6 +238,12 @@ class pppalpha(object):
       'fbasearg' : 'lf1'
       }
 
+   # Magic numbers
+   iargregs = 3 # 1 reserved for PV
+   fargregs = 2
+   #iargregs = 11 # 1 reserved for PV
+   #fargregs = 12
+
    def __init__(self):
       regs = { 
          'i' : { 'l' : [None]*32, 'g' : [None]*32, 's' : [None]*32, 'd' : [None]*32 },
@@ -249,12 +259,12 @@ class pppalpha(object):
             species = 'f'
             nr = int(r[2:])
             legnr = self.legacy_fregs[t]
-            inv_dic = reg_inv
+            inv_dic = freg_inv
          else:
             species = 'i'
             nr = int(r[1:])
             legnr = self.legacy_regs[t]
-            inv_dic = freg_inv
+            inv_dic = reg_inv
          
          reg = { 'species' : species, 'cat' : cat, 'name' : r, 'legname' : t, 'nr' : nr, 'legnr' : legnr }
          if aliases.has_key(r):
@@ -297,23 +307,17 @@ class pppalpha(object):
             init = None
          dic[species][cat].append({'ctype':ctype, 'name':name, 'init':init})
 
-      # Magic numbers
-      iargregs = 3 # 1 reserved for PV
-      fargregs = 2
-      #iargregs = 11 # 1 reserved for PV
-      #fargregs = 12
-
       # Check if some parameters will use memory passing
       escape = 0      
-      if len(dic['f']['sh']) * 2 + len(dic['f']['gl']) > fargregs:
+      if len(dic['f']['sh']) * 2 + len(dic['f']['gl']) > self.fargregs:
          escape = 1
-      if len(dic['i']['sh']) * 2 + len(dic['i']['gl']) > (iargregs - escape):
+      if len(dic['i']['sh']) * 2 + len(dic['i']['gl']) > (self.iargregs - escape):
          escape = 1
 
       # Start allocate
 
-      islots_avail = iargregs - escape
-      fslots_avail = fargregs
+      islots_avail = self.iargregs - escape
+      fslots_avail = self.fargregs
 
       # Allocate shareds first
       if len(dic['i']['sh']) > islots_avail:
@@ -375,6 +379,8 @@ class pppalpha(object):
          nriglobals = glc + 1
          ret['gl_mem_offset'] = glc
          ret['gl_pv_offset'] = glc + 1
+
+      nriglobals = nriglobals + 1 # count PV
 
       ret['nrargregs'] = { 'gli' : nriglobals, 'shi' : nrishareds,
                            'glf' : nrfglobals, 'shf' : nrfshareds }
@@ -517,22 +523,17 @@ class pppalpha(object):
       mapping = []
 
       aliases = self.aliases
-      print '__sl_prologue(%s, %d, %d, %d, %d, "$%d", "$%d", "$%d", "$%d", "$%d", "$%d", %s)' % \
+      print '__sl_prologue(%s, %d, %d, %d, %d, "$%d", %s)' % \
           (funcname, \
               c['nrargregs']['gli'], \
               c['nrargregs']['shi'], \
               c['nrargregs']['glf'], \
               c['nrargregs']['shf'], \
-              aliases['gp']['legnr'], \
               aliases['idx_init']['legnr'], \
-              aliases['g%d' % c['gl_pv_offset']]['legnr'], \
-              aliases['tlsp_init']['legnr'], \
-              aliases['pv']['legnr'], \
-              aliases['tlsp']['legnr'], \
               counter)
       
       # DEBUG:
-      # pprint.pprint(c)
+      #pprint.pprint(c)
 
       if c['gl_mem_offset'] is not None:
          glreg = 'g%d' % c['gl_mem_offset']
@@ -594,6 +595,419 @@ class pppalpha(object):
       print "m4_define([[__sl_parmnames]],[[%s]])m4_dnl" % ','.join(names)
       print 'm4_define([[__sl_parmspec]],[["%s"]])m4_dnl' % ','.join(mapping)
 
+   def compile(self, arch, compiler, *args):
+      """ Run the compiler, adding special flags to fix registers """
+
+      # Add flags to reserve all registers that may be used
+      # for shareds, globals and dependents:
+      fargs = []
+      for (v,l) in [("f",self.freg_inv), ("",self.reg_inv)]:
+         fixed = set()
+         for rl in l:
+            for r in rl:
+               if r['cat'] in 'sdg':
+                  fixed.add(r['legnr'])
+         for r in fixed:
+            fargs.append('-ffixed-$%s%d' % (v,r))
+      # Indicate to GCC it does not need to save
+      # RA before it uses it:
+      fargs.append('-fcall-saved-$%d' % self.aliases["ra"]['legnr'])
+
+      cmd = [compiler] + fargs + list(args) # + ['-fverbose-asm']
+      try:         
+         retcode = subprocess.call(cmd)
+         sys.exit(retcode)
+      except Exception, e:
+         print >>sys.stderr, sys.argv[0] + ':', ' '.join(cmd)
+         print >>sys.stderr, sys.argv[0] + ': %r' % e
+         sys.exit(126)
+
+
+
+   def makerepl(self, shi, gli, shf, glf):
+      """ 
+      Create a substitution function suitable for re.sub,
+      based on the values given to .registers.
+      """
+
+      subst = {}
+      regs = self.regs
+      for (spec, cat, nr, pref) in [('i','d',shi, ''),('i','s',shi, ''),('i','g',gli, ''),
+                                    ('f','d',shf, 'f'),('f','s',shf, 'f'),('f','g',glf, 'f')]:
+         for i in xrange(nr):
+            r = regs[spec][cat][i]
+            key = "%s%d" % (pref,r['legnr'])
+            assert not subst.has_key(key)
+            subst[key] = r['name']
+      for (spec, pref) in [('i',''),('f','f')]:
+         for r in (r for r in regs[spec]['l'] if r is not None):
+            key = "%s%d" % (pref,r['legnr'])
+            assert not subst.has_key(key)
+            subst[key] = r['name']
+
+      def repl(match):
+         r = match.group(1)
+         #if r == "$31" or r == "$f31":
+         #   return r
+         return '$' + subst[r[1:]]
+      
+      return repl
+
+   ###
+   ### Filtering stages: use Python generators!
+   ###
+
+   def reader(self, inname):
+      """
+      Read a file line by line, produce a generator of lines.
+      """
+      try:
+         inf = file(inname)
+      except Exception, e:
+         print >>sys.stderr, sys.argv[0] + ':', inname, ': %r' % e
+         sys.exit(1)
+      for line in (line.rstrip() for line in inf):
+         yield line
+      inf.close()
+
+   def lexer(self, lines):
+      """
+      Split code from comments, produce a generator of (code, comment).
+      """
+      w = re.compile(r'\s+')
+      r = re.compile(r'([^#]*)((#.*)?)')
+      for line in lines:
+         wline = w.sub(' ', line)
+         m = r.match(wline)
+         asm = m.group(1).strip()
+         comment = m.group(2)
+         if comment is None:
+            comment = ''
+         else:
+            comment = comment[1:].strip()
+         yield (asm, comment)
+
+   def parser(self, tokens):
+      """
+      Recognize assembly lines, produce a generator of (type, code, comment).
+      Type can be "directive", "empty", "label", "other".
+      """
+
+      relabel = re.compile(r'[^:]+:')
+      redir = re.compile(r'\.[a-z]+')
+
+      for (asm, comment) in tokens:
+         if not asm:
+            yield ('empty', asm, comment)
+         elif relabel.match(asm):
+            yield ('label', asm, comment)
+         elif redir.match(asm):
+            yield ('directive', asm, comment)
+         else:
+            yield ('other', asm, comment)
+
+   def munchret(self, fundata, items):
+      """
+      Replace ret and possible frame adjustment by end thread
+      """
+      spreg = self.legacy_regs['sp']
+      gpreg = self.legacy_regs['gp']
+      rareg = self.legacy_regs['ra']
+      fpreg = self.legacy_regs['fp']
+      reanyreg = r'(\$f?\d+)'
+      respecial = r'(\$(%d|%d|%d|%d))' % (spreg, gpreg, rareg, fpreg)
+      rekill = r'(mov %s,\s*\$%d|ld. %s,\d+\(\$%d\))' % (reanyreg, spreg, respecial, spreg)
+      rekill = re.compile(rekill)
+
+      queue = []
+      for (i, (type, content, comment)) in enumerate(items):
+         if content.startswith('ret '):
+            hello = 1
+            qnew = []
+            while hello:
+               if len(queue) == 0:
+                  hello = 0
+               else:
+                  r = queue[-1][1]
+                  if rekill.match(r):
+                     qnew.insert(0,r)
+                     queue.pop()
+                  else:
+                     hello = 0
+            for r in qnew:
+               queue.append(('empty','','MT: optimized away: %s' % r))
+            queue.append(('other','nop','END_THREAD'))
+            queue.append(('other','end','END_THREAD'))
+         else:
+            queue.append((type, content, comment))
+
+      return queue
+            
+            
+
+   def detectregs(self, fundata, items):
+      """
+      Check if GP, SP, PV are used (in case they need to be initialized...)
+      """
+      use_sp = 0
+      spreg = '$%d' % self.legacy_regs['sp']
+      use_gp = 0
+      gpreg = '$%d' % self.legacy_regs['gp']
+      use_pv = 0
+      pvreg = '$%d' % self.legacy_regs['pv']
+      for (type, content, comment) in items:
+         if spreg in content:
+            use_sp = 1
+         elif gpreg in content:
+            use_gp = 1
+         elif ('jsr' in content) and (pvreg in content):
+            use_pv = 1
+         yield (type, content, comment)
+      fundata['use_sp'] = use_sp
+      fundata['use_gp'] = use_gp
+      fundata['use_pv'] = use_pv
+
+   def xjoin(self, fundata, items):
+      """
+      Rebuild function code back into a single body.
+      """
+      name = fundata['name']
+      regs = fundata['regs']
+      yield ('directive', '.globl %s' % name, '')
+      yield ('directive', '.ent %s' % name, '')
+      yield ('label', '%s:' % name, '')
+      yield ('directive', '.registers %d %d %d %d %d %d' % tuple(regs), '')
+      for n in fundata['pprologue']:
+         yield n
+      yield ('label', '$%s..ng:' % name, '')
+      for n in fundata['prologue']:
+         yield n
+      yield ('directive', '.prologue %d' % (fundata['prologuen']), '')
+      for n in items:
+         yield n
+      yield ('directive', '.end %s' % name, '')
+      
+
+
+   def flattener(self, items):
+      """
+      Flatten function code back into single stream.
+      Produce a generator of (type, code, comment)
+      """
+      for (type, content, comment) in items:
+         if type == "fun":
+            for i in content['body']:
+               yield i
+         else:
+            yield (type, content, comment)
+
+   def grouper(self, items):
+      """
+      Group function code together (when applicable).
+      Produce a generator of (type, code, comment).
+
+      For functions, emit a single item with type == "fun". In this case
+      code is a dictionary with keys:
+      - "name" : name of the function
+      - "body" : stream of instructions
+      """
+
+      state = 0
+      queue = []
+
+      for (type, content, comment) in items:
+         if state == 0:
+            # expect: .globl _x_...
+            if content.startswith('.globl'):
+               name = content.split(' ')[1]
+               if name.startswith('_x_'):
+                  state += 1
+                  queue.append((type, content, comment))
+                  continue
+         elif state == 1:
+            # expect: .ent _x_...
+            if content.startswith('.ent'):
+               maybe_name = content.split(' ')[1]
+               if maybe_name == name:
+                  state += 1
+                  queue.append((type, content, comment))
+                  continue
+         elif state == 2:
+            # expect: stuff, then .end _x_...
+            queue.append((type, content, comment))
+            if not content.startswith('.end'):
+               continue
+            maybe_name = content.split(' ')[1]
+            if maybe_name == name:
+               state = 0
+               yield ('fun',{'name':name[3:],'body':queue, 'prologue':[], 'pprologue':[],'prologuen':0},'')
+               queue = []
+               continue
+
+         for q in queue:
+            yield q
+         queue = []
+         state = 0
+         yield (type, content, comment)
+
+   def funfilter(self, filter, items):
+      for (type, content, comment) in items:
+         if type == 'fun':
+            # print "XXXXXXXXXXXXXXXXXXXXXX"
+            # print filter
+            # pprint.pprint(content)
+            content['body'] = [x for x in filter(content, content['body'])]
+            # pprint.pprint(content)
+         yield (type, content, comment)
+
+   def xsplit(self, fundata, items):
+      name = fundata['name']
+      inprologue = 0
+      inpprologue = 0
+      for (type, content, comment) in items:
+         if content.startswith('.frame ') \
+                or content.startswith('.mask ') \
+                or content.startswith('.globl ') \
+                or content.startswith('.ent ') \
+                or content.startswith('.end '):
+            continue
+         elif type == 'label' and content == ('$_x_%s..ng:' % name):
+            inpprologue = 0
+            inprologue = 1
+            continue
+         elif inprologue == 1:
+            if type == 'label' and content == ('_x_%s:' % name):
+               continue
+            elif content.startswith('.prologue'):
+               fundata['prologuen'] = int(content.split(' ')[1])
+               inprologue = 0
+               continue
+            fundata['prologue'].append((type, content, comment))
+            continue
+         elif type == 'label' and content == ('_x_%s:' % name):
+            inpprologue = 1
+            continue
+         elif inpprologue == 1:
+            fundata['pprologue'].append((type, content, comment))
+            continue
+         
+         yield (type, content, comment)
+            
+
+   def regextract(self, fundata, items):
+      reregs = re.compile(r'.registers (\d+) (\d+) (\d+) (\d+) (\d+) (\d+)')
+      for (type, content, comment) in items:
+         m = reregs.match(content)
+         if m is not None:
+            assert not fundata.has_key('regs')
+            fundata['regs'] = [int(x) for x in m.groups()]
+            continue
+
+         yield (type, content, comment)
+   
+   def remdefaults(self, fundata, items):
+      resp = re.compile(r'setplace \$l\d+, 0$')
+      resb = re.compile(r'setstart \$l\d+, 0$')
+      resl = re.compile(r'setlimit \$l\d+, 1$')
+      ress = re.compile(r'setstep \$l\d+, 1$')
+      resbl = re.compile(r'setblock \$l\d+, 0$')
+      for (type, content, comment) in items:
+         if type == 'other' and \
+            (resp.match(content) is not None \
+                   or resb.match(content) is not None \
+                   or resl.match(content) is not None \
+                   or ress.match(content) is not None \
+                   or resbl.match(content) is not None):
+               # default setting, ignore
+            yield ('empty','','MT: "%s" ignored (uses default) %s' % (content,comment))
+            continue
+         yield (type, content, comment)
+
+   def renameregs(self, fundata, items):
+      rd = fundata['regs']
+      repl = self.makerepl(rd[0],rd[1],rd[3],rd[4])
+      re1reg = re.compile('(\$f?\d+)')
+      for (type, content, comment) in items:
+         content = re1reg.sub(repl, content)
+         comment = re1reg.sub(repl, comment)
+         yield (type, content, comment)
+
+   def addswch(self, fundata, items):
+      redeps = re.compile(r'.*\$df?\d+')
+      for (type, content, comment) in items:
+         yield (type, content, comment)
+         if redeps.match(content) is not None:
+            yield ('other','swch','MT: previous insn reads dependent')
+
+   def makespecial(self, fundata, items):
+      shi, gli, li, shf, glf, lf = fundata['regs']
+      assert gli > 0
+      assert li > 3
+      pvargreg = gli - 1
+      pvreg = li - 3
+      gpreg = li - 2
+      spreg = li - 1
+      pprologue = fundata['pprologue']
+      if fundata['use_gp']:
+         # GP needs to be initialized, do it:
+         assert len(pprologue) == 2
+         disp = pprologue[0][1].split('!')[2]
+         fundata['pprologue'] = [('other','ldah $l%d, 0($g%d) !gpdisp!%s' % (gpreg, pvargreg, disp),''),
+                                 ('other','lda $l%d, 0($l%d) !gpdisp!%s' % (gpreg, gpreg, disp),'')]
+      else:
+         assert len(pprologue) == 0
+      if fundata['use_pv']:
+         fundata['prologue'].insert(0, ('other','mov $g%d, $l%d' % (pvargreg, pvreg), ''))
+      if fundata['use_sp'] and spreg != 1:
+         fundata['prologue'].insert(0, ('other','mov $l1, $l%d' % spreg,''))
+
+      return items
+
+   def printer(self, items):
+      for (type, content, comment) in items:
+         if comment:
+            tail = "# %s" % comment
+         else:
+            tail = ""
+         if type == "label":
+            head = '%s ' % content
+         elif content:
+            head = '\t%s\t\t' % content
+         else:
+            head = ''
+         yield '%s%s\n' % (head, tail)
+
+   def filter(self, arch, compiler, output, *inputs):
+
+      try:
+         outf = file(output, "w")
+      except Exception, e:
+         print >>sys.stderr, sys.argv[0] + ':', output, ': %r' % e
+         sys.exit(1)
+
+      for inname in inputs:
+         lines = self.reader(inname)
+         tokens = self.lexer(lines)
+         items = self.parser(tokens)
+         groups = self.grouper(items)
+         groups = self.funfilter(self.detectregs, groups)
+         groups = self.funfilter(self.regextract, groups)
+         groups = self.funfilter(self.munchret, groups)
+         groups = self.funfilter(self.renameregs, groups)
+         groups = self.funfilter(self.xsplit, groups)
+         groups = self.funfilter(self.makespecial, groups)
+         groups = self.funfilter(self.remdefaults, groups)
+         groups = self.funfilter(self.addswch, groups)
+
+         groups = self.funfilter(self.xjoin, groups)
+         items = self.flattener(groups)
+         lines = self.printer(items)
+         for line in lines:
+            # print "YOO:", line,
+            outf.write(line)
+
+
+      outf.close()
 
 if __name__ == "__main__":
    module = sys.argv[1]
