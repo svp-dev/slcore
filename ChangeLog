@@ -1,5 +1,9 @@
 2009-03-13  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	* doc/spec.txt: Add missing reference to [utc2].
+
+2009-03-13  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	Upgrade the µTC-PTL back-end.
 	
 	* lib/t-ptl/include/sl_support.h: Allow to use an external PTL

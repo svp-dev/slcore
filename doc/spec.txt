@@ -38,6 +38,8 @@ considered bound to this specification:
 
 - CSA note [svp6]: visibility of shared arguments in the parent thread.
 
+- CSA note [utc2]: semantics of synchronizing objects in the µTC language.
+
 Terms and definitions
 =====================
 
