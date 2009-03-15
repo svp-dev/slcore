@@ -239,8 +239,8 @@ class pppalpha(object):
       }
 
    # Magic numbers
-   iargregs = 3 # 1 reserved for PV
-   fargregs = 2
+   iargregs = 6 # 1 reserved for PV
+   fargregs = 4
    #iargregs = 11 # 1 reserved for PV
    #fargregs = 12
 
@@ -386,6 +386,9 @@ class pppalpha(object):
                            'glf' : nrfglobals, 'shf' : nrfshareds }
       ret['args'] = dic
       ret['memlayout'] = memlayout
+
+      #pprint.pprint(ret)
+
       return ret
 
    def create(self, funcname, tag, br, *args):
@@ -589,7 +592,7 @@ class pppalpha(object):
                         leg = "%d" % legnr
                      mapping.append("%d:%s" % (legnr, reg))
 
-                     print '__sl_declglp(%s, %s, "$%s")' % (ctype, name, leg)
+                     print '__sl_declglp(%s, %s, "$%s");' % (ctype, name, leg)
                      print 'm4_define([[__sl_getp_%s]],[[__sl_glparm_%s]])m4_dnl' % (name, name)
                      print "m4_define([[__sl_setp_%s]],[[\n#error cannot set global %s\n]])m4_dnl" % (name, name)
       print "m4_define([[__sl_parmnames]],[[%s]])m4_dnl" % ','.join(names)
@@ -618,13 +621,13 @@ class pppalpha(object):
          retcode = subprocess.call(cmd)
          sys.exit(retcode)
       except Exception, e:
-         print >>sys.stderr, sys.argv[0] + ':', ' '.join(cmd)
-         print >>sys.stderr, sys.argv[0] + ': %r' % e
+         #print >>sys.stderr, sys.argv[0] + ':', ' '.join(cmd)
+         print >>sys.stderr, sys.argv[0] + ': %s: %r' % (compiler, e)
          sys.exit(126)
 
 
 
-   def makerepl(self, shi, gli, shf, glf):
+   def makerepl(self, gli, shi, glf, shf):
       """ 
       Create a substitution function suitable for re.sub,
       based on the values given to .registers.
@@ -756,12 +759,13 @@ class pppalpha(object):
       use_pv = 0
       pvreg = '$%d' % self.legacy_regs['pv']
       for (type, content, comment) in items:
-         if spreg in content:
-            use_sp = 1
-         elif gpreg in content:
-            use_gp = 1
-         elif ('jsr' in content) and (pvreg in content):
-            use_pv = 1
+         if type == 'other':
+            if spreg in content:
+               use_sp = 1
+            elif gpreg in content:
+               use_gp = 1
+            elif ('jsr' in content) and (pvreg in content):
+               use_pv = 1
          yield (type, content, comment)
       fundata['use_sp'] = use_sp
       fundata['use_gp'] = use_gp
@@ -853,11 +857,11 @@ class pppalpha(object):
    def funfilter(self, filter, items):
       for (type, content, comment) in items:
          if type == 'fun':
-            # print "XXXXXXXXXXXXXXXXXXXXXX"
-            # print filter
-            # pprint.pprint(content)
+            #print "XXXXXXXXXXXXXXXXXXXXXX"
+            #print filter
+            #pprint.pprint(content)
             content['body'] = [x for x in filter(content, content['body'])]
-            # pprint.pprint(content)
+            #pprint.pprint(content)
          yield (type, content, comment)
 
    def xsplit(self, fundata, items):
@@ -923,6 +927,20 @@ class pppalpha(object):
             continue
          yield (type, content, comment)
 
+   def rmdupswch(self, fundata, items):
+      seeswch = 0
+      for (type, content, comment) in items:
+         if type == 'other':
+            if content.startswith('swch'):
+               if seeswch == 0:
+                  seeswch = 1
+                  yield (type, content, comment)
+            else:
+               seeswch = 0
+               yield (type, content, comment)
+         else:
+            yield (type, content, comment)
+
    def renameregs(self, fundata, items):
       rd = fundata['regs']
       repl = self.makerepl(rd[0],rd[1],rd[3],rd[4])
@@ -932,7 +950,128 @@ class pppalpha(object):
          comment = re1reg.sub(repl, comment)
          yield (type, content, comment)
 
-   def addswch(self, fundata, items):
+   def forcezero(self, fundata, items):
+      for (type, content, comment) in items:
+         content = content.replace('$l31','$31').replace('$lf31','$f31')
+         yield (type, content, comment)
+         
+   def seereg(self, reg, str):
+      r = re.compile(r'\$[ld]f?\d+')
+      for m in r.findall(str):
+         if m == reg:
+            return True
+      return False
+
+   def addswchll(self, fundata, items):
+      re3way = re.compile(r'\w+\s([^,]+),([^,]+),([^,]+)$')
+      re1way = re.compile(r'\w+\s([^,]+)$')
+      re2way = re.compile(r'mov\s([^,]+),([^,]+)$')
+      rexway = re.compile(r'\w+\s([^,]+),(.*)')
+      reld = re.compile(r'(ldl|ldq|ldt|allocate)')
+
+      allregs = ['$l%d' % x for x in xrange(31 - self.iargregs) if x not in (17, 18)] + \
+          ['$lf%d' % x for x in xrange(31 - self.fargregs)] + \
+          ['$d%d' % x for x in xrange(self.iargregs / 2)] + \
+          ['$df%d' % x for x in xrange(self.fargregs / 2)]
+         
+      maybell = list(allregs)
+      for (type, content, comment) in items:
+         yield (type, content, comment)
+         if type == 'label':
+            maybell = list(allregs)
+
+         elif type == 'other':
+            reads = []
+            shortwrites = []
+            longwrites = []
+            done = 0
+
+
+            # check 3-way insns
+            m = re3way.match(content)
+            if m is not None and not done:
+               r1, r2, r3 = m.groups()
+               reads.append(r1)
+               reads.append(r2)
+               shortwrites.append(r3)
+               done = 1
+
+
+            # check 1-way insn, 1st is target (e.g. break)
+            m = re1way.match(content)
+            if m is not None and not done:
+               r1 = m.groups()
+               reads.append(r1)
+               done = 1
+
+
+            # check 2-way insn, second is target (e.g. mov)
+            m = re2way.match(content)
+            if m is not None and not done:
+               r1, r2 = m.groups()
+               reads.append(r1)
+               shortwrites.append(r2)
+               done = 1
+
+       
+            # check other insns, assume 1st is target
+            m = rexway.match(content)
+            if m is not None and not done:
+               r1, r2 = m.groups()
+               reads.append(r2)
+
+               # Special case for loads from memory:
+               m2 = reld.match(content)
+               if m2 is not None:
+                  longwrites.append(r1)
+               elif content.startswith('lda'):
+                  shortwrites.append(r1)
+               elif content.startswith('cred') or content.startswith('crei'):
+                  longwrites.append(r1)
+                  reads.append(r1)
+               else:
+                  # insn reads 1st operand, then writes to it
+                  reads.append(r1)
+                  shortwrites.append(r1)
+            
+            test = 0
+            q = []
+
+            # if one of the "maybe regs" is read from,
+            # assume we are reading result from long latency.
+            for rx in maybell:
+               for r in reads:
+                  if self.seereg(rx,r):
+                     test = 1
+                     q.append(rx)
+            if test == 1:
+               yield ('other','swch','MT: prev insn may read result of long latency op (%s)' % ','.join(q))
+
+            # all the registers that are "short written"
+            # will not cause long latency during next use
+            for rx in maybell:
+               for r in shortwrites:
+                  if self.seereg(rx, r):
+                     q.append(rx)
+
+            # remove touched registers from the long latency registers
+            for r in q:
+               maybell = [x for x in maybell if x != r]
+            # add generated long latency
+            for rx in allregs:
+               for r in longwrites:
+                  if self.seereg(rx, r):
+                     maybell.append(rx)
+            
+
+   def addswchbr(self, fundata, items):
+      rebr = re.compile(r'(br|beq|bne|bge|ble|bgt|blt)\s')
+      for (type, content, comment) in items:
+         yield (type, content, comment)
+         if rebr.match(content) is not None:
+            yield ('other','swch','MT: swch after branch')
+
+   def addswchdep(self, fundata, items):
       redeps = re.compile(r'.*\$df?\d+')
       for (type, content, comment) in items:
          yield (type, content, comment)
@@ -940,7 +1079,7 @@ class pppalpha(object):
             yield ('other','swch','MT: previous insn reads dependent')
 
    def makespecial(self, fundata, items):
-      shi, gli, li, shf, glf, lf = fundata['regs']
+      gli, shi, li, glf, shf, lf = fundata['regs']
       assert gli > 0
       assert li > 3
       pvargreg = gli - 1
@@ -997,7 +1136,11 @@ class pppalpha(object):
          groups = self.funfilter(self.xsplit, groups)
          groups = self.funfilter(self.makespecial, groups)
          groups = self.funfilter(self.remdefaults, groups)
-         groups = self.funfilter(self.addswch, groups)
+         groups = self.funfilter(self.addswchll, groups)
+         # groups = self.funfilter(self.addswchdep, groups)
+         groups = self.funfilter(self.addswchbr, groups)
+         groups = self.funfilter(self.rmdupswch, groups)
+         groups = self.funfilter(self.forcezero, groups)
 
          groups = self.funfilter(self.xjoin, groups)
          items = self.flattener(groups)

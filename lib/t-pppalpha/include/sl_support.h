@@ -118,8 +118,8 @@
 #define __sl_declsync(Tag, Reg) \
   register long long __sl_sync_ ## Tag __asm__(Reg) = __sl_fid_ ## Tag
 
-#define __sl_docreate(Tag, ...)					\
-  __asm__ __volatile__("crei %0, 0(%2)\t# CREATE " #Tag "\n\tswch"	\
+#define __sl_docreate(Tag, ...)						\
+  __asm__ __volatile__("crei %0, 0(%2)\t# CREATE " #Tag			\
 		       : "=r"(__sl_sync_ ## Tag)			\
 		       : "0"(__sl_sync_ ## Tag),  			\
 		       "r"(__sl_glarg___fptr ## Tag ), ## __VA_ARGS__	\

@@ -1,3 +1,39 @@
+2009-03-15  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
+	Continue implementation of alternate "compiler". Now it can
+	produce (possibly invalid) executable files. Use it for library
+	and demo code.
+
+	* bin/spp: Implement features.
+	* bin/Makefile.am: Fix trailing whitespace.
+
+	* lib/t-pppalpha/slimpl.m4,	
+	* lib/t-pppalpha/include/sl_support.h: Remove swch from sync and
+	create, as spp now adds it automatically.
+	
+	* configure.ac: Search for "ar" and "ranlib" from mtalpha
+	binutils.
+
+	* include/svp/lib.slh: Encapsulate __abort differently.
+
+	* lib/div/divide.c: Copy to...
+	* lib/svplib/div.sl: here; modify to use SL syntax.
+	* lib/div/div.s: Remove, as is now compiled from source.
+
+	* lib/mtalpha-sim/crt.s: Rename to...
+	* lib/mtalpha-sim/slrt.s: here. Update to use MT register names.
+
+	* lib/Makefile.am: Also build mtalpha library and crt; include
+	div.sl into library for all targets.
+	
+	* demo/Makefile.am: Compile example code also using ppp compiler
+	during check.
+
+	* lib/svplib/io.sl: Let printf output the format character when it
+	is unrecognized.
+
+	* lib/r-mtalpha-sim: MGSim is now called MGAlpha.
+
 2009-03-13  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
 	Continue implementation of alternate "compiler".

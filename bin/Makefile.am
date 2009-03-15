@@ -15,7 +15,7 @@ edit_src = $(edit_base) \
 	       -e 's|@srcdatadir[@]|$(abs_top_srcdir)/lib|g' \
 	       -e 's|@pkgdatadir[@]|$(abs_top_builddir)/lib|g' \
 	       -e 's|@srclibdir[@]|$(abs_top_srcdir)/lib|g' \
-	       -e 's|@pkglibdir[@]|$(abs_top_builddir)/lib|g' \	
+	       -e 's|@pkglibdir[@]|$(abs_top_builddir)/lib|g' \
 	       -e 's|@cce_helper[@]|$(abs_builddir)/cce.local|g' \
 	       -e 's|@python[@]|$(PYTHON)|g' 
 

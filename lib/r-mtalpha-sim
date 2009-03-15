@@ -1,7 +1,7 @@
 #! /bin/sh
 # $Id$
-if ! test -x $MGSIM/MGSim; then
+if ! test -x $MGSIM/MGAlpha; then
   echo "Can't find simulator? Please set env. var. MGSIM to source directory." >&2
   exit 1
 fi
-exec $MGSIM/MGSim -t -c $MGSIM/programs/config.ini "$@"
+exec $MGSIM/MGAlpha -t -c $MGSIM/programs/config.ini "$@"

@@ -71,7 +71,7 @@ m4_define([[__sl_syncdst]],[[%__sl_nrwrites]])
 ]])
 m4_define([[__sl_rqueue_sync]], 
 m4_join([[,]], [["r"(__sl_sync_[[]]__sl_tag), "r"(__sl_glarg___fptr[[]]__sl_tag)]], __sl_rqueue_sync))
-__asm__ __volatile__("bis __sl_syncsrc, $[[]]31, __sl_syncdst\n\tswch"
+__asm__ __volatile__("bis __sl_syncsrc, $[[]]31, __sl_syncdst"
 : __sl_wqueue_sync
 : __sl_rqueue_sync)
 ]])

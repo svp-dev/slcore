@@ -3,7 +3,11 @@ EXTRA_DIST = \
 	host-host-ptl/slrt.c \
 	host-host-ptl/include/create.tpl \
 	host-host-ptl/include/template.pl \
-	svplib/io.sl
+	mtalpha-sim/slrt.s \
+	mtalpha-sim/include/svp_asmdiv.h \
+	mtalpha-sim/include/svp_os.h \
+	svplib/io.sl \
+	svplib/div.sl
 
 nobase_dist_pkglib_SCRIPTS = \
 	r-host \
@@ -26,18 +30,28 @@ nobase_dist_pkgdata_DATA = \
 	host-host-ptl/include/ptl_deps.h \
 	host-host-ptl/include/ptl_svp.h \
 	host-host-ptl/include/ptl_vars.h \
-	host-host-ptl/include/svp_os.h
+	host-host-ptl/include/svp_os.h \
+	mtalpha-sim/include/svp_os.h \
+	mtalpha-sim/include/svp_asmdiv.h
 
 nobase_pkglib_DATA = \
 	host-host-seqc/slrt.o \
-	host-host-ptl/slrt.o
+	host-host-ptl/slrt.o \
+	mtalpha-sim/slrt.o
 
 nobase_pkglib_LIBRARIES = \
 	host-host-ptl/libslos.a \
 	host-host-seqc/libslos.a
 
+nobase_pkglib_DATA += \
+	mtalpha-sim/libslos.a
+mtalpha_sim_libslos_a_CONTENTS = \
+	mtalpha-sim/div.o \
+	mtalpha-sim/io.o
+
 host_host_seqc_libslos_a_SOURCES = 
 host_host_seqc_libslos_a_LIBADD = \
+	host-host-seqc/div.o \
 	host-host-seqc/io.o
 
 host_host_ptl_libslos_a_CPPFLAGS = \
@@ -49,7 +63,8 @@ host_host_ptl_libslos_a_SOURCES = \
 	host-host-ptl/ptl_vars.cc \
 	host-host-ptl/ptl_svp.cc
 host_host_ptl_libslos_a_LIBADD = \
-	host-host-ptl/io.o
+	host-host-ptl/io.o \
+	host-host-ptl/div.o
 
 BUILT_SOURCES = \
 	host-host-ptl/include/ptl_create.h
@@ -57,9 +72,37 @@ BUILT_SOURCES = \
 CLEANFILES = 
 SLC = $(top_builddir)/bin/slc.local
 
+######## mtalpha-specific objects #######
+mtalpha-sim/io.o: $(srcdir)/svplib/io.sl
+	$(MKDIR_P) mtalpha-sim
+	$(SLC) -b ppp-mtalpha -c -o $@ $<
+
+mtalpha-sim/div.o: $(srcdir)/svplib/div.sl
+	$(MKDIR_P) mtalpha-sim
+	$(SLC) -b ppp-mtalpha -c -o $@ $<
+
+mtalpha-sim/slrt.o: $(srcdir)/mtalpha-sim/slrt.s
+	$(MKDIR_P) mtalpha-sim
+	$(SLC) -b ppp-mtalpha -c -o $@ $<
+
+mtalpha-sim/libslos.a: $(mtalpha_sim_libslos_a_CONTENTS)
+	rm -f $@
+	$(MTALPHA_AR) cru $@ $^
+	$(MTALPHA_RANLIB) $@
+
+CLEANFILES += \
+	mtalpha-sim/io.o \
+	mtalpha-sim/div.o \
+	mtalpha-sim/slrt.o \
+	mtalpha-sim/libslos.a
+
 ######## seqc-specific objects ########
 
 host-host-seqc/io.o: $(srcdir)/svplib/io.sl
+	$(MKDIR_P) host-host-seqc
+	$(SLC) -b seqc -c -o $@ $<
+
+host-host-seqc/div.o: $(srcdir)/svplib/div.sl
 	$(MKDIR_P) host-host-seqc
 	$(SLC) -b seqc -c -o $@ $<
 
@@ -69,11 +112,16 @@ host-host-seqc/slrt.o: $(srcdir)/host-host-seqc/slrt.c
 
 CLEANFILES += \
 	host-host-seqc/io.o \
+	host-host-seqc/div.o \
 	host-host-seqc/slrt.o
 
 ######## ptl-specific objects ########
 
 host-host-ptl/io.o: $(srcdir)/svplib/io.sl
+	$(MKDIR_P) host-host-ptl
+	$(SLC) -b ptl -c -o $@ $<
+
+host-host-ptl/div.o: $(srcdir)/svplib/div.sl
 	$(MKDIR_P) host-host-ptl
 	$(SLC) -b ptl -c -o $@ $<
 
@@ -83,6 +131,7 @@ host-host-ptl/slrt.o: $(srcdir)/host-host-ptl/slrt.c
 
 CLEANFILES += \
 	host-host-ptl/io.o \
+	host-host-ptl/div.o \
 	host-host-ptl/slrt.o
 
 PTL_CREATE_SUBST = $(srcdir)/host-host-ptl/include/template.pl

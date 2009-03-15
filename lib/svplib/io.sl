@@ -160,6 +160,7 @@ sl_def(svp_io_printf, void,
 			    sl_glarg(unsigned long long, n, (*data++).u),
 			    sl_glarg(unsigned, base, 16)); 
 	break;
+      default: __write1('%'); __write1(*fmt); break;
       }
   }
 }

@@ -36,6 +36,13 @@ AC_CACHE_CHECK([for Bourne-Again shell], [ac_cv_path_SBASH],
 		    [AC_MSG_ERROR([could not find bash])])])
 AC_SUBST([SBASH], [$ac_cv_path_SBASH])
 
+SLC_PROGS([mtalpha_ar],
+	  [AR utility for mtalpha binaries],
+	  [mtalpha-ar mtalpha-linux-gnu-ar])
+SLC_PROGS([mtalpha_ranlib],
+	  [RANLIB utility for mtalpha binaries],
+	  [mtalpha-ranlib mtalpha-linux-gnu-ranlib])
+
 AC_PROG_EGREP
 AC_PROG_SED
 AC_PROG_CC
