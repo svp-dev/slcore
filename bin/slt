@@ -1,0 +1,372 @@
+#! /bin/sh
+# $Id$
+
+# Tester script. Run with --help for details.
+
+set -e
+version=2
+rev='$Rev$'
+rev=$(echo "$rev"|cut -d' ' -f2)
+basename=$(basename "$0")
+root=$(cd $(dirname "$0"); pwd)
+
+slc=${SLC:-$root/slc}
+runner=${SGR:-$root/sgr}
+timeout=$root/timeout
+
+die() {
+  echo "$0:" $@ >&2
+  exit 1
+}
+
+usage() {
+ cat <<EOF
+Usage: $basename [SOURCE] [IMPLEMENTATION]...
+
+Test the program SOURCE against the IMPLEMENTATIONs.
+
+Multiple implementations can be specified, and each multiple
+times. Implementations are filtered through the 'cce' utility.
+
+Example implementation aliases:
+
+  seqc          sequential C scheduling
+
+  ptl           muTC-ptl (pthreads / C++)
+
+  ppp           "alternate" compiler for MT-Alpha
+
+  utc0          Alpha-gcc compiler
+
+  utcx          "desired muTC" (transform/preprocess only)
+
+If no IMPLEMENTATION is specified, or is set to "all", then the
+implementations list above are tested, in that order.
+
+The program performs the tests and display results as they become
+available using the following format:
+
+SOURCE     TPCFALR> TPCFALRD TPCFALRD ...
+
+The first column contains the name of the SOURCE specified on the
+command line. Each subsequent column contains a string of tests
+results for the corresponding IMPLEMENTATION on the command line.
+
+Each string of test results has 8 positions:
+
+  T   translate (from SL to the implementation's input language)
+  P   preprocess (#include, macro expansions, etc)
+  C   compile (input language to raw assembly)
+  F   filter (raw assemply to assembly)
+  A   assemble (assemply to binary code)
+  L   link (binary code to executable)
+  R   run (check that the program runs without errors)
+  D   compare results (check output against reference, see below)
+
+For each position the following results can be produced:
+
+  T,P,C,F,A,L,R (green) The phase succeeded (success)
+  = (green)             The output is used as reference. (success)
+  D (green)             The output is identical to the reference. (success)
+
+  / (yellow)            An expected error occurred (success)
+  o (yellow)            An expected timeout occurred (success)
+  . (yellow)            An expected signal occurred (success)
+  | (yellow)            Test not defined. (newcore-sim only)
+
+  X (red)               An error occured (failure)
+  8 (red)               A timeout occurred (failure)
+  ! (red)               A signal occurred (failure)
+  ? (red)               Expected failure, test succeeded (failure)
+
+  - (white)             The phase was skipped.
+
+To indicate expected failures, the source code can be annotated as
+follows:
+
+  XFAIL: letters...     Indicate that an error or signal is expected
+                        at the phase(s) mentioned in "letters".
+
+  XTIMEOUT: letters...  Indicate that a timeout is expected 
+                        at the phase(s) mentioned in "letters".
+
+The annotation can appear anywhere; for example in source comments.
+
+For program output comparison, the test assumes that the first
+implementation tested produces the reference output; subsequent
+implementations are checked against the results of the first run.
+
+During testing a number of intermediate files are generated. If the
+SOURCE file is named test.sl, the following files are generated:
+
+  IMPL/test.log        Test log
+  IMPL/test.{c,cc,utc} Source code after transformation
+  IMPL/test.{i,ii,ui}  Source code after preprocessing
+  IMPL/test.s0         Raw assembly output
+  IMPL/test.s          Assembly output
+  IMPL/test.o          Object file
+  IMPL/test.x          Executable
+  IMPL/test.out        Output during execution
+
+If a test is successful the corresponding files are erased after the
+test completes, unless the environment variable KEEP is set and
+non-empty.
+
+Report bugs and suggestions to the CSA Trac issue tracker,
+or to <r.c.poss@uva.nl>.
+EOF
+   exit 0 
+}
+
+test_exec() {
+  if ! test -x "$1"; then
+     die "$1: not found or not executable"
+  fi
+}
+test_exec "$slc"
+test_exec "$runner"
+test_exec "$timeout"
+
+if test "$1" = "--help" -o "$1" = "-h"; then
+  usage
+  exit 0
+elif test "$1" = "--version" -o "$1" = "-v"; then
+  cat <<EOF
+$basename $version.$rev
+
+Copyright (C) 2008 the CSA group - The SL project
+
+Written by Raphael "kena" Poss.
+EOF
+  exit 0
+fi
+
+# Compute base name and directory of test source.
+testdir=${TESTDIR:-$(dirname "$1")}
+testsrc=$1
+
+case $1 in
+  *.sl)     testname=$(basename "$1" .sl);;
+  *.s)      testname=$(basename "$1" .s);;
+  *)
+  cat <<EOF
+Usage: $basename [SOURCE] [IMPLEMENTATION]...
+   or: $basename -h
+EOF
+   exit 1
+esac
+
+shift
+
+case $1 in
+  ""|all)
+    impl1=seqc
+    oimpl="ptl ppp utcx"
+    #oimpl="ptl ppp utc0 utcx"
+    ;;
+  *)
+    impl1=$1
+    shift
+    oimpl="$@"
+    ;;
+esac
+
+if test ! -d $testdir -o ! -w $testdir; then
+   echo "$testdir: directory does not exist or read-only" >&2
+   exit 1
+fi
+if test ! -r $testsrc; then
+   echo "$testsrc: cannot read file" >&2
+   exit 1
+fi
+
+check_status() {
+    status=ok
+    if test $1 = 127; then status=invcmd
+    elif test $1 = 0; then status=ok
+    elif test $1 -lt 127; then status=error; errcode=$1
+    elif test $1 = 137; then status=timeout
+    else status=signal; signal=$(expr $1 - 128)
+    fi
+    if test $status = signal; then echo "Terminated with signal $signal" >&2; fi
+    if test $status = error; then echo "Terminated with status code $errcode" >&2; fi
+
+    # Bailout if invalid command or command was interrupted (SIGINT = 2).
+    if test $status = invcmd || test $status = signal -a "$signal" = 2; then exit $2; fi
+}
+
+
+report_compile() {
+  local code offset color char str outlog
+  code=$1
+  offset=$2
+  outlog=$3
+  check_status "$code" 2>>"$outlog"
+  fail=0
+  case $status in
+    signal)  color=31; char="! "; fail=1 ;;
+    timeout) color=31; char="8 "; fail=1 ;; 
+    ok)      if grep -q "XFAIL:.*[TPCFAL]" "$testsrc"; then color=31; char="? "; fail=1; else color=32; char=" L"; fi ;;
+    error) 
+       case $errcode in
+          1) color=31; char="X "; fail=1 ;;
+          2) if grep -q "XFAIL:.*T" "$testsrc"; then color=33; char="/T"; else color=31; char="XT"; fail=1; fi;;
+          3) if grep -q "XFAIL:.*P" "$testsrc"; then color=33; char="/P"; else color=31; char="XP"; fail=1; fi;;
+          4) if grep -q "XFAIL:.*C" "$testsrc"; then color=33; char="/C"; else color=31; char="XC"; fail=1; fi;;
+          5) if grep -q "XFAIL:.*F" "$testsrc"; then color=33; char="/F"; else color=31; char="XF"; fail=1; fi;;
+          6) if grep -q "XFAIL:.*A" "$testsrc"; then color=33; char="/A"; else color=31; char="XA"; fail=1; fi;;
+          7) if grep -q "XFAIL:.*L" "$testsrc"; then color=33; char="/L"; else color=31; char="XL"; fail=1; fi;;
+          *) color=31; char="??" ;;
+       esac       
+  esac
+  dorun=1
+  if expr "$impl" : '.*x' >/dev/null; then
+     if test $status = error -a $errcode -ge 3 -a $errcode -le 7; then
+        color=33; char=" |"; fail=0; dorun=0
+     fi
+  fi
+  if test $fail = 1; then
+    dorun=0
+  fi
+  str=$(printf '\r\033[%sC\033[%sm%s\e[0m' $offset $color "$char")
+  printf "%s" "$str"
+}
+
+report_run() {
+  local code offset outlog color char str
+  code=$1
+  offset=$2
+  outlog=$3
+  check_status "$code" 2>>"$outlog"
+  fail=0
+  case $status in
+    signal)  if grep -q "XFAIL:.*R" "$testsrc"; then color=33; char="."; else color=31; char="!"; fail=1; fi;;
+    timeout) if grep -q "XTIMEOUT" "$testsrc"; then color=33; char="o"; else color=31; char="8"; fail=1; fi;;
+    ok)      if grep -q "XFAIL:.*R" "$testsrc"; then color=31; char="?"; fail=1; else color=32; char="R"; fi ;;
+    error)   if grep -q "XFAIL:.*R" "$testsrc"; then color=33; char="/"; else color=31; char="X"; fail=1; fi;;
+  esac
+  if expr "$impl" : '.*x' >/dev/null; then
+      color=33; char="  "; fail=0
+  fi
+  str=$(printf '\r\033[%sC\033[%sm%s\e[0m' $offset $color "$char")
+  printf "%s" "$str"
+}
+
+do_compile() {
+  local offset command x
+  offset=$1
+  echo "===== TEST: $testsrc, COMPILE ======" >$baseout.log
+  command="$timeout $slc -v -t $outdir -b $impl -o $baseout.x $testsrc"
+  echo "$command" >>$baseout.log
+  set +e
+  KEEP=1 $command >>$baseout.log 2>&1
+  x=$?
+  set -e
+
+  report_compile $x $offset $baseout.log
+}
+
+do_run() {
+  local offset command x
+  offset=$1
+
+  if test $dorun = 0; then
+    echo "Not running program since no executable was produced." >>$baseout.log
+    str=$(printf '\r\033[%sC\033[%sm%s\e[0m' $offset 37 -)
+    printf "%s" "$str"
+  else
+      echo "===== RUNNING PROGRAM =====" >>$baseout.log
+      command="$timeout $runner $baseout.x"
+      echo "$command >$baseout.out" >>$baseout.log
+      set +e
+      $command >$baseout.out 2>>$baseout.log 
+      x=$?
+      set -e
+
+      report_run $x $offset $baseout.log
+  fi
+}
+ 
+
+do_check() {
+  local offset refout
+  impl=$1
+  offset=$2
+  refout=$3
+
+  do_compile $offset
+  do_run $(expr $offset + 2)
+
+  rm -rf "$outdir"
+  return $fail
+}
+
+do_prepdir() {
+  impl=$1
+  outdir=$testdir/$impl
+  baseout=$outdir/$testname
+  mkdir -p "$outdir"
+  if ! test -w "$outdir"; then
+     die "$outdir: directory is not writable"
+  fi
+  rm -f "$baseout"*
+}
+
+
+# find terminal width and squeeze first
+# column as needed
+if stty size >/dev/null 2>&1; then
+  COLUMNS=$(stty size|cut -d' ' -f2)
+fi
+COLUMNS=${COLUMNS:-80}
+nrimpl=$(echo "$oimpl"|tr ' ' '\n'|wc -l)
+nrcols=$(expr \( $nrimpl + 1 \) \* 8)
+remainder=$(expr $COLUMNS - $nrcols - 5)
+if test $remainder -lt 20; then remainder=20; fi
+name=$testsrc
+namelen=$(echo "$name"|wc -c)
+if test $namelen -gt $remainder; then
+  name=$(echo "$name"|sed -e 's,\([0-9]_\)[^/]*,\1*,g')
+  namelen=$(echo "$name"|wc -c)
+  rem=$(expr $remainder - 3)
+  if test $namelen -gt $rem; then
+     name=$(echo "$name"|sed -e 's/^.*\(.\{'$rem'\}\)$/...\1/g')
+  fi
+fi
+printf "%-${remainder}s" "$name"
+
+# start testing
+do_prepdir $impl1
+
+offset=$remainder
+fail=0
+# Start with first impl, need to wait for it
+# since output will be used as reference:
+if ! (do_check $impl1 $offset); then
+    fail=1
+else
+    # Perform other tests asynchronously
+    towait=
+    for impl in $oimpl; do
+	offset=$(expr $offset + 8)
+	do_prepdir $impl
+	do_check $impl $offset $testbase.out &
+	towait="$towait $!"
+    done
+    
+    # After they are started, wait on them
+    for w in $towait; do
+	set +e
+	wait $w
+	x=$?
+	set -e
+	if test $x != 0; then
+	    fail=1
+	fi
+    done
+fi
+
+echo
+exit $fail
+
+# -*- mode: shell -*-

@@ -1,8 +1,8 @@
 bin_SCRIPTS = cce slc sgr
 noinst_SCRIPTS = cce.local slc.local sgr.local
-dist_bin_SCRIPTS = scu spp
-
+dist_bin_SCRIPTS = scu spp slt timeout
 EXTRA_DIST = cce.in slc.in sgr.in
+
 CLEANFILES = $(bin_SCRIPTS) $(noinst_SCRIPTS)
 
 edit_base = $(SED) \

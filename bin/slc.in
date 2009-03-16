@@ -264,6 +264,11 @@ Compiler debugging options:
                      intermediate files generated during compilation are
                      deleted before the program terminates.
 
+  -t dir             Output directory for intermediate files. If this option
+                     is not set, a directory is automatically created
+                     in the system-wide default temporary directory
+                     (usually /tmp).
+
 Other options:
   -h, --help         Print this help; do not process anything.
 

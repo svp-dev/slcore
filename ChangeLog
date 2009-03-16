@@ -1,5 +1,18 @@
 2009-03-16  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	Start implementing slc test tools.
+	
+	* bin/timeout: Import from utcc.
+	* bin/slt: Import from utcc (test1). Upgrade to slc interface.
+
+	* bin/Makefile.am: Update accordingly.
+
+	* demo/Makefile.am: Use the test system.
+
+	* bin/slc.in: Document option -t.
+
+2009-03-16  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	Fix bug.
 	
 	* bin/spp: Rename zero registers after flattening, to catch them
