@@ -1,0 +1,3 @@
+
+void *bogus = 0;
+

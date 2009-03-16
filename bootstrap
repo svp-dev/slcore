@@ -50,6 +50,7 @@ do
   fi
 done
 
+run tests                 ./mkalltests.sh
 run .                     $AUTORECONF -v -f -i
 
 echo "Reconfiguration done."

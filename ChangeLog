@@ -1,5 +1,35 @@
 2009-03-16  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	Extend test suite.
+
+	* configure.ac,
+	* Makefile.am: Add subdirectory "tests".
+	
+	* tests/Makefile.am: Capture TESTS_ENVIRONMENT to...	
+	* tests.mk: here.
+
+	* tests/mkalltests.sh: Generate TESTS variable automatically.
+	* tests/Makefile.am: Use it.
+	* bootstrap: Update accordingly.
+
+	* tests/0_minimal/0_trivial/div.sl,
+	* tests/0_minimal/0_trivial/emptymain.sl,
+	* tests/0_minimal/0_trivial/if.sl,
+	* tests/0_minimal/0_trivial/if2.sl,
+	* tests/0_minimal/0_trivial/nop.sl,
+	* tests/0_minimal/0_trivial/x_abort.sl,
+	* tests/0_minimal/0_trivial/x_empty.sl,
+	* tests/0_minimal/0_trivial/x_illinsn.sl,
+	* tests/0_minimal/0_trivial/x_infloop.sl,
+	* tests/0_minimal/0_trivial/x_invcpp.sl,
+	* tests/0_minimal/0_trivial/x_invm4.sl,
+	* tests/0_minimal/0_trivial/x_invsyntax.sl,
+	* tests/0_minimal/0_trivial/x_undefsym.sl: Import from utcc.
+	
+2009-03-16  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
+	* bin/slt (Usage): 
+
 	Bug fixes thanks to testing.
 	
 	* demo/10threads.sl: Copy shared after sync to new temporary, to
