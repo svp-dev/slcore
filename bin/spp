@@ -6,7 +6,7 @@ import subprocess
 import re
 
 def die(msg):
-   print >>sys.stderr, msg
+   print >>sys.stderr, "%s:" % sys.argv[0], msg
    sys.exit(1)
 
 class NotFound(Exception):
@@ -462,7 +462,6 @@ class pppalpha(object):
 
       pvreg = str(aliases['l%d' % (glibase + c['gl_pv_offset'])]['legnr'])
       print '__sl_declgla(__sl_fptr_t, __fptr%s, "$%s", %s);' % (tag, pvreg, funcname)
-      # rregs.append('__sl_glarg___fptr%s' % tag)
 
       if c['gl_mem_offset'] is not None:
          print "const struct __sl_ma_t_%s {" % tag
@@ -503,16 +502,19 @@ class pppalpha(object):
       crreg = aliases['l%d' % cri]['legnr']
       print '__sl_declsync(%s, "$%d");' % (tag, crreg)
       
-      wqueue = ", ".join(['"=rf"(%s)' % x for x in wregs])
-      rqueue1 = ", ".join(['"%d"(%s)' % i for i in enumerate(wregs)] + ['"rf"(%s)' % x for x in rregs])
-      if not rregs:
-         rqueue2 = ""
-      else:
-         rqueue2 = ", " + ", ".join(['"rf"(%s)' % x for x in rregs])
-      print "__sl_docreate(%s%s)" % (tag, rqueue2)
-      print "m4_define([[__sl_rqueue_sync]],[[%s]])" % rqueue1
+
+      rregs.append('__sl_glarg___fptr%s' % tag)
+      wregs1 = ['__sl_sync_%s' % tag] + wregs
+      wqueue_cre = ", ".join(['"=rf"(%s)' % x for x in wregs1])
+      rqueue_cre = ", ".join(['"%d"(%s)' % i for i in enumerate(wregs1)] + ['"rf"(%s)' % x for x in rregs])
+      print '__asm__ __volatile__("crei %%0, 0(%%%d)\t# CREATE %s" : %s : %s)' % \
+                                (2*len(wregs1)+len(rregs)-1, tag, wqueue_cre, rqueue_cre)
+
+      wqueue_sync = ", ".join(['"=rf"(%s)' % x for x in wregs])
+      rqueue_sync = ", ".join(['"%d"(%s)' % i for i in enumerate(wregs)] + ['"rf"(%s)' % x for x in rregs])
+      print "m4_define([[__sl_rqueue_sync]],[[%s]])" % rqueue_sync
       print "m4_define([[__sl_nrwrites]],[[%d]])" % len(wregs)
-      print "m4_define([[__sl_wqueue_sync]],[[%s]])" % wqueue
+      print "m4_define([[__sl_wqueue_sync]],[[%s]])" % wqueue_sync
       
    def fundef(self, funcname, counter, *args):
 
@@ -941,6 +943,14 @@ class pppalpha(object):
          else:
             yield (type, content, comment)
 
+
+   def barkatjsr(self, fundata, items):
+      for (type, content, comment) in items:
+         if type == "other" and content.startswith('jsr'):
+            die("%s: unsupported call: %s" % (fundata['name'],content))
+         yield (type, content, comment)
+         
+
    def renameregs(self, fundata, items):
       rd = fundata['regs']
       repl = self.makerepl(rd[0],rd[1],rd[3],rd[4])
@@ -1000,7 +1010,7 @@ class pppalpha(object):
             # check 1-way insn, 1st is target (e.g. break)
             m = re1way.match(content)
             if m is not None and not done:
-               r1 = m.groups()
+               r1 = m.group(1)
                reads.append(r1)
                done = 1
 
@@ -1129,6 +1139,7 @@ class pppalpha(object):
          tokens = self.lexer(lines)
          items = self.parser(tokens)
          groups = self.grouper(items)
+         groups = self.funfilter(self.barkatjsr, groups)
          groups = self.funfilter(self.detectregs, groups)
          groups = self.funfilter(self.regextract, groups)
          groups = self.funfilter(self.munchret, groups)

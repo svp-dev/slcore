@@ -1,6 +1,6 @@
 m4_ifndef([[SVP_DIV_SLH]],[[m4_define([[SVP_DIV_SLH]],1)
 
-m4_ifdef([[HAVE_C_DIVIDE]],[[
+m4_ifdef([[USE_C_DIVIDE]],[[
 
 m4_define([[divu]],[[
   (__typeof__(([[$1]]) / ([[$2]])))
@@ -40,10 +40,30 @@ m4_define([[divmods]],[[do {
 
 ]], [[ /* !HAVE_C_DIVIDE */ 
 
-#include "svp_asmdiv.h"
+sl_decl(__divmodqu, void, sl_shparm(unsigned long long, x), sl_shparm(unsigned long long, y));
+sl_decl(__divmodqs, void, sl_shparm(signed long long, x), sl_shparm(signed long long, y));
 
-m4_define([[divmodu]], [[__asm_divmodu(([[$1]]),([[$2]]))]])
-m4_define([[divmods]], [[__asm_divmods(([[$1]]),([[$2]]))]])
+m4_define([[divmodu]], [[do {
+unsigned long long __dmu_x = ([[$1]]);
+unsigned long long __dmu_y = ([[$2]]);
+sl_create(,,,,,,,__divmodqu, 
+          sl_sharg(unsigned long long, __dmu_sx, __dmu_x),
+          sl_sharg(unsigned long long, __dmu_sy, __dmu_y));
+sl_sync();
+([[$1]]) = sl_geta(__dmu_sx);
+([[$2]]) = sl_geta(__dmu_sy);
+} while(0)]])
+
+m4_define([[divmods]], [[do {
+unsigned long long __dms_x = ([[$1]]);
+unsigned long long __dms_y = ([[$2]]);
+sl_create(,,,,,,,__divmodqs, 
+          sl_sharg(signed long long, __dms_sx, __dms_x),
+          sl_sharg(signed long long, __dms_sy, __dms_y));
+sl_sync();
+([[$1]]) = sl_geta(__dms_sx);
+([[$2]]) = sl_geta(__dms_sy);
+} while(0)]])
 
 m4_define([[divu]], [[({
     unsigned long long __divu_x = ([[$1]]), __divu_y = ([[$2]]);

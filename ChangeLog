@@ -1,5 +1,36 @@
 2009-03-16  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	Bug fixes thanks to testing.
+	
+	* demo/10threads.sl: Copy shared after sync to new temporary, to
+	work around current bug in compiler.
+
+	* include/svp/iomacros.slh: Initialize printf arguments using
+	assignments instead of initializer, to prevent gcc from using
+	'memset' behind the scenes. Make structure volatile so that the
+	assignments are not optimized away.
+
+	* include/svp/div.slh: Use software divide in all implementations
+	by default.
+
+	* include/svp/lib.slh: Fix definition of "unlikely".
+
+	* lib/t-pppalpha/include/sl_support.h,	
+	* bin/spp: Emit create during translation, as it needs intricate
+	registers lists. Bark when "jsr" is found in the output.
+
+	* lib/mtalpha-sim/include/svp_os.h: Insert "nop"'s before the halt
+	instruction, as it causes a decode error in the pipeline and may
+	cause a failure in the delay slot after a branch.
+
+	* bin/slc.in: Use -Os by default instead of -O2.
+
+	* bin/slt: Implement more.
+
+	* tests/div.sl: Implement.
+	
+2009-03-16  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	Start implementing slc test tools.
 	
 	* bin/timeout: Import from utcc.

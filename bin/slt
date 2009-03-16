@@ -46,21 +46,47 @@ implementations list above are tested, in that order.
 The program performs the tests and display results as they become
 available using the following format:
 
-SOURCE     TPCFALR> TPCFALRD TPCFALRD ...
+SOURCE     XXYZ XXYZ XXYZ ...
 
 The first column contains the name of the SOURCE specified on the
 command line. Each subsequent column contains a string of tests
 results for the corresponding IMPLEMENTATION on the command line.
 
-Each string of test results has 8 positions:
+Each string of test results has 3 positions:
 
-  T   translate (from SL to the implementation's input language)
-  P   preprocess (#include, macro expansions, etc)
-  C   compile (input language to raw assembly)
-  F   filter (raw assemply to assembly)
-  A   assemble (assemply to binary code)
-  L   link (binary code to executable)
-  R   run (check that the program runs without errors)
+- compilation results; one of:
+
+   L   An executable was produced successfully.
+  8    A timeout occurred during compilation.
+  !    A signal occurred during compilation.
+  ?    Compilation succeeded, but a failure was expected.
+ 
+  XT   Translation failed.
+  XP   Preprocessing failed.
+  XC   Compilation failed.
+  XF   Post-compilation failed.
+  XA   Assembly failed.
+  XL   Linking failed.
+
+  /T   Translation failed, as expected.
+  /P   Preprocessing failed, as expected.
+  /C   Compilation failed, as expected.
+  /F   Post-compilation failed, as expected.
+  /A   Assembly failed, as expected.
+  /L   Linking failed, as expected.
+
+- execution results; one of:
+
+  R    Execution succeded without errors.
+  8    A timeout occurred.
+  !    A signal occurred.
+  ?    Execution succeeded, but a failure was expected.
+  o    A timeout occurred, as expected.
+  .    A signal occurred, as expected.
+
+- check of reference output; one of:
+
+  =   
   D   compare results (check output against reference, see below)
 
 For each position the following results can be produced:
@@ -87,8 +113,8 @@ follows:
   XFAIL: letters...     Indicate that an error or signal is expected
                         at the phase(s) mentioned in "letters".
 
-  XTIMEOUT: letters...  Indicate that a timeout is expected 
-                        at the phase(s) mentioned in "letters".
+  XTIMEOUT              Indicate that a timeout is expected 
+                        at runtime.
 
 The annotation can appear anywhere; for example in source comments.
 
@@ -245,9 +271,6 @@ report_run() {
     ok)      if grep -q "XFAIL:.*R" "$testsrc"; then color=31; char="?"; fail=1; else color=32; char="R"; fi ;;
     error)   if grep -q "XFAIL:.*R" "$testsrc"; then color=33; char="/"; else color=31; char="X"; fail=1; fi;;
   esac
-  if expr "$impl" : '.*x' >/dev/null; then
-      color=33; char="  "; fail=0
-  fi
   str=$(printf '\r\033[%sC\033[%sm%s\e[0m' $offset $color "$char")
   printf "%s" "$str"
 }
@@ -270,10 +293,12 @@ do_run() {
   local offset command x
   offset=$1
 
+  dodiff=1
   if test $dorun = 0; then
     echo "Not running program since no executable was produced." >>$baseout.log
     str=$(printf '\r\033[%sC\033[%sm%s\e[0m' $offset 37 -)
     printf "%s" "$str"
+    dodiff=0
   else
       echo "===== RUNNING PROGRAM =====" >>$baseout.log
       command="$timeout $runner $baseout.x"
@@ -286,7 +311,30 @@ do_run() {
       report_run $x $offset $baseout.log
   fi
 }
- 
+
+do_diff() {
+  local offset refout str
+  offset=$1
+  refout=$2
+
+  if test $fail = 1 -o $dorun = 0; then
+    echo "Not testing output." >>$baseout.log
+    str=$(printf '\r\033[%sC\033[%sm%s\e[0m' $offset 37 -)
+    printf "%s" "$str"
+  else
+      echo "===== CHECKING OUTPUT =====" >>$baseout.log
+      if diff -u "$refout" "$baseout.out" >>"$baseout.log" 2>&1; then
+	  echo "Output identical to reference" >>$baseout.log
+	  str=$(printf '\r\033[%sC\033[%sm%s\e[0m' $offset 32 "D")
+      else
+	  str=$(printf '\r\033[%sC\033[%sm%s\e[0m' $offset 31 "X")
+	  fail=1
+      fi
+      printf "%s" "$str"
+  fi
+}
+
+
 
 do_check() {
   local offset refout
@@ -296,8 +344,13 @@ do_check() {
 
   do_compile $offset
   do_run $(expr $offset + 2)
-
-  rm -rf "$outdir"
+  if test -n "$refout"; then
+      do_diff $(expr $offset + 3) "$refout"
+  else
+      str=$(printf '\r\033[%sC\033[%sm%s\e[0m' $(expr $offset + 3) 32 "=")
+      printf "%s" "$str"
+  fi
+  #rm -rf "$outdir"
   return $fail
 }
 
@@ -350,7 +403,7 @@ else
     for impl in $oimpl; do
 	offset=$(expr $offset + 8)
 	do_prepdir $impl
-	do_check $impl $offset $testbase.out &
+	do_check $impl $offset $baseout.out &
 	towait="$towait $!"
     done
     

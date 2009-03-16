@@ -96,7 +96,7 @@ sl_def(svp_io_putn, void,
        sl_glparm(long long, gn),
        sl_glparm(unsigned, gbase))
 {
-  long long x = sl_getp(gn);
+  long long x = sl_getp(gn); 
   const unsigned base = sl_getp(gbase);
   if (!x) __write1('0');
   else {
