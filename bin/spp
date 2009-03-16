@@ -950,7 +950,7 @@ class pppalpha(object):
          comment = re1reg.sub(repl, comment)
          yield (type, content, comment)
 
-   def forcezero(self, fundata, items):
+   def forcezero(self, items):
       for (type, content, comment) in items:
          content = content.replace('$l31','$31').replace('$lf31','$f31')
          yield (type, content, comment)
@@ -1140,10 +1140,10 @@ class pppalpha(object):
          # groups = self.funfilter(self.addswchdep, groups)
          groups = self.funfilter(self.addswchbr, groups)
          groups = self.funfilter(self.rmdupswch, groups)
-         groups = self.funfilter(self.forcezero, groups)
 
          groups = self.funfilter(self.xjoin, groups)
          items = self.flattener(groups)
+         items = self.forcezero(items)
          lines = self.printer(items)
          for line in lines:
             # print "YOO:", line,

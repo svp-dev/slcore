@@ -1,3 +1,10 @@
+2009-03-16  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
+	Fix bug.
+	
+	* bin/spp: Rename zero registers after flattening, to catch them
+	in prologue too.
+
 2009-03-15  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
 	Continue implementation of alternate "compiler". Now it can
