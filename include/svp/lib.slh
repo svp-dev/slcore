@@ -3,6 +3,7 @@ m4_ifndef([[SVP_LIB_SLH]],[[m4_define([[SVP_LIB_SLH]],1)
 #include "svp_os.h"
 
 m4_define([[svp_abort]], [[__abort()]])
+m4_define([[svp_nop]],[[__nop()]]);
 
 #ifdef __GNUC__
 #define likely(X) __builtin_expect(!!(X), 1)

@@ -1,0 +1,40 @@
+m4_ifndef([[SV_ROMAN_SLH]], [[m4_define([[SVP_ROMAN_SLH]],1)
+
+m4_include(svp/iomacros.slh)
+
+m4_define([[roman]], [[do {
+  int num = ([[$1]]);
+  if (num < 0) { 
+    putc('-');
+    num = -num;
+  }
+  while(num >= 1000) {
+     putc('M');
+     num = num - 1000;
+  }
+  while(num >= 500) {
+     putc('D');
+     num = num - 500;
+  }
+  while(num >= 100) {
+     putc('C');
+     num = num - 100;
+  }
+  while(num >= 50) {
+     putc('L');
+     num = num - 50;
+  }
+  while(num >= 10) {
+     putc('X');
+     num = num - 10;
+  }
+  while(num >= 5) {
+     putc('V');
+     num = num - 5;
+  }
+  while(num--)
+     putc('I');
+} while(0)
+]])
+
+]])

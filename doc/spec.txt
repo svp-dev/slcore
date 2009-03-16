@@ -591,6 +591,9 @@ The following definitions are available in ``svp/lib.slh``:
   environment to stop with an error condition when it is reached
   during execution of a thread.
 
+- "statement"-like macro ``svp_nop()``: as its name implies causes the
+  program to step forward with no side effect.
+
 - "expression"-like macros ``likely(X)`` and ``unlikely(X)`` that can
   be used to guide branch optimization. See the provided macro
   definition and the description of ``__builtin_expect`` in the

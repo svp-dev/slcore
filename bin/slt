@@ -218,7 +218,7 @@ check_status() {
     if test $status = error; then echo "Terminated with status code $errcode" >&2; fi
 
     # Bailout if invalid command or command was interrupted (SIGINT = 2).
-    if test $status = invcmd || test $status = signal -a "$signal" = 2; then exit $2; fi
+    if test $status = invcmd || test $status = signal -a "$signal" = 2; then exit $1; fi
 }
 
 
@@ -229,6 +229,7 @@ report_compile() {
   outlog=$3
   check_status "$code" 2>>"$outlog"
   fail=0
+  dorun=1
   case $status in
     signal)  color=31; char="! "; fail=1 ;;
     timeout) color=31; char="8 "; fail=1 ;; 
@@ -242,10 +243,10 @@ report_compile() {
           5) if grep -q "XFAIL:.*F" "$testsrc"; then color=33; char="/F"; else color=31; char="XF"; fail=1; fi;;
           6) if grep -q "XFAIL:.*A" "$testsrc"; then color=33; char="/A"; else color=31; char="XA"; fail=1; fi;;
           7) if grep -q "XFAIL:.*L" "$testsrc"; then color=33; char="/L"; else color=31; char="XL"; fail=1; fi;;
-          *) color=31; char="??" ;;
-       esac       
+          *) color=31; char="??"; fail=1 ;;
+       esac
+       dorun=0
   esac
-  dorun=1
   if expr "$impl" : '.*x' >/dev/null; then
      if test $status = error -a $errcode -ge 3 -a $errcode -le 7; then
         color=33; char=" |"; fail=0; dorun=0
@@ -265,11 +266,15 @@ report_run() {
   outlog=$3
   check_status "$code" 2>>"$outlog"
   fail=0
+  dodiff=1
   case $status in
-    signal)  if grep -q "XFAIL:.*R" "$testsrc"; then color=33; char="."; else color=31; char="!"; fail=1; fi;;
-    timeout) if grep -q "XTIMEOUT" "$testsrc"; then color=33; char="o"; else color=31; char="8"; fail=1; fi;;
+    signal)  dodiff=0; 
+             if grep -q "XFAIL:.*R" "$testsrc"; then color=33; char="."; else color=31; char="!"; fail=1; fi;;
+    timeout) dodiff=0; 
+             if grep -q "XTIMEOUT" "$testsrc"; then color=33; char="o"; else color=31; char="8"; fail=1; fi;;
     ok)      if grep -q "XFAIL:.*R" "$testsrc"; then color=31; char="?"; fail=1; else color=32; char="R"; fi ;;
-    error)   if grep -q "XFAIL:.*R" "$testsrc"; then color=33; char="/"; else color=31; char="X"; fail=1; fi;;
+    error)   dodiff=0;
+             if grep -q "XFAIL:.*R" "$testsrc"; then color=33; char="/"; else color=31; char="X"; fail=1; fi;;
   esac
   str=$(printf '\r\033[%sC\033[%sm%s\e[0m' $offset $color "$char")
   printf "%s" "$str"
@@ -282,7 +287,7 @@ do_compile() {
   command="$timeout $slc -v -t $outdir -b $impl -o $baseout.x $testsrc"
   echo "$command" >>$baseout.log
   set +e
-  KEEP=1 $command >>$baseout.log 2>&1
+  KEEP=1 TIMEOUT=40 $command >>$baseout.log 2>&1
   x=$?
   set -e
 
@@ -296,7 +301,7 @@ do_run() {
   dodiff=1
   if test $dorun = 0; then
     echo "Not running program since no executable was produced." >>$baseout.log
-    str=$(printf '\r\033[%sC\033[%sm%s\e[0m' $offset 37 -)
+    str=$(printf '\r\033[%sC\033[%sm%s\e[0m' $offset 37 "-")
     printf "%s" "$str"
     dodiff=0
   else
@@ -317,7 +322,7 @@ do_diff() {
   offset=$1
   refout=$2
 
-  if test $fail = 1 -o $dorun = 0; then
+  if test $fail = 1 -o $dorun = 0 -o $dodiff = 0; then
     echo "Not testing output." >>$baseout.log
     str=$(printf '\r\033[%sC\033[%sm%s\e[0m' $offset 37 -)
     printf "%s" "$str"
@@ -347,7 +352,11 @@ do_check() {
   if test -n "$refout"; then
       do_diff $(expr $offset + 3) "$refout"
   else
-      str=$(printf '\r\033[%sC\033[%sm%s\e[0m' $(expr $offset + 3) 32 "=")
+      if test $dodiff = 0; then
+	  str=$(printf '\r\033[%sC\033[%sm%s\e[0m' $(expr $offset + 3) 37 "-")
+      else
+	  str=$(printf '\r\033[%sC\033[%sm%s\e[0m' $(expr $offset + 3) 32 "=")
+      fi
       printf "%s" "$str"
   fi
   #rm -rf "$outdir"
@@ -373,7 +382,7 @@ if stty size >/dev/null 2>&1; then
 fi
 COLUMNS=${COLUMNS:-80}
 nrimpl=$(echo "$oimpl"|tr ' ' '\n'|wc -l)
-nrcols=$(expr \( $nrimpl + 1 \) \* 8)
+nrcols=$(expr \( $nrimpl + 1 \) \* 5)
 remainder=$(expr $COLUMNS - $nrcols - 5)
 if test $remainder -lt 20; then remainder=20; fi
 name=$testsrc
@@ -391,33 +400,64 @@ printf "%-${remainder}s" "$name"
 # start testing
 do_prepdir $impl1
 
+bye() {
+  for pid in $towait; do
+    kill $pid >/dev/null 2>&1
+  done
+  signalled=1
+}
+
 offset=$remainder
 fail=0
 # Start with first impl, need to wait for it
 # since output will be used as reference:
-if ! (do_check $impl1 $offset); then
+
+signalled=0
+trap bye INT QUIT HUP TERM
+do_check $impl1 $offset &
+towait=$!
+set +e
+wait $towait
+x=$?
+set -e
+if test $signalled = 1; then 
+    echo
+    exit $x
+elif test $x != 0; then
     fail=1
-else
-    # Perform other tests asynchronously
-    towait=
-    for impl in $oimpl; do
-	offset=$(expr $offset + 8)
-	do_prepdir $impl
-	do_check $impl $offset $baseout.out &
-	towait="$towait $!"
-    done
-    
-    # After they are started, wait on them
-    for w in $towait; do
-	set +e
-	wait $w
-	x=$?
-	set -e
-	if test $x != 0; then
-	    fail=1
-	fi
-    done
 fi
+
+# Perform other tests asynchronously
+towait=
+for impl in $oimpl; do
+    offset=$(expr $offset + 5)
+    do_prepdir $impl
+    do_check $impl $offset $baseout.out &
+    towait="$towait $!"
+done
+
+# After they are started, wait on them
+for w in $towait; do
+    set +e
+    wait $w
+    x=$?
+    set -e
+    if test $signalled = 1; then
+        echo
+        exit $x
+    elif test $x != 0; then
+	fail=1
+    fi
+done
+
+offset=$(expr $offset + 5)
+if test $fail = 0; then
+  str=$(printf '\r\033[%sC\033[%sm%s\e[0m' $offset 37 "\o/")
+else
+  str=$(printf '\r\033[%sC\033[%sm%s\e[0m' $offset 31 ":(")
+fi
+printf "%s" "$str"
+
 
 echo
 exit $fail

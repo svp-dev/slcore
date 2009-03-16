@@ -1,5 +1,20 @@
 2009-03-16  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	Improvements thanks to testing.
+	
+	* include/svp/roman.slh: Implement simple number printer which
+	does not require divide.
+
+	* include/svp/lib.slh: Expose "nop" as svp_nop.
+	* doc/spec.txt: Update accordingly.
+
+	* bin/slt: Better error handling. Try to handle signals more
+	gracefully.
+	
+	* tests.mk: Missing from previous commit.
+	
+2009-03-16  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	Extend test suite.
 
 	* configure.ac,
@@ -27,8 +42,6 @@
 	* tests/0_minimal/0_trivial/x_undefsym.sl: Import from utcc.
 	
 2009-03-16  Raphael 'kena' Poss  <r.c.poss@uva.nl>
-
-	* bin/slt (Usage): 
 
 	Bug fixes thanks to testing.
 	
