@@ -1,5 +1,49 @@
 2009-03-16  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	More tests & improvements thanks to testing.
+	
+	* lib/t-ptl/slimpl.m4,	
+	* lib/t-seqc/slimpl.m4: Simplify loops by using m4_foreach from
+	m4sugar. Adopt new semantics for 1st create parameter. Check
+	proper balancing of create and sync. Protect initializers that
+	contain colons.
+
+	* lib/t-ptl/slimpl.m4,
+	* lib/t-ptl/include/sl_support.h,
+	* lib/t-pppalpha/slimpl.m4,		
+	* lib/t-pppalpha/include/sl_support.h: Use PLACE_DEFAULT as
+	default 2nd create parameter instead of SVP_LOCAL, as documented.
+
+	* bin/spp: End create with a semicolon, as it may be required for
+	copy of fid afterwards.
+	
+	* tests/0_minimal/1_create/cr1.s,
+	* tests/0_minimal/1_create/cr1.sl,
+	* tests/0_minimal/1_create/crif.sl,
+	* tests/0_minimal/1_create/crif2.sl,
+	* tests/0_minimal/1_create/crif3.sl,
+	* tests/0_minimal/1_create/crnop.sl,
+	* tests/0_minimal/1_create/crnop2.sl,
+	* tests/0_minimal/1_create/crnop3.sl,
+	* tests/0_minimal/1_create/crnopdefs.sl,
+	* tests/0_minimal/1_create/fididreuse.sl,
+	* tests/0_minimal/1_create/x_crnosync.sl,
+	* tests/0_minimal/1_create/x_crnotstm.sl,
+	* tests/0_minimal/1_create/x_extcreate.sl,
+	* tests/0_minimal/1_create/x_extcreatedefs.sl,
+	* tests/0_minimal/1_create/x_inffamily.sl,
+	* tests/0_minimal/1_create/x_invsync.sl,
+	* tests/0_minimal/1_create/x_nested.sl,
+	* tests/0_minimal/1_create/x_nocreate.sl,
+	* tests/0_minimal/1_create/x_nothread.sl,
+	* tests/0_minimal/2_args/sum.sl,
+	* tests/0_minimal/3_mem/crdefaults.sl,
+	* tests/0_minimal/3_mem/if.sl,
+	* tests/0_minimal/3_mem/indcreate.sl,
+	* tests/0_minimal/4_index/indexdecl.sl: Import from utcc.
+	
+2009-03-16  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	Improvements thanks to testing.
 	
 	* include/svp/roman.slh: Implement simple number printer which
@@ -66,7 +110,7 @@
 	instruction, as it causes a decode error in the pipeline and may
 	cause a failure in the delay slot after a branch.
 
-	* bin/slc.in: Use -Os by default instead of -O2.
+	* bin/cce.in: Use -Os by default instead of -O2.
 
 	* bin/slt: Implement more.
 

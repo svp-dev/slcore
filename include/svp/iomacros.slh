@@ -1,5 +1,4 @@
 m4_ifndef([[SV_IOMACROS_SLH]], [[m4_define([[SVP_IOMACROS_SLH]],1)
-
 m4_include(svp/io.slh)
 
 /*

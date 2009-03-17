@@ -21,6 +21,7 @@ m4_esyscmd(m4_quote(PYTHON SPP_PY pppalpha fundef __sl_funcname __sl_dispcount _
 m4_assert(m4_sysval == 0)
 ]])
 m4_define([[sl_enddef]],[[
+m4_ifdef([[_sl_increate]],[[m4_fatal(missing sync after create)]])
 m4_foreach([[__sl_parmname]],m4_quote(__sl_parmnames),[[
 m4_undefine([[__sl_getp_]]__sl_parmname)
 m4_undefine([[__sl_setp_]]__sl_parmname)
@@ -42,10 +43,11 @@ m4_define([[sl_seta]],[[__sl_seta_$1([[$2]])]])
 m4_define([[m4_sh_escape]],[['m4_bpatsubst([[$1]],[[[']]],[['"'"']])']])
 
 m4_define([[sl_create]],[[
+m4_ifdef([[_sl_increate]],[[m4_fatal(cannot nest create)]])
+m4_define([[_sl_increate]],1)
 m4_step([[__sl_crcnt]])
-m4_define([[__sl_autotag]],__child[[]]__sl_crcnt[[]]__)
-m4_define([[__sl_tag]],m4_if([[$1]],,__sl_autotag,[[$1]]))
-m4_define([[_sl_place]],m4_if([[$2]],,[[SVP_LOCAL]],[[$2]]))
+m4_define([[__sl_tag]],__sl_child[[]]__sl_crcnt)
+m4_define([[_sl_place]],m4_if([[$2]],,[[PLACE_DEFAULT]],[[$2]]))
 m4_define([[_sl_start]],m4_if([[$3]],,0,[[$3]]))
 m4_define([[_sl_limit]],m4_if([[$4]],,1,[[$4]]))
 m4_define([[_sl_step]],m4_if([[$5]],,1,[[$5]]))
@@ -55,12 +57,14 @@ m4_define([[__sl_crfuncname]],"[[$8]]")
 m4_define([[__sl_thargs]], m4_mapall_sep([[m4_sh_escape]],[[ ]], m4_dquote(m4_shiftn(8, $@))))
 m4_esyscmd(m4_quote(PYTHON SPP_PY pppalpha create __sl_crfuncname __sl_tag __sl_crbrktype __sl_thargs))
 m4_assert(m4_sysval == 0)
+m4_if([[$1]],,,[[([[$1]]) = __sl_fid_[[]]__sl_tag;]])
 ]])
 
 m4_define([[__sl_makewreg]],[["=rf"([[$1]])]])
 m4_define([[__sl_makerreg]],[["rf"([[$1]])]])
 
 m4_define([[sl_sync]],[[
+m4_ifndef([[_sl_increate]],[[m4_fatal(sync without create)]])
 m4_if([[$1]],,[[
 m4_define([[__sl_syncsrc]],[[%__sl_nrwrites]])
 m4_define([[__sl_syncdst]],[[$[[]]31]])
@@ -71,9 +75,10 @@ m4_define([[__sl_syncdst]],[[%__sl_nrwrites]])
 ]])
 m4_define([[__sl_rqueue_sync]], 
 m4_join([[,]], [["r"(__sl_sync_[[]]__sl_tag), "r"(__sl_glarg___fptr[[]]__sl_tag)]], __sl_rqueue_sync))
-__asm__ __volatile__("bis __sl_syncsrc, $[[]]31, __sl_syncdst"
+__asm__ __volatile__("bis __sl_syncsrc, $[[]]31, __sl_syncdst # SYNC __sl_tag"
 : __sl_wqueue_sync
 : __sl_rqueue_sync)
+m4_undefine([[_sl_increate]])
 ]])
 
 m4_define([[sl_break]],[[

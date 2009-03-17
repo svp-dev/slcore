@@ -1,5 +1,0 @@
-
-struct { int a; } bogus;
-
-
-

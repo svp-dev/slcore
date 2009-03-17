@@ -126,7 +126,8 @@ typedef long long sl_family_t;
 typedef long long sl_place_t;
 typedef void (*__sl_fptr_t)(void);
 
-#define SVP_LOCAL 0
+#define PLACE_LOCAL   1
+#define PLACE_DEFAULT 0
 
 #define SVP_ENOERR 0
 #define SVP_EBROKEN 1

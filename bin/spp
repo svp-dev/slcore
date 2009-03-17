@@ -507,7 +507,7 @@ class pppalpha(object):
       wregs1 = ['__sl_sync_%s' % tag] + wregs
       wqueue_cre = ", ".join(['"=rf"(%s)' % x for x in wregs1])
       rqueue_cre = ", ".join(['"%d"(%s)' % i for i in enumerate(wregs1)] + ['"rf"(%s)' % x for x in rregs])
-      print '__asm__ __volatile__("crei %%0, 0(%%%d)\t# CREATE %s" : %s : %s)' % \
+      print '__asm__ __volatile__("crei %%0, 0(%%%d)\t# CREATE %s" : %s : %s);' % \
                                 (2*len(wregs1)+len(rregs)-1, tag, wqueue_cre, rqueue_cre)
 
       wqueue_sync = ", ".join(['"=rf"(%s)' % x for x in wregs])

@@ -10,7 +10,8 @@
 typedef uTC::family sl_family_t;
 typedef uTC::place sl_place_t;
 
-#define SVP_LOCAL uTC::PLACE_LOCAL
+#define PLACE_DEFAULT uTC::PLACE_GROUP
+#define PLACE_LOCAL   uTC::PLACE_LOCAL
 
 #define SVP_ENOERR uTC::EXIT_NORMAL
 #define SVP_EBROKEN uTC::EXIT_BREAK

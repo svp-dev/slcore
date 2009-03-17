@@ -1,3 +1,0 @@
-
-void *bogus = 0;
-
