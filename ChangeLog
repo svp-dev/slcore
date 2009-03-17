@@ -1,5 +1,18 @@
 2009-03-17  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	Update handling of family exit code.
+	
+	* lib/t-ptl/slimpl.m4,
+	* lib/t-seqc/slimpl.m4: Fix sl_sync to follow specification.
+
+	* tests/0_minimal/1_create/x_invsync.sl: Make structure bigger so
+	that it becomes an invalid output for the exit code with the
+	'alternate' compiler.
+	
+	* tests/0_minimal/2_args/useexit2.sl: Import from utcc.
+
+2009-03-17  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	More tests.
 	
 	* tests/0_minimal/2_args/argshadow.sl,

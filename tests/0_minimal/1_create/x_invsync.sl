@@ -1,4 +1,4 @@
-struct { int a; } bogus;
+struct { int a[100]; } bogus;
 
 sl_def(foo, void) {} sl_enddef
 

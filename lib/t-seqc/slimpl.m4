@@ -98,7 +98,7 @@ for (__sl_child.ix = __sl_child.be; m4_dnl
      __sl_child.ix > __sl_child.li; m4_dnl
      __sl_child.ix += __sl_child.st) _sl_body m4_dnl
 __sl_fam->ch = 0; m4_dnl
-m4_if([[$2]],,,[[[[$2]] = __sl_child.ex;]]) m4_dnl
+m4_if([[$1]],,,[[[[$1]] = __sl_child.ex;]]) m4_dnl
 } while(0) m4_dnl
 m4_undefine([[_sl_increate]]) m4_dnl
 ]])

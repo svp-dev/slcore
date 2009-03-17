@@ -69,7 +69,7 @@ m4_if([[$1]],,,[[([[$1]]) = _sl_lbl]]) m4_dnl
 # Pass transparently the sync construct.
 m4_define([[sl_sync]],[[m4_dnl
 m4_ifndef([[_sl_increate]],[[m4_fatal(sync without create)]])m4_dnl
-m4_if([[$2]],,,[[$2 = ]])uTC::sync(_sl_lbl)m4_dnl
+m4_if([[$1]],,,[[$1 = ]])uTC::sync(_sl_lbl)m4_dnl
 m4_undefine([[_sl_increate]])m4_dnl
 ]])
 
