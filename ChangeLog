@@ -1,3 +1,33 @@
+2009-03-17  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
+	More tests.
+	
+	* tests/0_minimal/2_args/argshadow.sl,
+	* tests/0_minimal/2_args/delayshared.sl,
+	* tests/0_minimal/2_args/useafter.sl,
+	* tests/0_minimal/2_args/useafter2.sl,
+	* tests/0_minimal/2_args/useafter3.sl,
+	* tests/0_minimal/2_args/useafter4.sl,
+	* tests/0_minimal/2_args/x_addrarg.sl,
+	* tests/0_minimal/2_args/x_addrparm.sl,
+	* tests/0_minimal/2_args/x_addrparm2.sl,
+	* tests/0_minimal/2_args/x_argnr.sl,
+	* tests/0_minimal/2_args/x_argnr2.sl,
+	* tests/0_minimal/2_args/x_argscope.sl,
+	* tests/0_minimal/2_args/x_deadlock.sl,
+	* tests/0_minimal/2_args/x_dupdecl.sl,
+	* tests/0_minimal/2_args/x_dupdecl2.sl,
+	* tests/0_minimal/2_args/x_glnoinit.sl,
+	* tests/0_minimal/2_args/x_invinit.sl,
+	* tests/0_minimal/2_args/x_invinit2.sl,
+	* tests/0_minimal/2_args/x_invsh1.sl,
+	* tests/0_minimal/2_args/x_invsh2.sl,
+	* tests/0_minimal/2_args/x_invsh3.sl,
+	* tests/0_minimal/2_args/x_invsh4.sl,
+	* tests/0_minimal/2_args/x_nothread.sl,
+	* tests/0_minimal/2_args/x_wrglarg.sl,
+	* tests/0_minimal/2_args/x_wrglparm.sl: Import from utcc.
+
 2009-03-16  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
 	More tests & improvements thanks to testing.
