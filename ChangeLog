@@ -1,5 +1,12 @@
 2009-03-18  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	Improve interface of slc.
+	
+	* bin/slc.in: Complain early when input files do not
+	exist. Complain if there is nothing to do.
+
+2009-03-18  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	Code cleanup & copyright notice.
 	
 	* reheader.pl: Import from utcc. Update.	

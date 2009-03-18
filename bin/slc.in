@@ -30,7 +30,10 @@ inflight=
 outfile=
 tmpdir=
 
-keep=$KEEP
+keep=
+if test -n "$KEEP"; then
+ keep=1
+fi
 
 extra_inc=
 extra_ppflags=
@@ -65,6 +68,14 @@ trap cleanup 0 ERR INT TERM QUIT
 die() {
     echo "$0:" "$@" >&2
     exit 1
+}
+
+check_exists() {
+  if ! test -e "$1"; then
+     echo "$0: $1: No such file or directory" >&2
+     return 1
+  fi
+  return 0
 }
 
 # Command line analysis
@@ -113,17 +124,17 @@ for arg in "$@"; do
       -*)	extra_cflags="$extra_cflags $arg";;
 
 # Legacy file types
-      *.i|*.ii) in_cc_spec="$in_cc_spec $arg";;
-      *.C|*.cxx|*.c++|*.cc|*.cp|*.cpp) in_pp_spec="$in_pp_spec $arg";;
-      *.S|*.c) in_pp_spec="$in_pp_spec $arg";;
-      *.s)     in_as_spec="$in_as_spec $arg";;
+      *.i|*.ii) check_exists "$arg" && in_cc_spec="$in_cc_spec $arg";;
+      *.C|*.cxx|*.c++|*.cc|*.cp|*.cpp) check_exists "$arg" && in_pp_spec="$in_pp_spec $arg";;
+      *.S|*.c) check_exists "$arg" && in_pp_spec="$in_pp_spec $arg";;
+      *.s)     check_exists "$arg" && in_as_spec="$in_as_spec $arg";;
 # SLC file types
-      *.iu)  in_cc_spec="$in_cc_spec $arg";;
-      *.utc) in_pp_spec="$in_pp_spec $arg";;
-      *.sl)  in_slt_spec="$in_slt_spec $arg";;
-      *.s0)  in_filt_spec="$in_filt_spec $arg";;
+      *.iu)  check_exists "$arg" && in_cc_spec="$in_cc_spec $arg";;
+      *.utc) check_exists "$arg" && in_pp_spec="$in_pp_spec $arg";;
+      *.sl)  check_exists "$arg" && in_slt_spec="$in_slt_spec $arg";;
+      *.s0)  check_exists "$arg" && in_filt_spec="$in_filt_spec $arg";;
 # Default behavior: feed input to linker
-      *) in_ld_spec="$in_ld_spec $arg";;
+      *) check_exists "$arg" && in_ld_spec="$in_ld_spec $arg";;
   esac
 done
 
@@ -504,12 +515,17 @@ prepare_chain() {
 # *_ind: derivatives
 
 skip=
+transforms=
 prepare_chain "$in_slt_spec" $pp_ext T in_pp_ind "$in_slt_spec" "translation"
 prepare_chain "$in_pp_ind $in_pp_spec" $cc_ext P in_cc_ind "$in_pp_spec" "preprocessor"
 prepare_chain "$in_cc_ind $in_cc_spec" s0 C in_filt_ind "$in_cc_spec" "compiler"
 prepare_chain "$in_filt_ind $in_filt_spec" s F in_as_ind "$in_filt_spec" "post-filter"
 prepare_chain "$in_as_ind $in_as_spec" o A in_ld_ind "$in_as_spec" "assembler"
 prepare_chain "$in_ld_ind $in_ld_spec" x L unused "$in_ld_spec" "linker"
+
+if test -z "$transforms"; then
+   die "no input files"
+fi
 
 ##############################################
 # Start processing
