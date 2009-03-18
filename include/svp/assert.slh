@@ -1,10 +1,18 @@
+//                                                             -*- m4 -*-
+// assert.slh: this file is part of the slc project.
+//
+// Copyright (C) 2009 The SL project.
+// All rights reserved.
+//
+// $Id$
+//
 m4_ifndef([[SVP_ASSERT_SLH]],[[m4_define(SVP_ASSERT_SLH,1)
 
 m4_include(svp/io.slh)
 m4_include(svp/lib.slh)
 
 m4_ifndef([[NDEBUG]],[[
-m4_define([[svp__assert]], 
+m4_define([[svp__assert]],
 [[do {
     sl_proccall(svp_io_puts, sl_glarg(const char*, str,  "[[$2]]:[[$3]]: failed assertion [[$1]]\n"));
     svp_abort();

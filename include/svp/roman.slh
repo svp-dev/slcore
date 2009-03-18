@@ -1,10 +1,18 @@
+//                                                             -*- m4 -*-
+// roman.slh: this file is part of the slc project.
+//
+// Copyright (C) 2009 The SL project.
+// All rights reserved.
+//
+// $Id$
+//
 m4_ifndef([[SV_ROMAN_SLH]], [[m4_define([[SVP_ROMAN_SLH]],1)
 
 m4_include(svp/iomacros.slh)
 
 m4_define([[roman]], [[do {
   int num = ([[$1]]);
-  if (num < 0) { 
+  if (num < 0) {
     putc('-');
     num = -num;
   }

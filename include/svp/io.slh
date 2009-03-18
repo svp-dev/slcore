@@ -1,14 +1,22 @@
+//                                                             -*- m4 -*-
+// io.slh: this file is part of the slc project.
+//
+// Copyright (C) 2009 The SL project.
+// All rights reserved.
+//
+// $Id$
+//
 m4_ifndef([[SVP_IO_SLH]],[[m4_define([[SVP_IO_SLH]],1)
 
 m4_include(svp/argslot.slh)
 
 /* Print a single character to the console output. */
-sl_decl(svp_io_putc, void, 
+sl_decl(svp_io_putc, void,
 	sl_glparm(char, c));
 
 /* Print a nul-terminated string to the console output. */
 sl_decl(svp_io_puts, void,
-	sl_glparm(const char *, gstr));	
+	sl_glparm(const char *, gstr));
 
 /* Print a floating point number to the console output. */
 /* Note: the floating point is normalized before printing. */
@@ -24,7 +32,7 @@ sl_decl(svp_io_putun, void,
 
 /* Print a nul-terminated string to the console output. */
 sl_decl(svp_io_puts, void,
-	sl_glparm(const char *, gstr));	
+	sl_glparm(const char *, gstr));
 
 /* Print a floating point number to the console output. */
 /* Note: the floating point is normalized before printing. */
@@ -34,7 +42,7 @@ sl_decl(svp_io_putf, void,
 	sl_glparm(unsigned, gbase));
 
 /* Print a signed integer to the console output. */
-sl_decl(svp_io_putn, void,	
+sl_decl(svp_io_putn, void,
 	sl_glparm(long long, gn),
 	sl_glparm(unsigned, gbase));
 
@@ -54,4 +62,3 @@ sl_decl(svp_io_printf, void,
 	sl_glparm(svp_arg_slot*, gdata));
 
 ]])
-

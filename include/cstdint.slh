@@ -1,3 +1,11 @@
+//                                                             -*- m4 -*-
+// cstdint.slh: this file is part of the slc project.
+//
+// Copyright (C) 2009 The SL project.
+// All rights reserved.
+//
+// $Id$
+//
 m4_ifndef([[CSTDINT_SLH]], [[m4_define([[CSTDINT_SLH]], 1)
 
 #include <stdint.h>

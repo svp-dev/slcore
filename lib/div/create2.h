@@ -1,3 +1,11 @@
+//                                                             -*- C++ -*-
+// create2.h: this file is part of the slc project.
+//
+// Copyright (C) 2009 The SL project.
+// All rights reserved.
+//
+// $Id$
+//
 #define CREATEX(FidName, Start, Limit, Step, Block, Func,		\
 		TS0, S0, TS1, S1, TS2, S2,				\
 		TG0, G0, ge0, TG1, G1, ge1, TG2, G2, ge2,		\
@@ -32,6 +40,4 @@
   __asm__ __volatile__("bis %4, " PHYS_ZERO ", %0 # SYNC " #FidName "\n\tswch"	\
 		       : "=r"(Ret), "=r"(S0), "=r"(S1), "=r"(S2)	\
 		       : "r"(__sync_var), "1"(S0), "2"(S1), "3"(S2),	\
-			 "r"(G0), "r"(G1), "r"(G2), "r"(G3), "r"(G4), "r"(FidName ## __func)) 
- 
-
+			 "r"(G0), "r"(G1), "r"(G2), "r"(G3), "r"(G4), "r"(FidName ## __func))

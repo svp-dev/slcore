@@ -1,7 +1,7 @@
 #! /bin/sh
 # $Id$
 #
-copyright="Copyright (C) 2009 the CSA group - The SL project."
+copyright="Copyright (C) 2009 the CSA group - The SL project.."
 #
 # This program is free software: you can redistribute it and/or modify 
 # it under the terms of the GNU General Public License as published by   
@@ -192,10 +192,10 @@ non-empty.
 
 Environment variables:
   SLC            Location of the SL compiler. Default is 
-                 "$root/slc".
+                 "slc" in the same directory as \`$basename'.
 
   SGR            Location of the SVP generic runner. Default is 
-                 "$root/sgr"
+                 "sgr" in the same directory as \`$basename'.
 
   KEEP           If set, do not erase intermediary files when a test
                  succeeds. Default is not set.

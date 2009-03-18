@@ -1,5 +1,13 @@
-#ifndef SVP_ASMDIV_H
-#define SVP_ASMDIV_H
+//                                                             -*- C++ -*-
+// svp_asmdiv.h: this file is part of the slc project.
+//
+// Copyright (C) 2009 The SL project.
+// All rights reserved.
+//
+// $Id$
+//
+#ifndef SLC_SVP_ASMDIV_H
+# define SLC_SVP_ASMDIV_H
 
 extern void __divmodqu(void);
 extern void __divmodqs(void);
@@ -26,4 +34,4 @@ extern void __divmodqs(void);
 #define __asm_divmodu(X, Y) __ASM_DIVCALL(unsigned long long, __divmodqu, X, Y)
 #define __asm_divmods(X, Y) __ASM_DIVCALL(signed long long, __divmodqs, X, Y)
 
-#endif
+#endif // ! SLC_SVP_ASMDIV_H

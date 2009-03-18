@@ -1,3 +1,11 @@
+//                                                             -*- m4 -*-
+// cstddef.slh: this file is part of the slc project.
+//
+// Copyright (C) 2009 The SL project.
+// All rights reserved.
+//
+// $Id$
+//
 m4_ifndef([[CSTDDEF_SLH]], [[m4_define([[CSTDDEF_SLH]], 1)
 
 #include <stddef.h>

@@ -1,7 +1,7 @@
+// slrt.c: this file is part of the slc project.
 //
-// seqc-main.c: this file is part of the slc project.
-//
-// Copyright (C) 2008 The CSA group.
+// Copyright (C) 2009 The SL project.
+// All rights reserved.
 //
 // $Id$
 //

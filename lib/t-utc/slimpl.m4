@@ -1,3 +1,9 @@
+# t-utc/slimpl.m4: this file is part of the slc project.
+#
+# Copyright (C) 2008,2009 The SL project.
+# All rights reserved.
+#
+# $Id$
 # ###############################################
 #  Macro definitions for the new muTC syntax
 # ###############################################

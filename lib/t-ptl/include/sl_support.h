@@ -1,5 +1,13 @@
-#ifndef SL_SUPPORT_H
-#define SL_SUPPORT_H
+//                                                             -*- C++ -*-
+// sl_support.h: this file is part of the slc project.
+//
+// Copyright (C) 2009 The SL project.
+// All rights reserved.
+//
+// $Id$
+//
+#ifndef SLC_SL_SUPPORT_H
+# define SLC_SL_SUPPORT_H
 
 #ifdef USE_EXTERNAL_PTL
 #include <uTC.h>
@@ -17,4 +25,4 @@ typedef uTC::place sl_place_t;
 #define SVP_EBROKEN uTC::EXIT_BREAK
 #define SVP_EKILLED uTC::EXIT_KILL
 
-#endif
+#endif // ! SLC_SL_SUPPORT_H

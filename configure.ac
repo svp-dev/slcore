@@ -1,3 +1,10 @@
+# 
+# slc, a SL compiler.
+# 
+# Copyright (C) 2008,2009 The SL project..
+# All rights reserved.
+# 
+
 AC_PREREQ([2.63])
 AC_INIT([slc], [2.x], [r.c.poss@uva.nl])
 AC_CONFIG_AUX_DIR([build-aux])

@@ -1,3 +1,11 @@
+//                                                             -*- C++ -*-
+// encapsulate2.h: this file is part of the slc project.
+//
+// Copyright (C) 2009 The SL project.
+// All rights reserved.
+//
+// $Id$
+//
 #define BEGIN_FUNC__(Name, LN)						\
   void _x_ ## Name (void) {						\
     register long long __sync_var __asm__(RSYNC);			\
@@ -28,6 +36,3 @@
 
 #define BEGIN_FUNC_(Name, LN) BEGIN_FUNC__(Name, LN)
 #define BEGIN_FUNC(Name) BEGIN_FUNC_(Name, __LINE__)
-
-
-

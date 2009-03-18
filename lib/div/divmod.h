@@ -1,5 +1,11 @@
-
-
+//                                                             -*- C++ -*-
+// divmod.h: this file is part of the slc project.
+//
+// Copyright (C) 2009 The SL project.
+// All rights reserved.
+//
+// $Id$
+//
 extern void __divmodqu(void);
 extern void __divmodlu(void);
 
@@ -36,4 +42,3 @@ extern void __divmodlu(void);
 
 #define divmodqu(X, Y) DIVFUNC(__divmodqu, X, Y)
 #define divmodlu(X, Y) DIVFUNC(__divmodlu, X, Y)
-

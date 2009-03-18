@@ -1,11 +1,13 @@
-// ptl_deps.h: this file is part of the utcc project.
+//                                                             -*- C++ -*-
+// ptl_deps.h: this file is part of the slc project.
 //
-// Copyright (C) 2008 The CSA group.
+// Copyright (C) 2008,2009 The SL project.
+// All rights reserved.
 //
 // $Id$
 //
-#ifndef UTC_PTL_CPP_PTL_DEPS_H
-# define UTC_PTL_CPP_PTL_DEPS_H
+#ifndef SLC_PTL_DEPS_H
+# define SLC_PTL_DEPS_H
 
 // This is the only file that will include config.h
 #include "ptl_config.h"
@@ -223,4 +225,4 @@
 
 
 // End of #ifndef UTC_DEPENDENCIES_H
-#endif // ! UTC_PTL_CPP_PTL_DEPS_H
+#endif // ! SLC_PTL_DEPS_H

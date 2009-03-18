@@ -1,3 +1,10 @@
+// test-divide.c: this file is part of the slc project.
+//
+// Copyright (C) 2009 The SL project.
+// All rights reserved.
+//
+// $Id$
+//
 #include "utc2.h"
 
 static const char *__basechars = "0123456789abcdef";

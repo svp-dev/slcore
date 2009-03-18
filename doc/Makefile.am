@@ -1,3 +1,9 @@
+# 
+# slc, a SL compiler.
+# 
+# Copyright (C) 2008,2009 The SL project..
+# All rights reserved.
+# 
 dist_man1_MANS = cce.1 slc.1 sgr.1 slt.1
 dist_pdf_DATA = acronyms.pdf README.pdf NEWS.pdf HACKING.pdf lang.pdf spec.pdf
 dist_doc_DATA = acronyms.txt README.txt NEWS.txt HACKING.txt lang.txt spec.txt

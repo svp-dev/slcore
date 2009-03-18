@@ -1,5 +1,13 @@
-#ifndef SL_SUPPORT_H
-#define SL_SUPPORT_H
+//                                                             -*- C++ -*-
+// sl_support.h: this file is part of the slc project.
+//
+// Copyright (C) 2009 The SL project.
+// All rights reserved.
+//
+// $Id$
+//
+#ifndef SLC_SL_SUPPORT_H
+# define SLC_SL_SUPPORT_H
 
 #define __sl_getshp(Name)						\
   ({									\
@@ -37,7 +45,7 @@
     __asm__ __volatile__(".registers " # GI " " # SI " 19 " # GF " " # SF " 19\n");
 
 #define __sl_epilogue(Name, ArgSpec)						\
-    }									
+    }
 
 #define __sl_allocate(Tag, GI, SI, GF, SF)				\
   register long long __sl_fid_ ## Tag;					\
@@ -133,4 +141,4 @@ typedef void (*__sl_fptr_t)(void);
 #define SVP_EBROKEN 1
 #define SVP_EKILLED 2
 
-#endif
+#endif // ! SLC_SL_SUPPORT_H

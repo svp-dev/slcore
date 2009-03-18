@@ -1,5 +1,13 @@
-#ifndef SL_SUPPORT_H
-#define SL_SUPPORT_H
+//                                                             -*- C++ -*-
+// sl_support.h: this file is part of the slc project.
+//
+// Copyright (C) 2009 The SL project.
+// All rights reserved.
+//
+// $Id$
+//
+#ifndef SLC_SL_SUPPORT_H
+# define SLC_SL_SUPPORT_H
 
 #include "svp_os.h"
 
@@ -24,4 +32,4 @@ typedef long long sl_place_t;
 #define SVP_EBROKEN 1
 #define SVP_EKILLED 2
 
-#endif
+#endif // ! SLC_SL_SUPPORT_H

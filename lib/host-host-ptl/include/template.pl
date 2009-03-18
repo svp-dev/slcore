@@ -1,15 +1,11 @@
-#!/usr/bin/perl
-
-###############################################################################
-#                                                                             #
-# Name:        template.pl                                                    #
-# Version:     utc-ptl Release 3                                              #
-# Usage:       template.pl < <template file> > ptl_create.h                   #
-# Description: Perl script to generate the create function templates.         #
-#              It reads a template file from Standard Input and writes the    #
-#              generated templates to Standard Output.                        #
-#                                                                             #
-###############################################################################
+#! /usr/bin/perl
+# template.pl: this file is part of the slc project.
+#
+# Copyright (C) 2008,2009 The SL project.
+# All rights reserved.
+#
+# $Id$
+#
 
 ### [ Configurable settings ] ###
 

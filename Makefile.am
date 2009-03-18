@@ -1,3 +1,10 @@
+# 
+# slc, a SL compiler.
+# 
+# Copyright (C) 2008,2009 The SL project..
+# All rights reserved.
+# 
+
 EXTRA_DIST = README
 SUBDIRS = . bin lib doc tests demo
 
@@ -28,6 +35,21 @@ nobase_dist_pkgdata_DATA = \
 MAINTAINERCLEANFILES = include/slc_m4sugar.m4 include/slc_m4sversion.m4 include/slc_m4sforeach.m4
 
 if MAINTAINER_MODE
+
+find_sources = \
+	find $(srcdir)/include $(srcdir)/demo $(srcdir)/tests $(srcdir)/lib \
+	  -name '*.h' \
+	-or -name '*.c' \
+	-or -name '*.sl' \
+	-or -name '*.slh' \
+	-or -name '*.cpp' \
+	-or -name '*.cc' \
+	-or -name '*.hh'
+
+# Update copyright notice.
+rehead:
+	$(find_sources) | xargs perl $(srcdir)/reheader.pl
+
 include/slc_m4sugar.m4: $(srcdir)/include/m4sugar.m4 $(srcdir)/include/m4sugar_transform.sed
 	$(MKDIR_P) include
 	$(SED) -f $(srcdir)/include/m4sugar_transform.sed $< >$@.tmp

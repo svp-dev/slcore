@@ -1,6 +1,8 @@
-// ptl_svp.cc: this file is part of the utcc project.
+//                                                             -*- C++ -*-
+// ptl_svp.cc: this file is part of the slc project.
 //
-// Copyright (C) 2008 The CSA group.
+// Copyright (C) 2008,2009 The SL project.
+// All rights reserved.
 //
 // $Id$
 //
@@ -246,7 +248,7 @@ namespace uTC
     {
         // If we attempt to sync on a family that is a continuation,
         // we sync immediately with a normal exit code. Also since the
-        // creatorthread syncs on it automatically, and we dont want a 
+        // creatorthread syncs on it automatically, and we dont want a
         // race-condition of sync that both try to access and delete FB!
         if (f->is_continuation())
         {
@@ -642,9 +644,9 @@ namespace uTC
 	      while (!m_killed && m_threads.size() >= m_blockSize)
 		  CONDWAIT(&m_thread_completed, &m_data_mutex);
 	      if (!m_killed)
-                create_iteration(m_index, 
-				 m_index == m_start, 
-				 (m_step > 0 && m_index + m_step >= m_end) 
+                create_iteration(m_index,
+				 m_index == m_start,
+				 (m_step > 0 && m_index + m_step >= m_end)
 				 || (m_step < 0 && m_index + m_step <= m_end));
 	      m_index += m_step;
 	    }
@@ -682,23 +684,23 @@ namespace uTC
         // for a family that is not a continuation one) resulting in segfaults and
         // deadlock (because sync() is called again). For this reason we call
         // the function is_continuation() before we create any threads for this
-        // family and cache its value thus getting the correct value always (the 
+        // family and cache its value thus getting the correct value always (the
         // sync() function calls destroy() which deletes the object only
         // after all threads have been created thus at this point we are sure
         // the object is valid). If it is a continuation create we do not
         // have this problem because the global sync() function (the one
-        // called from the uTC program) does not call FamilyBase::sync() but 
+        // called from the uTC program) does not call FamilyBase::sync() but
         // returns immediately. Thus in this case the object is always valid.
         bool is_continuation = f->is_continuation();
 
         f->create_loop();
 
-        
+
         if (is_continuation)
         {
             f->sync();
         }
-        
+
         return 0;
     }
 
@@ -882,7 +884,7 @@ namespace uTC
     {
         return m_continuation;
     }
-   
+
     FamilyBase::FamilyBase(int start, int end, int step, unsigned int blockSize, place place_id, bool root, bool nosync, int* pSqueezeVal)
         : m_start(start), m_end(end), m_step(step), m_index(start), m_root(root), m_continuation(nosync), m_place(place_id), m_pSqueezeValue(pSqueezeVal)
     {

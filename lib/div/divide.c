@@ -1,3 +1,10 @@
+// divide.c: this file is part of the slc project.
+//
+// Copyright (C) 2009 The SL project.
+// All rights reserved.
+//
+// $Id$
+//
 #include "utc2.h"
 
 // algorithm courtesy of Michael Hicks
@@ -28,7 +35,7 @@
   }								\
   								\
   (DivisorResult) = answer;					\
-  (DividendMod) = dividend; 
+  (DividendMod) = dividend;
 
 
 #define DIVCODES(T, DividendMod, DivisorResult)				\
@@ -56,7 +63,7 @@
     --shiftcount;							\
   }									\
   (DivisorResult) = answer * invsign;					\
-  (DividendMod) = dividend * dendsign;					
+  (DividendMod) = dividend * dendsign;
 
 
 

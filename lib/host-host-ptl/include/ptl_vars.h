@@ -1,11 +1,13 @@
-// ptl_vars.h: this file is part of the utcc project.
+//                                                             -*- C++ -*-
+// ptl_vars.h: this file is part of the slc project.
 //
-// Copyright (C) 2008 The CSA group.
+// Copyright (C) 2008,2009 The SL project.
+// All rights reserved.
 //
 // $Id$
 //
-#ifndef UTC_PTL_CPP_PTL_VARS_H
-# define UTC_PTL_CPP_PTL_VARS_H
+#ifndef SLC_PTL_VARS_H
+# define SLC_PTL_VARS_H
 
 #include "ptl_debug.h"
 
@@ -50,4 +52,4 @@ int pthread_setspecific(pthread_key_t key, void *pointer);
 
 }
 
-#endif // ! UTC_PTL_CPP_PTL_VARS_H
+#endif // ! SLC_PTL_VARS_H

@@ -1,3 +1,8 @@
+# slrt.s: this file is part of the slc project.
+#
+# Copyright (C) 2008,2009 The SL project.
+# All rights reserved.
+#
 	.ent _start
 	.globl _start
 _start:

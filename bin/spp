@@ -1,4 +1,8 @@
 #! /usr/bin/env python
+# spp: this file is part of the slc project.
+#
+# Copyright (C) 2009 The SL project..
+# All rights reserved.
 
 import pprint
 import sys

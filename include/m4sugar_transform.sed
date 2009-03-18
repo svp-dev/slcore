@@ -1,4 +1,11 @@
 #! /usr/bin/sed -f
+# m4sugar_transform.sed: this file is part of the slc project.
+#
+# Copyright (C) 2008,2009 The SL project.
+# All rights reserved.
+#
+# $Id$
+#
 
 # Change m4sugar's quote system; [ and ]
 # are just too common in C.

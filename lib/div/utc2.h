@@ -1,3 +1,11 @@
+//                                                             -*- C++ -*-
+// utc2.h: this file is part of the slc project.
+//
+// Copyright (C) 2009 The SL project.
+// All rights reserved.
+//
+// $Id$
+//
 #include "regs2.h"
 #include "encapsulate2.h"
 #include "create2.h"

@@ -1,6 +1,8 @@
-// ptl_debug.cc: this file is part of the utcc project.
+//                                                             -*- C++ -*-
+// ptl_debug.cc: this file is part of the slc project.
 //
-// Copyright (C) 2008 The CSA group.
+// Copyright (C) 2008,2009 The SL project.
+// All rights reserved.
 //
 // $Id$
 //
@@ -127,4 +129,4 @@ int __DESTROY(const char* file, int line, const char* name, pthread_mutex_t* mut
 }
 
 // end #ifdef UTC_CONFIG_DEBUG
-#endif // ! UTC_PTL_CPP_PTL_DEBUG_CC
+#endif // ! SLC_LIB_HOST_HOST_PTL_PTL_DEBUG_CC

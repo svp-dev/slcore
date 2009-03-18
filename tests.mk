@@ -1,3 +1,9 @@
+# 
+# slc, a SL compiler.
+# 
+# Copyright (C) 2008,2009 The SL project..
+# All rights reserved.
+# 
 
 TESTS_ENVIRONMENT = \
 	SLC=$(top_builddir)/bin/slc.local \

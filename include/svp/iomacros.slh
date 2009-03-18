@@ -1,3 +1,11 @@
+//                                                             -*- m4 -*-
+// iomacros.slh: this file is part of the slc project.
+//
+// Copyright (C) 2009 The SL project.
+// All rights reserved.
+//
+// $Id$
+//
 m4_ifndef([[SV_IOMACROS_SLH]], [[m4_define([[SVP_IOMACROS_SLH]],1)
 m4_include(svp/io.slh)
 
@@ -19,32 +27,32 @@ sl_proccall(svp_io_puts, sl_glarg(const char*, s, ([[$1]])))
 
 m4_define([[putf]],
 [[
-sl_proccall(svp_io_putf, 
+sl_proccall(svp_io_putf,
               sl_glfarg(double, d, ([[$1]])),
-              sl_glarg(unsigned, gprec, ([[$2]])), 
+              sl_glarg(unsigned, gprec, ([[$2]])),
               sl_glarg(unsigned, gbase, 10))
 ]])
 
-m4_define([[putn]], 
+m4_define([[putn]],
 [[
-sl_proccall(svp_io_putn, 
+sl_proccall(svp_io_putn,
 	    sl_glarg(long long, n, ([[$1]])),
             sl_glarg(unsigned, gbase, 10))
 ]])
 
-m4_define([[putu]], 
+m4_define([[putu]],
 [[
-sl_proccall(svp_io_putun, 
-            sl_glarg(unsigned long long, n, ([[$1]])), 
+sl_proccall(svp_io_putun,
+            sl_glarg(unsigned long long, n, ([[$1]])),
             sl_glarg(unsigned, gbase, 10))
 ]])
 
-m4_define([[printf]], 
+m4_define([[printf]],
 [[do {
   volatile struct {
     m4_pushdef([[printf_argcount]],0)
     m4_foreach([[printf_arg]],m4_dquote(m4_shift($@)),[[
-      union { __typeof__(printf_arg) __arg; svp_arg_slot __slot; } 
+      union { __typeof__(printf_arg) __arg; svp_arg_slot __slot; }
         __a[[]]printf_argcount;
       m4_step([[printf_argcount]])
     ]])
@@ -63,4 +71,3 @@ m4_define([[printf]],
 
 
 ]])
-

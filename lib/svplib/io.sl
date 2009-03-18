@@ -1,3 +1,11 @@
+//                                                             -*- m4 -*-
+// io.sl: this file is part of the slc project.
+//
+// Copyright (C) 2009 The SL project.
+// All rights reserved.
+//
+// $Id$
+//
 m4_include(svp/lib.slh)
 m4_include(svp/div.slh)
 m4_include(svp/io.slh)
@@ -31,7 +39,7 @@ sl_def(svp_io_putf, void,
   const unsigned base = sl_getp(gbase);
 
   if (unlikely(x != x)) sl_proccall(svp_io_puts, sl_glarg(const char*, s, "nan"));
-  else if (unlikely(x == 1e5000)) sl_proccall(svp_io_puts, sl_glarg(const char*, s, "+inf")); 
+  else if (unlikely(x == 1e5000)) sl_proccall(svp_io_puts, sl_glarg(const char*, s, "+inf"));
   else if (unlikely(x == -1e5000)) sl_proccall(svp_io_puts, sl_glarg(const char*, s, "-inf"));
   else {
       /* -- find exponent and normalize -- */
@@ -92,11 +100,11 @@ sl_def(svp_io_putun, void,
 }
 sl_enddef
 
-sl_def(svp_io_putn, void,	
+sl_def(svp_io_putn, void,
        sl_glparm(long long, gn),
        sl_glparm(unsigned, gbase))
 {
-  long long x = sl_getp(gn); 
+  long long x = sl_getp(gn);
   const unsigned base = sl_getp(gbase);
   if (!x) __write1('0');
   else {
@@ -126,39 +134,39 @@ sl_def(svp_io_printf, void,
   const char *fmt;
   const svp_arg_slot *data;
 
-  for (fmt = sl_getp(gfmt), 
-	 data = sl_getp(gdata); *fmt; ++fmt) { 
+  for (fmt = sl_getp(gfmt),
+	 data = sl_getp(gdata); *fmt; ++fmt) {
     if (likely(*fmt != '%'))
       __write1(*fmt);
-    else 
+    else
       switch(*++fmt) {
-      case 'c': sl_proccall(svp_io_putc, 
-			    sl_glarg(char, c, (*data++).c)); 
+      case 'c': sl_proccall(svp_io_putc,
+			    sl_glarg(char, c, (*data++).c));
 	break;
-      case 's': sl_proccall(svp_io_puts, 
-			    sl_glarg(const char*, p, (const char*)(*data++).ptr)); 
+      case 's': sl_proccall(svp_io_puts,
+			    sl_glarg(const char*, p, (const char*)(*data++).ptr));
 	break;
-      case 'f': sl_proccall(svp_io_putf, 
-			    sl_glarg(double, d, (*data++).d), 
+      case 'f': sl_proccall(svp_io_putf,
+			    sl_glarg(double, d, (*data++).d),
 			    sl_glarg(unsigned, prec, 7),
 			    sl_glarg(unsigned, base, 10));
 	break;
-      case 'g': sl_proccall(svp_io_putf, 
-			    sl_glarg(double, d, (*data++).d), 
+      case 'g': sl_proccall(svp_io_putf,
+			    sl_glarg(double, d, (*data++).d),
 			    sl_glarg(unsigned, prec, 15),
 			    sl_glarg(unsigned, base, 10));
 	break;
-      case 'd': sl_proccall(svp_io_putn, 
+      case 'd': sl_proccall(svp_io_putn,
 			    sl_glarg(long long, n, (*data++).s),
 			    sl_glarg(unsigned, base, 10));
 	break;
-      case 'u': sl_proccall(svp_io_putun, 
+      case 'u': sl_proccall(svp_io_putun,
 			    sl_glarg(unsigned long long, n, (*data++).u),
-			    sl_glarg(unsigned, base, 10)); 
+			    sl_glarg(unsigned, base, 10));
 	break;
-      case 'x': sl_proccall(svp_io_putun, 
+      case 'x': sl_proccall(svp_io_putun,
 			    sl_glarg(unsigned long long, n, (*data++).u),
-			    sl_glarg(unsigned, base, 16)); 
+			    sl_glarg(unsigned, base, 16));
 	break;
       default: __write1('%'); __write1(*fmt); break;
       }
@@ -166,5 +174,3 @@ sl_def(svp_io_printf, void,
 }
 
 sl_enddef
-
-

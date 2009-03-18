@@ -1,6 +1,8 @@
-// ptl_vars.cc: this file is part of the utcc project.
+//                                                             -*- C++ -*-
+// ptl_vars.cc: this file is part of the slc project.
 //
-// Copyright (C) 2008 The CSA group.
+// Copyright (C) 2008,2009 The SL project.
+// All rights reserved.
 //
 // $Id$
 //

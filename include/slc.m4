@@ -1,8 +1,10 @@
 m4_init()
+# slc.m4: this file is part of the slc project.
+#
+# Copyright (C) 2008,2009 The SL project.
+# All rights reserved.
+#
 # $Id$
-# ###########################
-# Common definitions
-# ###########################
 
 # m4_incr: helper macro
 m4_define([[m4_step]],[[m4_define([[$1]], m4_incr($1))]])

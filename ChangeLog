@@ -1,5 +1,87 @@
 2009-03-18  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	Code cleanup & copyright notice.
+	
+	* reheader.pl: Import from utcc. Update.	
+	* Makefile.am: Add "reheader" rule to update copyright notice.
+	
+	* bin/cce.in,
+	* bin/scu,
+	* bin/sgr.in,
+	* bin/slc.in,
+	* bin/slt,
+	* bin/spp,
+	* demo/10threads.sl,
+	* demo/answer.sl,
+	* demo/fibonacci.sl,
+	* demo/helloworld.sl,
+	* demo/roman.sl,
+	* demo/test.sl,
+	* include/cstddef.slh,
+	* include/cstdint.slh,
+	* include/m4sugar_transform.sed,
+	* include/slc.m4,
+	* include/svp/argslot.slh,
+	* include/svp/assert.slh,
+	* include/svp/div.slh,
+	* include/svp/io.slh,
+	* include/svp/iomacros.slh,
+	* include/svp/lib.slh,
+	* include/svp/roman.slh,
+	* lib/div/create2.h,
+	* lib/div/divide.c,
+	* lib/div/divmod.h,
+	* lib/div/encapsulate2.h,
+	* lib/div/regs2.h,
+	* lib/div/test-divide.c,
+	* lib/div/utc2.h,
+	* lib/host-host-ptl/include/ptl_config.h,
+	* lib/host-host-ptl/include/ptl_debug.h,
+	* lib/host-host-ptl/include/ptl_deps.h,
+	* lib/host-host-ptl/include/ptl_svp.h,
+	* lib/host-host-ptl/include/ptl_vars.h,
+	* lib/host-host-ptl/include/svp_os.h,
+	* lib/host-host-ptl/include/template.pl,
+	* lib/host-host-ptl/ptl_debug.cc,
+	* lib/host-host-ptl/ptl_svp.cc,
+	* lib/host-host-ptl/ptl_vars.cc,
+	* lib/host-host-ptl/slrt.c,
+	* lib/host-host-seqc/include/svp_os.h,
+	* lib/host-host-seqc/slrt.c,
+	* lib/mtalpha-sim-proto/include/sl_support.h,
+	* lib/mtalpha-sim-proto/include/svp_asmdiv.h,
+	* lib/mtalpha-sim-proto/include/svp_os.h,
+	* lib/mtalpha-sim/include/svp_asmdiv.h,
+	* lib/mtalpha-sim/include/svp_os.h,
+	* lib/mtalpha-sim/slrt.s,
+	* lib/svplib/div.sl,
+	* lib/svplib/io.sl,
+	* lib/t-pppalpha/include/sl_support.h,
+	* lib/t-pppalpha/slimpl.m4,
+	* lib/t-ptl/include/sl_support.h,
+	* lib/t-ptl/slimpl.m4,
+	* lib/t-seqc/include/sl_support.h,
+	* lib/t-seqc/slimpl.m4,
+	* lib/t-utc/slimpl.m4,
+	* lib/t-utc0/include/sl_support.h,	
+	* lib/t-utc0/slimpl.m4: Update copyright notice. Strip trailing
+	whitespace.
+
+	* configure.ac,
+	* Makefile.am,
+	* bin/Makefile.am,
+	* demo/Makefile.am,
+	* doc/Makefile.am,
+	* tests/Makefile.am,
+	* lib/Makefile.am,
+	* tests.mk: Update copyright notice.
+
+	* bin/slt: Fix documentation.
+
+	* lib/t-pppalpha/protoimpl.m4: Kill, as file is now unused.
+
+2009-03-18  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	Improvements to test script.
 	
 	* bin/slt: Remove test output when test is successful and KEEP is

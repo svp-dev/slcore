@@ -1,8 +1,11 @@
-/////////////////////////////////////////
-// Alpha standard registers
-// listed in GCC allocation order
-
-// function temporaries
+//                                                             -*- C++ -*-
+// regs2.h: this file is part of the slc project.
+//
+// Copyright (C) 2009 The SL project.
+// All rights reserved.
+//
+// $Id$
+//
 #define PHYS_T0 "$1"
 #define PHYS_T1 "$2"
 #define PHYS_T2 "$3"
@@ -152,7 +155,7 @@
 #define RAG2 "$ag2"
 #define RAG3 "$ag3"
 #define RAG4 "$ag4"
-#define RAG5 "$ag5" 
+#define RAG5 "$ag5"
 
 #else // !MT_SYMBOLIC
 
@@ -230,4 +233,3 @@
 #define RAG5_N RL6_N
 
 // Fix registers; this effectively prevents
-

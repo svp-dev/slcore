@@ -1,15 +1,23 @@
+//                                                             -*- m4 -*-
+// 10threads.sl: this file is part of the slc project.
+//
+// Copyright (C) 2009 The SL project.
+// All rights reserved.
+//
+// $Id$
+//
 m4_include(svp/iomacros.slh)
 m4_include(svp/roman.slh)
 
-sl_def(foo, void, sl_shparm(int, a)) 
+sl_def(foo, void, sl_shparm(int, a))
 {
    sl_setp(a, sl_getp(a) + 1);
 
    putc('.');
-} 
+}
 sl_enddef
 
-sl_def(t_main, void) 
+sl_def(t_main, void)
 {
   sl_create(,, 0, 10, 1, 0,,
             foo, sl_sharg(int, x));
@@ -21,5 +29,5 @@ sl_def(t_main, void)
   putc('\n');
   putn(ax);
   putc('\n');
-} 
+}
 sl_enddef

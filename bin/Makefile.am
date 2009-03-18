@@ -1,3 +1,9 @@
+# 
+# slc, a SL compiler.
+# 
+# Copyright (C) 2008,2009 The SL project..
+# All rights reserved.
+# 
 bin_SCRIPTS = cce slc sgr
 noinst_SCRIPTS = cce.local slc.local sgr.local
 dist_bin_SCRIPTS = scu spp slt timeout

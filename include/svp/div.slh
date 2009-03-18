@@ -1,3 +1,11 @@
+//                                                             -*- m4 -*-
+// div.slh: this file is part of the slc project.
+//
+// Copyright (C) 2009 The SL project.
+// All rights reserved.
+//
+// $Id$
+//
 m4_ifndef([[SVP_DIV_SLH]],[[m4_define([[SVP_DIV_SLH]],1)
 
 m4_ifdef([[USE_C_DIVIDE]],[[
@@ -26,7 +34,7 @@ m4_define([[divmodu]],[[do {
     unsigned long long __divmod_dividend = ([[$1]]), __divmod_divisor = ([[$2]]);
     unsigned long long __divmod_mod = __divmod_dividend % __divmod_divisor;
     unsigned long long __divmod_res = __divmod_dividend / __divmod_divisor;
-    ([[$1]]) = (__typeof__ ([[$1]]))__divmod_mod; 
+    ([[$1]]) = (__typeof__ ([[$1]]))__divmod_mod;
     ([[$2]]) = (__typeof__ ([[$2]]))__divmod_res;
   } while(0)]])
 
@@ -34,11 +42,11 @@ m4_define([[divmods]],[[do {
     signed long long __divmod_dividend = ([[$1]]), __divmod_divisor = ([[$2]]);
     signed long long __divmod_mod = __divmod_dividend % __divmod_divisor;
     signed long long __divmod_res = __divmod_dividend / __divmod_divisor;
-    ([[$1]]) = (__typeof__ ([[$1]]))__divmod_mod; 
+    ([[$1]]) = (__typeof__ ([[$1]]))__divmod_mod;
     ([[$2]]) = (__typeof__ ([[$2]]))__divmod_res;
   } while(0)]])
 
-]], [[ /* !HAVE_C_DIVIDE */ 
+]], [[ /* !HAVE_C_DIVIDE */
 
 sl_decl(__divmodqu, void, sl_shparm(unsigned long long, x), sl_shparm(unsigned long long, y));
 sl_decl(__divmodqs, void, sl_shparm(signed long long, x), sl_shparm(signed long long, y));
@@ -46,7 +54,7 @@ sl_decl(__divmodqs, void, sl_shparm(signed long long, x), sl_shparm(signed long 
 m4_define([[divmodu]], [[do {
 unsigned long long __dmu_x = ([[$1]]);
 unsigned long long __dmu_y = ([[$2]]);
-sl_create(,,,,,,,__divmodqu, 
+sl_create(,,,,,,,__divmodqu,
           sl_sharg(unsigned long long, __dmu_sx, __dmu_x),
           sl_sharg(unsigned long long, __dmu_sy, __dmu_y));
 sl_sync();
@@ -57,7 +65,7 @@ sl_sync();
 m4_define([[divmods]], [[do {
 unsigned long long __dms_x = ([[$1]]);
 unsigned long long __dms_y = ([[$2]]);
-sl_create(,,,,,,,__divmodqs, 
+sl_create(,,,,,,,__divmodqs,
           sl_sharg(signed long long, __dms_sx, __dms_x),
           sl_sharg(signed long long, __dms_sy, __dms_y));
 sl_sync();

@@ -1,11 +1,13 @@
-// ptl_svp.h: this file is part of the utcc project.
+//                                                             -*- C++ -*-
+// ptl_svp.h: this file is part of the slc project.
 //
-// Copyright (C) 2008 The CSA group.
+// Copyright (C) 2008,2009 The SL project.
+// All rights reserved.
 //
 // $Id$
 //
-#ifndef UTC_PTL_CPP_PTL_SVP_H
-# define UTC_PTL_CPP_PTL_SVP_H
+#ifndef SLC_PTL_SVP_H
+# define SLC_PTL_SVP_H
 
 #include "ptl_vars.h"
 
@@ -412,4 +414,4 @@ namespace uTC
 #include "ptl_create.h"
 
 }
-#endif // ! UTC_PTL_CPP_PTL_SVP_H
+#endif // ! SLC_PTL_SVP_H

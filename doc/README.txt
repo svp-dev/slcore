@@ -1,5 +1,5 @@
 slc, a SVP language compiler.
-Copyright (C) 2008, 2009 the CSA group, The SL project
+Copyright (C) 2008, 2009 the CSA group, The SL project.
 
 =====================
  Introduction to SLC

@@ -1,3 +1,11 @@
+//                                                             -*- m4 -*-
+// test.sl: this file is part of the slc project.
+//
+// Copyright (C) 2009 The SL project.
+// All rights reserved.
+//
+// $Id$
+//
 m4_include(svp/iomacros.slh)
 
 sl_def(inc, int,
@@ -15,7 +23,7 @@ sl_decl((*inc2), int, sl_shparm(int, x)) = inc;
 sl_def(inc3, void,
        sl_shparm(int, x),
        sl_glparm(int, y))
-{ 
+{
   sl_setp(x, sl_getp(x) + sl_getp(y));
 }
 sl_enddef
@@ -32,7 +40,7 @@ sl_def(t_main, void)
     sl_sync(f1);
     printf("output count: %d\n", sl_geta(n));
   }
-  
+
   {
     puts("Test #2:\n");
     sl_family_t cf;
@@ -42,14 +50,14 @@ sl_def(t_main, void)
     sl_kill(cf);
     sl_sync(f,r);
 
-    if (r == SVP_EKILLED) 
+    if (r == SVP_EKILLED)
       puts("killed!\n");
     else {
       printf("counter: %d\n", sl_geta(n));
     }
   }
 
-    
+
   {
     puts("Test #3:\n");
     sl_create(,SVP_LOCAL,,,,, void,
@@ -72,4 +80,3 @@ sl_def(t_main, void)
   }
 }
 sl_enddef
-

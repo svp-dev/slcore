@@ -1,3 +1,11 @@
+//                                                             -*- m4 -*-
+// div.sl: this file is part of the slc project.
+//
+// Copyright (C) 2009 The SL project.
+// All rights reserved.
+//
+// $Id$
+//
 m4_include(svp/lib.slh)
 
 // algorithm courtesy of Michael Hicks
@@ -25,7 +33,7 @@ m4_define([[DIVCODEU]],[[
   }
 
   ([[$3]]) = answer;
-  ([[$2]]) = dividend; 
+  ([[$2]]) = dividend;
 			 ]])
 
 m4_define([[DIVCODES]],[[
@@ -53,7 +61,7 @@ m4_define([[DIVCODES]],[[
     --shiftcount;
   }
   ([[$3]]) = answer * invsign;
-  ([[$2]]) = dividend * dendsign;					
+  ([[$2]]) = dividend * dendsign;
 			 ]])
 
 
@@ -81,4 +89,3 @@ DIVFUNCU(__divmodqu, unsigned long long)
 DIVFUNCU(__divmodlu, unsigned int)
 DIVFUNCS(__divmodqs, signed long long)
 DIVFUNCS(__divmodls, signed int)
-

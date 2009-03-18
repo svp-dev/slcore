@@ -1,11 +1,13 @@
-// ptl_debug.h: this file is part of the utcc project.
+//                                                             -*- C++ -*-
+// ptl_debug.h: this file is part of the slc project.
 //
-// Copyright (C) 2008 The CSA group.
+// Copyright (C) 2008,2009 The SL project.
+// All rights reserved.
 //
 // $Id$
 //
-#ifndef UTC_PTL_CPP_PTL_DEBUG_H
-# define UTC_PTL_CPP_PTL_DEBUG_H
+#ifndef SLC_PTL_DEBUG_H
+# define SLC_PTL_DEBUG_H
 
 #include "ptl_deps.h"
 
@@ -40,4 +42,4 @@ namespace uTC
 #endif
 
 // End #ifndef UTC_PTL_DEBUG_H
-#endif // ! UTC_PTL_CPP_PTL_DEBUG_H
+#endif // ! SLC_PTL_DEBUG_H
