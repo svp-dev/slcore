@@ -1,3 +1,17 @@
+2009-03-18  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
+	Improvements to test script.
+	
+	* bin/slt: Remove test output when test is successful and KEEP is
+	not set. Factorize output of test results. Simplify display offset
+	computations. Improve documentation. Use different exit codes for
+	different exit situations. Propose license. Allow to use a local
+	directory to help "make distcheck" build from a directory
+	different from source.
+
+	* doc/Makefile.am: Build man page for 'slt'. Fix locations of
+	dependencies of language spec to be nice with "make distcheck".
+	
 2009-03-17  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
 	Update handling of family exit code.
