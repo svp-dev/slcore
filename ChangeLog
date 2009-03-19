@@ -1,3 +1,63 @@
+2009-03-20  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
+	More tests & improvements thanks to testing.	
+
+	* bin/spp: Implement local register window compression.
+
+	* bin/slt: Fix checking against reference output. Allow
+	implementation specifiers to indicate extra env vars to set during
+	testing. Change naming of output directories to a simple digit.
+	
+	* lib/t-pppalpha/include/sl_support.h,
+	* bin/spp,
+	* lib/t-pppalpha/slimpl.m4: Fix delayed shared initialization.
+
+	* lib/r-mtalpha-sim: Allow extra simulator arguments via SIMARGS
+	variable.
+	
+	* tests/0_minimal/2_args/delayshared.sl: Simplify.
+
+	* tests/div.sl: Rename to...	
+	* tests/1_basic/2_div/div.sl: here. Simplify to use printf.
+
+	* demo/10threads.sl: Use printf.	
+
+	* tests/1_basic/1_index/common.slh,
+	* tests/1_basic/1_index/defaults.sl,
+	* tests/1_basic/1_index/inf1.sl,
+	* tests/1_basic/1_index/inf2.sl,
+	* tests/1_basic/1_index/inf3.sl,
+	* tests/1_basic/1_index/inf4.sl,
+	* tests/1_basic/1_index/inf5.sl,
+	* tests/1_basic/1_index/neg1.sl,
+	* tests/1_basic/1_index/neg2.sl,
+	* tests/1_basic/1_index/neg3.sl,
+	* tests/1_basic/1_index/neg4.sl,
+	* tests/1_basic/1_index/neg5.sl,
+	* tests/1_basic/1_index/neg6.sl,
+	* tests/1_basic/1_index/neg7.sl,
+	* tests/1_basic/1_index/neg8.sl,
+	* tests/1_basic/1_index/neg9.sl,
+	* tests/1_basic/1_index/pos1.sl,
+	* tests/1_basic/1_index/pos2.sl,
+	* tests/1_basic/1_index/pos3.sl,
+	* tests/1_basic/1_index/pos4.sl,
+	* tests/1_basic/1_index/pos5.sl,
+	* tests/1_basic/1_index/pos6.sl,
+	* tests/1_basic/1_index/pos7.sl,
+	* tests/1_basic/1_index/pos8.sl,
+	* tests/1_basic/1_index/pos9.sl,
+	* tests/1_basic/2_div/div2.sl: Import from utcc.
+
+	* tests/mkalltests.sh: Remove 'x_' tests from Automake test
+	suite (all failures are not properly reported by all
+	implementations, but we want to ignore this for now and focus on
+	the positive features).
+	
+	* demo/fibonacci.sl: Reduce N to fit execution time within 5
+	seconds (timeout during tests).
+
+	
 2009-03-19  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
 	More tests & improvements thanks to testing.

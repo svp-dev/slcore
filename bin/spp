@@ -452,10 +452,10 @@ class pppalpha(object):
                      else:
                         print '__sl_declsha(%s, %s, "$%s", %s);' % (ctype, name, reg, a['init'])
                      wregs.append('__sl_arg_%s' % name)
-                     #print 'm4_pushdef([[__sl_geta_%s]],[[__sl_getsha(%s)]])m4_dnl' % (name, name)
-                     #print 'm4_pushdef([[__sl_seta_%s]],[[__sl_setsha(%s, [[$1]])]])m4_dnl' % (name, name)
-                     print 'm4_pushdef([[__sl_geta_%s]],[[__sl_arg_%s]]) m4_dnl' % (name, name)
-                     print 'm4_pushdef([[__sl_seta_%s]],[[__sl_arg_%s = [[$1]]]]) m4_dnl' % (name, name)
+                     print 'm4_pushdef([[__sl_geta_%s]],[[__sl_getsha(%s)]])m4_dnl' % (name, name)
+                     print 'm4_pushdef([[__sl_seta_%s]],[[__sl_setsha(%s, [[$1]])]])m4_dnl' % (name, name)
+                     #print 'm4_pushdef([[__sl_geta_%s]],[[__sl_arg_%s]]) m4_dnl' % (name, name)
+                     #print 'm4_pushdef([[__sl_seta_%s]],[[__sl_arg_%s = [[$1]]]]) m4_dnl' % (name, name)
                   else: # cat: gl
                      if species == "f":
                         reg = "f%d" % aliases['lf%d' % (glfbase + regnr)]['legnr']
@@ -779,16 +779,11 @@ class pppalpha(object):
       fundata['use_gp'] = use_gp
       fundata['use_pv'] = use_pv
 
-   def xjoin(self, fundata, items):
+   def xjoin1(self, fundata, items):
       """
       Rebuild function code back into a single body.
       """
       name = fundata['name']
-      regs = fundata['regs']
-      yield ('directive', '.globl %s' % name, '')
-      yield ('directive', '.ent %s' % name, '')
-      yield ('label', '%s:' % name, '')
-      yield ('directive', '.registers %d %d %d %d %d %d' % tuple(regs), '')
       for n in fundata['pprologue']:
          yield n
       yield ('label', '$%s..ng:' % name, '')
@@ -797,8 +792,20 @@ class pppalpha(object):
       yield ('directive', '.prologue %d' % (fundata['prologuen']), '')
       for n in items:
          yield n
-      yield ('directive', '.end %s' % name, '')
-      
+
+   def xjoin2(self, fundata, items):
+      """
+      Add function header.
+      """
+      name = fundata['name']
+      regs = fundata['regs']
+      yield ('directive', '.globl %s' % name, '')
+      yield ('directive', '.ent %s' % name, '')
+      yield ('label', '%s:' % name, '')
+      yield ('directive', '.registers %d %d %d %d %d %d' % tuple(regs), '')
+      for n in items:
+         yield n
+      yield ('directive', '.end %s' % name, '')     
 
 
    def flattener(self, items):
@@ -977,6 +984,127 @@ class pppalpha(object):
          if m == reg:
             return True
       return False
+
+   def markused(self, fundata, items):
+      r1 = re.compile(r'\$l(\d+)')
+      r2 = re.compile(r'\$lf(\d+)')
+      r3 = re.compile(r'\$g(\d+)')
+      r4 = re.compile(r'\$gf(\d+)')
+      rmask = [False] * 32
+      rfmask = [False] * 32
+      rgmask = [False] * 32
+      rgfmask = [False] * 32
+      for (type, content, comment) in items:
+         if type == 'other':
+            for rm in r1.finditer(content):
+               n = int(rm.group(1))
+               rmask[n] = True
+            for rm in r2.finditer(content):
+               n = int(rm.group(1))
+               rfmask[n] = True
+            for rm in r3.finditer(content):
+               n = int(rm.group(1))
+               rgmask[n] = True
+            for rm in r4.finditer(content):
+               n = int(rm.group(1))
+               rgfmask[n] = True
+         yield (type, content, comment)
+      fundata['usedregs'] = rmask
+      fundata['usedfregs'] = rfmask
+      fundata['usedgl'] = rgmask
+      fundata['usedglf'] = rgfmask
+
+
+   def makespecialtransform(self, special):
+      def dotransform(fundata, items):
+         nr = int(self.reg_aliases[special][1:])
+         regname = '$l%d' % nr
+         rmask = fundata['usedregs']
+         dorename = 0
+         if rmask[nr] == True and False in rmask:
+            freenr = [i for (i,r) in enumerate(rmask) if r == False][0]
+            dorename = 1
+            newname = '$l%d' % freenr
+            rmask[nr] = False
+            rmask[freenr] = True
+            yield ('empty','','MT: special "%s" renamed from %s to %s' % (special, regname, newname))
+         for (type, content, comment) in items:
+            if type == 'other' and dorename == 1:
+               content = content.replace(regname, newname)
+            yield (type, content, comment)
+      return dotransform
+
+   def compress(self, fundata, items):
+
+      regs = fundata['regs']
+      rmask = fundata['usedregs']
+      rfmask = fundata['usedfregs']
+      rgmask = fundata['usedgl']
+      rgfmask = fundata['usedglf']
+
+      # Compress integer locals
+      lastfound = None
+      for i in xrange(30, -1, -1):
+         if rmask[i]:
+            lastfound = i
+            break
+      if lastfound is None:
+         newnr = 0
+      else:
+         newnr = lastfound + 1
+         
+      # FIXME: WORKAROUND BUG IN SIMULATOR
+      if newnr < 2:
+         newnr = 2
+
+      if newnr < regs[2]:
+         yield ('empty','','MT: compressed integer locals from %d to %d' % (regs[2], newnr))
+         regs[2] = newnr
+
+      # Compress integer globals
+      lastfound = None
+      for i in xrange(30, -1, -1):
+         if rgmask[i]:
+            lastfound = i
+            break
+      if lastfound is None:
+         newnr = 0
+      else:
+         newnr = lastfound + 1
+      if newnr < regs[0]:
+         yield ('empty','','MT: compressed integer globals from %d to %d' % (regs[0], newnr))
+         regs[0] = newnr
+
+      # Compress FP locals
+      lastfound = None
+      for i in xrange(30, -1, -1):
+         if rfmask[i]:
+            lastfound = i
+            break
+      if lastfound is None:
+         newnr = 0
+      else:
+         newnr = lastfound + 1
+      if newnr < regs[5]:
+         yield ('empty','','MT: compressed FP locals from %d to %d' % (regs[5], newnr))
+         regs[5] = newnr
+
+      # Compress FP globals
+      lastfound = None
+      for i in xrange(30, -1, -1):
+         if rgfmask[i]:
+            lastfound = i
+            break
+      if lastfound is None:
+         newnr = 0
+      else:
+         newnr = lastfound + 1
+      if newnr < regs[3]:
+         yield ('empty','','MT: compressed FP globals from %d to %d' % (regs[3], newnr))
+         regs[3] = newnr
+
+      for (type, content, comment) in items:
+         yield (type, content, comment)
 
    def addswchll(self, fundata, items):
       re3way = re.compile(r'\w+\s([^,]+),([^,]+),([^,]+)$')
@@ -1165,7 +1293,12 @@ class pppalpha(object):
          groups = self.funfilter(self.addswchbr, groups)
          groups = self.funfilter(self.rmdupswch, groups)
 
-         groups = self.funfilter(self.xjoin, groups)
+         groups = self.funfilter(self.xjoin1, groups)
+         groups = self.funfilter(self.markused, groups)
+         groups = self.funfilter(self.makespecialtransform('gp'), groups)
+         groups = self.funfilter(self.makespecialtransform('tlsp'), groups)
+         groups = self.funfilter(self.compress, groups)
+         groups = self.funfilter(self.xjoin2, groups)
          items = self.flattener(groups)
          items = self.forcezero(items)
          lines = self.printer(items)

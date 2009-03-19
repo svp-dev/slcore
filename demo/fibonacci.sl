@@ -37,7 +37,7 @@ sl_def(fibo_print, void,
 }
 sl_enddef
 
-m4_define(N, 45)
+m4_define(N, 12)
 number fibonums[N];
 
 sl_def(t_main, void)

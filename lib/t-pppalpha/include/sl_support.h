@@ -27,15 +27,18 @@
 			 : "0"(__sl_shparm_out_ ## Name));		\
   })
 
-/*
+
 #define __sl_getsha(Name) __sl_sharg_ ## Name
 #define __sl_setsha(Name, Val) do {				\
-    __sl_sharg_ ## Name = (Val);				\
+    __asm__ __volatile__("# MT: writing shared " # Name " (%0)"	\
+			 : "=r"(__sl_arg_ ## Name)		\
+			 : "0"(__sl_arg_ ## Name));		\
+    __sl_arg_ ## Name = (Val);				\
     __asm__ __volatile__("# MT: shared " # Name " ready (%0)"	\
-			 : "=r"(__sl_sharg_ ## Name)		\
-			 : "0"(__sl_sharg_ ## Name));		\
+			 : "=r"(__sl_arg_ ## Name)		\
+			 : "0"(__sl_arg_ ## Name));		\
   } while(0)
-*/
+
 
 #define __sl_declindex(Name) register const long long Name = __sl_index
 

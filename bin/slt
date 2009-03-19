@@ -265,13 +265,11 @@ shift
 case $1 in
   ""|all)
     impl1=seqc
-    oimpl="ptl ppp utcx"
-    #oimpl="ptl ppp utc0 utcx"
+    set ptl ppp 'ppp:SIMARGS=-o NumProcessors=1' utcx
     ;;
   *)
     impl1=$1
     shift
-    oimpl="$@"
     ;;
 esac
 
@@ -405,6 +403,7 @@ do_diff() {
     place_chars $offset 37 "-"
   else
       echo "===== CHECKING OUTPUT =====" >>$baseout.log
+      echo "diff -u $refout $baseout.out" >>$baseout.log
       if diff -u "$refout" "$baseout.out" >>"$baseout.log" 2>&1; then
 	  echo "Output identical to reference" >>$baseout.log
 	  place_chars $offset 32 D
@@ -418,7 +417,7 @@ do_diff() {
 
 
 do_check() {
-  local offset refout
+  local offset refout b
   impl=$1
   offset=$2
   refout=$3
@@ -437,28 +436,46 @@ do_check() {
       fi
   fi
   if test $fail = 0 -a -z "$KEEP"; then
-    rm -f "$baseout"*
+    for b in "$baseout"*; do
+       if test "x$refout" != "x" -a "x$refout" != "x$b"; then
+          rm "$b"
+       fi
+    done
     rmdir "$outdir" >/dev/null 2>&1 || true
   fi
   return $fail
 }
 
-do_prepdir() {
-  impl=$1
-  outdir=$testdir/$impl
-  if test -n "$TEST_HERE"; then
-    outdir=$(echo "_$outdir"|tr '/.:' '___')
-  fi
-  baseout=$outdir/$testname
-
-  if ! mkdir -p "$outdir" >/dev/null 2>&1; then
-     die "$outdir: cannot create directory" 
-  fi
-
-  if ! test -w "$outdir"; then
-     die "$outdir: directory is not writable"
-  fi
-  rm -f "$baseout"*
+do_preptest() {
+    local vars save vn var val
+    impl=$(echo "$1" | cut -d: -f1)
+    vars=$(echo "$1" | cut -d: -f2-)
+    if test -n "$vars"; then
+	save=$IFS
+	IFS=":"
+	for vn in $vars; do
+	    var=$(echo "$vn"|cut -d= -f1)
+	    val=$(echo "$vn"|cut -d= -f2-|sed -e s/\'/\'\"\'\"\'/g)
+	    eval "export $var='$val'"
+	done
+	IFS=$save
+    fi
+    
+    outdir=$testdir/_$counter
+    counter=$(expr $counter + 1)
+    if test -n "$TEST_HERE"; then
+	outdir=$(echo "_$outdir"|tr '/.:' '___')
+    fi
+    baseout=$outdir/$testname
+    
+    if ! mkdir -p "$outdir" >/dev/null 2>&1; then
+	die "$outdir: cannot create directory" 
+    fi
+    
+    if ! test -w "$outdir"; then
+	die "$outdir: directory is not writable"
+    fi
+    rm -f "$baseout"*
 }
 
 
@@ -468,7 +485,7 @@ if stty size >/dev/null 2>&1; then
   COLUMNS=$(stty size|cut -d' ' -f2)
 fi
 COLUMNS=${COLUMNS:-80}
-nrimpl=$(echo "$oimpl"|tr ' ' '\n'|wc -l)
+nrimpl=$#
 nrcols=$(expr \( $nrimpl + 1 \) \* 5)
 remainder=$(expr $COLUMNS - $nrcols - 5)
 if test $remainder -lt 20; then remainder=20; fi
@@ -485,7 +502,8 @@ fi
 printf "%-${remainder}s" "$name"
 
 # start testing
-do_prepdir $impl1
+counter=0
+do_preptest "$impl1"
 
 bye() {
   for pid in $towait; do
@@ -501,7 +519,7 @@ fail=0
 
 signalled=0
 trap bye INT QUIT HUP TERM
-do_check $impl1 $offset &
+do_check $impl $offset &
 towait=$!
 set +e
 wait $towait
@@ -516,10 +534,11 @@ fi
 
 # Perform other tests asynchronously
 towait=
-for impl in $oimpl; do
+refout=$baseout.out
+for impl1 in "$@"; do
     offset=$(expr $offset + 5)
-    do_prepdir $impl
-    do_check $impl $offset $baseout.out &
+    do_preptest "$impl1"
+    do_check $impl $offset "$refout" &
     towait="$towait $!"
 done
 
@@ -545,6 +564,10 @@ else
 fi
 
 echo
+if test $fail = 0 -a -z "$KEEP"; then
+    rm "$refout"
+    rmdir $(dirname "$refout") >/dev/null 2>&1 || true
+fi
 exit $fail
 
 # -*- mode: shell -*-
