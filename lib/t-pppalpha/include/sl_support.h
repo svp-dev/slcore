@@ -27,6 +27,7 @@
 			 : "0"(__sl_shparm_out_ ## Name));		\
   })
 
+/*
 #define __sl_getsha(Name) __sl_sharg_ ## Name
 #define __sl_setsha(Name, Val) do {				\
     __sl_sharg_ ## Name = (Val);				\
@@ -34,6 +35,7 @@
 			 : "=r"(__sl_sharg_ ## Name)		\
 			 : "0"(__sl_sharg_ ## Name));		\
   } while(0)
+*/
 
 #define __sl_declindex(Name) register const long long Name = __sl_index
 
@@ -98,19 +100,19 @@
   register Type const __sl_glparm_ ## Name __asm__(Reg)
 
 #define __sl_declgla_noreg(Type, Name, Init)		\
-  register Type const __sl_glarg_ ## Name = (Init)
+  register Type const __sl_arg_ ## Name = (Init)
 
 #define __sl_declgla(Type, Name, Reg, Init)			\
-  register Type const __sl_glarg_ ## Name __asm__(Reg) = (Init)
+  register Type const __sl_arg_ ## Name __asm__(Reg) = (Init)
 
 #define __sl_declsha_empty(Type, Name, Reg) \
-  register Type __sl_sharg_ ## Name __asm__(Reg); \
-  __asm__ ("setempty %0 # EMPTY " # Name : "=rf"(__sl_sharg_ ## Name))
+  register Type __sl_arg_ ## Name __asm__(Reg); \
+  __asm__ ("setempty %0 # EMPTY " # Name : "=rf"(__sl_arg_ ## Name))
 
 // : "0"(__sl_sharg_ ## Name))
 
 #define __sl_declsha(Type, Name, Reg, Init)		\
-  register Type __sl_sharg_ ## Name __asm__(Reg) = (Init)
+  register Type __sl_arg_ ## Name __asm__(Reg) = (Init)
 
 #define __sl_setbreak(Tag, BRI) \
   __asm__ ("setbreak %0, %1\t# CREATE " # Tag \

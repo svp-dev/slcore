@@ -437,8 +437,8 @@ class pppalpha(object):
                if a['mode'] == 'mem':
                   assert cat == 'gl'
                   print "__sl_declgla_noreg(%s, %s, %s);" % (ctype, name, a['init'])
-                  print "m4_define([[__sl_geta_%s]],[[__sl_glarg_%s]])m4_dnl" % (name,name)
-                  print "m4_define([[__sl_seta_%s]],[[\n#error cannot set global %s\n]])m4_dnl" % (name, name)
+                  print "m4_pushdef([[__sl_geta_%s]],[[__sl_arg_%s]])m4_dnl" % (name,name)
+                  print "m4_pushdef([[__sl_seta_%s]],[[\n#error cannot set global %s\n]])m4_dnl" % (name, name)
                else: # mode: reg
                   regnr = a['regnr']
                   if cat == "sh":
@@ -451,18 +451,20 @@ class pppalpha(object):
                         print '__sl_declsha_empty(%s, %s, "$%s");' % (ctype, name, reg)
                      else:
                         print '__sl_declsha(%s, %s, "$%s", %s);' % (ctype, name, reg, a['init'])
-                     wregs.append('__sl_sharg_%s' % name)
-                     print 'm4_define([[__sl_geta_%s]],[[__sl_getsha(%s)]])m4_dnl' % (name, name)
-                     print 'm4_define([[__sl_seta_%s]],[[__sl_setsha(%s, [[$1]])]])m4_dnl' % (name, name)
+                     wregs.append('__sl_arg_%s' % name)
+                     #print 'm4_pushdef([[__sl_geta_%s]],[[__sl_getsha(%s)]])m4_dnl' % (name, name)
+                     #print 'm4_pushdef([[__sl_seta_%s]],[[__sl_setsha(%s, [[$1]])]])m4_dnl' % (name, name)
+                     print 'm4_pushdef([[__sl_geta_%s]],[[__sl_arg_%s]]) m4_dnl' % (name, name)
+                     print 'm4_pushdef([[__sl_seta_%s]],[[__sl_arg_%s = [[$1]]]]) m4_dnl' % (name, name)
                   else: # cat: gl
                      if species == "f":
                         reg = "f%d" % aliases['lf%d' % (glfbase + regnr)]['legnr']
                      else:
                         reg = "%d" % aliases['l%d' % (glibase + regnr)]['legnr']
-                     rregs.append('__sl_glarg_%s' % name)
+                     rregs.append('__sl_arg_%s' % name)
                      print '__sl_declgla(%s, %s, "$%s", %s);' % (ctype, name, reg, a['init'])
-                     print 'm4_define([[__sl_geta_%s]],[[__sl_glarg_%s]])m4_dnl' % (name, name)
-                     print "m4_define([[__sl_seta_%s]],[[\n#error cannot set global %s\n]])m4_dnl" % (name, name)
+                     print 'm4_pushdef([[__sl_geta_%s]],[[__sl_arg_%s]])m4_dnl' % (name, name)
+                     print "m4_pushdef([[__sl_seta_%s]],[[\n#error cannot set global %s\n]])m4_dnl" % (name, name)
 
       pvreg = str(aliases['l%d' % (glibase + c['gl_pv_offset'])]['legnr'])
       print '__sl_declgla(__sl_fptr_t, __fptr%s, "$%s", %s);' % (tag, pvreg, funcname)
@@ -473,7 +475,7 @@ class pppalpha(object):
             print d['ctype'], d['name'], ';'
          print '} __sl_ma_data_%s = {' % tag
          for d in c['memlayout']:
-            print '__sl_glarg_%s__%s,' % (tag, d['name'])
+            print '__sl_arg_%s__%s,' % (tag, d['name'])
          print '};'
          
          nr = aliases['basearg']['nr'] + c['gl_mem_offset']
@@ -507,7 +509,7 @@ class pppalpha(object):
       print '__sl_declsync(%s, "$%d");' % (tag, crreg)
       
 
-      rregs.append('__sl_glarg___fptr%s' % tag)
+      rregs.append('__sl_arg___fptr%s' % tag)
       wregs1 = ['__sl_sync_%s' % tag] + wregs
       wqueue_cre = ", ".join(['"=rf"(%s)' % x for x in wregs1])
       rqueue_cre = ", ".join(['"%d"(%s)' % i for i in enumerate(wregs1)] + ['"rf"(%s)' % x for x in rregs])
@@ -981,7 +983,8 @@ class pppalpha(object):
       re1way = re.compile(r'\w+\s([^,]+)$')
       re2way = re.compile(r'mov\s([^,]+),([^,]+)$')
       rexway = re.compile(r'\w+\s([^,]+),(.*)')
-      reld = re.compile(r'(ldl|ldq|ldt|allocate)')
+      reld = re.compile(r'(ld[lqts]|allocate)')
+      re3wayll = re.compile(r'(add|sub|mul|div|sqrt)[ts]')
 
       allregs = ['$l%d' % x for x in xrange(31 - self.iargregs) if x not in (17, 18)] + \
           ['$lf%d' % x for x in xrange(31 - self.fargregs)] + \
@@ -1007,7 +1010,10 @@ class pppalpha(object):
                r1, r2, r3 = m.groups()
                reads.append(r1)
                reads.append(r2)
-               shortwrites.append(r3)
+               if re3wayll.match(content) is None:
+                  shortwrites.append(r3)
+               else:
+                  longwrites.append(r3)
                done = 1
 
 
@@ -1015,7 +1021,10 @@ class pppalpha(object):
             m = re1way.match(content)
             if m is not None and not done:
                r1 = m.group(1)
-               reads.append(r1)
+               if content.startswith('setempty'):
+                  shortwrites.append(r1)
+               else:
+                  reads.append(r1)
                done = 1
 
 

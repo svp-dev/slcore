@@ -24,10 +24,8 @@ sl_def(t_main, void)
   sl_seta(x, 0);
   sl_sync();
 
-  int ax = sl_geta(x);
-
   putc('\n');
-  putn(ax);
+  putn(sl_geta(x));
   putc('\n');
 }
 sl_enddef

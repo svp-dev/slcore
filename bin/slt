@@ -200,9 +200,9 @@ Environment variables:
   KEEP           If set, do not erase intermediary files when a test
                  succeeds. Default is not set.
 
-  TEST_HERE      If set, use a subdirectory in the current directory
-                 for each implementation instead of a subdirectory
-                 in the program's source directory.
+  TEST_HERE      If set and not empty, use a subdirectory in the current
+                 directory for each implementation instead of a
+                 subdirectory in the program's source directory.
 
 Diagnostics:
   0              The test succeeded.
@@ -446,7 +446,7 @@ do_check() {
 do_prepdir() {
   impl=$1
   outdir=$testdir/$impl
-  if test -n "TEST_HERE"; then
+  if test -n "$TEST_HERE"; then
     outdir=$(echo "_$outdir"|tr '/.:' '___')
   fi
   baseout=$outdir/$testname

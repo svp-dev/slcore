@@ -41,10 +41,20 @@ m4_define([[sl_declarg]],[[m4_dnl
 [[$1]] [[$2]]; m4_dnl
 ]])
 
+m4_define([[sl_copyarg]],[[m4_dnl
+__after_[[$2]] = _sl_lbl[[]]_args.[[$2]]; m4_dnl
+m4_popdef([[__sl_geta_$2]]) m4_dnl
+m4_popdef([[__sl_seta_$2]]) m4_dnl
+]])
+
 m4_define([[sl_initarg]],[[ m4_dnl
 m4_pushdef([[_sl_initializer]],m4_joinall([[:]],m4_shiftn(2,$@))) m4_dnl
 m4_if(m4_quote(_sl_initializer),,,[[_sl_lbl[[]]_args.[[$2]] = (_sl_initializer);]]) m4_dnl
-register [[$1]] *const __a_[[$2]] = &_sl_lbl[[]]_args.[[$2]]; m4_dnl
+[[$1]] __after_[[$2]]; m4_dnl
+m4_define([[__sl_geta_$2]],__after_$2) m4_dnl
+m4_define([[__sl_seta_$2]],__after_$2 = $[[]]1) m4_dnl
+m4_pushdef([[__sl_geta_$2]],_sl_lbl[[]]_args.$2)
+m4_pushdef([[__sl_seta_$2]],_sl_lbl[[]]_args.$2 = $[[]]1) m4_dnl
 m4_popdef([[_sl_initializer]]) m4_dnl
 ]])
 
@@ -91,7 +101,6 @@ __sl_child.f(&__sl_child); m4_dnl
 if (__sl_fam->ex == SVP_EKILLED) return; m4_dnl
 } m4_dnl
 ]])m4_dnl
-do { m4_dnl
 if (!__sl_child.st)m4_dnl
  for (__sl_child.ix = __sl_child.be; m4_dnl
       ; __sl_child.ix += __sl_child.li) _sl_body m4_dnl
@@ -105,14 +114,14 @@ for (__sl_child.ix = __sl_child.be; m4_dnl
      __sl_child.ix += __sl_child.st) _sl_body m4_dnl
 __sl_fam->ch = 0; m4_dnl
 m4_if([[$1]],,,[[[[$1]] = __sl_child.ex;]]) m4_dnl
-} while(0) m4_dnl
+m4_foreach([[_sl_arg]],m4_quote(_sl_thargs),[[m4_apply([[sl_copyarg]],m4_split(_sl_arg,:))]]) m4_dnl
 m4_undefine([[_sl_increate]]) m4_dnl
 ]])
 
 # Pass transparently all references to argument/parameter
 # names.
-m4_define([[sl_geta]],[[(*__a_[[$1]])]])
-m4_define([[sl_seta]],[[(*__a_[[$1]]) = [[$2]]]])
+m4_define([[sl_geta]],[[__sl_geta_$1]])
+m4_define([[sl_seta]],[[__sl_seta_$1([[$2]])]])
 
 # Pass transparently break and kill
 m4_define([[sl_break]],[[m4_dnl

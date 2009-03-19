@@ -1,5 +1,47 @@
 2009-03-19  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	More tests & improvements thanks to testing.
+	
+	* bin/spp,
+	* lib/t-pppalpha/include/sl_support.h,
+	* lib/t-pppalpha/slimpl.m4: Declare thread arguments in a single
+	namespace before the create, to catch multiple definitions of the
+	same identifier. Copy the thread arguments to a new temporary
+	after the sync, so that further references use the temporary
+	instead of the variable shared with the child family (which could
+	be reused via a register for a new family).
+
+	* lib/t-seqc/slimpl.m4: Imitate behavior of t-pppalpha for
+	arguments (useful for comparison/testing).
+
+	* tests/0_minimal/2_args/args1.sl: Add feature check.
+	* demo/10threads.sl: Remove workaround as the feature is now fixed.
+	
+	* lib/t-ptl/slimpl.m4: Avoid setting every family as a root for
+	continuation creates (3rd create parameter in PTL).
+
+	* bin/spp (pppalpha.addswchll): Recognize more instructions that
+	cause a long latency operation (esp. FP ops). Avoid swch after
+	"setempty" which does not read its register.
+	
+	* doc/acronyms.txt: Document 'slt'. 
+
+	* bin/slt: Properly use TEST_HERE.
+	* tests.mk: Use it.
+
+	* tests/0_minimal/1_create/fididreuse.sl,
+	* tests/0_minimal/1_create/cr1.sl,
+	* tests/0_minimal/2_args/argshadow.sl: Fix use of sl_sync.
+
+	* tests/0_minimal/2_args/x_wrglparm.sl,	
+	* tests/0_minimal/2_args/x_wrglarg.sl: Announce that failure can
+	possibly occur earlier than compilation proper.
+	
+	* tests/0_minimal/2_args/x_addrparm2.sl: Do not try to write to
+	global.
+	
+2009-03-19  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	Move language specification away from the software project.
 	
 	* doc/spec.txt: Remove, as is now replaced by CSA note [sl1].

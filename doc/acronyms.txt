@@ -36,7 +36,13 @@ Acronym: SVP Generic Runner
 
 Role: execute a SVP binary in its intended run environment.
 
+slt
+===
 
+Acronym for: SL Tester
+
+Role: test that a SL program compiles and runs on multiple SVP
+implementations.
 
 
 
