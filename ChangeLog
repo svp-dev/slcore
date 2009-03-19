@@ -1,3 +1,13 @@
+2009-03-19  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
+	Move language specification away from the software project.
+	
+	* doc/spec.txt: Remove, as is now replaced by CSA note [sl1].
+	* doc/lang.txt: Remove, as is now replaced by CSA note [sl2].
+	
+	* doc/Makefile.am,
+	* doc/README.txt: Update accordingly.	
+
 2009-03-18  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
 	Improve interface of slc.

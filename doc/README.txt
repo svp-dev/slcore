@@ -64,7 +64,9 @@ There are other sources of interest in the distribution:
   root of the source tree.
 
 - Documentation about the input language SL and the accompanying
-  software library can be found in the ``doc/`` subdirectory.
+  software library can be found in CSA notes. 
+
+- Additional documentation can be found in the ``doc/`` subdirectory.
 
 
 
