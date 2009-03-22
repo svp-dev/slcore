@@ -1,5 +1,14 @@
 2009-03-22  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	Fix definition of places for the simulator.
+	
+	* lib/mtalpha-sim/include/sl_support.h: PLACE_DEFAULT is 1 on
+	mt-alpha (according to simulator sources).
+	
+	* bin/spp (pppalpha.remdefaults): Update accordingly.
+
+2009-03-22  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	Reinstate "make distcheck" by hiding the unit test suite behind a
 	configure argument.
 
