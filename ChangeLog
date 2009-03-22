@@ -1,5 +1,22 @@
 2009-03-22  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	Reinstate "make distcheck" by hiding the unit test suite behind a
+	configure argument.
+
+	* configure.ac: Add conditional "USE_TESTSUITE".
+	* tests/mkalltests.sh,	
+	* tests/Makefile.am: Activate unit test suite only when
+	USE_TESTSUITE is enabled.
+
+	* doc/HACKING.txt: Document the change.
+
+	* bin/slt: Clean up better after a test succeeds, especially the
+	directory containing the reference output.
+
+	* Makefile.am: Add missing reference to include/svp/roman.slh.
+	
+2009-03-22  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	Faster (microthreaded) integer divide + improvements to demos.
 
 	* lib/mtalpha-sim/mtdiv.s: Add, courtesy of Mike Lankamp.

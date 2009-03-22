@@ -6,8 +6,11 @@
 # 
 
 include $(srcdir)/alltests.mk
+EXTRA_DIST = $(TESTSUITE)
 
-EXTRA_DIST = $(TESTS)
+if USE_TESTSUITE
+TESTS = $(TESTSUITE)
+endif
 
 include $(top_srcdir)/tests.mk
 

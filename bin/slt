@@ -417,7 +417,7 @@ do_diff() {
 
 
 do_check() {
-  local offset refout b
+  local offset refout compref b
   impl=$1
   offset=$2
   refout=$3
@@ -436,8 +436,13 @@ do_check() {
       fi
   fi
   if test $fail = 0 -a -z "$KEEP"; then
+    if test "x$refout" = "x"; then
+      compref=$baseout.out
+    else
+      compref=$refout
+    fi
     for b in "$baseout"*; do
-       if test "x$refout" != "x" -a "x$refout" != "x$b"; then
+       if test "x$compref" != "x$b"; then
           rm "$b"
        fi
     done

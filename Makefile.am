@@ -29,6 +29,7 @@ nobase_dist_pkgdata_DATA = \
 	include/svp/assert.slh \
 	include/svp/div.slh \
 	include/svp/io.slh \
+	include/svp/roman.slh \
 	include/svp/iomacros.slh \
 	include/svp/lib.slh
 

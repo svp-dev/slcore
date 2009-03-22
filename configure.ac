@@ -58,6 +58,15 @@ AC_PROG_RANLIB
 
 AM_PATH_PYTHON
 
+AC_ARG_ENABLE([debug],
+[  --enable-testsuite    Activate unit tests for the compiler],
+[case "${enableval}" in
+   yes) testsuite=true ;;
+   no)  testuite=false ;;
+   *) AC_MSG_ERROR([bad value ${enableval} for --enable-testuite]) ;;
+ esac],[testsuite=false])
+AM_CONDITIONAL([USE_TESTSUITE], [test x$testsuite = xtrue])
+
 AC_CONFIG_FILES([
 	Makefile
 	bin/Makefile
