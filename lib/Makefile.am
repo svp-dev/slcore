@@ -10,9 +10,11 @@ EXTRA_DIST = \
 	host-host-ptl/include/create.tpl \
 	host-host-ptl/include/template.pl \
 	mtalpha-sim/slrt.s \
+	mtalpha-sim/mtdiv.s \
 	mtalpha-sim/include/svp_asmdiv.h \
 	mtalpha-sim/include/svp_os.h \
 	svplib/io.sl \
+	svplib/roman.sl \
 	svplib/div.sl
 
 nobase_dist_pkglib_SCRIPTS = \
@@ -52,12 +54,14 @@ nobase_pkglib_LIBRARIES = \
 nobase_pkglib_DATA += \
 	mtalpha-sim/libslos.a
 mtalpha_sim_libslos_a_CONTENTS = \
-	mtalpha-sim/div.o \
+	mtalpha-sim/mtdiv.o \
+	mtalpha-sim/roman.o \
 	mtalpha-sim/io.o
 
 host_host_seqc_libslos_a_SOURCES = 
 host_host_seqc_libslos_a_LIBADD = \
 	host-host-seqc/div.o \
+	host-host-seqc/roman.o \
 	host-host-seqc/io.o
 
 host_host_ptl_libslos_a_CPPFLAGS = \
@@ -70,6 +74,7 @@ host_host_ptl_libslos_a_SOURCES = \
 	host-host-ptl/ptl_svp.cc
 host_host_ptl_libslos_a_LIBADD = \
 	host-host-ptl/io.o \
+	host-host-ptl/roman.o \
 	host-host-ptl/div.o
 
 BUILT_SOURCES = \
@@ -87,6 +92,14 @@ mtalpha-sim/div.o: $(srcdir)/svplib/div.sl
 	$(MKDIR_P) mtalpha-sim
 	$(SLC) -b ppp-mtalpha -c -o $@ $<
 
+mtalpha-sim/roman.o: $(srcdir)/svplib/roman.sl
+	$(MKDIR_P) mtalpha-sim
+	$(SLC) -b ppp-mtalpha -c -o $@ $<
+
+mtalpha-sim/mtdiv.o: $(srcdir)/mtalpha-sim/mtdiv.s
+	$(MKDIR_P) mtalpha-sim
+	$(SLC) -b ppp-mtalpha -c -o $@ $<
+
 mtalpha-sim/slrt.o: $(srcdir)/mtalpha-sim/slrt.s
 	$(MKDIR_P) mtalpha-sim
 	$(SLC) -b ppp-mtalpha -c -o $@ $<
@@ -98,7 +111,9 @@ mtalpha-sim/libslos.a: $(mtalpha_sim_libslos_a_CONTENTS)
 
 CLEANFILES += \
 	mtalpha-sim/io.o \
+	mtalpha-sim/roman.o \
 	mtalpha-sim/div.o \
+	mtalpha-sim/mtdiv.o \
 	mtalpha-sim/slrt.o \
 	mtalpha-sim/libslos.a
 
@@ -112,6 +127,10 @@ host-host-seqc/div.o: $(srcdir)/svplib/div.sl
 	$(MKDIR_P) host-host-seqc
 	$(SLC) -b seqc -c -o $@ $<
 
+host-host-seqc/roman.o: $(srcdir)/svplib/roman.sl
+	$(MKDIR_P) host-host-seqc
+	$(SLC) -b seqc -c -o $@ $<
+
 host-host-seqc/slrt.o: $(srcdir)/host-host-seqc/slrt.c
 	$(MKDIR_P) host-host-seqc
 	$(CC) $(CFLAGS) -I$(srcdir)/t-seqc/include -c -o $@ $<
@@ -119,6 +138,7 @@ host-host-seqc/slrt.o: $(srcdir)/host-host-seqc/slrt.c
 CLEANFILES += \
 	host-host-seqc/io.o \
 	host-host-seqc/div.o \
+	host-host-seqc/roman.o \
 	host-host-seqc/slrt.o
 
 ######## ptl-specific objects ########
@@ -131,6 +151,10 @@ host-host-ptl/div.o: $(srcdir)/svplib/div.sl
 	$(MKDIR_P) host-host-ptl
 	$(SLC) -b ptl -c -o $@ $<
 
+host-host-ptl/roman.o: $(srcdir)/svplib/roman.sl
+	$(MKDIR_P) host-host-ptl
+	$(SLC) -b ptl -c -o $@ $<
+
 host-host-ptl/slrt.o: $(srcdir)/host-host-ptl/slrt.c
 	$(MKDIR_P) host-host-ptl
 	$(CC) $(CFLAGS) -I$(srcdir)/t-ptl/include -c -o $@ $<
@@ -138,6 +162,7 @@ host-host-ptl/slrt.o: $(srcdir)/host-host-ptl/slrt.c
 CLEANFILES += \
 	host-host-ptl/io.o \
 	host-host-ptl/div.o \
+	host-host-ptl/roman.o \
 	host-host-ptl/slrt.o
 
 PTL_CREATE_SUBST = $(srcdir)/host-host-ptl/include/template.pl

@@ -10,6 +10,6 @@ m4_include(svp/iomacros.slh)
 
 sl_def(t_main, void)
 {
-  printf("%d\n", 42);
+  printf("%d\n", (long long)42);
 }
 sl_enddef

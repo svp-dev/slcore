@@ -7,10 +7,11 @@
 // $Id$
 //
 m4_include(svp/roman.slh)
+m4_include(svp/iomacros.slh)
 
 sl_def(t_main, void)
 {
-  roman(42);
+  sl_proccall(roman, sl_glarg(short, x, 42));
   putc('\n');
 }
 sl_enddef

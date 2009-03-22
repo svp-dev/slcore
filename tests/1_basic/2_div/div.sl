@@ -27,7 +27,7 @@ m4_define([[do_tests]],[[{
     puts("----\n");
     sl_proccall(testu, sl_glarg(unsigned long long, x, [[$1]]),
 		sl_glarg(unsigned long long, y, [[$2]]));
-    sl_proccall(testu, sl_glarg(signed long long, x, [[$1]]),
+    sl_proccall(tests, sl_glarg(signed long long, x, [[$1]]),
 		sl_glarg(signed long long, y, [[$2]]));
   } 
 ]])

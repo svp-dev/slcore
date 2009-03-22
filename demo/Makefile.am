@@ -5,9 +5,25 @@
 # All rights reserved.
 # 
 
-TESTS = 10threads.sl answer.sl fibonacci.sl helloworld.sl roman.sl # test.sl
+DEMOS = 10threads.sl answer.sl fibonacci.sl helloworld.sl roman.sl # test.sl
+EXTRA_DIST = $(DEMOS)
 
-EXTRA_DIST = $(TESTS)
+noinst_DATA = $(DEMOS:.sl=.mtalpha-x) $(DEMOS:.sl=.ptl-x) $(DEMOS:.sl=.seqc-x)
+CLEANFILES = $(noinst_DATA)
 
+SLC = $(top_builddir)/bin/slc.local
+SUFFIXES = .sl .mtalpha-x
+
+.sl.mtalpha-x:
+	$(SLC) -b ppp-mtalpha -o $@ $<
+
+.sl.ptl-x:
+	$(SLC) -b ptl -o $@ $<
+
+.sl.seqc-x:
+	$(SLC) -b seqc -o $@ $<
+
+
+TESTS = $(DEMOS)
 include $(top_srcdir)/tests.mk
 

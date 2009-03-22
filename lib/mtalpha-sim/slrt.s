@@ -13,7 +13,7 @@ _start:
 	# we want to create t_main:
 	# main has no shareds, take 1 global = PV
 	allocate $l0, 1, 0, 0, 0
-	
+
 	ldq $l1, t_main($l29) !literal
 	crei $l0, 0($l1)
 	swch

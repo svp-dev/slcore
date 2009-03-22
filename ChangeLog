@@ -1,3 +1,28 @@
+2009-03-22  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
+	Faster (microthreaded) integer divide + improvements to demos.
+
+	* lib/mtalpha-sim/mtdiv.s: Add, courtesy of Mike Lankamp.
+	* lib/Makefile.am: Update accordingly.
+	
+	* include/svp/roman.slh,	
+	* lib/svplib/roman.sl: Implement "roman" as a actual thread
+	function instead of a macro.
+	
+	* lib/Makefile.am,
+	* demo/roman.sl: Update accordingly.
+
+	* demo/fibonacci.sl: Use "INT" instead of "number" for the
+	preprocessor macro, to avoid substitution in the output message.
+
+	* demo/answer.sl: Work around bug in printf (output of 64 vs. 32
+	bits integers).
+ 	
+	* demo/Makefile.am: Reinstate rules that create executables during
+	"make all", so that make outputs something to try out with "sgr".
+
+	* lib/mtalpha-sim/Makefile: Kill, as it was unused.
+	
 2009-03-20  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
 	More tests & improvements thanks to testing.	
