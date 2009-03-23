@@ -1,3 +1,19 @@
+2009-03-24  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+	
+	Fix "ppp" compiler thanks to testing. Improve FFT.
+	(now FFT works from source in simulator!)
+	
+	* bin/spp (pppalpha.lexer): Do not remove duplicate whitespace, as
+	it may be legitimate (e.g. in .ascii). Recognize FP branch
+	instructions.
+
+	* demo/fft.sl: Change algorithm, as previous algorithm was not
+	thread-safe. Convert FP numbers to integers before printing, to
+	work around bug in FP print function.	
+	* demo/fft_gentable.c: Update for new algorithm.
+
+	* lib/svplib/io.sl: Inline display of "nan", "+inf" and "-inf".
+	
 2009-03-23  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
 	Minor changes for FFT testing.

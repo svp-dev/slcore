@@ -29,6 +29,8 @@ sl_def(svp_io_puts, void,
 }
 sl_enddef
 
+#define _puts(S) do { char *p = (S); while(*p) __write1(*p++); } while(0)
+
 sl_def(svp_io_putf, void,
        sl_glfparm(double, gx),
        sl_glparm(unsigned, gprec),
@@ -38,9 +40,9 @@ sl_def(svp_io_putf, void,
   unsigned prec = sl_getp(gprec);
   const unsigned base = sl_getp(gbase);
 
-  if (unlikely(x != x)) sl_proccall(svp_io_puts, sl_glarg(const char*, s, "nan"));
-  else if (unlikely(x == 1e5000)) sl_proccall(svp_io_puts, sl_glarg(const char*, s, "+inf"));
-  else if (unlikely(x == -1e5000)) sl_proccall(svp_io_puts, sl_glarg(const char*, s, "-inf"));
+  if (unlikely(x != x)) _puts("nan");
+  else if (unlikely(x == 1e5000)) _puts("+inf");
+  else if (unlikely(x == -1e5000)) _puts("-inf");
   else {
       /* -- print the mantissa -- */
       if (x < 0.) { __write1('-'); x = -x; } else __write1('+');
@@ -49,7 +51,6 @@ sl_def(svp_io_putf, void,
       int exp = 0;
       while (x >= base) { x /= base; ++exp; }
       while (x && x < 1.0) { x *= base; --exp; }
-
 
       unsigned d = (unsigned)x;
       __write1(digits[d]);

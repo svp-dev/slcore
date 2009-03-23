@@ -9,95 +9,53 @@ m4_include(fft_table.slh)
 m4_define(RE, 0)
 m4_define(IM, 1)
 
-/* for (i = j; i < N; i += LE) fft3(...) */
-sl_def(fft3, void,
-       sl_glparm(cpx_t*, X),
-       sl_glparm(unsigned, LE2),
-       sl_glfparm(FT, Ure),
-       sl_glfparm(FT, Uim))
+sl_def(FFT_2, void, 
+       sl_glparm(cpx_t*, X), 
+       sl_glparm(unsigned, k))
 {
   sl_index(i);
+  unsigned   km1 = sl_getp(k) - 1;
+  unsigned   LE2 = 1 << km1;
+  unsigned   w   = i - ((i >> km1) * LE2);
+  unsigned   j   = 2 * (i - w) + w;
+  unsigned   ip  = j + LE2;
 
-  unsigned ip = i + sl_getp(LE2);
+  FT Ure, Uim, Tre, Tim;
+  Ure = sc_table[km1][i][RE];
+  Uim = sc_table[km1][i][IM];
 
   cpx_t *X = sl_getp(X);
-  FT re = X[ip][RE];
+  Tre = Ure * X[ip][RE] - Uim * X[ip][IM];
+  Tim = Uim * X[ip][RE] + Ure * X[ip][IM];
 
-  /* complex T = X[i] + X[ip] */
-  FT Tre = X[i][RE] + re;
-  FT Tim = X[i][IM] + X[ip][IM];
-
-  /* X[ip] = (X[i] - X[ip]) * U; */
-  X[ip][RE] = (X[i][RE] - re) * sl_getp(Ure) - (X[i][IM] - X[ip][IM]) * sl_getp(Uim);
-  X[ip][IM] = (X[i][IM] - X[ip][IM]) * sl_getp(Ure) + (X[i][RE] - re) * sl_getp(Uim);
-
-  /* X[i] = T */
-  X[i][RE] = Tre; 
-  X[i][IM] = Tim;
+  X[ip][RE] = X[j][RE] - Tre;
+  X[ip][IM] = X[j][IM] - Tim;
+  X[j] [RE] = X[j][RE] + Tre;
+  X[j] [IM] = X[j][IM] + Tim;
 }
 sl_enddef
 
-/* for (j = 0; j < LE2; j++) fft2(...) */
-sl_def(fft2, void,
-       sl_shfparm(FT, Ure), 
-       sl_shfparm(FT, Uim),
-       sl_glparm(cpx_t*, S),
+sl_def(FFT_1, void,
        sl_glparm(cpx_t*, X),
        sl_glparm(unsigned, N),
-       sl_glparm(unsigned, LE),
-       sl_glparm(unsigned, LE2))
-{
-  sl_index(j);
-
-  FT re = sl_getp(Ure);
-  FT im = sl_getp(Uim);
-  /* for (i = j; i < N; i += LE) ... */
-  sl_create(,,j, sl_getp(N), sl_getp(LE),,,
-	    fft3,
-	    sl_glarg(cpx_t*, X, sl_getp(X)),
-	    sl_glarg(unsigned, LE2, sl_getp(LE2)),
-	    sl_glfarg(FT, gUre, re),
-	    sl_glfarg(FT, gUim, im));
-  sl_sync();
-
-  /* U = U * S; */
-  cpx_t *S = sl_getp(S);
-  sl_setp(Ure, re * (*S)[RE] - im * (*S)[IM]);
-  sl_setp(Uim, im * (*S)[RE] + re * (*S)[IM]);
-}
-sl_enddef
-
-/* for (k = M; k > 0; k--) fft1(...) */
-sl_def(fft1, void,
-       sl_glparm(cpx_t*, X),
-       sl_glparm(unsigned, N))
+       sl_shparm(int, token))
 {
   sl_index(k);
 
-  unsigned LE = 1U << k;
-  unsigned LE2 = LE / 2U;
-
-  /* for (j = 0; j < LE2; j++) ... */
-  sl_create(,, 0, LE2,,,, 
-	    fft2,
-	    sl_shfarg(FT, Ure, 1.0),
-	    sl_shfarg(FT, Uim, 0.0),
-	    sl_glarg(cpx_t*, S, &sc_table[k]),
-	    sl_glarg(cpx_t*, X, sl_getp(X)),
-	    sl_glarg(unsigned, N, sl_getp(N)),
-	    sl_glarg(unsigned, gLE, LE),
-	    sl_glarg(unsigned, gLE2, LE2));
-
+  int t = sl_getp(token);
+  sl_create(,,0,sl_getp(N)/2,,,, FFT_2, 
+	    sl_glarg(cpx_t*, gX, sl_getp(X)), 
+	    sl_glarg(unsigned, gk, k));
   sl_sync();
-
+  sl_setp(token, t);
 }
 sl_enddef
 
 /* swap X[i] and X[j] if i < j */
-sl_def(fft_post_swap, void,
+sl_def(FFT_Swap, void,
+       sl_glparm(cpx_t*, X),
        sl_glparm(unsigned, i),
-       sl_glparm(unsigned, j),
-       sl_glparm(cpx_t*, X))
+       sl_glparm(unsigned, j))
 {
   if (sl_getp(i) < sl_getp(j)) {
     cpx_t *Xi = sl_getp(X) + sl_getp(i);
@@ -114,101 +72,92 @@ sl_def(fft_post_swap, void,
 }
 sl_enddef
 
-/* for (i = 0, j = 0; i < N - 1; i++) fft_post(...) */
-sl_def(fft_post, void,
-       sl_shparm(unsigned, j),
+sl_def(FFT_Reverse, void,
        sl_glparm(cpx_t*, X),
-       sl_glparm(unsigned, N2))
+       sl_glparm(unsigned, N),
+       sl_shparm(unsigned, j))
 {
   sl_index(i);
-
-  /* swap X[i] and X[j] */
-  sl_create(,,,,,,, fft_post_swap, 
+  unsigned t = sl_getp(j);
+  sl_create(,,,,,,, FFT_Swap, 
+	    sl_glarg(cpx_t*, gX, sl_getp(X)),
 	    sl_glarg(unsigned, gi, i),
-	    sl_glarg(unsigned, gj, sl_getp(j)),
-	    sl_glarg(cpx_t*, gX, sl_getp(X)));
-  sl_sync();
+	    sl_glarg(unsigned, gt, t));
+  sl_sync(); // FIXME: sync belongs after the loop below.
 
-  unsigned k = sl_getp(N2);
-  unsigned j = sl_getp(j);
-  while (k - 1 < j)
+  unsigned k = sl_getp(N) / 2;
+  while (k <= t) 
     {
-      j = j - k;
+      t = t - k;
       k = k / 2;
     }
-  sl_setp(j, j + k);
+  sl_setp(j, t + k);
 }
 sl_enddef
 
-sl_def(fft, void, 
+sl_def(FFT, void,
        sl_glparm(cpx_t*, X),
        sl_glparm(unsigned, M))
 {
   unsigned N = 1 << sl_getp(M);
-  {
-    /* for (k = M; k > 0; k--) ... */
-    sl_create(,,sl_getp(M),0,-1,,,
-	      fft1, 
-	      sl_glarg(cpx_t*, gX, sl_getp(X)), 
-	      sl_glarg(unsigned, gN, N));
-    sl_sync();
-  }
-  {
-    /* for (i = 0, j = 0; i < N - 1; i++) ... */
-    sl_create(,,0,N-1,,,,
-	      fft_post, 
-	      sl_sharg(unsigned, j, 0), 
-	      sl_glarg(cpx_t*, gX, sl_getp(X)),
-	      sl_glarg(unsigned, N2, N/2));
-    sl_sync();
-  }
+
+  sl_create(,,,N-1,,,, FFT_Reverse,
+	    sl_glarg(cpx_t*, gX, sl_getp(X)),
+	    sl_glarg(unsigned, gN, N),
+	    sl_sharg(unsigned, j, 0));
+  sl_sync();
+  
+  sl_create(,PLACE_LOCAL,1,sl_getp(M)+1,,,, FFT_1,
+	    sl_glarg(cpx_t*, gX2, sl_geta(gX)),
+	    sl_glarg(unsigned, gN2, sl_geta(gN)),
+	    sl_sharg(int, token, 0));
+  sl_sync(); 
 }
 sl_enddef
 
-sl_def(inv_fft1, void, sl_glparm(cpx_t*, X))
+sl_def(Conjugate, void, sl_glparm(cpx_t*, X))
 {
   sl_index(i);
-  cpx_t* X = sl_getp(X);
+  cpx_t *X = sl_getp(X);
+  
   X[i][IM] = -X[i][IM];
 }
 sl_enddef
 
-sl_def(inv_fft2, void, 
-       sl_glparm(cpx_t*, X), 
+sl_def(Scale, void, 
+       sl_glparm(cpx_t*, X),
        sl_glparm(unsigned, N))
 {
   sl_index(i);
-  cpx_t* X = sl_getp(X);
+  cpx_t *X = sl_getp(X);
+  
   X[i][RE] = X[i][RE] / sl_getp(N);
   X[i][IM] = -X[i][IM] / sl_getp(N);
 }
 sl_enddef
 
-
-sl_def(inv_fft, void, 
+sl_def(FFT_Inv, void,
        sl_glparm(cpx_t*, X),
        sl_glparm(unsigned, M))
 {
   unsigned N = 1 << sl_getp(M);
-  {
-    sl_create(,,0,N,,,, inv_fft1,
-	      sl_glarg(cpx_t*, gX, sl_getp(X)));
-    sl_sync();
-  }
-  {
-    sl_create(,,,,,,, fft, 
-	      sl_glarg(cpx_t*, gX, sl_getp(X)),
-	      sl_glarg(unsigned, gM, sl_getp(M)));
-    sl_sync();
-  }
-  {
-    sl_create(,,0,N,,,, inv_fft2,
-	      sl_glarg(cpx_t*, gX, sl_getp(X)),
-	      sl_glarg(unsigned, gN, N));
-    sl_sync();
-  }
+  
+  sl_create(,,,N,,,, Conjugate, 
+	    sl_glarg(cpx_t*, gX, sl_getp(X)));
+  sl_sync();
+
+  sl_create(,,,,,,, FFT, 
+	    sl_glarg(cpx_t*, gX2, sl_geta(gX)), 
+	    sl_glarg(unsigned, gM, sl_getp(M)));
+  sl_sync();
+
+  sl_create(,,,N,,,, Scale, 
+	    sl_glarg(cpx_t*, gX3, sl_geta(gX2)),
+	    sl_glarg(unsigned, gN, N));
+  sl_sync();
 }
 sl_enddef
+
 
 m4_define(M_INIT, 4)
 m4_define(N_INIT, (1 << M_INIT))
@@ -239,11 +188,17 @@ sl_def(print, void, sl_shparm(int, guard))
 {
   sl_index(i);
   int g = sl_getp(guard);
-
+  /*
   printf("X = %f %f\tY = %f %f\tZ = %f %f\n",
 	 X[i][RE], X[i][IM],
 	 Y[i][RE], Y[i][IM],
 	 Z[i][RE], Z[i][IM]);
+  */
+  long long C = 10000;
+  printf("|  %d %d  |  %d %d  |  %d %d  |\n",
+	 (long long)(C*X[i][RE]), (long long)(C*X[i][IM]),
+	 (long long)(C*Y[i][RE]), (long long)(C*Y[i][IM]),
+	 (long long)(C*Z[i][RE]), (long long)(C*Z[i][IM]));
 
   sl_setp(guard, g);
 }
@@ -254,15 +209,16 @@ sl_def(t_main, void)
   sl_create(,,,N_INIT,,,, fft_init);
   sl_sync();
 
-  sl_create(,,,,,,, fft, sl_glarg(cpx_t*, gX, Y), sl_glarg(unsigned, gM, M_INIT));
+  sl_create(,,,,,,, FFT, sl_glarg(cpx_t*, gX, Y), sl_glarg(unsigned, gM, M_INIT));
   sl_sync(); 
 
   sl_create(,,,N_INIT,,,, copy_y_z);
   sl_sync();
 
-  sl_create(,,,,,,, inv_fft, sl_glarg(cpx_t*, gZ, Z), sl_glarg(unsigned, gM2, M_INIT));
+  sl_create(,,,,,,, FFT_Inv, sl_glarg(cpx_t*, gZ, Z), sl_glarg(unsigned, gM2, sl_geta(gM)));
   sl_sync();
 
+  puts("| int(X) * 10k | int(Y) * 10k | int(Z) * 10k |\n");
   sl_create(,,,N_INIT,,,, print, sl_sharg(int, guard, 0));
   sl_sync();
 }

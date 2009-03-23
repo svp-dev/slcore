@@ -1,11 +1,12 @@
 #include <math.h>
 #include <stdio.h>
+#include <assert.h>
 
 // #define PI 3.1415926535897932384626433832795
 #define PI 0x3.243F6A8885A308D313198A2E03707344A4093822299F31D008p0L
 
-#define INTEGER unsigned long long
-#define PRINTF_MOD1 "ll" /* integer modifier */
+#define INTEGER unsigned
+#define PRINTF_MOD1 "" /* integer modifier */
 
 #define FLOATTYPE long double
 #define SIN sinl
@@ -15,19 +16,34 @@
 
 int main(void) {
 
-  unsigned long long k;
+  INTEGER k, i, w, w2, LE2;
+  INTEGER M = 8, N = 1 << M;
 
-  printf("FT sc_table[][2] = { { /*k=0*/ 0, 0 },\n"); 
-  for (k = 1; k < 37; ++k) {
-    INTEGER LE2    = 1ULL << (k - 1);
-    FLOATTYPE d0 = (FLOATTYPE)(PI / LE2);
-    printf("{ /* k=%" PRINTF_MOD1 "d, LE2=%" PRINTF_MOD1 "d, PI/LE2=%" PRINTF_MOD2 "a:", k, LE2, d0);
-    FLOATTYPE d1 = COS(d0);
-    FLOATTYPE d2 = -SIN(d0);
-    printf(" cos(PI/LE2), -sin(PI/LE2) =\n"
-	   "\t%" PRINTF_MOD2 "e,\t%" PRINTF_MOD2 "e */\n"
-	   "\t%" PRINTF_MOD2 "a" LITTERAL_SUFFIX ",\t%" PRINTF_MOD2 "a" LITTERAL_SUFFIX " },\n", 
-	   d1, d2, d1, d2);
+  FLOATTYPE sc_table[M][N/2][2];
+
+  for (k = 1; k < M; ++k) {
+    for (i = 0; i < N/2; ++i) {
+      LE2    = 1 << (k - 1);
+      w      = i % LE2;
+      FLOATTYPE d0 = (FLOATTYPE)w * (FLOATTYPE)(PI / LE2);
+      FLOATTYPE d1 = COS(d0);
+      FLOATTYPE d2 = -SIN(d0);
+      sc_table[k-1][i][0] = d1;
+      sc_table[k-1][i][1] = d2;
+    }
+  }
+
+  printf("FT sc_table[/*0..M-1*/ %d][/*0..N/2-1*/ %d][2] = { \n", M, N/2-1);
+  for (k = 1; k < M; ++k) {
+    printf(" { /* k = %d: */\n", k);
+    for (i = 0; i < N/2-1; ++i) {
+      printf("  { /* i = %d: */ %" PRINTF_MOD2 "a" LITTERAL_SUFFIX ","
+	     "\t%" PRINTF_MOD2 "a" LITTERAL_SUFFIX " }, \n", 
+	     i, 
+	     sc_table[k-1][i][0],
+	     sc_table[k-1][i][1]);
+    }
+    printf(" },\n");
   }
   printf("};\n");
 

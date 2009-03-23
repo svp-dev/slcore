@@ -685,11 +685,12 @@ class pppalpha(object):
       """
       Split code from comments, produce a generator of (code, comment).
       """
-      w = re.compile(r'\s+')
+      #w = re.compile(r'\s+')
       r = re.compile(r'([^#]*)((#.*)?)')
       for line in lines:
-         wline = w.sub(' ', line)
-         m = r.match(wline)
+         #wline = w.sub(' ', line)
+         #m = r.match(wline)
+         m = r.match(line)
          asm = m.group(1).strip()
          comment = m.group(2)
          if comment is None:
@@ -1218,7 +1219,7 @@ class pppalpha(object):
             
 
    def addswchbr(self, fundata, items):
-      rebr = re.compile(r'(br|beq|bne|bge|ble|bgt|blt)\s')
+      rebr = re.compile(r'f?(br|beq|bne|bge|ble|bgt|blt)\s')
       for (type, content, comment) in items:
          yield (type, content, comment)
          if rebr.match(content) is not None:
