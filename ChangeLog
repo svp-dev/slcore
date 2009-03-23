@@ -1,5 +1,15 @@
 2009-03-23  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	Code cleanup. Fix "make distcheck"
+	
+	* bin/cce.in: Revert use of $CC (test argument was left by mistake
+	in previous commit). Only list env.vars that have an effect.
+
+	* demo/Makefile.am: Erase fft_table.slh during clean. Cleanup
+	makefile.
+
+2009-03-23  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	Add FFT example code. Fixes thanks to testing.
 	
 	* demo/fft.sl,
@@ -13,7 +23,6 @@
 	beginning of the function.
 
 	* bin/slc.in: Fix use of mktemp (use template with X's).
-
 
 2009-03-23  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 

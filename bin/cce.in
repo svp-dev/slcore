@@ -221,7 +221,7 @@ case $slc_dialect-$slc_arch in
     *-host)
 	case $slc_complang in
 	    cpp) slc_compiler=$CXX ;;
-	    c)   slc_compiler="$CC -g" ;;
+	    c)   slc_compiler="$CC" ;;
 	    utc) die "no compiler for $dialect-$arch" ;;
 	esac
 	slc_filter=cp
