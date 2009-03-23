@@ -8,7 +8,7 @@
 include $(srcdir)/alltests.mk
 EXTRA_DIST = $(TESTSUITE)
 
-if USE_TESTSUITE
+if ENABLE_TESTSUITE
 TESTS = $(TESTSUITE)
 endif
 

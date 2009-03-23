@@ -1,11 +1,12 @@
-#! @SBASH@
+#! @BASH@
 # $Id$
 #
-copyright="Copyright (C) 2009 the CSA group - The SL project.."
+copyright="Copyright (C) 2009 the CSA group - The SL project."
 # All rights reserved.
 
 set -e
-libdir=@srclibdir@
+slc_libdir=${SLC_LIBDIR:-@slc_libdir@}
+
 timestamp=$(echo '$Date$'|cut -d' ' -f2)
 version=1
 
@@ -118,10 +119,18 @@ if test -z "$runner"; then
 fi
 
 # check it
-if ! test -r "$libdir/r-$runner"; then
-    echo "$0: unknown runner: $runner" >&2
+runner_script=
+IFS=:
+for l in $slc_libdir; do
+  if test -r "$l/r-$runner"; then
+     runner_script=$l/r-$runner
+     break
+  fi
+done
+if test -z "$runner_script"; then
+    echo "$0: $runner: cannot find runner script" >&2
     exit 1
 fi
 
-exec @SBASH@ "$libdir/r-$runner" "$program" "$@"
+exec @BASH@ "$runner_script" "$program" "$@"
 

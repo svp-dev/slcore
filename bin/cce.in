@@ -1,17 +1,29 @@
-#! @SBASH@
+#! @BASH@
 # $Id$
 #
-copyright="Copyright (C) 2009 The SL project.."
+copyright="Copyright (C) 2009 The SL project."
 # All rights reserved.
 
 set -e
-root=@bindir@
-srcincdir=@srcincdir@
-incdir=@incdir@
-pkgdatadir=@pkgdatadir@
-srcdatadir=@srcdatadir@
-pkglibdir=@pkglibdir@
-python=@python@
+
+python=${PYTHON:-@python@}
+
+slc_libdir=${SLC_LIBDIR:-@slc_libdir@}
+slc_datadir=${SLC_DATADIR:-@slc_datadir@}
+slc_incdir=${SLC_INCDIR:-@slc_incdir@}
+spp_helper=${SPP:-@spp_helper@}
+scu_helper=${SCU:-@scu_helper@}
+
+CC=${CC:-@CC@}
+CXX=${CXX:-@CXX@}
+CC_ALPHA=${CC_ALPHA:-@CC_ALPHA@}
+UTCC_MTALPHA=${UTCC_ALPHA:-@UTCC_MTALPHA@}
+CC_MTALPHA=$UTCC_MTALPHA
+
+CC_SPARC=${CC_SPARC:-@CC_SPARC@}
+UTCC_MTSPARC=${UTCC_SPARC:-@UTCC_MTSPARC@}
+CC_MTSPARC=$UTCC_MTSPARC
+
 timestamp=$(echo '$Date$'|cut -d' ' -f2)
 version=1
 
@@ -165,36 +177,65 @@ case $slc_dialect-$slc_arch in
     utc*|seqc*|ptl*) slc_transbase=$slc_dialect	;;
     ppp-*)     slc_transbase=ppp$basearch ;;
 esac
-slc_trans=$srcdatadir/t-$slc_transbase
-if test -r "$srcincdir/slc_m4sugar.m4"; then
-  slc_tflags="$slc_tflags $srcincdir/slc_m4sugar.m4"
-else
-  slc_tflags="$slc_tflags $incdir/slc_m4sugar.m4"
+
+save_IFS=$IFS
+IFS=:
+found=
+for d in $slc_datadir; do
+  if test -d "$d/t-$slc_transbase"; then
+    found="$d/t-$slc_transbase"
+    break
+  fi
+done
+if test -z "$found"; then
+   die "could not find t-$slc_transbase in $slc_datadir"
 fi
-slc_tflags="$slc_tflags $srcincdir/slc.m4 -I$slc_trans -I$incdir -I$srcincdir -DPYTHON=$python -DSPP_PY=$root/spp"
-slc_ppflags="$slc_ppflags -I$slc_trans/include -I$incdir -I$srcincdir"
+slc_trans=$found
+slc_tflags="$slc_tflags -I$slc_trans"
+slc_ppflags="$slc_ppflags -I$slc_trans/include"
+
+for m4_preinc in slc_m4sugar.m4 slc.m4; do
+   found=
+   for d in $slc_incdir; do
+     if test -r "$d/$m4_preinc"; then
+       found="$d/$m4_preinc"
+       break
+     fi
+   done
+   if test -z "$found"; then
+      die "could not find $m4_preinc in $slc_incdir"
+   fi
+   slc_tflags="$slc_tflags $found"
+done
+for d in $slc_incdir; do
+  slc_tflags="$slc_tflags -I$d"
+  slc_ppflags="$slc_ppflags -I$d"
+done
+IFS=$save_IFS
+
+slc_tflags="$slc_tflags -DPYTHON=$python -DSPP_PY=$spp_helper"
 
 # Compiler selection
 case $slc_dialect-$slc_arch in
-    *-x) slc_compiler="$root/scu compile" ;;
+    *-x) slc_compiler="$scu_helper compile" ;;
     *-host)
 	case $slc_complang in
-	    cpp) slc_compiler=${CXX:-g++} ;;
-	    c)   slc_compiler=${CC:-gcc} ;;
+	    cpp) slc_compiler=$CXX ;;
+	    c)   slc_compiler=$CC ;;
 	    utc) die "no compiler for $dialect-$arch" ;;
 	esac
 	slc_filter=cp
 	;;
     ppp-*)
-        archcomp=$(eval "echo \${CC_$basearchvar:-$basearch-linux-gnu-gcc}")
-	slc_compiler="$python $root/spp $slc_transbase compile $slc_arch $archcomp"
-	slc_filter="$python $root/spp $slc_transbase filter $slc_arch $archcomp"
+        archcomp=$(eval "echo \${CC_$basearchvar:-$scu_helper}")
+	slc_compiler="$python $spp_helper $slc_transbase compile $slc_arch $archcomp"
+	slc_filter="$python $spp_helper $slc_transbase filter $slc_arch $archcomp"
 	;;
     *-*)
 	case $slc_complang in
-	    cpp) slc_compiler=$(eval "echo \${CXX_$basearchvar:-$basearch-linux-gnu-g++}") ;;
-	    c)   slc_compiler=$(eval "echo \${CC_$basearchvar:-$basearch-linux-gnu-gcc} -std=gnu99") ;;
-	    utc) slc_compiler=$(eval "echo \${UTCC_$archvar:-$slc_arch-linux-gnu-gcc} -std=utc") ;;
+	    cpp) slc_compiler=$(eval "echo \${CXX_$basearchvar:-$scu_helper}") ;;
+	    c)   slc_compiler=$(eval "echo \${CC_$basearchvar:-$scu_helper} -std=gnu99") ;;
+	    utc) slc_compiler=$(eval "echo \${UTCC_$archvar:-$scu_helper} -std=utc") ;;
 	esac
 	slc_filter=cp
 	;;
@@ -206,11 +247,11 @@ slc_cflags="$slc_cflags -Os"
 
 # Assembler and linker selection
 case $slc_complang-$slc_arch in
-    *-x)      slc_aslink="$root/scu assemble/link" ;;
+    *-x)      slc_aslink="$scu_helper assemble/link" ;;
     cpp-host) slc_aslink=${CXX:-g++} ;;
     *-host)   slc_aslink=${CC:-gcc} ;;
-    cpp-*)    slc_aslink=$(eval "echo \${CXX_$archvar:-$slc_arch-linux-gnu-g++}") ;;
-    *-*)      slc_aslink=$(eval "echo \${CC_$archvar:-$slc_arch-linux-gnu-gcc}") ;;
+    cpp-*)    slc_aslink=$(eval "echo \${CXX_$archvar:-$scu_helper}") ;;
+    *-*)      slc_aslink=$(eval "echo \${CC_$archvar:-$scu_helper}") ;;
 esac
 
 # Extra defines
@@ -234,11 +275,28 @@ esac
 case $slc_os in
     x) ;;
     *) 
-	incdir1=$pkgdatadir/$slc_arch-$slc_os/include
-	incdir2=$srcdatadir/$slc_arch-$slc_os/include
-	osdir=$pkglibdir/$slc_arch-$slc_os
-	slc_ppflags="$slc_ppflags -I$incdir1 -I$incdir2"
-	slc_ldflags="$slc_ldflags -L$osdir -lslos $osdir/slrt.o"
+        save_IFS=$IFS
+        IFS=:
+        for d in $slc_datadir; do
+            slc_ppflags="$slc_ppflags -I$d/$slc_arch-$slc_os/include"
+            slc_ldflags="$slc_ldflags -L$d/$slc_arch-$slc_os"
+        done
+        slc_ldflags="$slc_ldflags -lslos"
+
+        found=
+        for d in $slc_datadir; do
+  	    osdir=$d/$slc_arch-$slc_os
+            if test -r "$osdir/slrt.o"; then
+              found=$osdir/slrt.o
+              break
+            fi
+        done
+	if test -z "$found"; then
+           echo "$0: warning: slrt.o not found for $slc_arch-$slc_os in $slc_datadir" >&2
+        fi
+        slc_ldflags="$slc_ldflags $found"
+         
+        IFS=$save_IFS
 	;;
 esac
 

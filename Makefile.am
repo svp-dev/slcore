@@ -66,3 +66,14 @@ include/slc_m4sforeach.m4: $(srcdir)/include/m4sugar_foreach.m4 $(srcdir)/includ
 	$(SED) -f $(srcdir)/include/m4sugar_transform.sed $< >$@.tmp
 	mv $@.tmp $@
 endif
+
+include $(srcdir)/tests.mk
+show-vars:
+	@echo
+	@echo "### Set the following to work from the source directory:"
+	@echo
+	@for n in $(SLC_VARS); do \
+	   echo "export $$n"; \
+	done
+
+ACLOCAL_AMFLAGS = -I m4

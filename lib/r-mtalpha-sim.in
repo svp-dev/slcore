@@ -1,0 +1,9 @@
+#! /bin/sh
+# $Id$
+MGSIM_ALPHA=${MGSIM_ALPHA:-@MGSIM_ALPHA@}
+
+if ! "$MGSIM_ALPHA" --help >/dev/null 2>&1; then
+  echo "Can't find simulator? Please set env. var. MGSIM_ALPHA to simulator executable." >&2
+  exit 1
+fi
+exec $MGSIM_ALPHA $SIMARGS -t "$@"

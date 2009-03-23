@@ -1,0 +1,9 @@
+#! /bin/sh
+# $Id$
+MGSIM_SPARC=${MGSIM_SPARC:-@MGSIM_SPARC@}
+
+if ! "$MGSIM_SPARC" --help >/dev/null 2>&1; then
+  echo "Can't find simulator? Please set env. var. MGSIM_SPARC to simulator executable." >&2
+  exit 1
+fi
+exec $MGSIM_SPARC $SIMARGS -t "$@"

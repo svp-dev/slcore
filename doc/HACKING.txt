@@ -64,11 +64,12 @@ The ``slc`` and ``sgr`` scripts are generated during
 installation directory. This means they cannot be used "as-is" before
 ``make install`` is run.
 
-This may be a hassle during development (would require to re-run ``make
-install`` after each change). To balance this, a "local" version of
-all the derived scripts is generated as well, with the extension
-``.local``. These can be run from the build directory without the need
-for ``make install``. For example: ``slc.local``, ``sgr.local``, etc.
+This may be a hassle during development (would require to re-run
+``make install`` after each change). To balance this, it is possible
+to set environment variables to indicate that the scripts should find
+the data in the source directory. Use ``make show-vars`` for example
+values.
+
 
 
 Committing work

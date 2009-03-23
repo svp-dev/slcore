@@ -1,13 +1,12 @@
-#! /bin/bash
+#! @BASH@
 # $Id$
 #
 copyright="Copyright (C) 2009 The SL project.."
 # All rights reserved.
 
 set -e
-cce_helper=@cce_helper@
+cce_helper=${CCE:-@cce_helper@}
 basename=$(basename "$0")
-incdir=@incdir@
 
 # Interface version number
 version=2

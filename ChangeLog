@@ -1,3 +1,38 @@
+2009-03-23  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
+	Improve use of Autotools & code cleanup.
+	
+	* m4/m4.m4: Add.
+	* configure.ac: Check for more programs. In particular, the MT
+	utilities are checked explicitly. Require GNU m4. Rename
+	USE_TESTSUITE into ENABLE_TESTSUITE. Use BASH instead of SBASH.
+
+	* bin/Makefile.am,
+	* bin/cce.in,
+	* bin/slc.in,	
+	* bin/sgr.in: Update accordingly. Simplify. Now the scripts use
+	the values supplied by Autoconf for defaults. (They can still be
+	overriden via variables).
+
+	* tests.mk: Set environment variables before calling `slc' and
+	`slt'. The ".local" scripts are not needed any more.
+
+	* demo/Makefile.am,
+	* tests/Makefile.am: Update accordingly.
+
+	* lib/Makefile.am: Split into...
+	* lib/mtalpha.mk: this,
+	* lib/seqc.mk: this,
+	* lib/ptl.mk: and this.
+
+	* lib/r-mtalpha-sim: Rename to...
+	* lib/r-mtalpha-sim.in: this. Take location of simulator from Autoconf.
+	* lib/r-mtsparc-sim.in: Duplicate feature from r-mtalpha-sim.
+	* configure.ac: Update accordingly.
+
+	* Makefile.am: Add rule "show-vars" for convenience.
+	* doc/HACKING.txt: Document show-vars.
+
 2009-03-22  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
 	Fix definition of places for the simulator.
