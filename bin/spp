@@ -1119,7 +1119,9 @@ class pppalpha(object):
           ['$d%d' % x for x in xrange(self.iargregs / 2)] + \
           ['$df%d' % x for x in xrange(self.fargregs / 2)]
          
-      maybell = list(allregs)
+      # initially exlude index and sp reg
+      maybell = [x for x in list(allregs) if x not in ["$l0", "$l1"]] 
+
       for (type, content, comment) in items:
          yield (type, content, comment)
          if type == 'label':

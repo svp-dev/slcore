@@ -5,13 +5,21 @@
 # All rights reserved.
 # 
 
-DEMOS = 10threads.sl answer.sl fibonacci.sl helloworld.sl roman.sl # test.sl
-EXTRA_DIST = $(DEMOS)
+DEMOS = 10threads.sl answer.sl fibonacci.sl helloworld.sl roman.sl 
+EXTRA_DEMOS = fft.sl
+
+noinst_PROGRAMS = fft_gentable
+fft_gentable_SOURCES = fft_gentable.c
+
+BUILT_SOURCES = fft_table.slh
+
+ALL_DEMOS = $(DEMOS) $(EXTRA_DEMOS)
+EXTRA_DIST = $(ALL_DEMOS)
 
 TESTS = $(DEMOS)
 include $(top_srcdir)/tests.mk
 
-noinst_DATA = $(DEMOS:.sl=.mtalpha-x) $(DEMOS:.sl=.ptl-x) $(DEMOS:.sl=.seqc-x)
+noinst_DATA = $(ALL_DEMOS:.sl=.mtalpha-x) $(ALL_DEMOS:.sl=.ptl-x) $(ALL_DEMOS:.sl=.seqc-x)
 CLEANFILES = $(noinst_DATA)
 
 SUFFIXES = .sl .mtalpha-x
@@ -24,4 +32,7 @@ SUFFIXES = .sl .mtalpha-x
 
 .sl.seqc-x:
 	$(SLC) -b seqc -o $@ $<
+
+fft_table.slh: fft_gentable$(EXEEXT)
+	./fft_gentable$(EXEEXT) >$@
 

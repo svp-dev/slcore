@@ -46,8 +46,8 @@ Options:
 
 Environment variables:
   CC CXX
-  CC_ALPHA CC_MTALPHA UTCC_MTALPHA
-  CC_SPARC CC_MTSPARC UTCC_MTSPARC  
+  CC_ALPHA UTCC_MTALPHA
+  CC_SPARC UTCC_MTSPARC  
 
 Examples:
 
@@ -221,7 +221,7 @@ case $slc_dialect-$slc_arch in
     *-host)
 	case $slc_complang in
 	    cpp) slc_compiler=$CXX ;;
-	    c)   slc_compiler=$CC ;;
+	    c)   slc_compiler="$CC -g" ;;
 	    utc) die "no compiler for $dialect-$arch" ;;
 	esac
 	slc_filter=cp

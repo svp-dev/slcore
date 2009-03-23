@@ -430,7 +430,7 @@ if test -n "$tmpdir"; then
 	die "$tmpdir: cannot write to directory"
     fi
 else
-    tmpdir=$(mktemp -d -t slc)
+    tmpdir=$(mktemp -d -t slc.XXXXXXXX)
     tempdirs=$tmpdir
 fi
 

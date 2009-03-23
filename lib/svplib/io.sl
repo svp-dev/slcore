@@ -42,13 +42,14 @@ sl_def(svp_io_putf, void,
   else if (unlikely(x == 1e5000)) sl_proccall(svp_io_puts, sl_glarg(const char*, s, "+inf"));
   else if (unlikely(x == -1e5000)) sl_proccall(svp_io_puts, sl_glarg(const char*, s, "-inf"));
   else {
+      /* -- print the mantissa -- */
+      if (x < 0.) { __write1('-'); x = -x; } else __write1('+');
+
       /* -- find exponent and normalize -- */
       int exp = 0;
       while (x >= base) { x /= base; ++exp; }
-      while (x < 1.0) { x *= base; --exp; }
+      while (x && x < 1.0) { x *= base; --exp; }
 
-      /* -- print the mantissa -- */
-      if (x < 0.) { __write1('-'); x = -x; }
 
       unsigned d = (unsigned)x;
       __write1(digits[d]);
@@ -63,7 +64,7 @@ sl_def(svp_io_putf, void,
 
       /* -- print the exponent -- */
       __write1('E');
-      if (exp < 0) { __write1('-'); exp = -exp; }
+      if (exp < 0) { __write1('-'); exp = -exp; } else __write1('+');
       unsigned uexp = exp;
       if (uexp < base)
 	__write1(digits[uexp]);

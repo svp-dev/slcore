@@ -1,5 +1,22 @@
 2009-03-23  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	Add FFT example code. Fixes thanks to testing.
+	
+	* demo/fft.sl,
+	* demo/fft_gentable.c: Add new demo program.
+	* demo/Makefile.am: Update accordingly.
+
+	* lib/svplib/io.sl: Fix display of FP numbers.
+	
+	* bin/spp (pppalpha.addswchll): Avoid adding "swch" on
+	instructions that use the index/tls register just after the
+	beginning of the function.
+
+	* bin/slc.in: Fix use of mktemp (use template with X's).
+
+
+2009-03-23  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	Improve use of Autotools & code cleanup.
 	
 	* m4/m4.m4: Add.
