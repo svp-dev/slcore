@@ -1,5 +1,12 @@
 2009-03-23  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	Minor changes for FFT testing.
+	
+	* demo/Makefile.am: Ship fft_table.slh with the distribution.
+	* demo/fft_gentable.c: Make code a bit more generic to ease testing.
+
+2009-03-23  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	Code cleanup. Fix "make distcheck"
 	
 	* bin/cce.in: Revert use of $CC (test argument was left by mistake
