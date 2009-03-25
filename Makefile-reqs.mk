@@ -28,7 +28,10 @@ all: \
      $(PREFIX)/bin/alpha-linux-gnu-gcc \
      $(PREFIX)/bin/mtalpha-linux-gnu-as \
      $(PREFIX)/bin/mgsim-alpha \
-     $(PREFIX)/bin/mtalpha-linux-gnu-gcc
+     $(PREFIX)/bin/mtalpha-linux-gnu-gcc \
+     $(PREFIX)/bin/sparc-leon-linux-as \
+     $(PREFIX)/bin/mtsparc-leon-linux-as \
+     $(PREFIX)/bin/mgsim-sparc
 	@echo
 	@echo "*** All dependencies are now installed. ***"
 	@echo
@@ -51,6 +54,14 @@ $(PREFIX)/bin/alpha-linux-gnu-as: $(SOURCES)/binutils/download_done
 	   $(MAKE) $(MAKE_FLAGS) && \
 	   $(MAKE) install)
 
+$(PREFIX)/bin/sparc-leon-linux-as: $(SOURCES)/binutils/download_done
+	mkdir -p $(BUILD)/binutils-sparc
+	(SRC=$$PWD/$(SOURCES)/binutils; cd $(BUILD)/binutils-sparc && \
+	   $$SRC/configure --target=sparc-leon-linux \
+	                   --prefix=$(PREFIX) && \
+	   $(MAKE) $(MAKE_FLAGS) && \
+	   $(MAKE) install)
+
 $(PREFIX)/bin/mtalpha-linux-gnu-as: $(SOURCES)/binutils/download_done
 	mkdir -p $(BUILD)/binutils-mtalpha
 	(SRC=$$PWD/$(SOURCES)/binutils; cd $(BUILD)/binutils-mtalpha && \
@@ -58,6 +69,15 @@ $(PREFIX)/bin/mtalpha-linux-gnu-as: $(SOURCES)/binutils/download_done
 	                   --prefix=$(PREFIX) && \
 	   $(MAKE) $(MAKE_FLAGS) && \
            $(MAKE) install)
+
+$(PREFIX)/bin/mtsparc-leon-linux-as: $(SOURCES)/binutils/download_done
+	mkdir -p $(BUILD)/binutils-mtsparc
+	(SRC=$$PWD/$(SOURCES)/binutils; cd $(BUILD)/binutils-mtsparc && \
+	   $$SRC/configure --target=mtsparc-leon-linux \
+	                   --prefix=$(PREFIX) && \
+	   $(MAKE) $(MAKE_FLAGS) && \
+           $(MAKE) install)
+
 
 ##### muTC core compiler #####
 

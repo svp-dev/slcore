@@ -204,6 +204,9 @@ Environment variables:
                  directory for each implementation instead of a
                  subdirectory in the program's source directory.
 
+  TEXT_ONLY      If set and not empty, use plain text messages instead
+                 of colored/positioned characters on the console.
+
 Diagnostics:
   0              The test succeeded.
 
@@ -293,12 +296,23 @@ check_status() {
 }
 
 place_chars() {
-  local offset color chars str
+  local offset color chars str nicemsg
   offset=$1
   color=$2
   chars=$3
-  str=$(printf '\r\033[%sC\033[%sm%s\e[0m' $offset $color "$chars")
-  printf "%s" "$str"
+  if test -n "$TEXT_ONLY"; then
+      case $color in
+	  32) nicemsg=good ;;
+	  33) nicemsg=xfail ;;
+	  31) nicemsg=bad ;;
+	  37) nicemsg=skip ;;
+	  *) nicemsg="???" ;;
+      esac
+      echo "$testsrc: $outdir: $impl1: $chars ($nicemsg)"
+  else
+      str=$(printf '\r\033[%sC\033[%sm%s\e[0m' $offset $color "$chars")
+      printf "%s" "$str"
+  fi
 }
 
 report_compile() {
@@ -484,27 +498,29 @@ do_preptest() {
 }
 
 
-# find terminal width and squeeze first
-# column as needed
-if stty size >/dev/null 2>&1; then
-  COLUMNS=$(stty size|cut -d' ' -f2)
+if test -z "$TEXT_ONLY"; then
+    # find terminal width and squeeze first
+    # column as needed
+    if stty size >/dev/null 2>&1; then
+	COLUMNS=$(stty size|cut -d' ' -f2)
+    fi
+    COLUMNS=${COLUMNS:-80}
+    nrimpl=$#
+    nrcols=$(expr \( $nrimpl + 1 \) \* 5)
+    remainder=$(expr $COLUMNS - $nrcols - 5)
+    if test $remainder -lt 20; then remainder=20; fi
+    name=$testsrc
+    namelen=$(echo "$name"|wc -c)
+    if test $namelen -gt $remainder; then
+	name=$(echo "$name"|sed -e 's,\([0-9]_\)[^/]*,\1*,g')
+	namelen=$(echo "$name"|wc -c)
+	rem=$(expr $remainder - 3)
+	if test $namelen -gt $rem; then
+	    name=$(echo "$name"|sed -e 's/^.*\(.\{'$rem'\}\)$/...\1/g')
+	fi
+    fi
+    printf "%-${remainder}s" "$name"
 fi
-COLUMNS=${COLUMNS:-80}
-nrimpl=$#
-nrcols=$(expr \( $nrimpl + 1 \) \* 5)
-remainder=$(expr $COLUMNS - $nrcols - 5)
-if test $remainder -lt 20; then remainder=20; fi
-name=$testsrc
-namelen=$(echo "$name"|wc -c)
-if test $namelen -gt $remainder; then
-  name=$(echo "$name"|sed -e 's,\([0-9]_\)[^/]*,\1*,g')
-  namelen=$(echo "$name"|wc -c)
-  rem=$(expr $remainder - 3)
-  if test $namelen -gt $rem; then
-     name=$(echo "$name"|sed -e 's/^.*\(.\{'$rem'\}\)$/...\1/g')
-  fi
-fi
-printf "%-${remainder}s" "$name"
 
 # start testing
 counter=0
@@ -517,7 +533,18 @@ bye() {
   signalled=1
 }
 
-offset=$remainder
+check_proc() {
+    local x
+    x=$1
+    if test $signalled = 1; then 
+	echo
+	exit $x
+    elif test $x != 0; then
+	fail=1
+    fi
+}
+
+offset=${remainder:-0}
 fail=0
 # Start with first impl, need to wait for it
 # since output will be used as reference:
@@ -530,12 +557,7 @@ set +e
 wait $towait
 x=$?
 set -e
-if test $signalled = 1; then 
-    echo
-    exit $x
-elif test $x != 0; then
-    fail=1
-fi
+check_proc $x
 
 # Perform other tests asynchronously
 towait=
@@ -553,22 +575,25 @@ for w in $towait; do
     wait $w
     x=$?
     set -e
-    if test $signalled = 1; then
-        echo
-        exit $x
-    elif test $x != 0; then
-	fail=1
-    fi
+    check_proc $x
 done
 
-offset=$(expr $offset + 5)
-if test $fail = 0; then
-  place_chars $offset 37 "\o/"
+if test -z "$TEXT_ONLY"; then
+    offset=$(expr $offset + 5)
+    if test $fail = 0; then
+	place_chars $offset 37 "\o/"
+    else
+	place_chars $offset 31 ":("
+    fi
+    echo
 else
-  place_chars $offset 31 ":("
+    if test $fail = 0; then
+	echo "$testsrc: test(s) succeeded."
+    else
+	echo "$testsrc: test(s) failed."
+    fi
 fi
 
-echo
 if test $fail = 0 -a -z "$KEEP"; then
     rm "$refout"
     rmdir $(dirname "$refout") >/dev/null 2>&1 || true

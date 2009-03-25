@@ -1,5 +1,19 @@
 2009-03-25  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	Improve test script to support text only output (requested by
+	Simon Polstra in utcc).
+
+	Improve requirements "Makefile" to download sparc binutils (they
+	are not needed yet, this is an investment for later).
+	
+	* bin/slt: Add new output mode: sequential text only (no control
+	codes), enabled with a non-empty environment variable
+	TEXT_ONLY. Document it in --help.
+
+	* Makefile-reqs.mk: Add rules to fetch sparc/mtsparc binutils.
+
+2009-03-25  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	More bug fixes thanks to Andrei Matei.
 
 	* bin/cce.in: Use $slc_libdir to find the slrt and library, not
