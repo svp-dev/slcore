@@ -45,11 +45,12 @@ throughout this document.
    external sources. Green items are the actual requirements for the
    configuration & installation of ``slc``.
 
+   .. note:: Although the diagram indicates the Alpha/Linux base root
+      tree, this is not actually needed any more.
+
 Overall installation strategy:
 
 - phase 1:
-
-  - install the Linux/Alpha base root tree;
 
   - install the (modified) binutils for target ``mtalpha-linux-gnu``;
 
@@ -182,47 +183,9 @@ following programs:
    or the directory specified as installation root with ``--prefix``.
 
 While these requirements seem "simple" the µTC core compiler itself is
-non-trivial to install:
-
-1. it requires itself the MT-Alpha assembler
-   (``mtalpha-linux-gnu-as``) and linker (``mtalpha-linux-gnu-ld``);
-
-2. it requires a Linux/Alpha *base root tree* to generate the
-   cross-compiler.
-
-The items in #1 come from the **modified binutils** that we
-provide. See below for details. The root tree in #2 is more tricky. 
-
-The Linux/Alpha base root tree
-------------------------------
-
-The Linux/Alpha base root tree contains target-specific development
-files; most significantly standard C headers, the C library and the "C
-runtime objects" (``crt``) which are usually provided with the target
-operating system (Linux/Alpha in our case).
-
-Unfortunately, this tree is quite difficult to generate from source
-code as it causes a chicken-and-egg problem: the target C library
-should be compiled using the using the Alpha cross-compiler; which in
-turns prerequires the C library to generate executables. To solve this
-catch-22 we depend on a pre-compiled root tree that can be downloaded
-as an archive.
-
-Location of the archive:
-http://staff.science.uva.nl/~hicks/files/mt-alpha-root.tar.bz2
-
-Installation steps:
-
-1. create an empty directory; we recommend ``$HOME/svp/target-alpha``
-
-2. extract the archive in there.
-
-Example sequence of commands::
-
-   mkdir -p ~/svp/target-alpha
-   cd ~/svp/target-alpha
-   wget http://.../mt-alpha-root.tar.bz2
-   tar -xjf mt-alpha-root.tar.bz2
+will need the MT-Alpha assembler (``mtalpha-linux-gnu-as``) and linker
+(``mtalpha-linux-gnu-ld``).  These items come from the **modified
+binutils** that we provide. See below for details.
 
 MT-Alpha binutils
 -----------------
@@ -237,26 +200,16 @@ following location: https://svn.svp-home.org/sw/svp/mg/binutils/trunk
 Once this is downloaded the standard GNU sequence ``configure``,
 ``make``, ``make install`` can be used as follows:
 
-1. ``configure --with-sysroot=... --prefix=... --target=mtalpha-linux-gnu``
-
-   - for ``--with-sysroot`` indicate the location of the Linux/Alpha
-     base tree installed in the previous step.
+1. ``configure --prefix=... --target=mtalpha-linux-gnu``
 
    - for ``--prefix`` indicate a target installation directory that
      will be shared throughout the installation procedure by all the
-     other utilities; for example ``$HOME/svp``. This directory must
-     be different from the one indicated for ``--with-sysroot``.
+     other utilities; for example ``$HOME/svp``. 
 
 2. ``make`` (optionally ``-jNN`` to speed up) 
 
 3. ``make install``
 
-.. note:: While the binutils themselves do not need the Linux/Alpha
-   root tree (``sysroot``) to function properly, the core compiler
-   configuration described below does. Unfortunately, when the GCC
-   source tree is configured to use ``--with-sysroot``, the
-   corresponding binutils must be configured with ``--with-sysroot``
-   as well.
 
 Example sequence of commands::
 
@@ -265,17 +218,10 @@ Example sequence of commands::
    svn co https://svn.svp-home.org/sw/svp/mg/binutils/trunk
    mkdir build-mtalpha
    cd build-mtalpha
-   ../trunk/configure --target=mtalpha-linux-gnu --prefix=$HOME/svp \
-       --with-sysroot=$HOME/svp/target-alpha
+   ../trunk/configure --target=mtalpha-linux-gnu --prefix=$HOME/svp 
    make -j4
    make install
 
-.. note:: Compilation during ``make`` may fail with an error related
-   to ``makeinfo``. If this happens, ensure ``makeinfo`` is installed
-   (it is part of the GNU Texinfo package) and re-run ``make`` as
-   follows::
-
-      make MAKEINFO=makeinfo
 
 Installation of the µTC core compiler
 -------------------------------------
@@ -288,7 +234,7 @@ Installation goes as follows:
 1. get the µTC core compiler sources from the CSA repository:
    https://svn.svp-home.org/sw/svp/mg/mg-gcc/trunk
 
-2. ``configure --prefix=... --with-sysroot=... (some other flags, see below)``
+2. ``configure --prefix=...  (some other flags, see below)``
 
 3. ``make`` (optionally ``-jNN`` to speed up)
 
@@ -300,10 +246,6 @@ The following command line arguments should be passed to
 ``--prefix=...``
    Directory where the core compiler will be installed. We recommend
    the same prefix as the binutils, e.g. ``--prefix=$HOME/svp``.
-
-``--with-sysroot=...``
-   Directory where the Linux/Alpha base tree is installed,
-   e.g. ``--with-sysroot=$HOME/svp/target-alpha``.
  
 ``--target=mtalpha-linux-gnu``
    This selects the target architecture.
@@ -319,6 +261,10 @@ The following command line arguments should be passed to
 ``--disable-coverage``
    Disable support for code instrumentation extensions to measure code
    coverage, which are unsupported on MT-Alpha.
+
+``--disable-multilib``
+   Disables a replacement library for basic C library functions which
+   is not usde in SL programs anyways.
 
 ``--enable-gdb``
    Compile the cross-compiler with debugging options, to allow running
@@ -342,18 +288,12 @@ Example sequence of commands::
    mkdir build
    cd build
    ../trunk/configure --target=mtalpha-linux-gnu --prefix=$HOME/svp \
-       --with-sysroot=$HOME/svp/target-alpha --disable-libmudflap \
-       --disable-libssp --disable-coverage --enable-gdb --disable-nls \
+       --disable-libmudflap --disable-libssp --disable-coverage \
+       --enable-gdb --disable-nls \
        --enable-languages=c --disable-bootstrap
    make -j4
    make install
 
-.. note:: As for the binutils compilation during ``make`` may fail
-   with an error related to ``makeinfo``. If this happens, ensure
-   ``makeinfo`` is installed (it is part of the GNU Texinfo package)
-   and re-run ``make`` as follows::
-
-      make MAKEINFO=makeinfo
 
 Prerequisites for the alternate MT-Alpha implementation
 =======================================================
@@ -372,18 +312,12 @@ non-trivial to install:
 1. it requires itself the Linux/Alpha assembler
    (``alpha-linux-gnu-as``) and linker (``alpha-linux-gnu-ld``);
 
-2. it requires a Linux/Alpha *base root tree* to generate the
-   cross-compiler;
-
-3. it requires some additional libraries on the host, namely GMP and MPFR.
+2. it requires some additional libraries on the host, namely GMP and MPFR.
 
 Item #1 can be installed from any GNU binutils distribution; we
 recommend using the same tree as for the MT-Alpha target (see below).
 
-Item #2 is described in the previous section about the prerequisites
-for the µTC core compiler.
-
-Item #3 is not described in this document. See the latest GCC
+Item #2 is not described in this document. See the latest GCC
 installation documentation for details.
 
 Linux/Alpha binutils
@@ -392,16 +326,12 @@ Linux/Alpha binutils
 Required:
 
 - binutils source code (we recommend the same as for MT-Alpha);
-
-- Linux/Alpha base tree (for the same reasons as for MT-Alpha).
+- C compiler.
 
 The Linux/Alpha binutils are installed in pretty much the same way as
 the MT/Alpha binutils:
 
-1. ``configure --with-sysroot=... --prefix=... --target=alpha-linux-gnu``
-
-   - for ``--with-sysroot`` indicate the location of the Linux/Alpha
-     base tree previously installed.
+1. ``configure --prefix=... --target=alpha-linux-gnu``
 
    - for ``--prefix`` indicate a target installation directory, that
      should be the same as for the other tools; for example
@@ -418,17 +348,9 @@ Example sequence of commands::
    svn co https://svn.svp-home.org/sw/svp/mg/binutils/trunk
    mkdir build-alpha
    cd build-alpha
-   ../trunk/configure --target=alpha-linux-gnu --prefix=$HOME/svp \
-       --with-sysroot=$HOME/svp/target-alpha
+   ../trunk/configure --target=alpha-linux-gnu --prefix=$HOME/svp
    make -j4
    make install
-
-.. note:: Compilation during ``make`` may fail with an error related
-   to ``makeinfo``. If this happens, ensure ``makeinfo`` is installed
-   (it is part of the GNU Texinfo package) and re-run ``make`` as
-   follows::
-
-      make MAKEINFO=makeinfo
 
 Installation of the GCC 4.3 cross-compiler
 ------------------------------------------
@@ -445,29 +367,32 @@ Installation goes as follows:
 
 1. get the GCC source code from one of GNU's download sites.
 
-2. ``configure --prefix=... --with-sysroot=... (some other flags, see below)``
+2. ``configure --prefix=... (some other flags, see below)``
 
-3. ``make`` (optionally ``-jNN`` to speed up)
+3. patch up the generated ``Makefile`` to prevent building libraries
+   we do not use;
 
-4. ``make install``
+4. ``make`` (optionally ``-jNN`` to speed up)
+
+5. ``make install``
 
 The following command line arguments should be used:
 
 ``--target=alpha-linux-gnu``
    This selects the target architecture.
 
-``--disable-multilib``
-   Disables a replacement library for basic C library functions which
-   is not usd in SL programs anyways.
+All the lines in the generated ``Makefile`` matching the regular
+expression ``maybe-[a-z]*-target-lib(iberty|gomp|gcc)`` must be
+removed.
 
 All the following command line arguments used for the µTC core
 compiler should be passed as well here::
 
   --prefix=...
-  --with-sysroot=...
   --disable-libmudflap
   --disable-libssp
   --disable-coverage
+  --disable-multilib
   --enable-gdb
   --disable-nls
   --enable-languages=c
@@ -482,18 +407,13 @@ Example sequence of commands::
    mkdir build
    cd build
    ../gcc-4.3.3/configure --target=alpha-linux-gnu --prefix=$HOME/svp \
-       --with-sysroot=$HOME/svp/target-alpha --disable-libmudflap \
-       --disable-libssp --disable-coverage --enable-gdb --disable-nls \
+       --disable-libmudflap --disable-libssp --disable-coverage \
+       --enable-gdb --disable-nls \
        --enable-languages=c --disable-bootstrap --disable-multilib
+   grep -v 'maybe-[a-z]*-target-\(libgcc\|libiberty\|libgomp\)' <Makefile >Makefile.tmp
+   mv Makefile.tmp Makefile
    make -j4
    make install
-
-.. note:: As for the binutils compilation during ``make`` may fail
-   with an error related to ``makeinfo``. If this happens, ensure
-   ``makeinfo`` is installed (it is part of the GNU Texinfo package)
-   and re-run ``make`` as follows::
-
-      make MAKEINFO=makeinfo
 
 .. note:: On MacOS X systems using MacPorts, compilation during
    ``make`` may fail with a link error related to ``iconv``. If this
@@ -522,7 +442,9 @@ To install the simulator proceed as follows:
 1. get the simulator sources from the CSA repository:
    https://svn.svp-home.org/sw/svp/mg/mgsim/trunk
 
-2. ``configure --prefix=... && make && make install`` 
+2. Generate the ``configure`` script by running ``bootstrap``.
+
+3. ``configure --prefix=... && make && make install`` 
 
 .. note:: For ease of use, indicate the same installation prefix as
    for the other utilities.

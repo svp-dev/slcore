@@ -1,5 +1,19 @@
 2009-03-25  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	Simplify installation of prerequisites. No more Alpha/Linux
+	sysroot is required.
+	
+	* doc/requirements.txt,
+	* Makefile-reqs.orig: Remove overload of MAKEINFO, as the binutils
+	now detect it properly. Remove dependency on Alpha sysroot.
+
+	* Makefile-reqs.orig: Split and separate configuration-dependent
+	rules to...
+	* Makefile-reqs.mk: here. Simplify. Patch up GCC's Makefile as
+	necessary to prevent failures in the absence of a sysroot.
+	
+2009-03-25  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	Add Makefile to automate installation of prerequisites.
 
 	* Makefile-reqs.orig: Add.
