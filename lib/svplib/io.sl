@@ -149,12 +149,12 @@ sl_def(svp_io_printf, void,
 			    sl_glarg(const char*, p, (const char*)(*data++).ptr));
 	break;
       case 'f': sl_proccall(svp_io_putf,
-			    sl_glarg(double, d, (*data++).d),
+			    sl_glfarg(double, d, (*data++).d),
 			    sl_glarg(unsigned, prec, 7),
 			    sl_glarg(unsigned, base, 10));
 	break;
       case 'g': sl_proccall(svp_io_putf,
-			    sl_glarg(double, d, (*data++).d),
+			    sl_glfarg(double, d, (*data++).d),
 			    sl_glarg(unsigned, prec, 15),
 			    sl_glarg(unsigned, base, 10));
 	break;

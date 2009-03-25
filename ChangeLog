@@ -1,5 +1,19 @@
 2009-03-25  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	FFT improvements & bug fixes thanks to testing.
+
+	* demo/fft_gentable.c: Generate table for larger problem sizes (up
+	to M = 10: FFT1024).
+	
+	* demo/fft.sl: Use larger problem size (M = 6: FFT64). Print
+	output both as floating point numbers and rounded
+	integers. Provide column headers.
+
+	* lib/svplib/io.sl: Fix "printf" for %f and %g: use sl_glfarg
+	instead of sl_glarg for floating point types.
+
+2009-03-25  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	Document external requirements.
 	
 	* doc/requirements.txt,
@@ -11,7 +25,7 @@
 	requirements.
 
 2009-03-24  Raphael 'kena' Poss  <r.c.poss@uva.nl>
-	
+
 	Fix "ppp" compiler thanks to testing. Improve FFT.
 	(now FFT works from source in simulator!)
 	

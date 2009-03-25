@@ -17,7 +17,7 @@
 int main(void) {
 
   INTEGER k, i, w, w2, LE2;
-  INTEGER M = 8, N = 1 << M;
+  INTEGER M = 10, N = 1 << M;
 
   FLOATTYPE sc_table[M][N/2][2];
 

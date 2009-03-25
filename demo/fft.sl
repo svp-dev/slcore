@@ -16,7 +16,7 @@ sl_def(FFT_2, void,
   sl_index(i);
   unsigned   km1 = sl_getp(k) - 1;
   unsigned   LE2 = 1 << km1;
-  unsigned   w   = i - ((i >> km1) * LE2);
+  unsigned   w   = i & (LE2 - 1); // ((i >> km1) * LE2);
   unsigned   j   = 2 * (i - w) + w;
   unsigned   ip  = j + LE2;
 
@@ -146,6 +146,7 @@ sl_def(FFT_Inv, void,
 	    sl_glarg(cpx_t*, gX, sl_getp(X)));
   sl_sync();
 
+
   sl_create(,,,,,,, FFT, 
 	    sl_glarg(cpx_t*, gX2, sl_geta(gX)), 
 	    sl_glarg(unsigned, gM, sl_getp(M)));
@@ -155,11 +156,12 @@ sl_def(FFT_Inv, void,
 	    sl_glarg(cpx_t*, gX3, sl_geta(gX2)),
 	    sl_glarg(unsigned, gN, N));
   sl_sync();
+
 }
 sl_enddef
 
 
-m4_define(M_INIT, 4)
+m4_define(M_INIT, 6)
 m4_define(N_INIT, (1 << M_INIT))
 
 cpx_t X[N_INIT];
@@ -188,14 +190,14 @@ sl_def(print, void, sl_shparm(int, guard))
 {
   sl_index(i);
   int g = sl_getp(guard);
-  /*
-  printf("X = %f %f\tY = %f %f\tZ = %f %f\n",
-	 X[i][RE], X[i][IM],
-	 Y[i][RE], Y[i][IM],
-	 Z[i][RE], Z[i][IM]);
-  */
+  long long d = i;
+  printf("%d  |  %g %g  |  %g %g  |  %g %g\n", d,
+	 (double)X[i][RE], (double)X[i][IM],
+	 (double)Y[i][RE], (double)Y[i][IM],
+	 (double)Z[i][RE], (double)Z[i][IM]);
+  
   long long C = 10000;
-  printf("|  %d %d  |  %d %d  |  %d %d  |\n",
+  printf("%d  |  %d %d  |  %d %d  |  %d %d  |\n", d ,
 	 (long long)(C*X[i][RE]), (long long)(C*X[i][IM]),
 	 (long long)(C*Y[i][RE]), (long long)(C*Y[i][IM]),
 	 (long long)(C*Z[i][RE]), (long long)(C*Z[i][IM]));
@@ -217,10 +219,11 @@ sl_def(t_main, void)
 
   sl_create(,,,,,,, FFT_Inv, sl_glarg(cpx_t*, gZ, Z), sl_glarg(unsigned, gM2, sl_geta(gM)));
   sl_sync();
-
-  puts("| int(X) * 10k | int(Y) * 10k | int(Z) * 10k |\n");
+  
+  puts("   | int(X * 10k) | int(Y * 10k) | int(Z * 10k) |\n");
   sl_create(,,,N_INIT,,,, print, sl_sharg(int, guard, 0));
   sl_sync();
+  
 }
 sl_enddef
 
