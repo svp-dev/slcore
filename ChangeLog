@@ -1,5 +1,29 @@
 2009-03-25  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	More bug fixes thanks to Andrei Matei.
+
+	* bin/cce.in: Use $slc_libdir to find the slrt and library, not
+	$slc_datadir.
+	
+	* bin/slc.in: Give a source file's directory as extra -I to m4 to
+	allow m4_include's to work a bit more like CPP's #include "".
+	
+	* configure.ac: Search for a suitable $(LN_S).	
+	* doc/Makefile.am: Use it. Fixes use of picture in document when
+	building in a separate directory.
+
+	* configure.ac: The Sparc utilities have architecture name
+	mtsparc-leon-linux, not mtsparc-linux-gnu.
+
+	* Makefile.am: Extract more rules outside of the maintainer mode,
+	as suggested by Andrei.
+
+	* tests.mk (TESTS_ENVIRONMENT): Run "slt" with $(SHELL), so that
+	extra shell arguments can be passed on the command line of "make
+	check".
+
+2009-03-25  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	Bug fixes thanks to initial feedback from Andrei Matei.
 	
 	* bin/Makefile.am (edit_scripts): Fix substitution of slc_incdir

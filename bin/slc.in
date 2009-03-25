@@ -560,7 +560,17 @@ EOF
       R) tempfiles="$tempfiles $target"; continue ;;
       T) 
 	  res=2
-	  cmd="$M4 $m4flags $deps"
+          m4deps=
+          for d in $deps; do
+	      case $d in
+		  *.sl)
+		      m4dsrcdir=$(dirname "$d")
+		      m4deps="$m4deps -I$m4dsrcdir $d"
+		      ;;
+		  *) m4deps="$m4deps $d";;
+	      esac
+          done
+	  cmd="$M4 $m4flags $m4deps"
 	  if ! test "$slc_mode" = "trans" -a -z "$outfile"; then capturestdout=1; fi
 	  ;;
       P)

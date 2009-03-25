@@ -39,6 +39,7 @@ AC_PROG_SED
 AC_PROG_CC
 AC_PROG_CXX
 AC_PROG_RANLIB
+AC_PROG_LN_S
 
 AC_ARG_ENABLE([testsuite],
 [AC_HELP_STRING([--enable-testsuite], [activate unit tests for the compiler (default is disabled)])], 
@@ -99,16 +100,16 @@ AC_ARG_ENABLE([mtsparc],
 [], [enable_mtsparc=yes])
 
 AC_ARG_VAR([UTCC_MTSPARC], [Location of the muTC core compiler for the MT-Sparc Microgrid.])
-AC_PATH_PROG([UTCC_MTSPARC], [mtsparc-linux-gnu-gcc], [no], [$prefix/bin$PATH_SEPARATOR$PATH])
+AC_PATH_PROG([UTCC_MTSPARC], [mtsparc-leon-linux-gcc], [no], [$prefix/bin$PATH_SEPARATOR$PATH])
 
 AC_ARG_VAR([CC_SPARC], [Location of the GCC/Sparc cross-compiler.])
-AC_PATH_PROG([CC_SPARC], [sparc-linux-gnu-gcc], [no], [$prefix/bin$PATH_SEPARATOR$PATH])
+AC_PATH_PROG([CC_SPARC], [sparc-leon-linux-gcc], [no], [$prefix/bin$PATH_SEPARATOR$PATH])
 
 AC_ARG_VAR([AR_MTSPARC], [Location of the `ar' utility configured for the MT-Sparc binary format.])
-AC_PATH_PROG([AR_MTSPARC], [mtsparc-linux-gnu-ar], [no], [$prefix/bin$PATH_SEPARATOR$PATH])
+AC_PATH_PROG([AR_MTSPARC], [mtsparc-leon-linux-ar], [no], [$prefix/bin$PATH_SEPARATOR$PATH])
 
 AC_ARG_VAR([RANLIB_MTSPARC], [Location of the `ranlib' utility configured for the MT-Sparc binary format.])
-AC_PATH_PROG([RANLIB_MTSPARC], [mtsparc-linux-gnu-ranlib], [no], [$prefix/bin$PATH_SEPARATOR$PATH])
+AC_PATH_PROG([RANLIB_MTSPARC], [mtsparc-leon-linux-ranlib], [no], [$prefix/bin$PATH_SEPARATOR$PATH])
 
 AC_ARG_VAR([MGSIM_SPARC], [Location of the MT-Sparc Microgrid simulator.])
 AC_PATH_PROG([MGSIM_SPARC], [mgsim-sparc MGSparc], [no], [$prefix/bin:$PATH_SEPARATOR:$PATH])

@@ -20,5 +20,5 @@ SLC = $(SLC_VARS) $(abs_top_builddir)/bin/slc
 TESTS_ENVIRONMENT = \
 	$(SLC_VARS) \
 	TEST_HERE=1 \
-	$(abs_top_srcdir)/bin/slt
+	$(SHELL) $(abs_top_srcdir)/bin/slt
 
