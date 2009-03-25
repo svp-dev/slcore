@@ -74,10 +74,50 @@ Overall installation strategy:
 Entry-level prerequisites
 =========================
 
-The SL compiler requires GNU m4 version 1.4 or later; and Python
-version 2.5 or later. As we expect all the systems where ``slc`` will
-be used to have these tools available their installation is not
-described here.
+The SL compiler requires the following basic tools:
+
+- the Bourne-Again shell (bash);
+
+- GNU m4 version 1.4 or later; 
+
+- Python version 2.5 or later. 
+
+Additionally, the installation of the requirements themselves 
+require the following:
+
+- C90 compiler
+- sh (Bourne-Again or POSIX)
+- awk (POSIX or svr4)
+- bzip2 (v1.0.2 or later)
+- gzip (v1.2.4 or later)
+- sed (POSIX or svr4)
+- svn client (v1.4 or later)
+- wget / fetch
+- GNU tar (v1.14 or later)
+- GNU GMP (v4.1 or later)
+- GNU MPFR (v2.3.2 or later)
+- GNU m4 (v1.4 or later)
+- GNU make (v3.80 or later)
+- GNU Autoconf (v2.63 or later)
+- GNU Automake (v1.10 or later)
+- GNU Texinfo (v4.13 or later)
+
+As we expect all the systems where ``slc`` will be used to have a
+standard way to install these tools (package manager, etc), their
+installation is not described here.
+
+Automated installation of prerequisites
+=======================================
+
+For convenience, all the steps described in the rest of this document
+have been collected into a single ``make`` rule file named
+``Makefile.reqs``.
+
+A template for ``Makefile.reqs`` is present at the root of the source
+distribution as ``Makefile-reqs.orig``. Open this file with a text
+editor and read the comments at the start of the file for details and
+usage instructions.
+
 
 Prerequisites for the sequential C implementation
 =================================================
@@ -494,12 +534,12 @@ Conclusion
 This document describes in detail the various prerequisites for the SL
 compiler, and how to get and install them.
 
-Obviously these steps can be automated and we are working on an
-installer script to perform the work with minimum user interaction
-(courtesy of Michael Hicks). This script can be found in the CSA
-repository as well.
+Obviously these steps can be automated and both a ``Makefile`` (see
+`Automated installation of prerequisites`_ above) and an installer
+script (courtesy of Michael Hicks) are available to perform the work
+with minimum user interaction.
 
-Despite the existence of the installation script this document can
-serve as a reference in cases "things go wrong" or if there is a need
-to manually tweak the installation for new environments that we
-haven't tested yet.
+Despite the existence of the automated tools this document can serve
+as a reference in cases "things go wrong" or if there is a need to
+manually tweak the installation for new environments that we haven't
+tested yet.
