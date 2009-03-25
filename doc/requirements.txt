@@ -45,9 +45,6 @@ throughout this document.
    external sources. Green items are the actual requirements for the
    configuration & installation of ``slc``.
 
-   .. note:: Although the diagram indicates the Alpha/Linux base root
-      tree, this is not actually needed any more.
-
 Overall installation strategy:
 
 - phase 1:

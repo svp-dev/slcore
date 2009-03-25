@@ -1,5 +1,15 @@
 2009-03-25  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	Improve documentation.
+	
+	* doc/sl_deps.graffle,
+	* doc/sl_deps.png: Remove reference to Alpha/Linux sysroot.
+	
+	* doc/requirements.txt: Update accordingly.
+	
+
+2009-03-25  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	Improve test script to support text only output (requested by
 	Simon Polstra in utcc).
 
