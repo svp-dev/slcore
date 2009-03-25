@@ -1,5 +1,11 @@
 2009-03-25  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	Add Makefile to automate installation of prerequisites.
+
+	* Makefile-reqs.orig: Add.
+	
+2009-03-25  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	Improve documentation for external requirements.
 
 	* doc/requirements.txt: Add new section, clarify conclusion.

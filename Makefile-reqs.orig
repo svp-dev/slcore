@@ -1,0 +1,231 @@
+# -*- makefile -*-
+#
+# This is Makefile.reqs, to be used to fetch and install the
+# dependencies for the SL compiler.
+#
+# This Makefile performs the work documented in
+# doc/requirements.txt. Look at the documentation for more details.
+# 
+# Use as follows:
+#
+#    1. copy Makefile-reqs.orig to Makefile.reqs
+#
+#    2. using a text editor, adjust the variables below in
+#       Makefile.reqs
+# 
+#    2. run: make -f Makefile.reqs MAKE_OPTIONS=-jXX
+#       (where XX is the number of CPUs on your system)
+#
+# Prerequisites for the dependencies themselves:
+# - C compiler
+# - sh (Bourne-Again or POSIX)
+# - awk (POSIX or svr4)
+# - bzip2 (v1.0.2 or later)
+# - gzip (v1.2.4 or later)
+# - sed (POSIX or svr4)
+# - svn client (v1.4 or later)
+# - wget / fetch
+# - GNU tar (v1.14 or later)
+# - GNU GMP (v4.1 or later)
+# - GNU MPFR (v2.3.2 or later)
+# - GNU m4 (v1.4 or later)
+# - GNU make (v3.80 or later)
+# - GNU Autoconf (v2.63 or later)
+# - GNU Automake (v1.10 or later)
+# - GNU Texinfo (v4.13 or later)
+
+###### YOU MUST EDIT THE FOLLOWING #####
+
+####
+#### What tools can be used to download?
+####
+
+## Download a file using HTTP:
+FETCH = wget
+
+## Fetch a Subversion repository
+SVN = svn
+
+## SVN with a specific username:
+# SVN = svn --username=kena
+
+## GNU tar:
+TAR = tar
+
+####
+#### Where will all the tools be installed?
+####
+#### (choose one of the following)
+
+## Default: system-wide directory
+PREFIX = /usr/local
+
+## Installation in home directory
+# PREFIX = $(HOME)/svp
+
+## Standard system at the UvA:
+# PREFIX = /scratch/svp
+
+####
+#### Where can GMP be found? 
+####
+
+## Default: no special flag required to GCC's configure;
+## libgmp is installed in the system-wide default location.
+GMP_CONF =
+
+## libgmp is installed in the home directory:
+# GMP_CONF = --with-gmp=$(HOME)/opt
+
+####
+#### Where can MPFR be found? 
+####
+
+## Default: no special flag required to GCC's configure;
+## libmpfr is installed in the system-wide default location.
+MPFR_CONF =
+
+## libmpfr is installed in the home directory:
+# MPFR_CONF = --with-mpfr=$(HOME)/opt
+
+
+
+######## YOU SHOULD NOT NEED TO EDIT THE FOLLOWING ########
+
+SYSROOT_ALPHA = $(PREFIX)/target-alpha-linux-gnu
+
+
+# Source URLs:
+ALPHA_ROOT_ARCHIVE = mt-alpha-root.tar.bz2
+ALPHA_ROOT_URLBASE = http://staff.science.uva.nl/~hicks/files
+
+BINUTILS_REPO = https://svn.svp-home.org/sw/svp/mg/binutils/trunk
+UTC_GCC_REPO = https://svn.svp-home.org/sw/svp/mg/gcc/trunk
+MGSIM_REPO = https://svn.svp-home.org/sw/svp/mg/mgsim/trunk
+
+GCC_VERSION = 4.3.3
+GCC_ARCHIVE = gcc-core-$(GCC_VERSION).tar.bz2
+GCC_MIRROR = http://gcc.cybermirror.org/releases/gcc-$(GCC_VERSION)
+
+BUILD = sl-reqs/build
+SOURCES = sl-reqs/src
+
+GCC_CONFIG_FLAGS = \
+   --disable-bootstrap --disable-libmudflap -disable-libssp \
+   --disable-coverage --enable-gdb --disable-threads --disable-nls \
+   --disable-multilib --enable-languages=c 
+
+all: \
+     $(PREFIX)/bin/alpha-linux-gnu-as \
+     $(PREFIX)/bin/alpha-linux-gnu-gcc \
+     $(PREFIX)/bin/mtalpha-linux-gnu-as \
+     $(PREFIX)/bin/mgsim-alpha \
+     $(PREFIX)/bin/mtalpha-linux-gnu-gcc \
+
+##### Linux/Alpha sysroot #####
+
+$(SOURCES)/$(ALPHA_ROOT_ARCHIVE):
+	mkdir -p $(SOURCES)
+	(cd $(SOURCES) && \
+	  $(FETCH) $(ALPHA_ROOT_URLBASE)/$(ALPHA_ROOT_ARCHIVE))
+
+$(SYSROOT_ALPHA): $(SOURCES)/$(ALPHA_ROOT_ARCHIVE)
+	mkdir -p $@
+	(TBZ=$$PWD/$<; cd $@ && $(TAR) -xjf $$TBZ)
+
+##### Binutils #####
+
+$(SOURCES)/binutils/download_done:
+	rm -f $@
+	mkdir -p $(SOURCES)
+	(cd $(SOURCES) && \
+	  $(SVN) co $(BINUTILS_REPO) binutils && \
+	  touch binutils/download_done)
+
+$(PREFIX)/bin/alpha-linux-gnu-as: $(SOURCES)/binutils/download_done
+	mkdir -p $(BUILD)/binutils-alpha
+	(SRC=$$PWD/$(SOURCES)/binutils; cd $(BUILD)/binutils-alpha && \
+	   $$SRC/configure --target=alpha-linux-gnu \
+                           --with-sysroot=$(SYSROOT_ALPHA) \
+	                   --prefix=$(PREFIX) && \
+	   $(MAKE) $(MAKE_FLAGS) MAKEINFO=makeinfo && \
+	   $(MAKE) install)
+
+$(PREFIX)/bin/mtalpha-linux-gnu-as: $(SOURCES)/binutils/download_done
+	mkdir -p $(BUILD)/binutils-mtalpha
+	(SRC=$$PWD/$(SOURCES)/binutils; cd $(BUILD)/binutils-mtalpha && \
+	   $$SRC/configure --target=mtalpha-linux-gnu \
+	                   --with-sysroot=$(SYSROOT_ALPHA) \
+	                   --prefix=$(PREFIX) && \
+	   $(MAKE) $(MAKE_FLAGS) MAKEINFO=makeinfo && \
+           $(MAKE) install)
+
+##### muTC core compiler #####
+
+$(SOURCES)/utc-gcc/download_done:
+	rm -f $@
+	mkdir -p $(SOURCES)
+	(cd $(SOURCES) && \
+         $(SVN) co $(UTC_GCC_REPO) utc-gcc && \
+	 touch utc-gcc/download_done)
+
+$(PREFIX)/bin/mtalpha-linux-gnu-gcc: \
+	$(PREFIX)/bin/mtalpha-linux-gnu-as \
+	$(SYSROOT_ALPHA) \
+	$(SOURCES)/utc-gcc/download_done
+	mkdir -p $(BUILD)/gcc-mtalpha
+	(SRC=$$PWD/$(SOURCES)/utc-gcc; cd $(BUILD)/gcc-mtalpha && \
+	   $$SRC/configure --target=mtalpha-linux-gnu \
+	                       --with-sysroot=$(ALPHA_SYSROOT) \
+			       --prefix=$(PREFIX) \
+	                       $(GCC_CONFIG_FLAGS) && \
+	 $(MAKE) $(MAKE_FLAGS) && \
+	 $(MAKE) install)
+
+##### GCC 4.3 cross-compiler #####
+
+$(SOURCES)/$(GCC_ARCHIVE):
+	mkdir -p $(SOURCES)
+	(cd $(SOURCES) && $(FETCH) $(GCC_MIRROR)/$(GCC_ARCHIVE))
+
+$(SOURCES)/gcc-$(GCC_VERSION)/extract_done: $(SOURCES)/$(GCC_ARCHIVE)
+	rm -f $@
+	(cd $(SOURCES) && \
+	  $(TAR) -xjf $(GCC_ARCHIVE) && \
+	  touch gcc-$(GCC_VERSION)/extract_done)
+
+$(PREFIX)/bin/alpha-linux-gnu-gcc: \
+	$(PREFIX)/bin/alpha-linux-gnu-as \
+	$(SYSROOT_ALPHA) \
+	$(SOURCES)/gcc-$(GCC_VERSION)/extract_done
+	mkdir -p $(BUILD)/gcc-alpha
+	(SRC=$$PWD/$(SOURCES)/gcc-$(GCC_VERSION); cd $(BUILD)/gcc-alpha && \
+	  $$SRC/configure --target=alpha-linux-gnu \
+	                  --with-sysroot=$(SYSROOT_ALPHA) \
+	                  --prefix=$(PREFIX) \
+			  $(GMP_CONF) $(MPFR_CONF) \
+	                  $(GCC_CONFIG_FLAGS) && \
+	  if ! $(MAKE) $(MAKE_FLAGS); then \
+	    perl -pi.bak -n -e \
+	      's|^LIBICONV=.*|LIBICONV = -L/usr/lib -liconv|g' gcc/Makefile && \
+               $(MAKE) $(MAKE_FLAGS); \
+          fi && \
+          $(MAKE) install)
+
+##### Simulator #####
+
+$(SOURCES)/mgsim/configure:
+	mkdir -p $(SOURCES)
+	(cd $(SOURCES) && \
+	    $(SVN) co $(MGSIM_REPO) mgsim && \
+	    cd mgsim && \
+	    ./bootstrap)
+
+
+$(PREFIX)/bin/mgsim-alpha $(PREFIX)/bin/mgsim-sparc: $(SOURCES)/mgsim/configure
+	mkdir -p $(BUILD)/mgsim
+	(SRC=$$PWD/$(SOURCES)/mgsim; cd $(BUILD)/mgsim && \
+	 $$SRC/configure --prefix=$(PREFIX) && \
+	 $(MAKE) $(MAKE_FLAGS) && \
+	 $(MAKE) install)
+
