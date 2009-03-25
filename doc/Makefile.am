@@ -5,8 +5,10 @@
 # All rights reserved.
 # 
 dist_man1_MANS = cce.1 slc.1 sgr.1 slt.1
-dist_pdf_DATA = acronyms.pdf README.pdf NEWS.pdf HACKING.pdf
-dist_doc_DATA = acronyms.txt README.txt NEWS.txt HACKING.txt
+dist_pdf_DATA = acronyms.pdf README.pdf NEWS.pdf HACKING.pdf requirements.pdf
+dist_doc_DATA = acronyms.txt README.txt NEWS.txt HACKING.txt requirements.txt \
+                sl_deps.png
+
 
 SUFFIXES = .txt .tex .pdf
 TEXI2PDF_FLAGS = --tidy --batch --build-dir=tmp.t2d

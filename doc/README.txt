@@ -48,6 +48,10 @@ The following tools are used by slc:
 - GCC 4.3.x (or later) configured as cross-compiler for
   alpha-gnu-linux with alpha binutils
 
+For more details about how to obtain and install the required tools,
+check out the document ``doc/requirements.pdf`` or
+``doc/requirements.txt`` in the source directory.
+
 Using slc
 =========
 

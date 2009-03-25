@@ -1,3 +1,15 @@
+2009-03-25  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
+	Document external requirements.
+	
+	* doc/requirements.txt,
+	* doc/sl_deps.graffle,
+	* doc/sl_deps.png: Add.
+	* doc/Makefile.am: Update accordingly.
+	
+	* doc/README.txt: Indicate where to find the documentation about
+	requirements.
+
 2009-03-24  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 	
 	Fix "ppp" compiler thanks to testing. Improve FFT.
