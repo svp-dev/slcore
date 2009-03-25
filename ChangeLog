@@ -1,5 +1,21 @@
 2009-03-25  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	Bug fixes thanks to initial feedback from Andrei Matei.
+	
+	* bin/Makefile.am (edit_scripts): Fix substitution of slc_incdir
+	as suggested by Andrei Matei.
+	
+	* demo/Makefile.am: Link fft_gentable with -lm, as suggested by
+	Andrei Matei.
+
+	* Makefile.am (SUBDIRS): Build documentation last so that missing
+	tools do not prevent the rest from compiling.
+
+	* doc/requirements.txt: List requirements for building the
+	documentation.
+	
+2009-03-25  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	Simplify installation of prerequisites. No more Alpha/Linux
 	sysroot is required.
 	

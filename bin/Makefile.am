@@ -20,7 +20,7 @@ edit_scripts = $(SED) \
 	       -e 's|@UTCC_MTSPARC[@]|$(UTCC_MTSPARC)|g' \
 	       -e 's|@python[@]|$(PYTHON)|g' \
 	       -e 's|@slc_libdir[@]|$(pkglibdir)|g' \
-	       -e 's|@slc_incdir[@]|$(includedir)|g' \
+	       -e 's|@slc_incdir[@]|$(pkgdatadir)/include|g' \
 	       -e 's|@slc_datadir[@]|$(pkgdatadir)|g' \
 	       -e 's|@cce_helper[@]|$(bindir)/cce|g' \
 	       -e 's|@scu_helper[@]|$(bindir)/scu|g' \

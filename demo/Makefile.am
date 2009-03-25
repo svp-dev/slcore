@@ -41,6 +41,7 @@ if MAINTAINER_MODE
 noinst_PROGRAMS = fft_gentable
 fft_gentable_SOURCES = fft_gentable.c
 fft_gentable_CFLAGS = -O0 -ffloat-store
+fft_gentable_LDFLAGS = -lm
 
 fft_table.slh: fft_gentable$(EXEEXT)
 	./fft_gentable$(EXEEXT) >$@

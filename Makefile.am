@@ -6,7 +6,7 @@
 # 
 
 EXTRA_DIST = README
-SUBDIRS = . bin lib doc tests demo
+SUBDIRS = . bin lib tests demo doc
 
 README: $(srcdir)/doc/README.txt
 	rm -f $@

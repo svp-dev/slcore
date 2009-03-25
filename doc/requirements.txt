@@ -107,6 +107,12 @@ As we expect all the systems where ``slc`` will be used to have a
 standard way to install these tools (package manager, etc), their
 installation is not described here.
 
+Building the slc documentation requires the following tools as well:
+
+- help2man
+- docutils (v0.5 or later)
+- pdflatex
+
 Automated installation of prerequisites
 =======================================
 
