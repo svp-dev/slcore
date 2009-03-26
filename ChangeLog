@@ -1,3 +1,25 @@
+2009-03-26  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
+	Fix handling of long argument lists.
+
+	* bin/spp: Add missing shared registers (df5, sf5) for FP shared
+	passing. Restore original intended values for the magic
+	numbers (11 and 12, resp). Strip whitespace from thread function
+	parameter names, so that the m4 macro names for the
+	setters/getters do not contain whitespace either. In mapcall(),
+	properly double #shareds in checks. Make the structure that holds
+	extra arguments "volatile" to force the compiler to emit the
+	stores on time. Use "__restrict__" instead of "restrict".
+
+	* lib/t-pppalpha/include/sl_support.h: Tell the compiler in
+	__sl_getshp that the same register can be used for the dependent
+	shared after the volatile asm has been reached (allows for more
+	optimization).
+
+	* tests/1_basic/3_args/gencall.py: Add test case generator. 
+
+	* tests/mkalltests.sh: Use it to generate more tests.
+
 2009-03-25  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
 	Improve documentation.

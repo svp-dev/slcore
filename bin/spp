@@ -180,6 +180,8 @@ class pppalpha(object):
       'df3' : 'fs3',
       'sf4' : 'fs4',
       'df4' : 'fs5',
+      'sf5' : 'fs6',
+      'df5' : 'fs7',
       
       'lf31' : 'fzero',
       
@@ -243,10 +245,10 @@ class pppalpha(object):
       }
 
    # Magic numbers
-   iargregs = 6 # 1 reserved for PV
-   fargregs = 4
-   #iargregs = 11 # 1 reserved for PV
-   #fargregs = 12
+   #iargregs = 6 # 1 reserved for PV
+   #fargregs = 4
+   iargregs = 11 # 1 reserved for PV
+   fargregs = 12
 
    def __init__(self):
       regs = { 
@@ -306,6 +308,7 @@ class pppalpha(object):
       for a in args:
          la = a.split(':')
          cat, species, ctype, name = la[:4]
+         name = name.strip()
          init = ':'.join(la[4:])
          if init == "":
             init = None
@@ -324,14 +327,14 @@ class pppalpha(object):
       fslots_avail = self.fargregs
 
       # Allocate shareds first
-      if len(dic['i']['sh']) > islots_avail:
+      if len(dic['i']['sh']) * 2 > islots_avail:
          die("too many int shareds, cannot pass them via memory yet")
       shc = 0
       for s in dic['i']['sh']:
          s['mode'] = 'reg'
          s['regnr'] = shc
          shc += 1
-         islots_avail -= 1
+         islots_avail -= 2
       nrishareds = shc
 
       if len(dic['f']['sh']) > fslots_avail:
@@ -341,7 +344,7 @@ class pppalpha(object):
          s['mode'] = 'reg'
          s['regnr'] = shc
          shc += 1
-         fslots_avail -= 1
+         fslots_avail -= 2
       nrfshareds = shc
    
       # Allocate fp globals
@@ -470,18 +473,18 @@ class pppalpha(object):
       print '__sl_declgla(__sl_fptr_t, __fptr%s, "$%s", %s);' % (tag, pvreg, funcname)
 
       if c['gl_mem_offset'] is not None:
-         print "const struct __sl_ma_t_%s {" % tag
+         print "volatile struct __sl_ma_t_%s {" % tag
          for d in c['memlayout']:
             print d['ctype'], d['name'], ';'
-         print '} __sl_ma_data_%s = {' % tag
+         print '} __sl_ma_data_%s;' % tag
          for d in c['memlayout']:
-            print '__sl_arg_%s__%s,' % (tag, d['name'])
-         print '};'
+            print '__sl_ma_data_%s.%s = __sl_arg_%s;' % (tag, d['name'], d['name'])
+
          
          nr = aliases['basearg']['nr'] + c['gl_mem_offset']
          reg = aliases['l%d' % nr]['legnr']
-         print "register const struct __sl_ma_t_%s" % tag, \
-             '*const restrict __sl_ma_p_%s __asm__("$%d")' % (tag, reg), \
+         print "register volatile const struct __sl_ma_t_%s" % tag, \
+             '* __restrict__ const __sl_ma_p_%s __asm__("$%d")' % (tag, reg), \
              "= &__sl_ma_data_%s;" % tag
 
          rregs.append('__sl_ma_p_%s' % tag)
@@ -553,7 +556,7 @@ class pppalpha(object):
          print "register const struct {"
          for d in c['memlayout']:
             print d['ctype'], d['name'], ';'
-         print '} * const restrict __sl_ma __asm__("$%d");' % legnr
+         print '} * __restrict__ const __sl_ma __asm__("$%d");' % legnr
       
       names = []
       for species,d1 in c['args'].items():
