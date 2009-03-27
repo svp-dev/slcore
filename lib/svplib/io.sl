@@ -29,7 +29,7 @@ sl_def(svp_io_puts, void,
 }
 sl_enddef
 
-#define _puts(S) do { char *p = (S); while(*p) __write1(*p++); } while(0)
+#define _puts(S) do { const char *p = (S); while(*p) __write1(*p++); } while(0)
 
 sl_def(svp_io_putf, void,
        sl_glfparm(double, gx),

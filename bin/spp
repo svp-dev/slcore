@@ -1113,7 +1113,7 @@ class pppalpha(object):
    def addswchll(self, fundata, items):
       re3way = re.compile(r'\w+\s([^,]+),([^,]+),([^,]+)$')
       re1way = re.compile(r'\w+\s([^,]+)$')
-      re2way = re.compile(r'mov\s([^,]+),([^,]+)$')
+      re2way = re.compile(r'(?:mov|cvt\S*|itof\S*|ftoi\S*)\s([^,]+),([^,]+)$')
       rexway = re.compile(r'\w+\s([^,]+),(.*)')
       reld = re.compile(r'(ld[lqts]|allocate)')
       re3wayll = re.compile(r'(add|sub|mul|div|sqrt)[ts]')
@@ -1125,7 +1125,6 @@ class pppalpha(object):
          
       # initially exlude index and sp reg
       maybell = [x for x in list(allregs) if x not in ["$l0", "$l1"]] 
-
       for (type, content, comment) in items:
          yield (type, content, comment)
          if type == 'label':
@@ -1222,7 +1221,7 @@ class pppalpha(object):
             
 
    def addswchbr(self, fundata, items):
-      rebr = re.compile(r'f?(br|beq|bne|bge|ble|bgt|blt)\s')
+      rebr = re.compile(r'f?(br|beq|bne|bge|ble|bgt|blt|blbc)\s')
       for (type, content, comment) in items:
          yield (type, content, comment)
          if rebr.match(content) is not None:

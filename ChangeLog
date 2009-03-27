@@ -1,5 +1,17 @@
 2009-03-27  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	Bug fixes thanks to testing.
+	
+	* bin/spp: Recognize cvt*, itof* and ftoi* instructions as
+	instructions that overwrite their 2nd parameter (like "mov"). This
+	avoids unneeded swch annotations. Recognize "blbc" as branch
+	instruction.
+
+	* lib/svplib/io.sl: Use "const char*" instead of "char*" to please
+	the compiler.
+	
+2009-03-27  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	Improve compiler interface: allow linking without startup object
 	or standard library.
 	
