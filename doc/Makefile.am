@@ -25,21 +25,17 @@ TEXI2PDF_FLAGS = --tidy --batch --build-dir=tmp.t2d
 	$(RST2LATEX) --halt=warning $< >$@.tmp
 	mv $@.tmp $@
 
-cce.1 slc.1 sgr.1:
+cce.1 slc.1 sgr.1 slt.1:
 	cd $(top_builddir)/bin && $(MAKE) $(AM_MAKEFLAGS) $(@:.1=)
 	rm -f $@
 	$(HELP2MAN) -N --output=$@.tmp $(top_builddir)/bin/$(@:.1=)
 	mv $@.tmp $@
 
-slt.1:
-	rm -f $@
-	$(HELP2MAN) -N --output=$@.tmp $(top_srcdir)/bin/$(@:.1=)
-	mv $@.tmp $@
 
 cce.1: $(top_srcdir)/bin/cce.in
 slc.1: $(top_srcdir)/bin/slc.in
 sgr.1: $(top_srcdir)/bin/sgr.in
-slt.1: $(top_srcdir)/bin/slt
+slt.1: $(top_srcdir)/bin/slt.in
 
 MAINTAINERCLEANFILES = $(dist_man1_MANS) $(dist_pdf_DATA)
 

@@ -1,4 +1,4 @@
-#! /bin/sh
+#! @BASH@
 # $Id$
 #
 if test $# -lt 1; then
@@ -8,9 +8,9 @@ usage: $0 <commandline ...>
 Execute a program and force terminate its execution
 if it does not terminate normally before a timeout.
 
-The exit code is 137 if the timeout expires before the command
-terminates. The default timeout is 5 seconds. 
-Change with environment variable TIMEOUT.
+The program reports abnormal termination met SIGKILL (exit code 137)
+if the timeout expires before the command terminates. The default
+timeout is 5 seconds.  Change with environment variable TIMEOUT.
 EOF
   exit 1
 fi
@@ -22,16 +22,20 @@ cmdpid=
 kpid=
 dokill() {
   sig=$1
-  echo "received $sig!"
+  echo "Received signal (SIG$sig)!"
   if test -n "$cmdpid"; then kill -$sig "$cmdpid"; fi
   if test -n "$kpid"; then kill -HUP "$kpid"; fi
-  exit $(expr $sig + 128)
+  # propagate signal up
+  trap - HUP INT QUIT TERM PIPE
+  kill -$sig $$
+  exit 128 # should not be reached
 }
 
-trap 'dokill 1' 1
-trap 'dokill 2' 2
-trap 'dokill 3' 3
-trap 'dokill 15' 15
+trap 'dokill HUP' HUP
+trap 'dokill INT' INT
+trap 'dokill QUIT' QUIT
+trap 'dokill TERM' TERM
+trap 'dokill PIPE' PIPE
 
 "$@" &
 cmdpid=$!
@@ -46,6 +50,11 @@ kpid=$!
 wait $cmdpid
 result=$?
 kill -HUP $kpid >/dev/null 2>&1
+trap - HUP INT QUIT TERM PIPE
+if test $result -gt 128; then
+    # propagate signal up
+    kill -$(expr $result - 128) $$
+fi
 exit $result
 
 # -*- mode: shell -*-

@@ -1,4 +1,4 @@
-#! /bin/sh
+#! @BASH@
 # $Id$
 #
 copyright="Copyright (C) 2009 the CSA group - The SL project.."
@@ -527,18 +527,22 @@ counter=0
 do_preptest "$impl1"
 
 bye() {
+  local sig
+  sig=$1
   for pid in $towait; do
     kill $pid >/dev/null 2>&1
   done
-  signalled=1
+  signalled=$sig
 }
 
 check_proc() {
     local x
     x=$1
-    if test $signalled = 1; then 
-	echo
-	exit $x
+    if test -n "$signalled"; then 
+	echo "Signal received (SIG$signalled)!" >&2
+	trap - INT QUIT HUP TERM PIPE
+        kill -$signalled $$
+	exit 128
     elif test $x != 0; then
 	fail=1
     fi
@@ -549,8 +553,12 @@ fail=0
 # Start with first impl, need to wait for it
 # since output will be used as reference:
 
-signalled=0
-trap bye INT QUIT HUP TERM
+signalled=
+trap "bye INT" INT
+trap "bye QUIT" QUIT
+trap "bye HUP" HUP
+trap "bye TERM" TERM
+trap "bye PIPE" PIPE
 do_check $impl $offset &
 towait=$!
 set +e

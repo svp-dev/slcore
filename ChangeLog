@@ -1,5 +1,23 @@
 2009-03-27  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	Bug fixes thanks to testing: improve portability with systems
+	where /bin/sh is not bash (e.g. Ubuntu). Handle signals better
+	during testing.
+	
+	* bin/slt: Rename to...	
+	* bin/slt.in: Here. Announce dependency on bash. Better signal
+	handling.
+	
+	* bin/timeout: Rename to...	
+	* bin/timeout.in: Here. Announce dependency on bash. Better signal
+	handling.
+	
+	* bin/Makefile.am,
+	* doc/Makefile.am,
+	* tests.mk: Update accordingly.
+
+2009-03-27  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	Bug fixes thanks to testing.
 	
 	* bin/spp: Recognize cvt*, itof* and ftoi* instructions as

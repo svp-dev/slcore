@@ -4,9 +4,9 @@
 # Copyright (C) 2008,2009 The SL project..
 # All rights reserved.
 # 
-bin_SCRIPTS = cce slc sgr
-dist_bin_SCRIPTS = scu spp slt timeout
-EXTRA_DIST = cce.in slc.in sgr.in
+bin_SCRIPTS = cce slc sgr slt timeout
+dist_bin_SCRIPTS = scu spp 
+EXTRA_DIST = cce.in slc.in sgr.in slt.in timeout.in
 
 CLEANFILES = $(bin_SCRIPTS)
 
@@ -26,7 +26,7 @@ edit_scripts = $(SED) \
 	       -e 's|@scu_helper[@]|$(bindir)/scu|g' \
 	       -e 's|@spp_helper[@]|$(bindir)/spp|g'
 
-cce sgr slc: Makefile
+cce sgr slc slt timeout: Makefile
 	rm -f $@ $@.tmp
 	$(edit_scripts) $(srcdir)/$@.in >$@.tmp
 	chmod +x $@.tmp
@@ -36,4 +36,6 @@ cce sgr slc: Makefile
 cce: cce.in
 sgr: sgr.in
 slc: slc.in
+slt: slt.in
+timeout: timeout.in
 
