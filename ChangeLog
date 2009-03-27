@@ -1,3 +1,20 @@
+2009-03-27  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
+	Improve compiler interface: allow linking without startup object
+	or standard library.
+	
+	* bin/slc.in: Handle -nostdlib, -nodefaultlibs,
+	-nostartfiles. Document them.
+	
+	* bin/cce.in: Use variables slc_use_slrt and slc_use_slos provided
+	by slc.
+
+	* lib/seqc.mk,
+	* lib/mtalpha.mk,
+	* lib/ptl.mk: Use -nostdlib where appropriate.
+
+	* bin/cce.in: Require slrt.o when -nostartfiles is not specified.
+
 2009-03-26  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
 	Fix handling of long argument lists.

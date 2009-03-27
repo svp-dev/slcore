@@ -38,17 +38,19 @@ host_host_ptl_libslos_a_LIBADD = \
 BUILT_SOURCES += \
 	host-host-ptl/include/ptl_create.h
 
+SLC_PTL = $(SLC) -b ptl -nostdlib
+
 host-host-ptl/io.o: $(srcdir)/svplib/io.sl
 	$(MKDIR_P) host-host-ptl
-	$(SLC) -b ptl -c -o $@ $<
+	$(SLC_PTL) -c -o $@ $<
 
 host-host-ptl/div.o: $(srcdir)/svplib/div.sl
 	$(MKDIR_P) host-host-ptl
-	$(SLC) -b ptl -c -o $@ $<
+	$(SLC_PTL) -c -o $@ $<
 
 host-host-ptl/roman.o: $(srcdir)/svplib/roman.sl
 	$(MKDIR_P) host-host-ptl
-	$(SLC) -b ptl -c -o $@ $<
+	$(SLC_PTL) -c -o $@ $<
 
 host-host-ptl/slrt.o: $(srcdir)/host-host-ptl/slrt.c
 	$(MKDIR_P) host-host-ptl

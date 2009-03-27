@@ -17,17 +17,19 @@ host_host_seqc_libslos_a_LIBADD = \
 	host-host-seqc/roman.o \
 	host-host-seqc/io.o
 
+SLC_SEQC = $(SLC) -b seqc -nostdlib
+
 host-host-seqc/io.o: $(srcdir)/svplib/io.sl
 	$(MKDIR_P) host-host-seqc
-	$(SLC) -b seqc -c -o $@ $<
+	$(SLC_SEQC) -c -o $@ $<
 
 host-host-seqc/div.o: $(srcdir)/svplib/div.sl
 	$(MKDIR_P) host-host-seqc
-	$(SLC) -b seqc -c -o $@ $<
+	$(SLC_SEQC) -c -o $@ $<
 
 host-host-seqc/roman.o: $(srcdir)/svplib/roman.sl
 	$(MKDIR_P) host-host-seqc
-	$(SLC) -b seqc -c -o $@ $<
+	$(SLC_SEQC) -c -o $@ $<
 
 host-host-seqc/slrt.o: $(srcdir)/host-host-seqc/slrt.c
 	$(MKDIR_P) host-host-seqc

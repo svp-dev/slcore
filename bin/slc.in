@@ -19,6 +19,9 @@ synclines=yes
 combine=
 verbose=
 
+slc_use_slrt=yes
+slc_use_slos=yes
+
 check=
 prev_arg=
 
@@ -119,6 +122,10 @@ for arg in "$@"; do
       -x)       die "-x not supported yet" ;;
 
       -mutc*)   die "-mutc is deprecated, used -b instead" ;;
+
+      -nostartfiles) slc_use_slrt=no ;;
+      -nodefaultlibs) slc_use_slos=no ;;
+      -nostdlib) slc_use_slrt=no; slc_use_slos=no ;;
 
       -*)	extra_cflags="$extra_cflags $arg";;
 
@@ -284,6 +291,12 @@ tools; in particular, the following options may prove useful:
 
   -llibrary          Link with the library named "library".
 
+  -nostartfiles      Do not use the standard startup files when linking.
+
+  -nodefaultlibs     Do not use the standard system library when linking.
+
+  -nostdlib          Implies options -nostartfiles and -nodefaultlibs.
+
 Environment variables:
   M4                 M4 preprocessor to use. Default is "m4".
 
@@ -329,7 +342,7 @@ EOF
 fi
 
 # Here check the configuration
-eval $("$cce_helper" -s "$impl")
+eval $(slc_use_slrt=$slc_use_slrt slc_use_slos=$slc_use_slos "$cce_helper" -s "$impl")
 
 # If we were requested to test the configuration, do it now
 if test -n "$check"; then

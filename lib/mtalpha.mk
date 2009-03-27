@@ -23,25 +23,27 @@ mtalpha_sim_libslos_a_CONTENTS = \
 	mtalpha-sim/roman.o \
 	mtalpha-sim/io.o
 
+SLC_MTALPHA = $(SLC) -b ppp-mtalpha -nostdlib
+
 mtalpha-sim/io.o: $(srcdir)/svplib/io.sl
 	$(MKDIR_P) mtalpha-sim
-	$(SLC) -b ppp-mtalpha -c -o $@ $<
+	$(SLC_MTALPHA) -c -o $@ $<
 
 mtalpha-sim/div.o: $(srcdir)/svplib/div.sl
 	$(MKDIR_P) mtalpha-sim
-	$(SLC) -b ppp-mtalpha -c -o $@ $<
+	$(SLC_MTALPHA) -c -o $@ $<
 
 mtalpha-sim/roman.o: $(srcdir)/svplib/roman.sl
 	$(MKDIR_P) mtalpha-sim
-	$(SLC) -b ppp-mtalpha -c -o $@ $<
+	$(SLC_MTALPHA) -c -o $@ $<
 
 mtalpha-sim/mtdiv.o: $(srcdir)/mtalpha-sim/mtdiv.s
 	$(MKDIR_P) mtalpha-sim
-	$(SLC) -b ppp-mtalpha -c -o $@ $<
+	$(SLC_MTALPHA) -c -o $@ $<
 
 mtalpha-sim/slrt.o: $(srcdir)/mtalpha-sim/slrt.s
 	$(MKDIR_P) mtalpha-sim
-	$(SLC) -b ppp-mtalpha -c -o $@ $<
+	$(SLC_MTALPHA) -c -o $@ $<
 
 mtalpha-sim/libslos.a: $(mtalpha_sim_libslos_a_CONTENTS)
 	rm -f $@

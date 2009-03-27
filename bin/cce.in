@@ -265,7 +265,7 @@ esac
 # Extra ldflags selection
 case $slc_arch in
     mt*)
-	slc_ldflags="$slc_ldflags -Wl,-Ttext -Wl,0 -nostdlib -nodefaultlibs"
+	slc_ldflags="$slc_ldflags -Wl,-Ttext -Wl,0 -nostdlib"
 	;;
     *)
 	;;
@@ -280,24 +280,28 @@ case $slc_os in
         for d in $slc_datadir; do
             slc_ppflags="$slc_ppflags -I$d/$slc_arch-$slc_os/include"
         done
-        for d in $slc_libdir; do
-            slc_ldflags="$slc_ldflags -L$d/$slc_arch-$slc_os"
-        done
-        slc_ldflags="$slc_ldflags -lslos"
+	if test "$slc_use_slos" != "no"; then
+            for d in $slc_libdir; do   
+		slc_ldflags="$slc_ldflags -L$d/$slc_arch-$slc_os"
+            done
+            slc_ldflags="$slc_ldflags -lslos"
+	fi
 
-        found=
-        for d in $slc_libdir; do
-  	    osdir=$d/$slc_arch-$slc_os
-            if test -r "$osdir/slrt.o"; then
-              found=$osdir/slrt.o
-              break
+	if test "$slc_use_slrt" != "no"; then
+            found=
+            for d in $slc_libdir; do
+  		osdir=$d/$slc_arch-$slc_os
+		if test -r "$osdir/slrt.o"; then
+		    found=$osdir/slrt.o
+		    break
+		fi
+            done
+	    if test -z "$found"; then
+		die "slrt.o not found for $slc_arch-$slc_os in $slc_libdir"
             fi
-        done
-	if test -z "$found"; then
-           echo "$0: warning: slrt.o not found for $slc_arch-$slc_os in $slc_libdir" >&2
+            slc_ldflags="$slc_ldflags $found"
         fi
-        slc_ldflags="$slc_ldflags $found"
-         
+
         IFS=$save_IFS
 	;;
 esac
