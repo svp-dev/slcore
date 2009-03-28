@@ -27,11 +27,11 @@ all: \
      $(PREFIX)/bin/alpha-linux-gnu-as \
      $(PREFIX)/bin/alpha-linux-gnu-gcc \
      $(PREFIX)/bin/mtalpha-linux-gnu-as \
-     $(PREFIX)/bin/mgsim-alpha \
-     $(PREFIX)/bin/mtalpha-linux-gnu-gcc \
      $(PREFIX)/bin/sparc-leon-linux-as \
      $(PREFIX)/bin/mtsparc-leon-linux-as \
-     $(PREFIX)/bin/mgsim-sparc
+     $(PREFIX)/bin/mgsim-alpha \
+     $(PREFIX)/bin/mgsim-sparc \
+     $(PREFIX)/bin/mtalpha-linux-gnu-gcc
 	@echo
 	@echo "*** All dependencies are now installed. ***"
 	@echo

@@ -1,5 +1,12 @@
 2009-03-28  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	Improve Makefile for required tools.
+	
+	* Makefile-reqs.mk: Reorder dependencies of "all" to build the
+	sparc binutils before mgsim.
+
+2009-03-28  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	Improve compatibility with Ubuntu.
 	
 	* bin/cce.in: Add slrt.o before -lsos in link flags, since slrt
