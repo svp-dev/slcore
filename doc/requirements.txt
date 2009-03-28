@@ -108,7 +108,18 @@ Building the slc documentation requires the following tools as well:
 
 - help2man
 - docutils (v0.5 or later)
+- a "recent enough" LaTeX distribution, with extras (e.g. ``multirow``)
 - pdflatex
+
+.. note:: (re)building the documentation is only necessary in case the
+   documentation is modified, or when working from the Subversion
+   repository. Distributed archives produced by ``make dist`` contain
+   the compiled PDF files and therefore do not require the additional
+   tools.
+
+.. note:: docutils uses the LaTeX package "aeguill", which on
+   Debian/Ubuntu is provided by the non-obvious
+   ``texlive-lang-french`` package. 
 
 Automated installation of prerequisites
 =======================================

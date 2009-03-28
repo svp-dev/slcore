@@ -5,7 +5,7 @@
 # All rights reserved.
 # 
 
-AC_PREREQ([2.63])
+AC_PREREQ([2.61])
 AC_INIT([slc], [2.x], [r.c.poss@uva.nl])
 AC_CONFIG_AUX_DIR([build-aux])
 AM_MAINTAINER_MODE

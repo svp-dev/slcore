@@ -1,3 +1,20 @@
+2009-03-28  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
+	Improve compatibility with Ubuntu.
+	
+	* bin/cce.in: Add slrt.o before -lsos in link flags, since slrt
+	can depend on -lsos and Ubuntu has strict linker semantics.
+
+	* configure.ac: Lower Autoconf requirement to 2.61, which is
+	reasonably recent (later than 2.60) and pleases Ubuntu users.
+
+	* doc/requirements.txt: Document extra requirements for building
+	documentation, with highlight on Debian/Ubuntu package names.
+
+	* bin/slt.in, 
+	* bin/timeout.in: Print a newline before the "interrupted by
+	signal" message, to clean up terminal.
+
 2009-03-27  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
 	Bug fixes thanks to testing: improve portability with systems

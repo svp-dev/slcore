@@ -539,6 +539,7 @@ check_proc() {
     local x
     x=$1
     if test -n "$signalled"; then 
+        echo >&2
 	echo "Signal received (SIG$signalled)!" >&2
 	trap - INT QUIT HUP TERM PIPE
         kill -$signalled $$

@@ -22,7 +22,8 @@ cmdpid=
 kpid=
 dokill() {
   sig=$1
-  echo "Received signal (SIG$sig)!"
+  echo >&2
+  echo "Received signal (SIG$sig)!" >&2
   if test -n "$cmdpid"; then kill -$sig "$cmdpid"; fi
   if test -n "$kpid"; then kill -HUP "$kpid"; fi
   # propagate signal up
