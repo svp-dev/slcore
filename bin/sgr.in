@@ -122,8 +122,8 @@ fi
 runner_script=
 IFS=:
 for l in $slc_libdir; do
-  if test -r "$l/r-$runner"; then
-     runner_script=$l/r-$runner
+  if test -r "$l/r-$runner/run.sh"; then
+     runner_script=$l/r-$runner/run.sh
      break
   fi
 done

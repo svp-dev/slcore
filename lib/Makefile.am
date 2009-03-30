@@ -10,11 +10,11 @@ EXTRA_DIST = \
 	svplib/div.sl
 
 nobase_dist_pkglib_SCRIPTS = \
-	r-host
+	r-host/run.sh
 
 nobase_pkglib_SCRIPTS = \
-	r-mtalpha-sim \
-	r-mtsparc-sim
+	r-mtalpha-sim/run.sh \
+	r-mtsparc-sim/run.sh
 
 
 nobase_dist_pkgdata_DATA = \

@@ -52,7 +52,7 @@ host-host-ptl/roman.o: $(srcdir)/svplib/roman.sl
 	$(MKDIR_P) host-host-ptl
 	$(SLC_PTL) -c -o $@ $<
 
-host-host-ptl/slrt.o: $(srcdir)/host-host-ptl/slrt.c
+host-host-ptl/slrt.o: $(srcdir)/host-host-ptl/slrt.c $(srcdir)/host-host-seqc/load.c
 	$(MKDIR_P) host-host-ptl
 	$(CC) $(CFLAGS) -I$(srcdir)/t-ptl/include -c -o $@ $<
 

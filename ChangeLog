@@ -1,5 +1,30 @@
 2009-03-30  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	Capture run scripts in subdirectories. Restore 'make check'
+	temporarily.
+
+	* lib/r-host: Rename to...
+	* lib/r-host/run.sh: here.
+	* lib/r-mtalpha-sim.in: Rename to...
+	* lib/r-mtalpha-sim/run.sh.in: here.
+	* lib/r-mtsparc-sim.in: Rename to...
+	* lib/r-mtsparc-sim/run.sh.in: here.
+
+	* bin/sgr.in,
+	* lib/Makefile.am,
+	* configure.ac: Update accordingly.
+
+	* lib/seqc.mk,	
+	* lib/ptl.mk: Capture missing dependency to host-host-seqc/load.c.
+
+	* lib/r-mtalpha-sim/run.sh.in: Temporarily initialize argument
+	pointer to 0. (will fix in later commit)
+	
+	* lib/host-host-seqc/load.c: Initialize argument pointer to 0 when
+	no data file is specified, instead of aborting.
+	
+2009-03-30  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	Start implementing parameter passing for SL programs.
 	
 	* bin/sag: Add. 

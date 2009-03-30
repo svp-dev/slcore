@@ -5,7 +5,7 @@ nobase_dist_pkgdata_DATA += \
 	t-seqc/include/sl_support.h \
 	host-host-seqc/include/svp_os.h 
 
-EXTRA_DIST += host-host-seqc/slrt.c 
+EXTRA_DIST += host-host-seqc/slrt.c host-host-seqc/load.c
 
 nobase_pkglib_DATA += host-host-seqc/slrt.o
 
@@ -31,7 +31,7 @@ host-host-seqc/roman.o: $(srcdir)/svplib/roman.sl
 	$(MKDIR_P) host-host-seqc
 	$(SLC_SEQC) -c -o $@ $<
 
-host-host-seqc/slrt.o: $(srcdir)/host-host-seqc/slrt.c
+host-host-seqc/slrt.o: $(srcdir)/host-host-seqc/slrt.c $(srcdir)/host-host-seqc/load.c
 	$(MKDIR_P) host-host-seqc
 	$(CC) $(CFLAGS) -I$(srcdir)/t-seqc/include -c -o $@ $<
 

@@ -136,8 +136,8 @@ fi
 AC_CONFIG_FILES([
 	Makefile
 	bin/Makefile
-        lib/r-mtalpha-sim
-        lib/r-mtsparc-sim
+        lib/r-mtalpha-sim/run.sh
+        lib/r-mtsparc-sim/run.sh
 	lib/Makefile
 	doc/Makefile
 	tests/Makefile
