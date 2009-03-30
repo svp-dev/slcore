@@ -6,13 +6,15 @@
 // $Id$
 //
 #include "sl_support.h"
+#include "load.c"
 
 extern void t_main(struct sl_famdata*);
 
 // configuration tag for sgr runner
 const char *__tag__ = "sgr_runner:host:";
 
-int main(void) {
+int main(int argc, const char **argv) {
+  load(argv[0], argv[1]);
   struct { } args;
   struct sl_famdata root;
   root.ix = root.be = 0;

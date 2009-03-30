@@ -1,0 +1,95 @@
+#! /usr/bin/env python
+# sag: this file is part of the slc project.
+#
+# Copyright (C) 2009 The SL project.
+# All rights reserved.
+import sys
+
+def die(msg):
+    print >>sys.stderr, msg
+    sys.exit(1)
+
+def genasm(out, data):
+    print >>out, "\t.globl __sgr_data_start\n\t.globl __sgr_data_end\n\t.align 4\n__sgr_data_start:"
+    for d in data:
+        print >>out, "\t.int __sgr_input_%s-__sgr_data_start" % d['label']
+    for d in data:
+        print >>out, "\t.align 4"
+        print >>out, "__sgr_input_%s:" % d['label']
+        print >>out, "\t.int %s" % d['len']
+        for i in d['items']:
+            print >>out, "\t.%s %s" % (d['type'], i)
+    print >>out, "__sgr_data_end:"
+
+def proto(parm):
+    print "Program variables:"
+    for k, v in parm.items():
+        print "\t%s (%s)\t%s" % (k, v['type'], v['desc'])
+
+def usage(parm):
+    print "Usage: <program> [VAR=INIT]..."
+    print 
+    proto(parm)
+    print
+    print "Initializers:"
+    print "\t(comma-separated list)\tuse the specified data items."
+    print "\tfile:FILENAME\tload data items from FILENAME, one per line."
+    print "\traw:FILENAME\tload data items from FILENAME as raw bytes."
+    print
+    print "Examples:"
+    print "\t<program> foo=42,69"
+    print "\t<program> foo=file:hello.txt"
+
+if __name__ == "__main__":
+    required = []
+    parm = {}
+    spec = {}
+    for l in sys.stdin:
+        _, label, type, desc = l.rstrip().split(':',3)
+        if label in required:
+            die("%s: already declared" % label)
+        required.append(label)
+        parm[label] = {'type':type,'desc':desc}
+
+    for a in sys.argv[1:]:
+            if not '=' in a:
+                usage(parm)
+                sys.exit(1)
+            label, init = a.split('=',1)
+            if label not in required:
+                die("%s: unrecognized variable" % label)
+            if label in spec:
+                die("%s: multiple definitions found" % label)
+            spec[label] = init
+
+    data = []
+    for r in required:
+        if r not in spec:
+            die("%s: variable not specified" % r)
+        
+        init = spec[r]
+        type = parm[r]['type']
+        if init.startswith('raw:'):
+            fname = init.split(':',1)[1]
+            s = file(fname).read()
+            p = 0
+            ls = len(s)
+            bytes = []
+            while p + 8 < ls:
+                bytes.append(','.join(('0x%x' % ord(x) for x in s[p:p+16])))
+                p += 8
+            while p < ls:
+                bytes.append('0x%x' % ord(s[p]))
+                p += 1
+            data.append({'label':r, 'type':type, 'len':ls, 'items':bytes})
+        elif init.startswith('file:'):
+            fname = init.split(':',1)[1]
+            items = []
+            for l in file(fname):
+                items.append(l.strip())
+            data.append({'label':r, 'type':type, 'len':len(items), 'items':items})
+        else:
+            values = init.split(',')
+            data.append({'label':r, 'type':type, 'len':len(values), 'items':values})
+    genasm(sys.stdout, data)
+

@@ -10,6 +10,10 @@ _start:
 	ldah $l29, 0($l27)	!gpdisp!1
 	lda  $l29, 0($l29)	!gpdisp!1
 
+	# initialize sgr data pointer:
+        lda $l1,__sgr_base
+	stq $l16,0($l1)
+	
 	# we want to create t_main:
 	# main has no shareds, take 1 global = PV
 	allocate $l0, 1, 0, 0, 0
@@ -22,7 +26,14 @@ _start:
 	mov $l0, $31
 	end	
 	.end _start
-	
+
+	.data
+	.align 4
+	.globl __sgr_base
+__sgr_base:
+	.int 0
+	.int 0
+
 	.section .rodata
 	.ascii "\0sgr_runner:mtalpha-sim:\0"
 	

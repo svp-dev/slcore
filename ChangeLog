@@ -1,3 +1,15 @@
+2009-03-30  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
+	Start implementing parameter passing for SL programs.
+	
+	* bin/sag: Add. 
+
+	* lib/host-host-seqc/load.c,
+	* lib/host-host-seqc/slrt.c,
+	* lib/host-host-ptl/slrt.c: Load data file before program startup.
+
+	* lib/mtalpha-sim/slrt.s: Initialize pointer to data before startup.
+	
 2009-03-28  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
 	Improve Makefile for required tools.
