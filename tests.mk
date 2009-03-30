@@ -11,6 +11,7 @@ SLC_VARS = \
 	SLC_DATADIR=$(abs_top_srcdir)/lib:$(abs_top_builddir)/lib \
 	SPP=$(abs_top_srcdir)/bin/spp \
 	SCU=$(abs_top_srcdir)/bin/scu \
+	SAG=$(abs_top_srcdir)/bin/sag \
 	CCE=$(abs_top_builddir)/bin/cce \
 	SGR=$(abs_top_builddir)/bin/sgr \
 	SLC=$(abs_top_builddir)/bin/slc

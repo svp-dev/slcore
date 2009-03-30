@@ -1,9 +1,21 @@
 #! /bin/sh
 # $Id$
 MGSIM_ALPHA=${MGSIM_ALPHA:-@MGSIM_ALPHA@}
+program=${1:?}
+datafile=${2:?}
+shift
+shift
+if ! test -x "$program"; then
+    echo "$0: $program: not an executable" >&2
+    exit 1
+fi
+if ! test -r "$datafile"; then
+    echo "$0: $datafile: file not found or not readable" >&2
+    exit 1
+fi
 
 if ! "$MGSIM_ALPHA" --help >/dev/null 2>&1; then
   echo "Can't find simulator? Please set env. var. MGSIM_ALPHA to simulator executable." >&2
   exit 1
 fi
-exec $MGSIM_ALPHA -R16 0 $SIMARGS -t "$@"
+exec $MGSIM_ALPHA $SIMARGS -t "$@" -L16 "$datafile" "$program"

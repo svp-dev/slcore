@@ -1,5 +1,60 @@
 2009-03-30  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	First "working" implementation of parameter passing for SL
+	programs. 
+
+	* bin/sag: Use C syntax instead of assembly for data source
+	code. Fix case where an empty list is specified as
+	initializer. Print help on standard error.
+
+	* lib/arggen.sl: Add.
+
+	* include/sgr.slh: Add.
+	
+	* bin/sgr.in: Better error handling. Compute data source file
+	based on command line, `sag' and the sgr specifiers in the program
+	binary from `sgr.slh'. Use `sgr_datatag' in binary as arch name to
+	compile data source file and `arggen.sl', then recurse to generate
+	the data. Define parameter -Ws to pass arguments to simulator.
+	
+	* lib/host-host-seqc/slrt.c,
+	* lib/host-host-ptl/slrt.c,	
+	* lib/mtalpha-sim/slrt.s: Define "sgr_datatag" in output binary.
+	
+	* include/svp/io.slh: Declare svp_io_write, required for
+	arggen.sl.
+	* include/svp/iomacros.slh: Wrap it.
+	* lib/svplib/io.sl: Implement it.
+	* lib/Makefile.am: Update accordingly.
+
+	* lib/r-host/run.sh,	
+	* lib/mtalpha-sim/run.sh.in: Recognize data file. Better error
+	handling.
+	
+	* bin/Makefile.am: Distribute / install `sag'.
+	* tests.mk: Overload SAG during tests.
+	* doc/acronyms.txt: Document `sag'.
+
+	* lib/host-host-seqc/load.c: Add missing file from 2 previous commits.
+
+	* demo/fibonacci.sl: Use the new parameter system.
+	
+	* demo/fft.sl: Use the new parameter system. Allow to skip
+	printing the data after the computation based on the value of
+	parameters Pi (print ints) and Pf (print floats).
+
+	* demo/testfft.sh: Add script to benchmark the fft, based on the
+	new parameter system.
+	* demo/Makefile.am: Update accordingly.
+	
+	* lib/div: Kill, as is now unused.
+	* bin/cce.in: Better handling of unknown tags.
+
+	* bin/spp: Bug fix thanks to fibo & fft: remove FP/RA spill in
+	function prologue. This provides (some) support for C99's VLAs.
+	
+2009-03-30  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	Capture run scripts in subdirectories. Restore 'make check'
 	temporarily.
 

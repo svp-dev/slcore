@@ -6,6 +6,7 @@
 # 
 
 DEMOS = 10threads.sl answer.sl fibonacci.sl helloworld.sl roman.sl 
+dist_noinst_SCRIPTS = testfft.sh
 EXTRA_DEMOS = fft.sl
 BUILT_SOURCES = fft_table.slh
 

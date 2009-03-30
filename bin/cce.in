@@ -165,17 +165,20 @@ basearch=$(echo "$slc_arch"|cut -c3-)
 basearchvar=$(echo "$basearch"|tr a-z A-Z)
 
 # Language mode selection
+slc_complang=unknown
 case $slc_dialect in
     ptl*)     slc_complang=cpp;;
     seqc|ppp) slc_complang=c;;
     utc*)     slc_complang=utc;;
-    *) 
+    *) echo "unknown dialect: $slc_dialect" >&2;;
 esac
 
 # Transformation selection
+slc_transbase=unknown
 case $slc_dialect-$slc_arch in
     utc*|seqc*|ptl*) slc_transbase=$slc_dialect	;;
     ppp-*)     slc_transbase=ppp$basearch ;;
+    *) echo "unknown combination: $slc_dialect-$slc_arch" >&2;;
 esac
 
 save_IFS=$IFS
@@ -188,11 +191,12 @@ for d in $slc_datadir; do
   fi
 done
 if test -z "$found"; then
-   die "could not find t-$slc_transbase in $slc_datadir"
+   echo "$0: warning: could not find t-$slc_transbase in $slc_datadir" >&2
+else
+    slc_trans=$found
+    slc_tflags="$slc_tflags -I$slc_trans"
+    slc_ppflags="$slc_ppflags -I$slc_trans/include"
 fi
-slc_trans=$found
-slc_tflags="$slc_tflags -I$slc_trans"
-slc_ppflags="$slc_ppflags -I$slc_trans/include"
 
 for m4_preinc in slc_m4sugar.m4 slc.m4; do
    found=
@@ -203,9 +207,10 @@ for m4_preinc in slc_m4sugar.m4 slc.m4; do
      fi
    done
    if test -z "$found"; then
-      die "could not find $m4_preinc in $slc_incdir"
+      echo "$0: warning: could not find $m4_preinc in $slc_incdir" >&2
+   else
+      slc_tflags="$slc_tflags $found"
    fi
-   slc_tflags="$slc_tflags $found"
 done
 for d in $slc_incdir; do
   slc_tflags="$slc_tflags -I$d"
@@ -222,7 +227,7 @@ case $slc_dialect-$slc_arch in
 	case $slc_complang in
 	    cpp) slc_compiler=$CXX ;;
 	    c)   slc_compiler="$CC" ;;
-	    utc) die "no compiler for $dialect-$arch" ;;
+	    utc) echo "$0: warning: no compiler for $dialect-$arch" >&2 ;;
 	esac
 	slc_filter=cp
 	;;
@@ -290,9 +295,10 @@ case $slc_os in
 		fi
             done
 	    if test -z "$found"; then
-		die "slrt.o not found for $slc_arch-$slc_os in $slc_libdir"
-            fi
-            slc_ldflags="$slc_ldflags $found"
+		echo "$0: warning: slrt.o not found for $slc_arch-$slc_os in $slc_libdir" >&2
+            else
+		slc_ldflags="$slc_ldflags $found"
+	    fi
         fi
 
 	if test "$slc_use_slos" != "no"; then

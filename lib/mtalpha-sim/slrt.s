@@ -36,4 +36,5 @@ __sgr_base:
 
 	.section .rodata
 	.ascii "\0sgr_runner:mtalpha-sim:\0"
+	.ascii "\0sgr_datatag:ppp-mtalpha-sim:\0"
 	

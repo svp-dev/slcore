@@ -18,6 +18,11 @@ sl_decl(svp_io_putc, void,
 sl_decl(svp_io_puts, void,
 	sl_glparm(const char *, gstr));
 
+/* Print an arbitrary number of bytes to the console output. */
+sl_decl(svp_io_write, void,
+	sl_glparm(void *, gptr),
+	sl_glparm(unsigned, gsize));
+
 /* Print a floating point number to the console output. */
 /* Note: the floating point is normalized before printing. */
 sl_decl(svp_io_putf, void,

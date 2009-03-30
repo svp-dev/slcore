@@ -1,0 +1,30 @@
+m4_ifndef([[SGR_SLH]],[[m4_define([[SGR_SLH]],1)
+
+m4_include(cstddef.slh)
+extern struct { ptrdiff_t offset; size_t nitems; } *__sgr_base;
+
+m4_define([[__sgr_acnt]],0)
+m4_define([[__sgr_vars]],[[]])
+
+#define __sgr_offset(N) __sgr_base[N].offset
+#define __sgr_baseptr ((char*)(void*)__sgr_base)
+#define __sgr_dataptr(N) ((void*)(__sgr_baseptr + __sgr_offset(N)))
+#define __sgr_len(N) __sgr_base[N].nitems
+
+m4_define([[sgr_var]],[[
+m4_define([[__sgr_len_$1]],[[__sgr_len(]]__sgr_acnt[[)]])
+m4_define([[__sgr_get_$1]],[[(([[$2]]*)__sgr_dataptr(]]__sgr_acnt[[))]])
+m4_define([[__sgr_vars]],m4_quote(__sgr_vars)[[\0sgr_arg:[[$1]]:[[$2]]:]]m4_dnl
+m4_if([[$3]],,[[(no description)]],[[" $3 "]]))
+m4_step([[__sgr_acnt]])
+]])
+
+m4_define([[sgr_decl]],[[
+m4_do($@)
+const char *__sgr_argdef = "__sgr_vars"
+]])
+
+m4_define([[sgr_get]],[[__sgr_get_$1]])
+m4_define([[sgr_len]],[[__sgr_len_$1]])
+
+]])

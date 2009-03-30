@@ -4,43 +4,60 @@
 # Copyright (C) 2009 The SL project.
 # All rights reserved.
 import sys
+import subprocess
 
 def die(msg):
     print >>sys.stderr, msg
     sys.exit(1)
 
 def genasm(out, data):
-    print >>out, "\t.globl __sgr_data_start\n\t.globl __sgr_data_end\n\t.align 4\n__sgr_data_start:"
+    #print >>out, "\t.globl __sgr_data_start\n\t.globl __sgr_data_end\n\t.align 4\n__sgr_data_start:"
+    print >>out, "struct {"
+    #for d in data:
+        #print >>out, "\t.int __sgr_input_%s-__sgr_data_start" % d['label']
+    print >>out, "  struct { ptrdiff_t offset; size_t nitems; } meta[%d];" % len(data)
     for d in data:
-        print >>out, "\t.int __sgr_input_%s-__sgr_data_start" % d['label']
+        print >>out, "  %s data_%s[%d];" % (d['type'], d['label'], d['len'])
+    print >>out, "} __sgr_data = {\n  { /* meta */"
     for d in data:
-        print >>out, "\t.align 4"
-        print >>out, "__sgr_input_%s:" % d['label']
-        print >>out, "\t.int %s" % d['len']
+        print >>out, "    { (char*)(void*)&__sgr_data.data_%s - (char*)(void*)&__sgr_data," % d['label'],
+        print >>out, "%d }," % d['len']
+    print >>out, "  },"
+    for d in data:
+        print >>out, "  { /* %s */ " % d['label']
         for i in d['items']:
-            print >>out, "\t.%s %s" % (d['type'], i)
-    print >>out, "__sgr_data_end:"
+            print >>out, "\t%s," % i
+        print >>out, "  },"
+    #for d in data:
+    #    print >>out, "\t.align 4"
+    #    print >>out, "__sgr_input_%s:" % d['label']
+    #    print >>out, "\t.int %s" % d['len']
+    #    for i in d['items']:
+    #        print >>out, "\t.%s %s" % (d['type'], i)
+    #print >>out, "__sgr_data_end:"
+    print "};"
 
 def proto(parm):
-    print "Program variables:"
+    print >>sys.stderr, "Program variables:"
     for k, v in parm.items():
-        print "\t%s (%s)\t%s" % (k, v['type'], v['desc'])
+        print >>sys.stderr, "\t%s (%s)\t%s" % (k, v['type'], v['desc'])
 
 def usage(parm):
-    print "Usage: <program> [VAR=INIT]..."
-    print 
+    print >>sys.stderr, "Usage: <program> [VAR=INIT]..."
+    print >>sys.stderr 
     proto(parm)
-    print
-    print "Initializers:"
-    print "\t(comma-separated list)\tuse the specified data items."
-    print "\tfile:FILENAME\tload data items from FILENAME, one per line."
-    print "\traw:FILENAME\tload data items from FILENAME as raw bytes."
-    print
-    print "Examples:"
-    print "\t<program> foo=42,69"
-    print "\t<program> foo=file:hello.txt"
+    print >>sys.stderr
+    print >>sys.stderr, "Initializers:"
+    print >>sys.stderr, "\t(comma-separated list)\tuse the specified data items."
+    print >>sys.stderr, "\tfile:FILENAME\tload data items from FILENAME, one per line."
+    print >>sys.stderr, "\traw:FILENAME\tload data items from FILENAME as raw bytes."
+    print >>sys.stderr
+    print >>sys.stderr, "Examples:"
+    print >>sys.stderr, "\t<program> foo=42,69"
+    print >>sys.stderr, "\t<program> foo=file:hello.txt"
 
 if __name__ == "__main__":
+
     required = []
     parm = {}
     spec = {}
@@ -89,7 +106,10 @@ if __name__ == "__main__":
                 items.append(l.strip())
             data.append({'label':r, 'type':type, 'len':len(items), 'items':items})
         else:
-            values = init.split(',')
+            if not init:
+                values = []
+            else:
+                values = init.split(',')
             data.append({'label':r, 'type':type, 'len':len(values), 'items':values})
     genasm(sys.stdout, data)
 

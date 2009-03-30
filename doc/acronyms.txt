@@ -44,6 +44,12 @@ Acronym for: SL Tester
 Role: test that a SL program compiles and runs on multiple SVP
 implementations.
 
+sag
+===
+
+Acronym for: SGR Arguments Generator
+
+Role: emit assembly source code suitable to build a SGR data file.
 
 
 

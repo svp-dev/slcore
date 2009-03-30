@@ -1252,11 +1252,29 @@ class pppalpha(object):
       else:
          assert len(pprologue) == 0
       if fundata['use_pv']:
-         fundata['prologue'].insert(0, ('other','mov $g%d, $l%d' % (pvargreg, pvreg), ''))
+         fundata['prologue'].insert(0, ('other','mov $g%d, $l%d' % (pvargreg, pvreg), 'MT: init PV'))
       if fundata['use_sp'] and spreg != 1:
-         fundata['prologue'].insert(0, ('other','mov $l1, $l%d' % spreg,''))
+         fundata['prologue'].insert(0, ('other','mov $l1, $l%d' % spreg,'MT: init SP'))
 
       return items
+
+   def optprologue(self, fundata, items):
+      fpreg = '$' + self.reg_aliases['fp']
+      rareg = '$' + self.reg_aliases['ra']
+      found = False
+      for (type, content, comment) in items:
+         if type == 'other' and fpreg in content:
+            found = True
+         yield (type, content, comment)
+      newprologue = []
+      for (type, content, comment) in fundata['prologue']:
+         if type == 'other' and (fpreg in content or rareg in content):
+            newprologue.append(('empty','','MT: optimized away: %s' % content))
+         else:
+            newprologue.append((type, content,comment))
+      if found == True:
+         newprologue.insert(0,('other','mov $l1, %s' % fpreg,'MT: init FP'))
+      fundata['prologue'] = newprologue
 
    def printer(self, items):
       for (type, content, comment) in items:
@@ -1292,6 +1310,7 @@ class pppalpha(object):
          groups = self.funfilter(self.renameregs, groups)
          groups = self.funfilter(self.xsplit, groups)
          groups = self.funfilter(self.makespecial, groups)
+         groups = self.funfilter(self.optprologue, groups)
          groups = self.funfilter(self.remdefaults, groups)
          groups = self.funfilter(self.addswchll, groups)
          # groups = self.funfilter(self.addswchdep, groups)

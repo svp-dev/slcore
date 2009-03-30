@@ -1,4 +1,6 @@
 m4_include(svp/iomacros.slh)
+m4_include(svp/assert.slh)
+m4_include(sgr.slh)
 
 m4_define(FT, double)
 
@@ -83,7 +85,9 @@ sl_def(FFT_Reverse, void,
 	    sl_glarg(cpx_t*, gX, sl_getp(X)),
 	    sl_glarg(unsigned, gi, i),
 	    sl_glarg(unsigned, gt, t));
-  sl_sync(); // FIXME: sync belongs after the loop below.
+
+  // NOTE: so much code between create and sync
+  // below has 'unspecified behavior' in SL.
 
   unsigned k = sl_getp(N) / 2;
   while (k <= t) 
@@ -91,6 +95,8 @@ sl_def(FFT_Reverse, void,
       t = t - k;
       k = k / 2;
     }
+  sl_sync(); 
+
   sl_setp(j, t + k);
 }
 sl_enddef
@@ -161,12 +167,9 @@ sl_def(FFT_Inv, void,
 sl_enddef
 
 
-m4_define(M_INIT, 6)
-m4_define(N_INIT, (1 << M_INIT))
-
-cpx_t X[N_INIT];
-cpx_t Y[N_INIT];
-cpx_t Z[N_INIT];
+cpx_t *X;
+cpx_t *Y;
+cpx_t *Z;
 
 sl_def(fft_init, void)
 {
@@ -186,16 +189,11 @@ sl_def(copy_y_z, void)
 }
 sl_enddef
 
-sl_def(print, void, sl_shparm(int, guard))
+sl_def(print_int, void, sl_shparm(int, guard))
 {
   sl_index(i);
   int g = sl_getp(guard);
   long long d = i;
-  printf("%d  |  %g %g  |  %g %g  |  %g %g\n", d,
-	 (double)X[i][RE], (double)X[i][IM],
-	 (double)Y[i][RE], (double)Y[i][IM],
-	 (double)Z[i][RE], (double)Z[i][IM]);
-  
   long long C = 10000;
   printf("%d  |  %d %d  |  %d %d  |  %d %d  |\n", d ,
 	 (long long)(C*X[i][RE]), (long long)(C*X[i][IM]),
@@ -206,24 +204,61 @@ sl_def(print, void, sl_shparm(int, guard))
 }
 sl_enddef
 
+sl_def(print_fl, void, sl_shparm(int, guard))
+{
+  sl_index(i);
+  int g = sl_getp(guard);
+  long long d = i;
+  printf("%d  |  %g %g  |  %g %g  |  %g %g\n", d,
+	 (double)X[i][RE], (double)X[i][IM],
+	 (double)Y[i][RE], (double)Y[i][IM],
+	 (double)Z[i][RE], (double)Z[i][IM]);
+
+  sl_setp(guard, g);
+}
+sl_enddef
+
+sgr_decl(
+	 sgr_var(M, int, "problem size"),
+	 sgr_var(Pi, int, "if nonempty: print values as integers after computation"),
+	 sgr_var(Pf, int, "if nonempty: print values as floats after computation")
+	 );
+
 sl_def(t_main, void)
 {
-  sl_create(,,,N_INIT,,,, fft_init);
+  svp_assert(sgr_len(M) >= 1);
+  unsigned M = sgr_get(M)[0];
+  svp_assert(M < 10);
+
+  unsigned N = 1 << M;
+
+  cpx_t lX[N]; X = lX;
+  cpx_t lY[N]; Y = lY;
+  cpx_t lZ[N]; Z = lZ;
+
+  sl_create(,,,N,,,, fft_init);
   sl_sync();
 
-  sl_create(,,,,,,, FFT, sl_glarg(cpx_t*, gX, Y), sl_glarg(unsigned, gM, M_INIT));
+  sl_create(,,,,,,, FFT, sl_glarg(cpx_t*, gX, Y), sl_glarg(unsigned, gM, M));
   sl_sync(); 
 
-  sl_create(,,,N_INIT,,,, copy_y_z);
+  sl_create(,,,N,,,, copy_y_z);
   sl_sync();
 
   sl_create(,,,,,,, FFT_Inv, sl_glarg(cpx_t*, gZ, Z), sl_glarg(unsigned, gM2, sl_geta(gM)));
   sl_sync();
+
+  if (sgr_len(Pi) > 0) {
+    puts("   |  X  |  Y  |  Z  |\n");
+    sl_create(,,,N,,,, print_fl, sl_sharg(int, guard, 0));
+    sl_sync();
+  }
   
-  puts("   | int(X * 10k) | int(Y * 10k) | int(Z * 10k) |\n");
-  sl_create(,,,N_INIT,,,, print, sl_sharg(int, guard, 0));
-  sl_sync();
-  
+  if (sgr_len(Pf) > 0) {
+    puts("   | int(X * 10k) | int(Y * 10k) | int(Z * 10k) |\n");
+    sl_create(,,,N,,,, print_int, sl_sharg(int, guard2, 0));
+    sl_sync();
+  }
 }
 sl_enddef
 

@@ -7,6 +7,8 @@
 // $Id$
 //
 m4_include(svp/iomacros.slh)
+m4_include(svp/assert.slh)
+m4_include(sgr.slh)
 
 m4_define(INT, unsigned long long)
 
@@ -37,11 +39,16 @@ sl_def(fibo_print, void,
 }
 sl_enddef
 
-m4_define(N, 15)
-INT fibonums[N];
+sgr_decl(sgr_var(N, int, "number of fibonacci numbers to generate"));
+
 
 sl_def(t_main, void)
 {
+  svp_assert(sgr_len(N) >= 1);
+  unsigned N = sgr_get(N)[0] + 1;
+
+  INT fibonums[N];
+
   // first, compute the numbers.
   fibonums[0] = fibonums[1] = 1;
   sl_create(,,2,N,,,,

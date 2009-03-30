@@ -25,6 +25,11 @@ m4_define([[puts]],
 sl_proccall(svp_io_puts, sl_glarg(const char*, s, ([[$1]])))
 ]])
 
+m4_define([[write]],
+[[
+sl_proccall(svp_io_write, sl_glarg(void*, s, ([[$1]])), sl_glarg(unsigned, i, ([[$2]])))
+]])
+
 m4_define([[putf]],
 [[
 sl_proccall(svp_io_putf,

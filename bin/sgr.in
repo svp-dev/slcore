@@ -5,7 +5,11 @@ copyright="Copyright (C) 2009 the CSA group - The SL project."
 # All rights reserved.
 
 set -e
+python=${PYTHON:-@python@}
+slc_helper=${SLC:-@slc_helper@}
+sag_helper=${SAG:-@sag_helper@}
 slc_libdir=${SLC_LIBDIR:-@slc_libdir@}
+slc_datadir=${SLC_DATADIR:-@slc_datadir@}
 
 timestamp=$(echo '$Date$'|cut -d' ' -f2)
 version=1
@@ -23,6 +27,7 @@ Usage: $0 [OPTION] PROGRAM [ARGS]...
 Options:
   -r runner      use the specified runner (use when autodetect fails)
   -x             show configuration string embedded in program (if any)
+  -Ws,arg        pass "arg" as extra command-line parameter to the runner
   -h, --help     print this help, then exit
   -v, --version  print version number, then exit
 
@@ -55,10 +60,15 @@ EOF
   exit 0
 }
 
+die() {
+  printf '%s: %s\n' "$0" "$2" >&2
+  exit $1
+}
 
 # Command line analysis
 prev_arg=
 show_embedded=
+lowargs=
 for arg in "$@"; do
   # if the previous option needs an argument, assign it
   if test -n "$prev_arg"; then
@@ -72,8 +82,11 @@ for arg in "$@"; do
       -x)	show_embedded=1; shift;;
       -v|--version)	do_version;;
       -h|--help)	do_usage;;
+      -Ws*)   lowarg=$(echo "$arg"|cut -d',' -f2-|tr ',' ' ')
+	  lowargs="$lowargs $lowarg"
+	  shift;;
       --)  break;;
-      -*) echo "$0: unrecognized command-line argument: $arg (try -h)" >&2; exit 1;;
+      -*)  die 1 "unrecognized command-line argument: $arg (try -h)";;
       *)   break;;
   esac
 done
@@ -83,14 +96,12 @@ shift
 
 # does the program exist?
 if ! test -f "$program"; then
-  echo "$0: no such file or directory: $program" >&2
-  exit 127
+  die 127 "no such file or directory: $program"
 fi
 
 # is it executable?
 if ! test -x "$program"; then
-  echo "$0: permission denied: $program" >&2
-  exit 126
+  die 126 "permission denied: $program"
 fi
 
 if test -n "$show_embedded" -o -z "$runner"; then
@@ -108,18 +119,24 @@ if test -n "$show_embedded" -o -z "$runner"; then
   fi
 fi
 
+datatag=$(strings "$program"|grep '^sgr_datatag:.*:'|tail -n1|cut -d: -f2)
+if test "x$datatag" = "x"; then
+    die 1 "can't determine cce tag to recompile"
+fi
+
+
 if test -z "$runner"; then
   # Not specified, use tag if found
   if test -n "$tag"; then
      runner=$tag
   else
-     echo "$0: can't determine runner (try -r)" >&2
-     exit 1
+     die 1 "can't determine runner (try -r)"
   fi
 fi
 
 # check it
 runner_script=
+saveIFS=$IFS
 IFS=:
 for l in $slc_libdir; do
   if test -r "$l/r-$runner/run.sh"; then
@@ -128,9 +145,80 @@ for l in $slc_libdir; do
   fi
 done
 if test -z "$runner_script"; then
-    echo "$0: $runner: cannot find runner script" >&2
+    die 1 "$runner: cannot find runner script"
+fi
+IFS=$saveIFS
+
+cleanfiles=
+docleanup() {
+    for f in $cleanfiles; do
+	if test -z "$KEEP"; then
+	    rm -rf "$f" >/dev/null 2>&1
+	else
+	    echo "$0: $f: left over temporary" >&2
+	fi
+    done
+}
+
+trapcleanup() {
+    local sig
+    sig=$1
+    docleanup
+    trap - INT PIPE TERM QUIT ALRM
+    kill -$sig $$
+}
+errcleanup() {
+    docleanup
+    trap - ERR
     exit 1
+}
+
+trap 'trapcleanup INT' INT
+trap 'trapcleanup PIPE' PIPE
+trap 'trapcleanup TERM' TERM
+trap 'trapcleanup QUIT' QUIT
+trap 'trapcleanup ALRM' ALRM
+trap 'errcleanup' ERR
+
+# build temporary directory
+baseout=$(basename "$program")
+tmpdir=$(mktemp -d -t "$baseout".XXXXXXXX)
+cleanfiles=$tmpdir
+
+# check program parameters
+strings "$program" | (grep '^sgr_arg:'||true) >"$tmpdir"/args.spec
+if test -s "$tmpdir"/args.spec; then
+    $python "$sag_helper" "$@" <"$tmpdir"/args.spec >"$tmpdir"/data.c
+
+    found=
+    saveIFS=$IFS
+    IFS=:
+    for d in $slc_datadir; do
+	if test -r "$d/arggen.sl"; then
+	    found=$d/arggen.sl
+	    break
+	fi
+    done
+    IFS=$saveIFS
+    if test -z "$found"; then
+	die 1 "arggen.sl not found in $slc_datadir"
+    fi
+    mkdir "$tmpdir"/slc-rec
+    TMPDIR="$tmpdir"/slc-rec @BASH@ "$slc_helper" -b "$datatag" -o "$tmpdir"/gen.x -I"$tmpdir" "$found"
+    mkdir "$tmpdir"/sgr-rec
+    TMPDIR="$tmpdir"/sgr-rec @BASH@ "$0" "$tmpdir"/gen.x >"$tmpdir"/data 2>/dev/null
+else
+    touch "$tmpdir"/data
 fi
 
-exec @BASH@ "$runner_script" "$program" "$@"
+#set +e
+@BASH@ "$runner_script" "$program" "$tmpdir"/data $lowargs
+#set -e
+docleanup
+trap - ERR
+#trap - ERR INT PIPE TERM QUIT ALRM
+#if test $x -gt 128; then
+#    kill -$(expr $x - 128) $$
+#fi
+#exit $x
 

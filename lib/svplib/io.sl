@@ -19,6 +19,17 @@ sl_def(svp_io_putc, void,
 }
 sl_enddef
 
+sl_def(svp_io_write, void,
+       sl_glparm(void*, gptr),
+       sl_glparm(unsigned, gsz))
+{
+  const char *p = (const char*)(void*)sl_getp(gptr);
+  unsigned i = 0, sz = sl_getp(gsz);
+  while (likely(i < sz))
+    __write1(p[i++]);
+}
+sl_enddef
+
 sl_def(svp_io_puts, void,
        sl_glparm(const char *, gstr))
 {

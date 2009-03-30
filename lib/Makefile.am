@@ -18,6 +18,7 @@ nobase_pkglib_SCRIPTS = \
 
 
 nobase_dist_pkgdata_DATA = \
+	arggen.sl \
 	t-utc/slimpl.m4 \
 	t-utc0/slimpl.m4 \
 	t-utc0/include/sl_support.h 

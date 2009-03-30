@@ -11,6 +11,7 @@ extern void lib_main(void);
 
 // configuration tag for sgr
 const char *__tag__ = "sgr_runner:host:";
+const char *__datatag__ = "sgr_datatag:ptl-host-host-ptl:";
 
 int main(int argc, const char **argv) {
   load(argv[0], argv[1]);
