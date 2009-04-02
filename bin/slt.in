@@ -90,7 +90,7 @@ command line. Each subsequent column contains a string of tests
 results for the corresponding implementation specifier on the command
 line.
 
-Each string of test results has 3 positions:
+Each string of test results has 3 sections:
 
 1. compilation results; one of:
 
@@ -126,7 +126,7 @@ Each string of test results has 3 positions:
 
   /L   Linking failed, as expected.
 
-2) execution results; one of:
+2) execution results; a number of:
 
   R    Execution succeded without errors.
 
@@ -155,13 +155,46 @@ Each string of test results has 3 positions:
 To indicate expected failures, the source code can be annotated as
 follows:
 
-  XFAIL: letters...     Indicate that an error or signal is expected
-                        at the phase(s) mentioned in "letters".
+  XFAIL: pattern...     Indicate that an error or signal is expected
+                        at the implementation/phase(s) matched by
+                        the patterns (see below)
 
-  XTIMEOUT              Indicate that a timeout is expected 
-                        at runtime.
+  XIGNORE: pattern...   Indicate that any result at the implementation/
+                        phase(s) matched by the patterns should
+                        be considered a success.
+
+  XTIMEOUT: pattern...  Indicate that a timeout is expected 
+                        at runtime in the implementation(s) matched by
+			the patterns.
 
 The annotation can appear anywhere; for example in source comments.
+
+Patterns have the following form: IMPL:PHASESPEC. Where: IMPL is a
+pattern that matches the implementation name being tested; PHASESPEC
+matches the phase(s) being tested. The pattern matches when at a test
+point both the current implementation and the current phase match the
+pattern. Example patterns:
+
+  *x:*                  Match any phase in any implementation ending 
+                        with "x". 
+
+  ptl*:D                Ignore the program output for implementations
+                        whose name start with "ptl".
+
+To run the program the helper script \`sgr' is used. By default, a
+single run is performed without extra arguments to \`sgr'. When extra
+arguments are required, the program should contains annotations of the
+following form, one per (commented) line:
+
+  SLT_RUN: args...
+
+For each occurrence of SLT_RUN in the program source code, \`sgr' is
+run once with the arguments specified after SLT_RUN. There are as many
+"execution" columns in the output as there are SLT_RUN specifiers in
+the program. For example:
+
+  SLT_RUN: N=5 -Ws,-o -Ws,NumProcessors=1
+  SLT_RUN: N=10
 
 For program output comparison, the test assumes that the first
 implementation tested produces the reference output; subsequent
@@ -206,6 +239,11 @@ Environment variables:
 
   TEXT_ONLY      If set and not empty, use plain text messages instead
                  of colored/positioned characters on the console.
+
+  XIGNORE        If set and not empty, prepend to the XIGNORE pattern
+                 list set by programs. Can be used to mark specific
+                 implementations as not relevant for overall test results.
+                 Default is "XIGNORE=*x:*"
 
 Diagnostics:
   0              The test succeeded.
@@ -268,7 +306,7 @@ shift
 case $1 in
   ""|all)
     impl1=seqc
-    set ptl ppp 'ppp:SIMARGS=-o NumProcessors=1' utcx
+    set ptl ppp utc0 utcx
     ;;
   *)
     impl1=$1
@@ -315,8 +353,39 @@ place_chars() {
   fi
 }
 
+matchpat() {
+  local pats pat a found
+  pats=$1
+  shift
+  set -f
+  found=
+  for pat in $pats; do
+    for a in "$@"; do
+      if [[ "$impl:$a" == $pat ]]; then
+        found=1
+        break 2
+      fi
+    done
+  done
+  set +f
+  if test -z "$found"; then return 1; fi
+  return 0
+}
+
+xign() {
+    matchpat "$ignpats" "$@"
+}
+
+xfail() {
+    matchpat "$xfailpats" "$@"
+}
+
+xto() {
+    matchpat "$xtopats" "$@"
+}
+
 report_compile() {
-  local code offset color char str outlog
+  local code offset color char str outlog found pat
   code=$1
   offset=$2
   outlog=$3
@@ -324,27 +393,29 @@ report_compile() {
   fail=0
   dorun=1
   case $status in
-    signal)  color=31; char="! "; fail=1 ;;
-    timeout) color=31; char="8 "; fail=1 ;; 
-    ok)      if grep -q "XFAIL:.*[TPCFAL]" "$testsrc"; then color=31; char="? "; fail=1; else color=32; char=" L"; fi ;;
+      signal)  color=31; char="! "; fail=1 ;;
+      timeout) color=31; char="8 "; fail=1 ;; 
+      ok)      
+	  if xfail T P C F A L
+          then color=31; char="? "; fail=1 
+    	  else color=32; char=" L"
+	  fi ;;
     error) 
        case $errcode in
           1) color=31; char="X "; fail=1 ;;
-          2) if grep -q "XFAIL:.*T" "$testsrc"; then color=33; char="/T"; else color=31; char="XT"; fail=1; fi;;
-          3) if grep -q "XFAIL:.*P" "$testsrc"; then color=33; char="/P"; else color=31; char="XP"; fail=1; fi;;
-          4) if grep -q "XFAIL:.*C" "$testsrc"; then color=33; char="/C"; else color=31; char="XC"; fail=1; fi;;
-          5) if grep -q "XFAIL:.*F" "$testsrc"; then color=33; char="/F"; else color=31; char="XF"; fail=1; fi;;
-          6) if grep -q "XFAIL:.*A" "$testsrc"; then color=33; char="/A"; else color=31; char="XA"; fail=1; fi;;
-          7) if grep -q "XFAIL:.*L" "$testsrc"; then color=33; char="/L"; else color=31; char="XL"; fail=1; fi;;
+          2) if xfail T; then color=33; char="/T"; else color=31; char="XT"; fail=1; fi;;
+          3) if xfail P; then color=33; char="/P"; else color=31; char="XP"; fail=1; fi;;
+          4) if xfail C; then color=33; char="/C"; else color=31; char="XC"; fail=1; fi;;
+          5) if xfail F; then color=33; char="/F"; else color=31; char="XF"; fail=1; fi;;
+          6) if xfail A; then color=33; char="/A"; else color=31; char="XA"; fail=1; fi;;
+          7) if xfail L; then color=33; char="/L"; else color=31; char="XL"; fail=1; fi;;
           *) color=31; char="??"; fail=1 ;;
        esac
        dorun=0
   esac
-  if expr "$impl" : '.*x' >/dev/null; then
-     if test $status = error -a $errcode -ge 3 -a $errcode -le 7; then
-        color=33; char=" |"; fail=0; dorun=0
-     fi
-  fi
+  
+  if xign T P C F A L; then color=37; fail=0; dorun=0; fi
+
   if test $fail = 1; then
     dorun=0
   fi
@@ -361,13 +432,14 @@ report_run() {
   dodiff=1
   case $status in
     signal)  dodiff=0; 
-             if grep -q "XFAIL:.*R" "$testsrc"; then color=33; char="."; else color=31; char="!"; fail=1; fi;;
+             if xfail R; then color=33; char="."; else color=31; char="!"; fail=1; fi;;
     timeout) dodiff=0; 
-             if grep -q "XTIMEOUT" "$testsrc"; then color=33; char="o"; else color=31; char="8"; fail=1; fi;;
-    ok)      if grep -q "XFAIL:.*R" "$testsrc"; then color=31; char="?"; fail=1; else color=32; char="R"; fi ;;
+             if xto R; then color=33; char="o"; else color=31; char="8"; fail=1; fi;;
+    ok)      if xfail R; then color=31; char="?"; fail=1; else color=32; char="R"; fi ;;
     error)   dodiff=0;
-             if grep -q "XFAIL:.*R" "$testsrc"; then color=33; char="/"; else color=31; char="X"; fail=1; fi;;
+             if xfail R; then color=33; char="/"; else color=31; char="X"; fail=1; fi;;
   esac
+  if xign R; then fail=0; dodiff=0; color=37; fi
   place_chars $offset $color "$char"
 }
 
@@ -386,29 +458,34 @@ do_compile() {
 }
 
 do_run() {
-  local offset command x
+  local offset command x i
+  local -a vars
   offset=$1
 
   dodiff=1
   if test $dorun = 0; then
-    echo "Not running program since no executable was produced." >>$baseout.log
-    place_chars $offset 37 "-"
+    echo "Not running program." >>$baseout.log
+    for ((i=0; i<$nruns; ++i)); do place_chars $(($offset + $i)) 37 "-"; done
     dodiff=0
   else
-      echo "===== RUNNING PROGRAM =====" >>$baseout.log
-      command="$timeout $runner $baseout.x"
-      echo "$command >$baseout.out" >>$baseout.log
-      set +e
-      $command >$baseout.out 2>>$baseout.log 
-      x=$?
-      set -e
-
-      report_run $x $offset $baseout.log
+      printf '' >$baseout.out
+      while read -a vars ; do
+	  echo "===== RUNNING PROGRAM: ${vars[*]} =====" >>$baseout.log
+	  command="$timeout $runner $baseout.x ${vars[*]}"
+	  echo "$command >>$baseout.out" >>$baseout.log
+	  set +e
+	  $command >>$baseout.out 2>>$baseout.log 
+	  x=$?
+	  set -e
+	  
+	  report_run $x $offset $baseout.log
+	  offset=$(expr $offset + 1)
+      done <"$runspec"
   fi
 }
 
 do_diff() {
-  local offset refout str
+  local offset refout str diffok
   offset=$1
   refout=$2
 
@@ -420,15 +497,14 @@ do_diff() {
       echo "diff -u $refout $baseout.out" >>$baseout.log
       if diff -u "$refout" "$baseout.out" >>"$baseout.log" 2>&1; then
 	  echo "Output identical to reference" >>$baseout.log
-	  place_chars $offset 32 D
+	  if xfail D; then char=?; color=31; fail=1; else char=D; color=32; fi
       else
-	  place_chars $offset 31 X
-	  fail=1
+	  if xfail D; then char="/"; color=33; else char=X; color=31; fail=1; fi
       fi
+      if xign D; then color=37; fail=0; fi
+      place_chars $offset $color $char
   fi
 }
-
-
 
 do_check() {
   local offset refout compref b
@@ -439,7 +515,7 @@ do_check() {
   do_compile $offset
   offset=$(expr $offset + 2)
   do_run $offset
-  offset=$(expr $offset + 1)
+  offset=$(expr $offset + $nruns)
   if test -n "$refout"; then
       do_diff $offset "$refout"
   else
@@ -456,8 +532,8 @@ do_check() {
       compref=$refout
     fi
     for b in "$baseout"*; do
-       if test "x$compref" != "x$b"; then
-          rm "$b"
+       if test "x$compref" != "x$b" -a "x$runspec" != "x$b"; then
+          rm -rf "$b"
        fi
     done
     rmdir "$outdir" >/dev/null 2>&1 || true
@@ -466,7 +542,7 @@ do_check() {
 }
 
 do_preptest() {
-    local vars save vn var val
+    local vars save vn var val prefign
     impl=$(echo "$1" | cut -d: -f1)
     vars=$(echo "$1" | cut -d: -f2-)
     if test -n "$vars"; then
@@ -494,19 +570,38 @@ do_preptest() {
     if ! test -w "$outdir"; then
 	die "$outdir: directory is not writable"
     fi
-    rm -f "$baseout"*
+    rm -rf "$baseout"*
+    export TMPDIR="$outdir"
 }
 
+
+# start testing
+counter=0
+do_preptest "$impl1"
+
+prefign=${XIGNORE:-*x:*}
+xfailpats=$(grep "XFAIL:" <"$testsrc"|sed -e 's/^.*XFAIL:\(.*\)$/\1/g')
+ignpats=$(echo "$prefign"; grep "XIGNORE:" <"$testsrc"|sed -e 's/^.*XIGNORE:\(.*\)$/\1/g')
+xtopats=$(grep "XTIMEOUT:" <"$testsrc"|sed -e 's/^.*XTIMEOUT:\(.*\)$/\1/g')
+
+(grep "SLT_RUN:" <"$testsrc"|sed -e 's/^.*SLT_RUN:\(.*\)$/\1/g') >"$baseout".runspec
+nruns=$(wc -l <"$baseout".runspec)
+if test $nruns = 0; then
+    echo >"$baseout".runspec
+    nruns=1
+fi
+runspec="$baseout".runspec
 
 if test -z "$TEXT_ONLY"; then
     # find terminal width and squeeze first
     # column as needed
+    colspertest=$(expr $nruns + 4)
     if stty size >/dev/null 2>&1; then
 	COLUMNS=$(stty size|cut -d' ' -f2)
     fi
     COLUMNS=${COLUMNS:-80}
     nrimpl=$#
-    nrcols=$(expr \( $nrimpl + 1 \) \* 5)
+    nrcols=$(expr \( $nrimpl + 1 \) \* $colspertest )
     remainder=$(expr $COLUMNS - $nrcols - 5)
     if test $remainder -lt 20; then remainder=20; fi
     name=$testsrc
@@ -521,10 +616,6 @@ if test -z "$TEXT_ONLY"; then
     fi
     printf "%-${remainder}s" "$name"
 fi
-
-# start testing
-counter=0
-do_preptest "$impl1"
 
 bye() {
   local sig
@@ -572,7 +663,7 @@ check_proc $x
 towait=
 refout=$baseout.out
 for impl1 in "$@"; do
-    offset=$(expr $offset + 5)
+    offset=$(expr $offset + $colspertest)
     do_preptest "$impl1"
     do_check $impl $offset "$refout" &
     towait="$towait $!"
@@ -588,7 +679,7 @@ for w in $towait; do
 done
 
 if test -z "$TEXT_ONLY"; then
-    offset=$(expr $offset + 5)
+    offset=$(expr $offset + $colspertest)
     if test $fail = 0; then
 	place_chars $offset 37 "\o/"
     else
@@ -604,7 +695,7 @@ else
 fi
 
 if test $fail = 0 -a -z "$KEEP"; then
-    rm "$refout"
+    rm -f "$refout" "$runspec"
     rmdir $(dirname "$refout") >/dev/null 2>&1 || true
 fi
 exit $fail

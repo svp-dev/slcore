@@ -27,7 +27,8 @@ Usage: $0 [OPTION] PROGRAM [ARGS]...
 Options:
   -r runner      use the specified runner (use when autodetect fails)
   -x             show configuration string embedded in program (if any)
-  -Ws,arg        pass "arg" as extra command-line parameter to the runner
+  -Ws,arg        pass "arg" as extra command-line parameter to the simulator,
+                 when the simulator is used.
   -h, --help     print this help, then exit
   -v, --version  print version number, then exit
 
@@ -68,7 +69,9 @@ die() {
 # Command line analysis
 prev_arg=
 show_embedded=
-lowargs=
+vars=
+program=
+SIMARGS=${SIMARGS:-}
 for arg in "$@"; do
   # if the previous option needs an argument, assign it
   if test -n "$prev_arg"; then
@@ -83,16 +86,17 @@ for arg in "$@"; do
       -v|--version)	do_version;;
       -h|--help)	do_usage;;
       -Ws*)   lowarg=$(echo "$arg"|cut -d',' -f2-|tr ',' ' ')
-	  lowargs="$lowargs $lowarg"
+	  SIMARGS="$SIMARGS $lowarg"
 	  shift;;
       --)  break;;
       -*)  die 1 "unrecognized command-line argument: $arg (try -h)";;
-      *)   break;;
+      *=*) vars="$vars $arg";;
+      *)   if test -z "$program"; then program=$arg
+           else die 1 "unrecognized command-line argument: $arg (try -h)"
+	   fi ;;
   esac
 done
 
-program=$1
-shift
 
 # does the program exist?
 if ! test -f "$program"; then
@@ -188,7 +192,7 @@ cleanfiles=$tmpdir
 # check program parameters
 strings "$program" | (grep '^sgr_arg:'||true) >"$tmpdir"/args.spec
 if test -s "$tmpdir"/args.spec; then
-    $python "$sag_helper" "$@" <"$tmpdir"/args.spec >"$tmpdir"/data.c
+    $python "$sag_helper" $vars <"$tmpdir"/args.spec >"$tmpdir"/data.c
 
     found=
     saveIFS=$IFS
@@ -212,7 +216,8 @@ else
 fi
 
 #set +e
-@BASH@ "$runner_script" "$program" "$tmpdir"/data $lowargs
+export SIMARGS
+@BASH@ "$runner_script" "$program" "$tmpdir"/data 
 #set -e
 docleanup
 trap - ERR

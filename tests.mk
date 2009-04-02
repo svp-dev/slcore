@@ -20,6 +20,6 @@ SLC = $(SLC_VARS) $(abs_top_builddir)/bin/slc
 
 TESTS_ENVIRONMENT = \
 	$(SLC_VARS) \
-	TEST_HERE=1 \
+	TEST_HERE=1 XIGNORE="*x:* utc0:[CLRD]" \
 	$(SHELL) $(abs_top_builddir)/bin/slt
 

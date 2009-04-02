@@ -25,6 +25,7 @@ nobase_dist_pkgdata_DATA = \
 	include/slc_m4sforeach.m4 \
 	include/cstdint.slh \
 	include/cstddef.slh \
+	include/sgr.slh \
 	include/svp/argslot.slh \
 	include/svp/assert.slh \
 	include/svp/div.slh \

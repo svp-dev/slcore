@@ -1,3 +1,39 @@
+2009-04-02  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
+	Improvements to unit test script (`slt'). Restore 'make distcheck'
+	again.
+
+	Make it possible to 1) set expected failures for specific
+	implementations using pattern matching, 2) disregard a test phase
+	regardless of its status (XIGNORE), 3) indicate to `slt' that
+	there should be multiple executions of the program with different
+	sets of parameters to `sgr' (SLT_RUN).
+
+	See "slt --help" for details.
+	
+	* bin/slt.in: Implement extra features. Document them.
+	
+	* bin/sgr.in: Relax argument parsing. Can now interleave program
+	variables and simulator parameters.
+
+	* demo/10threads.sl,	
+	* tests/0_minimal/2_args/delayshared.sl: use XIGNORE with ptl
+	since ptl does not implement the delayed shared sets properly.
+
+	* tests.mk: use XIGNORE for utc0 to relieve pressure on muTC core
+	compiler during "make distcheck"
+
+	* tests/1_basic/0_sgr_args/args.sl: Test the "sgr program
+	variables" mechanism.
+	
+	* demo/fibonacci.sl,
+	* tests/1_basic/2_div/div.sl: use the new SLT_RUN mechanism.
+
+	* tests/mkalltests.mk: disable index tests for now as they require
+	break and this is not properly designed in SL yet.
+
+	* Makefile.am: Do not forget to distribute sgr.slh.
+
 2009-03-30  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
 	First "working" implementation of parameter passing for SL
