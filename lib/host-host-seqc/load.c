@@ -20,7 +20,7 @@ void load(const char *progname, const char* fname)
   }
   FILE *f;
   if (!(f = fopen(fname, "rb"))) fail(progname, "fopen");
-  fseek(f, -1L, SEEK_END);
+  fseek(f, 0L, SEEK_END);
 
   long sz = ftell(f);
   if (sz < 0) fail(progname, "ftell");

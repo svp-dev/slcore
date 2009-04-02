@@ -48,22 +48,6 @@ m4_define([[sl_seta]],[[__sl_seta_$1([[$2]])]])
 
 m4_define([[m4_sh_escape]],[['m4_bpatsubst([[$1]],[[[']]],[['"'"']])']])
 
-m4_define([[sl_create]],[[
-m4_ifdef([[_sl_increate]],[[m4_fatal(cannot nest create)]])
-m4_define([[_sl_increate]],1)
-m4_step([[__sl_crcnt]])
-m4_define([[__sl_tag]],__sl_child[[]]__sl_crcnt)
-m4_define([[_sl_place]],m4_if([[$2]],,[[PLACE_DEFAULT]],[[$2]]))
-m4_define([[_sl_start]],m4_if([[$3]],,0,[[$3]]))
-m4_define([[_sl_limit]],m4_if([[$4]],,1,[[$4]]))
-m4_define([[_sl_step]],m4_if([[$5]],,1,[[$5]]))
-m4_define([[_sl_block]],m4_if([[$6]],,0,[[$6]]))
-m4_define([[__sl_crbrktype]],"[[$7]]")
-m4_define([[__sl_crfuncname]],"[[$8]]")
-m4_pushdef([[__sl_seta_$2]],_sl_lbl[[]]_args.$2 = $[[]]1) m4_dnl
-m4_popdef([[_sl_initializer]]) m4_dnl
-]])
-
 m4_define([[sl_initarg]],[[ m4_dnl
 [[$3]] __sl_after_[[$4]]; m4_dnl
 m4_define([[__sl_geta_$4]],__sl_after_$4) m4_dnl
@@ -76,11 +60,12 @@ m4_ifdef([[_sl_increate]],[[m4_fatal(cannot nest create)]])m4_dnl
 m4_define([[_sl_increate]],1)m4_dnl
 m4_step([[__sl_crcnt]])m4_dnl
 m4_define([[__sl_tag]],__child[[]]__sl_crcnt)m4_dnl
-m4_define([[_sl_place]],m4_if([[$2]],,PLACE_DEFAULT,[[$3]]))m4_dnl
+m4_define([[_sl_place]],m4_if([[$2]],,PLACE_DEFAULT,[[$2]]))m4_dnl
 m4_define([[_sl_start]],m4_if([[$3]],,0,[[$3]]))m4_dnl
 m4_define([[_sl_limit]],m4_if([[$4]],,1,[[$4]]))m4_dnl
 m4_define([[_sl_step]],m4_if([[$5]],,1,[[$5]]))m4_dnl
 m4_define([[_sl_block]],m4_if([[$6]],,0,[[$6]]))m4_dnl
+m4_define([[__sl_crbrktype]],"[[$7]]")m4_dnl
 m4_define([[__sl_crfuncname]],[[$8]])m4_dnl
 m4_define([[_sl_thargs]],m4_dquote(m4_shiftn(8,$@)))m4_dnl
 m4_foreach([[_sl_arg]],m4_quote(_sl_thargs),[[m4_apply([[sl_initarg]],m4_split(_sl_arg,:))]]) m4_dnl
