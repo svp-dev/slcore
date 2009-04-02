@@ -248,7 +248,7 @@ case $slc_dialect-$slc_arch in
 esac
 
 # Compiler flags selection; default to optimize
-slc_cflags="$slc_cflags -Os"
+slc_cflags="$slc_cflags -O2"
 
 # Assembler and linker selection
 case $slc_complang-$slc_arch in

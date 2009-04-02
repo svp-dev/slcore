@@ -12,10 +12,10 @@ def die(msg):
 
 def genasm(out, data):
     #print >>out, "\t.globl __sgr_data_start\n\t.globl __sgr_data_end\n\t.align 4\n__sgr_data_start:"
-    print >>out, "struct {"
+    print >>out, "struct __sgr_data_t {"
     #for d in data:
         #print >>out, "\t.int __sgr_input_%s-__sgr_data_start" % d['label']
-    print >>out, "  struct { ptrdiff_t offset; size_t nitems; } meta[%d];" % len(data)
+    print >>out, "  struct meta_%d_t { ptrdiff_t offset; size_t nitems; } meta[%d];" % (len(data), len(data))
     for d in data:
         print >>out, "  %s data_%s[%d];" % (d['type'], d['label'], d['len'])
     print >>out, "} __sgr_data = {\n  { /* meta */"

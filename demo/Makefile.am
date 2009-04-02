@@ -5,9 +5,9 @@
 # All rights reserved.
 # 
 
-DEMOS = 10threads.sl answer.sl fibonacci.sl helloworld.sl roman.sl 
+DEMOS = 10threads.sl answer.sl fibonacci.sl helloworld.sl roman.sl fft.sl
 dist_noinst_SCRIPTS = testfft.sh
-EXTRA_DEMOS = fft.sl
+EXTRA_DEMOS = 
 BUILT_SOURCES = fft_table.slh
 
 ALL_DEMOS = $(DEMOS) $(EXTRA_DEMOS)
@@ -26,7 +26,7 @@ CLEANFILES = $(noinst_DATA)
 SUFFIXES = .sl .mtalpha-x
 
 .sl.mtalpha-x:
-	$(SLC) -b ppp-mtalpha -o $@ $<
+	$(SLC) -b ppp-mtalpha -o $@ $< -mcpu=ev6 -mbwx -mmax -mfix -mcix
 
 .sl.ptl-x:
 	$(SLC) -b ptl -o $@ $<

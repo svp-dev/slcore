@@ -1117,6 +1117,7 @@ class pppalpha(object):
       rexway = re.compile(r'\w+\s([^,]+),(.*)')
       reld = re.compile(r'(ld[lqts]|allocate)')
       re3wayll = re.compile(r'(add|sub|mul|div|sqrt)[ts]')
+      w1way = re.compile(r'(setempty|rpcc)')
 
       allregs = ['$l%d' % x for x in xrange(31 - self.iargregs) if x not in (17, 18)] + \
           ['$lf%d' % x for x in xrange(31 - self.fargregs)] + \
@@ -1154,7 +1155,7 @@ class pppalpha(object):
             m = re1way.match(content)
             if m is not None and not done:
                r1 = m.group(1)
-               if content.startswith('setempty'):
+               if w1way.match(content) is not None:
                   shortwrites.append(r1)
                else:
                   reads.append(r1)
@@ -1266,12 +1267,15 @@ class pppalpha(object):
          if type == 'other' and fpreg in content:
             found = True
          yield (type, content, comment)
+
+      # 2009-04-02: beware of not fidgeting too much with FP!
       newprologue = []
       for (type, content, comment) in fundata['prologue']:
-         if type == 'other' and (fpreg in content or rareg in content):
+         if type == 'other' and (rareg in content or content.startswith("stq %s," % fpreg)):
             newprologue.append(('empty','','MT: optimized away: %s' % content))
          else:
             newprologue.append((type, content,comment))
+
       if found == True:
          newprologue.insert(0,('other','mov $l1, %s' % fpreg,'MT: init FP'))
       fundata['prologue'] = newprologue
@@ -1321,6 +1325,10 @@ class pppalpha(object):
          groups = self.funfilter(self.markused, groups)
          groups = self.funfilter(self.makespecialtransform('gp'), groups)
          groups = self.funfilter(self.makespecialtransform('tlsp'), groups)
+         groups = self.funfilter(self.makespecialtransform('fp'), groups)
+         groups = self.funfilter(self.makespecialtransform('ra'), groups)
+         groups = self.funfilter(self.makespecialtransform('pv'), groups)
+         groups = self.funfilter(self.makespecialtransform('rv'), groups)
          groups = self.funfilter(self.compress, groups)
          groups = self.funfilter(self.xjoin2, groups)
          items = self.flattener(groups)

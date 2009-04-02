@@ -1,3 +1,43 @@
+2009-04-03  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
+	Add new performance measurement API to the SL library. Improve FFT
+	demo. Fix bugs thanks to testing.
+	
+	* include/svp/perf.slh: Implement primitive to read the cycle
+	counter.
+
+	* include/cstdint.slh: Define some types manually when running
+	Alpha, since stdint.h is not available then. This needs to be
+	improved later.
+
+	* demo/fft.sl: Use new performance measurement mechanism. Skip
+	some computations when input parameter Pc is set. Separate output
+	of each array for more meaningful "diff".
+	
+	* demo/testfft.sh: Update accordingly.
+	
+	* demo/fft_gentable.c: Generate more table entries (M=11).
+
+	* demo/Makefile.am: Reinstate fft during "make check".
+	
+	* bin/spp (pppalpha.optprologue): Be more careful when optimizing
+	FP initialization: only remove the spilling instruction, not
+	potential loads from SP. (discovered when running FFT)
+
+	* bin/spp (pppalpha.addswchll): Recognize "rpcc" as an instruction
+	which overwrites its operand with no read.
+
+	* bin/spp (pppalpha.filter): Rename more locals to squeeze window
+	some more (also fp, ra, pv, rv).
+
+	* lib/mtalpha.mk,
+	* demo/Makefile.am: Set additional Alpha optimization flags.
+
+	* bin/cce.in: Use -O2 by default, not -Os.
+
+	* bin/sag (genasm): Emit structure names to please C++ compiler
+	when running in ptl mode.
+
 2009-04-02  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
 	Bug fixes thanks to testing.

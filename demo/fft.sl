@@ -1,5 +1,6 @@
 m4_include(svp/iomacros.slh)
 m4_include(svp/assert.slh)
+m4_include(svp/perf.slh)
 m4_include(sgr.slh)
 
 m4_define(FT, double)
@@ -103,19 +104,22 @@ sl_enddef
 
 sl_def(FFT, void,
        sl_glparm(cpx_t*, X),
-       sl_glparm(unsigned, M))
+       sl_glparm(unsigned, M),
+       sl_glparm(int, do_bitreversal))
 {
   unsigned N = 1 << sl_getp(M);
 
-  sl_create(,,,N-1,,,, FFT_Reverse,
+  if (sl_getp(do_bitreversal)) {
+    sl_create(,,,N-1,,,, FFT_Reverse,
+	      sl_glarg(cpx_t*, gX, sl_getp(X)),
+	      sl_glarg(unsigned, gN, N),
+	      sl_sharg(unsigned, j, 0));
+    sl_sync();
+  }
+  
+  sl_create(,PLACE_LOCAL,1,sl_getp(M)+1,1,,, FFT_1,
 	    sl_glarg(cpx_t*, gX, sl_getp(X)),
 	    sl_glarg(unsigned, gN, N),
-	    sl_sharg(unsigned, j, 0));
-  sl_sync();
-  
-  sl_create(,PLACE_LOCAL,1,sl_getp(M)+1,,,, FFT_1,
-	    sl_glarg(cpx_t*, gX2, sl_geta(gX)),
-	    sl_glarg(unsigned, gN2, sl_geta(gN)),
 	    sl_sharg(int, token, 0));
   sl_sync(); 
 }
@@ -155,7 +159,8 @@ sl_def(FFT_Inv, void,
 
   sl_create(,,,,,,, FFT, 
 	    sl_glarg(cpx_t*, gX2, sl_geta(gX)), 
-	    sl_glarg(unsigned, gM, sl_getp(M)));
+	    sl_glarg(unsigned, gM, sl_getp(M)),
+	    sl_glarg(int, gDBR, 1));
   sl_sync();
 
   sl_create(,,,N,,,, Scale, 
@@ -189,46 +194,50 @@ sl_def(copy_y_z, void)
 }
 sl_enddef
 
-sl_def(print_int, void, sl_shparm(int, guard))
+sl_def(print_int, void, sl_shparm(int, guard), sl_glparm(cpx_t*, array))
 {
   sl_index(i);
   int g = sl_getp(guard);
+  cpx_t *A = sl_getp(array);
   long long d = i;
   long long C = 10000;
-  printf("%d  |  %d %d  |  %d %d  |  %d %d  |\n", d ,
-	 (long long)(C*X[i][RE]), (long long)(C*X[i][IM]),
-	 (long long)(C*Y[i][RE]), (long long)(C*Y[i][IM]),
-	 (long long)(C*Z[i][RE]), (long long)(C*Z[i][IM]));
+  printf("%d  |  %d %d\n", d, 
+	 (long long)(C*A[i][RE]), (long long)(C*A[i][IM]));
 
   sl_setp(guard, g);
 }
 sl_enddef
 
-sl_def(print_fl, void, sl_shparm(int, guard))
+sl_def(print_fl, void, sl_shparm(int, guard), sl_glparm(cpx_t*, array))
 {
   sl_index(i);
   int g = sl_getp(guard);
+  cpx_t *A = sl_getp(array);
   long long d = i;
-  printf("%d  |  %g %g  |  %g %g  |  %g %g\n", d,
-	 (double)X[i][RE], (double)X[i][IM],
-	 (double)Y[i][RE], (double)Y[i][IM],
-	 (double)Z[i][RE], (double)Z[i][IM]);
+  printf("%d  |  %g %g\n", d,
+	 (double)A[i][RE], (double)A[i][IM]);
 
   sl_setp(guard, g);
 }
 sl_enddef
 
 sgr_decl(
-	 sgr_var(M, int, "problem size"),
+	 sgr_var(M, unsigned, "problem size"),
+	 sgr_var(BR, int, "if nonempty: perform bit reversal in forward FFT"),
+	 sgr_var(Pc, int, "if nonempty: print number of cycles for FFT and stop"),
 	 sgr_var(Pi, int, "if nonempty: print values as integers after computation"),
 	 sgr_var(Pf, int, "if nonempty: print values as floats after computation")
 	 );
 
+// SLT_RUN: M=3 Pi= Pf=1 Pc= BR=1
+// SLT_RUN: M=4 Pi= Pf=1 Pc= BR=1
+// SLT_RUN: M=4 Pi= Pf=1 Pc= BR=1 -Ws,-o -Ws,NumProcessors=3
+
 sl_def(t_main, void)
 {
-  svp_assert(sgr_len(M) >= 1);
+  svp_assert(sgr_len(M) > 0);
   unsigned M = sgr_get(M)[0];
-  svp_assert(M < 10);
+  svp_assert(sgr_len(M) <= (sizeof(sc_table)/sizeof(sc_table[0])));
 
   unsigned N = 1 << M;
 
@@ -239,25 +248,45 @@ sl_def(t_main, void)
   sl_create(,,,N,,,, fft_init);
   sl_sync();
 
-  sl_create(,,,,,,, FFT, sl_glarg(cpx_t*, gX, Y), sl_glarg(unsigned, gM, M));
+  int64_t p1, p2;
+  int br = (sgr_len(BR) > 0);
+
+  p1 = get_cycles();
+  sl_create(,,,,,,, FFT, sl_glarg(cpx_t*, gX, Y), sl_glarg(unsigned, gM, M), sl_glarg(int, gBR, br));
   sl_sync(); 
-
-  sl_create(,,,N,,,, copy_y_z);
-  sl_sync();
-
-  sl_create(,,,,,,, FFT_Inv, sl_glarg(cpx_t*, gZ, Z), sl_glarg(unsigned, gM2, sl_geta(gM)));
-  sl_sync();
-
-  if (sgr_len(Pi) > 0) {
-    puts("   |  X  |  Y  |  Z  |\n");
-    sl_create(,,,N,,,, print_fl, sl_sharg(int, guard, 0));
+  p2 = get_cycles();
+  if (sgr_len(Pc) > 0)
+    printf("%d\n", (p2 - p1));
+  else {
+    sl_create(,,,N,,,, copy_y_z);
     sl_sync();
-  }
-  
-  if (sgr_len(Pf) > 0) {
-    puts("   | int(X * 10k) | int(Y * 10k) | int(Z * 10k) |\n");
-    sl_create(,,,N,,,, print_int, sl_sharg(int, guard2, 0));
+
+    sl_create(,,,,,,, FFT_Inv, sl_glarg(cpx_t*, gZ, Z), sl_glarg(unsigned, gM2, sl_geta(gM)));
     sl_sync();
+    
+    if (sgr_len(Pf) > 0) {
+      puts("   |  X\n");
+      sl_create(,,,N,,,, print_fl, sl_sharg(int, g1, 0), sl_glarg(cpx_t*, a1, X));
+      sl_sync();
+      puts("   |  Y = FFT(X)\n");
+      sl_create(,,,N,,,, print_fl, sl_sharg(int, g2, 0), sl_glarg(cpx_t*, a2, Y));
+      sl_sync();
+      puts("   |  Z = InvFFT(Y)\n");
+      sl_create(,,,N,,,, print_fl, sl_sharg(int, g3, 0), sl_glarg(cpx_t*, a3, Z));
+      sl_sync();
+    }
+    
+    if (sgr_len(Pi) > 0) {
+      puts("   |  int(X*10000)\n");
+      sl_create(,,,N,,,, print_int, sl_sharg(int, g1, 0), sl_glarg(cpx_t*, a1, X));
+      sl_sync();
+      puts("   |  int(Y*10000) Y=FFT(X)\n");
+      sl_create(,,,N,,,, print_int, sl_sharg(int, g2, 0), sl_glarg(cpx_t*, a2, Y));
+      sl_sync();
+      puts("   |  int(Z*10000) Z=InvFFT(Y)\n");
+      sl_create(,,,N,,,, print_int, sl_sharg(int, g3, 0), sl_glarg(cpx_t*, a3, Z));
+      sl_sync();
+    }
   }
 }
 sl_enddef

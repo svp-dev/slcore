@@ -1,0 +1,42 @@
+m4_ifndef([[SVP_PERF_SLH]], [[m4_define([[SVP_PERF_SLH]],1)
+
+m4_include(cstdint.slh)
+
+m4_define([[get_cycles]],[[({ 
+#if defined (__i386__)
+  int32_t res[2];
+#if defined (_LP64)                      // 64 bit mode
+  __asm__ __volatile__  (               // serialize (save rbx)
+      "xorl %%eax,%%eax \n push %%rbx \n cpuid \n"
+      ::: "%rax", "%rcx", "%rdx");
+  __asm__ __volatile__  (               // read TSC, store edx:eax in res
+      "rdtsc\n"
+      : "=a" (res[0]), "=d" (res[1]) );
+  __asm__ __volatile__  (               // serialize again
+      "xorl %%eax,%%eax \n cpuid \n pop %%rbx \n"
+      ::: "%rax", "%rcx", "%rdx");
+#else                                    // 32 bit mode
+  __asm__ __volatile__  (               // serialize (save ebx)
+      "xorl %%eax,%%eax \n pushl %%ebx \n cpuid \n"
+      ::: "%eax", "%ecx", "%edx");
+  __asm__ __volatile__  (               // read TSC, store edx:eax in res
+      "rdtsc\n"
+      : "=a" (res[0]), "=d" (res[1]) );
+  __asm__ __volatile__  (               // serialize again
+      "xorl %%eax,%%eax \n cpuid \n popl %%ebx \n"
+      ::: "%eax", "%ecx", "%edx");
+#endif
+  *(int64_t*)res; 
+#else
+#if defined(__alpha__)
+  int64_t x;
+  __asm__ __volatile__ ("rpcc %0" : "=r"(x));
+  x;
+#else
+# warning Reading the time stamp counter is not defined on your system.
+  (int64_t)0;
+#endif
+#endif
+})]])
+
+]])

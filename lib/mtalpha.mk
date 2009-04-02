@@ -23,7 +23,7 @@ mtalpha_sim_libslos_a_CONTENTS = \
 	mtalpha-sim/roman.o \
 	mtalpha-sim/io.o
 
-SLC_MTALPHA = $(SLC) -b ppp-mtalpha -nostdlib
+SLC_MTALPHA = $(SLC) -b ppp-mtalpha -nostdlib -mcpu=ev6 -mbwx -mmax -mfix -mcix 
 
 mtalpha-sim/io.o: $(srcdir)/svplib/io.sl
 	$(MKDIR_P) mtalpha-sim
