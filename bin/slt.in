@@ -25,7 +25,7 @@ root=$(cd $(dirname "$0"); pwd)
 version=2
 
 slc=${SLC:-$root/slc}
-runner=${SGR:-$root/sgr}
+runner=${SLR:-$root/slr}
 timeout=$root/timeout
 
 die() {
@@ -181,14 +181,14 @@ pattern. Example patterns:
   ptl*:D                Ignore the program output for implementations
                         whose name start with "ptl".
 
-To run the program the helper script \`sgr' is used. By default, a
-single run is performed without extra arguments to \`sgr'. When extra
+To run the program the helper script \`slr' is used. By default, a
+single run is performed without extra arguments to \`slr'. When extra
 arguments are required, the program should contains annotations of the
 following form, one per (commented) line:
 
   SLT_RUN: args...
 
-For each occurrence of SLT_RUN in the program source code, \`sgr' is
+For each occurrence of SLT_RUN in the program source code, \`slr' is
 run once with the arguments specified after SLT_RUN. There are as many
 "execution" columns in the output as there are SLT_RUN specifiers in
 the program. For example:
@@ -227,8 +227,8 @@ Environment variables:
   SLC            Location of the SL compiler. Default is 
                  "slc" in the same directory as \`$basename'.
 
-  SGR            Location of the SVP generic runner. Default is 
-                 "sgr" in the same directory as \`$basename'.
+  SLR            Location of the SL runner. Default is 
+                 "slr" in the same directory as \`$basename'.
 
   KEEP           If set, do not erase intermediary files when a test
                  succeeds. Default is not set.
@@ -428,18 +428,19 @@ report_run() {
   offset=$2
   outlog=$3
   check_status "$code" 2>>"$outlog"
-  fail=0
+  refail=0
   dodiff=1
   case $status in
     signal)  dodiff=0; 
-             if xfail R; then color=33; char="."; else color=31; char="!"; fail=1; fi;;
+             if xfail R; then color=33; char="."; else color=31; char="!"; refail=1; fi;;
     timeout) dodiff=0; 
-             if xto R; then color=33; char="o"; else color=31; char="8"; fail=1; fi;;
-    ok)      if xfail R; then color=31; char="?"; fail=1; else color=32; char="R"; fi ;;
+             if xto R; then color=33; char="o"; else color=31; char="8"; refail=1; fi;;
+    ok)      if xfail R; then color=31; char="?"; refail=1; else color=32; char="R"; fi ;;
     error)   dodiff=0;
-             if xfail R; then color=33; char="/"; else color=31; char="X"; fail=1; fi;;
+             if xfail R; then color=33; char="/"; else color=31; char="X"; refail=1; fi;;
   esac
-  if xign R; then fail=0; dodiff=0; color=37; fi
+  if xign R; then refail=0; dodiff=0; color=37; fi
+  if test $refail = 1; then fail=1; fi
   place_chars $offset $color "$char"
 }
 

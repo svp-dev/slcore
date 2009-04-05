@@ -16,10 +16,10 @@ version=1
 
 do_usage() {
   cat <<EOF
-SVP Generic Runner.
+SL Runner.
 
-The \`sgr' utility provides a single interface to run a SVP program
-compiled with \`slc'. \`sgr' analyses the executable file to determine
+The \`slr' utility provides a single interface to run a SVP program
+compiled with \`slc'. \`slr' analyses the executable file to determine
 how to run the program, and invokes the simulator if needed.
 
 Usage: $0 [OPTION] PROGRAM [ARGS]...
@@ -36,11 +36,11 @@ Examples:
 
   # show runner string stored in \`a.out':
 
-  sgr -x a.out 
+  slr -x a.out 
 
   # run fibo.x, possibly using the MT simulator:
 
-  sgr fibo.x 
+  slr fibo.x 
 
 Report bugs and patches to the CSA group.
 EOF
@@ -51,7 +51,7 @@ do_version() {
   rev='$Rev$'
   rev=$(echo "$rev"|cut -d' ' -f2)
   cat <<EOF
-sgr $version.$rev
+slr $version.$rev
 
 $copyright
 All rights reserved.
@@ -109,7 +109,7 @@ if ! test -x "$program"; then
 fi
 
 if test -n "$show_embedded" -o -z "$runner"; then
-  tag=$(strings "$program"|grep '^sgr_runner:.*:'|tail -n1|cut -d: -f2)
+  tag=$(strings "$program"|grep '^slr_runner:.*:'|tail -n1|cut -d: -f2)
   if test "x$tag" = "x"; then
     if test -n "$show_embedded"; then
        echo "(none found)"
@@ -123,7 +123,7 @@ if test -n "$show_embedded" -o -z "$runner"; then
   fi
 fi
 
-datatag=$(strings "$program"|grep '^sgr_datatag:.*:'|tail -n1|cut -d: -f2)
+datatag=$(strings "$program"|grep '^slr_datatag:.*:'|tail -n1|cut -d: -f2)
 if test "x$datatag" = "x"; then
     die 1 "can't determine cce tag to recompile"
 fi
@@ -190,7 +190,7 @@ tmpdir=$(mktemp -d -t "$baseout".XXXXXXXX)
 cleanfiles=$tmpdir
 
 # check program parameters
-strings "$program" | (grep '^sgr_arg:'||true) >"$tmpdir"/args.spec
+strings "$program" | (grep '^slr_arg:'||true) >"$tmpdir"/args.spec
 if test -s "$tmpdir"/args.spec; then
     $python "$sag_helper" $vars <"$tmpdir"/args.spec >"$tmpdir"/data.c
 
@@ -209,8 +209,8 @@ if test -s "$tmpdir"/args.spec; then
     fi
     mkdir "$tmpdir"/slc-rec
     TMPDIR="$tmpdir"/slc-rec @BASH@ "$slc_helper" -b "$datatag" -o "$tmpdir"/gen.x -I"$tmpdir" "$found"
-    mkdir "$tmpdir"/sgr-rec
-    TMPDIR="$tmpdir"/sgr-rec @BASH@ "$0" "$tmpdir"/gen.x >"$tmpdir"/data 2>/dev/null
+    mkdir "$tmpdir"/slr-rec
+    TMPDIR="$tmpdir"/slr-rec @BASH@ "$0" "$tmpdir"/gen.x >"$tmpdir"/data 2>/dev/null
 else
     touch "$tmpdir"/data
 fi

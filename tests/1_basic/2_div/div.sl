@@ -1,6 +1,6 @@
 m4_include(svp/div.slh)
 m4_include(svp/iomacros.slh)
-m4_include(sgr.slh)
+m4_include(slr.slh)
 
 sl_def(testu, void, 
        sl_glparm(unsigned long long, x),
@@ -24,10 +24,10 @@ sl_def(tests, void,
 }
 sl_enddef
 
-sgr_decl(sgr_var(ua, unsigned long long),
-         sgr_var(ub, unsigned long long),
-         sgr_var(sa, signed long long),
-         sgr_var(sb, signed long long));
+slr_decl(slr_var(ua, unsigned long long),
+         slr_var(ub, unsigned long long),
+         slr_var(sa, signed long long),
+         slr_var(sb, signed long long));
 
 // SLT_RUN: ua=42 sa=42 ub=5 sb=5
 // SLT_RUN: ua=5 sa=5 ub=42 sb=42
@@ -47,11 +47,11 @@ sl_def(t_main, void)
 {
   puts("----\n");
   sl_proccall(testu, 
-	      sl_glarg(unsigned long long, x, sgr_get(ua)[0]),
-	      sl_glarg(unsigned long long, y, sgr_get(ub)[0]));
+	      sl_glarg(unsigned long long, x, slr_get(ua)[0]),
+	      sl_glarg(unsigned long long, y, slr_get(ub)[0]));
   sl_proccall(tests, 
-	      sl_glarg(signed long long, x, sgr_get(sa)[0]),
-	      sl_glarg(signed long long, y, sgr_get(sb)[0]));
+	      sl_glarg(signed long long, x, slr_get(sa)[0]),
+	      sl_glarg(signed long long, y, slr_get(sb)[0]));
 }
 sl_enddef
 

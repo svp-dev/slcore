@@ -4,7 +4,7 @@
 # Copyright (C) 2008,2009 The SL project..
 # All rights reserved.
 # 
-dist_man1_MANS = cce.1 slc.1 sgr.1 slt.1
+dist_man1_MANS = cce.1 slc.1 slr.1 slt.1
 dist_pdf_DATA = acronyms.pdf README.pdf NEWS.pdf HACKING.pdf requirements.pdf
 dist_doc_DATA = acronyms.txt README.txt NEWS.txt HACKING.txt requirements.txt \
                 sl_deps.png
@@ -25,7 +25,7 @@ TEXI2PDF_FLAGS = --tidy --batch --build-dir=tmp.t2d
 	$(RST2LATEX) --halt=warning $< >$@.tmp
 	mv $@.tmp $@
 
-cce.1 slc.1 sgr.1 slt.1:
+cce.1 slc.1 slr.1 slt.1:
 	cd $(top_builddir)/bin && $(MAKE) $(AM_MAKEFLAGS) $(@:.1=)
 	rm -f $@
 	$(HELP2MAN) -N --output=$@.tmp $(top_builddir)/bin/$(@:.1=)
@@ -34,7 +34,7 @@ cce.1 slc.1 sgr.1 slt.1:
 
 cce.1: $(top_srcdir)/bin/cce.in
 slc.1: $(top_srcdir)/bin/slc.in
-sgr.1: $(top_srcdir)/bin/sgr.in
+slr.1: $(top_srcdir)/bin/slr.in
 slt.1: $(top_srcdir)/bin/slt.in
 
 MAINTAINERCLEANFILES = $(dist_man1_MANS) $(dist_pdf_DATA)

@@ -29,10 +29,10 @@ Acronym for: SLC Configuration Unknown
 Role: serve as a placeholder for SVP languages that do not have a
 compilation chain yet.
 
-sgr
+slr
 ===
 
-Acronym: SVP Generic Runner
+Acronym: SL Runner
 
 Role: execute a SVP binary in its intended run environment.
 
@@ -47,9 +47,10 @@ implementations.
 sag
 ===
 
-Acronym for: SGR Arguments Generator
+Acronym for: SLR Arguments Generator
 
-Role: emit assembly source code suitable to build a SGR data file.
+Role: emit assembly source code suitable to build a data file during
+program startup by ``slr``.
 
 
 

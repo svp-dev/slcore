@@ -59,7 +59,7 @@ To enable these rules, use::
 Working from the source directory
 =================================
 
-The ``slc`` and ``sgr`` scripts are generated during
+The ``slc`` and ``slr`` scripts are generated during
 ``make``. However, they contain absolute paths relative to their
 installation directory. This means they cannot be used "as-is" before
 ``make install`` is run.

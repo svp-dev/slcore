@@ -25,14 +25,15 @@ nobase_dist_pkgdata_DATA = \
 	include/slc_m4sforeach.m4 \
 	include/cstdint.slh \
 	include/cstddef.slh \
-	include/sgr.slh \
+	include/slr.slh \
 	include/svp/argslot.slh \
 	include/svp/assert.slh \
 	include/svp/div.slh \
 	include/svp/io.slh \
 	include/svp/roman.slh \
 	include/svp/iomacros.slh \
-	include/svp/lib.slh
+	include/svp/lib.slh \
+	include/svp/perf.slh
 
 MAINTAINERCLEANFILES = \
 	include/slc_m4sugar.m4 \

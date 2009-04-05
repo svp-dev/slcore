@@ -2,7 +2,7 @@
  Prerequisites for the SL compiler
 ===================================
 
-:Date: 2009-03-24
+:Date: 2009-04-05
 
 :Abstract: This document explains what are the prerequisites for the
   SL compiler and how to install them.
@@ -444,7 +444,7 @@ The Microgrids simulator
 ========================
 
 Although it is not required to *compile* programs, ``slc`` comes with
-a companion script ``sgr`` which is able to run a Microgrid program
+a companion script ``slr`` which is able to run a Microgrid program
 inside the Microgrid simulator.
 
 This requires the Microgrids simulator to be installed as a

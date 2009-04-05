@@ -1,0 +1,30 @@
+m4_ifndef([[SLR_SLH]],[[m4_define([[SLR_SLH]],1)
+
+m4_include(cstddef.slh)
+extern struct { ptrdiff_t offset; size_t nitems; } *__slr_base;
+
+m4_define([[__slr_acnt]],0)
+m4_define([[__slr_vars]],[[]])
+
+#define __slr_offset(N) __slr_base[N].offset
+#define __slr_baseptr ((char*)(void*)__slr_base)
+#define __slr_dataptr(N) ((void*)(__slr_baseptr + __slr_offset(N)))
+#define __slr_len(N) __slr_base[N].nitems
+
+m4_define([[slr_var]],[[
+m4_define([[__slr_len_$1]],[[__slr_len(]]__slr_acnt[[)]])
+m4_define([[__slr_get_$1]],[[(([[$2]]*)__slr_dataptr(]]__slr_acnt[[))]])
+m4_define([[__slr_vars]],m4_quote(__slr_vars)[[\0slr_arg:[[$1]]:[[$2]]:]]m4_dnl
+m4_if([[$3]],,[[(no description)]],[[" $3 "]]))
+m4_step([[__slr_acnt]])
+]])
+
+m4_define([[slr_decl]],[[
+m4_do($@)
+const char *__slr_argdef = "__slr_vars"
+]])
+
+m4_define([[slr_get]],[[__slr_get_$1]])
+m4_define([[slr_len]],[[__slr_len_$1]])
+
+]])

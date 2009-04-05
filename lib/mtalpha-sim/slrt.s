@@ -10,8 +10,8 @@ _start:
 	ldah $l29, 0($l27)	!gpdisp!1
 	lda  $l29, 0($l29)	!gpdisp!1
 
-	# initialize sgr data pointer:
-        lda $l1,__sgr_base
+	# initialize slr data pointer:
+        lda $l1,__slr_base
 	stq $l16,0($l1)
 	
 	# we want to create t_main:
@@ -29,12 +29,12 @@ _start:
 
 	.data
 	.align 4
-	.globl __sgr_base
-__sgr_base:
+	.globl __slr_base
+__slr_base:
 	.int 0
 	.int 0
 
 	.section .rodata
-	.ascii "\0sgr_runner:mtalpha-sim:\0"
-	.ascii "\0sgr_datatag:ppp-mtalpha-sim:\0"
+	.ascii "\0slr_runner:mtalpha-sim:\0"
+	.ascii "\0slr_datatag:ppp-mtalpha-sim:\0"
 	

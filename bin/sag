@@ -11,16 +11,16 @@ def die(msg):
     sys.exit(1)
 
 def genasm(out, data):
-    #print >>out, "\t.globl __sgr_data_start\n\t.globl __sgr_data_end\n\t.align 4\n__sgr_data_start:"
-    print >>out, "struct __sgr_data_t {"
+    #print >>out, "\t.globl __slr_data_start\n\t.globl __slr_data_end\n\t.align 4\n__slr_data_start:"
+    print >>out, "struct __slr_data_t {"
     #for d in data:
-        #print >>out, "\t.int __sgr_input_%s-__sgr_data_start" % d['label']
+        #print >>out, "\t.int __slr_input_%s-__slr_data_start" % d['label']
     print >>out, "  struct meta_%d_t { ptrdiff_t offset; size_t nitems; } meta[%d];" % (len(data), len(data))
     for d in data:
         print >>out, "  %s data_%s[%d];" % (d['type'], d['label'], d['len'])
-    print >>out, "} __sgr_data = {\n  { /* meta */"
+    print >>out, "} __slr_data = {\n  { /* meta */"
     for d in data:
-        print >>out, "    { (char*)(void*)&__sgr_data.data_%s - (char*)(void*)&__sgr_data," % d['label'],
+        print >>out, "    { (char*)(void*)&__slr_data.data_%s - (char*)(void*)&__slr_data," % d['label'],
         print >>out, "%d }," % d['len']
     print >>out, "  },"
     for d in data:
@@ -30,11 +30,11 @@ def genasm(out, data):
         print >>out, "  },"
     #for d in data:
     #    print >>out, "\t.align 4"
-    #    print >>out, "__sgr_input_%s:" % d['label']
+    #    print >>out, "__slr_input_%s:" % d['label']
     #    print >>out, "\t.int %s" % d['len']
     #    for i in d['items']:
     #        print >>out, "\t.%s %s" % (d['type'], i)
-    #print >>out, "__sgr_data_end:"
+    #print >>out, "__slr_data_end:"
     print "};"
 
 def proto(parm):

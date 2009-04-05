@@ -1,3 +1,46 @@
+2009-04-05  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
+	Rename `sgr' to `slr' as suggested by C. Grelck. Minor other
+	improvements.
+
+	* bin/sgr.in: Rename to...
+	* bin/slr.in: here.
+
+	* include/sgr.slh: Rename to...
+	* include/slr.slh: here.
+
+	* tests/1_basic/0_sgr_args: Rename to...
+	* tests/1_basic/0_slr_args: here.
+
+	* Makefile.am,
+	* bin/slr.in,
+	* include/slr.slh,
+	* bin/Makefile.am,
+	* bin/sag,
+	* bin/slt.in,
+	* demo/fft.sl,
+	* demo/fibonacci.sl,
+	* demo/testfft.sh,
+	* doc/HACKING.txt,
+	* doc/Makefile.am,
+	* doc/acronyms.txt,
+	* doc/requirements.txt,
+	* lib/arggen.sl,
+	* lib/host-host-ptl/slrt.c,
+	* lib/host-host-seqc/load.c,
+	* lib/host-host-seqc/slrt.c,
+	* lib/mtalpha-sim/slrt.s,
+	* tests.mk,
+	* tests/1_basic/2_div/div.sl,
+	* tests/1_basic/0_slr_args/args.sl: Rename `sgr' to `slr'.	
+	
+	* demo/roman.sl: Declare number as runtime input variable.
+	
+	* bin/slt.in: Properly set error condition when any but the last
+	run fail.
+
+	* Makefile.am: Do not forget to distribute `include/svp/perf.slh'.
+
 2009-04-03  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
 	Add new performance measurement API to the SL library. Improve FFT

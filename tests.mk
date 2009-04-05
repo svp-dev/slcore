@@ -13,7 +13,7 @@ SLC_VARS = \
 	SCU=$(abs_top_srcdir)/bin/scu \
 	SAG=$(abs_top_srcdir)/bin/sag \
 	CCE=$(abs_top_builddir)/bin/cce \
-	SGR=$(abs_top_builddir)/bin/sgr \
+	SLR=$(abs_top_builddir)/bin/slr \
 	SLC=$(abs_top_builddir)/bin/slc
 
 SLC = $(SLC_VARS) $(abs_top_builddir)/bin/slc

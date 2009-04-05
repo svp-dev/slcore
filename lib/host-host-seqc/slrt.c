@@ -10,9 +10,9 @@
 
 extern void t_main(struct sl_famdata*);
 
-// configuration tag for sgr runner
-const char *__tag__ = "sgr_runner:host:";
-const char *__datatag__ = "sgr_datatag:seqc-host-host-seqc:";
+// configuration tag for slr runner
+const char *__tag__ = "slr_runner:host:";
+const char *__datatag__ = "slr_datatag:seqc-host-host-seqc:";
 
 int main(int argc, const char **argv) {
   load(argv[0], argv[1]);
