@@ -1,5 +1,14 @@
 2009-04-06  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	Transitory fix requested by M. Hicks.
+	
+	* bin/spp (pppalpha.makespecial): For prologue detection,
+	recognize a single "ldgp" macro as well instead of only 2
+	instructions. This may allow to use GCC 4.1 as Alpha
+	cross-compiler.
+
+2009-04-06  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	Improvements to test engine and documentation. Minor cleanup.
 	
 	* bin/slt.in: Allow specifying implementation names via an
