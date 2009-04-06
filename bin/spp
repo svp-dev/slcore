@@ -1246,11 +1246,14 @@ class pppalpha(object):
       pprologue = fundata['pprologue']
       if fundata['use_gp']:
          # GP needs to be initialized, do it:
-         assert (len(pprologue) == 1 and pprologue[0][1].startswith('ldgp')) or \
-             (len(pprologue) == 2 and 'gpdisp' in pprologue[0][1] and 'gpdisp' in pprologue[1][1])
-         disp = pprologue[0][1].split('!')[2]
-         fundata['pprologue'] = [('other','ldah $l%d, 0($g%d) !gpdisp!%s' % (gpreg, pvargreg, disp),''),
-                                 ('other','lda $l%d, 0($l%d) !gpdisp!%s' % (gpreg, gpreg, disp),'')]
+         if len(pprologue) == 1:
+            assert pprologue[0][1].startswith('ldgp')
+            fundata['pprologue'] = [('other','ldgp $l%d, 0($g%d)' % (gpreg, pvargreg),'')]
+         else:
+            assert (len(pprologue) == 2 and 'gpdisp' in pprologue[0][1] and 'gpdisp' in pprologue[1][1])
+            disp = pprologue[0][1].split('!')[2]
+            fundata['pprologue'] = [('other','ldah $l%d, 0($g%d) !gpdisp!%s' % (gpreg, pvargreg, disp),''),
+                                    ('other','lda $l%d, 0($l%d) !gpdisp!%s' % (gpreg, gpreg, disp),'')]
       else:
          assert len(pprologue) == 0
       if fundata['use_pv']:
