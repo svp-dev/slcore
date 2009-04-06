@@ -49,10 +49,21 @@ Environment variables:
   CC_ALPHA UTCC_MTALPHA
   CC_SPARC UTCC_MTSPARC  
 
-Examples:
+Example one-word implementation aliases:
 
-seqc ptl utc0 ppp utcx ptlx
-ppp-mtsparc-sim
+  seqc          sequential C scheduling
+
+  ptl           muTC-ptl (pthreads / C++)
+
+  ppp           "alternate" compiler for MT-Alpha
+
+  utc0          Alpha-gcc compiler
+
+  utcx          "desired muTC" (transform/preprocess only)
+
+Example "long" aliases:
+
+  ppp-mtalpha-sim utc0-mtalpha-sim ppp-host-host-ptl
 
 Report bugs and patches to the CSA group.
 EOF
@@ -66,7 +77,8 @@ do_version() {
 cce $version.$rev ($timestamp)
 
 $copyright
-All rights reserved.
+All rights reserved. There is NO warranty; not even for
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 
 Written by Raphael 'kena' Poss.
 EOF
@@ -105,7 +117,7 @@ if test -z "$alias"; then do_usage; fi
 case $alias in
     seqc)  alias=seqc-host-host-seqc ;;
     ptl)   alias=ptl-host-host-ptl ;;
-    utc0)  alias=utc0-mtalpha-sim-proto ;;
+    utc0)  alias=utc0-mtalpha-sim ;;
     ppp)   alias=ppp-mtalpha-sim ;;
     ptlx)  alias=ptlx-x-x ;;
     utcx)  alias=utc-x-x ;;
@@ -123,7 +135,7 @@ $alias
 EOF
 	case $alias in
 	    utc0-*)
-		alias=$alias-sim-proto
+		alias=$alias-sim
 		;;
 	    ppp-mt*)
 		alias=$alias-sim

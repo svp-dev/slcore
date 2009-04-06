@@ -46,6 +46,16 @@ AC_ARG_ENABLE([testsuite],
 [], [enable_testsuite=no])
 AM_CONDITIONAL([ENABLE_TESTSUITE], [test "x$enable_testsuite" = "xyes"])
 
+AC_ARG_ENABLE([check-utc],
+[AC_HELP_STRING([--enable-check-utc], [do not ignore test results for muTC core compiler (default is to ignore)])],
+[], [enable_check_utc=no])
+AM_CONDITIONAL([ENABLE_CHECK_UTC], [test "x$enable_check_utc" = "xyes"])
+
+AC_ARG_ENABLE([check-ppp],
+[AC_HELP_STRING([--disable-check-ppp], [ignore test results for PPP compiler (default is to not ignore)])],
+[], [enable_check_ppp=yes])
+AM_CONDITIONAL([ENABLE_CHECK_PPP], [test "x$enable_check_ppp" = "xyes"])
+
 ######### Required features #########
 
 AC_CACHE_CHECK([for Bourne-Again shell], [ac_cv_path_BASH],

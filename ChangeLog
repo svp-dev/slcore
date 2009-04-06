@@ -1,3 +1,38 @@
+2009-04-06  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
+	Improvements to test engine and documentation. Minor cleanup.
+	
+	* bin/slt.in: Allow specifying implementation names via an
+	environment variable. Provide (cleaner) mechanism to add extra
+	args for compilation and execution. Properly handle runtime
+	failure when a test code requires multiple test runs. Document the
+	features.
+
+	* bin/slt.in: Reorganize documentation sections so that the manual
+	page looks nice.
+
+	* configure.ac: Add new parameters --enable-check-utc and
+	--disable-check-ppp that set Automake conditionals.
+	
+	* tests.mk: Based on conditionals set by configure, either ignore
+	or use the test results for the muTC core compiler and PPP core
+	compiler.
+
+	* bin/slt.in: Take location of `slr' from Autoconf variable.
+	* bin/Makefile.am: Update accordingly.
+	
+	* bin/cce.in: Use the regular "mtalpha-sim" back-end for the muTC
+	core compiler, since the code to be run there can be compiled with
+	the alternate compiler and should not use a different calling
+	convention.
+	
+	* lib/mtalpha-sim-proto: Kill tree as is now unused.
+
+	* bin/slr.in,
+	* bin/slc.in,
+	* bin/cce.in: Add warranty disclaimer.
+	* bin/slt.in: Update licensing info and add warranty disclaimer.
+
 2009-04-05  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
 	Rename `sgr' to `slr' as suggested by C. Grelck. Minor other

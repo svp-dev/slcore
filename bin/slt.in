@@ -2,21 +2,8 @@
 # $Id$
 #
 copyright="Copyright (C) 2009 the CSA group - The SL project.."
-#
-# This program is free software: you can redistribute it and/or modify 
-# it under the terms of the GNU General Public License as published by   
-# the Free Software Foundation; either version 2, or (at your option)    
-# any later version.  
-#   
-# This program is distributed in the hope that it will be useful,   
-# but WITHOUT ANY WARRANTY; without even the implied warranty of    
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the     
-# GNU General Public License for more details.    
-#   
-# You should have received a copy of the GNU General Public License 
-# along with this program; if not, write to the Free Software 
-# Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA     
-# 02110-1301, USA.    
+# All rights reserved.
+
 set -e
 basename=$(basename "$0")
 root=$(cd $(dirname "$0"); pwd)
@@ -24,8 +11,8 @@ root=$(cd $(dirname "$0"); pwd)
 # Interface version number
 version=2
 
-slc=${SLC:-$root/slc}
-runner=${SLR:-$root/slr}
+slc=${SLC:-@slc_helper@}
+runner=${SLR:-@slr_helper@}
 timeout=$root/timeout
 
 die() {
@@ -54,6 +41,131 @@ as not runnable (see below);
 - on all runs but the first, the console output of the program is
 identical to the output on the first run.
 
+Output:
+  The program performs the tests and display results as they become
+  available using the following format:
+
+  SOURCE XXYZ XXYZ XXYZ ...
+
+  The first column contains the name of the SOURCE specified on the
+  command line, possibly truncated to fit the results on the rest of
+  the line. Each subsequent column contains a string of tests results
+  for the corresponding implementation specifier on the command line.
+
+  Each string of test results has 3 sections:
+
+  - results for compilation;
+
+  - results for program execution;
+
+  - result for output comparison.
+
+Output codes for compilation:
+  The compilation results column can contain any of the following:
+
+     L   An executable was produced successfully.
+
+    8    A timeout occurred during compilation.
+
+    !    A signal occurred during compilation.
+
+    ?    Compilation succeeded, but a failure was expected.
+ 
+    XT   Translation failed.
+
+    XP   Preprocessing failed.
+
+    XC   Compilation failed.
+
+    XF   Post-compilation failed.
+
+    XA   Assembly failed.
+
+    XL   Linking failed.
+
+    /T   Translation failed, as expected.
+
+    /P   Preprocessing failed, as expected.
+
+    /C   Compilation failed, as expected.
+
+    /F   Post-compilation failed, as expected.
+
+    /A   Assembly failed, as expected.
+
+    /L   Linking failed, as expected.
+
+Output codes for execution:
+  The execution results column(s) can contain a repetition of the
+  following:
+
+    R    Execution succeded without errors.
+
+    8    A timeout occurred.
+
+    !    A signal occurred.
+
+    ?    Execution succeeded, but a failure was expected.
+
+    o    A timeout occurred, as expected.
+
+    .    A signal occurred, as expected.
+
+    -    The program was not run.
+
+Output codes for output comparison:
+  The output comparison results can contain any of the following:
+
+    =   The output will be reused as reference.
+
+    D   The output is identical to the reference.
+
+    X   The output is different from the reference.
+
+    -   The output was not checked.
+
+Output comparison:
+  For program output comparison, the test assumes that the first
+  implementation tested produces the reference output; subsequent
+  implementations are checked against the results of the first run.
+
+Temporary files:
+  During testing a number of intermediate files are generated. If the
+  SOURCE file is named test.sl, the following files are generated:
+
+    IMPL/test.log         Test log
+
+    IMPL/test.{c,cc,utc}  Source code after transformation
+
+    IMPL/test.{i,ii,ui}   Source code after preprocessing
+
+    IMPL/test.s0          Raw assembly output
+
+    IMPL/test.s           Assembly output
+
+    IMPL/test.o           Object file
+
+    IMPL/test.x           Executable to be used as input to \`slr'
+
+    IMPL/test.out         Output during execution
+
+  If a test is successful the corresponding files are erased after the
+  test completes, unless the environment variable KEEP is set and
+  non-empty.
+
+Examples:
+
+  for i in *.sl; do slt \$i seqc ptl utc0; done
+
+  10threads.sl                                    LR=  LRD  LX- :(
+  answer.sl                                       LR=  LRD  LX- :(
+  empty.sl                                        LR=  LRD  LRD \o/
+  fibonacci.sl                                 LRR=  LRRD XC--- :(
+  helloworld.sl                                   LR=  LRD  LRX :(
+  quicksort.sl                                    LX-  LX- XP-- :(
+  roman.sl                                        LR=  LRD  LX- :(
+
+
 Usage: $0 [SOURCE] [IMPLEMENTATION]...
 
 Options:
@@ -62,166 +174,86 @@ Options:
   -v, --version Print a version number.
 
 
-Multiple implementations can be specified, and each multiple
-times. Implementations names are filtered through the \`cce' utility.
+Multiple implementations can be specified, and each multiple times. If
+no implementation is specified on the command line, the environment
+variable SLT_IMPL_LIST is used.
 
-Example implementation aliases:
+Implementations names are passed to \`slc' as-is via the -b
+command-line parameter. See "slc --help" for details.
 
-  seqc          sequential C scheduling
+Configuring expected failures for tests:
+  To indicate expected failures in specitic tests, the test source
+  code can be annotated as follows:
 
-  ptl           muTC-ptl (pthreads / C++)
+    XFAIL: pattern...     Indicate that an error or signal is expected
+                          at the implementation/phase(s) matched by
+                          the patterns (see below)
 
-  ppp           "alternate" compiler for MT-Alpha
+    XIGNORE: pattern...   Indicate that any result at the implementation/
+                          phase(s) matched by the patterns should
+                          be considered a success.
 
-  utc0          Alpha-gcc compiler
+    XTIMEOUT: pattern...  Indicate that a timeout is expected 
+                          at runtime in the implementation(s) matched by
+	                  the patterns.
 
-  utcx          "desired muTC" (transform/preprocess only)
+  The annotation can appear anywhere; for example in source comments.
 
-If no implementation is specified, or is set to "all", then the
-implementations list above are tested, in that order.
+  Patterns have the following form: IMPL:PHASESPEC. 
 
-The program performs the tests and display results as they become
-available using the following format:
+  IMPL is a pattern that matches the implementation name being tested;
+  PHASESPEC matches the phase(s) being tested. The pattern matches
+  when at a test point both the current implementation and the current
+  phase match the pattern. 
 
-SOURCE     XXYZ XXYZ XXYZ ...
+  Example pattern combinations:
 
-The first column contains the name of the SOURCE specified on the
-command line. Each subsequent column contains a string of tests
-results for the corresponding implementation specifier on the command
-line.
+    *x:*                  Match any phase in any implementation ending 
+                          with "x". 
 
-Each string of test results has 3 sections:
+    ptl*:D                Ignore the program output for implementations
+                          whose name start with "ptl".
 
-1. compilation results; one of:
+Test-specific runtime arguments:
+  To run the program the helper script \`slr' is used. By default, a
+  single run is performed without extra arguments to \`slr'. When
+  extra arguments are required, the program should contains
+  annotations of the following form, one per (commented) line:
 
-   L   An executable was produced successfully.
+  # SLT_RUN: args...
 
-  8    A timeout occurred during compilation.
+  For each occurrence of SLT_RUN in the program source code, \`slr' is
+  run once with the arguments specified after SLT_RUN. There are as
+  many "execution" columns in the output as there are SLT_RUN
+  specifiers in the program. For example:
 
-  !    A signal occurred during compilation.
+  # SLT_RUN: -dN=5 -Ws,-o -Ws,NumProcessors=1
 
-  ?    Compilation succeeded, but a failure was expected.
- 
-  XT   Translation failed.
+  # SLT_RUN: -dN=10
 
-  XP   Preprocessing failed.
+Implementation-specific extra compilation and execution arguments:
+  It may be desirable to test the same implementation multiple times
+  for all tests, with a range of compile-time and/or runtime
+  arguments. For example to test multiple optimization levels in the
+  compiler. For this purpose each implementation alias specified on
+  the command line or the SLT_IMPL_LIST environment variable can be
+  specified as a group of three components separated by colons:
 
-  XC   Compilation failed.
+    IMPL:CFLAGS:RFLAGS
 
-  XF   Post-compilation failed.
+  Where CFLAGS is a list of extra command-line parameters that are
+  passed to `slc' for this implementation, and RFLAGS an list of extra
+  command-line parameters that are passed to `slr'. To specify
+  multiple arguments separated by spaces, replaces occurrences of
+  spaces by the tilde character (~).
 
-  XA   Assembly failed.
+  For example:
 
-  XL   Linking failed.
+  # $basename test.sl seqc ppp:-O3 ppp::-Ws,-o~-Ws,NumProcessors=1
 
-  /T   Translation failed, as expected.
-
-  /P   Preprocessing failed, as expected.
-
-  /C   Compilation failed, as expected.
-
-  /F   Post-compilation failed, as expected.
-
-  /A   Assembly failed, as expected.
-
-  /L   Linking failed, as expected.
-
-2) execution results; a number of:
-
-  R    Execution succeded without errors.
-
-  8    A timeout occurred.
-
-  !    A signal occurred.
-
-  ?    Execution succeeded, but a failure was expected.
-
-  o    A timeout occurred, as expected.
-
-  .    A signal occurred, as expected.
-
-  -    The program was not run.
-
-3) check of reference output; one of:
-
-  =   The output will be reused as reference.
-
-  D   The output is identical to the reference.
-
-  X   The output is different from the reference.
-
-  -   The output was not checked.
-
-To indicate expected failures, the source code can be annotated as
-follows:
-
-  XFAIL: pattern...     Indicate that an error or signal is expected
-                        at the implementation/phase(s) matched by
-                        the patterns (see below)
-
-  XIGNORE: pattern...   Indicate that any result at the implementation/
-                        phase(s) matched by the patterns should
-                        be considered a success.
-
-  XTIMEOUT: pattern...  Indicate that a timeout is expected 
-                        at runtime in the implementation(s) matched by
-			the patterns.
-
-The annotation can appear anywhere; for example in source comments.
-
-Patterns have the following form: IMPL:PHASESPEC. Where: IMPL is a
-pattern that matches the implementation name being tested; PHASESPEC
-matches the phase(s) being tested. The pattern matches when at a test
-point both the current implementation and the current phase match the
-pattern. Example patterns:
-
-  *x:*                  Match any phase in any implementation ending 
-                        with "x". 
-
-  ptl*:D                Ignore the program output for implementations
-                        whose name start with "ptl".
-
-To run the program the helper script \`slr' is used. By default, a
-single run is performed without extra arguments to \`slr'. When extra
-arguments are required, the program should contains annotations of the
-following form, one per (commented) line:
-
-  SLT_RUN: args...
-
-For each occurrence of SLT_RUN in the program source code, \`slr' is
-run once with the arguments specified after SLT_RUN. There are as many
-"execution" columns in the output as there are SLT_RUN specifiers in
-the program. For example:
-
-  SLT_RUN: N=5 -Ws,-o -Ws,NumProcessors=1
-  SLT_RUN: N=10
-
-For program output comparison, the test assumes that the first
-implementation tested produces the reference output; subsequent
-implementations are checked against the results of the first run.
-
-During testing a number of intermediate files are generated. If the
-SOURCE file is named test.sl, the following files are generated:
-
-  IMPL/test.log         Test log
-
-  IMPL/test.{c,cc,utc}  Source code after transformation
-
-  IMPL/test.{i,ii,ui}   Source code after preprocessing
-
-  IMPL/test.s0          Raw assembly output
-
-  IMPL/test.s           Assembly output
-
-  IMPL/test.o           Object file
-
-  IMPL/test.x           Executable
-
-  IMPL/test.out         Output during execution
-
-If a test is successful the corresponding files are erased after the
-test completes, unless the environment variable KEEP is set and
-non-empty.
+  Indicates that three implementations should be tested; the second
+  with -O3 added to the compilation command line, the third with
+  "-Ws,-o -Ws,NumProcessors=1" added to the execution command line.
 
 Environment variables:
   SLC            Location of the SL compiler. Default is 
@@ -244,6 +276,9 @@ Environment variables:
                  list set by programs. Can be used to mark specific
                  implementations as not relevant for overall test results.
                  Default is "XIGNORE=*x:*"
+
+  SLT_IMPL_LIST  Used when no implementation names are supplied on
+                 the command line.
 
 Diagnostics:
   0              The test succeeded.
@@ -268,8 +303,8 @@ elif test "$1" = "--version" -o "$1" = "-v"; then
 $basename $version.$rev
 
 $copyright
-This is free software; see the source for copying conditions.  There is NO
-warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+All rights reserved. There is NO warranty; not even for
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 
 Written by Raphael 'kena' Poss.
 EOF
@@ -303,16 +338,15 @@ esac
 
 shift
 
-case $1 in
-  ""|all)
-    impl1=seqc
-    set ptl ppp utc0 utcx
-    ;;
-  *)
-    impl1=$1
-    shift
-    ;;
-esac
+if test $# = 0; then
+   if test -n "$SLT_IMPL_LIST"; then
+      set $SLT_IMPL_LIST
+   else
+     die "no implementation specified and SLT_IMPL_LIST not set or empty. See -h for details."
+   fi
+fi
+impl1=$1
+shift
 
 if test ! -r $testsrc; then
    die "$testsrc: cannot read file" 
@@ -330,7 +364,8 @@ check_status() {
     if test $status = error; then echo "Terminated with status code $errcode" >&2; fi
 
     # Bailout if invalid command or command was interrupted (SIGINT = 2).
-    if test $status = invcmd || test $status = signal -a "$signal" = 2; then exit $1; fi
+    if test $status = invcmd; then exit $1; fi
+    if test $status = signal -a "$signal" -le 3; then kill -$signal $$; fi
 }
 
 place_chars() {
@@ -414,16 +449,17 @@ report_compile() {
        dorun=0
   esac
   
-  if xign T P C F A L; then color=37; fail=0; dorun=0; fi
-
   if test $fail = 1; then
     dorun=0
   fi
+
+  if xign T P C F A L; then color=37; fail=0; fi
+
   place_chars $offset $color "$char"
 }
 
 report_run() {
-  local code offset outlog color char str
+  local code offset outlog color char str refail
   code=$1
   offset=$2
   outlog=$3
@@ -439,8 +475,8 @@ report_run() {
     error)   dodiff=0;
              if xfail R; then color=33; char="/"; else color=31; char="X"; refail=1; fi;;
   esac
-  if xign R; then refail=0; dodiff=0; color=37; fi
   if test $refail = 1; then fail=1; fi
+  if xign R; then fail=0; color=37; fi
   place_chars $offset $color "$char"
 }
 
@@ -448,7 +484,7 @@ do_compile() {
   local offset command x
   offset=$1
   echo "===== TEST: $testsrc, COMPILE ======" >$baseout.log
-  command="$timeout $slc -v -t $outdir -b $impl -o $baseout.x $testsrc"
+  command="$timeout $slc -v -t $outdir -b $impl -o $baseout.x $testsrc $COMPILE_ARGS"
   echo "$command" >>$baseout.log
   set +e
   KEEP=1 TIMEOUT=40 $command >>$baseout.log 2>&1
@@ -472,7 +508,7 @@ do_run() {
       printf '' >$baseout.out
       while read -a vars ; do
 	  echo "===== RUNNING PROGRAM: ${vars[*]} =====" >>$baseout.log
-	  command="$timeout $runner $baseout.x ${vars[*]}"
+	  command="$timeout $runner $baseout.x ${vars[*]} $RUN_ARGS"
 	  echo "$command >>$baseout.out" >>$baseout.log
 	  set +e
 	  $command >>$baseout.out 2>>$baseout.log 
@@ -543,19 +579,12 @@ do_check() {
 }
 
 do_preptest() {
-    local vars save vn var val prefign
+    local cargs rargs save vn var val prefign
     impl=$(echo "$1" | cut -d: -f1)
-    vars=$(echo "$1" | cut -d: -f2-)
-    if test -n "$vars"; then
-	save=$IFS
-	IFS=":"
-	for vn in $vars; do
-	    var=$(echo "$vn"|cut -d= -f1)
-	    val=$(echo "$vn"|cut -d= -f2-|sed -e s/\'/\'\"\'\"\'/g)
-	    eval "export $var='$val'"
-	done
-	IFS=$save
-    fi
+    cargs=$(echo "$1::" | cut -d: -f2 | tr '~' ' ')
+    rargs=$(echo "$1::" | cut -d: -f3 | tr '~' ' ')
+    export COMPILE_ARGS="$cargs"
+    export RUN_ARGS="$rargs"
     
     outdir=$testdir/_$counter
     counter=$(expr $counter + 1)

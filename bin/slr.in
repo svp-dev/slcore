@@ -54,7 +54,8 @@ do_version() {
 slr $version.$rev
 
 $copyright
-All rights reserved.
+All rights reserved. There is NO warranty; not even for
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 
 Written by Raphael 'kena' Poss.
 EOF
