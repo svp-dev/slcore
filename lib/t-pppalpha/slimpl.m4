@@ -98,7 +98,7 @@ m4_define([[__sl_rqueue_sync]],
 m4_join([[,]], [["r"(__sl_sync_[[]]__sl_tag), "r"(__sl_arg___fptr[[]]__sl_tag)]], __sl_rqueue_sync)) m4_dnl
 __asm__ __volatile__("bis __sl_syncsrc, $[[]]31, __sl_syncdst # SYNC __sl_tag" m4_dnl
 : __sl_wqueue_sync m4_dnl
-: __sl_rqueue_sync); m4_dnl
+: __sl_rqueue_sync : "memory"); m4_dnl
 m4_foreach([[_sl_arg]],m4_quote(_sl_thargs),[[m4_apply([[sl_copyarg]],m4_split(_sl_arg,:))]]) m4_dnl
 m4_undefine([[_sl_increate]]) m4_dnl
 ]])
