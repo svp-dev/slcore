@@ -1,5 +1,21 @@
 2009-04-06  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	Make `slr' recognize variable definitions using command line
+	argument of form "-dVAR" or "-dVAR=..." as recommended by
+	C. Grelck. Update documentation. Minor bug fix in `slt'.
+
+	* bin/slr.in: Handle command line differently. Document it.
+
+	* demo/roman.sl,
+	* demo/fibonacci.sl,
+	* demo/fft.sl,
+	* tests/1_basic/2_div/div.sl,
+	* tests/1_basic/0_slr_args/args.sl: Update accordingly.	
+
+	* bin/slt.in (check_status): Initialize $signal to 0 to avoid a
+	bad integer expression in `test' later.
+
+2009-04-06  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 	Transitory fix requested by M. Hicks.
 	
 	* bin/spp (pppalpha.makespecial): Use "ldgp" if no gpdisp number

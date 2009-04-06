@@ -31,16 +31,19 @@ Options:
                  when the simulator is used.
   -h, --help     print this help, then exit
   -v, --version  print version number, then exit
+  -dVAR          define the program input VAR as an empty array
+  -dVAR=...      define the program input VAR as specified (see CSA note [sl3])
 
 Examples:
 
-  # show runner string stored in \`a.out':
+  $ slr -x a.out 
 
-  slr -x a.out 
+  Shows runner string stored in \`a.out'.
 
-  # run fibo.x, possibly using the MT simulator:
+  $ slr fibo.x -dN=15
 
-  slr fibo.x 
+  Runs fibo.x, possibly using the MT simulator, and set program input
+  variable N to an array of 1 element with value "15".
 
 Report bugs and patches to the CSA group.
 EOF
@@ -89,10 +92,11 @@ for arg in "$@"; do
       -Ws*)   lowarg=$(echo "$arg"|cut -d',' -f2-|tr ',' ' ')
 	  SIMARGS="$SIMARGS $lowarg"
 	  shift;;
+      -d*=*) var=$(printf "%s" "$arg"|cut -c3-); vars="$vars $var"; shift;;
+      -d*) var=$(printf "%s" "$arg"|cut -c3-); vars="$vars $var="; shift;;
       --)  break;;
       -*)  die 1 "unrecognized command-line argument: $arg (try -h)";;
-      *=*) vars="$vars $arg";;
-      *)   if test -z "$program"; then program=$arg
+      *)   if test -z "$program"; then program=$arg; shift
            else die 1 "unrecognized command-line argument: $arg (try -h)"
 	   fi ;;
   esac

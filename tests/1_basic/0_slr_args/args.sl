@@ -3,7 +3,7 @@ m4_include(svp/iomacros.slh)
 
 slr_decl(slr_var(a, int), slr_var(b, int));
 
-// SLT_RUN: a=10 b=-10
+// SLT_RUN: -da=10 -db=-10
 
 sl_def(t_main, void)
 {

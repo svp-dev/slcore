@@ -29,19 +29,19 @@ slr_decl(slr_var(ua, unsigned long long),
          slr_var(sa, signed long long),
          slr_var(sb, signed long long));
 
-// SLT_RUN: ua=42 sa=42 ub=5 sb=5
-// SLT_RUN: ua=5 sa=5 ub=42 sb=42
+// SLT_RUN: -dua=42 -dsa=42 -dub=5 -dsb=5
+// SLT_RUN: -dua=5 -dsa=5 -dub=42 -dsb=42
 
-// SLT_RUN: ua=0 sa=0 ub=1 sb=1
-// SLT_RUN: ua=0 sa=0 ub=-1 sb=-1
+// SLT_RUN: -dua=0 -dsa=0 -dub=1 -dsb=1
+// SLT_RUN: -dua=0 -dsa=0 -dub=-1 -dsb=-1
 
-// SLT_RUN: ua=301 sa=301 ub=-10 sb=-10
-// SLT_RUN: ua=-301 sa=-301 ub=-10 sb=-10
-// SLT_RUN: ua=-301 sa=-301 ub=10 sb=10
-// SLT_RUN: ua=301 sa=301 ub=10 sb=10
+// SLT_RUN: -dua=301 -dsa=301 -dub=-10 -dsb=-10
+// SLT_RUN: -dua=-301 -dsa=-301 -dub=-10 -dsb=-10
+// SLT_RUN: -dua=-301 -dsa=-301 -dub=10 -dsb=10
+// SLT_RUN: -dua=301 -dsa=301 -dub=10 -dsb=10
 
-// SLT_RUN: ua=0xffffffffUL sa=0xffffffffUL ub=0x7ffffffeUL sb=0x7ffffffeUL
-// SLT_RUN: ua=0xffffffffffffffffULL sa=0xffffffffffffffffULL ub=0x7ffffffffffffffeULL sb=0x7ffffffffffffffeULL
+// SLT_RUN: -dua=0xffffffffUL -dsa=0xffffffffUL -dub=0x7ffffffeUL -dsb=0x7ffffffeUL
+// SLT_RUN: -dua=0xffffffffffffffffULL -dsa=0xffffffffffffffffULL -dub=0x7ffffffffffffffeULL -dsb=0x7ffffffffffffffeULL
 
 sl_def(t_main, void)
 {

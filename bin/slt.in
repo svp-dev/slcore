@@ -354,6 +354,7 @@ fi
 
 check_status() {
     status=ok
+    signal=0
     if test $1 = 127; then status=invcmd
     elif test $1 = 0; then status=ok
     elif test $1 -lt 127; then status=error; errcode=$1
