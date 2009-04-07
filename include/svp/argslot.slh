@@ -8,13 +8,21 @@
 //
 m4_ifndef([[SVP_ARGSLOT_SLH]],[[m4_define([[SVP_ARGSLOT_SLH]],1)
 
+m4_include(cstdint.slh)
+
 /* argument slot suitable to simulate
    C's variable argument lists */
 
 typedef union {
-  char c;
-  signed long long s;
-  unsigned long long u;
+  uint8_t ub;
+  int8_t sb;
+  uint16_t us;
+  int16_t ss;
+  uint32_t ul;
+  int32_t sl;
+  uint64_t uq;
+  int64_t sq;
+  float f;
   double d;
   void *ptr;
 } svp_arg_slot;

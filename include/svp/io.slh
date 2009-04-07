@@ -64,6 +64,7 @@ sl_decl(svp_io_putn, void,
 */
 sl_decl(svp_io_printf, void,
 	sl_glparm(const char*, gfmt),
+	sl_glparm(const unsigned char*, gsz),
 	sl_glparm(svp_arg_slot*, gdata));
 
 ]])

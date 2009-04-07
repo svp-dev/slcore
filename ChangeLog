@@ -1,5 +1,27 @@
 2009-04-07  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	Improve printf(). 
+
+	Until now printf() would expect all integers to be passed as "long
+	long", and all floats to be passed as "double", which required
+	explicit casts for arguments of other types. This is now
+	corrected, by having the size of each argument computed at the
+	point of use and passed as argument to printf. The interface now
+	looks and feels more C's native printf().
+
+	* include/cstdint.slh,
+	* include/svp/argslot.slh,
+	* include/svp/io.slh,
+	* include/svp/iomacros.slh,
+	* lib/svplib/io.sl: Fix printf.
+
+	* demo/answer.sl,
+	* demo/10threads.sl,
+	* demo/fft.sl,
+	* tests/1_basic/0_slr_args/args.sl: Simplify accordingly.	
+
+2009-04-07  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	Code cleanup.
 	
 	* include/slr.slh: Give the type of the input data structure a

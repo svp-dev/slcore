@@ -199,10 +199,11 @@ sl_def(print_int, void, sl_shparm(int, guard), sl_glparm(cpx_t*, array))
   sl_index(i);
   int g = sl_getp(guard);
   cpx_t *A = sl_getp(array);
-  long long d = i;
+
   long long C = 10000;
+  int d = i;
   printf("%d  |  %d %d\n", d, 
-	 (long long)(C*A[i][RE]), (long long)(C*A[i][IM]));
+	 (int64_t)(C*A[i][RE]), (int64_t)(C*A[i][IM]));
 
   sl_setp(guard, g);
 }
@@ -213,9 +214,10 @@ sl_def(print_fl, void, sl_shparm(int, guard), sl_glparm(cpx_t*, array))
   sl_index(i);
   int g = sl_getp(guard);
   cpx_t *A = sl_getp(array);
-  long long d = i;
+
+  int d = i;
   printf("%d  |  %g %g\n", d,
-	 (double)A[i][RE], (double)A[i][IM]);
+	 A[i][RE], A[i][IM]);
 
   sl_setp(guard, g);
 }

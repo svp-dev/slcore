@@ -54,6 +54,9 @@ sl_proccall(svp_io_putun,
 
 m4_define([[printf]],
 [[do {
+  static const uint8_t __pf_sz[m4_count(m4_shift($@))] = {
+    m4_foreach([[printf_arg]],m4_dquote(m4_shift($@)),[[sizeof(printf_arg),]])
+  };
   volatile struct {
     m4_pushdef([[printf_argcount]],0)
     m4_foreach([[printf_arg]],m4_dquote(m4_shift($@)),[[
@@ -71,6 +74,7 @@ m4_define([[printf]],
   m4_popdef([[printf_argcount]])
   sl_proccall(svp_io_printf,
               sl_glarg(const char*, gfmt, ([[$1]])),
+	      sl_glarg(const uint8_t*, gsz, (__pf_sz)),
               sl_glarg(svp_arg_slot*, gdata, (svp_arg_slot*)(void*)&__pf_args));
 } while(0)]])
 

@@ -7,8 +7,8 @@ slr_decl(slr_var(int, a), slr_var(int, b));
 
 sl_def(t_main, void)
 {
-  long long a = slr_get(a)[0];
-  long long b = slr_get(b)[0];
+  int a = slr_get(a)[0];
+  int b = slr_get(b)[0];
   printf("%d + %d = %d\n", a, b, a+b);
 }
 sl_enddef

@@ -30,6 +30,6 @@ sl_def(t_main, void)
   sl_seta(x, 0);
   sl_sync();
 
-  printf("\n%d\n", (long long)sl_geta(x));
+  printf("\n%d\n", sl_geta(x));
 }
 sl_enddef
