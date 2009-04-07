@@ -37,15 +37,18 @@ def genasm(out, data):
     #print >>out, "__slr_data_end:"
     print "};"
 
-def proto(parm):
-    print >>sys.stderr, "Program variables:"
-    for k, v in parm.items():
-        print >>sys.stderr, "\t%s (%s)\t%s" % (k, v['type'], v['desc'])
+def proto(out, parm):
+    if len(parm):
+        print >>out, "Program variables:"
+        for k, v in parm.items():
+            print >>out, "\t%s (%s)\t%s" % (k, v['type'], v['desc'])
+    else:
+        print >>out, "This program has no input variables."
 
 def usage(parm):
     print >>sys.stderr, "Usage: <program> [VAR=INIT]..."
     print >>sys.stderr 
-    proto(parm)
+    proto(sys.stderr, parm)
     print >>sys.stderr
     print >>sys.stderr, "Initializers:"
     print >>sys.stderr, "\t(comma-separated list)\tuse the specified data items."
@@ -69,6 +72,9 @@ if __name__ == "__main__":
         parm[label] = {'type':type,'desc':desc}
 
     for a in sys.argv[1:]:
+            if a == "list":
+                proto(sys.stdout,parm)
+                sys.exit(0)
             if not '=' in a:
                 usage(parm)
                 sys.exit(1)
@@ -82,7 +88,8 @@ if __name__ == "__main__":
     data = []
     for r in required:
         if r not in spec:
-            die("%s: variable not specified" % r)
+            print >>sys.stderr, "warning: %s not specified, assuming empty array" % r
+            spec[r] = ""
         
         init = spec[r]
         type = parm[r]['type']

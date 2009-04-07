@@ -22,17 +22,24 @@ The \`slr' utility provides a single interface to run a SVP program
 compiled with \`slc'. \`slr' analyses the executable file to determine
 how to run the program, and invokes the simulator if needed.
 
+This uses the SL input mechanism described in CSA note [sl3].
+
 Usage: $0 [OPTION] PROGRAM [ARGS]...
 
 Options:
-  -r runner      use the specified runner (use when autodetect fails)
-  -x             show configuration string embedded in program (if any)
-  -Ws,arg        pass "arg" as extra command-line parameter to the simulator,
-                 when the simulator is used.
-  -h, --help     print this help, then exit
-  -v, --version  print version number, then exit
   -dVAR          define the program input VAR as an empty array
   -dVAR=...      define the program input VAR as specified (see CSA note [sl3])
+
+  -l             list variables required as input by the program
+
+  -x             show configuration string embedded in program (if any)
+  -r runner      use the specified runner (use when autodetect fails)
+
+  -Ws,arg        pass "arg" as extra command line parameter to the simulator,
+                 when the simulator is used.
+
+  -h, --help     print this help, then exit
+  -v, --version  print version number, then exit
 
 Examples:
 
@@ -44,6 +51,13 @@ Examples:
 
   Runs fibo.x, possibly using the MT simulator, and set program input
   variable N to an array of 1 element with value "15".
+
+  $ slr fibo.x -dN=10 -Ws,-o -Ws,NumProcessors=7
+
+  Runs fibo.x, possibly using the MT simulator, and set program input
+  variable N to an array of 1 element with value "10". If the
+  simulator is used, add "-o NumProcessors=7" to the simulator command
+  line.
 
 Report bugs and patches to the CSA group.
 EOF
@@ -75,6 +89,7 @@ prev_arg=
 show_embedded=
 vars=
 program=
+query=
 SIMARGS=${SIMARGS:-}
 for arg in "$@"; do
   # if the previous option needs an argument, assign it
@@ -89,6 +104,7 @@ for arg in "$@"; do
       -x)	show_embedded=1; shift;;
       -v|--version)	do_version;;
       -h|--help)	do_usage;;
+      -l|--list)  query=1; shift;;
       -Ws*)   lowarg=$(echo "$arg"|cut -d',' -f2-|tr ',' ' ')
 	  SIMARGS="$SIMARGS $lowarg"
 	  shift;;
@@ -196,6 +212,11 @@ cleanfiles=$tmpdir
 
 # check program parameters
 strings "$program" | (grep '^slr_arg:'||true) >"$tmpdir"/args.spec
+if test -n "$query"; then
+  $python "$sag_helper" list <"$tmpdir"/args.spec
+  exit 0
+fi
+
 if test -s "$tmpdir"/args.spec; then
     $python "$sag_helper" $vars <"$tmpdir"/args.spec >"$tmpdir"/data.c
 

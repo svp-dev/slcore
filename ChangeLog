@@ -1,3 +1,13 @@
+2009-04-07  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
+	Improve documentation.
+	
+	* bin/slr.in: Better documentation.
+	
+	* bin/sag: Better handle listing of program variables.
+
+	* doc/NEWS.txt: Mention `slr'.
+
 2009-04-06  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
 	* lib/t-pppalpha/slimpl.m4: Mark sync as clobbering the whole

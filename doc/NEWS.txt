@@ -21,9 +21,12 @@ SLC 2.x, 2009
 
 - "utcc" renamed to "slc", to reflect the additional generality.
 
-The unit test suite and demo code applications were removed from the
-compiler tree. Only a few small programs are left for documentation
-purposes.
+- New program input mechanism via "slr" helper script.
+
+Known issues:
+
+- comments inside the parameters to ``sl_def`` and other SL macros
+  cause undesired effects.
 
 SLC 1.x (utcc), December 2008
 =============================
