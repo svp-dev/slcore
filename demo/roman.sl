@@ -10,7 +10,7 @@ m4_include(svp/roman.slh)
 m4_include(svp/iomacros.slh)
 m4_include(slr.slh)
 
-slr_decl(slr_var(N, short, "number to print"));
+slr_decl(slr_var(short, N, "number to print"));
 
 // SLT_RUN: -dN=42
 

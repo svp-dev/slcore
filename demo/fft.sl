@@ -222,11 +222,11 @@ sl_def(print_fl, void, sl_shparm(int, guard), sl_glparm(cpx_t*, array))
 sl_enddef
 
 slr_decl(
-	 slr_var(M, unsigned, "problem size"),
-	 slr_var(BR, int, "if nonempty: perform bit reversal in forward FFT"),
-	 slr_var(Pc, int, "if nonempty: print number of cycles for FFT and stop"),
-	 slr_var(Pi, int, "if nonempty: print values as integers after computation"),
-	 slr_var(Pf, int, "if nonempty: print values as floats after computation")
+	 slr_var(unsigned, M, "problem size"),
+	 slr_var(int, BR, "if nonempty: perform bit reversal in forward FFT"),
+	 slr_var(int, Pc, "if nonempty: print number of cycles for FFT and stop"),
+	 slr_var(int, Pi, "if nonempty: print values as integers after computation"),
+	 slr_var(int, Pf, "if nonempty: print values as floats after computation")
 	 );
 
 // SLT_RUN: -dM=3 -dPi -dPf=1 -dPc -dBR=1

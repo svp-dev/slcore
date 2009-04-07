@@ -24,10 +24,10 @@ sl_def(tests, void,
 }
 sl_enddef
 
-slr_decl(slr_var(ua, unsigned long long),
-         slr_var(ub, unsigned long long),
-         slr_var(sa, signed long long),
-         slr_var(sb, signed long long));
+slr_decl(slr_var(unsigned long long, ua),
+         slr_var(unsigned long long, ub),
+         slr_var(signed long long, sa),
+         slr_var(signed long long, sb));
 
 // SLT_RUN: -dua=42 -dsa=42 -dub=5 -dsb=5
 // SLT_RUN: -dua=5 -dsa=5 -dub=42 -dsb=42

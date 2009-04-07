@@ -1,7 +1,7 @@
 m4_include(slr.slh)
 m4_include(svp/iomacros.slh)
 
-slr_decl(slr_var(a, int), slr_var(b, int));
+slr_decl(slr_var(int, a), slr_var(int, b));
 
 // SLT_RUN: -da=10 -db=-10
 

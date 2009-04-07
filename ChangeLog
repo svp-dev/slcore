@@ -1,5 +1,20 @@
 2009-04-07  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	Code cleanup.
+	
+	* include/slr.slh: Give the type of the input data structure a
+	name. This prevents a compiler warning when compiling via
+	C++. Have slr_var take the type before the variable name, as is
+	customary in C.
+
+	* demo/roman.sl,
+	* demo/fibonacci.sl,
+	* demo/fft.sl,
+	* tests/1_basic/0_slr_args/args.sl,
+	* tests/1_basic/2_div/div.sl: Update accordingly.
+
+2009-04-07  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	Improve documentation.
 	
 	* bin/slr.in: Better documentation.

@@ -39,7 +39,7 @@ sl_def(fibo_print, void,
 }
 sl_enddef
 
-slr_decl(slr_var(N, int, "number of fibonacci numbers to generate"));
+slr_decl(slr_var(int, N, "number of fibonacci numbers to generate"));
 
 // SLT_RUN: -dN=5 -Ws,-o -Ws,NumProcessors=1
 // SLT_RUN: -dN=5 -Ws,-o -Ws,NumProcessors=2
