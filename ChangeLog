@@ -1,3 +1,17 @@
+2009-04-15  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
+	Simplify use of `slr'.
+	
+	* bin/slr.in: Reinstate possibility to specify program variables
+	directly by specifying the variable name, next to (in addition to)
+	-d. Update documentation accordingly.
+
+	* demo/fft.sl,
+	* demo/fibonacci.sl,
+	* demo/roman.sl,
+	* tests/1_basic/0_slr_args/args.sl,
+	* tests/1_basic/2_div/div.sl: Simplify accordingly.
+
 2009-04-07  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
 	Improve printf(). 

@@ -12,7 +12,7 @@ m4_include(slr.slh)
 
 slr_decl(slr_var(short, N, "number to print"));
 
-// SLT_RUN: -dN=42
+// SLT_RUN:  N=42
 
 sl_def(t_main, void)
 {

@@ -41,8 +41,8 @@ sl_enddef
 
 slr_decl(slr_var(int, N, "number of fibonacci numbers to generate"));
 
-// SLT_RUN: -dN=5 -Ws,-o -Ws,NumProcessors=1
-// SLT_RUN: -dN=5 -Ws,-o -Ws,NumProcessors=2
+// SLT_RUN:  N=5 -Ws,-o -Ws,NumProcessors=1
+// SLT_RUN:  N=5 -Ws,-o -Ws,NumProcessors=2
 
 sl_def(t_main, void)
 {
