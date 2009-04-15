@@ -561,7 +561,7 @@ for t in $transforms; do
   IFS=':' read action target indeps <<EOF 
 $t
 EOF
-  indeps=${indeps/:/ }
+  indeps=${indeps//:/ }
   deps=
   for d in $indeps; do
       case $d in
