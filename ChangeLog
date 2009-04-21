@@ -1,3 +1,12 @@
+2009-04-21  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
+	Small optimization.
+	
+	* lib/t-pppalpha/include/sl_support.h: Avoid forcing creating a
+	temporary when the incoming shared is the direct right hand side
+	of an assignment to an outgoing shared. This optimizes direct
+	shared assignments of the form `sl_setp(x, sl_getp(x))'.
+
 2009-04-15  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
 	Fix handling of multiple sources / objects on the command line for
