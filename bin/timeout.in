@@ -8,7 +8,7 @@ usage: $0 <commandline ...>
 Execute a program and force terminate its execution
 if it does not terminate normally before a timeout.
 
-The program reports abnormal termination met SIGKILL (exit code 137)
+The program reports abnormal termination with SIGKILL (exit code 137)
 if the timeout expires before the command terminates. The default
 timeout is 5 seconds.  Change with environment variable TIMEOUT.
 EOF

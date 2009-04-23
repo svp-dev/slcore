@@ -1,3 +1,7 @@
+2009-04-23  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
+	* bin/timeout.in (usage): Fix typo, as reported by mlankamp.
+
 2009-04-21  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
 	Small optimization.
