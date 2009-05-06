@@ -1,3 +1,17 @@
+2009-05-06  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
+	Improve portability and support for degraded environments (where
+	all tools are not present).
+	
+	* configure.ac: Refuse to configure if Python is not there.
+
+	* bin/Makefile.am,
+	* bin/slc.in: Use M4 as detected by "configure".
+
+	* tests.mk,	
+	* demo/Makefile.am: Use Automake conditionals to exclude tests
+	that cannot be run due to missing tools.
+
 2009-04-23  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
 	* bin/timeout.in (usage): Fix typo, as reported by mlankamp.

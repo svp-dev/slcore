@@ -66,7 +66,9 @@ AC_CACHE_CHECK([for Bourne-Again shell], [ac_cv_path_BASH],
 AC_SUBST([BASH], [$ac_cv_path_BASH])
 
 AC_PROG_GNU_M4
-AM_PATH_PYTHON([2.5],[],[PYTHON=no])
+AM_PATH_PYTHON([2.5],[],[AC_MSG_ERROR([sgr requires Python 2.5 or later])])
+
+
 
 AC_ARG_ENABLE([mtalpha], 
 [AC_HELP_STRING([--disable-mtalpha], [disable support for MT-Alpha compilation (default is try to enable)])],

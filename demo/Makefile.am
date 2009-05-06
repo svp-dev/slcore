@@ -20,10 +20,12 @@ include $(top_srcdir)/tests.mk
 
 # Also build demos during "make all":
 
-noinst_DATA = $(ALL_DEMOS:.sl=.mtalpha-x) $(ALL_DEMOS:.sl=.ptl-x) $(ALL_DEMOS:.sl=.seqc-x)
-CLEANFILES = $(noinst_DATA) 
+noinst_DATA = $(ALL_DEMOS:.sl=.ptl-x) $(ALL_DEMOS:.sl=.seqc-x)
+if ENABLE_MTALPHA
+noinst_DATA += $(ALL_DEMOS:.sl=.mtalpha-x)
+endif
 
-SUFFIXES = .sl .mtalpha-x
+SUFFIXES = .sl .mtalpha-x .ptl-x .seqc-x
 
 .sl.mtalpha-x:
 	$(SLC) -b ppp-mtalpha -o $@ $< -mcpu=ev6 -mbwx -mmax -mfix -mcix
@@ -35,6 +37,8 @@ SUFFIXES = .sl .mtalpha-x
 	$(SLC) -b seqc -o $@ $<
 
 fft.ptl-x fft.seqc-x fft.mtalpha-x: fft.sl fft_table.slh
+
+CLEANFILES = $(noinst_DATA) 
 
 # Special targets for the FFT demo:
 if MAINTAINER_MODE

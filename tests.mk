@@ -18,19 +18,22 @@ SLC_VARS = \
 
 SLC = $(SLC_VARS) $(abs_top_builddir)/bin/slc
 
-EXTRA_IGNORE =
+EXTRA_TEST_IMPL =
 
-if !ENABLE_CHECK_UTC
-EXTRA_IGNORE += utc0*:[CLRD]
+if ENABLE_CHECK_PPP
+if ENABLE_MTALPHA
+EXTRA_TEST_IMPL += ppp::-Ws,-o~-Ws,NumProcessors=1 ppp
+endif
 endif
 
-if !ENABLE_CHECK_PPP
-EXTRA_IGNORE += ppp*:[CLRD]
+if ENABLE_CHECK_UTC
+EXTRA_TEST_IMPL += utc0 utcx
 endif
+
 
 TESTS_ENVIRONMENT = \
 	$(SLC_VARS) \
-	TEST_HERE=1 XIGNORE="*x:* $(EXTRA_IGNORE)" \
-	SLT_IMPL_LIST="seqc ptl ppp::-Ws,-o~-Ws,NumProcessors=1 ppp utc0 utcx" \
-	$(SHELL) $(abs_top_builddir)/bin/slt
+	TEST_HERE=1 \
+	SLT_IMPL_LIST="seqc ptl $(EXTRA_TEST_IMPL)" \
+	$(BASH) $(abs_top_builddir)/bin/slt
 

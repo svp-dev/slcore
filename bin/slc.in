@@ -43,7 +43,7 @@ extra_asflags=
 extra_cflags=
 extra_ldflags=
 
-M4=${M4:-m4}
+M4=${M4:-@M4@}
 
 # Setting up some cleanup mechanism
 cleanup() {
