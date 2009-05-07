@@ -66,7 +66,7 @@ AC_CACHE_CHECK([for Bourne-Again shell], [ac_cv_path_BASH],
 AC_SUBST([BASH], [$ac_cv_path_BASH])
 
 AC_PROG_GNU_M4
-AM_PATH_PYTHON([2.5],[],[AC_MSG_ERROR([slr requires Python 2.5 or later])])
+AM_PATH_PYTHON([2.5],[],[AC_MSG_ERROR([`slr' requires Python 2.5 or later])])
 
 
 
@@ -104,7 +104,7 @@ fi
 AM_CONDITIONAL([ENABLE_MTALPHA], [test "x$enable_mtalpha" = xyes])
 
 if test "x$MGSIM_ALPHA" = "xno"; then
-   AC_MSG_WARN([Cannot find the MT-Alpha Microgrid simulator. `sgr' will not run MT-Alpha programs.])
+   AC_MSG_WARN([Cannot find the MT-Alpha Microgrid simulator. `slr' will not run MT-Alpha programs.])
 fi
 
 AC_ARG_ENABLE([mtsparc], 
@@ -141,9 +141,8 @@ fi
 AM_CONDITIONAL([ENABLE_MTSPARC], [test "x$enable_mtsparc" = xyes])
 
 if test "x$MGSIM_SPARC" = "xno"; then
-   AC_MSG_WARN([Cannot find the MT-Sparc Microgrid simulator. `sgr' may not run MT-Sparc programs.])
+   AC_MSG_WARN([Cannot find the MT-Sparc Microgrid simulator. `slr' may not run MT-Sparc programs.])
 fi
-
 
 AC_CONFIG_FILES([
 	Makefile

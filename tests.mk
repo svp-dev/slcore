@@ -27,7 +27,9 @@ endif
 endif
 
 if ENABLE_CHECK_UTC
-EXTRA_TEST_IMPL += utc0 utcx
+if ENABLE_MTALPHA
+EXTRA_TEST_IMPL += utcx utc0
+endif
 endif
 
 

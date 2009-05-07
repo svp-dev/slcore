@@ -2,6 +2,15 @@
 
 	Cosmetic fixes.
 	
+	* tests.mk: Avoid testing `utc' if `ENABLE_MTALPHA' is not
+	set. This avoids testing `utc' if the muTC compiler is not found.
+
+	* configure.ac: Fix typos.
+	
+2009-05-07  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
+	Cosmetic fixes.
+	
 	* Makefile.am (show-vars): Update PATH as well to allow using
 	`slc', `slr' etc directly on the command line instead of $SLC,
 	$SLR etc. Make target suitable input for a shell's `eval' builtin.
