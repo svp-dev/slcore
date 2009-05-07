@@ -56,7 +56,7 @@ Using slc
 =========
 
 slc comes with several demo programs. Looking at them is a good way to
-see what slc can support. They can be found in the ``demos``
+see what slc can support. They can be found in the ``demo``
 subdirectory.
 
 See also

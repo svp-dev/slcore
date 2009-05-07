@@ -82,10 +82,11 @@ endif
 include $(srcdir)/tests.mk
 show-vars:
 	@echo
-	@echo "### Set the following to work from the source directory:"
+	@echo ": Set the following to work from the source directory;"
 	@echo
 	@for n in $(SLC_VARS); do \
-	   echo "export $$n"; \
+	   echo "export $$n;"; \
 	done
+	@echo "export PATH=$(abs_top_builddir)/bin:$$PATH;"
 
 ACLOCAL_AMFLAGS = -I m4

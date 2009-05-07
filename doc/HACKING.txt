@@ -2,6 +2,9 @@
  SLC Hacking  guide
 ====================
 
+:Abstract: This document presents tips & tricks for developers working
+   on the SLC source code.
+
 .. contents::
 
 Maintainer mode
@@ -67,9 +70,16 @@ installation directory. This means they cannot be used "as-is" before
 This may be a hassle during development (would require to re-run
 ``make install`` after each change). To balance this, it is possible
 to set environment variables to indicate that the scripts should find
-the data in the source directory. Use ``make show-vars`` for example
-values.
+the data in the source directory. Use ``make show-vars`` to set
+environment variables::
 
+   $ eval `make show-vars`
+
+Note: this will update ``PATH`` as well. Once the variables are set,
+the command-line utilities can be used directly even before ``make
+install`` has been run, e.g.::
+
+   $ cd demo && slc 10threads.sl && slr a.out
 
 
 Committing work

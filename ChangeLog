@@ -1,3 +1,16 @@
+2009-05-07  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
+	Cosmetic fixes.
+	
+	* Makefile.am (show-vars): Update PATH as well to allow using
+	`slc', `slr' etc directly on the command line instead of $SLC,
+	$SLR etc. Make target suitable input for a shell's `eval' builtin.
+
+	* doc/HACKING.txt: Update accordingly.
+	
+	* configure.ac: Fix typo ("slr" instead of "sgr").
+	* doc/README.txt: Fix typo ("demo" instead of "demos").	
+	
 2009-05-06  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
 	Improve portability and support for degraded environments (where
