@@ -13,6 +13,8 @@ m4_define([[m4_step]],[[m4_define([[$1]], m4_incr($1))]])
 # non-empty
 m4_define([[sl_breakable]],[[m4_case([[$1]],[[void]],0,[[]],0,1)]])
 
+# restrict: enable C99 keyword
+m4_define([[restrict]], [[__restrict__]])
 
 # load implementation-specific definitions
 m4_include([[slimpl.m4]])

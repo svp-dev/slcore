@@ -273,15 +273,19 @@ esac
 
 # Extra defines
 case $slc_arch in
-    mtalpha) ;;
+    mtalpha) 
+        slc_cflags="$slc_cflags -mcpu=ev6 -mfix -mcix -mmax -mbwx -ffast-math"
+        ;;
     *)
 	slc_tflags="$slc_tflags -DHAVE_C_DIVIDE"
 	;;
 esac
 
-# Extra ldflags selection
-case $slc_arch in
-    mt*)
+# Extra flag selection
+case $slc_arch-$slc_os in
+    mt*-sim)
+        slc_ppflags="$slc_ppflags -D__mt_freestanding__ -D__WORDSIZE=64"
+        #slc_cflags="$slc_cflags -nostdinc"
 	slc_ldflags="$slc_ldflags -Wl,-Ttext -Wl,0 -nostdlib"
 	;;
     *)

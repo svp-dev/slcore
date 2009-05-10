@@ -1,0 +1,24 @@
+//                                                             -*- m4 -*-
+// cstdbool.slh: this file is part of the slc project.
+//
+// Copyright (C) 2009 The SL project.
+// All rights reserved.
+//
+// $Id: cstddef.slh 1782 2009-03-18 13:12:05Z kena $
+//
+m4_ifndef([[CSTDBOOL_SLH]], [[m4_define([[CSTDBOOL_SLH]], 1)
+
+#ifdef __mt_freestanding__
+
+#define bool _Bool
+#define true 1
+#define false 0
+#define __bool_true_false_are_defined 1
+
+#else
+
+#include <stdbool.h>
+
+#endif
+
+]])

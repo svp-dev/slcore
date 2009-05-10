@@ -1,0 +1,63 @@
+//                                                             -*- m4 -*-
+// minimath.slh: this file is part of the slc project.
+//
+// Copyright (C) 2009 The SL project.
+// All rights reserved.
+//
+// $Id: argslot.slh 1926 2009-04-07 21:20:29Z kena $
+//
+m4_ifndef([[SVP_MINIMATH_SLH]],[[m4_define([[SVP_MINIMATH_SLH]],1)
+
+#ifdef __mt_freestanding__
+
+typedef float float_t;
+typedef double double_t;
+
+#define FLT_EVAL_METHOD      0
+
+#define HUGE_VAL (__extension__ 0x1.0p2047)
+#define HUGE_VALF (__extension__ 0x1.0p255f)
+#define HUGE_VALL HUGE_VAL
+
+#define INFINITY     HUGE_VALF
+
+# define NAN								m4_dnl
+  (__extension__							m4_dnl
+   ((union { unsigned __l __attribute__((__mode__(__SI__))); float __d; }) m4_dnl
+    { __l: 0x7fc00000UL }).__d)
+
+# define FP_ILOGB0     (-2147483647)
+# define FP_ILOGBNAN   (2147483647)
+
+/* the following functions inline to assembly on the Alpha */
+
+extern double sqrt (double __x) ; extern double __sqrt (double __x) ;
+extern float sqrtf (float __x) ; extern float __sqrtf (float __x) ;
+
+extern float fabsf (float __x) __attribute__ ((__const__));
+extern float __fabsf (float __x) __attribute__ ((__const__));
+extern double fabs (double __x) __attribute__ ((__const__)); 
+extern double __fabs (double __x) __attribute__ ((__const__));
+
+extern float truncf (float __x) __attribute__ ((__const__));
+extern float __truncf (float __x) __attribute__ ((__const__));
+extern double trunc (double __x) __attribute__ ((__const__));
+extern double __trunc (double __x) __attribute__ ((__const__));
+
+extern float copysignf (float __x, float __y) __attribute__ ((__const__)); 
+extern float __copysignf (float __x, float __y) __attribute__ ((__const__));
+extern double copysign (double __x, double __y) __attribute__ ((__const__)); 
+extern double __copysign (double __x, double __y) __attribute__ ((__const__));
+
+extern float fminf (float __x, float __y) ; extern float __fminf (float __x, float __y) ;
+extern double fmin (double __x, double __y) ; extern double __fmin (double __x, double __y) ;
+extern float fmaxf (float __x, float __y) ; extern float __fmaxf (float __x, float __y) ;
+extern double fmax (double __x, double __y) ; extern double __fmax (double __x, double __y) ;
+
+#else
+#include <math.h>
+#endif
+
+m4_define([[svp_math]], [[[[$2]] = [[$1]](m4_shift2($@))]])
+
+]])

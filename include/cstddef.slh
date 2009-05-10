@@ -8,6 +8,31 @@
 //
 m4_ifndef([[CSTDDEF_SLH]], [[m4_define([[CSTDDEF_SLH]], 1)
 
+#ifdef __mt_freestanding__
+
+#ifdef __alpha__
+
+/* 7.17.2 types */
+
+typedef long ptrdiff_t;
+typedef unsigned long size_t;
+
+typedef int wchar_t;
+
+#else
+# warning No stddef.h definitions available for this target.
+#endif
+
+/* 7.17.3 macros */
+
+#define NULL ((void *)0)
+
+#define offsetof(TYPE, MEMBER) __builtin_offsetof (TYPE, MEMBER)
+
+#else
+
 #include <stddef.h>
+
+#endif
 
 ]])

@@ -28,7 +28,7 @@ endif
 SUFFIXES = .sl .mtalpha-x .ptl-x .seqc-x
 
 .sl.mtalpha-x:
-	$(SLC) -b ppp-mtalpha -o $@ $< -mcpu=ev6 -mbwx -mmax -mfix -mcix
+	$(SLC) -b ppp-mtalpha -o $@ $<
 
 .sl.ptl-x:
 	$(SLC) -b ptl -o $@ $<
