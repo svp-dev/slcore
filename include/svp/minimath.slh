@@ -4,7 +4,7 @@
 // Copyright (C) 2009 The SL project.
 // All rights reserved.
 //
-// $Id: argslot.slh 1926 2009-04-07 21:20:29Z kena $
+// $Id$
 //
 m4_ifndef([[SVP_MINIMATH_SLH]],[[m4_define([[SVP_MINIMATH_SLH]],1)
 

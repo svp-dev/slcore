@@ -1,3 +1,7 @@
+2009-05-13  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
+	* Makefile.am: Distribute Makefile-reqs.orig and Makefile-reqs.mk.
+
 2009-05-11  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
 	Improve support for C99. Start implementing math primitives.
@@ -1551,3 +1555,5 @@
 
 	* bin/cce.in: Allow for includes spread over separate source dir
 	and build dir.
+
+$Id$

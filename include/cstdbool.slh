@@ -4,7 +4,7 @@
 // Copyright (C) 2009 The SL project.
 // All rights reserved.
 //
-// $Id: cstddef.slh 1782 2009-03-18 13:12:05Z kena $
+// $Id$
 //
 m4_ifndef([[CSTDBOOL_SLH]], [[m4_define([[CSTDBOOL_SLH]], 1)
 

@@ -5,7 +5,7 @@
 # All rights reserved.
 # 
 
-EXTRA_DIST = README
+EXTRA_DIST = README Makefile-reqs.orig Makefile-reqs.mk
 SUBDIRS = . bin lib tests demo doc
 
 README: $(srcdir)/doc/README.txt
