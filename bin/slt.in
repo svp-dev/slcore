@@ -265,10 +265,6 @@ Environment variables:
   KEEP           If set, do not erase intermediary files when a test
                  succeeds. Default is not set.
 
-  TEST_HERE      If set and not empty, use a subdirectory in the current
-                 directory for each implementation instead of a
-                 subdirectory in the program's source directory.
-
   TEXT_ONLY      If set and not empty, use plain text messages instead
                  of colored/positioned characters on the console.
 
@@ -509,7 +505,7 @@ do_run() {
       printf '' >$baseout.out
       while read -a vars ; do
 	  echo "===== RUNNING PROGRAM: ${vars[*]} =====" >>$baseout.log
-	  command="$timeout $runner $baseout.x ${vars[*]} $RUN_ARGS"
+	  command="$timeout $runner -x $baseout.x ${vars[*]} $RUN_ARGS"
 	  echo "$command >>$baseout.out" >>$baseout.log
 	  set +e
 	  $command >>$baseout.out 2>>$baseout.log 
@@ -589,9 +585,8 @@ do_preptest() {
     
     outdir=$testdir/_$counter
     counter=$(expr $counter + 1)
-    if test -n "$TEST_HERE"; then
-	outdir=$(echo "_$outdir"|tr '/.:' '___')
-    fi
+    outdir=$(echo "_$outdir"|tr '/.:' '___')
+   
     baseout=$outdir/$testname
     
     if ! mkdir -p "$outdir" >/dev/null 2>&1; then

@@ -10,6 +10,7 @@ slc_helper=${SLC:-@slc_helper@}
 sag_helper=${SAG:-@sag_helper@}
 slc_libdir=${SLC_LIBDIR:-@slc_libdir@}
 slc_datadir=${SLC_DATADIR:-@slc_datadir@}
+TMPDIR=${TMPDIR:-/tmp}
 
 timestamp=$(echo '$Date$'|cut -d' ' -f2)
 version=1
@@ -27,27 +28,42 @@ This uses the SL input mechanism described in CSA note [sl3].
 Usage: $0 [OPTION] PROGRAM [ARGS]...
 
 Options:
-  -dVAR                define the program input VAR as an empty array.
+  -dVAR                Define the program input VAR as an empty array.
 
-  -dVAR=..., VAR=...   define the program input VAR as specified (see 
+  -dVAR=..., VAR=...   Define the program input VAR as specified (see 
                        CSA note [sl3] for details).
 
-  -l                   list variables required as input by the program.
+  -l                   List variables required as input by the program.
 
-  -x                   show configuration string embedded in program, if any.
+  -c                   Show configuration string embedded in program, if any.
 
-  -r runner            use the specified runner (use when autodetect fails).
+  -r runner            Use the specified runner (use when autodetect fails).
 
-  -Ws,arg              pass "arg" as extra command line parameter to the 
+  -Ws,arg              Pass "arg" as extra command line parameter to the 
                        simulator, when the simulator is used.
 
-  -h, --help           print this help, then exit.
+  -x                   Trace: print commands before running them.
 
-  -v, --version        print version number, then exit.
+  -g                   Debug: try to run debugger around program. Implies -x.
+
+  -h, --help           Print this help, then exit.
+
+  -v, --version        Print version number, then exit.
+
+Environment variables:
+  VERBOSE              If set and not empty, implies option -x.
+
+  DEBUG                If set and not empty, implies option -g.
+
+  DEBUGGER             Command prefix to use as debugger. 
+                       Default is \`gdb --args'.
+
+  SIMARGS              Combines with the occurrences of option -Ws on
+                       the command line when running the simulator.
 
 Examples:
 
-  \$ slr -x a.out 
+  \$ slr -c a.out 
 
   Shows runner string stored in \`a.out'.
 
@@ -95,6 +111,8 @@ vars=
 program=
 query=
 SIMARGS=${SIMARGS:-}
+VERBOSE=${VERBOSE:-}
+DEBUG=${DEBUG:-}
 for arg in "$@"; do
   # if the previous option needs an argument, assign it
   if test -n "$prev_arg"; then
@@ -105,7 +123,9 @@ for arg in "$@"; do
   fi
   case $arg in
       -r)	prev_arg=runner; shift;;
-      -x)	show_embedded=1; shift;;
+      -c)	show_embedded=1; shift;;
+      -x)       VERBOSE=1; shift;;
+      -g)	VERBOSE=1; DEBUG=1; shift;;
       -v|--version)	do_version;;
       -h|--help)	do_usage;;
       -l|--list)  query=1; shift;;
@@ -212,7 +232,7 @@ trap 'errcleanup' ERR
 
 # build temporary directory
 baseout=$(basename "$program")
-tmpdir=$(mktemp -d -t "$baseout".XXXXXXXX)
+tmpdir=$(mktemp -d $TMPDIR/"$baseout".XXXXXXXX)
 cleanfiles=$tmpdir
 
 # check program parameters
@@ -223,6 +243,9 @@ if test -n "$query"; then
 fi
 
 if test -s "$tmpdir"/args.spec; then
+    if test -n "$VERBOSE"; then
+      echo "$0: running: $python $sag_helper $vars <$tmpdir/args.spec >$tmpdir/data.c" >&2
+    fi
     $python "$sag_helper" $vars <"$tmpdir"/args.spec >"$tmpdir"/data.c
 
     found=
@@ -239,15 +262,24 @@ if test -s "$tmpdir"/args.spec; then
 	die 1 "arggen.sl not found in $slc_datadir"
     fi
     mkdir "$tmpdir"/slc-rec
+    if test -n "$VERBOSE"; then
+       echo "$0: running: TMPDIR=$tmpdir/slc-rec @BASH@ $slc_helper -b $datatag -o $tmpdir/gen.x -I$tmpdir $found" >&2
+    fi
     TMPDIR="$tmpdir"/slc-rec @BASH@ "$slc_helper" -b "$datatag" -o "$tmpdir"/gen.x -I"$tmpdir" "$found"
     mkdir "$tmpdir"/slr-rec
-    TMPDIR="$tmpdir"/slr-rec @BASH@ "$0" "$tmpdir"/gen.x >"$tmpdir"/data 2>/dev/null
+    if test -n "$VERBOSE"; then
+       echo "$0: running: TMPDIR=$tmpdir/slr-rec @BASH@ $0 $tmpdir/gen.x >$tmpdir/data 2>$tmpdir/gen.log" >&2
+    fi
+    TMPDIR="$tmpdir"/slr-rec @BASH@ "$0" "$tmpdir"/gen.x >"$tmpdir"/data 2>"$tmpdir"/gen.log
 else
     touch "$tmpdir"/data
 fi
 
 #set +e
-export SIMARGS
+export SIMARGS VERBOSE DEBUG
+if test -n "$VERBOSE"; then
+   echo "$0: running: @BASH@ $runner_script $program $tmp/data" >&2
+fi
 @BASH@ "$runner_script" "$program" "$tmpdir"/data 
 #set -e
 docleanup

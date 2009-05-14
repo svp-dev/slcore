@@ -1,9 +1,31 @@
 #! /bin/sh
 # $Id$
 MGSIM_SPARC=${MGSIM_SPARC:-@MGSIM_SPARC@}
+program=${1:?}
+datafile=${2:?}
+DEBUGGER=${DEBUGGER:-gdb --args}
+shift
+shift
+if ! test -x "$program"; then
+    echo "$0: $program: not an executable" >&2
+    exit 1
+fi
+if ! test -r "$datafile"; then
+    echo "$0: $datafile: file not found or not readable" >&2
+    exit 1
+fi
 
 if ! "$MGSIM_SPARC" --help >/dev/null 2>&1; then
-  echo "Can't find simulator? Please set env. var. MGSIM_SPARC to simulator executable." >&2
+  echo "$0: cannot find simulator (MGSIM_SPARC=$MGSIM_SPARC)." >&2
   exit 1
 fi
-exec $MGSIM_SPARC $SIMARGS -t "$@"
+
+do_debug=
+if test -n "$DEBUG"; then
+   SIMARGS="$SIMARGS -i"
+   do_debug=$DEBUGGER
+fi
+if test -n "$VERBOSE"; then
+   echo "$0: running: $do_debug $MGSIM_SPARC $SIMARGS -t $* -L16 $datafile $program" >&2
+fi  
+exec $do_debug $MGSIM_SPARC $SIMARGS -t "$@" -L16 "$datafile" "$program"

@@ -5,6 +5,7 @@
 
 program=${1:?}
 datafile=${2:?}
+DEBUGGER=${DEBUGGER:-gdb --args}
 shift
 shift
 if ! test -x "$program"; then
@@ -20,4 +21,11 @@ b=$(basename "$program")
 d=$(dirname "$program")
 d=$(cd "$d" && pwd)
 
-exec "$d/$b" "$datafile" "$@"
+do_debug=
+if test -n "$DEBUG"; then
+  do_debug=$DEBUGGER
+fi
+if test -n "$VERBOSE"; then
+  echo "$0: running: $do_debug $d/$b $datafile $*" >&2
+fi
+exec $do_debug "$d/$b" "$datafile" "$@"

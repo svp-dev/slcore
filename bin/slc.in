@@ -7,6 +7,7 @@ copyright="Copyright (C) 2009 The SL project.."
 set -e
 cce_helper=${CCE:-@cce_helper@}
 basename=$(basename "$0")
+TMPDIR=${TMPDIR:-/tmp}
 
 # Interface version number
 version=2
@@ -440,11 +441,16 @@ esac
 
 # Create temporary directory if necessary
 if test -n "$tmpdir"; then
-    if ! test -d "$tmpdir" -a -w "$tmpdir"; then
-	die "$tmpdir: cannot write to directory"
+    if test -e "$tmpdir"; then
+	if ! test -d "$tmpdir" -a -w "$tmpdir"; then
+           die "$tmpdir: cannot write to directory"
+        fi
+    else
+        mkdir -p "$tmpdir"
+	tempdirs=$tmpdir
     fi
 else
-    tmpdir=$(mktemp -d -t slc.XXXXXXXX)
+    tmpdir=$(mktemp -d $TMPDIR/slc.XXXXXXXX)
     tempdirs=$tmpdir
 fi
 

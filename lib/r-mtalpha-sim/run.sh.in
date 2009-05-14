@@ -3,6 +3,7 @@
 MGSIM_ALPHA=${MGSIM_ALPHA:-@MGSIM_ALPHA@}
 program=${1:?}
 datafile=${2:?}
+DEBUGGER=${DEBUGGER:-gdb --args}
 shift
 shift
 if ! test -x "$program"; then
@@ -15,7 +16,16 @@ if ! test -r "$datafile"; then
 fi
 
 if ! "$MGSIM_ALPHA" --help >/dev/null 2>&1; then
-  echo "Can't find simulator? Please set env. var. MGSIM_ALPHA to simulator executable." >&2
+  echo "$0: cannot find simulator (MGSIM_ALPHA=$MGSIM_ALPHA)." >&2
   exit 1
 fi
-exec $MGSIM_ALPHA $SIMARGS -t "$@" -L16 "$datafile" "$program"
+
+do_debug=
+if test -n "$DEBUG"; then
+   SIMARGS="$SIMARGS -i"
+   do_debug=$DEBUGGER
+fi
+if test -n "$VERBOSE"; then
+   echo "$0: running: $do_debug $MGSIM_ALPHA $SIMARGS -t $* -L16 $datafile $program" >&2
+fi  
+exec $do_debug $MGSIM_ALPHA $SIMARGS -t "$@" -L16 "$datafile" "$program"

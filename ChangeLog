@@ -1,3 +1,26 @@
+2009-05-14  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
+	Make debugging easier.
+
+	* bin/slr.in: Rename option -x to -c. Use -x for new "tracing"
+	feature (print commands before running them). Add option -g to run
+	command with debugger. Improve documentation to reflect the
+	feature changes.
+
+	* lib/r-mtalpha-sim/run.sh.in,
+	* lib/r-mtsparc-sim/run.sh.in,
+	* lib/r-host/run.sh: Recognize VERBOSE, DEBUG and DEBUGGER. 
+	
+	* bin/slt.in: Always put temporary file in a subdirectory of the
+	current directory, instead of the source directory. This makes
+	TEST_HERE obsolete. Give -x to `slr' for better logging.
+	
+	* tests.mk (TESTS_ENVIRONMENT): Simplify accordingly. 
+
+	* bin/slr.in,
+	* bin/slc.in: Better use TMPDIR and mktemp to reduce the size of
+	temporary directory paths.
+	
 2009-05-13  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
 	* Makefile.am: Distribute Makefile-reqs.orig and Makefile-reqs.mk.
