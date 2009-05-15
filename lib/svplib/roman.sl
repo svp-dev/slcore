@@ -9,39 +9,40 @@
 m4_include(svp/lib.slh)
 m4_include(svp/roman.slh)
 
+static struct roman_table_t {
+  long base;
+  const char* repr;
+} roman_table[] = {
+  {   50000, "(L)" },
+  {   10000, "(X)" },
+  {    5000, "(V)" },
+  {    1000,   "M" },
+  {     500,   "D" },
+  {     100,   "C" },
+  {      50,   "L" },
+  {      10,   "X" },
+  {       5,   "V" },
+  {       1,   "I" },
+  {       0,     0 }
+};
+
+
 sl_def(roman, void, sl_glparm(short, x))
 {
-  int num = sl_getp(x);
+  long num = sl_getp(x);
   if (num < 0) {
     __write1('-');
     num = -num;
   }
-  while(num >= 1000) {
-     __write1('M');
-     num = num - 1000;
-  }
-  while(num >= 500) {
-     __write1('D');
-     num = num - 500;
-  }
-  while(num >= 100) {
-     __write1('C');
-     num = num - 100;
-  }
-  while(num >= 50) {
-     __write1('L');
-     num = num - 50;
-  }
-  while(num >= 10) {
-     __write1('X');
-     num = num - 10;
-  }
-  while(num >= 5) {
-     __write1('V');
-     num = num - 5;
-  }
-  while(num--)
-     __write1('I');
+
+  struct roman_table_t *p = roman_table;
+  const char *s;
+
+  for (p = roman_table; p->base; ++p)
+    while(num >= p->base) {
+       for (s = p->repr; *s; ++s) __write1(*s);
+       num = num - p->base;
+    };
 }
 sl_enddef
 
