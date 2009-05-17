@@ -1,3 +1,17 @@
+2009-05-18  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
+	Allow for more debugging & more tests.
+
+	* lib/seqc.mk,	
+	* lib/ptl.mk: Compile with CFLAGS and CXXFLAGS, which can be
+	overridden by configure. This also captures configure's defaults
+	of -g -O2, suitable for debugging of the SVP library.
+
+	* tests/0_minimal/3_mem/floatsh.sl,
+	* tests/0_minimal/3_mem/floatsh1.sl,	
+	* tests/0_minimal/3_mem/floatsh2.sl: Add, based on report by
+	M. Hicks.
+	
 2009-05-15  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
 	* lib/svplib/roman.sl: Simplify.

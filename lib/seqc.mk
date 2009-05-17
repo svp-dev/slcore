@@ -17,7 +17,7 @@ host_host_seqc_libslos_a_LIBADD = \
 	host-host-seqc/roman.o \
 	host-host-seqc/io.o
 
-SLC_SEQC = $(SLC) -b seqc -nostdlib
+SLC_SEQC = $(SLC) -b seqc -nostdlib $(AM_CFLAGS) $(CFLAGS)
 
 host-host-seqc/io.o: $(srcdir)/svplib/io.sl
 	$(MKDIR_P) host-host-seqc
@@ -33,7 +33,7 @@ host-host-seqc/roman.o: $(srcdir)/svplib/roman.sl
 
 host-host-seqc/slrt.o: $(srcdir)/host-host-seqc/slrt.c $(srcdir)/host-host-seqc/load.c
 	$(MKDIR_P) host-host-seqc
-	$(CC) $(CFLAGS) -I$(srcdir)/t-seqc/include -c -o $@ $<
+	$(CC) $(CFLAGS) -I$(srcdir)/t-seqc/include -c -o $@ $< $(AM_CFLAGS) $(CFLAGS)
 
 CLEANFILES += \
 	host-host-seqc/io.o \

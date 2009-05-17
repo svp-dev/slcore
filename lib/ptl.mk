@@ -38,7 +38,7 @@ host_host_ptl_libslos_a_LIBADD = \
 BUILT_SOURCES += \
 	host-host-ptl/include/ptl_create.h
 
-SLC_PTL = $(SLC) -b ptl -nostdlib
+SLC_PTL = $(SLC) -b ptl -nostdlib $(CXXFLAGS)
 
 host-host-ptl/io.o: $(srcdir)/svplib/io.sl
 	$(MKDIR_P) host-host-ptl
@@ -54,7 +54,7 @@ host-host-ptl/roman.o: $(srcdir)/svplib/roman.sl
 
 host-host-ptl/slrt.o: $(srcdir)/host-host-ptl/slrt.c $(srcdir)/host-host-seqc/load.c
 	$(MKDIR_P) host-host-ptl
-	$(CC) $(CFLAGS) -I$(srcdir)/t-ptl/include -c -o $@ $<
+	$(CC) $(CFLAGS) -I$(srcdir)/t-ptl/include -c -o $@ $< $(AM_CXXFLAGS) $(CXXFLAGS)
 
 CLEANFILES += \
 	host-host-ptl/io.o \
