@@ -3,7 +3,7 @@ sl_def(foo, void, sl_glparm(int, a))
 { }
 sl_enddef
 
-// XFAIL: TPC (global is immutable)
+// XFAIL: *:[TPC] (global is immutable)
 sl_def(t_main, void)
 {
   sl_create(,,,,,,, foo, sl_glarg(int, a, 10));

@@ -1,3 +1,91 @@
+2009-05-19  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
+	Cosmetic changes. Reinstate support for compiling through the MG
+	core compiler. Reinstate "xfail" tests.
+	
+	* tests/0_minimal/0_trivial/div.sl: Rename to...	
+	* tests/1_basic/2_div/div3.sl: here, because div requires create
+	and arguments.
+	
+	* bin/spp (pppalpha.create): 
+	* lib/t-utc0/include/sl_support.h,
+	* lib/t-pppalpha/include/sl_support.h,
+	* tests/1_basic/3_args/gencall.py,		
+	* tests/1_basic/2_div/div2.sl,
+	* tests/1_basic/2_div/div3.sl: Use "long" instead of "long
+	long" to simplify code since they are the same size on the Alpha.
+
+	* include/svp/perf.slh,
+	* include/climits.slh,
+	* include/cstdint.slh,		
+	* include/cstddef.slh: Test for __mtalpha__ in addition to
+	__alpha__ to support the MG core compiler.
+
+	* lib/t-utc0/slimpl.m4: Use m4_foreach instead of manual recursion
+	to avoid issues with quoting. Check more for matching create/sync
+	blocks, as with ptl and ppp.
+
+	* lib/t-utc0/include/sl_support.h: Reinstate PLACE_LOCAL and
+	PLACE_DEFAULT. 
+
+	* lib/t-utc0/include/sl_support.h,
+	* lib/t-pppalpha/include/sl_support.h: Use FP register for "breakf".
+
+	* bin/spp (pppalpha.mapcall): Add warnings when arguments are
+	passed using memory.
+	
+	* demo/Makefile.am: Compile with CFLAGS and CXXFLAGS which can be
+	overridden by configure.
+
+	* configure.ac: Make checking of muTC-ptl optional.	
+	* tests.mk: Update accordingly. Test the core compiler with both
+	-O0, -O1, -O2
+
+	* tests/0_minimal/1_create/x_inffamily.sl,
+	* tests/0_minimal/1_create/x_nested.sl,
+	* tests/0_minimal/1_create/x_extcreate.sl,
+	* tests/0_minimal/1_create/x_extcreatedefs.sl,
+	* tests/0_minimal/1_create/x_invsync.sl,
+	* tests/0_minimal/1_create/x_crnosync.sl,
+	* tests/0_minimal/1_create/x_nocreate.sl,
+	* tests/0_minimal/1_create/x_nothread.sl,
+	* tests/0_minimal/1_create/x_crnotstm.sl,
+	* tests/0_minimal/0_trivial/x_abort.sl,
+	* tests/0_minimal/0_trivial/x_invm4.sl,
+	* tests/0_minimal/0_trivial/x_empty.sl,
+	* tests/0_minimal/0_trivial/x_invcpp.sl,
+	* tests/0_minimal/0_trivial/x_invsyntax.sl,
+	* tests/0_minimal/0_trivial/x_infloop.sl,
+	* tests/0_minimal/0_trivial/x_illinsn.sl,
+	* tests/0_minimal/0_trivial/x_undefsym.sl,
+	* tests/0_minimal/2_args/x_dupdecl.sl,
+	* tests/0_minimal/2_args/x_wrglparm.sl,
+	* tests/0_minimal/2_args/x_invinit2.sl,
+	* tests/0_minimal/2_args/x_argscope.sl,
+	* tests/0_minimal/2_args/x_argnr.sl,
+	* tests/0_minimal/2_args/x_invsh2.sl,
+	* tests/0_minimal/2_args/x_invsh4.sl,
+	* tests/0_minimal/2_args/x_addrparm2.sl,
+	* tests/0_minimal/2_args/x_invinit.sl,
+	* tests/0_minimal/2_args/x_glnoinit.sl,
+	* tests/0_minimal/2_args/x_addrparm.sl,
+	* tests/0_minimal/2_args/x_argnr2.sl,
+	* tests/0_minimal/2_args/x_dupdecl2.sl,
+	* tests/0_minimal/2_args/x_nothread.sl,
+	* tests/0_minimal/2_args/x_addrarg.sl,
+	* tests/0_minimal/2_args/x_wrglarg.sl,
+	* tests/0_minimal/2_args/x_deadlock.sl,
+	* tests/0_minimal/2_args/x_invsh1.sl,	
+	* tests/0_minimal/2_args/x_invsh3.sl: Update to the new syntax for
+	expected failures.
+
+	* tests/mkalltests.sh,
+	* tests/Makefile.am: Reinstate tests for expected failures.
+
+	* configure.ac: Make option for expected failure
+	tests (--enable-xfail-tests).	
+	* tests/Makefile.am: Use it.
+	
 2009-05-18  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
 	Allow for more debugging & more tests.

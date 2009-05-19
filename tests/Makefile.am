@@ -6,10 +6,13 @@
 # 
 
 include $(srcdir)/alltests.mk
-EXTRA_DIST = $(TESTSUITE)
+EXTRA_DIST = $(TESTSUITE) $(XTESTSUITE)
 
 if ENABLE_TESTSUITE
 TESTS = $(TESTSUITE)
+if ENABLE_XFAIL_TESTS
+TESTS += $(XTESTSUITE)
+endif
 endif
 
 include $(top_srcdir)/tests.mk

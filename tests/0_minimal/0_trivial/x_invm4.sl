@@ -1,2 +1,2 @@
-// XFAIL: T
+// XFAIL: *:T
 sl_def(

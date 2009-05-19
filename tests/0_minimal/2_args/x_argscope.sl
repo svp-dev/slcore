@@ -1,7 +1,7 @@
 
 sl_def(foo, void, sl_glparm(int, a)) {} sl_enddef
 
-// XFAIL: C (use of arg out of scope)
+// XFAIL: *:C (use of arg out of scope)
 sl_def(t_main, void)
 {
   {

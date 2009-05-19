@@ -6,7 +6,7 @@ sl_def(foo, void)
 }
 sl_enddef
 
-// XTIMEOUT
+// XTIMEOUT: *
 sl_def(t_main, void)
 {
   sl_create(,,0,1,0,,, foo);

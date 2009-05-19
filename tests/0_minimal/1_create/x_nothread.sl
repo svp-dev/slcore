@@ -1,6 +1,6 @@
 struct A {} a;
 
-// XFAIL: C (not thread type)
+// XFAIL: *:C (not thread type)
 sl_def(t_main, void)
 {
   sl_family_t f;

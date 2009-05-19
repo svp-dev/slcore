@@ -6,7 +6,7 @@ sl_def(func, void)
 }
 sl_enddef
 
-// XFAIL: T (create without sync should fail during transform)
+// XFAIL: *:T (create without sync should fail during transform)
 
 sl_def(t_main, void)
 {

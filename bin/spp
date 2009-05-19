@@ -13,6 +13,9 @@ def die(msg):
    print >>sys.stderr, "%s:" % sys.argv[0], msg
    sys.exit(1)
 
+def warn(msg):
+   print >>sys.stderr, "%s: warning:" % sys.argv[0], msg
+
 class NotFound(Exception):
    pass
 
@@ -299,7 +302,7 @@ class pppalpha(object):
       self.regs = regs
       self.aliases = aliases
 
-   def mapcall(self, args):
+   def mapcall(self, funcname, args):
       dic = { 
          'i' : { 'sh' : [], 'gl' : [] },
          'f' : { 'sh' : [], 'gl' : [] },
@@ -328,7 +331,7 @@ class pppalpha(object):
 
       # Allocate shareds first
       if len(dic['i']['sh']) * 2 > islots_avail:
-         die("too many int shareds, cannot pass them via memory yet")
+         die("function '%s': too many int shareds, cannot pass them via memory yet" % funcname)
       shc = 0
       for s in dic['i']['sh']:
          s['mode'] = 'reg'
@@ -338,7 +341,7 @@ class pppalpha(object):
       nrishareds = shc
 
       if len(dic['f']['sh']) > fslots_avail:
-         die("too many float shareds, cannot pass them via memory yet")
+         die("function '%s': too many float shareds, cannot pass them via memory yet" % funcname)
       shc = 0
       for s in dic['f']['sh']:
          s['mode'] = 'reg'
@@ -383,6 +386,7 @@ class pppalpha(object):
          ret['gl_mem_offset'] = None
          ret['gl_pv_offset'] = glc
       else:
+         warn("function '%s': some arguments are passed via memory" % funcname)
          nriglobals = glc + 1
          ret['gl_mem_offset'] = glc
          ret['gl_pv_offset'] = glc + 1
@@ -404,7 +408,7 @@ class pppalpha(object):
       if len(args) == 1 and args[0] == "":
          args = ()
 
-      c = self.mapcall(args)
+      c = self.mapcall(funcname, args)
 
       #pprint.pprint(c)
 
@@ -492,7 +496,7 @@ class pppalpha(object):
       if br == 'int':
          brreg = aliases['l%d' % bri]['legnr']
          print '__sl_setbreak(%s, %d);' % (tag, bri)
-         print '__sl_declbr(%s, long long, "$%d");' % (tag, brreg)
+         print '__sl_declbr(%s, long, "$%d");' % (tag, brreg)
          wregs.append('__sl_br_%s' % tag)
       elif br == 'float':
          brreg = aliases['lf%d' % brf]['legnr']
@@ -532,7 +536,7 @@ class pppalpha(object):
       if len(args) == 1 and args[0] == "":
          args = ()
 
-      c = self.mapcall(args)
+      c = self.mapcall(funcname, args)
 
       mapping = []
 

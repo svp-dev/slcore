@@ -1,5 +1,5 @@
 
-// XFAIL: C (shared has no address)
+// XFAIL: *:C (shared has no address)
 int *p;
 sl_def(foo, void, sl_shparm(int, a))
 {

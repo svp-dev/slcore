@@ -10,7 +10,7 @@ m4_ifndef([[CSTDDEF_SLH]], [[m4_define([[CSTDDEF_SLH]], 1)
 
 #ifdef __mt_freestanding__
 
-#ifdef __alpha__
+#if defined(__alpha__)||defined(__mtalpha__)
 
 /* 7.17.2 types */
 

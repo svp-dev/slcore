@@ -31,10 +31,10 @@ SUFFIXES = .sl .mtalpha-x .ptl-x .seqc-x
 	$(SLC) -b ppp-mtalpha -o $@ $<
 
 .sl.ptl-x:
-	$(SLC) -b ptl -o $@ $<
+	$(SLC) -b ptl -o $@ $< $(CXXFLAGS)
 
 .sl.seqc-x:
-	$(SLC) -b seqc -o $@ $<
+	$(SLC) -b seqc -o $@ $< $(CFLAGS)
 
 fft.ptl-x fft.seqc-x fft.mtalpha-x: fft.sl fft_table.slh
 

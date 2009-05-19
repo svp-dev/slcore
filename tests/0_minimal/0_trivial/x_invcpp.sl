@@ -1,3 +1,3 @@
-// XFAIL: P
+// XFAIL: *:P
 
 #define foo(

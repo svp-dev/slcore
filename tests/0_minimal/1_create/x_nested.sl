@@ -2,7 +2,7 @@ m4_include(svp/lib.slh)
 
 sl_def(foo, void) {} sl_enddef
 
-// XFAIL: T (nested creates)
+// XFAIL: *:T (nested creates)
 sl_def(t_main, void)
 {
   sl_family_t f1, f2;

@@ -1,6 +1,6 @@
 sl_def(foo, void, sl_shparm(int, x)) {} sl_enddef
 
-// XFAIL: C (shared has no address)
+// XFAIL: *:C (shared has no address)
 sl_def(t_main, void)
 {
   int *a;

@@ -1,5 +1,5 @@
 
-// XFAIL: C (global has no address)
+// XFAIL: *:C (global has no address)
 int *p;
 sl_def(foo, void, sl_glparm(int, a))
 {

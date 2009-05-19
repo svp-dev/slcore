@@ -28,7 +28,7 @@ m4_define([[get_cycles]],[[({
 #endif
   *(int64_t*)res; 
 #else
-#if defined(__alpha__)
+#if defined(__alpha__) || defined(__mtalpha__)
   int64_t x;
   __asm__ __volatile__ ("rpcc %0" : "=r"(x));
   x;

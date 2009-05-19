@@ -10,7 +10,7 @@ m4_ifndef([[CSTDINT_SLH]], [[m4_define([[CSTDINT_SLH]], 1)
 
 #ifdef __mt_freestanding__
 
-#ifdef __alpha__
+#if defined(__alpha__)||defined(__mtalpha__)
 
 /* 7.18.1.1 Exact-width integer types */
 typedef signed char             int8_t;

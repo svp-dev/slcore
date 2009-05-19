@@ -1,4 +1,4 @@
-// XTIMEOUT: R
+// XTIMEOUT: *:R
 sl_def(t_main, void)
 {
   while(1);

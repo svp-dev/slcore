@@ -30,7 +30,7 @@ def gencall(out, nrshareds, nrglobals, ty):
     print >>out, ',\n'.join(["\tsl_sh%sarg(%s,sarg%d,%d)" % (sc,ty,x,x) for x in xrange(nrshareds)] + 
                    ["\tsl_gl%sarg(%s,garg%d,%d)" % (sc,ty,x,x) for x in xrange(nrglobals)]),
     print >>out, "  );"
-    print >>out, "  long long iresult = result;"
+    print >>out, "  long iresult = result;"
     print >>out, "  putn(iresult);"
     print >>out, "  putc('\\n');\n}\nsl_enddef"
     print >>out, "sl_def(t_main, void) { sl_proccall(do_call); } sl_enddef"

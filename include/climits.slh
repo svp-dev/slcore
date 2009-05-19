@@ -10,7 +10,7 @@ m4_ifndef([[CLIMITS_SLH]], [[m4_define([[CLIMITS_SLH]], 1)
 
 #ifdef __mt_freestanding__
 
-#ifdef __alpha__
+#if defined(__alpha__)||defined(__mtalpha__)
 
 #define MB_LEN_MAX      16
 

@@ -55,12 +55,12 @@
   } while(0)
 
 
-#define __sl_declindex(Name) register const long long Name = __sl_index
+#define __sl_declindex(Name) register const long Name = __sl_index
 
 #define __sl_prologue(Name, GI, SI, GF, SF, IDXREG, LN) \
   extern void Name(void);						\
   void _x_ ## Name (void) {						\
-    register long long __sl_index __asm__(IDXREG);			\
+    register long __sl_index __asm__(IDXREG);			\
     __asm__ ("# MT: index starts in %0 (must be =" IDXREG ")" : "=r"(__sl_index)); \
     __asm__ __volatile__(".registers " # GI " " # SI " 19 " # GF " " # SF " 19\n");
 
@@ -68,7 +68,7 @@
     }
 
 #define __sl_allocate(Tag, GI, SI, GF, SF)				\
-  register long long __sl_fid_ ## Tag;					\
+  register long __sl_fid_ ## Tag;					\
   __asm__ __volatile__ ("allocate %0, %1, %2, %3, %4\t# CREATE " #Tag \
 			: "=r"(__sl_fid_ ## Tag)		      \
 			: "I"(GI), "I"(SI), "I"(GF), "I"(SF))
@@ -104,7 +104,7 @@
   } while(0)
 
 #define __sl_dobreakf(Val) do {			    \
-    __asm__ __volatile__("breakf %0" : : "r"(Val)); \
+    __asm__ __volatile__("breakf %0" : : "f"(Val)); \
     while(1) __nop();                               \
   } while(0)
 
@@ -146,12 +146,12 @@
   register Type const __sl_br_ ## Tag __asm__(Reg)
 
 #define __sl_declsync(Tag, Reg) \
-  register long long __sl_sync_ ## Tag __asm__(Reg) = __sl_fid_ ## Tag
+  register long __sl_sync_ ## Tag __asm__(Reg) = __sl_fid_ ## Tag
 
 
 
-typedef long long sl_family_t;
-typedef long long sl_place_t;
+typedef long sl_family_t;
+typedef long sl_place_t;
 typedef void (*__sl_fptr_t)(void);
 
 #define PLACE_LOCAL   0

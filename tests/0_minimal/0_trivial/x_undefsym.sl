@@ -1,4 +1,4 @@
-// XFAIL: L
+// XFAIL: *:L
 extern int __do_not_exist;
 
 sl_def(t_main, void)
