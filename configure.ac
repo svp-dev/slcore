@@ -9,8 +9,9 @@ AC_PREREQ([2.61])
 AC_INIT([slc], [2.x], [r.c.poss@uva.nl])
 AC_CONFIG_AUX_DIR([build-aux])
 AM_MAINTAINER_MODE
+AM_SILENT_RULES([yes])
 
-AM_INIT_AUTOMAKE([1.10 tar-ustar no-define foreign dist-bzip2])
+AM_INIT_AUTOMAKE([1.11 tar-ustar no-define foreign dist-bzip2 color-tests silent-rules])
 
 m4_define([SLC_OPT_PROG],
 [AC_ARG_VAR(m4_toupper([$1]), [$2])

@@ -5,18 +5,7 @@
 # All rights reserved.
 # 
 
-SLC_VARS = \
-	SLC_INCDIR=$(abs_top_srcdir)/include:$(abs_top_builddir)/include \
-	SLC_LIBDIR=$(abs_top_srcdir)/lib:$(abs_top_builddir)/lib \
-	SLC_DATADIR=$(abs_top_srcdir)/lib:$(abs_top_builddir)/lib \
-	SPP=$(abs_top_srcdir)/bin/spp \
-	SCU=$(abs_top_srcdir)/bin/scu \
-	SAG=$(abs_top_srcdir)/bin/sag \
-	CCE=$(abs_top_builddir)/bin/cce \
-	SLR=$(abs_top_builddir)/bin/slr \
-	SLC=$(abs_top_builddir)/bin/slc
-
-SLC = $(SLC_VARS) $(abs_top_builddir)/bin/slc
+include $(top_srcdir)/sl.mk
 
 EXTRA_TEST_IMPL =
 

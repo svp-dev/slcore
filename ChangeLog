@@ -1,3 +1,28 @@
+2009-05-20  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
+	Update to Automake 1.11. Cleanup build system.
+	
+	* Makefile.am,
+	* lib/Makefile.am,
+	* demo/Makefile.am,
+	* tests.mk: Simplify. Move generic rules to...
+	* sl.mk: here.
+
+	* Makefile-reqs.orig, 
+	* bootstrap,	
+	* configure.ac: Update for latest release of Automake, and enable
+	silent rules.
+
+	* Makefile.am,
+	* bin/Makefile.am,
+	* lib/mtalpha.mk,
+	* lib/seqc.mk,
+	* lib/ptl.mk,
+	* sl.mk: Use prefixes to silence custom slc build rules.
+
+	* demo/Makefile.am: Coalesce DEMOS, EXTRA_DEMOS and ALL_DEMOS
+	since no distinction exists any more.
+
 2009-05-19  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
 	Cosmetic changes. Reinstate support for compiling through the MG

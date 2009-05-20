@@ -41,20 +41,20 @@ BUILT_SOURCES += \
 SLC_PTL = $(SLC) -b ptl -nostdlib $(CXXFLAGS)
 
 host-host-ptl/io.o: $(srcdir)/svplib/io.sl
-	$(MKDIR_P) host-host-ptl
-	$(SLC_PTL) -c -o $@ $<
+	$(AM_V_at)$(MKDIR_P) host-host-ptl
+	$(slc_verbose)$(SLC_PTL) -c -o $@ $<
 
 host-host-ptl/div.o: $(srcdir)/svplib/div.sl
-	$(MKDIR_P) host-host-ptl
-	$(SLC_PTL) -c -o $@ $<
+	$(AM_V_at)$(MKDIR_P) host-host-ptl
+	$(slc_verbose)$(SLC_PTL) -c -o $@ $<
 
 host-host-ptl/roman.o: $(srcdir)/svplib/roman.sl
-	$(MKDIR_P) host-host-ptl
-	$(SLC_PTL) -c -o $@ $<
+	$(AM_V_at)$(MKDIR_P) host-host-ptl
+	$(slc_verbose)$(SLC_PTL) -c -o $@ $<
 
 host-host-ptl/slrt.o: $(srcdir)/host-host-ptl/slrt.c $(srcdir)/host-host-seqc/load.c
-	$(MKDIR_P) host-host-ptl
-	$(CC) $(CFLAGS) -I$(srcdir)/t-ptl/include -c -o $@ $< $(AM_CXXFLAGS) $(CXXFLAGS)
+	$(AM_V_at)$(MKDIR_P) host-host-ptl
+	$(AM_V_CC)$(CC) $(CFLAGS) -I$(srcdir)/t-ptl/include -c -o $@ $< $(AM_CXXFLAGS) $(CXXFLAGS)
 
 CLEANFILES += \
 	host-host-ptl/io.o \
@@ -66,8 +66,8 @@ PTL_CREATE_SUBST = $(srcdir)/host-host-ptl/include/template.pl
 PTL_CREATE_TEMPL = $(srcdir)/host-host-ptl/include/create.tpl
 
 host-host-ptl/include/ptl_create.h: $(PTL_CREATE_SUBST) $(PTL_CREATE_TEMPL)
-	$(MKDIR_P) host-host-ptl/include
-	$(PERL) $(PTL_CREATE_SUBST) <$(PTL_CREATE_TEMPL) >$@
+	$(AM_V_at)$(MKDIR_P) host-host-ptl/include
+	$(AM_V_GEN)$(PERL) $(PTL_CREATE_SUBST) <$(PTL_CREATE_TEMPL) >$@
 
 MAINTAINERCLEANFILES += host-host-ptl/include/ptl_create.h
 

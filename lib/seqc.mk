@@ -20,20 +20,20 @@ host_host_seqc_libslos_a_LIBADD = \
 SLC_SEQC = $(SLC) -b seqc -nostdlib $(AM_CFLAGS) $(CFLAGS)
 
 host-host-seqc/io.o: $(srcdir)/svplib/io.sl
-	$(MKDIR_P) host-host-seqc
-	$(SLC_SEQC) -c -o $@ $<
+	$(AM_V_at)$(MKDIR_P) host-host-seqc
+	$(slc_verbose)$(SLC_SEQC) -c -o $@ $<
 
 host-host-seqc/div.o: $(srcdir)/svplib/div.sl
-	$(MKDIR_P) host-host-seqc
-	$(SLC_SEQC) -c -o $@ $<
+	$(AM_V_at)$(MKDIR_P) host-host-seqc
+	$(slc_verbose)$(SLC_SEQC) -c -o $@ $<
 
 host-host-seqc/roman.o: $(srcdir)/svplib/roman.sl
-	$(MKDIR_P) host-host-seqc
-	$(SLC_SEQC) -c -o $@ $<
+	$(AM_V_at)$(MKDIR_P) host-host-seqc
+	$(slc_verbose)$(SLC_SEQC) -c -o $@ $<
 
 host-host-seqc/slrt.o: $(srcdir)/host-host-seqc/slrt.c $(srcdir)/host-host-seqc/load.c
-	$(MKDIR_P) host-host-seqc
-	$(CC) $(CFLAGS) -I$(srcdir)/t-seqc/include -c -o $@ $< $(AM_CFLAGS) $(CFLAGS)
+	$(AM_V_at)$(MKDIR_P) host-host-seqc
+	$(slc_verbose)$(CC) $(CFLAGS) -I$(srcdir)/t-seqc/include -c -o $@ $< $(AM_CFLAGS) $(CFLAGS)
 
 CLEANFILES += \
 	host-host-seqc/io.o \

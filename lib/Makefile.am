@@ -23,7 +23,7 @@ nobase_dist_pkgdata_DATA = \
 	t-utc0/slimpl.m4 \
 	t-utc0/include/sl_support.h 
 
-include $(top_srcdir)/tests.mk
+include $(top_srcdir)/sl.mk
 nobase_pkglib_DATA = 
 nobase_pkglib_LIBRARIES = 
 CLEANFILES =

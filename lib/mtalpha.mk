@@ -23,32 +23,32 @@ mtalpha_sim_libslos_a_CONTENTS = \
 	mtalpha-sim/roman.o \
 	mtalpha-sim/io.o
 
-SLC_MTALPHA = $(SLC) -b ppp-mtalpha
+SLC_MTALPHA = $(SLC) -b ppp-mtalpha -nostdlib
 
 mtalpha-sim/io.o: $(srcdir)/svplib/io.sl
-	$(MKDIR_P) mtalpha-sim
-	$(SLC_MTALPHA) -c -o $@ $<
+	$(AM_V_at)$(MKDIR_P) mtalpha-sim
+	$(slc_verbose)$(SLC_MTALPHA) -c -o $@ $<
 
 mtalpha-sim/div.o: $(srcdir)/svplib/div.sl
-	$(MKDIR_P) mtalpha-sim
-	$(SLC_MTALPHA) -c -o $@ $<
+	$(AM_V_at)$(MKDIR_P) mtalpha-sim
+	$(slc_verbose)$(SLC_MTALPHA) -c -o $@ $<
 
 mtalpha-sim/roman.o: $(srcdir)/svplib/roman.sl
-	$(MKDIR_P) mtalpha-sim
-	$(SLC_MTALPHA) -c -o $@ $<
+	$(AM_V_at)$(MKDIR_P) mtalpha-sim
+	$(slc_verbose)$(SLC_MTALPHA) -c -o $@ $<
 
 mtalpha-sim/mtdiv.o: $(srcdir)/mtalpha-sim/mtdiv.s
-	$(MKDIR_P) mtalpha-sim
-	$(SLC_MTALPHA) -c -o $@ $<
+	$(AM_V_at)$(MKDIR_P) mtalpha-sim
+	$(slc_verbose)$(SLC_MTALPHA) -c -o $@ $<
 
 mtalpha-sim/slrt.o: $(srcdir)/mtalpha-sim/slrt.s
-	$(MKDIR_P) mtalpha-sim
-	$(SLC_MTALPHA) -c -o $@ $<
+	$(AM_V_at)$(MKDIR_P) mtalpha-sim
+	$(slc_verbose)$(SLC_MTALPHA) -c -o $@ $<
 
 mtalpha-sim/libslos.a: $(mtalpha_sim_libslos_a_CONTENTS)
-	rm -f $@
-	$(AR_MTALPHA) cru $@ $^
-	$(RANLIB_MTALPHA) $@
+	$(AM_V_at)rm -f $@
+	$(AM_V_AR)$(AR_MTALPHA) cru $@ $^
+	$(AM_V_at)$(RANLIB_MTALPHA) $@
 
 endif
 

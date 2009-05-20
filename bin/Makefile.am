@@ -31,11 +31,11 @@ edit_scripts = $(SED) \
 	       -e 's|@spp_helper[@]|$(bindir)/spp|g'
 
 cce slr slc slt timeout: Makefile
-	rm -f $@ $@.tmp
-	$(edit_scripts) $(srcdir)/$@.in >$@.tmp
-	chmod +x $@.tmp
-	chmod a-w $@.tmp
-	mv $@.tmp $@
+	$(AM_V_at)rm -f $@ $@.tmp
+	$(AM_V_GEN)$(edit_scripts) $(srcdir)/$@.in >$@.tmp
+	$(AM_V_at)chmod +x $@.tmp
+	$(AM_V_at)chmod a-w $@.tmp
+	$(AM_V_at)mv $@.tmp $@
 
 cce: cce.in
 slr: slr.in
