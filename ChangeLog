@@ -1,3 +1,13 @@
+2009-05-22  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
+	* configure.ac: Capture SVN version number in Autoconf.
+
+	* bin/Makefile.am,
+	* bin/cce.in,
+	* bin/slc.in,
+	* bin/slr.in,
+	* bin/slt.in: use it. Uniformize version numbers.
+
 2009-05-20  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
 	Update to Automake 1.11. Cleanup build system.

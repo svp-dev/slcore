@@ -1,15 +1,17 @@
 #! @BASH@
 # $Id$
 #
-copyright="Copyright (C) 2009 the CSA group - The SL project.."
+copyright="Copyright (C) 2009 the CSA group - The SL project."
 # All rights reserved.
 
 set -e
 basename=$(basename "$0")
 root=$(cd $(dirname "$0"); pwd)
 
-# Interface version number
-version=2
+version=@slc_version@
+slrev=@slc_revision@
+bugreports=@bugreports@
+
 
 slc=${SLC:-@slc_helper@}
 runner=${SLR:-@slr_helper@}
@@ -283,7 +285,7 @@ Diagnostics:
 
   2              Invalid test parameters.
 
-Report bugs and suggestions to the CSA issue tracker.
+Report bugs and suggestions to $bugreports.
 EOF
    exit 0 
 }
@@ -296,7 +298,7 @@ elif test "$1" = "--version" -o "$1" = "-v"; then
   rev='$Rev$'
   rev=$(echo "$rev"|cut -d' ' -f2)
   cat <<EOF
-$basename $version.$rev
+$basename $version (rev $slrev/$rev)
 
 $copyright
 All rights reserved. There is NO warranty; not even for

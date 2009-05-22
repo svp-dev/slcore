@@ -12,8 +12,9 @@ slc_libdir=${SLC_LIBDIR:-@slc_libdir@}
 slc_datadir=${SLC_DATADIR:-@slc_datadir@}
 TMPDIR=${TMPDIR:-/tmp}
 
-timestamp=$(echo '$Date$'|cut -d' ' -f2)
-version=1
+version=@slc_version@
+slrev=@slc_revision@
+bugreports=@bugreports@
 
 do_usage() {
   cat <<EOF
@@ -79,7 +80,7 @@ Examples:
   simulator is used, add "-o NumProcessors=7" to the simulator command
   line.
 
-Report bugs and patches to the CSA group.
+Report bugs and patches to $bugreports.
 EOF
   exit 0
 }
@@ -88,7 +89,7 @@ do_version() {
   rev='$Rev$'
   rev=$(echo "$rev"|cut -d' ' -f2)
   cat <<EOF
-slr $version.$rev
+slr $version (rev $slrev/$rev)
 
 $copyright
 All rights reserved. There is NO warranty; not even for

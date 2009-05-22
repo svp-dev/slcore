@@ -9,8 +9,9 @@ cce_helper=${CCE:-@cce_helper@}
 basename=$(basename "$0")
 TMPDIR=${TMPDIR:-/tmp}
 
-# Interface version number
-version=2
+version=@slc_version@
+slrev=@slc_revision@
+bugreports=@bugreports@
 
 # Load defaults
 slc_mode=ld
@@ -150,7 +151,7 @@ if test "x$slc_mode" = xdisplay_version; then
    rev='$Rev$'
    rev=$(echo "$rev"|cut -d' ' -f2)
    cat <<EOF
-$basename $version.$rev
+$basename $version (rev $slrev/$rev)
 
 $copyright
 All rights reserved. There is NO warranty; not even for
@@ -338,7 +339,7 @@ Examples:
 
   $basename -o test test.sl ccode.c
 
-Report bugs and suggestions to the CSA issue tracker.
+Report bugs and suggestions to $bugreports.
 EOF
    exit 0
 fi

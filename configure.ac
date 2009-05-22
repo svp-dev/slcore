@@ -6,12 +6,30 @@
 # 
 
 AC_PREREQ([2.61])
-AC_INIT([slc], [2.x], [r.c.poss@uva.nl])
+AC_INIT([slc], [2.0.0a], [sl-users@nic.surfnet.nl])
 AC_CONFIG_AUX_DIR([build-aux])
+
+AM_INIT_AUTOMAKE([1.11 tar-ustar no-define foreign dist-bzip2 color-tests silent-rules])
 AM_MAINTAINER_MODE
 AM_SILENT_RULES([yes])
 
-AM_INIT_AUTOMAKE([1.11 tar-ustar no-define foreign dist-bzip2 color-tests silent-rules])
+AC_MSG_CHECKING([for the SVN revision of the source tree])
+[SVN_REVISION=$(sed -n '/^\$Rev:/s/[^0-9]//gp' "${srcdir}/ChangeLog")]
+AC_MSG_RESULT($SVN_REVISION)
+AC_SUBST([SVN_REVISION])
+
+######### Required features #########
+
+AC_CACHE_CHECK([for Bourne-Again shell], [ac_cv_path_BASH],
+	[AC_PATH_PROGS_FEATURE_CHECK([BASH], [bash3 bash sh],
+	[[$ac_path_BASH -c 'test "x$BASH_VERSION" != "x"' \
+             && ac_cv_path_BASH=$ac_path_BASH ac_path_BASH_found=:]],
+	[AC_MSG_ERROR([could not find bash])])])
+AC_SUBST([BASH], [$ac_cv_path_BASH])
+
+AC_PROG_GNU_M4
+AM_PATH_PYTHON([2.5],[],[AC_MSG_ERROR([`slr' requires Python 2.5 or later])])
+
 
 m4_define([SLC_OPT_PROG],
 [AC_ARG_VAR(m4_toupper([$1]), [$2])
@@ -42,6 +60,9 @@ AC_PROG_CXX
 AC_PROG_RANLIB
 AC_PROG_LN_S
 
+######### Options #########
+
+
 AC_ARG_ENABLE([testsuite],
 [AC_HELP_STRING([--enable-testsuite], [activate unit tests for features and regressions (default is disabled)])], 
 [], [enable_testsuite=no])
@@ -66,18 +87,6 @@ AC_ARG_ENABLE([check-ptl],
 [AC_HELP_STRING([--disable-check-ptl], [do not check muTC-ptl (default is to check)])],
 [], [enable_check_ptl=yes])
 AM_CONDITIONAL([ENABLE_CHECK_PTL], [test "x$enable_check_ptl" = "xyes"])
-
-######### Required features #########
-
-AC_CACHE_CHECK([for Bourne-Again shell], [ac_cv_path_BASH],
-	[AC_PATH_PROGS_FEATURE_CHECK([BASH], [bash3 bash sh],
-	[[$ac_path_BASH -c 'test "x$BASH_VERSION" != "x"' \
-             && ac_cv_path_BASH=$ac_path_BASH ac_path_BASH_found=:]],
-	[AC_MSG_ERROR([could not find bash])])])
-AC_SUBST([BASH], [$ac_cv_path_BASH])
-
-AC_PROG_GNU_M4
-AM_PATH_PYTHON([2.5],[],[AC_MSG_ERROR([`slr' requires Python 2.5 or later])])
 
 
 

@@ -24,8 +24,10 @@ CC_SPARC=${CC_SPARC:-@CC_SPARC@}
 UTCC_MTSPARC=${UTCC_SPARC:-@UTCC_MTSPARC@}
 CC_MTSPARC=$UTCC_MTSPARC
 
-timestamp=$(echo '$Date$'|cut -d' ' -f2)
-version=1
+version=@slc_version@
+slrev=@slc_revision@
+bugreports=@bugreports@
+
 
 do_usage() {
     cat <<EOF
@@ -65,7 +67,7 @@ Example "long" aliases:
 
   ppp-mtalpha-sim utc0-mtalpha-sim ppp-host-host-ptl
 
-Report bugs and patches to the CSA group.
+Report bugs and patches to $bugreports.
 EOF
     exit 0
 }
@@ -74,7 +76,7 @@ do_version() {
     rev='$Rev$'
     rev=$(echo "$rev"|cut -d' ' -f2)
     cat <<EOF
-cce $version.$rev ($timestamp)
+cce $version (rev $slrev/$rev)
 
 $copyright
 All rights reserved. There is NO warranty; not even for

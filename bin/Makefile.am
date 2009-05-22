@@ -28,7 +28,10 @@ edit_scripts = $(SED) \
 	       -e 's|@slc_helper[@]|$(bindir)/slc|g' \
 	       -e 's|@slr_helper[@]|$(bindir)/slr|g' \
 	       -e 's|@sag_helper[@]|$(bindir)/sag|g' \
-	       -e 's|@spp_helper[@]|$(bindir)/spp|g'
+	       -e 's|@spp_helper[@]|$(bindir)/spp|g' \
+	       -e 's|@slc_version[@]|$(PACKAGE_VERSION)|g' \
+	       -e 's|@slc_revision[@]|$(SVN_REVISION)|g' \
+	       -e 's|@bugreports[@]|$(PACKAGE_BUGREPORT)|g'
 
 cce slr slc slt timeout: Makefile
 	$(AM_V_at)rm -f $@ $@.tmp
