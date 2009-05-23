@@ -164,6 +164,7 @@ if test "x$MGSIM_SPARC" = "xno"; then
    AC_MSG_WARN([Cannot find the MT-Sparc Microgrid simulator. `slr' may not run MT-Sparc programs.])
 fi
 
+AC_SUBST([CONFIG_STATUS_DEPENDENCIES], ['$(top_srcdir)/ChangeLog'])
 AC_CONFIG_FILES([
 	Makefile
 	bin/Makefile

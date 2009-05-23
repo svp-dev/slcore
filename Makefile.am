@@ -5,7 +5,7 @@
 # All rights reserved.
 # 
 
-EXTRA_DIST = README Makefile-reqs.orig Makefile-reqs.mk
+EXTRA_DIST = README NEWS Makefile-reqs.orig Makefile-reqs.mk
 SUBDIRS = . bin lib tests demo doc
 
 README: $(srcdir)/doc/README.txt
@@ -90,3 +90,4 @@ show-vars:
 	@echo "export PATH=$(abs_top_builddir)/bin:$$PATH;"
 
 ACLOCAL_AMFLAGS = -I m4
+DISTCHECK_CONFIGURE_FLAGS = --enable-testsuite

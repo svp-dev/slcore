@@ -7,7 +7,7 @@ compiler.
 
 .. _SVP: http://www.svp-home.org/
 
-SLC 2.x, 2009
+SLC 2.0, 2009
 =============
 
 - Development version only.

@@ -1,3 +1,18 @@
+2009-05-23  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
+	Clean up distribution.
+	
+	* Makefile.am: Add missing NEWS to EXTRA_DIST, which was
+	forgotten. Enable test suite during distcheck.
+
+	* configure.ac: Add CONFIG_STATUS_DEPENDENCIES and point to
+	ChangeLog to properly capture SVN commits.
+
+	* doc/HACKING.txt: Mention Automake 1.11. Request a SVN commit
+	before `make dist'.
+
+	* doc/NEWS.txt: bump version number.
+	
 2009-05-22  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
 	* configure.ac: Capture SVN version number in Autoconf.

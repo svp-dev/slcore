@@ -40,7 +40,7 @@ When working from SVN, the following *additional* requirements apply:
 
 - Autoconf 2.63 or later
 
-- Automake 1.10 or later
+- Automake 1.11 or later
 
 - Docutils 0.5 or later
 
@@ -87,21 +87,18 @@ Committing work
 
 When committing to the ``trunk`` branch of the repository:
 
-1. ensure that ``make check`` succeeds with the testsuite
-   enabled. (``configure --enable-testsuite``)
+1. ensure that ``make distcheck`` succeeds.
 
-2. ensure that ``make distcheck`` succeeds.
-
-3. update the ``ChangeLog`` with a detailed description of your
+2. update the ``ChangeLog`` with a detailed description of your
    changes. (use ``C-x 4 a`` in Emacs from an edited file to get the
    entry automatically generated)
 
-4. save the output of ``svn diff`` to a file.
+3. save the output of ``svn diff`` to a file.
 
-5. perform the commit, ensuring that the latest ``ChangeLog`` entry is
+4. perform the commit, ensuring that the latest ``ChangeLog`` entry is
    pasted into the commit message.
 
-6. send the contents of the file from step #4 to the mailing list,
+5. send the contents of the file from step #4 to the mailing list,
    ensuring that the changes to the ``ChangeLog`` appear first in the
    e-mail.
 
@@ -117,15 +114,19 @@ the SVN repository, perform the following steps:
 
 2. ensure that ``doc/NEWS.txt`` contains the latest major changes;
 
-3. ensure that ``make check`` succeeds with the testsuite
-   enabled. (``configure --enable-testsuite``)
+3. ensure that ``make distcheck`` succeeds.
 
-4. ensure that ``make distcheck`` succeeds.
+4. commit any outstanding changes. 
 
-After step #5 has completed, ``make distcheck`` will have output two
+5. run ``make dist``.
+
+After step #5 has completed, ``make dist`` will have output two
 archives (``.tar.gz`` and ``.tar.bz2``) suitable for distribution.
 
-
+.. note:: You should run ``make dist`` after committing to Subversion,
+   to ensure that the SVN revision number at the end of the
+   ``ChangeLog`` is up-to-date. This is used in the message output by
+   the ``--version`` flag on the utilities.
 
 .. Local Variables:
 .. mode: rst
