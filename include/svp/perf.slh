@@ -1,4 +1,4 @@
-m4_ifndef([[SVP_PERF_SLH]], [[m4_define([[SVP_PERF_SLH]],1)
+sl_begin_header(SVP_PERF_SLH)
 
 m4_include(cstdint.slh)
 
@@ -30,7 +30,7 @@ m4_define([[get_cycles]],[[({
 #else
 #if defined(__alpha__) || defined(__mtalpha__)
   int64_t x;
-  __asm__ __volatile__ ("rpcc %0" : "=r"(x));
+  __asm__ __volatile__ ("rpcc %0" : "=r"(x) : : "memory");
   x;
 #else
 # warning Reading the time stamp counter is not defined on your system.
@@ -39,4 +39,5 @@ m4_define([[get_cycles]],[[({
 #endif
 })]])
 
-]])
+sl_end_header(SVP_PERF_SLH)
+

@@ -1,4 +1,5 @@
-//                                                             -*- m4 -*-
+sl_begin_header(SVP_ROMAN_SLH)m4_dnl -*- m4 -*-
+//
 // roman.slh: this file is part of the slc project.
 //
 // Copyright (C) 2009 The SL project.
@@ -6,8 +7,9 @@
 //
 // $Id$
 //
-m4_ifndef([[SV_ROMAN_SLH]], [[m4_define([[SVP_ROMAN_SLH]],1)
 
 sl_decl(roman, void, sl_glparm(short, x));
 
-]])
+sl_end_header(SVP_ROMAN_SLH)
+
+

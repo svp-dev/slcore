@@ -1,4 +1,5 @@
-//                                                             -*- m4 -*-
+sl_begin_header(SVP_ARGSLOT_SLH)m4_dnl -*- m4 -*-
+//
 // argslot.slh: this file is part of the slc project.
 //
 // Copyright (C) 2009 The SL project.
@@ -6,7 +7,6 @@
 //
 // $Id$
 //
-m4_ifndef([[SVP_ARGSLOT_SLH]],[[m4_define([[SVP_ARGSLOT_SLH]],1)
 
 m4_include(cstdint.slh)
 
@@ -27,4 +27,5 @@ typedef union {
   void *ptr;
 } svp_arg_slot;
 
-]])
+sl_end_header(SVP_ARGSLOT_SLH)
+

@@ -1,4 +1,5 @@
-//                                                             -*- m4 -*-
+sl_begin_header(SVP_DIV_SLH)m4_dnl -*- m4 -*-
+//
 // div.slh: this file is part of the slc project.
 //
 // Copyright (C) 2009 The SL project.
@@ -6,7 +7,7 @@
 //
 // $Id$
 //
-m4_ifndef([[SVP_DIV_SLH]],[[m4_define([[SVP_DIV_SLH]],1)
+
 
 m4_ifdef([[USE_C_DIVIDE]],[[
 
@@ -99,4 +100,4 @@ m4_define([[mods]], [[({
 
 ]])
 
-]])
+sl_end_header(SVP_DIV_SLH)

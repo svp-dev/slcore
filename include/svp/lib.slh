@@ -1,4 +1,5 @@
-//                                                             -*- m4 -*-
+sl_begin_header(SVP_LIB_SLH)m4_dnl -*- m4 -*-
+//
 // lib.slh: this file is part of the slc project.
 //
 // Copyright (C) 2009 The SL project.
@@ -6,12 +7,11 @@
 //
 // $Id$
 //
-m4_ifndef([[SVP_LIB_SLH]],[[m4_define([[SVP_LIB_SLH]],1)
 
 #include "svp_os.h"
 
 m4_define([[svp_abort]], [[__abort()]])
-m4_define([[svp_nop]],[[__nop()]]);
+m4_define([[svp_nop]],[[__nop()]])
 
 #ifdef __GNUC__
 #define likely(X) __builtin_expect(!!(X), 1)
@@ -21,4 +21,5 @@ m4_define([[svp_nop]],[[__nop()]]);
 #define unlikely(X) /*unlikely*/(X)
 #endif
 
-]])
+sl_end_header(SVP_LIB_SLH)
+

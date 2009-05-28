@@ -1,4 +1,5 @@
-//                                                             -*- m4 -*-
+sl_begin_header(SVP_IO_SLH)m4_dnl -*- m4 -*-
+//
 // io.slh: this file is part of the slc project.
 //
 // Copyright (C) 2009 The SL project.
@@ -6,7 +7,6 @@
 //
 // $Id$
 //
-m4_ifndef([[SVP_IO_SLH]],[[m4_define([[SVP_IO_SLH]],1)
 
 m4_include(svp/argslot.slh)
 
@@ -67,4 +67,5 @@ sl_decl(svp_io_printf, void,
 	sl_glparm(const unsigned char*, gsz),
 	sl_glparm(svp_arg_slot*, gdata));
 
-]])
+sl_end_header(SVP_IO_SLH)
+

@@ -1,3 +1,27 @@
+2009-05-28  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
+	Cosmetic fixes.
+	
+	* include/slc.m4: Implement new macros sl_begin_header and
+	sl_end_header.
+
+	* include/slr.slh,
+	* include/cstddef.slh,
+	* include/cstdbool.slh,
+	* include/cstdint.slh,
+	* include/climits.slh,
+	* include/svp/argslot.slh,
+	* include/svp/assert.slh,
+	* include/svp/div.slh,
+	* include/svp/io.slh,
+	* include/svp/iomacros.slh,
+	* include/svp/lib.slh,
+	* include/svp/perf.slh,
+	* include/svp/roman.slh: Use it.
+
+	* bin/slt.in: Ensure $colspertest is initialized even when
+	TEXT_ONLY is set.
+
 2009-05-23  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
 	Clean up distribution.

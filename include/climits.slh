@@ -6,7 +6,7 @@
 //
 // $Id$
 //
-m4_ifndef([[CLIMITS_SLH]], [[m4_define([[CLIMITS_SLH]], 1)
+sl_begin_header(CLIMITS_SLH)
 
 #ifdef __mt_freestanding__
 
@@ -78,4 +78,5 @@ m4_ifndef([[CLIMITS_SLH]], [[m4_define([[CLIMITS_SLH]], 1)
 
 #endif
 
-]])
+sl_end_header(CLIMITS_SLH)
+

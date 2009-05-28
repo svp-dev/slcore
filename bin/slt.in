@@ -643,6 +643,8 @@ if test -z "$TEXT_ONLY"; then
 	fi
     fi
     printf "%-${remainder}s" "$name"
+else
+    colspertest=1
 fi
 
 bye() {
