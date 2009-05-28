@@ -3,6 +3,7 @@
 EXTRA_DIST += \
 	mtalpha-sim/slrt.s \
 	mtalpha-sim/mtdiv.s \
+	mtalpha-sim/callgate.s \
 	mtalpha-sim/include/svp_asmdiv.h \
 	mtalpha-sim/include/svp_os.h 
 
@@ -21,6 +22,7 @@ nobase_pkglib_DATA += mtalpha-sim/libslos.a
 mtalpha_sim_libslos_a_CONTENTS = \
 	mtalpha-sim/mtdiv.o \
 	mtalpha-sim/roman.o \
+	mtalpha-sim/callgate.o \
 	mtalpha-sim/io.o
 
 SLC_MTALPHA = $(SLC) -b ppp-mtalpha -nostdlib
@@ -41,6 +43,10 @@ mtalpha-sim/mtdiv.o: $(srcdir)/mtalpha-sim/mtdiv.s
 	$(AM_V_at)$(MKDIR_P) mtalpha-sim
 	$(slc_verbose)$(SLC_MTALPHA) -c -o $@ $<
 
+mtalpha-sim/callgate.o: $(srcdir)/mtalpha-sim/callgate.s
+	$(AM_V_at)$(MKDIR_P) mtalpha-sim
+	$(slc_verbose)$(SLC_MTALPHA) -c -o $@ $<
+
 mtalpha-sim/slrt.o: $(srcdir)/mtalpha-sim/slrt.s
 	$(AM_V_at)$(MKDIR_P) mtalpha-sim
 	$(slc_verbose)$(SLC_MTALPHA) -c -o $@ $<
@@ -57,6 +63,7 @@ CLEANFILES += \
 	mtalpha-sim/roman.o \
 	mtalpha-sim/div.o \
 	mtalpha-sim/mtdiv.o \
+	mtalpha-sim/callgate.o \
 	mtalpha-sim/slrt.o \
 	mtalpha-sim/libslos.a
 
