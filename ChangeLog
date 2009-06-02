@@ -1,5 +1,28 @@
 2009-06-03  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	Update licensing info and bump version numbers.
+	
+	* Makefile-reqs.mk (GCC_VERSION): Bump to 4.4.0 which we now support.
+
+	* Makefile.am (EXTRA_DIST): Do not mention README and NEWS are
+	they are picked up by Automake automatically.
+
+	* bin/spp,
+	* bin/sag,
+	* bin/slr.in,
+	* bin/cce.in,
+	* bin/slt.in,
+	* bin/slc.in,
+	* bin/Makefile.am: Update licensing info.
+
+	* bin/timeout.in: Cleanup.
+	
+	* COPYING: Add.
+
+	* configure.ac: Bump to 2.0.1a.
+	
+2009-06-03  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	Update licensing info (some more).
 	
 	* Makefile.am,

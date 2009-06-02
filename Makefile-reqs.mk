@@ -11,7 +11,7 @@ BINUTILS_REPO = https://svn.svp-home.org/sw/svp/mg/binutils/trunk
 UTC_GCC_REPO = https://svn.svp-home.org/sw/svp/mg/gcc/trunk
 MGSIM_REPO = https://svn.svp-home.org/sw/svp/mg/mgsim/trunk
 
-GCC_VERSION = 4.3.3
+GCC_VERSION = 4.4.0
 GCC_ARCHIVE = gcc-core-$(GCC_VERSION).tar.bz2
 GCC_MIRROR = http://gcc.cybermirror.org/releases/gcc-$(GCC_VERSION)
 

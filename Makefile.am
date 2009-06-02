@@ -13,7 +13,7 @@
 
 # 
 
-EXTRA_DIST = README NEWS Makefile-reqs.orig Makefile-reqs.mk
+EXTRA_DIST = Makefile-reqs.orig Makefile-reqs.mk
 SUBDIRS = . bin lib tests demo doc
 
 README: $(srcdir)/doc/README.txt

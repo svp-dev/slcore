@@ -57,5 +57,3 @@ if test $result -gt 128; then
     kill -$(expr $result - 128) $$
 fi
 exit $result
-
-# -*- mode: shell -*-
