@@ -1,8 +1,24 @@
+//
+// div.sl: this file is part of the slc project.
+//
+// Copyright (C) 2009 The SL project.
+//
+// This program is free software; you can redistribute it and/or
+// modify it under the terms of the GNU General Public License
+// as published by the Free Software Foundation; either version 3
+// of the License, or (at your option) any later version.
+//
+// The complete GNU General Public Licence Notice can be found as the
+// `COPYING' file in the root directory.
+//
+// $Id$
+//
+
 m4_include(svp/div.slh)
 m4_include(svp/iomacros.slh)
 m4_include(slr.slh)
 
-sl_def(testu, void, 
+sl_def(testu, void,
        sl_glparm(unsigned long long, x),
        sl_glparm(unsigned long long, y))
 {
@@ -13,7 +29,7 @@ sl_def(testu, void,
 }
 sl_enddef
 
-sl_def(tests, void, 
+sl_def(tests, void,
        sl_glparm(signed long long, x),
        sl_glparm(signed long long, y))
 {
@@ -46,13 +62,11 @@ slr_decl(slr_var(unsigned long long, ua),
 sl_def(t_main, void)
 {
   puts("----\n");
-  sl_proccall(testu, 
+  sl_proccall(testu,
 	      sl_glarg(unsigned long long, x, slr_get(ua)[0]),
 	      sl_glarg(unsigned long long, y, slr_get(ub)[0]));
-  sl_proccall(tests, 
+  sl_proccall(tests,
 	      sl_glarg(signed long long, x, slr_get(sa)[0]),
 	      sl_glarg(signed long long, y, slr_get(sb)[0]));
 }
 sl_enddef
-
-

@@ -15,22 +15,32 @@ my $boundupper = "#ifndef %CPPNAME%
 # define %CPPNAME%";
 my $boundlower = "#endif // ! %CPPNAME%";
 
+my $m4_boundupper = "sl_begin_header([[%CPPNAME%]])m4_dnl -*- m4 -*-";
+my $m4_boundlower = "sl_end_header([[%CPPNAME%]])";
+
 my $cxx_hint =
 "//                                                             -*- C++ -*-
 ";
 
-my $m4_hint =
-"//                                                             -*- m4 -*-
-";
+
 
 my $header =
-"// %BASENAME%: this file is part of the slc project.
+"//
+// %BASENAME%: this file is part of the SL toolchain.
 //
 // Copyright (C) %COPYRIGHT% The SL project.
-// All rights reserved.
+//
+// This program is free software; you can redistribute it and/or
+// modify it under the terms of the GNU General Public License
+// as published by the Free Software Foundation; either version 3
+// of the License, or (at your option) any later version.
+//
+// The complete GNU General Public Licence Notice can be found as the
+// `COPYING' file in the root directory.
 //
 // \$Id\$
 //
+
 ";
 
 
@@ -62,6 +72,16 @@ sub rehead ($)
   s,%CPPNAME%,$cppname,g;
   my $xboundlower = $_;
 
+  $_ = $m4_boundupper;
+  s,%BASENAME%,$basename,g;
+  s,%CPPNAME%,$cppname,g;
+  my $m4_xboundupper = $_;
+
+  $_ = $m4_boundlower;
+  s,%BASENAME%,$basename,g;
+  s,%CPPNAME%,$cppname,g;
+  my $m4_xboundlower = $_;
+
   $_ = $header;
   s,%BASENAME%,$basename,g;
   s,%CPPNAME%,$cppname,g;
@@ -69,8 +89,6 @@ sub rehead ($)
 
   if ($fname =~ /\.(cc|hh|hxx|h)$/)
     { $xheader = $cxx_hint . $xheader; }
-  if ($fname =~ /\.(sl|slh)$/)
-    { $xheader = $m4_hint . $xheader; }
 
   # print STDERR "Processing $fname...\n";
 
@@ -85,7 +103,7 @@ sub rehead ($)
   while (<FILE>)
     {
       $content .= $_;
-      if (/Copyright \(C\) (.*) The SL project.\./)
+      if (/Copyright \(C\) (.*) The SL project\./)
 	{
 	  $copyright = $1;
 	  $copyright =~ s/,([^ ])/, $1/g;
@@ -119,17 +137,27 @@ sub rehead ($)
   s,([ \t\n])*$,\n,sg;
 
   # Adjust cpp guards.
-  if (/^\# *ifndef[^\n]*\n[\n\t ]*\# *define[^\n]*\n/s)
-    {
-      s,^\# *ifndef[^\n]*\n[\n\t ]*\# *define[^\n]*\n,$xboundupper\n,sg;
+  if ($fname =~ /\.(cc|hh|hxx|h|c|sl)$/) {
+    if (/^\# *ifndef[^\n]*\n[\n\t ]*\# *define[^\n]*\n/s)
+      {
+	s,^\# *ifndef[^\n]*\n[\n\t ]*\# *define[^\n]*\n,$xboundupper\n,sg;
+      }
+    
+    if (/\# *endif[^\n]*\n[\n\t ]*$/s)
+      {
+	s,\# *endif[^\n]*\n[\n\t ]*$,$xboundlower\n,sg;
+      }
+    
+    s/^/$xheader/sg;
     }
-
-  if (/\# *endif[^\n]*\n[\n\t ]*$/s)
-    {
-      s,\# *endif[^\n]*\n[\n\t ]*$,$xboundlower\n,sg;
+  if ($fname =~ /\.slh$/) {
+    if (/^ *sl_begin_header/s) {
+      s,^ *sl_begin_header[^\n]*\n((/\*.*?\*/)|(//[^\n]*\n)|[ \t\n])*,$m4_xboundupper\n$xheader,sg;
+      }
+    if (/ *sl_end_header[^\n]*\n[\n\t ]*$/s) {
+      s, *sl_end_header[^\n]*\n[\n\t ]*$,$m4_xboundlower\n,sg;
+      }
     }
-
-  s/^/$xheader/sg;
 
   # Make sure we have a unique ending eol.
   s/\n+\z/\n/;
