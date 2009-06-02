@@ -1,3 +1,33 @@
+2009-06-03  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
+	Isolate FFT demo code in own directory and compile with two
+	different FFT implementations.
+
+	* demo/fft/README: Add.
+	
+	* demo/testfft.sh: Rename to...
+	* demo/fft/testfft.sh: here.
+
+	* demo/fft.sl: Rename to...
+	* demo/fft/fft_impl1.sl: here, and split to...
+	* demo/fft/fft_test.sl: here and...
+	* demo/fft/fft_extra.sl: here.
+
+	* demo/fft_gentable.c: Rename to...
+	* demo/fft/gen_table_1.c: here.
+
+	* demo/fft/fft_impl2.sl,
+	* demo/fft/gen_table_2.sh,
+	* demo/fft/fft_bench.sl,
+	* demo/fft/fft_test1.sl,
+	* demo/fft/fft_test2.sl,
+	* demo/fft/fft_bench1.sl,
+	* demo/fft/fft_bench2.sl: Add.
+
+	* demo/fft/Makefile.am: Add.
+	* demo/Makefile.am,
+	* configure.ac: Update accordingly. Update licensing.
+
 2009-06-02  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
 	Start licensing changes. 

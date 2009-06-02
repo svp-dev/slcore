@@ -1,43 +1,26 @@
+## Makefile.am: this file is part of the SL toolchain.
+## 
+## Copyright (C) 2009 The SL project
+##
+## This program is free software; you can redistribute it and/or
+## modify it under the terms of the GNU General Public License
+## as published by the Free Software Foundation; either version 2
+## of the License, or (at your option) any later version.
+##
+## The complete GNU General Public Licence Notice can be found as the
+## `COPYING' file in the root directory.
+##
+
 # 
-# slc, a SL compiler.
-# 
-# Copyright (C) 2008,2009 The SL project..
-# All rights reserved.
-# 
-DEMOS = 10threads.sl answer.sl fibonacci.sl helloworld.sl roman.sl fft.sl
+DEMOS = 10threads.sl answer.sl fibonacci.sl helloworld.sl roman.sl 
 TESTS = $(DEMOS)
+
 include $(top_srcdir)/tests.mk
 
-BUILT_SOURCES = 
-EXTRA_DIST = $(DEMOS) $(BUILT_SOURCES)
-MAINTAINERCLEANFILES = $(BUILT_SOURCES)
+EXTRA_DIST = $(DEMOS)
 
 # Also build demos during "make all":
-noinst_DATA = $(DEMOS:.sl=.ptl-x) $(DEMOS:.sl=.seqc-x)
-if ENABLE_MTALPHA
-noinst_DATA += $(DEMOS:.sl=.mtalpha-x)
-endif
-CLEANFILES = $(noinst_DATA)
+noinst_DATA = $(DEMOS:.sl=.x)
+CLEANFILES = $(DEMOS:.sl=.x*)
 
-# Definitions for "make check":
-
-#####  Special targets for the FFT demo #####
-
-dist_noinst_SCRIPTS = testfft.sh
-BUILT_SOURCES += fft_table.slh
-
-noinst_PROGRAMS = fft_gentable
-fft_gentable_SOURCES = fft_gentable.c
-fft_gentable_CFLAGS = -O0 -ffloat-store
-fft_gentable_LDFLAGS = -lm
-
-fft.ptl-x fft.seqc-x fft.mtalpha-x: fft.sl fft_table.slh
-
-if MAINTAINER_MODE
-
-fft_table.slh: fft_gentable$(EXEEXT)
-	$(AM_V_at) rm -f $@
-	$(AM_V_GEN) ./fft_gentable$(EXEEXT) >$@
-	$(AM_V_at) chmod -w $@
-
-endif
+SUBDIRS = fft
