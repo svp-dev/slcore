@@ -1,3 +1,22 @@
+2009-06-02  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
+	Add some BLAS code for testing.
+
+	* demo/blas/zdotc.sl,
+	* demo/blas/saxpy.sl,
+	* demo/blas/daxpy.sl,
+	* demo/blas/zdotu.sl,
+	* demo/blas/sdot.sl,
+	* demo/blas/ddot.sl,
+	* demo/blas/cdotc.sl,
+	* demo/blas/cdotu.sl,
+	* demo/blas/complex.slh,
+	* demo/blas/templates/xaxpy.sl,
+	* demo/blas/templates/xaxpyc.sl,
+	* demo/blas/templates/xdot.sl,
+	* demo/blas/ytemplates/xdotc.sl,
+	* demo/blas-test-saxpy.sl: Demo test code.
+
 2009-05-28  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
 	Start implementing call gate for function calls.
