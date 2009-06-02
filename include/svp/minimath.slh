@@ -1,12 +1,19 @@
-//                                                             -*- m4 -*-
+sl_begin_header([[SLC_SVP_MINIMATH_SLH]])m4_dnl -*- m4 -*-
+//
 // minimath.slh: this file is part of the slc project.
 //
 // Copyright (C) 2009 The SL project.
-// All rights reserved.
+//
+// This program is free software; you can redistribute it and/or
+// modify it under the terms of the GNU General Public License
+// as published by the Free Software Foundation; either version 3
+// of the License, or (at your option) any later version.
+//
+// The complete GNU General Public Licence Notice can be found as the
+// `COPYING' file in the root directory.
 //
 // $Id$
 //
-m4_ifndef([[SVP_MINIMATH_SLH]],[[m4_define([[SVP_MINIMATH_SLH]],1)
 
 #ifdef __mt_freestanding__
 
@@ -36,7 +43,7 @@ extern float sqrtf (float __x) ; extern float __sqrtf (float __x) ;
 
 extern float fabsf (float __x) __attribute__ ((__const__));
 extern float __fabsf (float __x) __attribute__ ((__const__));
-extern double fabs (double __x) __attribute__ ((__const__)); 
+extern double fabs (double __x) __attribute__ ((__const__));
 extern double __fabs (double __x) __attribute__ ((__const__));
 
 extern float truncf (float __x) __attribute__ ((__const__));
@@ -44,9 +51,9 @@ extern float __truncf (float __x) __attribute__ ((__const__));
 extern double trunc (double __x) __attribute__ ((__const__));
 extern double __trunc (double __x) __attribute__ ((__const__));
 
-extern float copysignf (float __x, float __y) __attribute__ ((__const__)); 
+extern float copysignf (float __x, float __y) __attribute__ ((__const__));
 extern float __copysignf (float __x, float __y) __attribute__ ((__const__));
-extern double copysign (double __x, double __y) __attribute__ ((__const__)); 
+extern double copysign (double __x, double __y) __attribute__ ((__const__));
 extern double __copysign (double __x, double __y) __attribute__ ((__const__));
 
 extern float fminf (float __x, float __y) ; extern float __fminf (float __x, float __y) ;
@@ -58,6 +65,4 @@ extern double fmax (double __x, double __y) ; extern double __fmax (double __x, 
 #include <math.h>
 #endif
 
-m4_define([[svp_math]], [[[[$2]] = [[$1]](m4_shift2($@))]])
-
-]])
+sl_end_header([[SLC_SVP_MINIMATH_SLH]])

@@ -1,11 +1,19 @@
-//                                                             -*- m4 -*-
+//
 // io.sl: this file is part of the slc project.
 //
 // Copyright (C) 2009 The SL project.
-// All rights reserved.
+//
+// This program is free software; you can redistribute it and/or
+// modify it under the terms of the GNU General Public License
+// as published by the Free Software Foundation; either version 3
+// of the License, or (at your option) any later version.
+//
+// The complete GNU General Public Licence Notice can be found as the
+// `COPYING' file in the root directory.
 //
 // $Id$
 //
+
 m4_include(svp/lib.slh)
 m4_include(svp/div.slh)
 m4_include(svp/io.slh)
@@ -162,10 +170,10 @@ sl_def(svp_io_printf, void,
       char cfmt = *++fmt;
 
       switch(cfmt) {
-      case 'c': 
+      case 'c':
       case 'u':
       case 'd':
-      case 'x': 
+      case 'x':
 	switch(*sz++) {
 	case 8: udata = data->uq; sdata = (data++)->sq; break;
 	case 4: udata = data->ul; sdata = (data++)->sl; break;

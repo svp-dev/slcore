@@ -1,5 +1,66 @@
 2009-06-03  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	Update licensing info (some more).
+	
+	* Makefile.am,
+	* doc/Makefile.am,
+	* doc/Makefile.am.tmp,
+	* doc/tests.txt,
+	* include/slc.m4,
+	* lib/Makefile.am,
+	* lib/Makefile.am.tmp,
+	* lib/arggen.sl,
+	* lib/host-host-ptl/include/ptl_config.h,
+	* lib/host-host-ptl/include/ptl_debug.h,
+	* lib/host-host-ptl/include/ptl_deps.h,
+	* lib/host-host-ptl/include/ptl_svp.h,
+	* lib/host-host-ptl/include/ptl_vars.h,
+	* lib/host-host-ptl/include/svp_os.h,
+	* lib/host-host-ptl/ptl_debug.cc,
+	* lib/host-host-ptl/ptl_svp.cc,
+	* lib/host-host-ptl/ptl_vars.cc,
+	* lib/host-host-ptl/slrt.c,
+	* lib/host-host-seqc/include/svp_os.h,
+	* lib/host-host-seqc/load.c,
+	* lib/host-host-seqc/slrt.c,
+	* lib/mtalpha-sim/.dirstamp,
+	* lib/mtalpha-sim/include/svp_asmdiv.h,
+	* lib/mtalpha-sim/include/svp_os.h,
+	* lib/svplib/div.sl,
+	* lib/svplib/io.sl,
+	* lib/svplib/roman.sl,
+	* lib/t-pppalpha/include/sl_support.h,
+	* lib/t-pppalpha/slimpl.m4,
+	* lib/t-ptl/include/sl_support.h,
+	* lib/t-ptl/slimpl.m4,
+	* lib/t-seqc/include/sl_support.h,
+	* lib/t-seqc/slimpl.m4,
+	* lib/t-utc/slimpl.m4,
+	* lib/t-utc0/include/sl_support.h,
+	* lib/t-utc0/slimpl.m4,
+	* tests.mk: Update licensing info.
+
+	* include/climits.slh,
+	* include/create.slh,
+	* include/cstdbool.slh,
+	* include/cstddef.slh,
+	* include/cstdint.slh,
+	* include/slr.slh,
+	* include/svp/argslot.slh,
+	* include/svp/assert.slh,
+	* include/svp/div.slh,
+	* include/svp/io.slh,
+	* include/svp/iomacros.slh,
+	* include/svp/iomacros.slh.init,
+	* include/svp/lib.slh,
+	* include/svp/minimath.slh,
+	* include/svp/perf.slh,
+	* include/svp/roman.slh: Update licensing info. Also protect
+	properly for multiple inclusion.
+	
+
+2009-06-03  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	Cleanup demo directory.
 	
 	* sl.mk: Create a single SL compile rule which wraps multiple
