@@ -1,5 +1,5 @@
 //
-// helloworld.sl: this file is part of the slc project.
+// zaxpy.sl: this file is part of the slc project.
 //
 // Copyright (C) 2009 The SL project.
 //
@@ -14,10 +14,7 @@
 // $Id$
 //
 
-m4_include(svp/iomacros.slh)
-
-sl_def(t_main, void)
-{
-  puts("hello world!\n");
-}
-sl_enddef
+m4_define(FLOAT, double)
+m4_define(COMPLEX, blas_zomplex)
+m4_define(FUNCTION, zaxpy)
+m4_include(templates/xaxpyc.sl)

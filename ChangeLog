@@ -1,5 +1,27 @@
 2009-06-03  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	Cleanup demo directory.
+	
+	* sl.mk: Create a single SL compile rule which wraps multiple
+	binaries with a script. This is what demo/Makefile.am now
+	uses. Update licensing.
+
+	* demo/fft.sl,
+	* demo/testfft.sh,
+	* demo/fft_gentable.c: Remove (was renamed in previous commit).
+
+	* demo/blas/caxpy.sl,
+	* demo/blas/zaxpy.sl: Add more BLAS primitives.
+
+	* demo/10threads.sl,
+	* demo/helloworld.sl,
+	* demo/roman.sl,
+	* demo/fibonacci.sl,
+	* demo/answer.sl,
+	* demo/test.sl: Update licensing.
+
+2009-06-03  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	Isolate FFT demo code in own directory and compile with two
 	different FFT implementations.
 
