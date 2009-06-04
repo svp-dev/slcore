@@ -1,5 +1,11 @@
 2009-06-04  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	* configure.ac: Bump version number.
+
+	* doc/NEWS.txt: Document major changes since development version.
+	
+2009-06-04  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	Add support for function calls and malloc.
 
 	* lib/t-pppalpha/slimpl.m4,

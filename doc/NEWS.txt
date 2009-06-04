@@ -7,7 +7,43 @@ compiler.
 
 .. _SVP: http://www.svp-home.org/
 
-SLC 2.0, 2009
+SLC 2.0.2a, 2009
+================
+
+- Development version only.
+
+- New function call syntax from thread functions (sl_funcall)
+  documented in CSA note [sl1].
+
+- Add memory management services to the library (malloc), based on
+  Doug Lea's implementation (dlmalloc).
+
+Known issues:
+
+- comments inside the parameters to ``sl_def`` and other SL macros
+  cause undesired effects.
+
+- only "simple" function return types are supported in function calls
+  from thread functions. Also only 6 function arguments are supported,
+  of "simple" types as well. See CSA note [sl1] for details.
+
+SL 2.0.1a, 2009
+===============
+
+- Development version only.
+
+- Lots of bug fixes; more unit tests. 
+
+- Change license to GPLv3 since m4_sugar is being extended.
+
+- Support gcc 4.4 in alternate compiler for MT-Alpha.
+
+Known issues:
+
+- comments inside the parameters to ``sl_def`` and other SL macros
+  cause undesired effects.
+
+SLC 2.x, 2009
 =============
 
 - Development version only.
