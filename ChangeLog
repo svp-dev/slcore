@@ -1,3 +1,59 @@
+2009-06-04  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
+	Add support for function calls and malloc.
+
+	* lib/t-pppalpha/slimpl.m4,
+	* lib/t-pppalpha/include/sl_support.h: Implement function calls
+	through the wrapper thread function implemented in
+	`lib/mtalpha-sim/callgate.s'.
+
+	* lib/t-utc/slimpl.m4,
+	* lib/t-seqc/slimpl.m4,
+	* lib/t-ptl/slimpl.m4,	
+	* lib/t-utc0/slimpl.m4: Allow the same syntax in all
+	implementations.
+	
+	* tests/1_basic/4_funs/f1.sl,
+	* tests/1_basic/4_funs/f2.sl,
+	* tests/1_basic/4_funs/f3.sl,
+	* tests/1_basic/4_funs/add.sl,
+	* tests/1_basic/4_funs/f4.sl,
+	* tests/1_basic/4_funs/f5.sl,
+	* tests/1_basic/4_funs/f6.sl,
+	* tests/1_basic/4_funs/f7.sl,
+	* tests/1_basic/4_funs/f8.sl,	
+	* tests/1_basic/4_funs/f9.sl: Add test code for the new feature.
+
+	
+	* lib/mtalpha-sim/malloc.c: Import Doug Lea's malloc into the
+	library. Replace uses of fprintf(3) by custom print functions; remove
+	the dependency on time(2).
+
+	* lib/mtalpha-sim/malloc_intrinsics.h,
+	* lib/mtalpha-sim/malloc_intrinsics.c,	
+	* lib/mtalpha-sim/divide.S,
+	* lib/mtalpha-sim/memset.S,
+	* lib/mtalpha-sim/memcpy.s: Provide the dependencies for DLmalloc.
+	* lib/mtalpha.mk: Update accordingly.
+		
+	* include/cmalloc.slh: Declare the new service.
+	* Makefile.am: Update accordingly.
+	
+	* lib/mtalpha.mk: Update accordingly.
+
+	* tests/2_lib/1_malloc/m1.sl,
+	* tests/2_lib/1_malloc/m2.sl: Add tests for the new feature.
+	
+	The SAC team then really pushed for the following kludge:
+	
+	* lib/mtalpha-sim/strlib.c: Implement strncpy. 
+	* include/sac_helpers.slh: Add alias macros for some services.
+	* tests/3_sachelpers/sac1.sl: Test them.
+
+	Packaging & distribution:
+	
+	* lib/mtalpha-sim/slrt.s: Update licensing.
+
 2009-06-03  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
 	Update licensing info and bump version numbers.

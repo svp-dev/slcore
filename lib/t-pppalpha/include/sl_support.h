@@ -157,7 +157,7 @@
 #define __sl_declsync(Tag, Reg) \
   register long __sl_sync_ ## Tag __asm__(Reg) = __sl_fid_ ## Tag
 
-
+extern void _sl_callgate(void);
 
 typedef long sl_family_t;
 typedef long sl_place_t;

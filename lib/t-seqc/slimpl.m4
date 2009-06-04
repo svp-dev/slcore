@@ -150,4 +150,7 @@ m4_define([[sl_kill]],[[m4_dnl
 # Pass transparently sl_getbr
 m4_define([[sl_getbr]],(*[[$1]]_brk))
 
+m4_define([[sl_farg]], [[[[$2]]]])
+m4_define([[sl_funcall]], [[[[$3]](m4_shift3($@))]])
+
 # ## End macros for new muTC syntax ###

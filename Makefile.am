@@ -33,6 +33,10 @@ nobase_dist_pkgdata_DATA = \
 	include/slc_m4sforeach.m4 \
 	include/cstdint.slh \
 	include/cstddef.slh \
+	include/cstdbool.slh \
+	include/climits.slh \
+	include/cmalloc.slh \
+	include/sac_helpers.slh \
 	include/slr.slh \
 	include/svp/argslot.slh \
 	include/svp/assert.slh \
