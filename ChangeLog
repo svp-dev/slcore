@@ -1,5 +1,18 @@
 2009-06-08  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	Fix major bug found by Mike H. in "alternate compiler".
+	
+	* bin/spp: Fix bug where special registers (GP etc) would be
+	renamed to non-used local registers outside of the allowable
+	range. Avoid renaming if all the allowable locals are already
+	used.
+
+	* tests/livermore8.sl: Add regression test for this fix.
+
+	* configure.ac: Bump version number.
+
+2009-06-08  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	* demo/fft/fft_bench1.sl: Reinstate multiple test runs.
 
 2009-06-04  Raphael 'kena' Poss  <r.c.poss@uva.nl>

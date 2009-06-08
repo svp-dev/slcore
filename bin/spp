@@ -263,6 +263,7 @@ class pppalpha(object):
    #fargregs = 4
    iargregs = 11 # 1 reserved for PV
    fargregs = 12
+   ilocalregs = 19
 
    def __init__(self):
       regs = { 
@@ -1040,7 +1041,7 @@ class pppalpha(object):
          regname = '$l%d' % nr
          rmask = fundata['usedregs']
          dorename = 0
-         if rmask[nr] == True and False in rmask:
+         if rmask[nr] == True and False in rmask[:self.ilocalregs]:
             freenr = [i for (i,r) in enumerate(rmask) if r == False][0]
             dorename = 1
             newname = '$l%d' % freenr
