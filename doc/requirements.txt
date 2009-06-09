@@ -2,7 +2,7 @@
  Prerequisites for the SL compiler
 ===================================
 
-:Date: 2009-04-05
+:Date: 2009-06-09
 
 :Abstract: This document explains what are the prerequisites for the
   SL compiler and how to install them.
@@ -57,7 +57,7 @@ Overall installation strategy:
 
   - install the µTC core compiler (target ``mtalpha-linux-gnu``);
 
-  - install a "stock" GCC 4.3 Alpha cross-compiler (target
+  - install a "stock" GCC 4.4 Alpha cross-compiler (target
     ``alpha-linux-gnu``);
 
 - phase 3
@@ -126,12 +126,12 @@ Automated installation of prerequisites
 
 For convenience, all the steps described in the rest of this document
 have been collected into a single ``make`` rule file named
-``Makefile.reqs``.
+``deploy/Makefile.reqs``.
 
-A template for ``Makefile.reqs`` is present at the root of the source
-distribution as ``Makefile-reqs.orig``. Open this file with a text
-editor and read the comments at the start of the file for details and
-usage instructions.
+A template for ``deploy/Makefile.reqs`` is present at the root of the
+source distribution as ``deploy/Makefile-reqs.orig``. Open this file
+with a text editor and read the comments at the start of the file for
+details and usage instructions.
 
 
 Prerequisites for the sequential C implementation
@@ -312,7 +312,7 @@ Example sequence of commands::
 Prerequisites for the alternate MT-Alpha implementation
 =======================================================
 
-Required: "stock" GCC 4.3 cross-compiler for Linux/Alpha.
+Required: "stock" GCC 4.4 cross-compiler for Linux/Alpha.
 
 More specifically, slc's ``configure`` script looks for [#]_ the
 following program: ``alpha-linux-gnu-gcc``.
@@ -320,7 +320,7 @@ following program: ``alpha-linux-gnu-gcc``.
 .. [#] in the directories listed in the ``PATH`` environment variable
    or the directory specified as installation root with ``--prefix``.
 
-While this requirement seems "simple" the GCC 4.3 compiler itself is
+While this requirement seems "simple" the GCC 4.4 compiler itself is
 non-trivial to install:
 
 1. it requires itself the Linux/Alpha assembler
@@ -366,12 +366,12 @@ Example sequence of commands::
    make -j4
    make install
 
-Installation of the GCC 4.3 cross-compiler
+Installation of the GCC 4.4 cross-compiler
 ------------------------------------------
 
 Required:
 
-- source code for GCC 4.3.x;
+- source code for GCC 4.4.x;
 
 - binutils for ``alpha-linux-gnu`` already installed;
 
@@ -416,11 +416,11 @@ Example sequence of commands::
 
    mkdir -p ~/src/gcc
    cd ~/src/gcc
-   wget http://gcc.cybermirror.org/releases/gcc-4.3.3/gcc-core-4.3.3.tar.bz2
-   tar -xjf gcc-core-4.3.3.tar.bz2
+   wget http://gcc.cybermirror.org/releases/gcc-4.4.0/gcc-core-4.4.0.tar.bz2
+   tar -xjf gcc-core-4.4.0.tar.bz2
    mkdir build
    cd build
-   ../gcc-4.3.3/configure --target=alpha-linux-gnu --prefix=$HOME/svp \
+   ../gcc-4.4.0/configure --target=alpha-linux-gnu --prefix=$HOME/svp \
        --disable-libmudflap --disable-libssp --disable-coverage \
        --enable-gdb --disable-nls \
        --enable-languages=c --disable-bootstrap --disable-multilib

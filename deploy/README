@@ -1,0 +1,15 @@
+This directory contains tools to help deploy a SL toolchain on a Unix
+box.
+
+The Makefile (Makefile.reqs derived from Makefile-reqs.orig) installs
+the SL toolchain using GNU make. See the comments at the start of the
+file for details.
+
+The files are installed in versioned directories so that different
+versions can be installed side-by-side. Once at least one version of
+the toolchain is installed in a PREFIX directory, copy the script
+"slenv" in that directory.
+
+"slenv" provides an interactive menu to select one of the installed
+versions and setup environment variables accordingly.
+

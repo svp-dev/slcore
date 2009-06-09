@@ -7,6 +7,23 @@ compiler.
 
 .. _SVP: http://www.svp-home.org/
 
+SLC 2.0.3a, 2009
+================
+
+- Development version only.
+
+- Fix code generation bug for MT-Alpha happening when a thread
+  function has many local variables.
+
+Known issues:
+
+- comments inside the parameters to ``sl_def`` and other SL macros
+  cause undesired effects.
+
+- only "simple" function return types are supported in function calls
+  from thread functions. Also only 6 function arguments are supported,
+  of "simple" types as well. See CSA note [sl1] for details.
+
 SLC 2.0.2a, 2009
 ================
 

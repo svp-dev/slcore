@@ -1,0 +1,94 @@
+#! /bin/sh
+set -e
+prefix=$(dirname "$0")
+
+case $1 in
+  -h|--help)
+	cat >&2 <<EOF
+Usage: $0
+   or: $0 [SL-REQS-VER] [SL-VER]
+
+Display environment variables settings for use with a specified SL
+environment. If no arguments are provided, an interactive selection is
+proposed.
+
+Recommended use in a shell: 
+
+   eval \$($0 ...)
+EOF
+	exit 0
+	;;
+esac
+
+cd "$prefix"
+
+if test $# -ge 2; then
+  case $1 in
+    slreqs-*) slreq_sel=$1 ;;
+    *)        slreq_sel=slreqs-$1 ;;
+  esac
+  case $2 in
+    sl-*)    sl_sel=$2 ;; 
+    *)       sl_sel=sl-$2 ;;
+  esac
+else
+  cat >&2 <<EOF
+
+   Welcome to the SL toolchain selection tool!
+
+Multiple versions of the toolchain and its dependencies are installed
+on this system. To set up a work environment, select a combination of
+the following:
+
+1) a set of dependencies; this determines the binutils and core
+   compilers;
+
+2) the set of SL tools; this determines the SL compiler, runner and MG
+   simulator.
+
+Select the set of dependencies:
+EOF
+  select slreq_sel in slreqs-*; do
+     if test -n "$slreq_sel"; then break; fi
+  done
+  echo "Select the SL tools:" >&2
+  select sl_sel in sl-*; do
+     if test -n "$sl_sel"; then break; fi
+  done
+fi
+
+if ! test -d $slreq_sel/; then
+  echo "Invalid dependency specifier: $slreq_sel" >&2
+  exit 1
+fi
+
+if ! test -d $sl_sel/; then
+  echo "Invalid SL toolchain specifier: $sl_sel" >&2
+  exit 1
+fi
+
+
+cat >&2 <<EOF
+
+Next time the following command can be used:
+      $0 $slreq_sel $sl_sel
+
+EOF
+
+slreq_base=$prefix/$slreq_sel
+sl_base=$prefix/$sl_sel
+
+cat <<EOF
+: The command-lines to set up environment variables is printed below;
+: for maximum comfort run this script with "eval" in a shell; 
+EOF
+
+cat <<EOF
+export PATH=$sl_base/bin:$slreq_base/bin:~poss/opt/bin:\$PATH;
+export MANPATH=$sl_base/share/man:$slreq_base/share/man:\$MANPATH;
+export CC_ALPHA=$slreq_base/bin/alpha-linux-gnu-gcc;
+export UTCC_ALPHA=$slreq_base/bin/mtalpha-linux-gnu-gcc;
+export CC_SPARC=$slreq_base/bin/sparc-leon-linux-gcc;
+export UTCC_SPARC=$slreq_base/bin/mtsparc-leon-linux-gcc
+EOF
+

@@ -33,7 +33,7 @@ TEXI2PDF_FLAGS = --tidy --batch --build-dir=tmp.t2d
 	$(RST2LATEX) --halt=warning $< >$@.tmp
 	mv $@.tmp $@
 
-cce.1 slc.1 slr.1 slt.1:
+cce.1 slc.1 slr.1 slt.1: $(top_srcdir)/configure.ac
 	cd $(top_builddir)/bin && $(MAKE) $(AM_MAKEFLAGS) $(@:.1=)
 	rm -f $@
 	$(HELP2MAN) -N --output=$@.tmp $(top_builddir)/bin/$(@:.1=)

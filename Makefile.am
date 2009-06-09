@@ -13,7 +13,7 @@
 
 # 
 
-EXTRA_DIST = Makefile-reqs.orig Makefile-reqs.mk
+EXTRA_DIST = deploy/Makefile-reqs.orig deploy/reqs.mk deploy/README deploy/slenv
 SUBDIRS = . bin lib tests demo doc
 
 README: $(srcdir)/doc/README.txt

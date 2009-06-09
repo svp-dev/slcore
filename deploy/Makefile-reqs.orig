@@ -34,7 +34,20 @@
 # - GNU Automake (v1.11 or later)
 # - GNU Texinfo (v4.13 or later)
 
-###### YOU MUST EDIT THE FOLLOWING #####
+###### YOU SHOULD EDIT THE FOLLOWING #####
+
+### Desired versions for the tools
+BINUTILS_REV = 2182
+UTC_GCC_REV = 2182
+MGSIM_REV = 2202
+SLC_REV = 2198
+GCC_VERSION = 4.4.0
+
+### SVN repository for the tools
+BASE_REPO = https://svn.svp-home.org
+
+## BASE_REPO = svn+ssh://kena@mac-chris.science.uva.nl/Library/SVN/CSA
+
 
 ####
 #### What tools can be used to download?
@@ -58,7 +71,7 @@ TAR = tar
 #### (choose one of the following)
 
 ## Default: system-wide directory
-PREFIX = /usr/local
+PREFIX = /usr/local/svp
 
 ## Installation in home directory
 # PREFIX = $(HOME)/svp
@@ -75,7 +88,7 @@ PREFIX = /usr/local
 GMP_CONF =
 
 ## libgmp is installed in the home directory:
-# GMP_CONF = --with-gmp=$(HOME)/opt
+## GMP_CONF = --with-gmp=$(HOME)/opt
 
 ####
 #### Where can MPFR be found? 
@@ -86,8 +99,8 @@ GMP_CONF =
 MPFR_CONF =
 
 ## libmpfr is installed in the home directory:
-# MPFR_CONF = --with-mpfr=$(HOME)/opt
+## MPFR_CONF = --with-mpfr=$(HOME)/opt
 
 
 ######## YOU SHOULD NOT NEED TO EDIT THE FOLLOWING ########
-include Makefile-reqs.mk
+include reqs.mk

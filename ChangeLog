@@ -1,3 +1,28 @@
+2009-06-09  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
+	Import deployment facilities from the CSA server. Doc updates.
+	
+	* Makefile-reqs.mk: Rename to...	
+	* deploy/reqs.mk: here. Update to separate dependencies from SL
+	toolchain.
+
+	* Makefile-reqs.orig: Rename to...	
+	* deploy/Makefile-reqs.orig: here. Mention SVN revisions
+	explicitly.
+
+	* deploy/slenv: Add.
+
+	* deploy/README: Document some more.
+
+	* Makefile.am,
+	* doc/requirements.txt: Update accordingly. 
+
+	* doc/NEWS.txt: Update for new version number.	
+	* doc/Makefile.am: Put dependency on configure since the man pages
+	contain version information.
+
+	
+
 2009-06-08  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
 	Fix major bug found by Mike H. in "alternate compiler".
