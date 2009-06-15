@@ -21,7 +21,7 @@ EXTRA_DIST = $(DEMOS) fft_bench.sl fft_test.sl fft_impl1.sl fft_impl2.sl fft.slh
 
 # Also build demos during "make all":
 noinst_DATA = $(DEMOS:.sl=.x)
-CLEANFILES = $(DEMOS:.sl=.x*)
+CLEANFILES = $(DEMOS:.sl=.x) $(DEMOS:.sl=.bin.*)
 
 #####  Special targets for the FFT demo #####
 

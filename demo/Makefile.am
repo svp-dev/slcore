@@ -21,6 +21,6 @@ EXTRA_DIST = $(DEMOS)
 
 # Also build demos during "make all":
 noinst_DATA = $(DEMOS:.sl=.x)
-CLEANFILES = $(DEMOS:.sl=.x*)
+CLEANFILES = $(DEMOS:.sl=.x) $(DEMOS:.sl=.bin.*)
 
-SUBDIRS = fft
+SUBDIRS = . fft

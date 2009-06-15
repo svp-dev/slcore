@@ -46,11 +46,13 @@ SLC_BEFORE = function slc_compile() { \
        $(slc_ifppalpha) echo "$$SLC_OUT -> pppalpha" && \
           $(slc_ifppalpha) $(abs_top_builddir)/bin/slc $${SLC_OUT:+-o "$$SLC_OUT".mtalpha} -b ppp "$$@" && \
        if test -n "$$SLC_OUT"; then \
-          printf '\#\! /bin/sh\nex=$${1:?missing run tag}; shift; exec $${SLR:-$(abs_top_builddir)/bin/slr} $$0.$$ex "$$@"\n'  >"$@" && \
+          printf '\#! /bin/sh\n' >"$@" && \
+          printf 'select prog in `basename $$0 .x`.bin.*; do break; done; ' >>"$@" && \
+          printf 'exec $${SLR:-$(abs_top_builddir)/bin/slr} "$$prog" "$$@"\n'  >>"$@" && \
           chmod +x "$@" ; \
        fi; }
 
 .sl.x:
-	$(slc_verbose) $(SLC_BEFORE); $(SLC_VARS) SLC_OUT="$@" slc_compile $<
+	$(slc_verbose) $(SLC_BEFORE); $(SLC_VARS) SLC_OUT="${@:.x=.bin}" slc_compile $<
 
 

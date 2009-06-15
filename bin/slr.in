@@ -255,6 +255,9 @@ errcleanup() {
 
 if test -n "$rdatafile"; then
   if ! test -r "$rdatafile"; then die "$rdatafile: cannot read file"; fi
+  if test -n "$vars"; then 
+    echo "$0: warning: '-r $rdatafile' overrides '$vars'" >&2
+  fi
   datafile=$rdatafile
   dodata=
 else
@@ -313,11 +316,11 @@ if test -n "$dodata"; then
 	TMPDIR="$tmpdir"/slc-rec @BASH@ "$slc_helper" -b "$datatag" -o "$tmpdir"/gen.x -I"$tmpdir" "$found"
 	mkdir "$tmpdir"/slr-rec
 	if test -n "$VERBOSE"; then
-	    echo "$0: running: TMPDIR=$tmpdir/slr-rec @BASH@ $0 $tmpdir/gen.x >$datafile 2>$tmpdir/gen.log" >&2
+	    echo "$0: running: TMPDIR=$tmpdir/slr-rec @BASH@ $0 $tmpdir/gen.x >$datafile" >&2
 	fi
-	TMPDIR="$tmpdir"/slr-rec @BASH@ "$0" "$tmpdir"/gen.x >"$datafile" 2>"$tmpdir"/gen.log
+	TMPDIR="$tmpdir"/slr-rec @BASH@ "$0" "$tmpdir"/gen.x -Ws,-q >"$datafile"
     else
-	touch "$tmpdir"/data
+        true >"$datafile"
     fi
 fi
 #set +e

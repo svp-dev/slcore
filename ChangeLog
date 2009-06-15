@@ -1,5 +1,19 @@
 2009-06-15  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	Cosmetic fixes.
+	
+	* bin/slr.in: Fix initialization of data file when program takes
+	no argument. Log recursive invocation of `slc' and `slr' to
+	standard error. Warn if both -r and -d are used.
+
+	* sl.mk: Pop up a menu to select executable in .x wrappers.
+	
+	* demos/Makefile.am,
+	* demos/fft/Makefile.am: Update accordingly.
+
+
+2009-06-15  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	Improve interface of SL runner.
 	
 	* bin/slr.in: Reinstate use of -x to select runner. Use -t for
