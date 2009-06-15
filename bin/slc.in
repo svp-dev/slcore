@@ -281,9 +281,9 @@ Compiler debugging options:
                      deleted before the program terminates.
 
   -t dir             Output directory for intermediate files. If this option
-                     is not set, a directory is automatically created
-                     in the system-wide default temporary directory
-                     (usually /tmp).
+                     is not set, a subdirectory of the standard temporary 
+                     directory (TMPDIR or /tmp) is used.
+
 
 Other options:
   -h, --help         Print this help; do not process anything.
@@ -314,6 +314,9 @@ Environment variables:
   M4                 M4 preprocessor to use. Default is "m4".
 
   KEEP               If set and not empty, implies option -save-temps.
+
+  TMPDIR             If set and not empty, overrides /tmp as the
+                     base directory for temporary files.
 
 Diagnostics:
   0                  No error occured.

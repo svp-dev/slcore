@@ -1,3 +1,23 @@
+2009-06-15  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
+	Improve interface of SL runner.
+	
+	* bin/slr.in: Reinstate use of -x to select runner. Use -t for
+	trace instead of -x.
+	* bin/slt.in: Update accordingly.
+
+	* bin/slr.in: Support new options -r and -w to load/save the data
+	file from a file. This allows to cache an input data file between
+	runs. 
+
+	* bin/slr.in: Support new option -n as shorthand for the number of
+	cores.
+	* lib/r-mtalpha-sim/run.sh.in,
+	* lib/r-mtsparc-sim/run.sh.in: Update accordingly.
+
+	* bin/slc.in,
+	* bin/slr.in: Update documentation for TMPDIR.
+	
 2009-06-09  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
 	Import deployment facilities from the CSA server. Doc updates.

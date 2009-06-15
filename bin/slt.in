@@ -518,7 +518,7 @@ do_run() {
       printf '' >$baseout.out
       while read -a vars ; do
 	  echo "===== RUNNING PROGRAM: ${vars[*]} =====" >>$baseout.log
-	  command="$timeout $runner -x $baseout.x ${vars[*]} $RUN_ARGS"
+	  command="$timeout $runner -t $baseout.x ${vars[*]} $RUN_ARGS"
 	  echo "$command >>$baseout.out" >>$baseout.log
 	  set +e
 	  $command >>$baseout.out 2>>$baseout.log 
