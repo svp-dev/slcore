@@ -39,6 +39,9 @@ m4_define([[sl_enddef]],[[} m4_dnl
 m4_ifdef([[_sl_increate]],[[m4_fatal(missing sync after create)]]) m4_dnl
 ]])
 
+# end of thread
+m4_define([[sl_end_thread]], [[return]])
+
 m4_define([[sl_decl]], [[void [[$1]](struct sl_famdata * __sl_fam)]])
 
 m4_define([[sl_index]], [[register const int [[$1]] = (__sl_fam->ix)]])

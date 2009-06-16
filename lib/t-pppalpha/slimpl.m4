@@ -44,6 +44,10 @@ m4_undefine([[__sl_setp_]]__sl_parmname)
 __sl_epilogue(__sl_funcname, __sl_parmspec)
 ]])
 
+# end of thread
+m4_define([[sl_end_thread]], [[goto __sl_end_thread]])
+
+
 m4_define([[sl_getp]],[[__sl_getp_$1]])
 m4_define([[sl_setp]],[[__sl_setp_$1([[$2]])]])
 

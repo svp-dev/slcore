@@ -25,6 +25,9 @@ m4_define([[sl_thparms]],m4_dquote(m4_shift2($@)))m4_dnl
 void [[$1]]m4_if(m4_count(sl_thparms),0,(void),(sl_thparms))m4_dnl
 ]])
 
+# end of thread
+m4_define([[sl_end_thread]], [[return]])
+
 # No special action at the end of a definition
 m4_define([[sl_enddef]],[[m4_dnl
 m4_ifdef([[_sl_increate]],[[m4_fatal(missing sync after create)]])m4_dnl

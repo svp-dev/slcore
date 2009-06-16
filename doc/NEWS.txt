@@ -15,6 +15,9 @@ SLC 2.0.3a, 2009
 - Fix code generation bug for MT-Alpha happening when a thread
   function has many local variables.
 
+- New SL language feature: ``sl_end_thread``, which causes the current
+  thread to terminate.
+
 Known issues:
 
 - comments inside the parameters to ``sl_def`` and other SL macros

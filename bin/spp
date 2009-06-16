@@ -927,6 +927,8 @@ class pppalpha(object):
             inpprologue = 1
             continue
          elif inpprologue == 1:
+            if type == 'label':
+               continue
             fundata['pprologue'].append((type, content, comment))
             continue
          

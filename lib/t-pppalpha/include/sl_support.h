@@ -73,8 +73,8 @@
     __asm__ ("# MT: index starts in %0 (must be =" IDXREG ")" : "=r"(__sl_index)); \
     __asm__ __volatile__(".registers " # GI " " # SI " 19 " # GF " " # SF " 19\n");
 
-#define __sl_epilogue(Name, ArgSpec)						\
-    }
+#define __sl_epilogue(Name, ArgSpec)		\
+  __sl_end_thread: (void)0; }
 
 #define __sl_allocate(Tag, GI, SI, GF, SF)				\
   register long __sl_fid_ ## Tag;					\
