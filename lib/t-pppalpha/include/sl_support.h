@@ -28,7 +28,7 @@
 
 #define __sl_setshp(Name, Value)					\
   ({									\
-     __asm__ __volatile__("# MT: start write shared " # Name " (%1) <- " # Value " (and clobber incoming %0)" \
+     __asm__ __volatile__("# MT: start write shared " # Name " (%1) <- (and clobber incoming %0)" \
  			 : /* ensure incoming shared is marked clobbered */ \
 			   "=rf" (__sl_shparm_in_ ## Name), "=rf"(__sl_shparm_out_ ## Name) \
 			  : "0"(__sl_shparm_in_ ## Name), "1"(__sl_shparm_out_ ## Name)); \

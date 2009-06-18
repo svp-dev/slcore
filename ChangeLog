@@ -1,3 +1,10 @@
+2009-06-18  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
+	* lib/t-pppalpha/include/sl_support.h (__sl_setshp): Do not render
+	the expression value as a comment; this allows to use more complex
+	expressions potentially containing newlines in the second operand
+	to `sl_setp'.
+
 2009-06-16  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
 	Add new feature to SL: sl_end_thread which causes the current
