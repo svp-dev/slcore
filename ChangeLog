@@ -1,3 +1,10 @@
+2009-06-19  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
+	* bin/cce.in (slc_cflags): Use IEEE-compliant math compile flags.
+
+	* lib/svplib/io.sl (svp_io_putf): Fix printing of exponents when
+	there are more than two digits.
+
 2009-06-18  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
 	* lib/t-pppalpha/include/sl_support.h (__sl_setshp): Do not render

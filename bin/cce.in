@@ -286,7 +286,7 @@ esac
 # Extra defines
 case $slc_arch in
     mtalpha) 
-        slc_cflags="$slc_cflags -mcpu=ev6 -mfix -mcix -mmax -mbwx -ffast-math"
+        slc_cflags="$slc_cflags -mcpu=ev6 -mfix -mcix -mmax -mbwx -fno-math-errno -fno-trapping-math "
         ;;
     *)
 	slc_tflags="$slc_tflags -DHAVE_C_DIVIDE"

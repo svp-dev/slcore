@@ -86,14 +86,7 @@ sl_def(svp_io_putf, void,
       __write1('E');
       if (exp < 0) { __write1('-'); exp = -exp; } else __write1('+');
       unsigned uexp = exp;
-      if (uexp < base)
-	__write1(digits[uexp]);
-      else {
-	unsigned rs = base;
-	divmodu(uexp, rs);
-	__write1(digits[rs]);
-	__write1(digits[uexp]);
-      }
+      sl_proccall(svp_io_putun, sl_glarg(unsigned long long, gn, uexp), sl_glarg(unsigned, gbase, base));
     }
 }
 sl_enddef
