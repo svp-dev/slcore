@@ -181,11 +181,12 @@ AC_CONFIG_FILES([
 	tools/lib/Makefile
         tools/lib/r-mtalpha-sim/run.sh
         tools/lib/r-mtsparc-sim/run.sh
+	tools/tests/Makefile
 	lib/Makefile
 	doc/Makefile
-	tests/Makefile
 	demo/Makefile
 	demo/fft/Makefile
 ])
+#	tests/Makefile
 AC_OUTPUT
 

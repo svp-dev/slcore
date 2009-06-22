@@ -17,8 +17,22 @@ EXTRA_DIST = \
 	src/roman.sl \
 	src/div.sl
 
+nobase_dist_pkgdata_DATA = \
+	include/cstdint.slh \
+	include/cstddef.slh \
+	include/cstdbool.slh \
+	include/climits.slh \
+	include/cmalloc.slh \
+	include/sac_helpers.slh \
+	include/svp/argslot.slh \
+	include/svp/assert.slh \
+	include/svp/div.slh \
+	include/svp/io.slh \
+	include/svp/roman.slh \
+	include/svp/iomacros.slh \
+	include/svp/perf.slh
+
 include $(top_srcdir)/sl.mk
-nobase_dist_pkgdata_DATA =
 nobase_pkglib_DATA = 
 nobase_pkglib_LIBRARIES = 
 CLEANFILES =

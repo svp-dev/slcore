@@ -329,11 +329,15 @@ case $slc_os in
 	    fi
         fi
 
-	if test "$slc_use_slos" != "no"; then
-            for d in $slc_libdir; do   
-		slc_ldflags="$slc_ldflags -L$d/$slc_arch-$slc_os"
-            done
-            slc_ldflags="$slc_ldflags -lslos"
+	for d in $slc_libdir; do   
+	    slc_ldflags="$slc_ldflags -L$d/$slc_arch-$slc_os"
+        done
+	case $slc_dialect in
+	    seqc) ;;
+	    *) slc_ldflags="$slc_ldflags -lslc" ;;
+	esac
+	if test "$slc_use_libsl" != "no"; then
+            slc_ldflags="$slc_ldflags -lsl"
 	fi
 
         IFS=$save_IFS

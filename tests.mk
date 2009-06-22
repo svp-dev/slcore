@@ -36,5 +36,5 @@ endif
 TESTS_ENVIRONMENT = \
 	$(SLC_VARS) \
 	SLT_IMPL_LIST="seqc $(EXTRA_TEST_IMPL)" \
-	$(BASH) $(abs_top_builddir)/bin/slt
+	$(BASH) $(abs_top_builddir)/tools/bin/slt
 

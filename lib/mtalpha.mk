@@ -2,15 +2,13 @@
 
 EXTRA_DIST += \
 	src/mtalpha/mtdiv.s \
-	src/mtalpha/include/svp_asmdiv.h \
-	src/mtalpha/include/svp_os.h \
 	src/mtalpha/divide.S \
 	src/mtalpha/memset.S \
 	src/mtalpha/memcpy.s \
-	src/mtalpha/malloc_intrinsics.h \
-	src/mtalpha/malloc_intrinsics.c \
-	src/mtalpha/malloc.c \
-	src/mtalpha/strlib.c
+	src/malloc_intrinsics.h \
+	src/malloc_intrinsics.c \
+	src/malloc.c \
+	src/strlib.c
 
 nobase_dist_pkgdata_DATA += \
 	mtalpha-sim/include/svp_os.h \
@@ -19,7 +17,6 @@ nobase_dist_pkgdata_DATA += \
 if ENABLE_MTALPHA
 
 nobase_pkglib_DATA += \
-   mtalpha-sim/slrt.o \
    mtalpha-sim/libsl.a
 
 mtalpha_sim_libsl_a_CONTENTS = \

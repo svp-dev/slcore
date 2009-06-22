@@ -13,17 +13,17 @@
 
 
 SLC_VARS = \
-	SLC_INCDIR=$(abs_top_srcdir)/tools/include:$(abs_top_builddir)/tools/include:$(abs_top_srcdir)/include:$(abs_top_builddir)/include \
+	SLC_INCDIR=$(abs_top_srcdir)/tools/include:$(abs_top_builddir)/tools/include:$(abs_top_srcdir)/lib/include:$(abs_top_builddir)/lib/include \
 	SLC_LIBDIR=$(abs_top_srcdir)/tools/lib:$(abs_top_builddir)/tools/lib:$(abs_top_srcdir)/lib:$(abs_top_builddir)/lib \
 	SLC_DATADIR=$(abs_top_srcdir)/tools/lib:$(abs_top_builddir)/tools/lib:$(abs_top_srcdir)/lib:$(abs_top_builddir)/lib \
-	SPP=$(abs_top_srcdir)/bin/spp \
-	SCU=$(abs_top_srcdir)/bin/scu \
-	SAG=$(abs_top_srcdir)/bin/sag \
-	CCE=$(abs_top_builddir)/bin/cce \
-	SLR=$(abs_top_builddir)/bin/slr \
-	SLC=$(abs_top_builddir)/bin/slc
+	SPP=$(abs_top_srcdir)/tools/bin/spp \
+	SCU=$(abs_top_srcdir)/tools/bin/scu \
+	SAG=$(abs_top_srcdir)/tools/bin/sag \
+	CCE=$(abs_top_builddir)/tools/bin/cce \
+	SLR=$(abs_top_builddir)/tools/bin/slr \
+	SLC=$(abs_top_builddir)/tools/bin/slc
 
-SLC = $(SLC_VARS) $(abs_top_builddir)/bin/slc
+SLC = $(SLC_VARS) $(abs_top_builddir)/tools/bin/slc
 
 SUFFIXES = .sl .x
 
@@ -40,11 +40,11 @@ endif
 SLC_BEFORE = function slc_compile() { \
        if test -n "$$SLC_OUT"; then rm -f "$$SLC_OUT" "$$SLC_OUT".{mtalpha,ptl,seqc}; fi && \
        echo "$$SLC_OUT -> seqc" && \
-          $(abs_top_builddir)/bin/slc $${SLC_OUT:+-o "$$SLC_OUT".seqc} -b seqc "$$@" $(AM_CFLAGS) $(CFLAGS) && \
+          $(SLC) $${SLC_OUT:+-o "$$SLC_OUT".seqc} -b seqc "$$@" $(AM_CFLAGS) $(CFLAGS) && \
        echo "$$SLC_OUT -> ptl" && \
-          $(abs_top_builddir)/bin/slc $${SLC_OUT:+-o "$$SLC_OUT".ptl} -b ptl "$$@" $(AM_CXXFLAGS) $(CXXFLAGS) && \
+          $(SLC) $${SLC_OUT:+-o "$$SLC_OUT".ptl} -b ptl "$$@" $(AM_CXXFLAGS) $(CXXFLAGS) && \
        $(slc_ifppalpha) echo "$$SLC_OUT -> pppalpha" && \
-          $(slc_ifppalpha) $(abs_top_builddir)/bin/slc $${SLC_OUT:+-o "$$SLC_OUT".mtalpha} -b ppp "$$@" && \
+          $(slc_ifppalpha) $(SLC) $${SLC_OUT:+-o "$$SLC_OUT".mtalpha} -b ppp "$$@" && \
        if test -n "$$SLC_OUT"; then \
           printf '\#! /bin/sh\n' >"$@" && \
           printf 'select prog in `basename $$0 .x`.bin.*; do break; done; ' >>"$@" && \
@@ -53,6 +53,6 @@ SLC_BEFORE = function slc_compile() { \
        fi; }
 
 .sl.x:
-	$(slc_verbose) $(SLC_BEFORE); $(SLC_VARS) SLC_OUT="${@:.x=.bin}" slc_compile $<
+	$(slc_verbose) $(SLC_BEFORE); SLC_OUT="${@:.x=.bin}" slc_compile $<
 
 

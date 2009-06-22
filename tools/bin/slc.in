@@ -32,7 +32,7 @@ combine=
 verbose=
 
 slc_use_slrt=yes
-slc_use_slos=yes
+slc_use_libsl=yes
 
 check=
 prev_arg=
@@ -136,8 +136,8 @@ for arg in "$@"; do
       -mutc*)   die "-mutc is deprecated, used -b instead" ;;
 
       -nostartfiles) slc_use_slrt=no ;;
-      -nodefaultlibs) slc_use_slos=no ;;
-      -nostdlib) slc_use_slrt=no; slc_use_slos=no ;;
+      -nodefaultlibs) slc_use_libsl=no ;;
+      -nostdlib) slc_use_slrt=no; slc_use_libsl=no ;;
 
       -*)	extra_cflags="$extra_cflags $arg";;
 
@@ -358,7 +358,7 @@ EOF
 fi
 
 # Here check the configuration
-eval $(slc_use_slrt=$slc_use_slrt slc_use_slos=$slc_use_slos "$cce_helper" -s "$impl")
+eval $(slc_use_slrt=$slc_use_slrt slc_use_libsl=$slc_use_libsl "$cce_helper" -s "$impl")
 
 # If we were requested to test the configuration, do it now
 if test -n "$check"; then
