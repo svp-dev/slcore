@@ -17,7 +17,11 @@
 m4_include(svp/iomacros.slh)
 m4_include(cstddef.slh)
 
-m4_include(data.c)
+#ifdef FIBRE_DATA
+#include "fdata.c"
+#else
+#include "data.c"
+#endif
 
 sl_def(t_main, void)
 {

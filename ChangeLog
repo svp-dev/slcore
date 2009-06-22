@@ -1,5 +1,34 @@
 2009-06-22  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	Implement Fibre input.
+
+	* include/fibre.slh: Add.
+
+	* bin/sag: Encapsulate existing code as class SlrVarGenerator. Add
+	new class FibreGenerator.	
+	* bin/slr.in: Use it. Rename -w and -r to -wd and -rd. Implement
+	-wf, -rf, -wo. Document KEEP.
+	
+	* lib/arggen.sl: Include either "data.c" or "fdata.c".
+	
+	* lib/r-mtsparc-sim/run.sh.in,
+	* lib/r-mtalpha-sim/run.sh.in: Give Fibre data via -L17.	
+	* lib/mtalpha-sim/slrt.s: Save $l17 to __fibre_data. Fix loading
+	of pointer addresses via GP (use 'ldq ... !literal' instead of
+	'lda').
+	
+	* lib/host-host-seqc/load.c: Give target pointer to set as
+	parameter to support loading multiple files.
+	* lib/host-host-seqc/slrt.c,
+	* lib/host-host-ptl/slrt.c: Use it to load both SLR vars data and
+	Fibre data.
+
+	* lib/r-host/run.sh: Give both data files on the command line.
+
+	* doc/NEWS.txt: Mention the new feature.
+
+2009-06-22  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	Simplify tests.
 
 	* demo/fft/fft_test1.sl,

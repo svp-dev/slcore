@@ -19,8 +19,12 @@ _start:
 	lda  $l29, 0($l29)	!gpdisp!1
 
 	# initialize slr data pointer:
-        lda $l1,__slr_base
+        ldq $l1,__slr_base($l29) !literal
 	stq $l16,0($l1)
+
+	# initialize fibre data pointer:
+	ldq $l1,__fibre_base($l29) !literal
+	stq $l17,0($l1)
 	
 	# we want to create t_main:
 	# main has no shareds, take 1 global = PV
@@ -39,8 +43,10 @@ _start:
 	.align 4
 	.globl __slr_base
 __slr_base:
-	.int 0
-	.int 0
+	.long 0
+	.globl __fibre_base
+__fibre_base:
+	.long 0
 
 	.section .rodata
 	.ascii "\0slr_runner:mtalpha-sim:\0"

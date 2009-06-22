@@ -16,119 +16,218 @@
 #
 
 import sys
-import subprocess
 
 def die(msg):
-    print >>sys.stderr, msg
+    print >>sys.stderr, "%s: %s" % (sys.argv[0], msg)
     sys.exit(1)
 
-def genasm(out, data):
-    #print >>out, "\t.globl __slr_data_start\n\t.globl __slr_data_end\n\t.align 4\n__slr_data_start:"
-    print >>out, "struct __slr_data_t {"
-    #for d in data:
-        #print >>out, "\t.int __slr_input_%s-__slr_data_start" % d['label']
-    print >>out, "  struct meta_%d_t { ptrdiff_t offset; size_t nitems; } meta[%d];" % (len(data), len(data))
-    for d in data:
-        print >>out, "  %s data_%s[%d];" % (d['type'], d['label'], d['len'])
-    print >>out, "} __slr_data = {\n  { /* meta */"
-    for d in data:
-        print >>out, "    { (char*)(void*)&__slr_data.data_%s - (char*)(void*)&__slr_data," % d['label'],
-        print >>out, "%d }," % d['len']
-    print >>out, "  },"
-    for d in data:
-        print >>out, "  { /* %s */ " % d['label']
-        for i in d['items']:
-            print >>out, "\t%s," % i
+class FibreGenerator(object):
+    def dim(self, d):
+        if type(d) is type([]):
+            r = []
+            for v in d:
+                newdim = self.dim(v)
+                r.append(newdim)
+                if len(r[0]) != len(newdim):
+                        die("data contains heterogeneous array")
+            return [len(d)] + max(r, key=lambda x:x[0])
+        else:
+            return [0]
+
+    def dt(self,d):
+        if type(d) is type(0):
+            return (d >= 0) and "u" or "l"
+        elif type(d) is type(0.0):
+            return "d"
+        else:
+            die("can't recognize type: %r" % d)
+
+    def gt(self,t1, t2):
+        a = (t1, t2)
+        if "d" in a:
+            return "d"
+        elif "l" in a:
+            return "l"
+        return "u"
+
+    def ty(self, d):
+        if type(d) is type([]):
+            t = None
+            for v in d:
+                t = self.gt(t, self.ty(v))
+            return t
+        else:
+            return self.dt(d)
+
+    def unfold(self, sz, item):
+        if type(item) is type([]):
+            print "{",
+            for d in item:
+                self.unfold(sz[1:], d)
+                print ",",
+            for i in xrange(len(item), sz[0]):
+                print "0,",
+            print "}",
+        else:
+            print item,
+
+
+    def dogen(self):
+        d = sys.stdin.read()
+
+        data = eval(d)
+
+
+        t2c = {'u':'unsigned long','l':'long','d':'double'}
+        t2e = {'u':0,'l':1,'d':2}
+
+        ilist = []
+        for i,item in enumerate(data):
+            if item is None: break
+            sz = self.dim(item)
+            t = self.ty(item)
+            ilist.append((i,sz,t,item))
+
+
+        print "struct __slr_data_t {"
+        print "  struct { int tag; size_t dim; ptrdiff_t dim_offset; ptrdiff_t data_offset; } metadata[%d]; " % (len(ilist)+1)
+
+        for i, sz, _, _ in ilist:
+            print "  size_t dim%d[%d];" % (i, len(sz))
+
+        for i, sz, t, _ in ilist:
+            print "%s data%d" % (t2c[t], i),
+            for s in sz[:-1]:
+                print "[%d]" % s,
+            print ";"
+        print "} __slr_data = {"
+
+        print "  {/* metadata */"
+        for i, sz, t, _ in ilist:
+            print "  { %d, %d, " % (t2e[t], len(sz)-1),
+            print "(char*)(void*)&__slr_data.dim%d - (char*)(void*)&__slr_data," % i,
+            print "(char*)(void*)&__slr_data.data%d - (char*)(void*)&__slr_data" % i,
+            print "},"
+        print "  {-1,0,0,0}},"
+
+        print "  /* dimensions */"
+        for i, sz, _, _ in ilist:
+            print "  {%s}," % ','.join((str(x) for x in sz))
+        print
+        print "  /* data */"
+        for i, sz, _, item in ilist:
+            self.unfold(sz, item)
+            print ","
+            #print "%d, %r, %s" % (i, dim(item), ty(item))
+        print "};"
+
+
+
+
+class SlrVarGenerator(object):
+    def genasm(self, out, data):
+        print >>out, "struct __slr_data_t {"
+        print >>out, "  struct meta_%d_t { ptrdiff_t offset; size_t nitems; } meta[%d];" % (len(data), len(data))
+        for d in data:
+            print >>out, "  %s data_%s[%d];" % (d['type'], d['label'], d['len'])
+        print >>out, "} __slr_data = {\n  { /* meta */"
+        for d in data:
+            print >>out, "    { (char*)(void*)&__slr_data.data_%s - (char*)(void*)&__slr_data," % d['label'],
+            print >>out, "%d }," % d['len']
         print >>out, "  },"
-    #for d in data:
-    #    print >>out, "\t.align 4"
-    #    print >>out, "__slr_input_%s:" % d['label']
-    #    print >>out, "\t.int %s" % d['len']
-    #    for i in d['items']:
-    #        print >>out, "\t.%s %s" % (d['type'], i)
-    #print >>out, "__slr_data_end:"
-    print "};"
+        for d in data:
+            print >>out, "  { /* %s */ " % d['label']
+            for i in d['items']:
+                print >>out, "\t%s," % i
+            print >>out, "  },"
+        print "};"
 
-def proto(out, parm):
-    if len(parm):
-        print >>out, "Program variables:"
-        for k, v in parm.items():
-            print >>out, "\t%s (%s)\t%s" % (k, v['type'], v['desc'])
-    else:
-        print >>out, "This program has no input variables."
+    def proto(self, out, parm):
+        if len(parm):
+            print >>out, "Program variables:"
+            for k, v in parm.items():
+                print >>out, "\t%s (%s)\t%s" % (k, v['type'], v['desc'])
+                print >>out
+                print >>out, "Initializers:"
+                print >>out, "\t(comma-separated list)\tuse the specified data items."
+                print >>out, "\tfile:FILENAME\tload data items from FILENAME, one per line."
+                print >>out, "\traw:FILENAME\tload data items from FILENAME as raw bytes."
+                print >>out
+                print >>out, "Examples:"
+                print >>out, "\t<program> foo=42,69"
+                print >>out, "\t<program> foo=file:hello.txt"
+        else:
+            print >>out, "This program has no input variables."
 
-def usage(parm):
-    print >>sys.stderr, "Usage: <program> [VAR=INIT]..."
-    print >>sys.stderr 
-    proto(sys.stderr, parm)
-    print >>sys.stderr
-    print >>sys.stderr, "Initializers:"
-    print >>sys.stderr, "\t(comma-separated list)\tuse the specified data items."
-    print >>sys.stderr, "\tfile:FILENAME\tload data items from FILENAME, one per line."
-    print >>sys.stderr, "\traw:FILENAME\tload data items from FILENAME as raw bytes."
-    print >>sys.stderr
-    print >>sys.stderr, "Examples:"
-    print >>sys.stderr, "\t<program> foo=42,69"
-    print >>sys.stderr, "\t<program> foo=file:hello.txt"
+    def usage(self, parm):
+        print >>sys.stderr, "Usage: <program> [VAR=INIT]..."
+        print >>sys.stderr 
+        proto(sys.stderr, parm)
+
+    def dogen(self):
+        required = []
+        parm = {}
+        spec = {}
+        for l in sys.stdin:
+            _, label, type, desc = l.rstrip().split(':',3)
+            if label in required:
+                die("%s: already declared" % label)
+            required.append(label)
+            parm[label] = {'type':type,'desc':desc}
+
+        for a in sys.argv[2:]:
+                if a == "list":
+                    proto(sys.stdout,parm)
+                    sys.exit(0)
+                if not '=' in a:
+                    usage(parm)
+                    sys.exit(1)
+                label, init = a.split('=',1)
+                if label not in required:
+                    die("%s: unrecognized variable" % label)
+                if label in spec:
+                    die("%s: multiple definitions found" % label)
+                spec[label] = init
+
+        data = []
+        for r in required:
+            if r not in spec:
+                print >>sys.stderr, "warning: %s not specified, assuming empty array" % r
+                spec[r] = ""
+
+            init = spec[r]
+            type = parm[r]['type']
+            if init.startswith('raw:'):
+                fname = init.split(':',1)[1]
+                s = file(fname).read()
+                p = 0
+                ls = len(s)
+                bytes = []
+                while p + 8 < ls:
+                    bytes.append(','.join(('0x%x' % ord(x) for x in s[p:p+16])))
+                    p += 8
+                while p < ls:
+                    bytes.append('0x%x' % ord(s[p]))
+                    p += 1
+                data.append({'label':r, 'type':type, 'len':ls, 'items':bytes})
+            elif init.startswith('file:'):
+                fname = init.split(':',1)[1]
+                items = []
+                for l in file(fname):
+                    items.append(l.strip())
+                data.append({'label':r, 'type':type, 'len':len(items), 'items':items})
+            else:
+                if not init:
+                    values = []
+                else:
+                    values = init.split(',')
+                data.append({'label':r, 'type':type, 'len':len(values), 'items':values})
+        self.genasm(sys.stdout, data)
 
 if __name__ == "__main__":
-
-    required = []
-    parm = {}
-    spec = {}
-    for l in sys.stdin:
-        _, label, type, desc = l.rstrip().split(':',3)
-        if label in required:
-            die("%s: already declared" % label)
-        required.append(label)
-        parm[label] = {'type':type,'desc':desc}
-
-    for a in sys.argv[1:]:
-            if a == "list":
-                proto(sys.stdout,parm)
-                sys.exit(0)
-            if not '=' in a:
-                usage(parm)
-                sys.exit(1)
-            label, init = a.split('=',1)
-            if label not in required:
-                die("%s: unrecognized variable" % label)
-            if label in spec:
-                die("%s: multiple definitions found" % label)
-            spec[label] = init
-
-    data = []
-    for r in required:
-        if r not in spec:
-            print >>sys.stderr, "warning: %s not specified, assuming empty array" % r
-            spec[r] = ""
-        
-        init = spec[r]
-        type = parm[r]['type']
-        if init.startswith('raw:'):
-            fname = init.split(':',1)[1]
-            s = file(fname).read()
-            p = 0
-            ls = len(s)
-            bytes = []
-            while p + 8 < ls:
-                bytes.append(','.join(('0x%x' % ord(x) for x in s[p:p+16])))
-                p += 8
-            while p < ls:
-                bytes.append('0x%x' % ord(s[p]))
-                p += 1
-            data.append({'label':r, 'type':type, 'len':ls, 'items':bytes})
-        elif init.startswith('file:'):
-            fname = init.split(':',1)[1]
-            items = []
-            for l in file(fname):
-                items.append(l.strip())
-            data.append({'label':r, 'type':type, 'len':len(items), 'items':items})
-        else:
-            if not init:
-                values = []
-            else:
-                values = init.split(',')
-            data.append({'label':r, 'type':type, 'len':len(values), 'items':values})
-    genasm(sys.stdout, data)
+    if sys.argv[1] == "d":
+        m = SlrVarGenerator()
+    elif sys.argv[1] == "f":
+        m = FibreGenerator()
+    m.dogen()
 

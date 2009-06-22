@@ -20,6 +20,7 @@
 #include <errno.h>
 
 void *__slr_base;
+void *__fibre_base;
 
 void fail(const char *progname, const char *where)
 {
@@ -27,11 +28,11 @@ void fail(const char *progname, const char *where)
   exit(1);
 }
 
-void load(const char *progname, const char* fname)
+void load(const char *progname, const char* fname, void**ptr)
 {
   if (!fname) {
     fprintf(stderr, "%s: warning: no data file specified (did you use slr?)\n", progname);
-    __slr_base = 0;
+    *ptr = 0;
     return ;
   }
   FILE *f;
@@ -51,10 +52,9 @@ void load(const char *progname, const char* fname)
 
     fseek(f, 0L, SEEK_SET);
     if (0 == fread(p, sz, 1, f)) fail(progname, "fread");
-    __slr_base = p;
+    *ptr = p;
   }
   else
-    __slr_base = 0;
+    *ptr = 0;
   fclose(f);
-
 }

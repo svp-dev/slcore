@@ -24,7 +24,8 @@ const char *__tag__ = "slr_runner:host:";
 const char *__datatag__ = "slr_datatag:seqc-host-host-seqc:";
 
 int main(int argc, const char **argv) {
-  load(argv[0], argv[1]);
+  load(argv[0], argv[1], &__slr_base);
+  load(argv[0], argv[2], &__fibre_base); 
   struct { } args;
   struct sl_famdata root;
   root.ix = root.be = 0;

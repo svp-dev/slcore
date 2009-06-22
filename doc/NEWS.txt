@@ -18,6 +18,9 @@ SLC 2.0.3a, 2009
 - New SL language feature: ``sl_end_thread``, which causes the current
   thread to terminate.
 
+- New data input mechanism, to allow programs to read data formatted
+  in Sisal's Fibre I/O format.
+
 Known issues:
 
 - comments inside the parameters to ``sl_def`` and other SL macros
