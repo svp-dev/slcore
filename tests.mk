@@ -22,7 +22,7 @@ endif
 
 if ENABLE_CHECK_PPP
 if ENABLE_MTALPHA
-EXTRA_TEST_IMPL += ppp::-Ws,-o~-Ws,NumProcessors=1 ppp
+EXTRA_TEST_IMPL += ppp::-n~1 ppp
 endif
 endif
 

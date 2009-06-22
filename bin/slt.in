@@ -240,7 +240,7 @@ Test-specific runtime arguments:
   many "execution" columns in the output as there are SLT_RUN
   specifiers in the program. For example:
 
-  # SLT_RUN: -dN=5 -Ws,-o -Ws,NumProcessors=1
+  # SLT_RUN: -dN=5 -n 1 
 
   # SLT_RUN: -dN=10
 
@@ -262,11 +262,11 @@ Implementation-specific extra compilation and execution arguments:
 
   For example:
 
-  # $basename test.sl seqc ppp:-O3 ppp::-Ws,-o~-Ws,NumProcessors=1
+  # $basename test.sl seqc ppp:-O3 ppp::-n~1
 
   Indicates that three implementations should be tested; the second
   with -O3 added to the compilation command line, the third with
-  "-Ws,-o -Ws,NumProcessors=1" added to the execution command line.
+  "-n 1" added to the execution command line.
 
 Environment variables:
   SLC            Location of the SL compiler. Default is 

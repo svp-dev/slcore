@@ -1,3 +1,17 @@
+2009-06-22  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
+	Simplify tests.
+
+	* demo/fft/fft_test1.sl,
+	* demo/fft/fft_test2.sl,
+	* demo/fft/fft_bench1.sl,
+	* demo/fft/fft_bench2.sl,
+	* bin/slt.in,
+	* tests.mk: Use the new "-n" instead of "-Ws,-o -Ws,NumProcessors".
+
+	* demo/fibonacci.sl: Remove use of -n since tests.mk specifies
+	multiple settings anyways.	
+	
 2009-06-19  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
 	* bin/cce.in (slc_cflags): Use IEEE-compliant math compile flags.
