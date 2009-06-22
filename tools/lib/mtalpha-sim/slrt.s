@@ -39,15 +39,9 @@ _start:
 	end	
 	.end _start
 
-	.data
-	.align 4
-	.globl __slr_base
-__slr_base:
-	.long 0
-	.globl __fibre_base
-__fibre_base:
-	.long 0
-
+	.comm __slr_base,8,8
+	.comm __fibre_base,8,8
+	
 	.section .rodata
 	.ascii "\0slr_runner:mtalpha-sim:\0"
 	.ascii "\0slr_datatag:ppp-mtalpha-sim:\0"

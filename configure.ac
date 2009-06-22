@@ -183,6 +183,7 @@ AC_CONFIG_FILES([
         tools/lib/r-mtsparc-sim/run.sh
 	tools/tests/Makefile
 	lib/Makefile
+	lib/tests/Makefile
 	doc/Makefile
 	demo/Makefile
 	demo/fft/Makefile

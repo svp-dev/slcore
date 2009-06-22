@@ -43,4 +43,4 @@ include $(srcdir)/seqc.mk
 include $(srcdir)/ptl.mk
 include $(srcdir)/mtalpha.mk
 
-
+SUBDIRS = tests
