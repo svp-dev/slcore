@@ -11,6 +11,8 @@
 ## `COPYING' file in the root directory.
 ##
 
+echo "DO NOT USE YET"
+exit 1
 
 AC_PREREQ([2.61])
 AC_INIT([slc], [2.0.3a], [sl-users@nic.surfnet.nl])
@@ -174,9 +176,11 @@ fi
 AC_SUBST([CONFIG_STATUS_DEPENDENCIES], ['$(top_srcdir)/ChangeLog'])
 AC_CONFIG_FILES([
 	Makefile
-	bin/Makefile
-        lib/r-mtalpha-sim/run.sh
-        lib/r-mtsparc-sim/run.sh
+        tools/Makefile
+	tools/bin/Makefile
+	tools/lib/Makefile
+        tools/lib/r-mtalpha-sim/run.sh
+        tools/lib/r-mtsparc-sim/run.sh
 	lib/Makefile
 	doc/Makefile
 	tests/Makefile

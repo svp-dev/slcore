@@ -22,6 +22,12 @@ def die(msg):
     sys.exit(1)
 
 class FibreGenerator(object):
+    def mergemax(self, r):
+        if len(r) == 0:
+            return r
+        l = len(r[0])
+        return [max((x[i] for x in r)) for i in xrange(l)] 
+
     def dim(self, d):
         if type(d) is type([]):
             r = []
@@ -29,8 +35,10 @@ class FibreGenerator(object):
                 newdim = self.dim(v)
                 r.append(newdim)
                 if len(r[0]) != len(newdim):
-                        die("data contains heterogeneous array")
-            return [len(d)] + max(r, key=lambda x:x[0])
+                        die("data contains heterogeneous array dimensions")
+            r = [len(d)] + self.mergemax(r)
+            # print >>sys.stderr, "XXX: %r" % r
+            return r
         else:
             return [0]
 
@@ -59,6 +67,15 @@ class FibreGenerator(object):
         else:
             return self.dt(d)
 
+    def dozeros(self, sz):
+        if sz[0]:
+            print "{",
+            for i in xrange(sz[0]):
+                self.dozeros(sz[1:])
+            print "},",
+        else:
+            print "0,",
+
     def unfold(self, sz, item):
         if type(item) is type([]):
             print "{",
@@ -66,7 +83,7 @@ class FibreGenerator(object):
                 self.unfold(sz[1:], d)
                 print ",",
             for i in xrange(len(item), sz[0]):
-                print "0,",
+                self.dozeros(sz[1:])
             print "}",
         else:
             print item,

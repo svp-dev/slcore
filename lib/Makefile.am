@@ -13,25 +13,12 @@
 
 # 
 EXTRA_DIST = \
-	svplib/io.sl \
-	svplib/roman.sl \
-	svplib/div.sl
-
-nobase_dist_pkglib_SCRIPTS = \
-	r-host/run.sh
-
-nobase_pkglib_SCRIPTS = \
-	r-mtalpha-sim/run.sh \
-	r-mtsparc-sim/run.sh
-
-
-nobase_dist_pkgdata_DATA = \
-	arggen.sl \
-	t-utc/slimpl.m4 \
-	t-utc0/slimpl.m4 \
-	t-utc0/include/sl_support.h 
+	src/io.sl \
+	src/roman.sl \
+	src/div.sl
 
 include $(top_srcdir)/sl.mk
+nobase_dist_pkgdata_DATA =
 nobase_pkglib_DATA = 
 nobase_pkglib_LIBRARIES = 
 CLEANFILES =

@@ -1,73 +1,34 @@
 ########## muTC-PTL implementation ##########
 
 nobase_dist_pkgdata_DATA += \
-	t-ptl/slimpl.m4 \
-	t-ptl/include/sl_support.h \
-	host-host-ptl/include/create.tpl \
-	host-host-ptl/include/template.pl \
-	host-host-ptl/include/ptl_create.h \
-	host-host-ptl/include/ptl_config.h \
-	host-host-ptl/include/ptl_debug.h \
-	host-host-ptl/include/ptl_deps.h \
-	host-host-ptl/include/ptl_svp.h \
-	host-host-ptl/include/ptl_vars.h \
 	host-host-ptl/include/svp_os.h
 
-EXTRA_DIST += \
-	host-host-ptl/slrt.c \
-	host-host-ptl/include/create.tpl \
-	host-host-ptl/include/template.pl
+nobase_pkglib_LIBRARIES += host-host-ptl/libsl.a 
 
-nobase_pkglib_DATA += host-host-ptl/slrt.o
-
-nobase_pkglib_LIBRARIES += host-host-ptl/libslos.a 
-
-host_host_ptl_libslos_a_CPPFLAGS = \
-	-I$(srcdir)/host-host-ptl/include \
-	-I$(builddir)/host-host-ptl/include
-
-host_host_ptl_libslos_a_SOURCES = \
-	host-host-ptl/ptl_debug.cc \
-	host-host-ptl/ptl_vars.cc \
-	host-host-ptl/ptl_svp.cc
-host_host_ptl_libslos_a_LIBADD = \
+host_host_ptl_libsl_a_LIBADD = \
 	host-host-ptl/io.o \
 	host-host-ptl/roman.o \
 	host-host-ptl/div.o
 
-BUILT_SOURCES += \
-	host-host-ptl/include/ptl_create.h
 
 SLC_PTL = $(SLC) -b ptl -nostdlib $(CXXFLAGS)
 
-host-host-ptl/io.o: $(srcdir)/svplib/io.sl
+host-host-ptl/io.o: $(srcdir)/src/io.sl
 	$(AM_V_at)$(MKDIR_P) host-host-ptl
 	$(slc_verbose)$(SLC_PTL) -c -o $@ $<
 
-host-host-ptl/div.o: $(srcdir)/svplib/div.sl
+host-host-ptl/div.o: $(srcdir)/src/div.sl
 	$(AM_V_at)$(MKDIR_P) host-host-ptl
 	$(slc_verbose)$(SLC_PTL) -c -o $@ $<
 
-host-host-ptl/roman.o: $(srcdir)/svplib/roman.sl
+host-host-ptl/roman.o: $(srcdir)/src/roman.sl
 	$(AM_V_at)$(MKDIR_P) host-host-ptl
 	$(slc_verbose)$(SLC_PTL) -c -o $@ $<
 
-host-host-ptl/slrt.o: $(srcdir)/host-host-ptl/slrt.c $(srcdir)/host-host-seqc/load.c
-	$(AM_V_at)$(MKDIR_P) host-host-ptl
-	$(AM_V_CC)$(CC) $(CFLAGS) -I$(srcdir)/t-ptl/include -c -o $@ $< $(AM_CXXFLAGS) $(CXXFLAGS)
 
 CLEANFILES += \
 	host-host-ptl/io.o \
 	host-host-ptl/div.o \
-	host-host-ptl/roman.o \
-	host-host-ptl/slrt.o
+	host-host-ptl/roman.o
 
-PTL_CREATE_SUBST = $(srcdir)/host-host-ptl/include/template.pl
-PTL_CREATE_TEMPL = $(srcdir)/host-host-ptl/include/create.tpl
-
-host-host-ptl/include/ptl_create.h: $(PTL_CREATE_SUBST) $(PTL_CREATE_TEMPL)
-	$(AM_V_at)$(MKDIR_P) host-host-ptl/include
-	$(AM_V_GEN)$(PERL) $(PTL_CREATE_SUBST) <$(PTL_CREATE_TEMPL) >$@
-
-MAINTAINERCLEANFILES += host-host-ptl/include/ptl_create.h
 

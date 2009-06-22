@@ -14,6 +14,7 @@
 # 
 bin_SCRIPTS = cce slc slr slt timeout
 dist_bin_SCRIPTS = scu spp sag
+
 EXTRA_DIST = cce.in slc.in slr.in slt.in timeout.in
 
 CLEANFILES = $(bin_SCRIPTS)
@@ -54,3 +55,19 @@ slc: slc.in
 slt: slt.in
 timeout: timeout.in
 
+#
+# Documentation for the scripts
+#
+dist_man1_MANS = cce.1 slc.1 slr.1 slt.1
+
+cce.1 slc.1 slr.1 slt.1: $(top_srcdir)/configure.ac
+	rm -f $@
+	$(HELP2MAN) -N --output=$@.tmp $(@:.1=)
+	mv $@.tmp $@
+
+cce.1: cce
+slc.1: slc
+slr.1: slr
+slt.1: slt
+
+MAINTAINERCLEANFILES = $(dist_man1_MANS)

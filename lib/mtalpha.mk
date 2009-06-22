@@ -1,35 +1,30 @@
 ########### MT-Alpha components ###########
 
 EXTRA_DIST += \
-	mtalpha-sim/slrt.s \
-	mtalpha-sim/mtdiv.s \
-	mtalpha-sim/callgate.s \
-	mtalpha-sim/include/svp_asmdiv.h \
-	mtalpha-sim/include/svp_os.h \
-	mtalpha-sim/divide.S \
-	mtalpha-sim/memset.S \
-	mtalpha-sim/memcpy.s \
-	mtalpha-sim/malloc_intrinsics.h \
-	mtalpha-sim/malloc_intrinsics.c \
-	mtalpha-sim/malloc.c \
-	mtalpha-sim/strlib.c
+	src/mtalpha/mtdiv.s \
+	src/mtalpha/include/svp_asmdiv.h \
+	src/mtalpha/include/svp_os.h \
+	src/mtalpha/divide.S \
+	src/mtalpha/memset.S \
+	src/mtalpha/memcpy.s \
+	src/mtalpha/malloc_intrinsics.h \
+	src/mtalpha/malloc_intrinsics.c \
+	src/mtalpha/malloc.c \
+	src/mtalpha/strlib.c
 
 nobase_dist_pkgdata_DATA += \
-	t-pppalpha/slimpl.m4 \
-	t-pppalpha/include/sl_support.h \
 	mtalpha-sim/include/svp_os.h \
 	mtalpha-sim/include/svp_asmdiv.h
 
 if ENABLE_MTALPHA
 
-nobase_pkglib_DATA += mtalpha-sim/slrt.o
+nobase_pkglib_DATA += \
+   mtalpha-sim/slrt.o \
+   mtalpha-sim/libsl.a
 
-nobase_pkglib_DATA += mtalpha-sim/libslos.a
-
-mtalpha_sim_libslos_a_CONTENTS = \
+mtalpha_sim_libsl_a_CONTENTS = \
 	mtalpha-sim/mtdiv.o \
 	mtalpha-sim/roman.o \
-	mtalpha-sim/callgate.o \
 	mtalpha-sim/io.o \
 	mtalpha-sim/divl.o \
 	mtalpha-sim/divq.o \
@@ -43,19 +38,19 @@ mtalpha_sim_libslos_a_CONTENTS = \
 
 SLC_MTALPHA = $(SLC) -b ppp-mtalpha -nostdlib
 
-mtalpha-sim/io.o: $(srcdir)/svplib/io.sl
+mtalpha-sim/io.o: $(srcdir)/src/io.sl
 	$(AM_V_at)$(MKDIR_P) mtalpha-sim
 	$(slc_verbose)$(SLC_MTALPHA) -c -o $@ $<
 
-mtalpha-sim/div.o: $(srcdir)/svplib/div.sl
+mtalpha-sim/div.o: $(srcdir)/src/div.sl
 	$(AM_V_at)$(MKDIR_P) mtalpha-sim
 	$(slc_verbose)$(SLC_MTALPHA) -c -o $@ $<
 
-mtalpha-sim/roman.o: $(srcdir)/svplib/roman.sl
+mtalpha-sim/roman.o: $(srcdir)/src/roman.sl
 	$(AM_V_at)$(MKDIR_P) mtalpha-sim
 	$(slc_verbose)$(SLC_MTALPHA) -c -o $@ $<
 
-mtalpha-sim/malloc_intrinsics.o: $(srcdir)/mtalpha-sim/malloc_intrinsics.c
+mtalpha-sim/malloc_intrinsics.o: $(srcdir)/src/malloc_intrinsics.c
 	$(AM_V_at)$(MKDIR_P) mtalpha-sim
 	$(slc_verbose)$(SLC_MTALPHA) -c -o $@ $<
 
@@ -70,35 +65,35 @@ MALLOC_DEFS = -DLACKS_SYS_TYPES_H \
 	-DLACKS_SYS_PARAM_H \
 	-DLACKS_TIME
 
-mtalpha-sim/malloc.o: $(srcdir)/mtalpha-sim/malloc.c
+mtalpha-sim/malloc.o: $(srcdir)/src/malloc.c
 	$(AM_V_at)$(MKDIR_P) mtalpha-sim
 	$(slc_verbose)$(SLC_MTALPHA) -c -o $@ $< $(MALLOC_DEFS)
 
-mtalpha-sim/strlib.o: $(srcdir)/mtalpha-sim/strlib.c
+mtalpha-sim/strlib.o: $(srcdir)/src/strlib.c
 	$(AM_V_at)$(MKDIR_P) mtalpha-sim
 	$(slc_verbose)$(SLC_MTALPHA) -c -o $@ $<
 
-mtalpha-sim/mtdiv.o: $(srcdir)/mtalpha-sim/mtdiv.s
+mtalpha-sim/mtdiv.o: $(srcdir)/src/mtalpha/mtdiv.s
 	$(AM_V_at)$(MKDIR_P) mtalpha-sim
 	$(slc_verbose)$(SLC_MTALPHA) -c -o $@ $<
 
-mtalpha-sim/divl.s: $(srcdir)/mtalpha-sim/divide.S
+mtalpha-sim/divl.s: $(srcdir)/src/mtalpha/divide.S
 	$(AM_V_at)$(MKDIR_P) mtalpha-sim
 	$(AM_V_GEN)$(CPP) -o $@ $< -DDIV -DINTSIZE
 
-mtalpha-sim/reml.s: $(srcdir)/mtalpha-sim/divide.S
+mtalpha-sim/reml.s: $(srcdir)/src/mtalpha/divide.S
 	$(AM_V_at)$(MKDIR_P) mtalpha-sim
 	$(AM_V_GEN)$(CPP) -o $@ $< -DDIV -DINTSIZE
 
-mtalpha-sim/divq.s: $(srcdir)/mtalpha-sim/divide.S
+mtalpha-sim/divq.s: $(srcdir)/src/mtalpha/divide.S
 	$(AM_V_at)$(MKDIR_P) mtalpha-sim
 	$(AM_V_GEN)$(CPP) -o $@ $< -DDIV
 
-mtalpha-sim/remq.s: $(srcdir)/mtalpha-sim/divide.S
+mtalpha-sim/remq.s: $(srcdir)/src/mtalpha/divide.S
 	$(AM_V_at)$(MKDIR_P) mtalpha-sim
 	$(AM_V_GEN)$(CPP) -o $@ $< -DREM
 
-mtalpha-sim/memseti.s: $(srcdir)/mtalpha-sim/memset.S
+mtalpha-sim/memseti.s: $(srcdir)/src/mtalpha/memset.S
 	$(AM_V_at)$(MKDIR_P) mtalpha-sim
 	$(AM_V_GEN)$(CPP) -o $@ $<
 
@@ -122,19 +117,11 @@ mtalpha-sim/remq.o: mtalpha-sim/remq.s
 	$(AM_V_at)$(MKDIR_P) mtalpha-sim
 	$(slc_verbose)$(SLC_MTALPHA) -c -o $@ $<
 
-mtalpha-sim/callgate.o: $(srcdir)/mtalpha-sim/callgate.s
+mtalpha-sim/memcpy.o: $(srcdir)/src/mtalpha/memcpy.s
 	$(AM_V_at)$(MKDIR_P) mtalpha-sim
 	$(slc_verbose)$(SLC_MTALPHA) -c -o $@ $<
 
-mtalpha-sim/memcpy.o: $(srcdir)/mtalpha-sim/memcpy.s
-	$(AM_V_at)$(MKDIR_P) mtalpha-sim
-	$(slc_verbose)$(SLC_MTALPHA) -c -o $@ $<
-
-mtalpha-sim/slrt.o: $(srcdir)/mtalpha-sim/slrt.s
-	$(AM_V_at)$(MKDIR_P) mtalpha-sim
-	$(slc_verbose)$(SLC_MTALPHA) -c -o $@ $<
-
-mtalpha-sim/libslos.a: $(mtalpha_sim_libslos_a_CONTENTS)
+mtalpha-sim/libsl.a: $(mtalpha_sim_libsl_a_CONTENTS)
 	$(AM_V_at)rm -f $@
 	$(AM_V_AR)$(AR_MTALPHA) cru $@ $^
 	$(AM_V_at)$(RANLIB_MTALPHA) $@
@@ -146,8 +133,6 @@ CLEANFILES += \
 	mtalpha-sim/roman.o \
 	mtalpha-sim/div.o \
 	mtalpha-sim/mtdiv.o \
-	mtalpha-sim/callgate.o \
-	mtalpha-sim/slrt.o \
 	mtalpha-sim/divl.o \
 	mtalpha-sim/reml.o \
 	mtalpha-sim/divq.o \
@@ -162,5 +147,5 @@ CLEANFILES += \
 	mtalpha-sim/malloc_intrinsics.o \
 	mtalpha-sim/malloc.o \
 	mtalpha-sim/strlib.o \
-	mtalpha-sim/libslos.a
+	mtalpha-sim/libsl.a
 

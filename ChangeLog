@@ -1,5 +1,16 @@
 2009-06-22  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	Bug fixes in Fibre handling.
+	
+	* bin/sag (FibreGenerator): Properly compute the dimensions of
+	complex array shapes. Properly fill with zeros for these complex
+	shapes.
+
+	* bin/slr.in: Properly report when no program is specified. Add
+	missing exit status codes to uses of `die'.
+
+2009-06-22  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	Implement Fibre input.
 
 	* include/fibre.slh: Add.

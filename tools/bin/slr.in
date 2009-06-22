@@ -65,7 +65,9 @@ Program input options:
                        before many runs).
 
 Execution selection:
-  -n N                 Try to run with only N SVP cores.
+
+  -n N                 Try to run with N SVP cores. To specify multiple places, 
+                       use a comma-separated list of numbers.
 
   -c                   Show configuration string embedded in program, if any.
 
@@ -112,11 +114,11 @@ Examples:
   Runs fibo.x, possibly using the MT simulator, and set program input
   variable N to an array of 1 element with value "15".
 
-  \$ slr fibo.x N=10 -n 7
+  \$ slr fibo.x N=10 -n 7,12
 
   Runs fibo.x, possibly using the MT simulator, and set program input
   variable N to an array of 1 element with value "10". Try to run
-  with 7 SVP cores.
+  with two SVP places of 7 and 12 cores each.
 
 Report bugs and patches to $bugreports.
 EOF
@@ -198,7 +200,9 @@ done
 
 
 # does the program exist?
-if ! test -f "$program"; then
+if test -z "$program"; then
+  die 1 "no program specified"
+elif ! test -f "$program"; then
   die 127 "no such file or directory: $program"
 fi
 
@@ -288,7 +292,7 @@ errcleanup() {
 }
 
 if test -n "$rdatafile"; then
-  if ! test -r "$rdatafile"; then die "$rdatafile: cannot read file"; fi
+  if ! test -r "$rdatafile"; then die 1 "$rdatafile: cannot read file"; fi
   if test -n "$vars"; then 
     echo "$0: warning: '-rd $rdatafile' overrides '$vars'" >&2
   fi
@@ -299,7 +303,7 @@ else
 fi
 
 if test -n "$rfdatafile"; then
-  if ! test -r "$rfdatafile"; then die "$rfdatafile: cannot read file"; fi
+  if ! test -r "$rfdatafile"; then die 1 "$rfdatafile: cannot read file"; fi
   if test -n "$vars"; then 
     echo "$0: warning: '-rf $rfdatafile' overrides '-f $fibre_in'" >&2
   fi
@@ -366,7 +370,7 @@ if test -n "$dofdata"; then
     fi
     
     if test -n "$fibre_in"; then
-	if ! test -r "$fibre_in"; then die "$fibre_in: cannot read file"; fi
+	if ! test -r "$fibre_in"; then docleanup; die 1 "$fibre_in: cannot read file"; fi
 
         # check program parameters
 	if test -n "$VERBOSE"; then

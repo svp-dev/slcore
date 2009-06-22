@@ -13,9 +13,9 @@
 
 
 SLC_VARS = \
-	SLC_INCDIR=$(abs_top_srcdir)/include:$(abs_top_builddir)/include \
-	SLC_LIBDIR=$(abs_top_srcdir)/lib:$(abs_top_builddir)/lib \
-	SLC_DATADIR=$(abs_top_srcdir)/lib:$(abs_top_builddir)/lib \
+	SLC_INCDIR=$(abs_top_srcdir)/tools/include:$(abs_top_builddir)/tools/include:$(abs_top_srcdir)/include:$(abs_top_builddir)/include \
+	SLC_LIBDIR=$(abs_top_srcdir)/tools/lib:$(abs_top_builddir)/tools/lib:$(abs_top_srcdir)/lib:$(abs_top_builddir)/lib \
+	SLC_DATADIR=$(abs_top_srcdir)/tools/lib:$(abs_top_builddir)/tools/lib:$(abs_top_srcdir)/lib:$(abs_top_builddir)/lib \
 	SPP=$(abs_top_srcdir)/bin/spp \
 	SCU=$(abs_top_srcdir)/bin/scu \
 	SAG=$(abs_top_srcdir)/bin/sag \
