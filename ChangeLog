@@ -1,5 +1,11 @@
 2009-06-24  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	* tools/bin/Makefile.am (cce.1 slc.1 slr.1 slt.1): Revert previous
+	change since the temporary files are different anyways. Give
+	absolute pathname to help2man.
+
+2009-06-24  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	* tools/bin/Makefile.am (cce.1 slc.1 slr.1 slt.1): Use different
 	temporary file names to avoid race condition with script build
 	rule.
