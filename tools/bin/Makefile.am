@@ -63,8 +63,8 @@ dist_man1_MANS = cce.1 slc.1 slr.1 slt.1
 cce.1 slc.1 slr.1 slt.1: $(top_srcdir)/configure.ac
 	rm -f $@
 	$(MAKE) $(AM_MAKEFLAGS) $(@:.1=)
-	$(HELP2MAN) -N --output=$@.tmp $(@:.1=)
-	mv $@.tmp $@
+	$(HELP2MAN) -N --output=$@.1.tmp $(@:.1=)
+	mv $@.1.tmp $@
 
 cce.1: cce.in
 slc.1: slc.in

@@ -1,5 +1,11 @@
 2009-06-24  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	* tools/bin/Makefile.am (cce.1 slc.1 slr.1 slt.1): Use different
+	temporary file names to avoid race condition with script build
+	rule.
+
+2009-06-24  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	* programs/benchmarks/nas/Makefile.am
 	* programs/benchmarks/nas/is/Makefile.am
 	* programs/benchmarks/blas/Makefile.am
