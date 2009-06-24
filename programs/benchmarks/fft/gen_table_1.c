@@ -30,7 +30,7 @@
 #define LITTERAL_SUFFIX "L"
 #define PRINTF_MOD2 "L" /* fp modifier */
 
-enum constants { M = 16, N = 1 << M };
+enum constants { M = TABLE_SIZE, N = 1 << M };
 static  FLOATTYPE sc_table[M][N/2][2];
 
 int main(void) {

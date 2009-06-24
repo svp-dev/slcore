@@ -11,9 +11,6 @@
 ## `COPYING' file in the root directory.
 ##
 
-echo "DO NOT USE YET"
-exit 1
-
 AC_PREREQ([2.61])
 AC_INIT([slc], [2.0.3a], [sl-users@nic.surfnet.nl])
 AC_CONFIG_AUX_DIR([build-aux])
@@ -185,8 +182,14 @@ AC_CONFIG_FILES([
 	lib/Makefile
 	lib/tests/Makefile
 	doc/Makefile
-	demo/Makefile
-	demo/fft/Makefile
+	programs/Makefile
+	programs/demo/Makefile
+	programs/benchmarks/Makefile
+	programs/benchmarks/fft/Makefile
+	programs/benchmarks/quicksort/Makefile
+	programs/benchmarks/blas/Makefile
+	programs/benchmarks/nas/Makefile
+	programs/benchmarks/nas/is/Makefile
 ])
 #	tests/Makefile
 AC_OUTPUT

@@ -16,7 +16,8 @@
 
 m4_include(fft.slh)
 
-#include "fft_table1.h"
+#include "fft_table1_[[]]TABLE_SIZE.h"
+const void* sc_table_ptr = sc_table;
 
 sl_def(FFT_2, void,
        sl_glparm(cpx_t*restrict, X),

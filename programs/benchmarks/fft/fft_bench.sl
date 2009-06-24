@@ -15,9 +15,12 @@
 //
 
 m4_include(slr.slh)
+
+m4_define([[TABLE_SIZE]], 16)
 m4_include(fft.slh)
 
-static cpx_t X[1 << 16];
+static cpx_t X[1 << TABLE_SIZE];
+extern const void* sc_table_ptr;
 
 slr_decl(slr_var(unsigned, M, "problem size"));
 
@@ -30,7 +33,7 @@ sl_def(t_main, void)
 	    sl_glarg(cpx_t*restrict, gX, X),
 	    sl_glarg(unsigned long, gN, N/2),
 	    sl_sharg(long, token, 0),
-	    sl_glarg(const void*, gt, sc_table));
+	    sl_glarg(const void*, gt, sc_table_ptr));
   sl_sync();
 }
 sl_enddef

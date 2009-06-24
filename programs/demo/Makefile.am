@@ -23,4 +23,3 @@ EXTRA_DIST = $(DEMOS)
 noinst_DATA = $(DEMOS:.sl=.x)
 CLEANFILES = $(DEMOS:.sl=.x) $(DEMOS:.sl=.bin.*)
 
-SUBDIRS = . fft

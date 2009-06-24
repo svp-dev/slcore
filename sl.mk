@@ -32,9 +32,9 @@ slc_verbose_ = $(slc_verbose_$(AM_DEFAULT_VERBOSITY))
 slc_verbose_0 = @echo '  SLC    $@';
 
 if ENABLE_MTALPHA
-slc_ifpppalpha =
+slc_ifmtalpha =
 else
-slc_ifpppalpha = :
+slc_ifmtalpha = :
 endif
 
 SLC_BEFORE = function slc_compile() { \
@@ -43,8 +43,8 @@ SLC_BEFORE = function slc_compile() { \
           $(SLC) $${SLC_OUT:+-o "$$SLC_OUT".seqc} -b seqc "$$@" $(AM_CFLAGS) $(CFLAGS) && \
        echo "$$SLC_OUT -> ptl" && \
           $(SLC) $${SLC_OUT:+-o "$$SLC_OUT".ptl} -b ptl "$$@" $(AM_CXXFLAGS) $(CXXFLAGS) && \
-       $(slc_ifppalpha) echo "$$SLC_OUT -> pppalpha" && \
-          $(slc_ifppalpha) $(SLC) $${SLC_OUT:+-o "$$SLC_OUT".mtalpha} -b ppp "$$@" && \
+       $(slc_ifmtalpha) echo "$$SLC_OUT -> mtalpha" && \
+          $(slc_ifmtalpha) $(SLC) $${SLC_OUT:+-o "$$SLC_OUT".mtalpha} -b ppp "$$@" && \
        if test -n "$$SLC_OUT"; then \
           printf '\#! /bin/sh\n' >"$@" && \
           printf 'select prog in `basename $$0 .x`.bin.*; do break; done; ' >>"$@" && \

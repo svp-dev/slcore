@@ -19,13 +19,13 @@ m4_include(svp/assert.slh)
 m4_include(svp/perf.slh)
 m4_include(slr.slh)
 
+m4_define([[TABLE_SIZE]], 8)
 m4_include(fft.slh)
 
 
-
-static cpx_t X[1 << 16];
-static cpx_t Y[1 << 16];
-static cpx_t Z[1 << 16];
+static cpx_t X[1 << TABLE_SIZE];
+static cpx_t Y[1 << TABLE_SIZE];
+static cpx_t Z[1 << TABLE_SIZE];
 
 sl_def(fft_init, void)
 {
@@ -86,8 +86,7 @@ sl_def(t_main, void)
 {
   svp_assert(slr_len(M) > 0);
   unsigned M = slr_get(M)[0];
-  svp_assert(M <= 16);
-  svp_assert(M <= (sizeof(sc_table)/sizeof(sc_table[0])));
+  svp_assert(M <= TABLE_SIZE);
 
   unsigned N = 1 << M;
 

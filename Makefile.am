@@ -14,7 +14,7 @@
 # 
 
 EXTRA_DIST = deploy/Makefile-reqs.orig deploy/reqs.mk deploy/README deploy/slenv
-SUBDIRS = . tools lib demo doc
+SUBDIRS = . tools lib programs doc
 
 README: $(srcdir)/doc/README.txt
 	$(AM_V_at)rm -f $@
@@ -32,7 +32,7 @@ NEWS: $(srcdir)/doc/NEWS.txt
 if MAINTAINER_MODE
 
 find_sources = \
-	find $(srcdir)/include $(srcdir)/demo $(srcdir)/tests $(srcdir)/lib \
+	find $(srcdir)/tools $(srcdir)/lib \
 	  -name '*.h' \
 	-or -name '*.c' \
 	-or -name '*.sl' \
@@ -58,4 +58,4 @@ show-vars:
 	@echo "export PATH=$(abs_top_builddir)/bin:$$PATH;"
 
 ACLOCAL_AMFLAGS = -I m4
-DISTCHECK_CONFIGURE_FLAGS = --enable-testsuite
+DISTCHECK_CONFIGURE_FLAGS = # --enable-testsuite

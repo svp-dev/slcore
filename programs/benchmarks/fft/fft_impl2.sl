@@ -18,11 +18,12 @@
 m4_include(slr.slh)
 m4_include(fft.slh)
 
-enum { MAX_M = 16, MAX_N = 1 << MAX_M };
+enum { MAX_M = TABLE_SIZE, MAX_N = 1 << MAX_M };
 
 static const cpx_t sc_table[ MAX_N ] = {
-#include "fft_table2.h"
+#include "fft_table2_[[]]TABLE_SIZE.h"
 };
+const void* sc_table_ptr = sc_table;
 
 sl_def(FFT_2, void, 
        sl_glparm(unsigned long,LE2), 
