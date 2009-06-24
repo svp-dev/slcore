@@ -1,5 +1,17 @@
 2009-06-24  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	* programs/benchmarks/nas/Makefile.am
+	* programs/benchmarks/nas/is/Makefile.am
+	* programs/benchmarks/blas/Makefile.am
+	* programs/benchmarks/quicksort/Makefile.am
+	* tools/lib/mtalpha.mk
+	* tools/lib/seqc.mk
+	* tools/lib/ptl.mk
+	* tools/lib/Makefile.am
+	* tools/Makefile.am: Add files missing from previous commit.
+
+2009-06-24  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	Change source tree layout.
 
 	* sl.mk,
