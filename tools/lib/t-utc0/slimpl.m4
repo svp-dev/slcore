@@ -31,11 +31,14 @@ m4_define([[sl_end_thread]], [[goto __sl_end_thread]])
 # No special action at the end of a definition
 m4_define([[sl_enddef]],[[m4_dnl
 m4_ifdef([[_sl_increate]],[[m4_fatal(missing sync after create)]])m4_dnl
-__sl_end_thread: (void)0; }m4_dnl
+__sl_end_thread: (void)0;  }m4_dnl
 ]])
 
 # With the corecc syntax, a declaration looks the same as a definition.
-m4_define([[sl_decl]], m4_defn([[sl_def]]))
+m4_define([[sl_decl]],[[m4_dnl
+m4_define([[sl_thparms]],[[m4_shiftn(2,$@)]])m4_dnl
+thread [[$2]] [[$1]]m4_if((sl_thparms),(),(void),(sl_thparms))m4_dnl
+]])
 
 # Pass transparently parameter declarations.
 m4_define([[sl_shparm]], [[shared [[$1]] __p_[[$2]]]])
