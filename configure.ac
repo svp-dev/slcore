@@ -68,6 +68,11 @@ AC_PROG_LN_S
 
 ######### Options #########
 
+AC_ARG_ENABLE([demos],
+[AC_HELP_STRING([--disable-demos], [do not compile demonstration executables during build (default is enabled)])],
+[], [enable_demos=yes])
+AM_CONDITIONAL([ENABLE_DEMOS], [test "x$enable_demos" = "xyes"])
+
 
 AC_ARG_ENABLE([testsuite],
 [AC_HELP_STRING([--enable-testsuite], [activate unit tests for features and regressions (default is disabled)])], 
@@ -190,6 +195,7 @@ AC_CONFIG_FILES([
 	programs/benchmarks/blas/Makefile
 	programs/benchmarks/nas/Makefile
 	programs/benchmarks/nas/is/Makefile
+	programs/benchmarks/ll/Makefile
 ])
 #	tests/Makefile
 AC_OUTPUT

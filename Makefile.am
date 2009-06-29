@@ -55,7 +55,7 @@ show-vars:
 	@for n in $(SLC_VARS); do \
 	   echo "export $$n;"; \
 	done
-	@echo "export PATH=$(abs_top_builddir)/bin:$$PATH;"
+	@echo "export PATH=$(abs_top_builddir)/tools/bin:$$PATH;"
 
 ACLOCAL_AMFLAGS = -I m4
-DISTCHECK_CONFIGURE_FLAGS = # --enable-testsuite
+DISTCHECK_CONFIGURE_FLAGS = --enable-testsuite --disable-demos

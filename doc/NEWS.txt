@@ -21,6 +21,8 @@ SLC 2.0.3a, 2009
 - New data input mechanism, to allow programs to read data formatted
   in Sisal's Fibre I/O format.
 
+- More benchmarks bundled with toolchain.
+
 Known issues:
 
 - comments inside the parameters to ``sl_def`` and other SL macros

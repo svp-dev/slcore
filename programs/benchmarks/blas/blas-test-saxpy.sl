@@ -35,6 +35,8 @@ sl_decl(saxpy, void,
        sl_glparm(float*, sy),
 	sl_glparm(long, incy));
 
+// SLT_RUN: N=1000
+// XIGNORE: *:D
 
 sl_def(t_main, void)
 {
@@ -51,9 +53,11 @@ sl_def(t_main, void)
   c2 = get_cycles();
 
   float time = (float)(c2 - c1) / (float)HZ;
-  float daxpy = N;
+  float saxpy = N;
   float cycle = (float)(c2 - c1);
   printf("%d\t%d\t%d\t%f\t%f\t%f\t%f\n",
-	 N, 1, c2-c1, daxpy, time, daxpy/time, daxpy/cycle);
+	 N, 1, c2-c1, saxpy, time, saxpy/time, saxpy/cycle);
 }
 sl_enddef
+
+m4_include(saxpy.sl)

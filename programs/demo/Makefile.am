@@ -19,7 +19,7 @@ include $(top_srcdir)/tests.mk
 
 EXTRA_DIST = $(DEMOS)
 
-# Also build demos during "make all":
+if ENABLE_DEMOS
 noinst_DATA = $(DEMOS:.sl=.x)
 CLEANFILES = $(DEMOS:.sl=.x) $(DEMOS:.sl=.bin.*)
-
+endif

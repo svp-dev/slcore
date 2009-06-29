@@ -19,9 +19,10 @@ include $(top_srcdir)/tests.mk
 
 EXTRA_DIST = $(DEMOS) fft_bench.sl fft_test.sl fft_impl1.sl fft_impl2.sl fft.slh fft_extra.sl
 
-# Also build demos during "make all":
+if ENABLE_DEMOS
 noinst_DATA = $(DEMOS:.sl=.x)
 CLEANFILES = $(DEMOS:.sl=.x) $(DEMOS:.sl=.bin.*)
+endif
 
 #####  Special targets for the FFT demo #####
 

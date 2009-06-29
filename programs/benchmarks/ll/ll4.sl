@@ -46,6 +46,9 @@ sl_enddef
 
 double X[MAX_N], Y[MAX_N];
 
+// SLT_RUN:  L=1 N=10000
+// SLT_RUN:  L=3 N=1000
+// XIGNORE: *:D
 
 sl_def(t_main, void)
 {

@@ -1,5 +1,32 @@
 2009-06-29  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	Cosmetic fixes.
+
+	* Makefile.am: Fix rule `show-vars': add `tools/bin/' to PATH, not
+	`bin/'.
+
+	* configure.am: Define new conditional ENABLE_DEMOS for building
+	SL programs during `make all'.
+
+	* Makefile.am,
+	* programs/benchmarks/blas/Makefile.am,
+	* programs/benchmarks/fft/Makefile.am,
+	* programs/benchmarks/ll/Makefile.am,
+	* programs/demo/Makefile.am: Use it.
+
+	* programs/benchmarks/blas/blas-test-saxpy.sl,
+	* programs/benchmarks/ll/ll2.sl,
+	* programs/benchmarks/ll/ll4.sl: Define some test cases via SLT_RUN.
+
+	* programs/benchmarks/nas/is/Makefile.am,
+	* programs/benchmarks/quicksort/Makefile.am: Distribute some more files.
+
+	* programs/benchmarks/Makefile.am: Recurse also into `ll'.
+
+	* doc/NEWS.txt: Mention benchmark programs.
+	
+2009-06-29  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	Small fixes.
 	
 	* programs/benchmarks/ll/ll2.sl,
