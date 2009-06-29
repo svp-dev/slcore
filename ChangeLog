@@ -1,3 +1,13 @@
+2009-06-29  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
+	Small fixes.
+	
+	* programs/benchmarks/ll/ll2.sl,
+	* programs/benchmarks/ll/ll4.sl: Implement some more benchmarks.
+
+	* tools/bin/spp (pppalpha.remdefaults): Default place is now 0 as
+	per [svp27], not 1.
+
 2009-06-27  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
 	* tools/lib/t-pppalpha/include/sl_support.h: Update PLACE_LOCAL

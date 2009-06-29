@@ -947,7 +947,7 @@ class pppalpha(object):
          yield (type, content, comment)
    
    def remdefaults(self, fundata, items):
-      resp = re.compile(r'setplace \$l\d+, 1$')
+      resp = re.compile(r'setplace \$l\d+, 0$')
       resb = re.compile(r'setstart \$l\d+, 0$')
       resl = re.compile(r'setlimit \$l\d+, 1$')
       ress = re.compile(r'setstep \$l\d+, 1$')
