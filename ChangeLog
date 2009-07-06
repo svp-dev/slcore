@@ -1,3 +1,13 @@
+2009-07-01  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
+	Make `slc' look more like GCC's front-end.
+	
+	* tools/bin/slc.in: Run C compiler even if no input files are
+	provided; this to allow -dumpversion, etc. Refuse -M and -MM, but
+	be graceful with -M[GPDTQF]. Properly handle -include and other -i
+	preprocessor flags. Pass -W*, -d*, -pedantic, -ansi, -std* to both
+	preprocessor and compiler. Handle input from `-' (standard input).
+
 2009-06-29  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
 	Cosmetic fixes.

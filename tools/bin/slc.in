@@ -30,12 +30,14 @@ m4trace=
 synclines=yes
 combine=
 verbose=
+verdisplay=
 
 slc_use_slrt=yes
 slc_use_libsl=yes
 
 check=
 prev_arg=
+followaction=
 
 inputs=
 tempfiles=
@@ -100,6 +102,15 @@ for arg in "$@"; do
      prev_arg=
      continue
   fi
+  if test -n "$followaction"; then
+     act=$followaction
+     followaction=
+     case $act in
+        ignore) continue;;
+        touch) touch "$arg" ; continue;;
+        pparg) extra_ppflags="$extra_ppflags $pparg $arg"; continue;;
+     esac
+  fi
 
   case $arg in
       --version) slc_mode=display_version ;;
@@ -127,17 +138,36 @@ for arg in "$@"; do
 
       -L*|-Wl,*)     extra_ldflags="$extra_ldflags $arg" ;;
       -l*)           in_ld_spec="$in_ld_spec $arg" ;;
-      -D*|-U*)       extra_ppflags="$extra_ppflags $arg" ;;
+      -i*)           followaction=pparg; pparg=$arg ;;
+      -D*|-U*|-C*|-H)  extra_ppflags="$extra_ppflags $arg" ;;
+
+      -MG|-MP|-MD|-MMD)
+                echo "$0: warning: $arg ignored" >&2;;
+      -MT|-MQ)
+                echo "$0: warning: $arg ignored" >&2; followaction=ignore ;;
+      -MF)
+                echo "$0: warning: $arg ignored" >&2; followaction=touch ;;
+
       -I*)           extra_inc="$extra_inc $arg" ;;
       -Wa,*)         extra_asflags="$extra_asflags $arg" ;;
 
-      -x)       die "-x not supported yet" ;;
+      -W*|-d*|-pedantic|-ansi|-std*)
+         extra_ppflags="$extra_ppflags $arg"
+	 extra_cflags="$extra_cflags $arg"
+	 ;;
 
-      -mutc*)   die "-mutc is deprecated, used -b instead" ;;
+      -x|-M|-MM)  die "$arg not supported yet" ;;
+      -nostdinc*) 
+                echo "$0: warning: $arg may not behave as expected" >&2
+                extra_ppflags="$extra_ppflags $arg"
+                ;;
+      -mutc*)   die "-mutc is deprecated, use -b instead" ;;
 
       -nostartfiles) slc_use_slrt=no ;;
       -nodefaultlibs) slc_use_libsl=no ;;
       -nostdlib) slc_use_slrt=no; slc_use_libsl=no ;;
+
+      -)        in_pp_spec="$in_pp_spec $arg";;
 
       -*)	extra_cflags="$extra_cflags $arg";;
 
@@ -503,9 +533,14 @@ prepare_chain() {
 			target=$tmpdir/$fn.s
 			in_as_ind="$in_as_ind $target"
 			;;
+                    -)
+                        target=$tmpdir/STDIN.$addext
+                        eval "$indvar=\$$indvar' $target'"
+			;;
 		    *)
 			target=$tmpdir/$fn.$addext
 			eval "$indvar=\$$indvar' $target'"
+			;;
 		esac
 		transforms="R:$target $transforms $stage:$target:$f"
 	    done
@@ -557,7 +592,8 @@ prepare_chain "$in_as_ind $in_as_spec" o A in_ld_ind "$in_as_spec" "assembler"
 prepare_chain "$in_ld_ind $in_ld_spec" x L unused "$in_ld_spec" "linker"
 
 if test -z "$transforms"; then
-   die "no input files"
+   $slc_compiler $slc_cflags
+   exit 0
 fi
 
 ##############################################
