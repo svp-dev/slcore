@@ -1,5 +1,17 @@
 2009-07-06  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+
+	Some more benchmark code.
+	
+	* programs/benchmarks/quicksort/am-quicksort-iterative.sl,
+	* programs/benchmarks/quicksort/sah-quicksort.sl,
+	* programs/benchmarks/quicksort/am-quicksort.sl,
+	* programs/benchmarks/ll/Makefile.am: Add.
+
+	* tools/lib/seqc.mk: Use AM_V_CC for $(CC).
+
+2009-07-06  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	Minor `slr' improvement.
 	
 	* tools/lib/r-host/run.sh,

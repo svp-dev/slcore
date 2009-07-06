@@ -12,7 +12,7 @@ SLC_SEQC = $(SLC) -b seqc -nostdlib $(AM_CFLAGS) $(CFLAGS)
 
 host-host-seqc/slrt.o: $(srcdir)/host-host-seqc/slrt.c $(srcdir)/host-host-seqc/load.c
 	$(AM_V_at)$(MKDIR_P) host-host-seqc
-	$(slc_verbose)$(CC) $(CFLAGS) -I$(srcdir)/t-seqc/include -c -o $@ $< $(AM_CFLAGS) $(CFLAGS)
+	$(AM_V_CC)$(CC) $(CFLAGS) -I$(srcdir)/t-seqc/include -c -o $@ $< $(AM_CFLAGS) $(CFLAGS)
 
 CLEANFILES += \
 	host-host-seqc/slrt.o
