@@ -1,0 +1,12 @@
+*** Livermore Kernels in SL ***
+
+This directory consists of the currently (quite) stable versions
+of the Livermore Kernels, written in SL.
+
+They were tested on the CSA machine, using the 'current' SL
+environment as of 06/07/2009.
+
+To build them, just type 'make'. This will build three files for
+each kernel: the MG assembly, the uTC and the MG binary.
+
+Mike H.

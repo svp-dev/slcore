@@ -1,0 +1,357 @@
+//---------------------------------
+// Livemore Loops -- SLC (uTC)
+// M.A.Hicks, CSA Group, UvA
+// Implementation based of various
+// reference implementations
+// including the original FORTRAN
+// but mostly from
+// Roy Longbottom, 1996.
+//---------------------------------
+// Livermore Header File
+// This file contains the various 
+// data structures used throughout
+// the execution of the Livermore
+// kernels.
+//---------------------------------
+
+// several kernels may make use of
+// output using this header
+m4_include(svp/iomacros.slh)
+m4_include(svp/perf.slh)
+m4_include(slr.slh)
+m4_include(svp/div.slh)
+// use m4 to check for existing
+// instance of this header
+m4_ifdef([[LIVHEAD]], [[#error Cannot compile programs with more than one usage of the Livermore header.]])
+
+//*************************
+// WORK AROUND MACROS FOR
+// SHARED FLOAT PROBLEMS
+// Just change all doubles
+// to ints and rewrite
+// float macros to ints
+m4_ifdef([[SHFWA]],[[ 
+#warning COMPILING WITH SHARED FLOAT->INT WORKAROUND
+m4_define(double,[[long int]])
+m4_undefine([[sl_shfarg]])
+m4_define([[sl_shfarg]], m4_defn([[sl_sharg]]))
+m4_undefine([[sl_shfparm]])
+m4_define([[sl_shfparm]], m4_defn([[sl_shparm]]))
+]])
+//*************************
+
+//now define the header
+m4_ifndef([[LIVHEAD]], [[
+m4_define(LIVHEAD, [[]])
+// Should the kernels print information?
+// (comment out if not!)
+m4_define(STATS, [[]])
+
+// Loop number specifications:
+// INNER - Specifies the number of times that the loop
+// should perform the calculation being measured
+// [this is a specified aspect of the loops]
+// NB -- SEE LARGEST DEFINITION BELOW
+unsigned int inner[25] = {0,
+			  000, //1
+			  7000,
+			  7000,
+			  7000, //4
+			  7000,
+			  500,
+			  7000,
+			  7000,   //8
+			  7000,
+			  7000,
+			  7000,
+			  7000, //12
+			  10,
+			  10,
+			  10,
+			  10,   //16
+			  10,
+			  10,
+			  10,
+			  10,   //20
+			  10,
+			  10,
+			  10,
+			  10};  //24
+// define the largest inner loop size for the arrays below
+m4_define(LARGEST, [[8300]])
+
+//**IMPORTANT**
+//the block size of the outer create is set to the value below:
+//N.B. Default is 0
+m4_define([[SHARED_BLOCK]],[[2]]) //used by loops 3,5,6,11
+unsigned int blocksize[25] = {999,
+				0, //1
+				0,
+				0,
+				0, //4
+				0,
+				0,
+				0,
+				0, //8
+				0,
+				0,
+				0,
+				0, //12
+				0,
+				0,
+				0,
+				0, //16
+				0,
+				0,
+				0,
+				0, //20
+				0,
+				0,
+				0,
+				0};//24
+
+// OUTER - Specifies the number of times to repeat the
+// above inner loop. 
+// [this is merely a repetition of whatever the above
+// loops performed, and is primarily useful for calculating
+// averages on a system under load.
+unsigned int outer[25] = {0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1};
+
+// INIT -- a method to initialise data for the various loops.
+// I'm not even sure how necessary this is, given the kinds of
+// operations that are being measured, but it's here to help
+// obtain consistency.
+
+//a list of some fun numbers for variety
+double seeds[8] = {5656.555,6801.77,11842.1,22578.2,3.1415,2.7182,0.332,32.765};
+//assumes data width of 64 bits
+unsigned long int seedmask = 0x0000000000000007;
+
+sl_decl(initialiser, void);
+
+// RUNNER -- the following method is the generic Livermore 
+// kernel runner. This method is the default compile target
+// and is used to start executing the declared Livermore kernel
+
+slr_decl(slr_var(unsigned int, PSIZE, "livermore problem size"));
+//slr_decl(slr_var(unsigned int, OUTL, "outer loop iterations"));
+//slr_decl(slr_var(unsigned int, BLSIZE, "block size"));
+
+sl_def(t_main, void)
+{
+	m4_ifndef([[KERNEL]],[[#error Kernel macro is not defined.]])
+	
+	//outer loop counter
+	int counter;
+	//cycle counter
+	unsigned long int cycles = 0;
+	unsigned long int totalcycles = 0;
+
+        //first, define the method name of kernel
+        //to execute here.
+        m4_define(ACTUALKERNEL,[[kernel]]KERNEL)
+        //now make sure it's available as an extern
+        extern void ACTUALKERNEL ();
+	
+	//set the required problem size
+	// if the value is <=0 then use default PSIZE
+	//(assumes and unspecified value is set to zero)
+	//also make sure that the PSIZE is less that the
+	//maximum size of the data arrays
+	if (*(slr_get(PSIZE)) > 0)
+		if (*(slr_get(PSIZE)) < LARGEST)
+			inner[KERNEL] = *(slr_get(PSIZE));
+		else{
+			puts("***LIVERMORE WARNING: Specified problem size exceeds LARGEST!***\n\n");
+		}
+	
+	//set block size here
+	//and set outloop size here
+	
+	//output the prologue
+	m4_ifdef([[STATS]], [[
+        puts("--------------------------\n");
+        puts("   LIVERMORE LOOPS:  \n");
+        puts("   *** ACTUALKERNEL *** \n\n"); 
+        m4_ifdef([[SHFWA]],[[puts("**WARNING!! Shared FLOAT Workaround***\n");]])
+       	puts(" Using Initialised Data. \n");
+        puts(" Inner Loops: ");
+        putu(inner[KERNEL]);
+        puts("\n Output Loops: ");
+        putu(outer[KERNEL]);
+	puts("\n Specified Block Size: ");
+	putu(blocksize[KERNEL]);
+	]])
+	
+	//this main loop can be controlled with the array 
+	//'outer' above to repeat a particular benchmark
+	//several times, perhaps in order to form
+	//a more reliable average.
+
+	//now spawn the kernel
+	for(counter=0;counter<outer[KERNEL];counter++)
+	{
+		//call the data initialiser	
+		sl_create(,, 0,1,1,,,initialiser,);
+		sl_sync();	
+		//get current cycle value before kernel
+		cycles = get_cycles();
+		//create the singleton family -- call the kernel
+		sl_create(,, 0,1,1,,,ACTUALKERNEL ,);
+		sl_sync();
+		//now calculate the cycles used just for the kernel
+		totalcycles += get_cycles() - cycles;
+	}
+
+	m4_ifdef([[STATS]], [[
+	//and now the epilogue
+	puts("\n\n Cycles: ");
+	putu(totalcycles);
+	puts("\n--------------------------\n");
+	]])
+}
+sl_enddef
+
+// Kernel Data:
+// Modelled after R.Longbottom
+// Preserved here for simplicity
+   struct Arrays
+   {
+//     double U[1001];
+     double V[LARGEST];
+//     double W[1001];
+     double X[LARGEST];
+     double Y[LARGEST];
+     double Z[LARGEST+10]; //plus 10 -- read past LARGEST in some loops
+//     double G[1001];
+//     double Du1[101];
+//     double Du2[101];
+//     double Du3[101];
+//     double Grd[1001];
+//     double Dex[1001];
+//     double Xi[1001];
+//     double Ex[1001];
+//     double Ex1[1001];
+//     double Dex1[1001];
+//     double Vx[1001];
+//     double Xx[1001];
+//     double Rx[1001];
+//      double Rh[2048];
+//      double Vsp[101];
+//      double Vstp[101];
+//      double Vxne[101];
+//      double Vxnd[101];
+//      double Ve3[101];
+//      double Vlr[101];
+//      double Vlin[101];
+//      double B5[101];
+//      double Plan[300];
+//      double D[300];
+//      double Sa[101];
+//      double Sb[101];
+//      double P[512][4];
+//      double Px[LARGEST][LARGEST];
+      double Cx[LARGEST][LARGEST]; //10
+//      double Vy[25][101];
+//      double Vh[7][101];
+//      double Vf[7][101];
+//      double Vg[7][101];
+//      double Vs[7][101];
+//      double Za[7][101];
+//      double Zp[7][101];
+//      double Zq[7][101];
+//      double Zr[7][101];
+//      double Zm[7][101];
+//      double Zb[7][101];
+//      double Zu[7][101];
+//      double Zv[7][101];
+//      double Zz[7][101];
+     double B[LARGEST][LARGEST]; //currently just used by loop 6 & 10
+//      double C[64][64];
+//      double H[64][64];
+     double U1[2][LARGEST][5]; //loop8
+     double U2[2][LARGEST][5]; //loop8
+     double U3[2][LARGEST][5]; //loop8
+     double Xtra[40];
+//      long   E[96];
+//      long   F[96];
+//      long   Ix[1001];
+//      long   Ir[1001];
+//      long   Zone[301];
+  }data;
+// The definitions below are used to maintain the original
+// naming used in the Livermore Kernels. However, many names
+// map to the same data elements in the variables above.
+// This is because the kernels here are all compiled separately
+// and thus the maximum number of data objects required is the
+// highest number used by any single kernel.
+// If it becomes desirable to compile the kernels together, into
+// a single executable, then this is easy to change.
+//------------------------------------------
+typedef double (*array2d)[LARGEST]; //must declare a new type for 2d arrays (since SL/M4 macros confuse these)
+typedef double (*array3d)[LARGEST][LARGEST];
+m4_define([[x]],[[data.X]])
+m4_define([[q]],[[data.Xtra[28] ]])
+m4_define([[rr]],[[data.Xtra[30] ]]) // rr instead of just 'r' due to conflict
+m4_define([[t]],[[data.Xtra[36] ]])
+m4_define([[y]],[[data.Y]])
+m4_define([[z]],[[data.Z]])
+m4_define([[v]],[[data.V]])
+m4_define([[w]],[[data.X]]) //mapped to another
+m4_define([[b]],[[data.B]])
+m4_define([[u]],[[data.V]]) //mapped to another
+m4_define([[u1]],[[data.U1]])
+m4_define([[u2]],[[data.U2]])
+m4_define([[u3]],[[data.U3]])
+m4_define([[du1]],[[data.X]]) //mapped to another
+m4_define([[du2]],[[data.Y]]) //mapped to another
+m4_define([[du3]],[[data.Z]]) //mapped to another
+m4_define([[px]],[[data.B]]) //mapped to another
+m4_define([[cx]],[[data.Cx]]) 
+
+m4_define([[dm22]],[[data.Xtra[16] ]])
+m4_define([[dm23]],[[data.Xtra[17] ]])
+m4_define([[dm24]],[[data.Xtra[18] ]])
+m4_define([[dm25]],[[data.Xtra[19] ]])
+m4_define([[dm26]],[[data.Xtra[20] ]])
+m4_define([[dm27]],[[data.Xtra[21] ]])
+m4_define([[dm28]],[[data.Xtra[22] ]])
+m4_define([[c0]],[[data.Xtra[12] ]])
+
+m4_define([[a11]],[[data.Xtra[1] ]])
+m4_define([[a12]],[[data.Xtra[2] ]])
+m4_define([[a13]],[[data.Xtra[3] ]])
+m4_define([[a21]],[[data.Xtra[4] ]])
+m4_define([[a22]],[[data.Xtra[5] ]])
+m4_define([[a23]],[[data.Xtra[6] ]])
+m4_define([[a31]],[[data.Xtra[7] ]])
+m4_define([[a32]],[[data.Xtra[8] ]])
+m4_define([[a33]],[[data.Xtra[9] ]])
+m4_define([[sig]],[[data.Xtra[9] ]])
+//------------------------------------------
+
+sl_def(simpleinit, void, sl_glparm(double*, thedata))
+{
+        sl_index(dataposition);
+	
+	//use the lower order bits to choose from one of the predefined init variables
+        unsigned long int thisdatum = ((unsigned long int)dataposition) & seedmask;
+}
+sl_enddef
+
+//call simple init with the arrays as params
+sl_def(initialiser, void)
+{
+	//data.X
+	sl_create(,, 0,LARGEST,1,,,simpleinit,sl_glarg(double*, ddata,data.X));
+	sl_sync();
+	//data.Y
+	//data.Z (+10)
+	//data.V
+	//Xtra[40]
+	//B[LARGEST][LARGEST]
+	
+}
+sl_enddef
+
+]])
