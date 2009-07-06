@@ -94,6 +94,9 @@ Environment variables:
   DEBUGGER             Command prefix to use as debugger. 
                        Default is \`gdb --args'.
 
+  RUNNER_PREFIX        Command prefix to prepend to the execution
+                       command line.
+
   SIMARGS              Combines with the occurrences of option -Ws on
                        the command line when running the simulator.
 

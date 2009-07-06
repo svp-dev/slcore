@@ -34,4 +34,4 @@ fi
 if test -n "$VERBOSE"; then
   echo "$0: running: $do_debug $d/$b $datafile $fdatafile $*" >&2
 fi
-exec $do_debug "$d/$b" "$datafile" "$fdatafile" "$@"
+exec $RUNNER_PREFIX $do_debug "$d/$b" "$datafile" "$fdatafile" "$@"

@@ -39,4 +39,4 @@ fi
 if test -n "$VERBOSE"; then
    echo "$0: running: $do_debug $MGSIM_ALPHA $SIMARGS -t $* -L16 $datafile -L17 $fdatafile $program" >&2
 fi  
-exec $do_debug $MGSIM_ALPHA $SIMARGS -t "$@" -L16 "$datafile" -L17 "$fdatafile" "$program"
+exec $RUNNER_PREFIX $do_debug $MGSIM_ALPHA $SIMARGS -t "$@" -L16 "$datafile" -L17 "$fdatafile" "$program"
