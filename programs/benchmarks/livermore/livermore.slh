@@ -177,7 +177,7 @@ sl_def(t_main, void)
        	puts(" Using Uninitialised Data. \n");
         puts(" Inner Loops: ");
         putu(inner[KERNEL]);
-        puts("\n Output Loops: ");
+        puts("\n Outer Loops: ");
         putu(outer[KERNEL]);
 	puts("\n Specified Block Size: ");
 	putu(blocksize[KERNEL]);
