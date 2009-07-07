@@ -53,7 +53,7 @@ m4_define(STATS, [[]])
 // [this is a specified aspect of the loops]
 // NB -- SEE LARGEST DEFINITION BELOW
 unsigned int inner[25] = {0,
-			  000, //1
+			  7000, //1
 			  7000,
 			  7000,
 			  7000, //4
@@ -174,7 +174,7 @@ sl_def(t_main, void)
         puts("   LIVERMORE LOOPS:  \n");
         puts("   *** ACTUALKERNEL *** \n\n"); 
         m4_ifdef([[SHFWA]],[[puts("**WARNING!! Shared FLOAT Workaround***\n");]])
-       	puts(" Using Initialised Data. \n");
+       	puts(" Using Uninitialised Data. \n");
         puts(" Inner Loops: ");
         putu(inner[KERNEL]);
         puts("\n Output Loops: ");
@@ -192,8 +192,9 @@ sl_def(t_main, void)
 	for(counter=0;counter<outer[KERNEL];counter++)
 	{
 		//call the data initialiser	
-		sl_create(,, 0,1,1,,,initialiser,);
-		sl_sync();	
+		//do not initialise in this version
+		//sl_create(,, 0,1,1,,,initialiser,);
+		//sl_sync();	
 		//get current cycle value before kernel
 		cycles = get_cycles();
 		//create the singleton family -- call the kernel
