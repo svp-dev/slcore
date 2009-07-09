@@ -81,7 +81,7 @@ sl_def(kernel2,void)
 		// and multiplying by 2 where required. We must make
 		// sure therefore that the range is halved:
 		
-		unsigned int range = (upper >> 1);
+		unsigned int range = lower + ((upper - lower) >> 1);
 					    
 		sl_create(,, lower+1,range,1,blocksize[KERNEL],,innerk2,
    			sl_glarg(double*,xxxl,x),
