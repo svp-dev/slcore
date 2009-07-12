@@ -6,9 +6,12 @@ COMP_OPTS = -b ppp
 RUNNER = slr
 SOURCE_EXT = .sl
 BIN_EXT = .mg
-OUT_DIR = bin
-UTC_FLAG = -EE -P
+OUT_DIR = kernels
+UTC_FLAG = -b utc0 -EE -P
 ASM_FLAG = -S
+EXP_FILE = exp.tar.bz2
+BENCHER = bash ./benchmarker.sh
+
 
 #define all of the kernels to compile
 KERNELS = kernel01 kernel02 kernel03 kernel04 kernel05 kernel06 kernel07 kernel08 kernel09 kernel10 kernel11 kernel12
@@ -23,11 +26,14 @@ $(OUT_DIR):
 	mkdir $(OUT_DIR)
 
 $(KERNELS): $(OUT_DIR) livermore.slh
-		#make the MG-ALPHA executable
 		$(COMP) $(COMP_OPTS) $(@)$(SOURCE_EXT) -o $(OUT_DIR)/$(@)$(BIN_EXT)
-		#now make the asm
 		$(COMP) $(COMP_OPTS) $(ASM_FLAG) $(@)$(SOURCE_EXT) -o $(OUT_DIR)/$(@).s
-		#now make the utc
-		$(COMP) $(COMP_OPTS) $(UTC_FLAG)  $(@)$(SOURCE_EXT) -o $(OUT_DIR)/$(@).utc
+		$(COMP) $(UTC_FLAG)  $(@)$(SOURCE_EXT) -o $(OUT_DIR)/$(@).utc
 clean:
 	rm -rf $(OUT_DIR)
+
+exp: $(OUT_DIR)
+	tar xfj $(EXP_FILE) -C $(OUT_DIR)
+
+exprun: exp
+	$(BENCHER) $(OUT_DIR)

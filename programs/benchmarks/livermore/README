@@ -6,7 +6,34 @@ of the Livermore Kernels, written in SL.
 They were tested on the CSA machine, using the 'current' SL
 environment as of 06/07/2009.
 
-To build them, just type 'make'. This will build three files for
-each kernel: the MG assembly, the uTC and the MG binary.
+To build them, just type:
+
+$ make
+
+(on the command line)
+
+This will build three files for each kernel: the MG assembly, 
+the uTC and the MG binary. These files will be placed in 
+the directory 'kernels'.
+
+Advanced:
+
+You can also build a simple experiment template for use with the
+included 'benchmarker.sh' script. This script will produce fairly
+comprehensive results for the execution of the Livermore Kernels
+on the mgsim-alpha emulator/simulator. The cycles, FLOPS and 
+instruction counts are all placed neatly into a CSV file for
+easy importing into your favourite spreadsheet.
+
+To make the experiment template:
+$ make exp
+
+To run the experiments:
+$ make exprun
+
+The results will be placed in 'kernels/results.csv' .
+
+(HINT: take a look in the bench.exp file for variables that
+ you can change)
 
 Mike H.

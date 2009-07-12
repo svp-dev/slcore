@@ -27,8 +27,9 @@ BASEDIR="WHOOPS"
 TEMPDIR="/tmp"
 START_TIME=`date`
 RESINFILE="n"
-OUTPUT_INSNS="n"
 RESULTS_FILE="results.csv"
+
+NOTES="" #any information that should be written to the end of results
 
 #How to capture output:
 #CAPTURE_CYCLES='grep Cycles: | sed -e "s/ Cycles: //g"'
@@ -121,6 +122,8 @@ function benchmark {
 		resout ",$CORE"
 		EXPNUM=$[$EXPNUM + 1]
 	done
+	#output the last fixed three elements of each exp
+	resout ",FLOPS,INSNS,PSIZE"
 	resnewline #to add new line
 
 	#calculate the final number of experiments
@@ -162,20 +165,27 @@ function benchmark {
 	                		ERRORS="t"
 	                	else
 		                	resout ",$CYCLES" #number of cycles
-		                	if [ "$OUTPUT_INSNS" = y ]; then
-		                		resout ",$INSNS" #number of instructions
-		                	fi
 		                fi
 	                done
                 done
 		
 		#output the number of flops used by this benchmark
-		resout ',FLOPS='$FLOPS
+		resout ",$FLOPS"
+		#output the number of instructions used by this benchmark
+		resout ",$INSNS"
+		#output the problem size
+		resout ",$PSIZE"
 		
 		resnewline #start a new line for the next result	
 	done
 
-#	resout "***	Results End	***"
+	#output and experiment notes
+	if [ NOTES != "" ]; then
+		resout "$NOTES"
+		resnewline
+	fi
+	resout "***  Results End (from $START_TIME)  ***"
+	resnewline
 	
 	infoout ""
 	infoout "Experiments completed!"
