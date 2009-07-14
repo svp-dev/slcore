@@ -181,8 +181,8 @@ AC_CONFIG_FILES([
         tools/Makefile
 	tools/bin/Makefile
 	tools/lib/Makefile
-        tools/lib/r-mtalpha-sim/run.sh
-        tools/lib/r-mtsparc-sim/run.sh
+        tools/lib/r-mtalpha-sim.sh
+        tools/lib/r-mtsparc-sim.sh
 	tools/tests/Makefile
 	lib/Makefile
 	lib/tests/Makefile
@@ -197,6 +197,7 @@ AC_CONFIG_FILES([
 	programs/benchmarks/nas/is/Makefile
 	programs/benchmarks/ll/Makefile
 ])
+AC_CONFIG_FILES([tools/bin/cm4], [chmod +x tools/bin/cm4])
 #	tests/Makefile
 AC_OUTPUT
 

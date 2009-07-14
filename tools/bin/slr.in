@@ -249,8 +249,8 @@ runner_script=
 saveIFS=$IFS
 IFS=:
 for l in $slc_libdir; do
-  if test -r "$l/r-$runner/run.sh"; then
-     runner_script=$l/r-$runner/run.sh
+  if test -r "$l/r-$runner.sh"; then
+     runner_script=$l/r-$runner.sh
      break
   fi
 done

@@ -12,12 +12,12 @@
 ##
 
 # 
-nobase_dist_pkglib_SCRIPTS = \
-	r-host/run.sh
+dist_pkglib_SCRIPTS = \
+	r-host.sh
 
-nobase_pkglib_SCRIPTS = \
-	r-mtalpha-sim/run.sh \
-	r-mtsparc-sim/run.sh
+pkglib_SCRIPTS = \
+	r-mtalpha-sim.sh \
+	r-mtsparc-sim.sh
 
 nobase_dist_pkgdata_DATA = \
 	arggen.sl \
@@ -26,7 +26,7 @@ nobase_dist_pkgdata_DATA = \
 	t-utc0/include/sl_support.h 
 
 include $(top_srcdir)/sl.mk
-nobase_pkglib_DATA = 
+nobase_pkglib_DATA =
 nobase_pkglib_LIBRARIES = 
 EXTRA_DIST =
 CLEANFILES =
