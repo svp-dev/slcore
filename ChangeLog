@@ -1,5 +1,13 @@
 2009-07-14  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	Cosmetic changes.
+	
+	* deploy/reqs.mk: Use `svn export' instead of `svn co' as
+	recommended by M. Irfanuddin.
+	* deploy/Makefile-reqs.orig: Bump desired revisions.	
+
+2009-07-14  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	Use Automake's new "parallel tests" feature. This uses
 	multiple cores more effectively than slt's internal
 	parallel process spawning.

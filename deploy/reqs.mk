@@ -50,7 +50,7 @@ $(SOURCES)/binutils-$(BINUTILS_REV)/download_done:
 	rm -f $@
 	mkdir -p $(SOURCES)
 	(cd $(SOURCES) && \
-	  $(SVN) co -r$(BINUTILS_REV) $(BINUTILS_REPO) binutils-$(BINUTILS_REV) && \
+	  $(SVN) export -r$(BINUTILS_REV) $(BINUTILS_REPO) binutils-$(BINUTILS_REV) && \
 	  touch binutils-$(BINUTILS_REV)/download_done)
 
 $(REQDIR)/bin/alpha-linux-gnu-as: $(SOURCES)/binutils-$(BINUTILS_REV)/download_done
@@ -96,7 +96,7 @@ $(SOURCES)/utc-gcc-$(UTC_GCC_REV)/download_done:
 	rm -f $@
 	mkdir -p $(SOURCES)
 	(cd $(SOURCES) && \
-         $(SVN) co -r$(UTC_GCC_REV) $(UTC_GCC_REPO) utc-gcc-$(UTC_GCC_REV) && \
+         $(SVN) export -r$(UTC_GCC_REV) $(UTC_GCC_REPO) utc-gcc-$(UTC_GCC_REV) && \
 	 touch utc-gcc-$(UTC_GCC_REV)/download_done)
 
 $(REQDIR)/bin/mtalpha-linux-gnu-gcc: \
@@ -147,7 +147,7 @@ $(REQDIR)/bin/alpha-linux-gnu-gcc: \
 $(SOURCES)/mgsim-$(MGSIM_REV)/configure:
 	mkdir -p $(SOURCES)
 	(cd $(SOURCES) && \
-	    $(SVN) co -r$(MGSIM_REV) $(MGSIM_REPO) mgsim-$(MGSIM_REV) && \
+	    $(SVN) export -r$(MGSIM_REV) $(MGSIM_REPO) mgsim-$(MGSIM_REV) && \
 	    cd mgsim-$(MGSIM_REV) && \
 	    ./bootstrap)
 
@@ -168,7 +168,7 @@ $(SLDIR)/bin/mgsim-alpha $(SLDIR)/bin/mgsim-sparc: $(SOURCES)/mgsim-$(MGSIM_REV)
 $(SOURCES)/slc-$(SLC_REV)/configure:
 	mkdir -p $(SOURCES)
 	(cd $(SOURCES) && \
-	    $(SVN) co -r$(SLC_REV) $(SLC_REPO) slc-$(SLC_REV) && \
+	    $(SVN) export -r$(SLC_REV) $(SLC_REPO) slc-$(SLC_REV) && \
 	    cd slc-$(SLC_REV) && \
 	    ./bootstrap)
 

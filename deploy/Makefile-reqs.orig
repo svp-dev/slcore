@@ -39,8 +39,8 @@
 ### Desired versions for the tools
 BINUTILS_REV = 2182
 UTC_GCC_REV = 2182
-MGSIM_REV = 2202
-SLC_REV = 2198
+MGSIM_REV = 2324
+SLC_REV = 2429
 GCC_VERSION = 4.4.0
 
 ### SVN repository for the tools
