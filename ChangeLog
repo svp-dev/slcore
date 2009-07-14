@@ -1,5 +1,18 @@
 2009-07-14  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	Use Automake's new "parallel tests" feature. This uses
+	multiple cores more effectively than slt's internal
+	parallel process spawning.
+	
+	* configure.ac: Enable option `parallel-tests'.
+	* tests.mk: Use `LOG_COMPILER' instead of `TESTS_ENVIRONMENT'.
+	
+	* tools/bin/slt.in: Introduce new options `DUMP_LOGS' and
+	`SEQUENTIAL'. Document them.
+	* tests.mk: Use them.
+
+2009-07-14  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	Cosmetic changes.
 	
 	* tools/lib/r-host/run.sh: Rename to...

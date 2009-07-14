@@ -32,9 +32,10 @@ EXTRA_TEST_IMPL += utc0:-O0 utc0:-O1 utc0:-O2 utcx
 endif
 endif
 
-
-TESTS_ENVIRONMENT = \
+TEST_EXTENSIONS = .sl
+SL_LOG_COMPILER = \
 	$(SLC_VARS) \
 	SLT_IMPL_LIST="seqc $(EXTRA_TEST_IMPL)" \
+	DUMP_LOGS=1 TEXT_ONLY=1 SEQUENTIAL=1 \
 	$(BASH) $(abs_top_builddir)/tools/bin/slt
 

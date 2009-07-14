@@ -281,6 +281,10 @@ Environment variables:
   TEXT_ONLY      If set and not empty, use plain text messages instead
                  of colored/positioned characters on the console.
 
+  SEQUENTIAL     If set and not empty, run tests sequentially.
+
+  DUMP_LOGS      If set and not empty, dump error logs on failure.
+
   XIGNORE        If set and not empty, prepend to the XIGNORE pattern
                  list set by programs. Can be used to mark specific
                  implementations as not relevant for overall test results.
@@ -578,7 +582,7 @@ do_check() {
     else
       compref=$refout
     fi
-    for b in "$baseout"*; do
+    for b in "$baseout".*; do
        if test "x$compref" != "x$b" -a "x$runspec" != "x$b"; then
           rm -rf "$b"
        fi
@@ -602,21 +606,24 @@ do_preptest() {
    
     baseout=$outdir/$testname
     
-    if ! mkdir -p "$outdir" >/dev/null 2>&1; then
+    rm -rf "$baseout".* || true
+
+    if ! mkdir -p "$baseout".lck >/dev/null 2>&1; then
 	die "$outdir: cannot create directory" 
     fi
     
     if ! test -w "$outdir"; then
 	die "$outdir: directory is not writable"
     fi
-    rm -rf "$baseout"*
     export TMPDIR="$outdir"
 }
 
 
 # start testing
 counter=0
+logs=
 do_preptest "$impl1"
+logs="$logs $baseout.log"
 
 prefign=${XIGNORE:-*x:*}
 xfailpats=$(grep "XFAIL:" <"$testsrc"|sed -e 's/^.*XFAIL:\(.*\)$/\1/g')
@@ -674,7 +681,13 @@ check_proc() {
         echo >&2
 	echo "Signal received (SIG$signalled)!" >&2
 	trap - INT QUIT HUP TERM PIPE
-        kill -$signalled $$
+	for l in $logs; do
+	    if test -r "$l"; then 
+		echo "$0: failure log: $l" >&2
+		if test -n "$DUMP_LOGS"; then cat "$l" >&2; echo >&2; fi
+	    fi
+	done
+	kill -$signalled $$
 	exit 128
     elif test $x != 0; then
 	fail=1
@@ -698,6 +711,7 @@ set +e
 wait $towait
 x=$?
 set -e
+towait=
 check_proc $x
 
 # Perform other tests asynchronously
@@ -706,18 +720,28 @@ refout=$baseout.out
 for impl1 in "$@"; do
     offset=$(expr $offset + $colspertest)
     do_preptest "$impl1"
+    logs="$logs $baseout.log"
     do_check $impl $offset "$refout" &
     towait="$towait $!"
+    if test -n "$SEQUENTIAL"; then
+	set +e
+	wait $towait
+	x=$?
+	set -e
+	towait=
+	check_proc $x
+    fi
 done
 
-# After they are started, wait on them
-for w in $towait; do
-    set +e
-    wait $w
-    x=$?
-    set -e
-    check_proc $x
-done
+if test -z "$SEQUENTIAL"; then
+    for w in $towait; do
+	set +e
+	wait $w
+	x=$?
+	set -e
+	check_proc $x
+    done
+fi
 
 if test -z "$TEXT_ONLY"; then
     offset=$(expr $offset + $colspertest)
@@ -738,6 +762,13 @@ fi
 if test $fail = 0 -a -z "$KEEP"; then
     rm -f "$refout" "$runspec"
     rmdir $(dirname "$refout") >/dev/null 2>&1 || true
+else
+    for l in $logs; do
+	if test -r "$l"; then 
+	    echo "$0: failure log: $l" >&2
+	    if test -n "$DUMP_LOGS"; then cat "$l" >&2; echo >&2; fi
+	fi
+    done
 fi
 exit $fail
 
