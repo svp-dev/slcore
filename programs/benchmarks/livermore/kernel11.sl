@@ -34,7 +34,7 @@ sl_def(innerk11,void,
 }
 sl_enddef
 
-sl_def(kernel11,void)
+sl_def(kernel,void)
 {
 	sl_create(,, 1,inner[KERNEL],1,SHARED_BLOCK,,innerk11,
      		sl_glarg(double*,xxl,x),

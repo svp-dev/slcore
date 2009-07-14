@@ -75,7 +75,7 @@ sl_def(outerk6,void,
 }
 sl_enddef
 
-sl_def(kernel6,void)
+sl_def(kernel,void)
 {
 	sl_create(,, 1,inner[KERNEL],1,SHARED_BLOCK,,outerk6,
 		sl_sharg(int,syncherr,0),

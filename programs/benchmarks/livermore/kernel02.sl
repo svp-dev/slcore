@@ -54,7 +54,7 @@ sl_def(innerk2,void,
 }
 sl_enddef
 
-sl_def(kernel2,void)
+sl_def(kernel,void)
 {
 	long int loopcount = inner[KERNEL]; //initialise loop counter
 	long int lower,upper; //counters

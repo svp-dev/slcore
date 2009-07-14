@@ -43,7 +43,7 @@ sl_def(innerk9, void,
 }
 sl_enddef
 
-sl_def(kernel9, void)
+sl_def(kernel, void)
 {
 	sl_create(,, 0,inner[KERNEL],1,blocksize[KERNEL],,innerk9,
 		sl_glarg(array2d, llpx, px),

@@ -14,12 +14,20 @@
 // kernels.
 //---------------------------------
 
+//---------------------------------------------------------
+// Fixes for core compiler compatibility:
+//m4_define([[COMPAT]])
+m4_ifndef([[COMPAT]],[[
+//---------------------------------------------------------
 // several kernels may make use of
 // output using this header
 m4_include(svp/iomacros.slh)
 m4_include(svp/perf.slh)
 m4_include(slr.slh)
 m4_include(svp/div.slh)
+]])
+//^^ end core compiler compatibility exclusion
+
 // use m4 to check for existing
 // instance of this header
 m4_ifdef([[LIVHEAD]], [[#error Cannot compile programs with more than one usage of the Livermore header.]])
@@ -47,6 +55,9 @@ m4_define(LIVHEAD, [[]])
 // (comment out if not!)
 m4_define(STATS, [[]])
 
+//intitialise data:
+//m4_define(INIT_DATA, [[]])
+
 // Loop number specifications:
 // INNER - Specifies the number of times that the loop
 // should perform the calculation being measured
@@ -65,7 +76,7 @@ unsigned int inner[25] = {0,
 			  7000,
 			  7000,
 			  7000, //12
-			  10,
+			  7000,
 			  10,
 			  10,
 			  10,   //16
@@ -127,6 +138,23 @@ double seeds[8] = {5656.555,6801.77,11842.1,22578.2,3.1415,2.7182,0.332,32.765};
 //assumes data width of 64 bits
 unsigned long int seedmask = 0x0000000000000007;
 
+//define the method name of kernel
+//to execute here.
+//("kernel"+number = method name)
+extern void kernel();
+
+//---------------------------------------------------------
+// Fixes for core compiler compatibility:
+
+//rename kernel name to main, and bypass this main function
+m4_ifdef([[COMPAT]],[[
+m4_define([[kernel]],t_main)
+]])
+
+//exclude the rest
+m4_ifndef([[COMPAT]],[[
+//---------------------------------------------------------
+
 sl_decl(initialiser, void);
 
 // RUNNER -- the following method is the generic Livermore 
@@ -146,12 +174,6 @@ sl_def(t_main, void)
 	//cycle counter
 	unsigned long int cycles = 0;
 	unsigned long int totalcycles = 0;
-
-        //first, define the method name of kernel
-        //to execute here.
-        m4_define(ACTUALKERNEL,[[kernel]]KERNEL)
-        //now make sure it's available as an extern
-        extern void ACTUALKERNEL ();
 	
 	//set the required problem size
 	// if the value is <=0 then use default PSIZE
@@ -172,9 +194,11 @@ sl_def(t_main, void)
 	m4_ifdef([[STATS]], [[
         puts("--------------------------\n");
         puts("   LIVERMORE LOOPS:  \n");
-        puts("   *** ACTUALKERNEL *** \n\n"); 
+        puts("   *** Kernel KERNEL *** \n\n"); 
         m4_ifdef([[SHFWA]],[[puts("**WARNING!! Shared FLOAT Workaround***\n");]])
-       	puts(" Using Uninitialised Data. \n");
+       	m4_ifdef([[INIT_DATA]], [[
+       	puts(" Using Initialised Data. \n");
+        ]])
         puts(" Inner Loops: ");
         putu(inner[KERNEL]);
         puts("\n Outer Loops: ");
@@ -192,13 +216,14 @@ sl_def(t_main, void)
 	for(counter=0;counter<outer[KERNEL];counter++)
 	{
 		//call the data initialiser	
-		//do not initialise in this version
-		//sl_create(,, 0,1,1,,,initialiser,);
-		//sl_sync();	
+		m4_ifdef([[INIT_DATA]], [[
+		sl_create(,, 0,1,1,,,initialiser,);
+		sl_sync();
+		]])	
 		//get current cycle value before kernel
 		cycles = get_cycles();
 		//create the singleton family -- call the kernel
-		sl_create(,, 0,1,1,,,ACTUALKERNEL ,);
+		sl_create(,, 0,1,1,,,kernel ,);
 		sl_sync();
 		//now calculate the cycles used just for the kernel
 		totalcycles += get_cycles() - cycles;
@@ -212,6 +237,9 @@ sl_def(t_main, void)
 	]])
 }
 sl_enddef
+
+]])
+//^^ end core compiler compatibility exclusion
 
 // Kernel Data:
 // Modelled after R.Longbottom
@@ -250,7 +278,7 @@ sl_enddef
 //      double D[300];
 //      double Sa[101];
 //      double Sb[101];
-//      double P[512][4];
+      double P[LARGEST][LARGEST];
 //      double Px[LARGEST][LARGEST];
       double Cx[LARGEST][LARGEST]; //10
 //      double Vy[25][101];
@@ -269,7 +297,7 @@ sl_enddef
 //      double Zz[7][101];
      double B[LARGEST][LARGEST]; //currently just used by loop 6 & 10
 //      double C[64][64];
-//      double H[64][64];
+     double H[LARGEST][LARGEST];
      double U1[2][LARGEST][5]; //loop8
      double U2[2][LARGEST][5]; //loop8
      double U3[2][LARGEST][5]; //loop8
@@ -309,6 +337,12 @@ m4_define([[du2]],[[data.Y]]) //mapped to another
 m4_define([[du3]],[[data.Z]]) //mapped to another
 m4_define([[px]],[[data.B]]) //mapped to another
 m4_define([[cx]],[[data.Cx]]) 
+m4_define([[e]],[[data.X]]) //mapped to another
+m4_define([[ff]],[[data.V]]) //mapped to another
+m4_define([[p]],[[data.P]])
+m4_define([[c]],[[data.Cx]])
+m4_define([[h]],[[data.H]])
+
 
 m4_define([[dm22]],[[data.Xtra[16] ]])
 m4_define([[dm23]],[[data.Xtra[17] ]])
@@ -318,7 +352,6 @@ m4_define([[dm26]],[[data.Xtra[20] ]])
 m4_define([[dm27]],[[data.Xtra[21] ]])
 m4_define([[dm28]],[[data.Xtra[22] ]])
 m4_define([[c0]],[[data.Xtra[12] ]])
-
 m4_define([[a11]],[[data.Xtra[1] ]])
 m4_define([[a12]],[[data.Xtra[2] ]])
 m4_define([[a13]],[[data.Xtra[3] ]])
@@ -330,6 +363,11 @@ m4_define([[a32]],[[data.Xtra[8] ]])
 m4_define([[a33]],[[data.Xtra[9] ]])
 m4_define([[sig]],[[data.Xtra[9] ]])
 //------------------------------------------
+
+//---------------------------------------------------------
+// Fixes for core compiler compatibility:
+m4_ifndef([[COMPAT]],[[
+//---------------------------------------------------------
 
 sl_def(simpleinit, void, sl_glparm(double*, thedata))
 {
@@ -356,3 +394,8 @@ sl_def(initialiser, void)
 sl_enddef
 
 ]])
+//^^ end core compiler compatibility exclusion
+
+
+]])
+//^^ end header

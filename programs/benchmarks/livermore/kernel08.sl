@@ -132,7 +132,7 @@ sl_def(outerk8,void,
 }
 sl_enddef
 
-sl_def(kernel8,void)
+sl_def(kernel,void)
 {
 
 //              sl_glarg(array3d, lu1,u1),

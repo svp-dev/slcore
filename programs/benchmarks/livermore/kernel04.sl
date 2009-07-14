@@ -61,7 +61,7 @@ sl_def(outerk4, void,
 	//loop uses an internal stride of 5 by multiplying a 1 stride counter
 	//this means the range of the loop must be divided by 5
 	
-	unsigned int range = divu(inner[KERNEL], 5); 
+	unsigned int range = inner[KERNEL]/5;  //divu(inner[KERNEL], 5); 
 	
 	sl_create(,, 0,range,1,SHARED_BLOCK,,innerk4,
 		sl_shfarg(double, ttotal, sl_getp(xl)[iteration-1]),
@@ -77,7 +77,7 @@ sl_def(outerk4, void,
 }
 sl_enddef
 
-sl_def(kernel4, void)
+sl_def(kernel, void)
 {
 	sl_create(,, 6,1001,MSTEP,blocksize[KERNEL],,outerk4,
 		sl_glarg(double*, xxl,x),

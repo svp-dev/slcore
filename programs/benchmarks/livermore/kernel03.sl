@@ -33,7 +33,7 @@ sl_def(innerk3, void,
 }
 sl_enddef
 
-sl_def(kernel3, void)
+sl_def(kernel, void)
 {
 	//create the kernel, not forgetting to initialise
 	//q to zero

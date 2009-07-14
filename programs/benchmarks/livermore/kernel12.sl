@@ -29,7 +29,7 @@ sl_def(innerk12,void,
 }
 sl_enddef
 
-sl_def(kernel12,void)
+sl_def(kernel,void)
 {
 	sl_create(,, 0,inner[KERNEL],1,blocksize[KERNEL],,innerk12,
      		sl_glarg(double*,xxl,x),

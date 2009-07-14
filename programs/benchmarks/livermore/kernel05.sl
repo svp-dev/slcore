@@ -35,7 +35,7 @@ sl_def(innerk5,void,
 }
 sl_enddef
 
-sl_def(kernel5,void)
+sl_def(kernel,void)
 {
 
 	sl_create(,, 1,inner[KERNEL],1,SHARED_BLOCK,,innerk5,

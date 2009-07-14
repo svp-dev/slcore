@@ -33,7 +33,7 @@ sl_def(innerk1, void,
 }
 sl_enddef
 
-sl_def(kernel1, void)
+sl_def(kernel, void)
 {
 	// calculate array base pointers and values here
 	// to avoid calculatoin in each subordinate
