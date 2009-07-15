@@ -107,10 +107,10 @@ class FibreGenerator(object):
 
 
         print "struct __slr_data_t {"
-        print "  struct { int tag; size_t dim; ptrdiff_t dim_offset; ptrdiff_t data_offset; } metadata[%d]; " % (len(ilist)+1)
+        print "  struct { int tag; size_t rank; ptrdiff_t shape_offset; ptrdiff_t data_offset; } metadata[%d]; " % (len(ilist)+1)
 
         for i, sz, _, _ in ilist:
-            print "  size_t dim%d[%d];" % (i, len(sz))
+            print "  size_t shape%d[%d];" % (i, len(sz))
 
         for i, sz, t, _ in ilist:
             print "%s data%d" % (t2c[t], i),
@@ -122,7 +122,7 @@ class FibreGenerator(object):
         print "  {/* metadata */"
         for i, sz, t, _ in ilist:
             print "  { %d, %d, " % (t2e[t], len(sz)-1),
-            print "(char*)(void*)&__slr_data.dim%d - (char*)(void*)&__slr_data," % i,
+            print "(char*)(void*)&__slr_data.shape%d - (char*)(void*)&__slr_data," % i,
             print "(char*)(void*)&__slr_data.data%d - (char*)(void*)&__slr_data" % i,
             print "},"
         print "  {-1,0,0,0}},"
@@ -164,22 +164,22 @@ class SlrVarGenerator(object):
             print >>out, "Program variables:"
             for k, v in parm.items():
                 print >>out, "\t%s (%s)\t%s" % (k, v['type'], v['desc'])
-                print >>out
-                print >>out, "Initializers:"
-                print >>out, "\t(comma-separated list)\tuse the specified data items."
-                print >>out, "\tfile:FILENAME\tload data items from FILENAME, one per line."
-                print >>out, "\traw:FILENAME\tload data items from FILENAME as raw bytes."
-                print >>out
-                print >>out, "Examples:"
-                print >>out, "\t<program> foo=42,69"
-                print >>out, "\t<program> foo=file:hello.txt"
+            print >>out
+            print >>out, "Initializers:"
+            print >>out, "\t(comma-separated list)\tuse the specified data items."
+            print >>out, "\tfile:FILENAME\tload data items from FILENAME, one per line."
+            print >>out, "\traw:FILENAME\tload data items from FILENAME as raw bytes."
+            print >>out
+            print >>out, "Examples:"
+            print >>out, "\t<program> foo=42,69"
+            print >>out, "\t<program> foo=file:hello.txt"
         else:
             print >>out, "This program has no input variables."
 
     def usage(self, parm):
         print >>sys.stderr, "Usage: <program> [VAR=INIT]..."
         print >>sys.stderr 
-        proto(sys.stderr, parm)
+        self.proto(sys.stderr, parm)
 
     def dogen(self):
         required = []
@@ -194,7 +194,7 @@ class SlrVarGenerator(object):
 
         for a in sys.argv[2:]:
                 if a == "list":
-                    proto(sys.stdout,parm)
+                    self.proto(sys.stdout, parm)
                     sys.exit(0)
                 if not '=' in a:
                     usage(parm)

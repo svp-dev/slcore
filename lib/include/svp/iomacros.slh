@@ -63,23 +63,29 @@ sl_proccall(svp_io_putun,
 m4_define([[printf]],
 [[do {
   static const uint8_t __pf_sz[m4_count(m4_shift($@))] = {
-    m4_foreach([[printf_arg]],m4_dquote(m4_shift($@)),[[sizeof(printf_arg),]])
+    m4_if([[$2]],[[]],,[[
+      m4_foreach([[printf_arg]],m4_dquote(m4_shift($@)),[[sizeof(printf_arg),]])
+    ]])
   };
   volatile struct {
-    m4_pushdef([[printf_argcount]],0)
-    m4_foreach([[printf_arg]],m4_dquote(m4_shift($@)),[[
-      union { __typeof__(printf_arg) __arg; svp_arg_slot __slot; }
-        __a[[]]printf_argcount;
-      m4_step([[printf_argcount]])
+    m4_if([[$2]],[[]],,[[
+      m4_pushdef([[printf_argcount]],0)
+      m4_foreach([[printf_arg]],m4_dquote(m4_shift($@)),[[
+        union { __typeof__(printf_arg) __arg; svp_arg_slot __slot; }
+          __a[[]]printf_argcount;
+        m4_step([[printf_argcount]])
+      ]])
+      m4_popdef([[printf_argcount]])
     ]])
-    m4_popdef([[printf_argcount]])
   } __pf_args;
-  m4_pushdef([[printf_argcount]],0)
-  m4_foreach([[printf_arg]],m4_dquote(m4_shift($@)),[[
-  __pf_args.__a[[]]printf_argcount[[]].__arg = (printf_arg);
-  m4_step([[printf_argcount]])
+  m4_if([[$2]],[[]],,[[
+   m4_pushdef([[printf_argcount]],0)
+   m4_foreach([[printf_arg]],m4_dquote(m4_shift($@)),[[
+   __pf_args.__a[[]]printf_argcount[[]].__arg = (printf_arg);
+   m4_step([[printf_argcount]])
+   ]])
+   m4_popdef([[printf_argcount]])
   ]])
-  m4_popdef([[printf_argcount]])
   sl_proccall(svp_io_printf,
               sl_glarg(const char*, gfmt, ([[$1]])),
 	      sl_glarg(const uint8_t*, gsz, (__pf_sz)),

@@ -20,16 +20,16 @@ m4_include(svp/assert.slh)
 
 extern struct fibre_base_t {
        int tag;
-       size_t ndims;
-       ptrdiff_t dims_offset;
+       size_t rank;
+       ptrdiff_t shape_offset;
        ptrdiff_t data_offset;
 } *__fibre_base;
 
 #define fibre_tag(N) __fibre_base[N].tag
 
-#define fibre_ndims(N) __fibre_base[N].ndims
+#define fibre_rank(N) __fibre_base[N].rank
 
-#define fibre_dims_array(N) ((size_t*)(void*)((char*)(void*)__fibre_base + __fibre_base[N].dims_offset))
+#define fibre_shape(N) ((size_t*)(void*)((char*)(void*)__fibre_base + __fibre_base[N].shape_offset))
 
 #define fibre_data(N) (void*)((char*)(void*)__fibre_base + __fibre_base[N].data_offset)
 

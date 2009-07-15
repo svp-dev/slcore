@@ -1,3 +1,18 @@
+2009-07-15  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
+	Bug fixes, better support for Fibre input.
+	
+	* lib/include/svp/iomacros.slh: Handle case where `printf' is used
+	with only a format string.
+
+	* tools/bin/slr.in: Support reading Fibre data from standard input. 
+
+	* tools/bin/sag (FibreGenerator),
+	* tools/include/fibre.slh: Use the SAC vocabulary: "rank", "shape".
+
+	* tools/bin/sag (SlrVarGenerator),
+	* tools/bin/slr.in: Fix handling of "-l".
+
 2009-07-14  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
 	Cosmetic changes.
