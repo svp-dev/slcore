@@ -12,7 +12,7 @@
 ##
 
 # 
-DEMOS = 10threads.sl answer.sl fibonacci.sl helloworld.sl roman.sl 
+DEMOS = 10threads.sl answer.sl fibonacci.sl helloworld.sl roman.sl fibre.sl
 TESTS = $(DEMOS)
 
 include $(top_srcdir)/tests.mk

@@ -36,8 +36,8 @@ class FibreGenerator(object):
                 r.append(newdim)
                 if len(r[0]) != len(newdim):
                         die("data contains heterogeneous array dimensions")
-            r = [len(d)] + self.mergemax(r)
-            # print >>sys.stderr, "XXX: %r" % r
+            r = [len(d)] + (len(d) == 0 and [0] or self.mergemax(r))
+            ##print >>sys.stderr, "XXX: %r" % r
             return r
         else:
             return [0]
@@ -60,7 +60,7 @@ class FibreGenerator(object):
 
     def ty(self, d):
         if type(d) is type([]):
-            t = None
+            t = "u"
             for v in d:
                 t = self.gt(t, self.ty(v))
             return t
@@ -103,8 +103,8 @@ class FibreGenerator(object):
             if item is None: break
             sz = self.dim(item)
             t = self.ty(item)
+            #print >>sys.stderr, "%r / %r / %r" % (i, sz, t)
             ilist.append((i,sz,t,item))
-
 
         print "struct __slr_data_t {"
         print "  struct { int tag; size_t rank; ptrdiff_t shape_offset; ptrdiff_t data_offset; } metadata[%d]; " % (len(ilist)+1)

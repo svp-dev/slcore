@@ -1,5 +1,5 @@
 #! @BASH@
-#
+# -*- mode: shell-script -*-
 # slc: This file is part of the SL toolchain.
 #
 copyright="Copyright (C) 2009 The SL project."
@@ -522,7 +522,7 @@ do_run() {
       printf '' >$baseout.out
       while read -a vars ; do
 	  echo "===== RUNNING PROGRAM: ${vars[*]} =====" >>$baseout.log
-	  command="$timeout $runner -t $baseout.x ${vars[*]} $RUN_ARGS"
+	  command=$(echo "$timeout $runner -t $baseout.x ${vars[*]} $RUN_ARGS"|sed -e "s|TEST|$testsrc|g")
 	  echo "$command >>$baseout.out" >>$baseout.log
 	  set +e
 	  $command >>$baseout.out 2>>$baseout.log 
@@ -772,4 +772,3 @@ else
 fi
 exit $fail
 
-# -*- mode: shell -*-

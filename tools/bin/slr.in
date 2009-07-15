@@ -182,7 +182,7 @@ for arg in "$@"; do
       -h|--help)	do_usage;;
       -l)  query=1; shift;;
       -n)  prev_arg=NCORES; shift;;
-      -Ws*)   lowarg=$(echo "$arg"|cut -d',' -f2-|tr ',' ' ')
+      -Ws,*)   lowarg=$(echo "$arg"|cut -d',' -f2-|tr ',' ' ')
 	  SIMARGS="$SIMARGS $lowarg"
 	  shift;;
       -d*=*) var=$(printf "%s" "$arg"|cut -c3-); vars="$vars $var"; shift;;
@@ -351,16 +351,16 @@ if test -n "$dodata"; then
 	fi
 	$python "$sag_helper" d $vars <"$tmpdir"/args.spec >"$tmpdir"/data.c
 	
-	mkdir "$tmpdir"/slc-rec
+	mkdir -p "$tmpdir"/slc-rec
 	if test -n "$VERBOSE"; then
 	    echo "$0: running: TMPDIR=$tmpdir/slc-rec @BASH@ $slc_helper -b $datatag -o $tmpdir/gen.x -I$tmpdir $arggen" >&2
 	fi
 	TMPDIR="$tmpdir"/slc-rec @BASH@ "$slc_helper" -b "$datatag" -o "$tmpdir"/gen.x -I"$tmpdir" "$arggen"
-	mkdir "$tmpdir"/slr-rec
+	mkdir -p "$tmpdir"/slr-rec
 	if test -n "$VERBOSE"; then
 	    echo "$0: running: TMPDIR=$tmpdir/slr-rec @BASH@ $0 $tmpdir/gen.x >$datafile" >&2
 	fi
-	TMPDIR="$tmpdir"/slr-rec @BASH@ "$0" "$tmpdir"/gen.x -Ws,-q -n 1 >"$datafile"
+	TMPDIR="$tmpdir"/slr-rec @BASH@ "$0" "$tmpdir"/gen.x -Ws,-q,-o,NumProcessorsPerFPU=1 -n 1 >"$datafile"
     else
         true >"$datafile"
     fi
@@ -383,7 +383,7 @@ if test -n "$dofdata"; then
 	    echo "$0: running: [sed] <$fibre_in |$python $sag_helper f >$tmpdir/fdata.c" >&2
 	fi
 
-	(if test "x$fibre_in" = "x-"; then cat; else cat "$thefile"; fi) | \
+	(if test "x$fibre_in" = "x-"; then cat; else cat "$fibre_in"; fi) | \
 	    sed -e 's/\#.*//g;' | \
 	    (tr '\n' ' ';echo " None") | \
 	    sed -e 's/^ *//g;
@@ -393,19 +393,20 @@ s/  */,/g;
 s/d0//g;
 s/,$//g' | $python "$sag_helper" f >"$tmpdir"/fdata.c
 	
-	mkdir "$tmpdir"/slc-rec
+	mkdir -p "$tmpdir"/slc-rec
 	if test -n "$VERBOSE"; then
 	    echo "$0: running: TMPDIR=$tmpdir/slc-rec @BASH@ $slc_helper -b $datatag -o $tmpdir/gen.x -I$tmpdir -DFIBRE_DATA=1 $arggen" >&2
 	fi
 	TMPDIR="$tmpdir"/slc-rec @BASH@ \
 	    "$slc_helper" -b "$datatag" -o "$tmpdir"/gen.x -I"$tmpdir" -DFIBRE_DATA=1 "$arggen"
-	mkdir "$tmpdir"/slr-rec
+	mkdir -p "$tmpdir"/slr-rec
 	if test -n "$VERBOSE"; then
 	    echo "$0: running: TMPDIR=$tmpdir/slr-rec @BASH@ $0 $tmpdir/gen.x >$fdatafile" >&2
 	fi
-	TMPDIR="$tmpdir"/slr-rec @BASH@ "$0" "$tmpdir"/gen.x -Ws,-q -n 1 >"$fdatafile"
+	TMPDIR="$tmpdir"/slr-rec @BASH@ "$0" "$tmpdir"/gen.x -Ws,-q,-o,NumProcessorsPerFPU=1 -n 1 >"$fdatafile"
     else
-        true >"$fdatafile"
+	# Ensure a tag = -1 for the first item
+        printf '\xff\xff\xff\xff\xff\xff\xff\xff' >"$fdatafile"
     fi
 fi
 
