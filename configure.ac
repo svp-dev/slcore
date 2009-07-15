@@ -199,7 +199,7 @@ AC_CONFIG_FILES([
 	programs/benchmarks/nas/is/Makefile
 	programs/benchmarks/ll/Makefile
 ])
-AC_CONFIG_FILES([tools/bin/cm4], [chmod +x tools/bin/cm4])
-#	tests/Makefile
+#AC_CONFIG_FILES([tools/bin/cm4], [chmod +x tools/bin/cm4])
+
 AC_OUTPUT
 
