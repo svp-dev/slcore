@@ -23,6 +23,9 @@ SLC 2.0.3a, 2009
 
 - More benchmarks bundled with toolchain.
 
+- New interface to access the thread local storage on the Microgrid,
+  requires simulator revision r2462 or later.
+
 Known issues:
 
 - comments inside the parameters to ``sl_def`` and other SL macros

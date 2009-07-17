@@ -9,8 +9,8 @@ _sl_callgate:
 
 	ldq $9, 0($0)  # load call protocol
 	ldq $27, 8($0) # load callee function pointer into PV
-	mov $1, $30   # set up stack pointer
-	mov $1, $15   # set up frame pointer
+	ldfp $30   # set up stack pointer
+	mov $30, $15   # set up frame pointer
 
 	beq $9, $docall		; swch
 	ldq $16, 32($0)

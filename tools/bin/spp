@@ -1277,7 +1277,7 @@ class pppalpha(object):
       if fundata['use_pv']:
          fundata['prologue'].insert(0, ('other','mov $g%d, $l%d' % (pvargreg, pvreg), 'MT: init PV'))
       if fundata['use_sp'] and spreg != 1:
-         fundata['prologue'].insert(0, ('other','mov $l1, $l%d' % spreg,'MT: init SP'))
+         fundata['prologue'].insert(0, ('other','ldfp $l%d' % spreg,'MT: init SP'))
 
       return items
 
@@ -1299,7 +1299,7 @@ class pppalpha(object):
             newprologue.append((type, content,comment))
 
       if found == True:
-         newprologue.insert(0,('other','mov $l1, %s' % fpreg,'MT: init FP'))
+         newprologue.insert(0,('other','mov $l31, %s' % fpreg,'MT: init FP'))
       fundata['prologue'] = newprologue
 
    def printer(self, items):
