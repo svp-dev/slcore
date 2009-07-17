@@ -8,7 +8,7 @@ root=$(dirname "$0")
 basename=$(basename "$0")
 
 if test $# = 0; then
-   tests=$(find . -name '*.sl'|sort)
+   tests=$(find . -name '*.sl'|grep -v '/_'|sort)
 elif test "$1" = "-h" -o "$1" = "--help"; then
    cat <<EOF
 SL test helper.
@@ -21,7 +21,8 @@ and all subdirectories for test programs and runs \`slt' on them.
 
 Test programs must have filenames with the extension .sl to be
 picked up by this script automatically. When specified explicitely,
-test programs can have extension .sl, .S or .s.
+test programs can have extension .sl, .S or .s. File or directory
+names starting with an underscore (_) are ignored.
 
 If arguments are specified, the behavior depends on the type of each
 argument:
@@ -80,10 +81,12 @@ else
   tests=""
   for arg in "$@"; do
     if test -d "$arg"; then
-      found=$(find $arg -name '*.sl' -or -name '*.[sS]')
-      if test -n "$found"; then
-	  tests="$tests $found"
-      fi
+      found=$(find $arg -name '*.sl' -or -name '*.[sS]'|grep -v '/_'|sort)
+      for f in $found; do
+	  if test -r "$f"; then
+	      tests="$tests $f"
+	  fi
+      done
     else  
       if test -r "$arg"; then
         tests="$tests $arg"
@@ -101,7 +104,7 @@ if test -z "$tests"; then
   echo "No tests selected! (run from test directory or select tests on command line)" >&2
   exit 1
 fi
-nrtests=$(echo "$tests"|tr ' ' '\n'|wc -l)
+nrtests=$(echo "$tests"|tr ' ' '\n'|grep -v '^$'|wc -l)
 echo "$nrtests test(s) selected."
 
 SLT_IMPL_LIST=${SLT_IMPL_LIST:-seqc ptl ppp utc0}
@@ -119,8 +122,6 @@ report() {
 
 export SLT_IMPL_LIST
 trap report INT TERM QUIT HUP
-# sort the tests
-tests=$(echo "$tests"|tr ' ' '\n'|sort)
 for t in $tests; do
   set +e
   slt "$t"

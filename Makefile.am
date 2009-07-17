@@ -26,8 +26,18 @@ NEWS: $(srcdir)/doc/NEWS.txt
 	$(AM_V_GEN)cp $(srcdir)/doc/NEWS.txt $@
 	$(AM_V_at)chmod -w $@
 
+# run `slt' on the console (eye candy, for more intensive CPU
+# usage and faster results, use `make check')
 
-
+check-slt:
+	$(AM_V_at)$(MAKE) $(AM_MAKEFLAGS) all
+	$(AM_V_at)set -e; for d in `find . -type d \
+	    -and -exec test -r '{}'/Makefile \; \
+	    -and -exec test -r $(srcdir)/'{}'/Makefile.am \; \
+	    -and -exec grep -q 'tests\.mk' '{}'/Makefile \; \
+	    -and -print`; do \
+	   (cd $$d && $(MAKE) $(AM_MAKEFLAGS) check-slt) \
+	done
 
 if MAINTAINER_MODE
 

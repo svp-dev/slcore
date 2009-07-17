@@ -1,4 +1,4 @@
-## tests.mkm this file is part of the SL toolchain.
+## tests.mk: This file is part of the SL toolchain.
 ## 
 ## Copyright (C) 2009 The SL project
 ##
@@ -10,7 +10,6 @@
 ## The complete GNU General Public Licence Notice can be found as the
 ## `COPYING' file in the root directory.
 ##
-
 
 include $(top_srcdir)/sl.mk
 
@@ -32,10 +31,17 @@ EXTRA_TEST_IMPL += utc0:-O0 utc0:-O1 utc0:-O2 utcx
 endif
 endif
 
+SLT_IMPL_LIST ?= seqc $(EXTRA_TEST_IMPL)
+
 TEST_EXTENSIONS = .sl
 SL_LOG_COMPILER = \
 	$(SLC_VARS) \
-	SLT_IMPL_LIST="seqc $(EXTRA_TEST_IMPL)" \
+	SLT_IMPL_LIST="$(SLT_IMPL_LIST)" \
 	DUMP_LOGS=1 TEXT_ONLY=1 SEQUENTIAL=1 \
 	$(BASH) $(abs_top_builddir)/tools/bin/slt
 
+check-slt:
+	$(AM_V_at)echo; echo "Current directory:" `pwd`
+	$(AM_V_at)SLT_IMPL_LIST="$(SLT_IMPL_LIST)" \
+	    $(top_srcdir)/tools/bin/slt-many \
+	    $(TESTS:%=$(srcdir)/%)

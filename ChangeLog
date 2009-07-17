@@ -1,5 +1,21 @@
 2009-07-18  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	Add new rule `check-slt' for the eye candy, since `make check' now
+	redirects the ASCII art to parallel log files.
+
+	* Makefile.am: Introduce rule `check-slt' to run `slt' on the
+	console (previously documented in `doc/HACKING.txt') for all
+	source directories that include `tests.mk'.
+
+	* tests.mk: Support `check-slt' in each directory defining tests.
+
+	* tools/bin/slt-many: Ignore names starting with an underscore, so
+	as to avoid itself to pick up remaining temporaries from a
+	previous run. Avoid counting extra whitespace in test count.
+
+
+2009-07-18  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	Sanitize scripts. Simplify code, ease debugging.
 	
 	* tools/bin/timeout.in,
