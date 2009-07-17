@@ -23,7 +23,7 @@ SLC_VARS = \
 	SLR=$(abs_top_builddir)/tools/bin/slr \
 	SLC=$(abs_top_builddir)/tools/bin/slc
 
-SLC = $(SLC_VARS) $(abs_top_builddir)/tools/bin/slc
+SLC_RUN = $(SLC_VARS) $(abs_top_builddir)/tools/bin/slc
 
 SUFFIXES = .sl .x
 
@@ -40,11 +40,11 @@ endif
 SLC_BEFORE = function slc_compile() { \
        if test -n "$$SLC_OUT"; then rm -f "$$SLC_OUT" "$$SLC_OUT".{mtalpha,ptl,seqc}; fi && \
        echo "$$SLC_OUT -> seqc" && \
-          $(SLC) $${SLC_OUT:+-o "$$SLC_OUT".seqc} -b seqc "$$@" $(AM_CFLAGS) $(CFLAGS) && \
+          $(SLC_RUN) $${SLC_OUT:+-o "$$SLC_OUT".seqc} -b seqc "$$@" $(AM_CFLAGS) $(CFLAGS) && \
        echo "$$SLC_OUT -> ptl" && \
-          $(SLC) $${SLC_OUT:+-o "$$SLC_OUT".ptl} -b ptl "$$@" $(AM_CXXFLAGS) $(CXXFLAGS) && \
+          $(SLC_RUN) $${SLC_OUT:+-o "$$SLC_OUT".ptl} -b ptl "$$@" $(AM_CXXFLAGS) $(CXXFLAGS) && \
        $(slc_ifmtalpha) echo "$$SLC_OUT -> mtalpha" && \
-          $(slc_ifmtalpha) $(SLC) $${SLC_OUT:+-o "$$SLC_OUT".mtalpha} -b ppp "$$@" && \
+          $(slc_ifmtalpha) $(SLC_RUN) $${SLC_OUT:+-o "$$SLC_OUT".mtalpha} -b ppp "$$@" && \
        if test -n "$$SLC_OUT"; then \
           printf '\#! /bin/sh\n' >"$@" && \
           printf 'select prog in `basename $$0 .x`.bin.*; do break; done; ' >>"$@" && \

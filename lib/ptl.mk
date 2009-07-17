@@ -11,7 +11,7 @@ host_host_ptl_libsl_a_LIBADD = \
 	host-host-ptl/roman.o \
 	host-host-ptl/div.o
 
-SLC_PTL = $(SLC) -b ptl -nostdlib $(CXXFLAGS)
+SLC_PTL = $(SLC_RUN) -b ptl -nostdlib $(CXXFLAGS)
 
 host-host-ptl/io.o: $(srcdir)/src/io.sl
 	$(AM_V_at)$(MKDIR_P) host-host-ptl

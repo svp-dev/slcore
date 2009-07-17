@@ -33,7 +33,7 @@ mtalpha_sim_libsl_a_CONTENTS = \
 	mtalpha-sim/malloc.o \
 	mtalpha-sim/strlib.o
 
-SLC_MTALPHA = $(SLC) -b ppp-mtalpha -nostdlib
+SLC_MTALPHA = $(SLC_RUN) -b ppp-mtalpha -nostdlib
 
 mtalpha-sim/io.o: $(srcdir)/src/io.sl
 	$(AM_V_at)$(MKDIR_P) mtalpha-sim

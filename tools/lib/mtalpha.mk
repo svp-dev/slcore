@@ -24,7 +24,7 @@ mtalpha-sim/libslc.a: $(mtalpha_sim_libslc_a_CONTENTS)
 	$(AM_V_AR)$(AR_MTALPHA) cru $@ $^
 	$(AM_V_at)$(RANLIB_MTALPHA) $@
 
-SLC_MTALPHA = $(SLC) -b ppp-mtalpha -nostdlib
+SLC_MTALPHA = $(SLC_RUN) -b ppp-mtalpha -nostdlib
 
 mtalpha-sim/callgate.o: $(srcdir)/mtalpha-sim/callgate.s
 	$(AM_V_at)$(MKDIR_P) mtalpha-sim
