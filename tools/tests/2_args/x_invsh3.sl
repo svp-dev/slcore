@@ -14,6 +14,9 @@
 // $Id$
 //
 
+// XFAIL: *:C
+// (multiple storage specifiers)
+
 sl_decl(foo, void, sl_shparm(register int, a));
 
 sl_def(bar, void, sl_shparm(register int, a)) { } sl_enddef

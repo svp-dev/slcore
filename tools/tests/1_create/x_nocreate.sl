@@ -14,6 +14,7 @@
 // $Id$
 //
 
+// XFAIL: *:T
 sl_def(t_main, void)
 {
   sl_sync();

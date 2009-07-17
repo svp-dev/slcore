@@ -17,14 +17,12 @@ echo 'TESTSUITE = '
 
 find . -name \*.sl \
   | grep -v '/x_' \
-  | grep -v '4_index' \
   | sed -e 's/^\.\/\(.*\)$/TESTSUITE += \1/g' | sort
 
 echo 'XTESTSUITE = '
 
 find . -name \*.sl \
   | grep '/x_' \
-  | grep -v '4_index' \
   | sed -e 's/^\.\/\(.*\)$/XTESTSUITE += \1/g' | sort
 
 

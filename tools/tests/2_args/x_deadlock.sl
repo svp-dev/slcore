@@ -20,7 +20,7 @@ sl_def(foo, void, sl_shparm(int, a))
 }
 sl_enddef
 
-// XTIMEOUT: * (shared never set: deadlock)
+// XFAIL: *:R (shared never set: deadlock)
 sl_def(t_main, void)
 {
   sl_create(,,,,,,,

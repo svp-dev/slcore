@@ -14,6 +14,8 @@
 // $Id$
 //
 
+// XFAIL: *:[PC]
+// (write to a global)
 sl_def(foo, void, sl_glparm(int, a))
 {
   sl_setp(a, sl_getp(a) + 1);

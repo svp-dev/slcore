@@ -14,4 +14,5 @@
 // $Id$
 //
 
+// XFAIL: *:P
 #define foo(

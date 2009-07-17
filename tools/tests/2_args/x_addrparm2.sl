@@ -14,6 +14,7 @@
 // $Id$
 //
 
+// XFAIL: *:C
 int *p;
 sl_def(foo, void, sl_glparm(int, a))
 {

@@ -1,5 +1,82 @@
 2009-07-17  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	Cleanup test code.
+	
+	* tools/tests/0_trivial/x_empty.sl,
+	* tools/tests/0_trivial/x_illinsn.sl,
+	* tools/tests/0_trivial/x_infloop.sl,
+	* tools/tests/0_trivial/x_invcpp.sl,
+	* tools/tests/0_trivial/x_invm4.sl,
+	* tools/tests/0_trivial/x_invsyntax.sl,
+	* tools/tests/0_trivial/x_undefsym.sl,
+	* tools/tests/1_create/x_nocreate.sl,
+	* tools/tests/2_args/x_addrparm.sl,
+	* tools/tests/2_args/x_addrparm2.sl,
+	* tools/tests/2_args/x_deadlock.sl,
+	* tools/tests/2_args/x_invsh1.sl,
+	* tools/tests/2_args/x_invsh2.sl,
+	* tools/tests/2_args/x_invsh3.sl,	
+	* tools/tests/2_args/x_wrglparm.sl: Rewrite expected failure
+	variables for `slt'.
+	
+	* tools/tests/2_args/x_invsh4.sl: Duplicate of x_invsh3 -> remove.
+	
+	* tools/tests/4_index/defaults.sl,
+	* tools/tests/4_index/indexdecl.sl,
+	* tools/tests/4_index/inf1.sl,
+	* tools/tests/4_index/inf2.sl,
+	* tools/tests/4_index/inf3.sl,
+	* tools/tests/4_index/inf4.sl,
+	* tools/tests/4_index/inf5.sl,
+	* tools/tests/4_index/neg1.sl,
+	* tools/tests/4_index/neg2.sl,
+	* tools/tests/4_index/neg3.sl,
+	* tools/tests/4_index/neg4.sl,
+	* tools/tests/4_index/neg5.sl,
+	* tools/tests/4_index/neg6.sl,
+	* tools/tests/4_index/neg7.sl,
+	* tools/tests/4_index/neg8.sl,
+	* tools/tests/4_index/neg9.sl,
+	* tools/tests/4_index/pos1.sl,
+	* tools/tests/4_index/pos2.sl,
+	* tools/tests/4_index/pos3.sl,
+	* tools/tests/4_index/pos4.sl,
+	* tools/tests/4_index/pos5.sl,
+	* tools/tests/4_index/pos6.sl,
+	* tools/tests/4_index/pos7.sl,
+	* tools/tests/4_index/pos8.sl,
+	* tools/tests/4_index/pos9.sl: Rename to...
+
+	* tools/tests/4_index/defaults.sl.disabled,
+	* tools/tests/4_index/indexdecl.sl.disabled,
+	* tools/tests/4_index/inf1.sl.disabled,
+	* tools/tests/4_index/inf2.sl.disabled,
+	* tools/tests/4_index/inf3.sl.disabled,
+	* tools/tests/4_index/inf4.sl.disabled,
+	* tools/tests/4_index/inf5.sl.disabled,
+	* tools/tests/4_index/neg1.sl.disabled,
+	* tools/tests/4_index/neg2.sl.disabled,
+	* tools/tests/4_index/neg3.sl.disabled,
+	* tools/tests/4_index/neg4.sl.disabled,
+	* tools/tests/4_index/neg5.sl.disabled,
+	* tools/tests/4_index/neg6.sl.disabled,
+	* tools/tests/4_index/neg7.sl.disabled,
+	* tools/tests/4_index/neg8.sl.disabled,
+	* tools/tests/4_index/neg9.sl.disabled,
+	* tools/tests/4_index/pos1.sl.disabled,
+	* tools/tests/4_index/pos2.sl.disabled,
+	* tools/tests/4_index/pos3.sl.disabled,
+	* tools/tests/4_index/pos4.sl.disabled,
+	* tools/tests/4_index/pos5.sl.disabled,
+	* tools/tests/4_index/pos6.sl.disabled,
+	* tools/tests/4_index/pos7.sl.disabled,
+	* tools/tests/4_index/pos8.sl.disabled,
+	* tools/tests/4_index/pos9.sl.disabled: ... here.
+
+	* tools/tests/mkalltests.sh: Simplify accordingly.
+	
+2009-07-17  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	New SHA-1 benchmark/test program.
 	
 	* programs/benchmarks/sha/sha1.sl,

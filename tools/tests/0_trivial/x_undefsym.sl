@@ -16,6 +16,7 @@
 
 extern int __do_not_exist;
 
+// XFAIL: *:L
 sl_def(t_main, void)
 {
   __do_not_exist = 1;

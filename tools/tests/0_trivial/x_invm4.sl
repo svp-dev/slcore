@@ -14,4 +14,5 @@
 // $Id$
 //
 
+// XFAIL: *:T
 sl_def(

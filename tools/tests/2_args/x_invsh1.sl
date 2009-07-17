@@ -14,6 +14,7 @@
 // $Id$
 //
 
+// XFAIL: *:C
 void foo(sl_shparm(int, a));
 
 sl_def(t_main, void){}sl_enddef

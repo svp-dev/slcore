@@ -14,4 +14,5 @@
 // $Id$
 //
 
+// XFAIL: *:C
 sl_shparm(int, a);
