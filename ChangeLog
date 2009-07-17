@@ -1,3 +1,40 @@
+2009-07-18  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
+	Sanitize scripts. Simplify code, ease debugging.
+	
+	* tools/bin/timeout.in,
+	* tools/bin/slc.in,
+	* tools/bin/slr.in,
+	* tools/bin/slt.in: Enable shell tracing (`set -x') when
+	env. var. TRACE is set (used for debugging).
+
+	* doc/HACKING.txt: Document the feature.
+
+	* tools/bin/timeout.in: Major redesign to simplify and get signal
+	management and exit codes right. Processes now killed gracefully
+	(SIGTERM) once before SIGKILL.
+
+	* tools/bin/slt.in: Detect SIGTERM in child as timeout.
+
+	* tools/bin/slr.in: Use similar process management as in
+	`timeout'. The cleanup now happens in a background process instead
+	of a trap. Document the different steps.
+	
+	* tools/bin/slc.in: Use `timeout' to start compiler sub-processes,
+	so that they get terminated eventually when run from `slt' with
+	TIMEOUT set. Trap on SIGHUP as well.
+	* tools/bin/slt.in: Do not prefix `timeout' to `slc', since `slc'
+	takes care of aborting on its own.
+
+	* tools/lib/r-host.sh,
+	* tools/lib/r-mtalpha-sim.sh.in,	
+	* tools/lib/r-mtsparc-sim.sh.in: Protect with `set -u' against
+	bugs. Update variable accesses accordingly.
+
+	* tools/bin/slt.in: Do not dump logs when terminating due to
+	signal. List remaining files in all cases. Support .S as a test
+	extension.
+	
 2009-07-17  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
 	Reintroduce the `test-all' script from previous project `utcc',

@@ -2,7 +2,7 @@
 # $Id$
 
 # Run script for native executables.
-
+set -eu
 program=${1:?}
 datafile=${2:?}
 fdatafile=${3:?}
@@ -28,10 +28,10 @@ d=$(dirname "$program")
 d=$(cd "$d" && pwd)
 
 do_debug=
-if test -n "$DEBUG"; then
+if test -n "${DEBUG:-}"; then
   do_debug=$DEBUGGER
 fi
-if test -n "$VERBOSE"; then
-  echo "$0: running: $do_debug $d/$b $datafile $fdatafile $*" >&2
+if test -n "${VERBOSE:-}"; then
+  echo "$0: running: ${RUNNER_PREFIX:-} $do_debug $d/$b $datafile $fdatafile $*" >&2
 fi
-exec $RUNNER_PREFIX $do_debug "$d/$b" "$datafile" "$fdatafile" "$@"
+exec ${RUNNER_PREFIX:-} $do_debug "$d/$b" "$datafile" "$fdatafile" "$@"

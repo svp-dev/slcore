@@ -1,5 +1,6 @@
 #! /bin/sh
 # $Id$
+set -eu
 MGSIM_SPARC=${MGSIM_SPARC:-@MGSIM_SPARC@}
 program=${1:?}
 datafile=${2:?}
@@ -27,16 +28,16 @@ if ! "$MGSIM_SPARC" --help >/dev/null 2>&1; then
   exit 1
 fi
 
-if test -n "$NCORES"; then
-   SIMARGS="$SIMARGS -o NumProcessors=$NCORES"
+if test -n "${NCORES:-}"; then
+   SIMARGS="${SIMARGS:-} -o NumProcessors=$NCORES"
 fi
 
 do_debug=
-if test -n "$DEBUG"; then
-   SIMARGS="$SIMARGS -i"
+if test -n "${DEBUG:-}"; then
+   SIMARGS="${SIMARGS:-} -i"
    do_debug=$DEBUGGER
 fi
-if test -n "$VERBOSE"; then
-   echo "$0: running: $do_debug $MGSIM_SPARC $SIMARGS -t $* -L16 $datafile -L17 $fdatafile $program" >&2
+if test -n "${VERBOSE:-}"; then
+   echo "$0: running: ${RUNNER_PREFIX:-} $do_debug $MGSIM_SPARC ${SIMARGS:-} -t $* -L16 $datafile -L17 $fdatafile $program" >&2
 fi  
-exec $RUNNER_PREFIX $do_debug $MGSIM_SPARC $SIMARGS -t "$@" -L16 "$datafile" -L17 "$fdatafile" "$program"
+exec ${RUNNER_PREFIX:-} $do_debug $MGSIM_SPARC ${SIMARGS:-} -t "$@" -L16 "$datafile" -L17 "$fdatafile" "$program"

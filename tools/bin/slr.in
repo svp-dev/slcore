@@ -1,5 +1,5 @@
 #! @BASH@
-#
+# -*- mode: shell-script -*-
 # slr: This file is part of the SL toolchain.
 #
 copyright="Copyright (C) 2009 The SL project."
@@ -14,17 +14,20 @@ copyright="Copyright (C) 2009 The SL project."
 #
 # $Id$
 #
-set -e
+PS4='+ slr($$): '
+if test -n "${TRACE:-}"; then set -x; fi
+set -eu
 python=${PYTHON:-@python@}
 slc_helper=${SLC:-@slc_helper@}
 sag_helper=${SAG:-@sag_helper@}
 slc_libdir=${SLC_LIBDIR:-@slc_libdir@}
 slc_datadir=${SLC_DATADIR:-@slc_datadir@}
 TMPDIR=${TMPDIR:-/tmp}
+KEEP=${KEEP:-}
 
 version=@slc_version@
 slrev=@slc_revision@
-bugreports=@bugreports@
+bugreports="@bugreports@"
 
 do_usage() {
   cat <<EOF
@@ -150,6 +153,7 @@ die() {
 }
 
 # Command line analysis
+runner=
 prev_arg=
 show_embedded=
 vars=
@@ -215,6 +219,7 @@ if ! test -x "$program"; then
   die 126 "permission denied: $program"
 fi
 
+# detect runner & print string if requested
 if test -n "$show_embedded" -o -z "$runner"; then
   tag=$(strings "$program"|grep '^slr_runner:.*:'|tail -n1|cut -d: -f2)
   if test "x$tag" = "x"; then
@@ -235,7 +240,6 @@ if test "x$datatag" = "x"; then
     die 1 "can't determine cce tag to recompile"
 fi
 
-
 if test -z "$runner"; then
   # Not specified, use tag if found
   if test -n "$tag"; then
@@ -245,7 +249,7 @@ if test -z "$runner"; then
   fi
 fi
 
-# check it
+# search the runner in the libdirs
 runner_script=
 saveIFS=$IFS
 IFS=:
@@ -259,6 +263,7 @@ if test -z "$runner_script"; then
     die 1 "$runner: cannot find runner script"
 fi
 
+# search arggen.sl in the datadirs
 arggen=
 for d in $slc_datadir; do
     if test -r "$d/arggen.sl"; then
@@ -271,30 +276,7 @@ if test -z "$arggen"; then
     die 1 "arggen.sl not found in $slc_datadir"
 fi
 
-cleanfiles=
-docleanup() {
-    for f in $cleanfiles; do
-	if test -z "$KEEP"; then
-	    rm -rf "$f" >/dev/null 2>&1
-	else
-	    echo "$0: $f: left over temporary" >&2
-	fi
-    done
-}
-
-trapcleanup() {
-    local sig
-    sig=$1
-    docleanup
-    trap - INT PIPE TERM QUIT ALRM
-    kill -$sig $$
-}
-errcleanup() {
-    docleanup
-    trap - ERR
-    exit 1
-}
-
+# if a slrvars cache file is specified, use it
 if test -n "$rdatafile"; then
   if ! test -r "$rdatafile"; then die 1 "$rdatafile: cannot read file"; fi
   if test -n "$vars"; then 
@@ -306,6 +288,7 @@ else
   dodata=1
 fi
 
+# if a fibre cache file is specified, use it
 if test -n "$rfdatafile"; then
   if ! test -r "$rfdatafile"; then die 1 "$rfdatafile: cannot read file"; fi
   if test -n "$vars"; then 
@@ -317,20 +300,34 @@ else
   dofdata=1
 fi
 
-trap 'trapcleanup INT' INT
-trap 'trapcleanup PIPE' PIPE
-trap 'trapcleanup TERM' TERM
-trap 'trapcleanup QUIT' QUIT
-trap 'trapcleanup ALRM' ALRM
-trap 'errcleanup' ERR
-
+# if the cache(s) don't yet exist, create a temporary
+# directory for the data generation processes. This
+# needs to be erased when `slr' and its child processes
+# are terminated somehow and KEEP is not set, so start
+# a background watchdog for this purpose.
 if test -n "$dodata" -o -n "$dofdata"; then
     # build temporary directory
     baseout=$(basename "$program")
-    tmpdir=$(mktemp -d $TMPDIR/"$baseout".XXXXXXXX)
-    cleanfiles=$tmpdir
+    tmpdir=$(mktemp -d $TMPDIR/"$baseout".slr-XXXXXXXX)
+    if test -n "$KEEP"; then
+	echo "$0: $tmpdir: will not delete after program termination" >&2
+    else
+	SLR_PID=$$
+	(
+	    # start watchdog
+	    PS4='+ slr-wd($$)'
+	    while true; do 
+		if ! kill -0 $SLR_PID 2>/dev/null; then
+		    rm -rf "$tmpdir" >/dev/null 2>&1
+		    exit 0
+		fi
+		sleep 1
+	    done
+	    ) & 
+    fi
 fi
 
+# do we need to prepare the slrvars data file?
 if test -n "$dodata"; then
     if test -n "$wdatafile"; then
 	datafile=$wdatafile
@@ -344,28 +341,36 @@ if test -n "$dodata"; then
 	$python "$sag_helper" d list <"$tmpdir"/args.spec
 	exit 0
     fi
-      
+
+    # does the program take any slr vars?
     if test -s "$tmpdir"/args.spec; then
+
+	# prepare C struct with slr var data
 	if test -n "$VERBOSE"; then
 	    echo "$0: running: $python $sag_helper d $vars <$tmpdir/args.spec >$tmpdir/data.c" >&2
 	fi
 	$python "$sag_helper" d $vars <"$tmpdir"/args.spec >"$tmpdir"/data.c
-	
+
+	# compile arggen.sl with slr var data in C
 	mkdir -p "$tmpdir"/slc-rec
 	if test -n "$VERBOSE"; then
 	    echo "$0: running: TMPDIR=$tmpdir/slc-rec @BASH@ $slc_helper -b $datatag -o $tmpdir/gen.x -I$tmpdir $arggen" >&2
 	fi
 	TMPDIR="$tmpdir"/slc-rec @BASH@ "$slc_helper" -b "$datatag" -o "$tmpdir"/gen.x -I"$tmpdir" "$arggen"
+
+	# run slr recursively on the arggen binary to dump the data
 	mkdir -p "$tmpdir"/slr-rec
 	if test -n "$VERBOSE"; then
 	    echo "$0: running: TMPDIR=$tmpdir/slr-rec @BASH@ $0 $tmpdir/gen.x >$datafile" >&2
 	fi
 	TMPDIR="$tmpdir"/slr-rec @BASH@ "$0" "$tmpdir"/gen.x -Ws,-q,-o,NumProcessorsPerFPU=1 -n 1 >"$datafile"
     else
+	# just ensure the cache file exists 
         true >"$datafile"
     fi
 fi
 
+# do we need to prepare the fibre data file?
 if test -n "$dofdata"; then
     if test -n "$wfdatafile"; then
 	fdatafile=$wfdatafile
@@ -373,55 +378,51 @@ if test -n "$dofdata"; then
 	fdatafile="$tmpdir"/fdata
     fi
     
+    # was a Fibre file specified?
     if test -n "$fibre_in"; then
 	if test "x$fibre_in" != "x-" -a \! -r "$fibre_in"; then 
-	    docleanup; die 1 "$fibre_in: cannot read file"
+	    die 1 "$fibre_in: cannot read file"
 	fi
 
-        # check program parameters
+        # transform the Fibre data to a C string definition
 	if test -n "$VERBOSE"; then
 	    echo "$0: running: [sed] <$fibre_in |$python $sag_helper f >$tmpdir/fdata.c" >&2
 	fi
-
 	(if test "x$fibre_in" = "x-"; then cat; else cat "$fibre_in"; fi) | \
 	    sed -e 's/\#.*//g;' | \
-	    (tr '\n' ' ';echo " None") | \
+	    (tr '\t\n' '  ';echo " None") | \
 	    sed -e 's/^ *//g;
 s/\[[0-9 ,]*: */\[/g;
 s/ *\]/\]/g;
 s/  */,/g;
-s/d0//g;
+s/[dD]/e/g;
 s/,$//g' | $python "$sag_helper" f >"$tmpdir"/fdata.c
 	
+	# compile arggen.sl with Fibre data in C
 	mkdir -p "$tmpdir"/slc-rec
 	if test -n "$VERBOSE"; then
 	    echo "$0: running: TMPDIR=$tmpdir/slc-rec @BASH@ $slc_helper -b $datatag -o $tmpdir/gen.x -I$tmpdir -DFIBRE_DATA=1 $arggen" >&2
 	fi
 	TMPDIR="$tmpdir"/slc-rec @BASH@ \
 	    "$slc_helper" -b "$datatag" -o "$tmpdir"/gen.x -I"$tmpdir" -DFIBRE_DATA=1 "$arggen"
+
+	# run slr recursively on the arggen binary to dump the data
 	mkdir -p "$tmpdir"/slr-rec
 	if test -n "$VERBOSE"; then
 	    echo "$0: running: TMPDIR=$tmpdir/slr-rec @BASH@ $0 $tmpdir/gen.x >$fdatafile" >&2
 	fi
 	TMPDIR="$tmpdir"/slr-rec @BASH@ "$0" "$tmpdir"/gen.x -Ws,-q,-o,NumProcessorsPerFPU=1 -n 1 >"$fdatafile"
     else
-	# Ensure a tag = -1 for the first item
+	# Ensure a tag = -1 for the first Fibre item
         printf '\xff\xff\xff\xff\xff\xff\xff\xff' >"$fdatafile"
     fi
 fi
 
-if test -n "$preponly"; then docleanup; exit 0; fi
+# cache only?
+if test -n "$preponly"; then exit 0; fi
 
 export SIMARGS VERBOSE DEBUG NCORES
 if test -n "$VERBOSE"; then
     echo "$0: running: @BASH@ $runner_script $program $datafile $fdatafile" >&2
 fi
-@BASH@ "$runner_script" "$program" "$datafile" "$fdatafile"
-
-docleanup
-
-trap - ERR
-
-# Local variables:
-# mode: shell-script
-# End:
+exec @BASH@ "$runner_script" "$program" "$datafile" "$fdatafile"

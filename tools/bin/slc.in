@@ -14,7 +14,11 @@ copyright="Copyright (C) 2009 The SL project."
 #
 # $Id$
 #
+PS4='+ slc($$): '
+if test -n "$TRACE"; then set -x; fi
 set -e
+root=$(cd $(dirname "$0"); pwd)
+timeout=$root/timeout
 cce_helper=${CCE:-@cce_helper@}
 basename=$(basename "$0")
 TMPDIR=${TMPDIR:-/tmp}
@@ -79,7 +83,7 @@ cleanup() {
   tempfiles=
   tempdirs=
 }
-trap cleanup 0 ERR INT TERM QUIT
+trap cleanup 0 ERR HUP INT TERM QUIT
 
 die() {
     echo "$0:" "$@" >&2
@@ -677,13 +681,13 @@ EOF
   if test -n "$capturestdout"; then
       if test -n "$verbose"; then echo "$action: $cmd >$target" >&2; fi
       set +e
-      $cmd >"$target"
+      $timeout $cmd >"$target"
       cmdcode=$?
       set -e
   else
       if test -n "$verbose"; then echo "$action: $cmd" >&2; fi
       set +e
-      $cmd
+      $timeout $cmd
       cmdcode=$?
       set -e
   fi

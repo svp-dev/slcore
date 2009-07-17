@@ -79,7 +79,7 @@ Note: this will update ``PATH`` as well. Once the variables are set,
 the command-line utilities can be used directly even before ``make
 install`` has been run, e.g.::
 
-   $ cd demo && slc 10threads.sl && slr a.out
+   $ cd programs/demo && slc 10threads.sl && slr a.out
 
 
 Committing work
@@ -127,6 +127,38 @@ archives (``.tar.gz`` and ``.tar.bz2``) suitable for distribution.
    to ensure that the SVN revision number at the end of the
    ``ChangeLog`` is up-to-date. This is used in the message output by
    the ``--version`` flag on the utilities.
+
+Goodies
+=======
+
+The following "features" of the source tree are there for the benefit
+of the developer, not the end user of the SL toolchain:
+
+
+- ``make check-slt`` at the top directory invokes ``slt`` on the
+  console, and lets it use ASCII art for test results. 
+
+  This is nicer to the eye than ``make check``, but ``make check -jN``
+  can deliver test results much faster on many-core machines. In both
+  cases, failed tests cause log files to stay around for further
+  investigation. Fish for the log files in the test subdirectories
+  (extension ``.log``), or look at what ``slt`` says about remaining
+  files;
+
+- the list of SL implementations that are tested by ``make check`` and
+  ``make check-slt`` is normally derived from ``configure`` flags
+  (e.g. ``--enable-check-utc``), but can be overriden with the
+  environment variable ``SLT_IMPL_LIST``;
+
+- the environment variable ``TRACE``, when set and not empty, cause
+  the scripts ``slt``, ``slc``, ``slr`` and ``timeout`` to enable the
+  shell tracing mode (``set -x``). 
+
+  .. note:: This feature is redundant with the better-looking output
+  of ``slc -v``, ``slr -t`` and ``slt`` 's detailed logs. Check the
+  documentation of these utilities for details. However, ``TRACE`` was
+  introduced when debugging process management and signal handling in
+  ``slt`` and may still be useful to debug the script internals.
 
 .. Local Variables:
 .. mode: rst
