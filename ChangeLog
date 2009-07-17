@@ -1,5 +1,13 @@
 2009-07-18  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	Distribute missing files. Pass `make distcheck' again.
+	
+	* programs/demo/Makefile.am: Distribute `fibre.sl.d{1,2,3}'.
+
+	* tools/Makefile.am: Distribute `include/fibre.slh'.
+	
+2009-07-18  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	Sanitize the make rules.
 	
 	* sl.mk: Rename make variable `SLC' to `SLC_RUN', so that rules in

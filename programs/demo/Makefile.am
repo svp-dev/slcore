@@ -18,6 +18,7 @@ TESTS = $(DEMOS)
 include $(top_srcdir)/tests.mk
 
 EXTRA_DIST = $(DEMOS)
+EXTRA_DIST += fibre.sl.d1 fibre.sl.d2 fibre.sl.d3
 
 if ENABLE_DEMOS
 noinst_DATA = $(DEMOS:.sl=.x)
