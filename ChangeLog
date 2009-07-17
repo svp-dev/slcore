@@ -1,5 +1,18 @@
 2009-07-17  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	Reintroduce the `test-all' script from previous project `utcc',
+	rename to `slt-many'. This eases applying `slt' on a batch of test
+	files or directories on the command line.
+	
+	* tools/bin/slt-many: Reinstate `test-all'. Change to use `slt'
+	instead of `test1'. Handle signals properly. Credit
+	S. Polstra. Update bug report info, copyright.
+	
+	* tools/bin/Makefile.am: Distribute and install it. Be careful
+	when generating man pages, `slt-many' is not a derived file.
+
+2009-07-17  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	Minor packaging update.
 	
 	* tools/bin/Makefile.am: Make the generated scripts depend on

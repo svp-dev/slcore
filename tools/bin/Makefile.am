@@ -13,7 +13,7 @@
 
 # 
 bin_SCRIPTS = cce slc slr slt timeout
-dist_bin_SCRIPTS = scu spp sag
+dist_bin_SCRIPTS = scu spp sag slt-many
 
 EXTRA_DIST = cce.in slc.in slr.in slt.in timeout.in
 
@@ -58,19 +58,20 @@ timeout: timeout.in
 #
 # Documentation for the scripts
 #
-dist_man1_MANS = cce.1 slc.1 slr.1 slt.1
+dist_man1_MANS = cce.1 slc.1 slr.1 slt.1 slt-many.1
 
 if MAINTAINER_MODE
 
-cce.1 slc.1 slr.1 slt.1:
+cce.1 slc.1 slr.1 slt.1 slt-many.1:
 	rm -f $@
-	$(HELP2MAN) -N --output=$@.tmp ./$(@:.1=)
+	$(HELP2MAN) -N --output=$@.tmp `test -r $(srcdir)/$(@:.1=) && echo $(srcdir) || echo .`/$(@:.1=)
 	mv $@.tmp $@
 
 cce.1: cce
 slc.1: slc
 slr.1: slr
 slt.1: slt
+slt-many.1: slt-many
 
 MAINTAINERCLEANFILES = $(dist_man1_MANS)
 

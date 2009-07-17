@@ -1,0 +1,137 @@
+#! /bin/sh
+version=2
+
+set -e
+rev='$Rev$'
+rev=$(echo "$rev"|cut -d' ' -f2)
+root=$(dirname "$0")
+basename=$(basename "$0")
+
+if test $# = 0; then
+   tests=$(find . -name '*.sl'|sort)
+elif test "$1" = "-h" -o "$1" = "--help"; then
+   cat <<EOF
+SL test helper.
+
+\`$basename' is a command-line utility that helps invoke \`slt' 
+recursively on an list of tests or directories.
+
+When run with no arguments, \`$basename' searches the current directory
+and all subdirectories for test programs and runs \`slt' on them.
+
+Test programs must have filenames with the extension .sl to be
+picked up by this script automatically. When specified explicitely,
+test programs can have extension .sl, .S or .s.
+
+If arguments are specified, the behavior depends on the type of each
+argument:
+
+- if the argument is a source file, \`slt' is run on it directly.
+
+- if the argument is a directory, $basename searches the directory 
+and all subdirectories for test programs and runs \`slt' on them.
+
+All paths and filenames used for testing are sorted in alphanumerical
+order before testing starts.
+
+Examples:
+
+  $basename
+
+  SLT_IMPL_LIST=seqc $basename
+
+  KEEP=1 $basename tests/0_minimal/0_trivial
+
+  $basename tests/2*/0*/helloworld.sl
+
+Usage: $0 [TEST]... [DIR]...
+
+Options:
+
+  -h, --help    Display this help.
+  -v, --version Display the version number.
+
+Environment variables:
+  KEEP               Keep intermediary files.
+
+  SLT_IMPL_LIST      Select implementations to test. Default is "all".
+
+Diagnostics:
+  0                  All tests succeeded.
+
+  1                  Some test(s) failed.
+
+Report bugs and suggestions to the CSA Trac issue tracker, or to
+<sl-users@nic.surfnet.nl>.
+EOF
+   exit 0
+elif test "$1" = "-v" -o "$1" = "--version"; then
+   cat <<EOF   
+$basename $version.$revision
+
+Copyright (C) 2008, 2009 the CSA group - The SL project
+
+Script written by Raphael Poss, with input from Mike Lankamp,
+Thomas Bernard, Simon Polstra.
+EOF
+   exit 0
+else
+  # collect arguments and test files
+  tests=""
+  for arg in "$@"; do
+    if test -d "$arg"; then
+      found=$(find $arg -name '*.sl' -or -name '*.[sS]')
+      if test -n "$found"; then
+	  tests="$tests $found"
+      fi
+    else  
+      if test -r "$arg"; then
+        tests="$tests $arg"
+      fi
+    fi
+  done
+fi
+
+if ! slt --version >/dev/null 2>&1; then
+  echo "\`slt' not found in PATH, cannot run." >&2
+  exit 1
+fi
+
+if test -z "$tests"; then
+  echo "No tests selected! (run from test directory or select tests on command line)" >&2
+  exit 1
+fi
+nrtests=$(echo "$tests"|tr ' ' '\n'|wc -l)
+echo "$nrtests test(s) selected."
+
+SLT_IMPL_LIST=${SLT_IMPL_LIST:-seqc ptl ppp utc0}
+echo "The following implementation(s) are tested: $SLT_IMPL_LIST"
+echo
+
+count=0
+errs=0
+report() {
+  set +e
+  success=$(expr $count - $errs)
+  echo "$count tests run: $success good, $errs failed."
+  if test $errs = 0; then exit 0; else exit 1; fi
+}
+
+export SLT_IMPL_LIST
+trap report INT TERM QUIT HUP
+# sort the tests
+tests=$(echo "$tests"|tr ' ' '\n'|sort)
+for t in $tests; do
+  set +e
+  slt "$t"
+  x=$?
+  set -e
+  count=$(expr $count + 1)
+  if test $x -gt 127; then
+     echo "signal $x, exiting" >&2
+     kill -$(expr $x - 128) $$
+  elif test $x != 0; then
+     errs=$(expr $errs + 1)
+  fi
+done
+report
