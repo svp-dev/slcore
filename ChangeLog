@@ -1,5 +1,15 @@
 2009-07-17  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	New SHA-1 benchmark/test program.
+	
+	* programs/benchmarks/sha/sha1.sl,
+	* programs/benchmarks/sha/Makefile.am: Add.
+	
+	* programs/benchmarks/Makefile.am,
+	* configure.ac: Update accordingly.
+
+2009-07-17  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	Update to the new `ldfp' mechanism in the Microgrid
 	simulator. This break compatibility of the generated code with
 	older simulator versions.

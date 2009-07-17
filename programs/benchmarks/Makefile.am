@@ -1,1 +1,1 @@
-SUBDIRS = fft blas quicksort nas ll
+SUBDIRS = fft blas quicksort nas ll sha
