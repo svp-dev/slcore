@@ -1,5 +1,13 @@
 2009-07-17  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	Minor packaging update.
+	
+	* tools/bin/Makefile.am: Make the generated scripts depend on
+	`ChangeLog', which carries the version information. Generate man
+	pages only in maintainer mode.
+	
+2009-07-17  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	Cleanup test code.
 	
 	* tools/tests/0_trivial/x_empty.sl,

@@ -42,7 +42,7 @@ edit_scripts = $(SED) \
 	       -e 's|@slc_revision[@]|$(SVN_REVISION)|g' \
 	       -e 's|@bugreports[@]|$(PACKAGE_BUGREPORT)|g'
 
-cce slr slc slt timeout: Makefile
+cce slr slc slt timeout: $(top_srcdir)/ChangeLog
 	$(AM_V_at)rm -f $@ $@.tmp
 	$(AM_V_GEN)$(edit_scripts) $(srcdir)/$@.in >$@.tmp
 	$(AM_V_at)chmod +x $@.tmp
@@ -60,15 +60,18 @@ timeout: timeout.in
 #
 dist_man1_MANS = cce.1 slc.1 slr.1 slt.1
 
-cce.1 slc.1 slr.1 slt.1: $(top_srcdir)/configure.ac
+if MAINTAINER_MODE
+
+cce.1 slc.1 slr.1 slt.1:
 	rm -f $@
-	$(MAKE) $(AM_MAKEFLAGS) $(@:.1=)
 	$(HELP2MAN) -N --output=$@.tmp ./$(@:.1=)
 	mv $@.tmp $@
 
-cce.1: cce.in
-slc.1: slc.in
-slr.1: slr.in
-slt.1: slt.in
+cce.1: cce
+slc.1: slc
+slr.1: slr
+slt.1: slt
 
 MAINTAINERCLEANFILES = $(dist_man1_MANS)
+
+endif
