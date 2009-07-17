@@ -155,10 +155,11 @@ of the developer, not the end user of the SL toolchain:
   shell tracing mode (``set -x``). 
 
   .. note:: This feature is redundant with the better-looking output
-  of ``slc -v``, ``slr -t`` and ``slt`` 's detailed logs. Check the
-  documentation of these utilities for details. However, ``TRACE`` was
-  introduced when debugging process management and signal handling in
-  ``slt`` and may still be useful to debug the script internals.
+     of ``slc -v``, ``slr -t`` and ``slt`` 's detailed logs. Check the
+     documentation of these utilities for details. However, ``TRACE``
+     was introduced when debugging process management and signal
+     handling in ``slt`` and may still be useful to debug the script
+     internals.
 
 .. Local Variables:
 .. mode: rst
