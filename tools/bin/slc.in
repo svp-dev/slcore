@@ -19,6 +19,7 @@ if test -n "$TRACE"; then set -x; fi
 set -e
 root=$(cd $(dirname "$0"); pwd)
 timeout=$root/timeout
+TIMEOUT=${TIMEOUT:-10000}; export TIMEOUT
 cce_helper=${CCE:-@cce_helper@}
 basename=$(basename "$0")
 TMPDIR=${TMPDIR:-/tmp}

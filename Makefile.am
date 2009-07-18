@@ -30,7 +30,7 @@ NEWS: $(srcdir)/doc/NEWS.txt
 # usage and faster results, use `make check')
 
 check-slt:
-	$(AM_V_at)$(MAKE) $(AM_MAKEFLAGS) all
+	$(AM_V_at)for d in tools lib; do (cd $$d && $(MAKE) $(AM_MAKEFLAGS) all); done
 	$(AM_V_at)set -e; for d in `find . -type d \
 	    -and -exec test -r '{}'/Makefile \; \
 	    -and -exec test -r $(srcdir)/'{}'/Makefile.am \; \

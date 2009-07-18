@@ -1,5 +1,16 @@
 2009-07-18  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	Sanitize (more).
+
+	* tools/bin/slc.in (TIMEOUT): Set a large default timeout, so that
+	commands can have a chance to terminate by default (the timeout
+	value is overriden by `slt').
+
+	* Makefile.am (check-slt): Recurse `make all' only into `tools'
+	and `lib'.
+
+2009-07-18  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	Optimizations in generated code for `ppp' target.
 	
 	* tools/bin/spp (pppalpha.addswchll): Remove special case for
