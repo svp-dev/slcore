@@ -13,7 +13,7 @@ EXP_FILE = exp.tar.bz2
 BENCHER = bash ./benchmarker.sh
 
 #define all of the kernels to compile
-KERNELS = kernel01 kernel02 kernel03 kernel04 kernel05 kernel06 kernel07 kernel08 kernel09 kernel10 kernel11 kernel12 kernel13
+KERNELS = kernel01 kernel02 kernel03 kernel04 kernel05 kernel06 kernel07 kernel08 kernel09 kernel10 kernel11 kernel12 kernel13 kernel14
 
 # as per the design, each of the livermore
 # kernels must be separately compiled.

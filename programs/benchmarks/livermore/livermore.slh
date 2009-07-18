@@ -77,7 +77,7 @@ unsigned int inner[25] = {0,
 			  7000,
 			  7000, //12
 			  7000,
-			  10,
+			  2000,
 			  10,
 			  10,   //16
 			  10,
@@ -256,16 +256,16 @@ sl_enddef
 //     double Du1[101];
 //     double Du2[101];
 //     double Du3[101];
-//     double Grd[1001];
-//     double Dex[1001];
+     double Grd[LARGEST];
+     double Dex[LARGEST];
 //     double Xi[1001];
-//     double Ex[1001];
+     double Ex[LARGEST];
 //     double Ex1[1001];
-//     double Dex1[1001];
+     double Dex1[LARGEST];
 //     double Vx[1001];
 //     double Xx[1001];
-//     double Rx[1001];
-//      double Rh[2048];
+     double Rx[LARGEST];
+      double Rh[LARGEST*2];
 //      double Vsp[101];
 //      double Vstp[101];
 //      double Vxne[101];
@@ -304,8 +304,8 @@ sl_enddef
      double Xtra[40];
 //      long   E[96];
 //      long   F[96];
-//      long   Ix[1001];
-//      long   Ir[1001];
+      long   Ix[LARGEST];
+      long   Ir[LARGEST];
 //      long   Zone[301];
   }data;
 // The definitions below are used to maintain the original
@@ -343,6 +343,19 @@ m4_define([[p]],[[data.P]])
 m4_define([[c]],[[data.Cx]])
 m4_define([[h]],[[data.H]])
 
+m4_define([[vx]],[[data.V]]) //mapped to another
+m4_define([[xxx]],[[data.X]]) //mapped to another
+m4_define([[xi]],[[data.Z]]) //mapped to another
+m4_define([[ex1]],[[data.Y]])  //mapped to another
+
+m4_define([[ex]],[[data.Ex]])
+m4_define([[dex]],[[data.Dex]])
+m4_define([[dex1]],[[data.Dex1]])
+m4_define([[grd]],[[data.Grd]])
+m4_define([[rx]],[[data.Rx]])
+m4_define([[rh]],[[data.Rh]])
+m4_define([[ir]],[[data.Ir]])
+m4_define([[ix]],[[data.Ix]])
 
 m4_define([[dm22]],[[data.Xtra[16] ]])
 m4_define([[dm23]],[[data.Xtra[17] ]])
@@ -362,6 +375,7 @@ m4_define([[a31]],[[data.Xtra[7] ]])
 m4_define([[a32]],[[data.Xtra[8] ]])
 m4_define([[a33]],[[data.Xtra[9] ]])
 m4_define([[sig]],[[data.Xtra[9] ]])
+m4_define([[flx]],[[data.Xtra[27] ]])
 //------------------------------------------
 
 //---------------------------------------------------------
