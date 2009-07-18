@@ -767,8 +767,8 @@ class pppalpha(object):
                      hello = 0
             for r in qnew:
                queue.append(('empty','','MT: optimized away: %s' % r))
-            queue.append(('other','nop','END_THREAD'))
-            queue.append(('other','end','END_THREAD'))
+            # queue.append(('other','nop','MT: end thread'))
+            queue.append(('other','end','MT: end thread'))
          else:
             queue.append((type, content, comment))
 
@@ -1128,6 +1128,17 @@ class pppalpha(object):
       for (type, content, comment) in items:
          yield (type, content, comment)
 
+   def protectend(self, fundata, items):
+      atlabel = True
+      for (type, content, comment) in items:
+         if type == 'label':
+            atlabel = True
+         if type == 'other':
+            if content == 'end' and atlabel:
+               yield ('other', 'nop', 'MT: end after label')
+            atlabel = False
+         yield (type, content, comment)
+
    def addswchll(self, fundata, items):
       re3way = re.compile(r'\w+\s([^,]+),([^,]+),([^,]+)$')
       re1way = re.compile(r'\w+\s([^,]+)$')
@@ -1135,7 +1146,7 @@ class pppalpha(object):
       rexway = re.compile(r'\w+\s([^,]+),(.*)')
       reld = re.compile(r'(ld[lqts]|allocate)')
       re3wayll = re.compile(r'(add|sub|mul|div|sqrt)[ts]')
-      w1way = re.compile(r'(setempty|rpcc)')
+      w1way = re.compile(r'(setempty|rpcc|ldfp)')
 
       allregs = ['$l%d' % x for x in xrange(31 - self.iargregs) if x not in (17, 18)] + \
           ['$lf%d' % x for x in xrange(31 - self.fargregs)] + \
@@ -1143,7 +1154,7 @@ class pppalpha(object):
           ['$df%d' % x for x in xrange(self.fargregs / 2)]
          
       # initially exlude index and sp reg
-      maybell = [x for x in list(allregs) if x not in ["$l0", "$l1"]] 
+      maybell = [x for x in list(allregs) if x != "$l0"] 
       for (type, content, comment) in items:
          yield (type, content, comment)
          if type == 'label':
@@ -1154,7 +1165,6 @@ class pppalpha(object):
             shortwrites = []
             longwrites = []
             done = 0
-
 
             # check 3-way insns
             m = re3way.match(content)
@@ -1342,6 +1352,7 @@ class pppalpha(object):
          # groups = self.funfilter(self.addswchdep, groups)
          groups = self.funfilter(self.addswchbr, groups)
          groups = self.funfilter(self.rmdupswch, groups)
+         groups = self.funfilter(self.protectend, groups)
 
          groups = self.funfilter(self.xjoin1, groups)
          groups = self.funfilter(self.markused, groups)

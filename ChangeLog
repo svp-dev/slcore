@@ -1,5 +1,18 @@
 2009-07-18  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	Optimizations in generated code for `ppp' target.
+	
+	* tools/bin/spp (pppalpha.addswchll): Remove special case for
+	`$l1' when adding `swch' at the beginning of a function
+	body. Recognize `ldfp' as an instruction that writes to its
+	operand.
+
+	* tools/bin/spp (pppalpha.protectend): Do not insert "nop" before
+	"end", unless when adding "end" just after a label. This saves a
+	cycle in most cases.
+
+2009-07-18  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	Minor fix in doc.
 	
 	* doc/HACKING.txt: Fix indent in last note. 
