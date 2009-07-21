@@ -41,7 +41,7 @@ BASE_REPO = https://svn.svp-home.org
 ## BASE_REPO = svn+ssh://kena@mac-chris.science.uva.nl/Library/SVN/CSA
 
 ### Desired versions for the tools
-BINUTILS_REV = 2182
+BINUTILS_REV = 2430
 BINUTILS_REPO = $(BASE_REPO)/sw/svp/mg/binutils/trunk
 
 UTC_GCC_REV = 2182

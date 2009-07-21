@@ -1,5 +1,12 @@
 2009-07-21  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	Update deployment makefiles to use latest binutils changes.
+	
+	* deploy/Makefile-reqs.orig (BINUTILS_REV): Bump to r2430 where
+	LDFP was introduced.
+
+2009-07-21  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	Improve deployment makefiles.
 	
 	* deploy/reqs.mk: Copy slenv to $(PREFIX) when needed. Move REPO
