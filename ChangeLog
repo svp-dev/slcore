@@ -1,5 +1,13 @@
 2009-07-21  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	Improve deployment makefiles.
+	
+	* deploy/reqs.mk: Copy slenv to $(PREFIX) when needed. Move REPO
+	variables to...	
+	* deploy/Makefile-reqs.orig: here, so they can be customized.
+
+2009-07-21  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	Extend test suite.
 	
 	* tools/tests/2_args/twoways.sl: New. Inspired from discussion

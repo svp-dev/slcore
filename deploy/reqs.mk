@@ -6,18 +6,6 @@
 
 ######## YOU SHOULD NOT NEED TO EDIT THE FOLLOWING ########
 
-# Source URLs:
-BINUTILS_REPO = $(BASE_REPO)/sw/svp/mg/binutils/trunk
-
-UTC_GCC_REPO = $(BASE_REPO)/sw/svp/mg/gcc/trunk
-
-MGSIM_REPO = $(BASE_REPO)/sw/svp/mg/mgsim/trunk
-
-SLC_REPO = $(BASE_REPO)/sw/svp/slc/trunk
-
-GCC_ARCHIVE = gcc-core-$(GCC_VERSION).tar.bz2
-GCC_MIRROR = http://gcc.cybermirror.org/releases/gcc-$(GCC_VERSION)
-
 REQDIR = $(PREFIX)/slreqs-$(BINUTILS_REV)-$(UTC_GCC_REV)-$(GCC_VERSION)
 SLDIR = $(PREFIX)/sl-$(MGSIM_REV)-$(SLC_REV)
 
@@ -30,6 +18,7 @@ GCC_CONFIG_FLAGS = \
    --disable-multilib --enable-languages=c 
 
 all: \
+     $(PREFIX)/slenv \
      $(REQDIR)/bin/alpha-linux-gnu-as \
      $(REQDIR)/bin/alpha-linux-gnu-gcc \
      $(REQDIR)/bin/mtalpha-linux-gnu-as \
@@ -43,6 +32,11 @@ all: \
 	@echo "*** All dependencies are now installed. ***"
 	@echo
 
+
+$(PREFIX)/slenv: slenv
+	mkdir -p $(PREFIX)
+	cp $^ $@
+	chmod +x $@
 
 ##### Binutils #####
 

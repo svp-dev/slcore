@@ -36,17 +36,26 @@
 
 ###### YOU SHOULD EDIT THE FOLLOWING #####
 
-### Desired versions for the tools
-BINUTILS_REV = 2182
-UTC_GCC_REV = 2182
-MGSIM_REV = 2324
-SLC_REV = 2429
-GCC_VERSION = 4.4.0
-
 ### SVN repository for the tools
 BASE_REPO = https://svn.svp-home.org
-
 ## BASE_REPO = svn+ssh://kena@mac-chris.science.uva.nl/Library/SVN/CSA
+
+### Desired versions for the tools
+BINUTILS_REV = 2182
+BINUTILS_REPO = $(BASE_REPO)/sw/svp/mg/binutils/trunk
+
+UTC_GCC_REV = 2182
+UTC_GCC_REPO = $(BASE_REPO)/sw/svp/mg/gcc/trunk
+
+MGSIM_REV = 2477
+MGSIM_REPO = $(BASE_REPO)/sw/svp/mg/mgsim/trunk
+
+SLC_REV = 2510
+SLC_REPO = $(BASE_REPO)/sw/svp/slc/trunk
+
+GCC_VERSION = 4.4.0
+GCC_ARCHIVE = gcc-core-$(GCC_VERSION).tar.bz2
+GCC_MIRROR = http://gcc.cybermirror.org/releases/gcc-$(GCC_VERSION)
 
 
 ####
