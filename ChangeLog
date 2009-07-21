@@ -1,5 +1,12 @@
 2009-07-21  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	Extend test suite.
+	
+	* tools/tests/2_args/twoways.sl: New. Inspired from discussion
+	with T. Bernard.
+
+2009-07-21  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	Move forward with `make check' on LL benchmark code.
 
 	* programs/benchmarks/livermore/ll.slh: Remove structure
