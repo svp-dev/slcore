@@ -79,8 +79,6 @@ unsigned long blocksize[25] = {999,
 // Modelled after R.Longbottom
 // Preserved here for simplicity
 
-struct Arrays
-{
 //     double U[1001];
      double V[LARGEST];
 //     double W[1001];
@@ -142,7 +140,6 @@ struct Arrays
       long   Ix[LARGEST];
       long   Ir[LARGEST];
 //      long   Zone[301];
-} data;
 
 // The definitions below are used to maintain the original
 // naming used in the Livermore Kernels. However, many names
@@ -156,62 +153,62 @@ struct Arrays
 
 typedef double (*array2d)[LARGEST]; //must declare a new type for 2d arrays (since SL/M4 macros confuse these)
 typedef double (*array3d)[LARGEST][LARGEST];
-m4_define([[x]],[[data.X]])
-m4_define([[q]],[[data.Xtra[28] ]])
-m4_define([[rr]],[[data.Xtra[30] ]]) // rr instead of just 'r' due to conflict
-m4_define([[t]],[[data.Xtra[36] ]])
-m4_define([[y]],[[data.Y]])
-m4_define([[z]],[[data.Z]])
-m4_define([[v]],[[data.V]])
-m4_define([[w]],[[data.X]]) //mapped to another
-m4_define([[b]],[[data.B]])
-m4_define([[u]],[[data.V]]) //mapped to another
-m4_define([[u1]],[[data.U1]])
-m4_define([[u2]],[[data.U2]])
-m4_define([[u3]],[[data.U3]])
-m4_define([[du1]],[[data.X]]) //mapped to another
-m4_define([[du2]],[[data.Y]]) //mapped to another
-m4_define([[du3]],[[data.Z]]) //mapped to another
-m4_define([[px]],[[data.B]]) //mapped to another
-m4_define([[cx]],[[data.Cx]]) 
-m4_define([[e]],[[data.X]]) //mapped to another 
-m4_define([[ff]],[[data.V]]) //mapped to another 
-m4_define([[p]],[[data.P]]) 
-m4_define([[cx]],[[data.Cx]]) 
+m4_define([[x]],[[X]])
+m4_define([[q]],[[Xtra[28] ]])
+m4_define([[rr]],[[Xtra[30] ]]) // rr instead of just 'r' due to conflict
+m4_define([[t]],[[Xtra[36] ]])
+m4_define([[y]],[[Y]])
+m4_define([[z]],[[Z]])
+m4_define([[v]],[[V]])
+m4_define([[w]],[[X]]) //mapped to another
+m4_define([[b]],[[B]])
+m4_define([[u]],[[V]]) //mapped to another
+m4_define([[u1]],[[U1]])
+m4_define([[u2]],[[U2]])
+m4_define([[u3]],[[U3]])
+m4_define([[du1]],[[X]]) //mapped to another
+m4_define([[du2]],[[Y]]) //mapped to another
+m4_define([[du3]],[[Z]]) //mapped to another
+m4_define([[px]],[[B]]) //mapped to another
+m4_define([[cx]],[[Cx]]) 
+m4_define([[e]],[[X]]) //mapped to another 
+m4_define([[ff]],[[V]]) //mapped to another 
+m4_define([[p]],[[P]]) 
+m4_define([[cx]],[[Cx]]) 
 
-m4_define([[hx]],[[data.H]]) //mapped to another
-m4_define([[vx]],[[data.V]]) //mapped to another 
-m4_define([[xxx]],[[data.X]]) //mapped to another 
-m4_define([[xi]],[[data.Z]]) //mapped to another 
-m4_define([[ex1]],[[data.Y]])  //mapped to another 
+m4_define([[hx]],[[H]]) //mapped to another
+m4_define([[vx]],[[V]]) //mapped to another 
+m4_define([[xxx]],[[X]]) //mapped to another 
+m4_define([[xi]],[[Z]]) //mapped to another 
+m4_define([[ex1]],[[Y]])  //mapped to another 
  
-m4_define([[exx]],[[data.Ex]]) 
-m4_define([[dex]],[[data.Dex]]) 
-m4_define([[dex1]],[[data.Dex1]]) 
-m4_define([[grd]],[[data.Grd]]) 
-m4_define([[rx]],[[data.Rx]]) 
-m4_define([[rh]],[[data.Rh]]) 
-m4_define([[ir]],[[data.Ir]]) 
-m4_define([[ixx]],[[data.Ix]]) 
+m4_define([[exx]],[[Ex]]) 
+m4_define([[dex]],[[Dex]]) 
+m4_define([[dex1]],[[Dex1]]) 
+m4_define([[grd]],[[Grd]]) 
+m4_define([[rx]],[[Rx]]) 
+m4_define([[rh]],[[Rh]]) 
+m4_define([[ir]],[[Ir]]) 
+m4_define([[ixx]],[[Ix]]) 
 
-m4_define([[dm22]],[[data.Xtra[16] ]])
-m4_define([[dm23]],[[data.Xtra[17] ]])
-m4_define([[dm24]],[[data.Xtra[18] ]])
-m4_define([[dm25]],[[data.Xtra[19] ]])
-m4_define([[dm26]],[[data.Xtra[20] ]])
-m4_define([[dm27]],[[data.Xtra[21] ]])
-m4_define([[dm28]],[[data.Xtra[22] ]])
-m4_define([[c0]],[[data.Xtra[12] ]])
+m4_define([[dm22]],[[Xtra[16] ]])
+m4_define([[dm23]],[[Xtra[17] ]])
+m4_define([[dm24]],[[Xtra[18] ]])
+m4_define([[dm25]],[[Xtra[19] ]])
+m4_define([[dm26]],[[Xtra[20] ]])
+m4_define([[dm27]],[[Xtra[21] ]])
+m4_define([[dm28]],[[Xtra[22] ]])
+m4_define([[c0]],[[Xtra[12] ]])
 
-m4_define([[a11]],[[data.Xtra[1] ]])
-m4_define([[a12]],[[data.Xtra[2] ]])
-m4_define([[a13]],[[data.Xtra[3] ]])
-m4_define([[a21]],[[data.Xtra[4] ]])
-m4_define([[a22]],[[data.Xtra[5] ]])
-m4_define([[a23]],[[data.Xtra[6] ]])
-m4_define([[a31]],[[data.Xtra[7] ]])
-m4_define([[a32]],[[data.Xtra[8] ]])
-m4_define([[a33]],[[data.Xtra[9] ]])
-m4_define([[sig]],[[data.Xtra[9] ]])
-m4_define([[flx]],[[data.Xtra[27] ]])
+m4_define([[a11]],[[Xtra[1] ]])
+m4_define([[a12]],[[Xtra[2] ]])
+m4_define([[a13]],[[Xtra[3] ]])
+m4_define([[a21]],[[Xtra[4] ]])
+m4_define([[a22]],[[Xtra[5] ]])
+m4_define([[a23]],[[Xtra[6] ]])
+m4_define([[a31]],[[Xtra[7] ]])
+m4_define([[a32]],[[Xtra[8] ]])
+m4_define([[a33]],[[Xtra[9] ]])
+m4_define([[sig]],[[Xtra[9] ]])
+m4_define([[flx]],[[Xtra[27] ]])
 

@@ -19,6 +19,7 @@ EXTRA_DIST = \
 	main_bench.sl main_test.sl \
 	ll.slh \
 	k2-alt.sl k4-alt.sl
+MAINTAINERCLEANFILES = 
  
 include $(srcdir)/ll.mk
 

@@ -1,5 +1,34 @@
 2009-07-21  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	Move forward with `make check' on LL benchmark code.
+
+	* programs/benchmarks/livermore/ll.slh: Remove structure
+	definition (put arrays in global scope) to prevent the compiler
+	from complaining the structure is too large. Adjust LARGEST to
+	please the linker on MacOS X.
+	
+	* programs/benchmarks/livermore/bench1.bin.mtalpha.psize,
+	* programs/benchmarks/livermore/bench3.bin.mtalpha.psize,
+	* programs/benchmarks/livermore/bench4.bin.mtalpha.psize,
+	* programs/benchmarks/livermore/bench5.bin.mtalpha.psize,
+	* programs/benchmarks/livermore/bench7.bin.mtalpha.psize,
+	* programs/benchmarks/livermore/bench9.bin.mtalpha.psize,
+	* programs/benchmarks/livermore/bench10.bin.mtalpha.psize,
+	* programs/benchmarks/livermore/bench11.bin.mtalpha.psize,	
+	* programs/benchmarks/livermore/bench12.bin.mtalpha.psize: Adapt
+	problem size to new value of LARGEST.
+	
+	* programs/benchmarks/livermore/gencode.sh: Indicate to `slt' that
+	the `bench' programs take Fibre input. Generate the Fibre data
+	from the `.psize' files and distribute it. Indicate to `slt' that
+	the output of the `test' programs should not be compared to the
+	reference. Cleanup generated files on `make maintainerclean'
+
+	* programs/benchmarks/livermore/Makefile.am (MAINTAINERCLEANFILES):
+	Initialize variable so that `ll.mk' can append to it.
+
+2009-07-21  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	Fix distribution of LL benchmark code.	
 
 	* programs/benchmarks/livermore/bench.exp,
