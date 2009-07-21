@@ -1,5 +1,12 @@
 2009-07-21  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	Update deployment makefiles to use latest simulator changes.
+	
+	* deploy/Makefile-reqs.orig (MGSIM_REV): Bump to r2513 with latest
+	bug fixes.
+
+2009-07-21  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	Update deployment makefiles to use latest binutils changes.
 	
 	* deploy/Makefile-reqs.orig (BINUTILS_REV): Bump to r2430 where

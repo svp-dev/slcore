@@ -47,10 +47,10 @@ BINUTILS_REPO = $(BASE_REPO)/sw/svp/mg/binutils/trunk
 UTC_GCC_REV = 2182
 UTC_GCC_REPO = $(BASE_REPO)/sw/svp/mg/gcc/trunk
 
-MGSIM_REV = 2477
+MGSIM_REV = 2513
 MGSIM_REPO = $(BASE_REPO)/sw/svp/mg/mgsim/trunk
 
-SLC_REV = 2510
+SLC_REV = 2514
 SLC_REPO = $(BASE_REPO)/sw/svp/slc/trunk
 
 GCC_VERSION = 4.4.0
