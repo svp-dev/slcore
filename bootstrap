@@ -52,6 +52,7 @@ done
 
 run tools/tests           ./mkalltests.sh
 run lib/tests             ./mkalltests.sh
+run programs/benchmarks/livermore ./gencode.sh
 run .                     $AUTORECONF -v -f -i
 
 echo "Reconfiguration done."

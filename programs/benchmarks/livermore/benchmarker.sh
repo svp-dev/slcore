@@ -9,12 +9,12 @@
 #------------------------------------
 
 BENCHMARKS="blah"
-BENCHFILTER=".mg"
+BENCHGLOB="bench*.bin.mtalpha"
+BENCHFILTER=".bin.mtalpha"
 RUNNER="slr"
 VARYCORES=' -Ws,-o -Ws,NumProcessors='
 VARYMEM=' -Ws,-o -Ws,MemoryBanks='
 FPUS=" -Ws,-o -Ws,NumProcessorsPerFPU=1"
-VARY_PROBLEM_SIZE=' -dPSIZE='
 PROBLEM_SIZE="7000"
 CORES="1 2 4 8 16"
 CYCLES="CYCLES STORED HERE"
@@ -55,7 +55,7 @@ function execute {
 	
 	#capture output of this experiment
 	
-	COMMAND="$RUNNER $VARYCORES$2 $VARYMEM$2 $FPUS $VARY_PROBLEM_SIZE$3 $1  &> $TEMPDIR/$RESULTSFILE" 
+	COMMAND="echo 1 $3 | $RUNNER -f - $VARYCORES$2 $VARYMEM$2 $FPUS $1  &> $TEMPDIR/$RESULTSFILE" 
 	
 	eval $COMMAND
 	
@@ -127,14 +127,14 @@ function benchmark {
 	resnewline #to add new line
 
 	#calculate the final number of experiments
-	EXPNUM=$[$EXPNUM * (`ls -l $1/*$BENCHFILTER | wc -l`)]
+	EXPNUM=$[$EXPNUM * (`ls -l $1/$BENCHGLOB | wc -l`)]
 
 	infoout "Now executing $EXPNUM experiments..." 
 	
 	CUREXP=0 #first exp
 	
 	#iterate through each benchmark file
-	for BENCHMARK in `ls $1/*$BENCHFILTER`;
+	for BENCHMARK in `ls $1/$BENCHGLOB`;
 	do
 		resout `basename $BENCHMARK | sed -e "s/$BENCHFILTER//g" -e 's/\///g'`
 
@@ -156,7 +156,7 @@ function benchmark {
 
  				#output progress
  				CUREXP=$[$CUREXP + 1]
- 				echo -n "$CUREXP.." 1>&2
+ 				echo -n " $CUREXP.." 1>&2
                                                                  
 				execute $BENCHMARK $CORE $PSIZE
                 	

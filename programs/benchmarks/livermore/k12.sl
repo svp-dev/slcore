@@ -1,13 +1,3 @@
-m4_define(KERNEL, [[12]])
-m4_include(livermore.slh)
-//---------------------------------
-// Livemore Loops -- SLC (uTC)
-// M.A.Hicks, CSA Group, UvA
-// Implementation based of various
-// reference implementations
-// including the original FORTRAN
-// but mostly from
-// Roy Longbottom, 1996.
 //---------------------------------
 //      LIVERMORE KERNEL 12
 //       First Difference
@@ -20,6 +10,8 @@ m4_include(livermore.slh)
 // }
 //---------------------------------
 
+// muTC/SL implementation courtesy of M.A.Hicks
+
 sl_def(innerk12,void,
 	sl_glparm(double*,xl),
 	sl_glparm(double*,yl))
@@ -29,7 +21,7 @@ sl_def(innerk12,void,
 }
 sl_enddef
 
-sl_def(kernel,void)
+sl_def(kernel12,void)
 {
 	sl_create(,, 0,inner[KERNEL],1,blocksize[KERNEL],,innerk12,
      		sl_glarg(double*,xxl,x),

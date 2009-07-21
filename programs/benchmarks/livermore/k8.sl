@@ -1,13 +1,3 @@
-m4_define(KERNEL, [[8]])
-m4_include(livermore.slh)
-//---------------------------------
-// Livemore Loops -- SLC (uTC)
-// M.A.Hicks, CSA Group, UvA
-// Implementation based of various
-// reference implementations
-// including the original FORTRAN
-// but mostly from
-// Roy Longbottom, 1996.
 //---------------------------------
 //      LIVERMORE KERNEL 8
 //        ADI Integration
@@ -40,6 +30,8 @@ m4_include(livermore.slh)
 //   }
 // }
 //---------------------------------
+
+// muTC/SL implementation courtesy of M.A.Hicks
 
 //sl_glparm(array3d, lu1),
 //sl_glparm(array3d, lu2),
@@ -132,7 +124,7 @@ sl_def(outerk8,void,
 }
 sl_enddef
 
-sl_def(kernel,void)
+sl_def(kernel8,void)
 {
 
 //              sl_glarg(array3d, lu1,u1),

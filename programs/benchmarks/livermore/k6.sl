@@ -1,14 +1,3 @@
-//m4_define([[SHFWA]]) //shared float work around
-m4_define(KERNEL, [[6]])
-m4_include(livermore.slh)
-//---------------------------------
-// Livemore Loops -- SLC (uTC)
-// M.A.Hicks, CSA Group, UvA
-// Implementation based of various
-// reference implementations
-// including the original FORTRAN
-// but mostly from
-// Roy Longbottom, 1996.
 //---------------------------------
 //      LIVERMORE KERNEL 6
 //         general linear
@@ -25,6 +14,8 @@ m4_include(livermore.slh)
 //     }
 //  }
 //---------------------------------
+
+// muTC/SL implementation courtesy of M.A.Hicks
 
 // NB on Implementation 
 // Access to array b[][]
@@ -75,7 +66,7 @@ sl_def(outerk6,void,
 }
 sl_enddef
 
-sl_def(kernel,void)
+sl_def(kernel6,void)
 {
 	sl_create(,, 1,inner[KERNEL],1,SHARED_BLOCK,,outerk6,
 		sl_sharg(int,syncherr,0),

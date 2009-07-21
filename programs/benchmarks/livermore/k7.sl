@@ -1,13 +1,3 @@
-m4_define(KERNEL, [[7]])
-m4_include(livermore.slh)
-//---------------------------------
-// Livemore Loops -- SLC (uTC)
-// M.A.Hicks, CSA Group, UvA
-// Implementation based of various
-// reference implementations
-// including the original FORTRAN
-// but mostly from
-// Roy Longbottom, 1996.
 //---------------------------------
 //      LIVERMORE KERNEL 7
 //      equation of state
@@ -22,6 +12,8 @@ m4_include(livermore.slh)
 //    t*( u[k+6] + q*( u[k+5] + q*u[k+4] ) ) );
 //  }
 //---------------------------------
+
+// muTC/SL implementation courtesy of M.A.Hicks
 
 //requires: x,u,z,y,(r),(t),(q)
 //independent loop
@@ -42,7 +34,7 @@ sl_def(innerk7, void,
 }
 sl_enddef
 
-sl_def(kernel,void)
+sl_def(kernel7,void)
 {
 	sl_create(,, 0,inner[KERNEL],1,blocksize[KERNEL],,innerk7,
 		sl_glarg(double*,xx,x),

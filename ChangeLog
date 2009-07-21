@@ -1,5 +1,56 @@
 2009-07-21  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	Extend the Livermore loop benchmarks, thanks to M. Hicks.
+
+	* programs/benchmarks/ll/ll2.sl,
+	* programs/benchmarks/ll/ll4.sl: Rename to...
+	* programs/benchmarks/livermore/k2-alt.sl,
+	* programs/benchmarks/livermore/k4-alt.sl: here.
+
+	* programs/benchmarks/livermore/k1.sl,
+	* programs/benchmarks/livermore/k2.sl,
+	* programs/benchmarks/livermore/k3.sl,
+	* programs/benchmarks/livermore/k4.sl,
+	* programs/benchmarks/livermore/k5.sl,
+	* programs/benchmarks/livermore/k6.sl,
+	* programs/benchmarks/livermore/k7.sl,
+	* programs/benchmarks/livermore/k8.sl,
+	* programs/benchmarks/livermore/k9.sl,
+	* programs/benchmarks/livermore/k10.sl,
+	* programs/benchmarks/livermore/k11.sl,	
+	* programs/benchmarks/livermore/k12.sl,	
+	* programs/benchmarks/livermore/k13.sl,	
+	* programs/benchmarks/livermore/k14.sl: Import implementation from
+	M. Hicks. Fix indent. Remove include and KERNEL definition.
+
+	* programs/benchmarks/livermore/livermore.slh: Remove. Before
+	deletion, split content into...
+	* programs/benchmarks/livermore/ll.slh: Array and parameter declarations,
+	* programs/benchmarks/livermore/main_bench.sl: Main program for benchmarking,
+	* programs/benchmarks/livermore/main_test.sl: Main program for testing.
+	
+	* programs/benchmarks/livermore/gencode.sh: Generate benchmark and
+	test sources that bind `ll.slh', the main program (`main_*.sl')
+	and the specific kernel. Generate `ll.mk' with the list of
+	generated sources.
+
+	* programs/benchmarks/livermore/Makefile.am: New. Use
+	auto-generated `ll.mk'.
+
+	* programs/benchmarks/livermore/benchmarker.sh: Import
+	implementation from M. Hicks. Adapt to new interface of benchmark
+	programs.
+
+	* programs/benchmarks/ll/Makefile.am: Remove, as is now obsolete.
+	
+	* configure.ac,
+	* programs/benchmarks/Makefile.am: Remove reference to `ll',
+	replace by `livermore'.
+
+	* bootstrap: Run `gencode.sh' in `programs/benchmarks/livermore'.
+
+2009-07-21  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	Update FFT benchmark to use the Fibre format.
 
 	* programs/benchmarks/fft/fft_bench.sl: Take input from Fibre, not

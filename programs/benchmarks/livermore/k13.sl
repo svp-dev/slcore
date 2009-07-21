@@ -1,13 +1,3 @@
-m4_define(KERNEL, [[13]])
-m4_include(livermore.slh)
-//---------------------------------
-// Livemore Loops -- SLC (uTC)
-// M.A.Hicks, CSA Group, UvA
-// Implementation based of various
-// reference implementations
-// including the original FORTRAN
-// but mostly from
-// Roy Longbottom, 1996.
 //---------------------------------
 //      LIVERMORE KERNEL 13
 //  2-D PIC (Particle In Cell)
@@ -36,6 +26,8 @@ m4_include(livermore.slh)
 //             h[j2][i2] += 1.0;
 //         }
 //---------------------------------
+
+// muTC/SL implementation courtesy of M.A.Hicks
 
 
 sl_def(innerk1, void,
@@ -67,7 +59,7 @@ sl_def(innerk1, void,
 }
 sl_enddef
 
-sl_def(kernel, void)
+sl_def(kernel13, void)
 {
 	
 	//create the family of the appropriate size
@@ -75,8 +67,8 @@ sl_def(kernel, void)
 	sl_create(,, 0,inner[KERNEL],1,blocksize[KERNEL],,innerk1,
 	  sl_glarg(double*,ell,e),sl_glarg(double*,fll,ff),
 	  sl_glarg(double*,yll,y),sl_glarg(double*,zll,z),
-	  sl_glarg(array2d,bll,b),sl_glarg(array2d,cll,c),
-	  sl_glarg(array2d,hll,h),sl_glarg(array2d,pll,p) );
+	  sl_glarg(array2d,bll,b),sl_glarg(array2d,cll,cx),
+	  sl_glarg(array2d,hll,hx),sl_glarg(array2d,pll,p) );
 	  sl_sync();
 
 }

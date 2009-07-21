@@ -197,8 +197,8 @@ AC_CONFIG_FILES([
 	programs/benchmarks/blas/Makefile
 	programs/benchmarks/nas/Makefile
 	programs/benchmarks/nas/is/Makefile
-	programs/benchmarks/ll/Makefile
 	programs/benchmarks/sha/Makefile
+	programs/benchmarks/livermore/Makefile
 ])
 #AC_CONFIG_FILES([tools/bin/cm4], [chmod +x tools/bin/cm4])
 

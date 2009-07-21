@@ -12,8 +12,10 @@
 ##
 
 # 
-DEMOS = ll2.sl ll4.sl
+DEMOS = 
 TESTS = $(DEMOS)
+
+include $(srcdir)/ll.mk
 
 EXTRA_DIST = $(DEMOS)
 

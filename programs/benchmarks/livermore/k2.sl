@@ -1,13 +1,3 @@
-m4_define(KERNEL, [[2]])
-m4_include(livermore.slh)
-//---------------------------------
-// Livemore Loops -- SLC (uTC)
-// M.A.Hicks, CSA Group, UvA
-// Implementation based of various
-// reference implementations
-// including the original FORTRAN
-// but mostly from
-// Roy Longbottom, 1996.
 //----------------------------------------
 //      LIVERMORE KERNEL 2
 // Incomplete Cholesky Conjugate Gradient
@@ -30,6 +20,7 @@ m4_include(livermore.slh)
 //  } while ( ii>0 );
 //---------------------------------
 
+// muTC/SL implementation courtesy of M.A.Hicks
 
 sl_def(innerk2,void,
 	sl_glparm(double*,xl),sl_glparm(double*,vl),
@@ -54,7 +45,7 @@ sl_def(innerk2,void,
 }
 sl_enddef
 
-sl_def(kernel,void)
+sl_def(kernel2,void)
 {
 	long int loopcount = inner[KERNEL]; //initialise loop counter
 	long int lower,upper; //counters

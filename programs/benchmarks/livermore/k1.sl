@@ -1,13 +1,3 @@
-m4_define(KERNEL, [[1]])
-m4_include(livermore.slh)
-//---------------------------------
-// Livemore Loops -- SLC (uTC)
-// M.A.Hicks, CSA Group, UvA
-// Implementation based of various
-// reference implementations
-// including the original FORTRAN
-// but mostly from
-// Roy Longbottom, 1996.
 //---------------------------------
 //      LIVERMORE KERNEL 1
 //        Hydro Fragment
@@ -20,20 +10,22 @@ m4_include(livermore.slh)
 //        }
 //---------------------------------
 
+// muTC/SL implementation courtesy of M.A.Hicks
+
 //Break down kernel into two families
 //this one does the 'meat'
 sl_def(innerk1, void,
        sl_glparm(double*,xl),sl_glfparm(double,ql),sl_glparm(double*,yl),
-      sl_glfparm(double,rrl),sl_glparm(double*,zl),sl_glfparm(double,tl) )
+       sl_glfparm(double,rrl),sl_glparm(double*,zl),sl_glfparm(double,tl) )
 {
-	sl_index(iteration);
-	
-	//now the actual calculation
-	sl_getp(xl)[iteration] = sl_getp(ql) + sl_getp(yl)[iteration] * ( sl_getp(rrl)*sl_getp(zl)[iteration+10] + sl_getp(tl)*sl_getp(zl)[iteration+11] );
+  sl_index(iteration);
+  
+  //now the actual calculation
+  sl_getp(xl)[iteration] = sl_getp(ql) + sl_getp(yl)[iteration] * ( sl_getp(rrl)*sl_getp(zl)[iteration+10] + sl_getp(tl)*sl_getp(zl)[iteration+11] );
 }
 sl_enddef
 
-sl_def(kernel, void)
+sl_def(kernel1, void)
 {
 	// calculate array base pointers and values here
 	// to avoid calculatoin in each subordinate
@@ -50,6 +42,5 @@ sl_def(kernel, void)
 		sl_glarg(double*,zzl,z),
 		sl_glfarg(double,ttl,t));
 	sl_sync();
-
 }
 sl_enddef

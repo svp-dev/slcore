@@ -1,14 +1,3 @@
-//m4_define([[SHFWA]]) //shared float work around
-m4_define(KERNEL, [[3]])
-m4_include(livermore.slh)
-//---------------------------------
-// Livemore Loops -- SLC (uTC)
-// M.A.Hicks, CSA Group, UvA
-// Implementation based of various
-// reference implementations
-// including the original FORTRAN
-// but mostly from
-// Roy Longbottom, 1996.
 //---------------------------------
 //      LIVERMORE KERNEL 3
 //        Inner Product
@@ -22,6 +11,7 @@ m4_include(livermore.slh)
 // 	   }
 //---------------------------------
 
+// muTC/SL implementation courtesy of M.A.Hicks
 
 sl_def(innerk3, void,
         sl_shfparm(double,ql),sl_glparm(double*,zl),sl_glparm(double*,xl))
@@ -33,7 +23,7 @@ sl_def(innerk3, void,
 }
 sl_enddef
 
-sl_def(kernel, void)
+sl_def(kernel3, void)
 {
 	//create the kernel, not forgetting to initialise
 	//q to zero

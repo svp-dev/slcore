@@ -1,14 +1,3 @@
-//m4_define([[SHFWA]]) //shared float work around
-m4_define(KERNEL, [[4]])
-m4_include(livermore.slh)
-//---------------------------------
-// Livemore Loops -- SLC (uTC)
-// M.A.Hicks, CSA Group, UvA
-// Implementation based of various
-// reference implementations
-// including the original FORTRAN
-// but mostly from
-// Roy Longbottom, 1996.
 //---------------------------------
 //      LIVERMORE KERNEL 4
 //     Banded Linear Equations
@@ -28,6 +17,8 @@ m4_include(livermore.slh)
 //         x[k-1] = y[4]*temp;
 //      }
 //---------------------------------
+
+// muTC/SL implementation courtesy of M.A.Hicks
 
 //this variable is defined slightly strangely
 //in the reference implementation
@@ -61,7 +52,7 @@ sl_def(outerk4, void,
 	//loop uses an internal stride of 5 by multiplying a 1 stride counter
 	//this means the range of the loop must be divided by 5
 	
-	unsigned int range = inner[KERNEL]/5;  //divu(inner[KERNEL], 5); 
+	unsigned int range = inner[KERNEL] / 5; 
 	
 	sl_create(,, 0,range,1,SHARED_BLOCK,,innerk4,
 		sl_shfarg(double, ttotal, sl_getp(xl)[iteration-1]),
@@ -77,7 +68,7 @@ sl_def(outerk4, void,
 }
 sl_enddef
 
-sl_def(kernel, void)
+sl_def(kernel4, void)
 {
 	sl_create(,, 6,1001,MSTEP,blocksize[KERNEL],,outerk4,
 		sl_glarg(double*, xxl,x),

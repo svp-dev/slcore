@@ -1,13 +1,3 @@
-m4_define(KERNEL, [[9]])
-m4_include(livermore.slh)
-//---------------------------------
-// Livemore Loops -- SLC (uTC)
-// M.A.Hicks, CSA Group, UvA
-// Implementation based of various
-// reference implementations
-// including the original FORTRAN
-// but mostly from
-// Roy Longbottom, 1996.
 //---------------------------------
 //      LIVERMORE KERNEL 9
 //     Integrate Predictors
@@ -22,6 +12,8 @@ m4_include(livermore.slh)
 //              + px[i][ 2];
 // }
 //---------------------------------
+
+// muTC/SL implementation courtesy of M.A.Hicks
 
 sl_def(innerk9, void,
       sl_glparm(array2d, lpx),
@@ -43,18 +35,18 @@ sl_def(innerk9, void,
 }
 sl_enddef
 
-sl_def(kernel, void)
+sl_def(kernel9, void)
 {
-	sl_create(,, 0,inner[KERNEL],1,blocksize[KERNEL],,innerk9,
-		sl_glarg(array2d, llpx, px),
-		sl_glfarg(double, lldm28, dm28),
-		sl_glfarg(double, lldm27, dm27),
-		sl_glfarg(double, lldm26, dm26),
-		sl_glfarg(double, lldm25, dm25),
-		sl_glfarg(double, lldm24, dm24),
-		sl_glfarg(double, lldm23, dm23),
-		sl_glfarg(double, lldm22, dm22),
-		sl_glfarg(double, llc0, c0))
-	sl_sync();
+  sl_create(,, 0,inner[KERNEL],1,blocksize[KERNEL],,innerk9,
+	    sl_glarg(array2d, llpx, px),
+	    sl_glfarg(double, lldm28, dm28),
+	    sl_glfarg(double, lldm27, dm27),
+	    sl_glfarg(double, lldm26, dm26),
+	    sl_glfarg(double, lldm25, dm25),
+	    sl_glfarg(double, lldm24, dm24),
+	    sl_glfarg(double, lldm23, dm23),
+	    sl_glfarg(double, lldm22, dm22),
+	    sl_glfarg(double, llc0, c0));
+    sl_sync();
 }
 sl_enddef
