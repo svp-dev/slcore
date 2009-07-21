@@ -1,7 +1,8 @@
+
 This directory contains code in SL to perform 1-D FFT transforms.
 
-Two alternate implementations with different layouts for the
-sine/cosine lookup table are provided. Depending on the memory
+Two alternate implementations of the FFT kernel with different layouts
+for the sine/cosine lookup table are provided. Depending on the memory
 implementation they may display different run-time behavior.
 
 The computation kernels are in files `fft_impl1.sl' and
@@ -11,12 +12,23 @@ Two "user" programs are provided: `fft_test.sl' and `fft_bench.sl':
 
 - fft_test will perform the forward and inverse FFT on a known vector,
   and optionally print the values. This can be used to check the
-  numerical correctness of the computing kernel.
+  numerical correctness of the computing kernel. For configuration see
+  `slr -l'. For example::
+
+     # perform FFT8 and print the floats before and after
+     # computation, with bit reversal enabled:
+     slr fft_test1.bin M=8 BR=1 Pc=1 Pf=1
 
 - fft_bench will perform the forward FFT on an uninitialized vector,
   without bit reversal. This is appropriate to benchmark the execution
-  time of the kernel itself.
+  time of the kernel itself. This program input two positive numbers
+  in Fibre format, one iteration count and the problem size
+  (log2). For example::
 
-The combination of both programs with both implementations is
-performed automatically by the provided Makefile.am.
+     # iterate 5 times the FFT16:
+     echo 5 4 | slr fft_bench1.bin -f -
+  
+
+The combination of both programs with both implementations into four
+executables is performed automatically by the provided Makefile.am.
 

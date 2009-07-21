@@ -1,5 +1,14 @@
 2009-07-21  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	Update FFT benchmark to use the Fibre format.
+
+	* programs/benchmarks/fft/fft_bench.sl: Take input from Fibre, not
+	slr variables.
+
+	* programs/benchmarks/fft/README: Document usage.
+	
+2009-07-21  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	Beautify the SL compile process in Automake.
 
 	* sl.mk: Use the '.x' file only a a stub, not as an interactive
