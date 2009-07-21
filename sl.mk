@@ -11,6 +11,8 @@
 ## `COPYING' file in the root directory.
 ##
 
+SLC_LOCAL = $(abs_top_builddir)/tools/bin/slc
+
 
 SLC_VARS = \
 	SLC_INCDIR=$(abs_top_srcdir)/tools/include:$(abs_top_builddir)/tools/include:$(abs_top_srcdir)/lib/include:$(abs_top_builddir)/lib/include \
@@ -21,15 +23,19 @@ SLC_VARS = \
 	SAG=$(abs_top_srcdir)/tools/bin/sag \
 	CCE=$(abs_top_builddir)/tools/bin/cce \
 	SLR=$(abs_top_builddir)/tools/bin/slr \
-	SLC=$(abs_top_builddir)/tools/bin/slc
+	SLC=$(SLC_LOCAL)
 
-SLC_RUN = $(SLC_VARS) $(abs_top_builddir)/tools/bin/slc
+SLC_RUN = $(SLC_VARS) $(SLC_LOCAL)
 
 SUFFIXES = .sl .x
 
 slc_verbose = $(slc_verbose_$(V))
 slc_verbose_ = $(slc_verbose_$(AM_DEFAULT_VERBOSITY))
 slc_verbose_0 = @echo '  SLC    $@';
+
+slc_shverbose = $(slc_shverbose_$(V))
+slc_shverbose_ = $(slc_shverbose_$(AM_DEFAULT_VERBOSITY))
+slc_shverbose_0 = :
 
 if ENABLE_MTALPHA
 slc_ifmtalpha =
@@ -38,21 +44,21 @@ slc_ifmtalpha = :
 endif
 
 SLC_BEFORE = function slc_compile() { \
-       if test -n "$$SLC_OUT"; then rm -f "$$SLC_OUT" "$$SLC_OUT".{mtalpha,ptl,seqc}; fi && \
-       echo "$$SLC_OUT -> seqc" && \
-          $(SLC_RUN) $${SLC_OUT:+-o "$$SLC_OUT".seqc} -b seqc "$$@" $(AM_CFLAGS) $(CFLAGS) && \
-       echo "$$SLC_OUT -> ptl" && \
-          $(SLC_RUN) $${SLC_OUT:+-o "$$SLC_OUT".ptl} -b ptl "$$@" $(AM_CXXFLAGS) $(CXXFLAGS) && \
-       $(slc_ifmtalpha) echo "$$SLC_OUT -> mtalpha" && \
-          $(slc_ifmtalpha) $(SLC_RUN) $${SLC_OUT:+-o "$$SLC_OUT".mtalpha} -b ppp "$$@" && \
-       if test -n "$$SLC_OUT"; then \
-          printf '\#! /bin/sh\n' >"$@" && \
-          printf 'select prog in `basename $$0 .x`.bin.*; do break; done; ' >>"$@" && \
-          printf 'exec $${SLR:-$(abs_top_builddir)/bin/slr} "$$prog" "$$@"\n'  >>"$@" && \
-          chmod +x "$@" ; \
-       fi; }
+	$(slc_shverbose) set -x ; \
+	if test -n "$$SLC_OUT"; then rm -f "$$SLC_OUT" "$$SLC_OUT".{mtalpha,ptl,seqc}; fi && \
+	echo "  SLC    $$SLC_OUT".seqc && \
+	$(SLC_LOCAL) $${SLC_OUT:+-o "$$SLC_OUT".seqc} -b seqc "$$@" $(AM_CFLAGS) $(CFLAGS) && \
+	echo "  SLC    $$SLC_OUT".ptl && \
+        $(SLC_LOCAL) $${SLC_OUT:+-o "$$SLC_OUT".ptl} -b ptl "$$@" $(AM_CXXFLAGS) $(CXXFLAGS) && \
+	$(slc_ifmtalpha) echo "  SLC    $$SLC_OUT".mtalpha && \
+        $(slc_ifmtalpha) $(SLC_LOCAL) $${SLC_OUT:+-o "$$SLC_OUT".mtalpha} -b ppp "$$@" && \
+	if test -n "$$SLC_OUT"; then \
+	  printf '\#! /bin/sh\n' >"$@" && \
+	  printf 'echo "This script is only a stub. Run the actual program with:"\n' >>"$@" && \
+	  printf 'echo; echo "\tslr "$$(basename "$$0" .x)".bin.XXXX"; echo; exit 1\n' >>"$@"; \
+	fi; }
 
 .sl.x:
-	$(slc_verbose) $(SLC_BEFORE); SLC_OUT="${@:.x=.bin}" slc_compile $<
+	@$(SLC_BEFORE); $(SLC_VARS) SLC_OUT="${@:.x=.bin}" slc_compile $<
 
 

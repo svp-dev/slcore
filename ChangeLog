@@ -1,5 +1,14 @@
 2009-07-21  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	Beautify the SL compile process in Automake.
+
+	* sl.mk: Use the '.x' file only a a stub, not as an interactive
+	menu to choose the actual program from. Enable the shell's "-x"
+	option in the compile function when running `make V=1' (verbose
+	mode).
+
+2009-07-21  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	Library improvements.
 	
 	* tools/lib/t-ptl/include/sl_support.h: Define __STDC_LIMIT_MACROS and
