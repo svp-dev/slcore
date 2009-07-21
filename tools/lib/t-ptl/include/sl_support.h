@@ -18,6 +18,16 @@
 #ifndef SLC_SL_SUPPORT_H
 # define SLC_SL_SUPPORT_H
 
+// the following two are required to enabled
+// C99 macro definitions in C++ mode
+# ifndef __STDC_LIMIT_MACROS
+#  define __STDC_LIMIT_MACROS 1
+# endif
+# ifndef __STDC_CONSTANT_MACROS
+#  define __STDC_CONSTANT_MACROS 1
+# endif
+
+
 #ifdef USE_EXTERNAL_PTL
 #include <uTC.h>
 #else

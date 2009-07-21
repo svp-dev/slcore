@@ -1,3 +1,15 @@
+2009-07-21  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
+	Library improvements.
+	
+	* tools/lib/t-ptl/include/sl_support.h: Define __STDC_LIMIT_MACROS and
+	__STDC_CONSTANT_MACROS early. This is required to enable C99 definitions
+	in C standard headers when compiling in C++ mode.
+	
+	* lib/include/cstdint.slh: Add missing UINT*_MAX definitions.
+	
+	* lib/include/svp/perf.slh: Protect identifiers with underscores.
+
 2009-07-20  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
 	Fix linking against `mtalpha-sim/libslc.a' after the toolchain is
