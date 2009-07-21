@@ -12,12 +12,17 @@
 ##
 
 # 
-DEMOS = 
-TESTS = $(DEMOS)
-
+DEMOS =
+EXTRA_DIST = \
+	benchmarker.sh bench.exp \
+	bench.sl test.sl \
+	main_bench.sl main_test.sl \
+	ll.slh \
+	k2-alt.sl k4-alt.sl
+ 
 include $(srcdir)/ll.mk
 
-EXTRA_DIST = $(DEMOS)
+TESTS = $(DEMOS)
 
 include $(top_srcdir)/tests.mk
 

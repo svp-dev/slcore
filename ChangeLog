@@ -1,5 +1,31 @@
 2009-07-21  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	Fix distribution of LL benchmark code.	
+
+	* programs/benchmarks/livermore/bench.exp,
+	* programs/benchmarks/livermore/bench1.bin.mtalpha.psize,
+	* programs/benchmarks/livermore/bench2.bin.mtalpha.psize,
+	* programs/benchmarks/livermore/bench3.bin.mtalpha.psize,
+	* programs/benchmarks/livermore/bench4.bin.mtalpha.psize,
+	* programs/benchmarks/livermore/bench5.bin.mtalpha.psize,
+	* programs/benchmarks/livermore/bench6.bin.mtalpha.psize,
+	* programs/benchmarks/livermore/bench7.bin.mtalpha.psize,
+	* programs/benchmarks/livermore/bench8.bin.mtalpha.psize,
+	* programs/benchmarks/livermore/bench9.bin.mtalpha.psize,
+	* programs/benchmarks/livermore/bench10.bin.mtalpha.psize,
+	* programs/benchmarks/livermore/bench11.bin.mtalpha.psize,	
+	* programs/benchmarks/livermore/bench12.bin.mtalpha.psize: Import
+	data from M. Hicks.
+	
+	* programs/benchmarks/livermore/gencode.sh: Generate dist rules
+	for the ".psize" files.
+
+	* programs/benchmarks/livermore/Makefile.am (EXTRA_DIST):
+	Distribute also `benchmarker.sh', `bench.exp' and the dependencies
+	of test programs.
+
+2009-07-21  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	Extend the Livermore loop benchmarks, thanks to M. Hicks.
 
 	* programs/benchmarks/ll/ll2.sl,

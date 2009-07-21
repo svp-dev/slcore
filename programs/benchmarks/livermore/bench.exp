@@ -1,0 +1,7 @@
+#!/bin/bash
+TITLE="SL Livermore Loops"
+RESINFILE="y"
+CAPTURE_CYCLES='grep Cycles: | sed -e "s/ Cycles: //g"'
+CORES="1 2 4 8"
+FPUS=" -Ws,-o -Ws,NumProcessorsPerFPU=1"
+NOTES='REMEMBER: FLOPS and INSNS *DO NOT* exclude benchmark preamble.'

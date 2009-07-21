@@ -11,3 +11,7 @@ m4_include(test.sl)
 EOF
     echo "DEMOS += bench$i.sl test$i.sl" >>"ll.mk"
 done
+for f in *.psize; do
+    echo "EXTRA_DIST += $f" >>"ll.mk"
+done
+
