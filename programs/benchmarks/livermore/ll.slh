@@ -18,7 +18,7 @@
 // NB -- SEE LARGEST DEFINITION BELOW
 unsigned long inner[25] = {0,
 			  7000, //1
-			  7000,
+			  3500,
 			  7000,
 			  7000, //4
 			  7000,
