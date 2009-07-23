@@ -34,94 +34,93 @@
 
 
 sl_def(innerphase1, void,
-	sl_glparm(double*,vxl),
-	sl_glparm(double*,xxl),
-	sl_glparm(long*,ixl),
-	sl_glparm(double*,xil),
-	sl_glparm(double*,ex1l),
-	sl_glparm(double*,exl),
-	sl_glparm(double*,dexl),
-	sl_glparm(double*,dex1l),
-	sl_glparm(double*,grdl))
+       sl_glparm(double*restrict, vxl),
+       sl_glparm(double*restrict, xxl),
+       sl_glparm(long*restrict, ixl),
+       sl_glparm(double*restrict, xil),
+       sl_glparm(double*restrict, ex1l),
+       sl_glparm(double*restrict, exl),
+       sl_glparm(double*restrict, dexl),
+       sl_glparm(double*restrict, dex1l),
+       sl_glparm(double*restrict, grdl))
 {
-	sl_index(iteration);
-
-	sl_getp(vxl)[iteration] = 0.0;
-	sl_getp(xxl)[iteration] = 0.0;
-	sl_getp(ixl)[iteration] = (long) sl_getp(grdl)[iteration];
-	sl_getp(xil)[iteration] = (double) sl_getp(ixl)[iteration];
-	sl_getp(ex1l)[iteration] = sl_getp(exl)[ sl_getp(ixl)[iteration] - 1 ];
-	sl_getp(dex1l)[iteration] = sl_getp(dexl)[ sl_getp(ixl)[iteration] - 1 ];
+  sl_index(k);
+  
+  sl_getp(vxl)[k] = 0.0;
+  sl_getp(xxl)[k] = 0.0;
+  sl_getp(ixl)[k] = (long) sl_getp(grdl)[k];
+  sl_getp(xil)[k] = (double) sl_getp(ixl)[k];
+  sl_getp(ex1l)[k] = sl_getp(exl)[ sl_getp(ixl)[k] - 1 ];
+  sl_getp(dex1l)[k] = sl_getp(dexl)[ sl_getp(ixl)[k] - 1 ];
 }
 sl_enddef
 
 sl_def(innerphase2, void,
-	sl_glparm(double*,vxl),
-	sl_glparm(double*,ex1l),
-	sl_glparm(double*,xxl),
-	sl_glparm(double*,xil),
-	sl_glparm(double*,dex1l),
+	sl_glparm(double*restrict, vxl),
+	sl_glparm(double*restrict, ex1l),
+	sl_glparm(double*restrict, xxl),
+	sl_glparm(double*restrict, xil),
+	sl_glparm(double*restrict, dex1l),
 	sl_glfparm(double, flxl),
-	sl_glparm(long*,irl),
-	sl_glparm(double*,rxl))
+	sl_glparm(long*restrict, irl),
+	sl_glparm(double*restrict, rxl))
 {
-	sl_index(iteration);
+	sl_index(k);
 
-	sl_getp(vxl)[iteration] = sl_getp(vxl)[iteration] + sl_getp(ex1l)[iteration] + ( sl_getp(xxl)[iteration] - sl_getp(xil)[iteration] )*sl_getp(dex1l)[iteration];
-	sl_getp(xxl)[iteration] = sl_getp(xxl)[iteration] + sl_getp(vxl)[iteration]  + sl_getp(flxl);
-	sl_getp(irl)[iteration] = sl_getp(xxl)[iteration];
-	sl_getp(rxl)[iteration] = sl_getp(xxl)[iteration] - sl_getp(irl)[iteration];
-	sl_getp(irl)[iteration] = ( sl_getp(irl)[iteration] & 2048-1 ) + 1;
-	sl_getp(xxl)[iteration] = sl_getp(rxl)[iteration] + sl_getp(irl)[iteration];
+	sl_getp(vxl)[k] = sl_getp(vxl)[k] + sl_getp(ex1l)[k] + 
+	  ( sl_getp(xxl)[k] - sl_getp(xil)[k] ) * sl_getp(dex1l)[k];
+	sl_getp(xxl)[k] = sl_getp(xxl)[k] + sl_getp(vxl)[k]  + sl_getp(flxl);
+	sl_getp(irl)[k] = sl_getp(xxl)[k];
+	sl_getp(rxl)[k] = sl_getp(xxl)[k] - sl_getp(irl)[k];
+	sl_getp(irl)[k] = ( sl_getp(irl)[k] & 2048-1 ) + 1;
+	sl_getp(xxl)[k] = sl_getp(rxl)[k] + sl_getp(irl)[k];
 }
 sl_enddef
 
 sl_def(innerphase3, void,
-	sl_glparm(double*,rxl),
-	sl_glparm(long*,irl),
-	sl_glparm(double*,rhl))
+       sl_glparm(double*restrict, rxl),
+       sl_glparm(long*restrict, irl),
+       sl_glparm(double*restrict, rhl))
 {
-	sl_index(iteration);
-
-	  sl_getp(rhl)[ sl_getp(irl)[iteration]-1 ] += 1.0 - sl_getp(rxl)[iteration];
-	  sl_getp(rhl)[ sl_getp(irl)[iteration]   ] += sl_getp(rxl)[iteration];
-
+  sl_index(k);
+  
+  sl_getp(rhl)[ sl_getp(irl)[k]-1 ] += 1.0 - sl_getp(rxl)[k];
+  sl_getp(rhl)[ sl_getp(irl)[k]   ] += sl_getp(rxl)[k];
 }
 sl_enddef
 
+// LL_USE: V X Ix Z Y Ex Dex Dex1 Grd Flx Rx Ir Rh
 sl_def(kernel14, void)
 {
-
-	//create the family of the appropriate size
-	//specified in the 'inner' array
-	sl_create(,, 0,inner[KERNEL],1,blocksize[KERNEL],,innerphase1,
-		sl_glarg(double*,vxll,vx),
-		sl_glarg(double*,xxll,xxx),
-		sl_glarg(long*,ixll,ixx),
-		sl_glarg(double*,xill,xi),
-		sl_glarg(double*,ex1ll,ex1),
-		sl_glarg(double*,exll,exx),
-		sl_glarg(double*,dexll,dex),
-		sl_glarg(double*,dex1ll,dex1),
-		sl_glarg(double*,grdll,grd));
-	sl_sync();
-
-	sl_create(,, 0,inner[KERNEL],1,blocksize[KERNEL],,innerphase2,
-		sl_glarg(double*,vxlll,vx),
-		sl_glarg(double*,ex1lll,ex1),
-		sl_glarg(double*,xxlll,xxx),
-		sl_glarg(double*,xilll,xi),
-		sl_glarg(double*,dex1lll,dex1),
-		sl_glfarg(double,flxll,flx),
-		sl_glarg(long*, irll, ir),
-		sl_glarg(double*,rxll,rx));
-	sl_sync();
-
-	sl_create(,, 0,inner[KERNEL],1,blocksize[KERNEL],,innerphase3,
-		sl_glarg(double*,rxlll,rx),
-		sl_glarg(long*, irlll, ir),
-		sl_glarg(double*,rhll,rh));
-	sl_sync();
-
+  //create the family of the appropriate size
+  //specified in the 'inner' array
+  sl_create(,, 0, inner[KERNEL], 1, blocksize[KERNEL],, innerphase1,
+	    sl_glarg(double*restrict, vxll, V),
+	    sl_glarg(double*restrict, xxll, X),
+	    sl_glarg(long*restrict, ixll, Ix),
+	    sl_glarg(double*restrict, xill, Z),
+	    sl_glarg(double*restrict, ex1ll, Y),
+	    sl_glarg(double*restrict, exll, Ex),
+	    sl_glarg(double*restrict, dexll, Dex),
+	    sl_glarg(double*restrict, dex1ll, Dex1),
+	    sl_glarg(double*restrict, grdll, Grd));
+  sl_sync();
+  
+  sl_create(,, 0, inner[KERNEL], 1, blocksize[KERNEL],, innerphase2,
+	    sl_glarg(double*restrict, vxlll, V),
+	    sl_glarg(double*restrict, ex1lll, Y),
+	    sl_glarg(double*restrict, xxlll, X),
+	    sl_glarg(double*restrict, xilll, Z),
+	    sl_glarg(double*restrict, dex1lll, Dex1),
+	    sl_glfarg(double, flxll, *Flx),
+	    sl_glarg(long*restrict, irll, Ir),
+	    sl_glarg(double*restrict, rxll, Rx));
+  sl_sync();
+  
+  sl_create(,, 0, inner[KERNEL], 1, blocksize[KERNEL],, innerphase3,
+	    sl_glarg(double*restrict, rxlll, Rx),
+	    sl_glarg(long*, irlll, Ir),
+	    sl_glarg(double*restrict, rhll, Rh));
+  sl_sync();
 }
 sl_enddef

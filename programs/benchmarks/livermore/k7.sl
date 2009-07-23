@@ -15,35 +15,43 @@
 
 // muTC/SL implementation courtesy of M.A.Hicks
 
-//requires: x,u,z,y,(r),(t),(q)
+// LL_USE: U X Y Z R T Q
+
 //independent loop
 sl_def(innerk7, void,
-      	sl_glparm(double*,xl),
-      	sl_glparm(double*,ul),
-      	sl_glparm(double*,zl),
-      	sl_glparm(double*,yl),
-      	sl_glparm(double,rl),
-      	sl_glparm(double,tl),
-      	sl_glparm(double,ql))
+       sl_glparm(double*restrict, xl),
+       sl_glparm(double*restrict, ul),
+       sl_glparm(double*restrict, zl),
+       sl_glparm(double*restrict, yl),
+       sl_glparm(double, rl),
+       sl_glparm(double, tl),
+       sl_glparm(double, ql))
 {
-  sl_index(iteration);
-
-  sl_getp(xl)[iteration] = sl_getp(ul)[iteration] + sl_getp(rl)*( sl_getp(zl)[iteration] + sl_getp(rl)*sl_getp(yl)[iteration] ) +
-    sl_getp(tl)*( sl_getp(ul)[iteration+3] + sl_getp(rl)*( sl_getp(ul)[iteration+2] + sl_getp(rl)*sl_getp(ul)[iteration+1] ) +
-    sl_getp(tl)*( sl_getp(ul)[iteration+6] + sl_getp(ql)*( sl_getp(ul)[iteration+5] + sl_getp(ql)*sl_getp(ul)[iteration+4] ) ) );
+  sl_index(i);
+  
+  sl_getp(xl)[i] = 
+    sl_getp(ul)[i] +	              
+    sl_getp(rl) * ( sl_getp(zl)[i] + 
+		    sl_getp(rl) * sl_getp(yl)[i] ) + 
+    sl_getp(tl) * ( sl_getp(ul)[i+3] + 
+		    sl_getp(rl) * ( sl_getp(ul)[i+2] + 
+				    sl_getp(rl) * sl_getp(ul)[i+1] ) +
+		    sl_getp(tl) * ( sl_getp(ul)[i+6] + 
+				    sl_getp(ql) * ( sl_getp(ul)[i+5] + 
+						    sl_getp(ql) * sl_getp(ul)[i+4] ) ) );
 }
 sl_enddef
 
 sl_def(kernel7,void)
 {
-	sl_create(,, 0,inner[KERNEL],1,blocksize[KERNEL],,innerk7,
-		sl_glarg(double*,xx,x),
-		sl_glarg(double*,uu,u),
-		sl_glarg(double*,zz,z),
-		sl_glarg(double*,yy,y),
-		sl_glarg(double,rrr,rr),
-		sl_glarg(double,tt,t),
-		sl_glarg(double,qq,q));
-	sl_sync();
+  sl_create(,, 0, inner[KERNEL], 1, blocksize[KERNEL],, innerk7,
+	    sl_glarg(double*restrict, xx, X),
+	    sl_glarg(double*restrict, uu, U),
+	    sl_glarg(double*restrict, zz, Z),
+	    sl_glarg(double*restrict, yy, Y),
+	    sl_glarg(double,rrr, *R),
+	    sl_glarg(double,tt, *T),
+	    sl_glarg(double,qq, *Q));
+  sl_sync();
 }
 sl_enddef

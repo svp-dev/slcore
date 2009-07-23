@@ -26,54 +26,53 @@
 m4_define(MSTEP, [[((1001 -7) >> 1)]])
 
 sl_def(innerk4, void,
-       	sl_shfparm(double,total),
-      	sl_glparm(double*,xl),
-      	sl_glparm(double*,yl),
-      	sl_glparm(unsigned int,lw))
+       sl_shfparm(double, total),
+       sl_glparm(double*restrict, xl),
+       sl_glparm(double*restrict, yl),
+       sl_glparm(unsigned int, lw))
 {
-	sl_index(iteration);
-	//j -> 5step with a starting value of 4
-	sl_setp(total, sl_getp(total) - (sl_getp(xl)[sl_getp(lw)+iteration]  * sl_getp(yl)[(iteration*5) + 4]));
+  sl_index(i);
+  //j -> 5 step with a starting value of 4
+  sl_setp(total, sl_getp(total) - (sl_getp(xl)[sl_getp(lw)+i] * sl_getp(yl)[(i*5) + 4]));
 }
 sl_enddef
 
 sl_def(outerk4, void,
-       	sl_glparm(double*,xl),
-      	sl_glparm(double*,yl))
+       sl_glparm(double*restrict, xl),
+       sl_glparm(double*restrict, yl))
 {
-	sl_index(iteration);
-	unsigned int counter = iteration - 6;
+  sl_index(i);
+  unsigned int counter = i - 6;
+  
 	
-	
-	//check that previous loop iteration has finished
-	//because innerk4 reads previous result from xl[]
-//	int temp = sl_getp(writelock);
+  //check that previous loop iteration has finished
+  //because innerk4 reads previous result from xl[]
+  //	int temp = sl_getp(writelock);
 
-	//loop uses an internal stride of 5 by multiplying a 1 stride counter
-	//this means the range of the loop must be divided by 5
+  //loop uses an internal stride of 5 by multiplying a 1 stride counter
+  //this means the range of the loop must be divided by 5
 	
-	unsigned int range = inner[KERNEL] / 5; 
-	
-	sl_create(,, 0,range,1,SHARED_BLOCK,,innerk4,
-		sl_shfarg(double, ttotal, sl_getp(xl)[iteration-1]),
-		sl_glarg(double*,xxl,sl_getp(xl)),
-		sl_glarg(double*, yyl, sl_getp(yl)),
-		sl_glarg(unsigned int, llw,counter));
-	sl_sync();
+  sl_create(,, 0, inner[KERNEL] / 5, 1, SHARED_BLOCK,, innerk4,
+	    sl_shfarg(double, ttotal, sl_getp(xl)[i-1]),
+	    sl_glarg(double*restrict, xxl, sl_getp(xl)),
+	    sl_glarg(double*restrict, yyl, sl_getp(yl)),
+	    sl_glarg(unsigned int, llw, counter));
+  sl_sync();
 
-	sl_getp(xl)[iteration-1] = sl_getp(yl)[4] * sl_geta(ttotal);
-	//now set this lock as free by writing to shared, since xl[]
-	// has been written safely.
-//	sl_setp(writelock, temp + 1);
+  sl_getp(xl)[i-1] = sl_getp(yl)[4] * sl_geta(ttotal);
+  //now set this lock as free by writing to shared, since xl[]
+  // has been written safely.
+  //	sl_setp(writelock, temp + 1);
 }
 sl_enddef
 
+// LL_USE: X Y
 sl_def(kernel4, void)
 {
-	sl_create(,, 6,1001,MSTEP,blocksize[KERNEL],,outerk4,
-		sl_glarg(double*, xxl,x),
-		sl_glarg(double*,yyl, y));
-	sl_sync();
+  sl_create(,, 6, 1001, MSTEP, blocksize[KERNEL],, outerk4,
+	    sl_glarg(double*restrict, xxl, X),
+	    sl_glarg(double*restrict, yyl, Y));
+  sl_sync();
 }
 sl_enddef
 
@@ -86,13 +85,13 @@ sl_def(kernel4, void)
 	for(counter=6; counter<inner[KERNEL];counter+=MSTEP){
 		
 		sl_create(,, 0,inner[KERNEL],1,blocksize[KERNEL],,innerk4,
-			sl_shfarg(double, ttotal, x[counter-1]),
-			sl_glarg(double*,xxl,x),
-			sl_glarg(double*, yyl, y),
+			sl_shfarg(double, ttotal, X[counter-1]),
+			sl_glarg(double*restrict,xxl, X),
+			sl_glarg(double*restrict, yyl, Y),
 			sl_glarg(unsigned int, llw,(counter-6)));
 		sl_sync();
 		
-		x[counter-1] = y[4] * sl_geta(ttotal);
+		X[counter-1] = Y[4] * sl_geta(ttotal);
 	}
 }
 sl_enddef

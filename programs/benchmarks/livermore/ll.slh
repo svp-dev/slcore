@@ -16,31 +16,33 @@
 // should perform the calculation being measured
 // [this is a specified aspect of the loops]
 // NB -- SEE LARGEST DEFINITION BELOW
-unsigned long inner[25] = {0,
-			  7000, //1
-			  3500,
-			  7000,
-			  7000, //4
-			  7000,
-			  500,
-			  7000,
-			  7000,   //8
-			  7000,
-			  7000,
-			  7000,
-			  7000, //12
-			  7000,
-			  2000,
-			  10,
-			  10,   //16
-			  10,
-			  10,
-			  10,
-			  10,   //20
-			  10,
-			  10,
-			  10,
-			  10};  //24
+static unsigned long inner[25] = 
+  {0, // (padding)
+   1000, //1
+   500,
+   1000,
+   1000, //4
+   1000,
+   100,
+   1000,
+   1000,   //8
+   1000,
+   1000,
+   1000,
+   1000, //12
+   1000,
+   200,
+   10,
+   10,   //16
+   10,
+   10,
+   10,
+   10,   //20
+   10,
+   10,
+   10,
+   10,   //24
+};  
 // define the largest inner loop size for the arrays below
 m4_define([[LARGEST]], [[8000]])
 
@@ -48,167 +50,38 @@ m4_define([[LARGEST]], [[8000]])
 //the block size of the outer create is set to the value below:
 //N.B. Default is 0
 m4_define([[SHARED_BLOCK]],[[2]]) //used by loops 3,5,6,11
-unsigned long blocksize[25] = {999,
-				0, //1
-				0,
-				0,
-				0, //4
-				0,
-				0,
-				0,
-				0, //8
-				0,
-				0,
-				0,
-				0, //12
-				0,
-				0,
-				0,
-				0, //16
-				0,
-				0,
-				0,
-				0, //20
-				0,
-				0,
-				0,
-				0};//24
+static unsigned long blocksize[25] = 
+{ 999, // (padding)
+  0, //1
+  0,
+  0,
+  0, //4
+  0,
+  0,
+  0,
+  0, //8
+  0,
+  0,
+  0,
+  0, //12
+  0,
+  0,
+  0,
+  0, //16
+  0,
+  0,
+  0,
+  0, //20
+  0,
+  0,
+  0,
+  0, //24
+};
 
 
-// Kernel Data:
-// Modelled after R.Longbottom
-// Preserved here for simplicity
-
-//     double U[1001];
-     double V[LARGEST];
-//     double W[1001];
-     double X[LARGEST];
-     double Y[LARGEST];
-     double Z[LARGEST+10]; //plus 10 -- read past LARGEST in some loops
-//     double G[1001];
-//     double Du1[101];
-//     double Du2[101];
-//     double Du3[101];
-     double Grd[1001];
-     double Dex[1001];
-//     double Xi[1001];
-     double Ex[1001];
-//     double Ex1[1001];
-     double Dex1[1001];
-//     double Vx[1001];
-//     double Xx[1001];
-     double Rx[1001];
-      double Rh[2048];
-//      double Vsp[101];
-//      double Vstp[101];
-//      double Vxne[101];
-//      double Vxnd[101];
-//      double Ve3[101];
-//      double Vlr[101];
-//      double Vlin[101];
-//      double B5[101];
-//      double Plan[300];
-//      double D[300];
-//      double Sa[101];
-//      double Sb[101];
-      double P[LARGEST][LARGEST];
-//      double Px[LARGEST][LARGEST];
-      double Cx[LARGEST][LARGEST]; //10
-//      double Vy[25][101];
-//      double Vh[7][101];
-//      double Vf[7][101];
-//      double Vg[7][101];
-//      double Vs[7][101];
-//      double Za[7][101];
-//      double Zp[7][101];
-//      double Zq[7][101];
-//      double Zr[7][101];
-//      double Zm[7][101];
-//      double Zb[7][101];
-//      double Zu[7][101];
-//      double Zv[7][101];
-//      double Zz[7][101];
-     double B[LARGEST][LARGEST]; //currently just used by loop 6 & 10
-//      double C[64][64];
-     double H[LARGEST][LARGEST];
-     double U1[2][LARGEST][5]; //loop8
-     double U2[2][LARGEST][5]; //loop8
-     double U3[2][LARGEST][5]; //loop8
-     double Xtra[40];
-//      long   E[96];
-//      long   F[96];
-      long   Ix[LARGEST];
-      long   Ir[LARGEST];
-//      long   Zone[301];
-
-// The definitions below are used to maintain the original
-// naming used in the Livermore Kernels. However, many names
-// map to the same data elements in the variables above.
-// This is because the kernels here are all compiled separately
-// and thus the maximum number of data objects required is the
-// highest number used by any single kernel.
-// If it becomes desirable to compile the kernels together, into
-// a single executable, then this is easy to change.
-//------------------------------------------
-
-typedef double (*array2d)[LARGEST]; //must declare a new type for 2d arrays (since SL/M4 macros confuse these)
+typedef double (*array2d)[LARGEST]; // typedef array types so they fit as type spec in the SL macros
 typedef double (*array3d)[LARGEST][LARGEST];
-m4_define([[x]],[[X]])
-m4_define([[q]],[[Xtra[28] ]])
-m4_define([[rr]],[[Xtra[30] ]]) // rr instead of just 'r' due to conflict
-m4_define([[t]],[[Xtra[36] ]])
-m4_define([[y]],[[Y]])
-m4_define([[z]],[[Z]])
-m4_define([[v]],[[V]])
-m4_define([[w]],[[X]]) //mapped to another
-m4_define([[b]],[[B]])
-m4_define([[u]],[[V]]) //mapped to another
-m4_define([[u1]],[[U1]])
-m4_define([[u2]],[[U2]])
-m4_define([[u3]],[[U3]])
-m4_define([[du1]],[[X]]) //mapped to another
-m4_define([[du2]],[[Y]]) //mapped to another
-m4_define([[du3]],[[Z]]) //mapped to another
-m4_define([[px]],[[B]]) //mapped to another
-m4_define([[cx]],[[Cx]]) 
-m4_define([[e]],[[X]]) //mapped to another 
-m4_define([[ff]],[[V]]) //mapped to another 
-m4_define([[p]],[[P]]) 
-m4_define([[cx]],[[Cx]]) 
 
-m4_define([[hx]],[[H]]) //mapped to another
-m4_define([[vx]],[[V]]) //mapped to another 
-m4_define([[xxx]],[[X]]) //mapped to another 
-m4_define([[xi]],[[Z]]) //mapped to another 
-m4_define([[ex1]],[[Y]])  //mapped to another 
- 
-m4_define([[exx]],[[Ex]]) 
-m4_define([[dex]],[[Dex]]) 
-m4_define([[dex1]],[[Dex1]]) 
-m4_define([[grd]],[[Grd]]) 
-m4_define([[rx]],[[Rx]]) 
-m4_define([[rh]],[[Rh]]) 
-m4_define([[ir]],[[Ir]]) 
-m4_define([[ixx]],[[Ix]]) 
-
-m4_define([[dm22]],[[Xtra[16] ]])
-m4_define([[dm23]],[[Xtra[17] ]])
-m4_define([[dm24]],[[Xtra[18] ]])
-m4_define([[dm25]],[[Xtra[19] ]])
-m4_define([[dm26]],[[Xtra[20] ]])
-m4_define([[dm27]],[[Xtra[21] ]])
-m4_define([[dm28]],[[Xtra[22] ]])
-m4_define([[c0]],[[Xtra[12] ]])
-
-m4_define([[a11]],[[Xtra[1] ]])
-m4_define([[a12]],[[Xtra[2] ]])
-m4_define([[a13]],[[Xtra[3] ]])
-m4_define([[a21]],[[Xtra[4] ]])
-m4_define([[a22]],[[Xtra[5] ]])
-m4_define([[a23]],[[Xtra[6] ]])
-m4_define([[a31]],[[Xtra[7] ]])
-m4_define([[a32]],[[Xtra[8] ]])
-m4_define([[a33]],[[Xtra[9] ]])
-m4_define([[sig]],[[Xtra[9] ]])
-m4_define([[flx]],[[Xtra[27] ]])
-
+// the following is used to hold
+// some of the isolated scalars:
+static double Xtra[40];

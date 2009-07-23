@@ -12,20 +12,21 @@
 
 // muTC/SL implementation courtesy of M.A.Hicks
 
-sl_def(innerk12,void,
-	sl_glparm(double*,xl),
-	sl_glparm(double*,yl))
+sl_def(innerk12, void,
+       sl_glparm(double*restrict, xl),
+       sl_glparm(double*restrict, yl))
 {
-	sl_index(iteration);
-	sl_getp(xl)[iteration] = sl_getp(yl)[iteration+1] - sl_getp(yl)[iteration];
+  sl_index(i);
+  sl_getp(xl)[i] = sl_getp(yl)[i+1] - sl_getp(yl)[i];
 }
 sl_enddef
 
+// LL_USE: X Y
 sl_def(kernel12,void)
 {
-	sl_create(,, 0,inner[KERNEL],1,blocksize[KERNEL],,innerk12,
-     		sl_glarg(double*,xxl,x),
-		sl_glarg(double*,yyl,y));
-	sl_sync();
+  sl_create(,, 0, inner[KERNEL],1, blocksize[KERNEL],, innerk12,
+	    sl_glarg(double*restrict, xxl, X),
+	    sl_glarg(double*restrict, yyl, Y));
+  sl_sync();
 }
 sl_enddef

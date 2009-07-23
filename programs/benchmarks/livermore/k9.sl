@@ -16,7 +16,7 @@
 // muTC/SL implementation courtesy of M.A.Hicks
 
 sl_def(innerk9, void,
-      sl_glparm(array2d, lpx),
+      sl_glparm(array2d restrict, lpx),
       sl_glfparm(double, ldm28),
       sl_glfparm(double, ldm27),
       sl_glfparm(double, ldm26),
@@ -26,27 +26,36 @@ sl_def(innerk9, void,
       sl_glfparm(double, ldm22),
       sl_glfparm(double, lc0))
 {
-	sl_index(iteration);
+	sl_index(i);
 	
-	sl_getp(lpx)[iteration][0] = sl_getp(ldm28)*sl_getp(lpx)[iteration][12] + sl_getp(ldm27)*sl_getp(lpx)[iteration][11] + sl_getp(ldm26)*sl_getp(lpx)[iteration][10] +
-		sl_getp(ldm25)*sl_getp(lpx)[iteration][ 9] + sl_getp(ldm24)*sl_getp(lpx)[iteration][ 8] + sl_getp(ldm23)*sl_getp(lpx)[iteration][ 7] +
-		sl_getp(ldm22)*sl_getp(lpx)[iteration][ 6] + sl_getp(lc0)*( sl_getp(lpx)[iteration][ 4] + sl_getp(lpx)[iteration][ 5])
-		+ sl_getp(lpx)[iteration][ 2];
+	sl_getp(lpx)[i][0] = 
+	  sl_getp(ldm28) * sl_getp(lpx)[i][12] + 
+	  sl_getp(ldm27) * sl_getp(lpx)[i][11] + 
+	  sl_getp(ldm26) * sl_getp(lpx)[i][10] +
+	  sl_getp(ldm25) * sl_getp(lpx)[i][ 9] + 
+	  sl_getp(ldm24) * sl_getp(lpx)[i][ 8] + 
+	  sl_getp(ldm23) * sl_getp(lpx)[i][ 7] +
+	  sl_getp(ldm22) * sl_getp(lpx)[i][ 6] + 
+	  sl_getp(lc0) * ( sl_getp(lpx)[i][ 4] + 
+			   sl_getp(lpx)[i][ 5]) +
+	  sl_getp(lpx)[i][ 2];
 }
 sl_enddef
 
+// LL_USE: Px C0 Dm22 Dm23 Dm24 Dm25 Dm26 Dm27 Dm28
+
 sl_def(kernel9, void)
 {
-  sl_create(,, 0,inner[KERNEL],1,blocksize[KERNEL],,innerk9,
-	    sl_glarg(array2d, llpx, px),
-	    sl_glfarg(double, lldm28, dm28),
-	    sl_glfarg(double, lldm27, dm27),
-	    sl_glfarg(double, lldm26, dm26),
-	    sl_glfarg(double, lldm25, dm25),
-	    sl_glfarg(double, lldm24, dm24),
-	    sl_glfarg(double, lldm23, dm23),
-	    sl_glfarg(double, lldm22, dm22),
-	    sl_glfarg(double, llc0, c0));
+  sl_create(,, 0, inner[KERNEL], 1, blocksize[KERNEL],, innerk9,
+	    sl_glarg(array2d restrict, llpx, Px),
+	    sl_glfarg(double, lldm28, *Dm28),
+	    sl_glfarg(double, lldm27, *Dm27),
+	    sl_glfarg(double, lldm26, *Dm26),
+	    sl_glfarg(double, lldm25, *Dm25),
+	    sl_glfarg(double, lldm24, *Dm24),
+	    sl_glfarg(double, lldm23, *Dm23),
+	    sl_glfarg(double, lldm22, *Dm22),
+	    sl_glfarg(double, llc0, *C0));
     sl_sync();
 }
 sl_enddef

@@ -12,15 +12,45 @@
 ##
 
 # 
-DEMOS =
+DEMOS = k2-alt.sl k4-alt.sl
 EXTRA_DIST = \
 	benchmarker.sh bench.exp \
-	bench.sl test.sl \
-	main_bench.sl main_test.sl \
-	ll.slh \
-	k2-alt.sl k4-alt.sl
+	main_bench.sl main_simple.sl main_test.sl \
+	arrays.h ll.slh \
+	$(DEMOS)
 MAINTAINERCLEANFILES = 
- 
+
+define gen-ll-program
+	$(AM_V_at)rm -f $@ $@.tmp
+	$(AM_V_GEN)(echo "/* This file was auto-generated. Do not edit! */" && \
+	echo "// XIGNORE: *:D" && \
+	echo "m4_define([[KERNEL]], $*)" && \
+	echo "m4_define([[MAIN]],[[main_$(subst $*,,$@)]])" && \
+	echo "m4_include(ll.slh)" && \
+	for u in `$(GREP) "LL_USE:" <"$<"|$(SED) -e 's/^.*:\([^:]*\)$$/\1/g;s/,/ /g'`; do \
+	  $(SED) -e 's,//.*$$,,g' <"$(srcdir)/arrays.h" | $(GREP) " $$u[^a-zA-Z0-9_]"; \
+	done && \
+	echo "m4_include([[k]]KERNEL.sl)" && \
+	echo "m4_include(MAIN)") >$@.tmp
+	$(AM_V_at)chmod a-w $@.tmp
+	$(AM_V_at)mv $@.tmp $@
+endef
+
+simple%.sl: k%.sl arrays.h Makefile.am
+	$(gen-ll-program)
+
+bench%.sl: k%.sl arrays.h Makefile.am
+	$(gen-ll-program)
+
+test%.sl: k%.sl arrays.h Makefile.am
+	$(gen-ll-program)
+
+bench%.sl.in: bench%.bin.mtalpha.psize
+	$(AM_V_at)rm -f $@ $@.tmp
+	$(AM_V_GEN)(echo 1; cat $<) >$@.tmp
+	$(AM_V_at)chmod a-w $@.tmp
+	$(AM_V_at)mv -f $@.tmp $@
+
 include $(srcdir)/ll.mk
 
 TESTS = $(DEMOS)

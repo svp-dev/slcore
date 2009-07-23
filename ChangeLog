@@ -1,5 +1,74 @@
 2009-07-23  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	Simplify the Livermore loop sources, optimize some.
+
+	Previously *all* the arrays possibly used by all kernels were
+	defined when compiling *each* kernel. Due to the relatively large
+	array size selected to support large problem sizes at run-time,
+	the resulting offsets in object code and executables would
+	overflow linker abilities for weak linkers or on 32-bit systems.
+	
+	The code was refactored so that for each kernel the demonstration
+	programs only include the array definitions actually required.
+
+	Besides the `bench' and `test' programs a new `simple' program is
+	provided for the benefit of testing code generation in the muTC
+	core compiler.
+
+	As a side change, some kernels were made more efficient through
+	additional C99 `restrict' annotations on array pointers, which
+	promise nice aliasing properties to the optimizing compilers.
+
+	After this patch, some tests still fail due to either too large
+	problem sizes (or too low default TIMEOUT) or offset errors.
+	
+	* programs/benchmarks/livemore/main_simple.sl: New. This does not
+	take parameters, and uses the predefined defaults.
+
+	* programs/benchmarks/livermore/ll.slh: Move array definitions to...
+	
+	* programs/benchmarks/livermore/arrays.h: here. Get rid of
+	preprocessor aliases (`m4_define'), since the objects are now in
+	the global namespace and the aliases would fool up SL macro
+	expansions for special names (e.g. `ix', `ex').
+	
+	* programs/benchmarks/livermore/gencode.sh: Move glue code generation into...
+	* programs/benchmarks/livermore/Makefile.am: here. Extract array
+	definitions from `arrays.h' using a LL_USE annotation to be added in each
+	kernel, listing the *names* of the required objects from `arrays.h'.
+
+	* programs/benchmarks/livermore/bench13.bin.mtalpha.psize,
+	* programs/benchmarks/livermore/bench14.bin.mtalpha.psize: New.
+	
+	* programs/benchmarks/livermore/gencode.sh: Rename to...
+	* programs/benchmarks/livermore/genmk.sh: here. Simplify some
+	more; the .psize file must now exist for every source file.
+	* bootstrap: Update accordingly.
+	
+	* programs/benchmarks/livermore/test.sl,	
+	* programs/benchmarks/livermore/bench.sl: Remove, as the glue code
+	is now entirely dumped in each generated file by `Makefile.am'.
+
+	* programs/benchmarks/livermore/k1.sl,
+	* programs/benchmarks/livermore/k2.sl,
+	* programs/benchmarks/livermore/k3.sl,
+	* programs/benchmarks/livermore/k4.sl,
+	* programs/benchmarks/livermore/k5.sl,
+	* programs/benchmarks/livermore/k6.sl,
+	* programs/benchmarks/livermore/k7.sl,
+	* programs/benchmarks/livermore/k8.sl,
+	* programs/benchmarks/livermore/k9.sl,
+	* programs/benchmarks/livermore/k10.sl,
+	* programs/benchmarks/livermore/k11.sl,
+	* programs/benchmarks/livermore/k12.sl,
+	* programs/benchmarks/livermore/k13.sl,	
+	* programs/benchmarks/livermore/k14.sl: Declare the required
+	objects with a LL_USE annotation. Use the real object names not
+	aliased names. Clean up whitespace. Use C99's `restrict' where
+	appropriate.
+
+2009-07-23  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	More support for building out of the source tree (2).
 
 	* tests.mk: Append `-I$(srcdir)' to the compile flags used by
