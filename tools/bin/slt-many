@@ -108,7 +108,20 @@ nrtests=$(echo "$tests"|tr ' ' '\n'|grep -v '^$'|wc -l)
 echo "$nrtests test(s) selected."
 
 SLT_IMPL_LIST=${SLT_IMPL_LIST:-seqc ptl ppp utc0}
-echo "The following implementation(s) are tested: $SLT_IMPL_LIST"
+echo "The following implementation(s) are tested:"
+for impl in $SLT_IMPL_LIST; do
+    name=$(echo "$impl"|cut -d: -f1)
+    flag=$(echo "$impl"|cut -d: -f2|tr '~' ' ')
+    run=$(echo "$impl"|cut -d: -f3|tr '~' ' ')
+    printf '\t%s\t' $name
+    if test x != "x$flag"; then
+	printf '(slc %s) ' "$flag"
+    fi
+    if test x != "x$run"; then
+	printf '(slr %s)' "$run"
+    fi
+    echo
+done
 echo
 
 count=0

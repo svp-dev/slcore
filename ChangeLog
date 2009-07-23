@@ -1,5 +1,16 @@
 2009-07-23  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	More developer-friendly SL tests.
+	
+	* tests.mk (check-slt): Make rule phony. Properly pick up tests
+	either in source or build directory. Create dependency on test
+	sources and Automake's `check_DATA'.
+
+	* tools/bin/slt-many: Output the list of implementations being
+	tested; separate implementation name, compile flags and run flags.
+
+2009-07-23  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	Simplify the Livermore loop sources, optimize some.
 
 	Previously *all* the arrays possibly used by all kernels were

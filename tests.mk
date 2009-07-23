@@ -40,8 +40,9 @@ SL_LOG_COMPILER = \
 	DUMP_LOGS=1 TEXT_ONLY=1 SEQUENTIAL=1 \
 	$(BASH) $(abs_top_builddir)/tools/bin/slt
 
-check-slt:
+.PHONY: check-slt
+check-slt: $(check_DATA) $(TESTS)
 	$(AM_V_at)echo; echo "Current directory:" `pwd`
 	$(AM_V_at)SLT_IMPL_LIST="$(SLT_IMPL_LIST)" \
 	    $(top_srcdir)/tools/bin/slt-many \
-	    $(TESTS:%=$(srcdir)/%)
+	    `for t in $(TESTS); do if test -r $$t; then echo $$t; else echo $(srcdir)/$$t; fi; done`
