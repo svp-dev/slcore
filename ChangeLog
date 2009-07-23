@@ -1,3 +1,13 @@
+2009-07-23  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
+	Import more tests from previous `utcc' tree.
+	
+	* tools/tests/0_trivial/if3.sl,
+	* tools/tests/2_args/globpass.sl,
+	* tools/tests/2_args/shareuse.sl,
+	* tools/tests/2_args/sumunsigned.sl: Import code from
+	S. Polstra. Adapt to use SL macro names.
+
 2009-07-21  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
 	Update deployment makefiles to use latest simulator changes.
