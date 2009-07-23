@@ -16,22 +16,22 @@ include $(top_srcdir)/sl.mk
 EXTRA_TEST_IMPL =
 
 if ENABLE_CHECK_PTL
-EXTRA_TEST_IMPL += ptl
+EXTRA_TEST_IMPL += ptl:-I$(srcdir)
 endif
 
 if ENABLE_CHECK_PPP
 if ENABLE_MTALPHA
-EXTRA_TEST_IMPL += ppp::-n~1 ppp
+EXTRA_TEST_IMPL += ppp:-I$(srcdir):-n~1 ppp:-I$(srcdir)
 endif
 endif
 
 if ENABLE_CHECK_UTC
 if ENABLE_MTALPHA
-EXTRA_TEST_IMPL += utc0:-O0 utc0:-O1 utc0:-O2 utcx
+EXTRA_TEST_IMPL += utc0:-O0~-I$(srcdir) utc0:-O1~-I$(srcdir) utc0:-O2~-I$(srcdir) utcx:-I$(srcdir)
 endif
 endif
 
-SLT_IMPL_LIST ?= seqc $(EXTRA_TEST_IMPL)
+SLT_IMPL_LIST ?= seqc:-I$(srcdir) $(EXTRA_TEST_IMPL)
 
 TEST_EXTENSIONS = .sl
 SL_LOG_COMPILER = \

@@ -1,5 +1,12 @@
 2009-07-23  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	More support for building out of the source tree (2).
+
+	* tests.mk: Append `-I$(srcdir)' to the compile flags used by
+	`slt'.	
+
+2009-07-23  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	More support for building out of the source tree.
 	
 	Fix compilation of SL programs when the main SL source is in
