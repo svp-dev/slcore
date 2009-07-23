@@ -11,14 +11,15 @@
 ## `COPYING' file in the root directory.
 ##
 
-# 
-DEMOS = k2-alt.sl k4-alt.sl
+STATIC_DEMOS = k2-alt.sl k4-alt.sl
+DEMOS = $(STATIC_DEMOS)
 EXTRA_DIST = \
 	benchmarker.sh bench.exp \
 	main_bench.sl main_simple.sl main_test.sl \
 	arrays.h ll.slh \
-	$(DEMOS)
-MAINTAINERCLEANFILES = 
+	$(STATIC_DEMOS)
+DISTCLEANFILES = 
+check_DATA = 
 
 define gen-ll-program
 	$(AM_V_at)rm -f $@ $@.tmp
@@ -28,7 +29,8 @@ define gen-ll-program
 	echo "m4_define([[MAIN]],[[main_$(subst $*,,$@)]])" && \
 	echo "m4_include(ll.slh)" && \
 	for u in `$(GREP) "LL_USE:" <"$<"|$(SED) -e 's/^.*:\([^:]*\)$$/\1/g;s/,/ /g'`; do \
-	  $(SED) -e 's,//.*$$,,g' <"$(srcdir)/arrays.h" | $(GREP) " $$u[^a-zA-Z0-9_]"; \
+	  $(SED) -e 's,//.*$$,,g' <"$(srcdir)/arrays.h" | $(GREP) " $$u[^a-zA-Z0-9_]" && \
+	  echo "const long donttouch$$RANDOM[4096] = {0};"; \
 	done && \
 	echo "m4_include([[k]]KERNEL.sl)" && \
 	echo "m4_include(MAIN)") >$@.tmp
@@ -41,6 +43,9 @@ simple%.sl: k%.sl arrays.h Makefile.am
 
 bench%.sl: k%.sl arrays.h Makefile.am
 	$(gen-ll-program)
+	$(AM_V_at)chmod +w $@
+	$(AM_V_at)echo "// SLT_RUN: -f TEST.in" >>$@
+	$(AM_V_at)chmod -w $@
 
 test%.sl: k%.sl arrays.h Makefile.am
 	$(gen-ll-program)

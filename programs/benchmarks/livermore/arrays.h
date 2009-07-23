@@ -7,9 +7,9 @@ double X[LARGEST];
 double Y[LARGEST];
 double Z[LARGEST+10]; // plus 10 -- read past LARGEST in some loops
 double G[LARGEST];
-double Du1[101];
-double Du2[101];
-double Du3[101];
+double Du1[LARGEST];
+double Du2[LARGEST];
+double Du3[LARGEST];
 double Grd[LARGEST];
 double Dex[LARGEST];
 double Xi[LARGEST];

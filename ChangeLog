@@ -1,5 +1,25 @@
 2009-07-23  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	Fix `make distcheck' after the integration of Livermore loops.
+	
+	* programs/benchmarks/livermore/arrays.h: Increase size of Du1,
+	Du2, Du3 to LARGEST, since they are indexed in `k8.sl' up to the
+	problem size.
+
+	* programs/benchmarks/livermore/Makefile.am: Generate constant
+	"filling" between the data items picked from array.h, as a
+	possible safeguard against out-of-bound errors.
+
+	* programs/benchmarks/livermore/Makefile.am,
+	
+	* programs/benchmarks/livermore/genmk.sh: Do not distribute the
+	test programs as they are properly auto-generated. Remove them on
+	`make distclean'. Properly generate the Fibre inputs for the
+	`bench' programs. Indicate that the Fibre input should be run with
+	SLT_RUN in the `bench' programs.
+	
+2009-07-23  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	More developer-friendly SL tests.
 	
 	* tests.mk (check-slt): Make rule phony. Properly pick up tests

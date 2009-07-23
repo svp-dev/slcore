@@ -3,13 +3,19 @@ set -e
 exec >"ll.mk"
 
 plist=
-for k in k[1-9].sl k[1-9][0-9].sl; do
-    i=$(echo $k|cut -c2-)
-    for model in simple bench test; do
+ilist=
+for model in simple bench test; do
+    for k in k[1-9].sl k[1-9][0-9].sl; do
+	i=$(echo $k|cut -c2-)
 	plist="$plist $model$i"
     done
 done
+for k in k[1-9].sl k[1-9][0-9].sl; do
+    i=$(echo $k|cut -c2-)
+    ilist="$ilist bench$i.in"
+done
+echo "check_DATA += $ilist"
 echo "DEMOS += $plist"
-echo "MAINTAINERCLEANFILES += $plist"
-echo "EXTRA_DIST +=" *.psize
+echo "DISTCLEANFILES += $ilist $plist"
+echo "EXTRA_DIST +=" *.psize k[1-9].sl k[1-9][0-9].sl
 
