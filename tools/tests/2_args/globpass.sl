@@ -14,11 +14,12 @@
 // $Id$
 //
 
+m4_include(svp/lib.slh)
 
 sl_def(print_glob, void, sl_glparm(int, num))
 {
   if (sl_getp(num) > 10) {
-    d_putchar('X');
+    svp_nop();
   }
 }
 sl_enddef
