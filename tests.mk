@@ -16,26 +16,26 @@ include $(top_srcdir)/sl.mk
 EXTRA_TEST_IMPL =
 
 if ENABLE_CHECK_PTL
-EXTRA_TEST_IMPL += ptl:-I$(srcdir)
+EXTRA_TEST_IMPL += ptl
 endif
 
 if ENABLE_CHECK_PPP
 if ENABLE_MTALPHA
-EXTRA_TEST_IMPL += ppp:-I$(srcdir):-n~1 ppp:-I$(srcdir)
+EXTRA_TEST_IMPL += ppp::-n~1 ppp
 endif
 endif
 
 if ENABLE_CHECK_UTC
 if ENABLE_MTALPHA
-EXTRA_TEST_IMPL += utc0:-O0~-I$(srcdir) utc0:-O1~-I$(srcdir) utc0:-O2~-I$(srcdir) utcx:-I$(srcdir)
+EXTRA_TEST_IMPL += utc0:-O0 utc0:-O1 utc0:-O2 utcx
 endif
 endif
 
-SLT_IMPL_LIST ?= seqc:-I$(srcdir) $(EXTRA_TEST_IMPL)
+SLT_IMPL_LIST ?= seqc $(EXTRA_TEST_IMPL)
 
 TEST_EXTENSIONS = .sl
 SL_LOG_COMPILER = \
-	$(SLC_VARS) \
+	$(SLC_VARS) SRCDIR=$(srcdir) \
 	SLT_IMPL_LIST="$(SLT_IMPL_LIST)" \
 	DUMP_LOGS=1 TEXT_ONLY=1 SEQUENTIAL=1 \
 	$(BASH) $(abs_top_builddir)/tools/bin/slt
@@ -43,6 +43,6 @@ SL_LOG_COMPILER = \
 .PHONY: check-slt
 check-slt: $(check_DATA) $(TESTS)
 	$(AM_V_at)echo; echo "Current directory:" `pwd`
-	$(AM_V_at)SLT_IMPL_LIST="$(SLT_IMPL_LIST)" \
-	    $(top_srcdir)/tools/bin/slt-many \
+	$(AM_V_at)$(SLC_VARS) SLT_IMPL_LIST="$(SLT_IMPL_LIST)" SRCDIR=$(srcdir) \
+	    $(top_builddir)/tools/bin/slt-many \
 	    `for t in $(TESTS); do if test -r $$t; then echo $$t; else echo $(srcdir)/$$t; fi; done`

@@ -23,6 +23,7 @@ SLC_VARS = \
 	SAG=$(abs_top_srcdir)/tools/bin/sag \
 	CCE=$(abs_top_builddir)/tools/bin/cce \
 	SLR=$(abs_top_builddir)/tools/bin/slr \
+	SLT=$(abs_top_builddir)/tools/bin/slt \
 	SLC=$(SLC_LOCAL)
 
 SLC_RUN = $(SLC_VARS) $(SLC_LOCAL)

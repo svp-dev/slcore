@@ -295,6 +295,13 @@ Environment variables:
   SLT_IMPL_LIST  Used when no implementation names are supplied on
                  the command line.
 
+  SRCDIR         If set and non-empty, use to truncate the beginning
+                 of the test path when creating the output
+                 directory. Also, use to generate an additional -I
+                 flag during compilation to support test files in a
+                 subtree of the current directory that include other
+                 sources from a counterpart in SRCDIR.
+
 Diagnostics:
   0              The test succeeded.
 
@@ -340,6 +347,14 @@ test_exec "$timeout"
 testdir=$(dirname "$1")
 testsrc=$1
 
+if test ! -r $testsrc; then
+   die "$testsrc: cannot read file" 
+fi
+
+if test -z "$SRCDIR"; then
+    SRCDIR=.
+fi
+
 case $1 in
   *.sl)     testname=$(basename "$1" .sl);;
   *.S)      testname=$(basename "$1" .S);;
@@ -363,10 +378,6 @@ if test $# = 0; then
 fi
 impl1=$1
 shift
-
-if test ! -r $testsrc; then
-   die "$testsrc: cannot read file" 
-fi
 
 check_status() {
     status=ok
@@ -600,12 +611,18 @@ do_preptest() {
     impl=$(echo "$1" | cut -d: -f1)
     cargs=$(echo "$1::" | cut -d: -f2 | tr '~' ' ')
     rargs=$(echo "$1::" | cut -d: -f3 | tr '~' ' ')
+
+    reldir=${testdir#$SRCDIR}
+    reldir=${reldir//%\/}
+    if test -z "$reldir"; then reldir=.; fi
+    if test -n "$SRCDIR"; then
+	cargs="$cargs -I$SRCDIR/$reldir"
+    fi
     export COMPILE_ARGS="$cargs"
     export RUN_ARGS="$rargs"
-    
-    outdir=$testdir/_$counter
-    counter=$(expr $counter + 1)
-    outdir=$(echo "_$outdir"|tr '/.:' '___')
+
+    outdir=$reldir/_$(echo "$1"|tr ' ~/:.-' '______')
+    outdir=${outdir/#.\/}
    
     baseout=$outdir/$testname
     
@@ -625,7 +642,6 @@ do_preptest() {
 
 
 # start testing
-counter=0
 logs=
 basenames=
 do_preptest "$impl1"

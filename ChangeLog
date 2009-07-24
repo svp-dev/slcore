@@ -1,3 +1,36 @@
+2009-07-24  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
+	Sanitize test suite. Make `slt' output more human-friendly.
+
+	The tool `slt' would create output directories for log files and
+	temporary files as direct sub-directories of the current directory
+	always, with directories numbered after the test output
+	columns (e.g. `___tests_0'). This would make the test output
+	difficult to find when the input test (.sl) was located in a
+	relative path. This was changed so that test output directories
+	carry the name of the SL implementation being tested, and are
+	structured in a hierarchy similar to the input test, possibly the
+	same if building from the source tree directly (e.g. `tests/_seqc').
+
+	The tool `slt-many' would pick up `slt' from PATH always, instead
+	of the build directory as the other tools, resulting in `make
+	check-slt' failing before the tools are installed in PATH or `eval
+	$(make show-vars)' is run. This was fixed by handling tool
+	locations like the other tools.
+
+	* tools/bin/Makefile.am,
+	* sl.mk: Introduce new tool location variable for `slt'.
+	
+	* tools/bin/slt-many: Rename to...	
+	* tools/bin/slt-many.in: here. Handle copyright, bug reporting,
+	version handling, tool locations, TRACE and PS4 like the other
+	tools.
+
+	* tools/bin/slt.in: Handle $SRCDIR. Document it.
+
+	* tests.mk: Indicate $SRCDIR to `slt'. Set tool locations before
+	invoking `slt-many'.
+
 2009-07-23  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
 	Fix `make distcheck' after the integration of Livermore loops.
