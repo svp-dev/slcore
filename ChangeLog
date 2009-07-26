@@ -1,5 +1,12 @@
 2009-07-26  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	Fix emission of `.base'.
+	
+	* tools/bin/spp: Wait until the register window is compressed and
+	GP is renamed to emit `.base'.
+
+2009-07-26  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	Code generation improvements for MT-Alpha.
 
 	* tools/bin/spp: Emit directive `.base' in prologue to signal that

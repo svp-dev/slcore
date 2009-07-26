@@ -823,6 +823,8 @@ class pppalpha(object):
       yield ('directive', '.ent %s' % name, '')
       yield ('label', '%s:' % name, '')
       yield ('directive', '.registers %d %d %d %d %d %d' % tuple(regs), '')
+      if fundata['use_gp']:
+         yield ('directive', '.base $l%d' % fundata['specials']['gp'], '')
       for n in items:
          yield n
       yield ('directive', '.end %s' % name, '')
@@ -880,7 +882,7 @@ class pppalpha(object):
             maybe_name = content.split(' ')[1]
             if maybe_name == name:
                state = 0
-               yield ('fun',{'name':name[3:],'body':queue, 'prologue':[], 'pprologue':[],'prologuen':0},'')
+               yield ('fun',{'name':name[3:],'body':queue, 'specials':{}, 'prologue':[], 'pprologue':[],'prologuen':0},'')
                queue = []
                continue
 
@@ -1044,13 +1046,16 @@ class pppalpha(object):
          regname = '$l%d' % nr
          rmask = fundata['usedregs']
          dorename = 0
+         newnr = nr
          if rmask[nr] == True and False in rmask[:self.ilocalregs]:
             freenr = [i for (i,r) in enumerate(rmask) if r == False][0]
+            newnr = freenr
             dorename = 1
             newname = '$l%d' % freenr
             rmask[nr] = False
             rmask[freenr] = True
             yield ('empty','','MT: special "%s" renamed from %s to %s' % (special, regname, newname))
+         fundata['specials'][special] = newnr
          for (type, content, comment) in items:
             if type == 'other' and dorename == 1:
                content = content.replace(regname, newname)
@@ -1275,17 +1280,17 @@ class pppalpha(object):
       pprologue = fundata['pprologue']
       if fundata['use_gp']:
          # GP needs to be initialized, do it:
+         newpprologue = []
          if len(pprologue) == 1:
+            # form 1: "ldgp" was used by the compiler
             assert pprologue[0][1].startswith('ldgp')
-            fundata['pprologue'] = [
-               ('directive','.base $l%d' % gpreg, '')
-               ('other','ldgp $l%d, 0($g%d)' % (gpreg, pvargreg),'')
-               ]
+            newpprologue.append(('other','ldgp $l%d, 0($g%d)' % (gpreg, pvargreg),''))
          else:
             assert (len(pprologue) == 2 and 'gpdisp' in pprologue[0][1] and 'gpdisp' in pprologue[1][1])
             disp = pprologue[0][1].split('!')[2]
-            fundata['pprologue'] = [('other','ldah $l%d, 0($g%d) !gpdisp!%s' % (gpreg, pvargreg, disp),''),
-                                    ('other','lda $l%d, 0($l%d) !gpdisp!%s' % (gpreg, gpreg, disp),'')]
+            newpprologue.append(('other','ldah $l%d, 0($g%d) !gpdisp!%s' % (gpreg, pvargreg, disp),''))
+            newpprologue.append(('other','lda $l%d, 0($l%d) !gpdisp!%s' % (gpreg, gpreg, disp),''))
+         fundata['pprologue'] = newpprologue
       else:
          assert len(pprologue) == 0
       if fundata['use_pv']:
