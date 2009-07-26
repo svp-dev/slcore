@@ -825,7 +825,8 @@ class pppalpha(object):
       yield ('directive', '.registers %d %d %d %d %d %d' % tuple(regs), '')
       for n in items:
          yield n
-      yield ('directive', '.end %s' % name, '')     
+      yield ('directive', '.end %s' % name, '')
+      yield ('directive', '.base $%d' % self.legacy_regs['gp'], '')
 
 
    def flattener(self, items):
@@ -1075,9 +1076,9 @@ class pppalpha(object):
       else:
          newnr = lastfound + 1
          
-      # FIXME: WORKAROUND BUG IN SIMULATOR
-      if newnr < 2:
-         newnr = 2
+      ## FIXME: WORKAROUND BUG IN SIMULATOR
+      #if newnr < 2:
+      #   newnr = 2
 
       if newnr < regs[2]:
          yield ('empty','','MT: compressed integer locals from %d to %d' % (regs[2], newnr))
@@ -1276,7 +1277,10 @@ class pppalpha(object):
          # GP needs to be initialized, do it:
          if len(pprologue) == 1:
             assert pprologue[0][1].startswith('ldgp')
-            fundata['pprologue'] = [('other','ldgp $l%d, 0($g%d)' % (gpreg, pvargreg),'')]
+            fundata['pprologue'] = [
+               ('directive','.base $l%d' % gpreg, '')
+               ('other','ldgp $l%d, 0($g%d)' % (gpreg, pvargreg),'')
+               ]
          else:
             assert (len(pprologue) == 2 and 'gpdisp' in pprologue[0][1] and 'gpdisp' in pprologue[1][1])
             disp = pprologue[0][1].split('!')[2]
