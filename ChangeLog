@@ -1,6 +1,6 @@
 2009-07-27  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
-	Use more bashims to reduce the number of sub-processes spawned by
+	Use more bashisms to reduce the number of sub-processes spawned by
 	tools.
 
 	* tools/bin/slc.in,
