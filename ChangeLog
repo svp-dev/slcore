@@ -1,5 +1,17 @@
 2009-07-27  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	Run M4 after the C preprocessor.
+	
+	* tools/bin/slc.in: Use `cm4' to run M4 after the C
+	preprocessor. Document the feature.
+
+	* tools/bin/cce.in: Set toolchain parameters accordingly.
+	
+	* tools/bin/slt.in: Update accordingly.
+
+
+2009-07-27  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	Introduce new tool `cm4'.
 	
 	* tools/bin/cm4.in: New.
