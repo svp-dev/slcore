@@ -6,13 +6,13 @@ import subprocess
 import os
 import re
 
-m4 = "@M4@"
+m4 = os.getenv("M4", "@M4@")
 m4_args = []
 m4_lquote = '`'
 m4_rquote = "'"
 m4_file = "__file__"
 m4_line = "__line__"
-verbose = True
+verbose = False
 dump_trans = None
 output_file = '-'
 input_files = []
@@ -65,6 +65,7 @@ def parse_args(args):
         i += 1
 
     if verbose:
+        log("m4 = %s" % repr(m4))
         log("output_file = %s" % repr(output_file))
         log("dump_trans = %s" % repr(dump_trans))
         log("m4_args = %s" % repr(m4_args))
@@ -77,6 +78,15 @@ def parse_args(args):
 
 # regex for C comments: 
 re_com = r'/[*].*?[*]/|//.*?(?=\n)'
+# regex for C strings:
+re_str = r'''(?P<str>"(?:[^\\"]|\\.)*"|['](?:[^\\']|\\.)*['])'''
+# regex for whitespace
+re_ws = r'(?P<ws>\s+)'
+# regex for line directives
+re_line = r'#(?:[ \t]*line|)[ \t]+(?P<line>[0-9]+)[ \t]+"(?P<file>.*?)".*?(?=\n)'
+# regex for id
+re_id = r'(?P<id>[a-zA-Z_][$a-zA-Z0-9_]*)' 
+re_all = r'%s|%s|%s|%s|(?P<rest>\(|[^\(\'\"\#a-zA-Z_]+|.)' % (re_str, re_ws, re_line, re_id)
 
 acc_nl = None
 def com_repl(matchobj):
@@ -90,25 +100,16 @@ def com_repl(matchobj):
     if com is not None:
         acc_nl += com.count('\n')
         return ' '
+    return matchobj.group(0)
 
 def do_comments(data):
     global acc_nl
-    res = '(?P<com>%s)|(?P<nl>\n+)' % re_com
+    res = '%s|(?P<com>%s)|(?P<nl>\n+)' % (re_str,re_com)
     rec = re.compile(res, re.S|re.M)
     acc_nl = 0
     data = re.sub(rec, com_repl, data)
     data += '\n' * acc_nl
     return data
-
-# regex for C strings:
-re_str = r'''(?P<str>"(?:[^\\"]|\\.)*"|['](?:[^\\']|\\.)*['])'''
-# regex for whitespace
-re_ws = r'(?P<ws>\s+)'
-# regex for line directives
-re_line = r'#(?:[ \t]*line|)[ \t]+(?P<line>[0-9]+)[ \t]+"(?P<file>.*?)".*?(?=\n)'
-# regex for id
-re_id = r'(?P<id>[a-zA-Z_][$a-zA-Z0-9_]*)' 
-re_all = r'%s|%s|%s|%s|(?P<rest>\(|[^\(\'\"\#a-zA-Z_]+|.)' % (re_str, re_ws, re_line, re_id)
 
 repl_line = None
 acc_ws = None
@@ -204,8 +205,13 @@ def maybe_capture(cond, name, data):
 def do_combine():
     data = ''
     for fname in input_files:
-        if fname == '-': f = sys.stdin
-        else: f = file(fname)
+        if fname == '-': 
+            title = '<stdin>'
+            f = sys.stdin
+        else: 
+            title = fname
+            f = file(fname)
+        data += '\n# 1 "%s"\n' % title
         data += f.read()
         if fname != '-': f.close()
         
