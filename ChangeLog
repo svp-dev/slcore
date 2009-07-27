@@ -1,5 +1,12 @@
 2009-07-27  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	Provide test script for `quicksort' benchmark.
+
+	* programs/benchmarks/quicksort/testqs.sh: New. It was mentioned
+	in `Makefile.am' but nonexistent. 
+
+2009-07-27  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	Add shell goodies to the `slenv' script.
 
 	* deploy/slenv: Also set `PS1' with bash and zsh to inform which
