@@ -31,7 +31,7 @@ runner=${SLR:-@slr_helper@}
 timeout=$root/timeout
 
 die() {
-  echo "$0:" $@ >&2
+  echo "$basename:" $@ >&2
   exit 2
 }
 

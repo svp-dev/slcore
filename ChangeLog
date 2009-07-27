@@ -1,5 +1,23 @@
 2009-07-27  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	Make tools more human-friendly.
+	
+	* tools/bin/slr.in,	
+	* tools/bin/slc.in: Bark if a command-line parameter that requires
+	an argument appears last (without its argument) on the
+	command-line.
+	
+	* tools/bin/cce.in,
+	* tools/bin/slc.in,
+	* tools/bin/slt.in,
+	* tools/bin/slr.in,
+	* tools/lib/r-host.sh,
+	* tools/lib/r-mtalpha-sim.sh.in,
+	* tools/lib/r-mtsparc-sim.sh.in: Print only the short utility name
+	in warning and error messages, instead of the full path.	
+
+2009-07-27  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	Provide test script for `quicksort' benchmark.
 
 	* programs/benchmarks/quicksort/testqs.sh: New. It was mentioned

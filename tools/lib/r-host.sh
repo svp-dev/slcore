@@ -3,6 +3,7 @@
 
 # Run script for native executables.
 set -eu
+basename=${0##*/}
 program=${1:?}
 datafile=${2:?}
 fdatafile=${3:?}
@@ -11,15 +12,15 @@ shift
 shift
 shift
 if ! test -x "$program"; then
-    echo "$0: $program: not an executable" >&2
+    echo "$basename: $program: not an executable" >&2
     exit 1
 fi
 if ! test -r "$datafile"; then
-    echo "$0: $datafile: file not found or not readable" >&2
+    echo "$basename: $datafile: file not found or not readable" >&2
     exit 1
 fi
 if ! test -r "$fdatafile"; then
-    echo "$0: $fdatafile: file not found or not readable" >&2
+    echo "$basename: $fdatafile: file not found or not readable" >&2
     exit 1
 fi
 
@@ -32,6 +33,6 @@ if test -n "${DEBUG:-}"; then
   do_debug=$DEBUGGER
 fi
 if test -n "${VERBOSE:-}"; then
-  echo "$0: running: ${RUNNER_PREFIX:-} $do_debug $d/$b $datafile $fdatafile $*" >&2
+  echo "$basename: running: ${RUNNER_PREFIX:-} $do_debug $d/$b $datafile $fdatafile $*" >&2
 fi
 exec ${RUNNER_PREFIX:-} $do_debug "$d/$b" "$datafile" "$fdatafile" "$@"

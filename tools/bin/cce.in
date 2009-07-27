@@ -37,7 +37,7 @@ CC_MTSPARC=$UTCC_MTSPARC
 version=@slc_version@
 slrev=@slc_revision@
 bugreports=@bugreports@
-
+basename=${0##*/}
 
 do_usage() {
     cat <<EOF
@@ -103,7 +103,7 @@ do_timestamp() {
 }
 
 die() {
-    echo "$0:" "$@" >&2
+    echo "$basename:" "$@" >&2
     exit 1
 }
 
@@ -118,7 +118,7 @@ for arg in "$@"; do
 	-t|--timestamp) do_timestamp ;;
 	-s|--set-vars) set_vars=1 ;;
 	-h|--help) do_usage;;
-	-*) echo "$0: unrecognized command-line argument: $arg (try -h)" >&2; exit 1;;
+	-*) echo "$basename: unrecognized command-line argument: $arg (try -h)" >&2; exit 1;;
 	*) alias=$arg
     esac
 done
@@ -215,7 +215,7 @@ for d in $slc_datadir; do
   fi
 done
 if test -z "$found"; then
-   echo "$0: warning: could not find t-$slc_transbase in $slc_datadir" >&2
+   echo "$basename: warning: could not find t-$slc_transbase in $slc_datadir" >&2
 else
     slc_trans=$found
     slc_tflags="$slc_tflags -I$slc_trans"
@@ -231,7 +231,7 @@ for m4_preinc in slc_m4sugar.m4 slc.m4; do
      fi
    done
    if test -z "$found"; then
-      echo "$0: warning: could not find $m4_preinc in $slc_incdir" >&2
+      echo "$basename: warning: could not find $m4_preinc in $slc_incdir" >&2
    else
       slc_tflags="$slc_tflags $found"
    fi
@@ -251,7 +251,7 @@ case $slc_dialect-$slc_arch in
 	case $slc_complang in
 	    cpp) slc_compiler=$CXX ;;
 	    c)   slc_compiler="$CC" ;;
-	    utc) echo "$0: warning: no compiler for $dialect-$arch" >&2 ;;
+	    utc) echo "$basename: warning: no compiler for $dialect-$arch" >&2 ;;
 	esac
 	slc_filter=cp
 	;;
@@ -323,7 +323,7 @@ case $slc_os in
 		fi
             done
 	    if test -z "$found"; then
-		echo "$0: warning: slrt.o not found for $slc_arch-$slc_os in $slc_libdir" >&2
+		echo "$basename: warning: slrt.o not found for $slc_arch-$slc_os in $slc_libdir" >&2
             else
 		slc_ldflags="$slc_ldflags $found"
 	    fi

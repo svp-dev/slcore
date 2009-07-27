@@ -21,7 +21,7 @@ root=$(cd $(dirname "$0"); pwd)
 timeout=$root/timeout
 TIMEOUT=${TIMEOUT:-10000}; export TIMEOUT
 cce_helper=${CCE:-@cce_helper@}
-basename=${0#*/}
+basename=${0##*/}
 TMPDIR=${TMPDIR:-/tmp}
 
 version=@slc_version@
@@ -68,16 +68,16 @@ M4=${M4:-@M4@}
 cleanup() {
   for f in $inflight $tempfiles $tempdirs; do
     if test -z "$keep"; then 
-      test -n "$verbose" && echo "$0: $f: deleting temporary" >&2
+      test -n "$verbose" && echo "$basename: $f: deleting temporary" >&2
       if test -d "$f"; then 
 	  if ! rmdir "$f" ; then
-	      echo "$0: $f: warning: could not delete directory" >&2
+	      echo "$basename: $f: warning: could not delete directory" >&2
 	  fi
       else 
 	  rm -f "$f"
       fi
     else
-      test -e "$f" && echo "$0: $f: left over temporary" >&2
+      test -e "$f" && echo "$basename: $f: left over temporary" >&2
     fi
   done
   inflight=
@@ -87,13 +87,13 @@ cleanup() {
 trap cleanup 0 ERR HUP INT TERM QUIT
 
 die() {
-    echo "$0:" "$@" >&2
+    echo "$basename:" "$@" >&2
     exit 1
 }
 
 check_exists() {
   if ! test -e "$1"; then
-     echo "$0: $1: No such file or directory" >&2
+     echo "$basename: $1: No such file or directory" >&2
      return 1
   fi
   return 0
@@ -147,11 +147,11 @@ for arg in "$@"; do
       -D*|-U*|-C*|-H)  extra_ppflags="$extra_ppflags $arg" ;;
 
       -MG|-MP|-MD|-MMD)
-                echo "$0: warning: $arg ignored" >&2;;
+                echo "$basename: warning: $arg ignored" >&2;;
       -MT|-MQ)
-                echo "$0: warning: $arg ignored" >&2; followaction=ignore ;;
+                echo "$basename: warning: $arg ignored" >&2; followaction=ignore ;;
       -MF)
-                echo "$0: warning: $arg ignored" >&2; followaction=touch ;;
+                echo "$basename: warning: $arg ignored" >&2; followaction=touch ;;
 
       -I*)           extra_inc="$extra_inc $arg" ;;
       -Wa,*)         extra_asflags="$extra_asflags $arg" ;;
@@ -163,7 +163,7 @@ for arg in "$@"; do
 
       -x|-M|-MM)  die "$arg not supported yet" ;;
       -nostdinc*) 
-                echo "$0: warning: $arg may not behave as expected" >&2
+                echo "$basename: warning: $arg may not behave as expected" >&2
                 extra_ppflags="$extra_ppflags $arg"
                 ;;
       -mutc*)   die "-mutc is deprecated, use -b instead" ;;
@@ -190,6 +190,8 @@ for arg in "$@"; do
       *) check_exists "$arg" && in_ld_spec="$in_ld_spec $arg";;
   esac
 done
+if test -n "${prev_arg:-}"; then die "argument to \`$arg' is missing"; fi
+   
 
 # Special actions that do not require processing
 if test "x$slc_mode" = xdisplay_version; then
@@ -575,7 +577,7 @@ prepare_chain() {
 	fi
     else
 	for f in $specfiles; do
-	    echo "$0: $f: $phrase input file unused because $phrase not run" >&2
+	    echo "$basename: $f: $phrase input file unused because $phrase not run" >&2
 	done
     fi
 }
