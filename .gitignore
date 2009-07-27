@@ -1,0 +1,14 @@
+Makefile.in
+Makefile
+configure
+build-aux
+autom4te.cache
+aclocal.m4
+build
+config.log
+config.status
+README
+NEWS
+*.tar.gz
+*.tar.bz2
+
