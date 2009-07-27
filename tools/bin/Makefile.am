@@ -12,10 +12,10 @@
 ##
 
 # 
-bin_SCRIPTS = cce slc slr slt timeout
+bin_SCRIPTS = cce slc slr slt timeout slt-many cm4
 dist_bin_SCRIPTS = scu spp sag
 
-EXTRA_DIST = cce.in slc.in slr.in slt.in timeout.in slt-many.in
+EXTRA_DIST = cce.in slc.in slr.in slt.in timeout.in slt-many.in cm4.in
 
 CLEANFILES = $(bin_SCRIPTS)
 
@@ -56,6 +56,7 @@ slc: slc.in
 slt: slt.in
 timeout: timeout.in
 slt-many: slt-many.in
+cm4: cm4.in
 
 #
 # Documentation for the scripts
