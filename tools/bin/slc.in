@@ -1,5 +1,5 @@
 #! @BASH@
-#
+# -*- mode: shell-script -*-
 # slc: This file is part of the SL toolchain.
 #
 copyright="Copyright (C) 2009 The SL project."
@@ -21,7 +21,7 @@ root=$(cd $(dirname "$0"); pwd)
 timeout=$root/timeout
 TIMEOUT=${TIMEOUT:-10000}; export TIMEOUT
 cce_helper=${CCE:-@cce_helper@}
-basename=$(basename "$0")
+basename=${0#*/}
 TMPDIR=${TMPDIR:-/tmp}
 
 version=@slc_version@
@@ -135,10 +135,10 @@ for arg in "$@"; do
 
       -P)	synclines= ;;
       -o)	prev_arg=outfile;;
-      -ftrace-m4=*) m4trace=$(echo "$arg"|cut -d= -f2-);;
+      -ftrace-m4=*) m4trace=${arg#*=} ;;
       -save-temps) keep=yes ;;
       -v)       verbose=yes ;;
-      -combine=*) combine=$(echo "$arg"|cut -d= -f2);;
+      -combine=*) combine=${arg#*=} ;;
       -combine)   combine=C ;;
 
       -L*|-Wl,*)     extra_ldflags="$extra_ldflags $arg" ;;
@@ -194,7 +194,7 @@ done
 # Special actions that do not require processing
 if test "x$slc_mode" = xdisplay_version; then
    rev='$Rev$'
-   rev=$(echo "$rev"|cut -d' ' -f2)
+   rev=${rev# *}
    cat <<EOF
 $basename $version (rev $slrev/$rev)
 
@@ -531,8 +531,7 @@ prepare_chain() {
     if test "x$skip" = "x"; then
 	if ! expr "$combine" : ".*$stage" >/dev/null; then
 	    for f in $inputs; do
-		fn=${f##*/}; fn=${fn%*.*}
-
+		fn=${f##*/}; fn=${fn%.*}
 		case $f in
 		    *.S) 
 			target=$tmpdir/$fn.s
@@ -557,8 +556,7 @@ prepare_chain() {
 		transform="$transform:$f"
 	    done
 	    if test -n "$transform"; then 
-		fn=${first##*/}; fn=${fn%*.*}
-#		fn=$(basename "$first"|sed -e 's/^\(.*\)\.[^.]*$/\1/g')
+		fn=${first##*/}; fn=${fn%.*}
 		targetbase=$fn.$addext
 		if test "x$finalstage" = "x$stage"; then
 		    if test "x$finalname" = "x-"; then

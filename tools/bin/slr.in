@@ -134,7 +134,7 @@ EOF
 
 do_version() {
   rev='$Rev$'
-  rev=$(echo "$rev"|cut -d' ' -f2)
+  rev=${rev#* }
   cat <<EOF
 slr $version (rev $slrev/$rev)
 
@@ -186,11 +186,13 @@ for arg in "$@"; do
       -h|--help)	do_usage;;
       -l)  query=1; shift;;
       -n)  prev_arg=NCORES; shift;;
-      -Ws,*)   lowarg=$(echo "$arg"|cut -d',' -f2-|tr ',' ' ')
+      -Ws,*)   
+	  lowarg=${arg# ,}; 
+	  lowarg=${lowarg//,/ } ;
 	  SIMARGS="$SIMARGS $lowarg"
 	  shift;;
-      -d*=*) var=$(printf "%s" "$arg"|cut -c3-); vars="$vars $var"; shift;;
-      -d*) var=$(printf "%s" "$arg"|cut -c3-); vars="$vars $var="; shift;;
+      -d*=*) var=${arg:2}; vars="$vars $var"; shift;;
+      -d*) var=${arg:2}; vars="$vars $var="; shift;;
       -f)   prev_arg=fibre_in; shift;;
       -rd)  prev_arg=rdatafile; shift;;
       -wd)  prev_arg=wdatafile; shift;;
@@ -307,7 +309,7 @@ fi
 # a background watchdog for this purpose.
 if test -n "$dodata" -o -n "$dofdata"; then
     # build temporary directory
-    baseout=$(basename "$program")
+    baseout=${program##*/}
     tmpdir=$(mktemp -d $TMPDIR/"$baseout".slr-XXXXXXXX)
     if test -n "$KEEP"; then
 	echo "$0: $tmpdir: will not delete after program termination" >&2

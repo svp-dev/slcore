@@ -1,3 +1,15 @@
+2009-07-27  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
+	Use more bashims to reduce the number of sub-processes spawned by
+	tools.
+
+	* tools/bin/slc.in,
+	* tools/bin/cce.in,
+	* tools/bin/slr.in,
+	* tools/bin/slt.in: Use more $((...)) instead of $(expr ...). Use
+	more ${foo#...} and ${foo%...} instead of cut and sed. Use "<<<"
+	insted of "echo|".
+	
 2009-07-26  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
 	Fix emission of `.base'.

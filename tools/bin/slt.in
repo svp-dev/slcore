@@ -18,7 +18,7 @@ PS4='+ slt($$): '
 if test -n "$TRACE"; then set -x; fi
 set -e
 
-basename=$(basename "$0")
+basename=${0##*/}
 root=$(cd $(dirname "$0"); pwd)
 
 version=@slc_version@
@@ -320,7 +320,7 @@ if test "$1" = "--help" -o "$1" = "-h"; then
   exit 0
 elif test "$1" = "--version" -o "$1" = "-v"; then
   rev='$Rev$'
-  rev=$(echo "$rev"|cut -d' ' -f2)
+  rev=${rev#* }
   cat <<EOF
 $basename $version (rev $slrev/$rev)
 
@@ -355,10 +355,11 @@ if test -z "$SRCDIR"; then
     SRCDIR=.
 fi
 
-case $1 in
-  *.sl)     testname=$(basename "$1" .sl);;
-  *.S)      testname=$(basename "$1" .S);;
-  *.s)      testname=$(basename "$1" .s);;
+testbase=${1##*/}
+case $testbase in
+  *.sl)     testname=${testbase%.sl};;
+  *.S)      testname=${testbase%.S};;
+  *.s)      testname=${testbase%.s};;
   *)
   cat <<EOF
 Usage: $basename [SOURCE] [IMPLEMENTATION]...
@@ -386,7 +387,7 @@ check_status() {
     elif test $1 = 0; then status=ok
     elif test $1 -lt 127; then status=error; errcode=$1
     elif test $1 = 143 -o $1 = 137; then status=timeout
-    else status=signal; signal=$(expr $1 - 128)
+    else status=signal; signal=$(($1 - 128))
     fi
     if test $status = signal; then echo "Terminated with signal $signal" >&2; fi
     if test $status = error; then echo "Terminated with status code $errcode" >&2; fi
@@ -536,7 +537,8 @@ do_run() {
       printf '' >$baseout.out
       while read -a vars ; do
 	  echo "===== RUNNING PROGRAM: ${vars[*]} =====" >>$baseout.log
-	  command=$(echo "$timeout $runner -t $baseout.x ${vars[*]} $RUN_ARGS"|sed -e "s|TEST|$testsrc|g")
+	  command="$timeout $runner -t $baseout.x ${vars[*]} $RUN_ARGS"
+	  command=${command//TEST/$testsrc}
 	  echo "$command >>$baseout.out" >>$baseout.log
 	  set +e
 	  $command >>$baseout.out 2>>$baseout.log
@@ -544,7 +546,7 @@ do_run() {
 	  set -e
 	  
 	  report_run $x $offset $baseout.log
-	  offset=$(expr $offset + 1)
+	  offset=$(($offset + 1))
       done <"$runspec"
   fi
 }
@@ -578,9 +580,9 @@ do_check() {
   refout=$3
 
   do_compile $offset
-  offset=$(expr $offset + 2)
+  offset=$(($offset + 2))
   do_run $offset
-  offset=$(expr $offset + $nruns)
+  offset=$(($offset + $nruns))
   if test -n "$refout"; then
       do_diff $offset "$refout"
   else
@@ -607,13 +609,15 @@ do_check() {
 }
 
 do_preptest() {
-    local cargs rargs save vn var val prefign
-    impl=$(echo "$1" | cut -d: -f1)
-    cargs=$(echo "$1::" | cut -d: -f2 | tr '~' ' ')
-    rargs=$(echo "$1::" | cut -d: -f3 | tr '~' ' ')
+    local cargs rargs save vn var val prefign spec
+    spec="$1::"
+    impl=${spec%%:*}
+    cargs=${spec#*:}; cargs=${cargs%%:*}; cargs=${cargs//\~/ }
+    rargs=${spec#*:*:}; rargs=${rargs%%:*}; rargs=${rargs//\~/ }
 
     reldir=${testdir#$SRCDIR}
-    reldir=${reldir//%\/}
+    reldir=${reldir#/}
+
     if test -z "$reldir"; then reldir=.; fi
     if test -n "$SRCDIR"; then
 	cargs="$cargs -I$SRCDIR/$reldir"
@@ -621,8 +625,8 @@ do_preptest() {
     export COMPILE_ARGS="$cargs"
     export RUN_ARGS="$rargs"
 
-    outdir=$reldir/_$(echo "$1"|tr ' ~/:.-' '______')
-    outdir=${outdir/#.\/}
+    outdir=$reldir/_${1//[\~\/:.--- ]/_}
+    outdir=${outdir#./}
    
     baseout=$outdir/$testname
     
@@ -651,7 +655,7 @@ xfailpats=$(grep "XFAIL:" <"$testsrc"|sed -e 's/^.*XFAIL:\(.*\)$/\1/g')
 ignpats=$(echo "$prefign"; grep "XIGNORE:" <"$testsrc"|sed -e 's/^.*XIGNORE:\(.*\)$/\1/g')
 xtopats=$(grep "XTIMEOUT:" <"$testsrc"|sed -e 's/^.*XTIMEOUT:\(.*\)$/\1/g')
 
-(grep "SLT_RUN:" <"$testsrc"|sed -e 's/^.*SLT_RUN:\(.*\)$/\1/g') >"$baseout".runspec
+grep "SLT_RUN:" <"$testsrc"|sed -e 's/^.*SLT_RUN:\(.*\)$/\1/g' >"$baseout".runspec
 nruns=$(wc -l <"$baseout".runspec)
 if test $nruns = 0; then
     echo >"$baseout".runspec
@@ -662,23 +666,23 @@ runspec="$baseout".runspec
 if test -z "$TEXT_ONLY"; then
     # find terminal width and squeeze first
     # column as needed
-    colspertest=$(expr $nruns + 4)
+    colspertest=$(($nruns + 4))
     if stty size >/dev/null 2>&1; then
 	COLUMNS=$(stty size|cut -d' ' -f2)
     fi
     COLUMNS=${COLUMNS:-80}
     nrimpl=$#
-    nrcols=$(expr \( $nrimpl + 1 \) \* $colspertest )
-    remainder=$(expr $COLUMNS - $nrcols - 5)
+    nrcols=$(( ($nrimpl + 1) * $colspertest ))
+    remainder=$(($COLUMNS - $nrcols - 5))
     if test $remainder -lt 20; then remainder=20; fi
     name=$testsrc
-    namelen=$(echo "$name"|wc -c)
+    namelen=${#name}
     if test $namelen -gt $remainder; then
-	name=$(echo "$name"|sed -e 's,\([0-9]_\)[^/]*,\1*,g')
-	namelen=$(echo "$name"|wc -c)
-	rem=$(expr $remainder - 3)
+	name=$(sed -e 's,\([0-9]_\)[^/]*,\1*,g' <<<"$name")
+	namelen=${#name}
+	rem=$(($remainder - 3))
 	if test $namelen -gt $rem; then
-	    name=$(echo "$name"|sed -e 's/^.*\(.\{'$rem'\}\)$/...\1/g')
+	    name=$(sed -e 's/^.*\(.\{'$rem'\}\)$/...\1/g' <<<"$name")
 	fi
     fi
     printf "%-${remainder}s" "$name"
@@ -741,7 +745,7 @@ check_proc $x
 towait=
 refout=$baseout.out
 for impl1 in "$@"; do
-    offset=$(expr $offset + $colspertest)
+    offset=$(($offset + $colspertest))
     do_preptest "$impl1"
     do_check $impl $offset "$refout" &
     towait="$towait $!"
@@ -766,7 +770,7 @@ if test -z "$SEQUENTIAL"; then
 fi
 
 if test -z "$TEXT_ONLY"; then
-    offset=$(expr $offset + $colspertest)
+    offset=$(($offset + $colspertest))
     if test $fail = 0; then
 	place_chars $offset 37 "\o/"
     else

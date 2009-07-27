@@ -1,5 +1,5 @@
 #! @BASH@
-#
+# -*- mode: shell-script -*-
 # cce: This file is part of the SL toolchain.
 #
 copyright="Copyright (C) 2009 The SL project."
@@ -84,7 +84,7 @@ EOF
 
 do_version() {
     rev='$Rev$'
-    rev=$(echo "$rev"|cut -d' ' -f2)
+    rev=${rev#* }
     cat <<EOF
 cce $version (rev $slrev/$rev)
 
@@ -184,9 +184,9 @@ if test "x$set_vars" = x; then
     exit 0
 fi
 
-archvar=$(echo "$slc_arch"|tr a-z A-Z)
-basearch=$(echo "$slc_arch"|cut -c3-)
-basearchvar=$(echo "$basearch"|tr a-z A-Z)
+archvar=$(tr a-z A-Z <<<"$slc_arch")
+basearch=${slc_arch:2}
+basearchvar=$(tr a-z A-Z <<<"$basearch")
 
 # Language mode selection
 slc_complang=unknown
