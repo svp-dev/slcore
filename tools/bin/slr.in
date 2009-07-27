@@ -24,7 +24,7 @@ slc_libdir=${SLC_LIBDIR:-@slc_libdir@}
 slc_datadir=${SLC_DATADIR:-@slc_datadir@}
 TMPDIR=${TMPDIR:-/tmp}
 KEEP=${KEEP:-}
-
+basename=${0##*/}
 version=@slc_version@
 slrev=@slc_revision@
 bugreports="@bugreports@"
@@ -148,7 +148,7 @@ EOF
 }
 
 die() {
-  printf '%s: %s\n' "$0" "$2" >&2
+  printf '%s: %s\n' "$basename" "$2" >&2
   exit $1
 }
 
@@ -207,6 +207,7 @@ for arg in "$@"; do
 	   fi ;;
   esac
 done
+if test -n "${prev_arg:-}"; then die 1 "argument to \`$arg' is missing"; fi
 
 
 # does the program exist?
@@ -282,7 +283,7 @@ fi
 if test -n "$rdatafile"; then
   if ! test -r "$rdatafile"; then die 1 "$rdatafile: cannot read file"; fi
   if test -n "$vars"; then 
-    echo "$0: warning: '-rd $rdatafile' overrides '$vars'" >&2
+    echo "$basename: warning: '-rd $rdatafile' overrides '$vars'" >&2
   fi
   datafile=$rdatafile
   dodata=
@@ -294,7 +295,7 @@ fi
 if test -n "$rfdatafile"; then
   if ! test -r "$rfdatafile"; then die 1 "$rfdatafile: cannot read file"; fi
   if test -n "$vars"; then 
-    echo "$0: warning: '-rf $rfdatafile' overrides '-f $fibre_in'" >&2
+    echo "$basename: warning: '-rf $rfdatafile' overrides '-f $fibre_in'" >&2
   fi
   fdatafile=$rfdatafile
   dofdata=
@@ -312,7 +313,7 @@ if test -n "$dodata" -o -n "$dofdata"; then
     baseout=${program##*/}
     tmpdir=$(mktemp -d $TMPDIR/"$baseout".slr-XXXXXXXX)
     if test -n "$KEEP"; then
-	echo "$0: $tmpdir: will not delete after program termination" >&2
+	echo "$basename: $tmpdir: will not delete after program termination" >&2
     else
 	SLR_PID=$$
 	(
@@ -349,21 +350,21 @@ if test -n "$dodata"; then
 
 	# prepare C struct with slr var data
 	if test -n "$VERBOSE"; then
-	    echo "$0: running: $python $sag_helper d $vars <$tmpdir/args.spec >$tmpdir/data.c" >&2
+	    echo "$basename: running: $python $sag_helper d $vars <$tmpdir/args.spec >$tmpdir/data.c" >&2
 	fi
 	$python "$sag_helper" d $vars <"$tmpdir"/args.spec >"$tmpdir"/data.c
 
 	# compile arggen.sl with slr var data in C
 	mkdir -p "$tmpdir"/slc-rec
 	if test -n "$VERBOSE"; then
-	    echo "$0: running: TMPDIR=$tmpdir/slc-rec @BASH@ $slc_helper -b $datatag -o $tmpdir/gen.x -I$tmpdir $arggen" >&2
+	    echo "$basename: running: TMPDIR=$tmpdir/slc-rec @BASH@ $slc_helper -b $datatag -o $tmpdir/gen.x -I$tmpdir $arggen" >&2
 	fi
 	TMPDIR="$tmpdir"/slc-rec @BASH@ "$slc_helper" -b "$datatag" -o "$tmpdir"/gen.x -I"$tmpdir" "$arggen"
 
 	# run slr recursively on the arggen binary to dump the data
 	mkdir -p "$tmpdir"/slr-rec
 	if test -n "$VERBOSE"; then
-	    echo "$0: running: TMPDIR=$tmpdir/slr-rec @BASH@ $0 $tmpdir/gen.x >$datafile" >&2
+	    echo "$basename: running: TMPDIR=$tmpdir/slr-rec @BASH@ $0 $tmpdir/gen.x >$datafile" >&2
 	fi
 	TMPDIR="$tmpdir"/slr-rec @BASH@ "$0" "$tmpdir"/gen.x -Ws,-q,-o,NumProcessorsPerFPU=1 -n 1 >"$datafile"
     else
@@ -388,7 +389,7 @@ if test -n "$dofdata"; then
 
         # transform the Fibre data to a C string definition
 	if test -n "$VERBOSE"; then
-	    echo "$0: running: [sed] <$fibre_in |$python $sag_helper f >$tmpdir/fdata.c" >&2
+	    echo "$basename: running: [sed] <$fibre_in |$python $sag_helper f >$tmpdir/fdata.c" >&2
 	fi
 	(if test "x$fibre_in" = "x-"; then cat; else cat "$fibre_in"; fi) | \
 	    sed -e 's/\#.*//g;' | \
@@ -403,7 +404,7 @@ s/,$//g' | $python "$sag_helper" f >"$tmpdir"/fdata.c
 	# compile arggen.sl with Fibre data in C
 	mkdir -p "$tmpdir"/slc-rec
 	if test -n "$VERBOSE"; then
-	    echo "$0: running: TMPDIR=$tmpdir/slc-rec @BASH@ $slc_helper -b $datatag -o $tmpdir/gen.x -I$tmpdir -DFIBRE_DATA=1 $arggen" >&2
+	    echo "$basename: running: TMPDIR=$tmpdir/slc-rec @BASH@ $slc_helper -b $datatag -o $tmpdir/gen.x -I$tmpdir -DFIBRE_DATA=1 $arggen" >&2
 	fi
 	TMPDIR="$tmpdir"/slc-rec @BASH@ \
 	    "$slc_helper" -b "$datatag" -o "$tmpdir"/gen.x -I"$tmpdir" -DFIBRE_DATA=1 "$arggen"
@@ -411,7 +412,7 @@ s/,$//g' | $python "$sag_helper" f >"$tmpdir"/fdata.c
 	# run slr recursively on the arggen binary to dump the data
 	mkdir -p "$tmpdir"/slr-rec
 	if test -n "$VERBOSE"; then
-	    echo "$0: running: TMPDIR=$tmpdir/slr-rec @BASH@ $0 $tmpdir/gen.x >$fdatafile" >&2
+	    echo "$basename: running: TMPDIR=$tmpdir/slr-rec @BASH@ $0 $tmpdir/gen.x >$fdatafile" >&2
 	fi
 	TMPDIR="$tmpdir"/slr-rec @BASH@ "$0" "$tmpdir"/gen.x -Ws,-q,-o,NumProcessorsPerFPU=1 -n 1 >"$fdatafile"
     else
@@ -425,6 +426,6 @@ if test -n "$preponly"; then exit 0; fi
 
 export SIMARGS VERBOSE DEBUG NCORES
 if test -n "$VERBOSE"; then
-    echo "$0: running: @BASH@ $runner_script $program $datafile $fdatafile" >&2
+    echo "$basename: running: @BASH@ $runner_script $program $datafile $fdatafile" >&2
 fi
 exec @BASH@ "$runner_script" "$program" "$datafile" "$fdatafile"

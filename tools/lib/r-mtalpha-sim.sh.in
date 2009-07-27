@@ -2,6 +2,7 @@
 # $Id$
 set -eu
 MGSIM_ALPHA=${MGSIM_ALPHA:-@MGSIM_ALPHA@}
+basename=${0##*/}
 program=${1:?}
 datafile=${2:?}
 fdatafile=${3:?}
@@ -10,21 +11,21 @@ shift
 shift
 shift
 if ! test -x "$program"; then
-    echo "$0: $program: not an executable" >&2
+    echo "$basename: $program: not an executable" >&2
     exit 1
 fi
 if ! test -r "$datafile"; then
-    echo "$0: $datafile: file not found or not readable" >&2
+    echo "$basename: $datafile: file not found or not readable" >&2
     exit 1
 fi
 
 if ! test -r "$fdatafile"; then
-    echo "$0: $fdatafile: file not found or not readable" >&2
+    echo "$basename: $fdatafile: file not found or not readable" >&2
     exit 1
 fi
 
 if ! "$MGSIM_ALPHA" --help >/dev/null 2>&1; then
-  echo "$0: cannot find simulator (MGSIM_ALPHA=$MGSIM_ALPHA)." >&2
+  echo "$basename: cannot find simulator (MGSIM_ALPHA=$MGSIM_ALPHA)." >&2
   exit 1
 fi
 
@@ -39,6 +40,6 @@ if test -n "${DEBUG:-}"; then
 fi
 
 if test -n "${VERBOSE:-}"; then
-    echo "$0: running: ${RUNNER_PREFIX:-} $do_debug $MGSIM_ALPHA ${SIMARGS:-} -t $* -L16 $datafile -L17 $fdatafile $program" >&2
+    echo "$basename: running: ${RUNNER_PREFIX:-} $do_debug $MGSIM_ALPHA ${SIMARGS:-} -t $* -L16 $datafile -L17 $fdatafile $program" >&2
 fi  
 exec ${RUNNER_PREFIX:-} $do_debug $MGSIM_ALPHA ${SIMARGS:-} -t "$@" -L16 "$datafile" -L17 "$fdatafile" "$program"
