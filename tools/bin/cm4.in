@@ -1,4 +1,4 @@
-#! @PYTHON@
+#! @python@
 # -*- mode: python -*-
 
 import sys
@@ -15,6 +15,7 @@ m4_line = "__line__"
 verbose = True
 dump_trans = None
 output_file = '-'
+input_files = []
 
 def die(msg):
     print >>sys.stderr, "%s: %s" % (sys.argv[0], msg)
@@ -107,27 +108,29 @@ re_ws = r'(?P<ws>\s+)'
 re_line = r'#(?:[ \t]*line|)[ \t]+(?P<line>[0-9]+)[ \t]+"(?P<file>.*?)".*?(?=\n)'
 # regex for id
 re_id = r'(?P<id>[a-zA-Z_][$a-zA-Z0-9_]*)' 
-re_all = r'%s|%s|%s|%s|(?P<rest>\(|[^\(]+)' % (re_str, re_ws, re_line, re_id)
+re_all = r'%s|%s|%s|%s|(?P<rest>\(|[^\(\'\"\#a-zA-Z_]+|.)' % (re_str, re_ws, re_line, re_id)
 
-repl_str = None
 repl_line = None
 acc_ws = None
 
 last_seen = None
 def wrepl(matchobj):
-    global acc_ws, last_seen
+    global acc_ws, last_seen, m4_lquote, m4_rquote
 
     if matchobj.group('line') is not None:
+        # log("LINE")
         acc_ws += '\n' * matchobj.group(0).count('\n') + matchobj.expand(repl_line)
         return ""
 
     ws = matchobj.group('ws')
     if ws is not None:
+        # log("WS: %r" % ws)
         acc_ws += ws
         return ""
 
     id = matchobj.group('id')
     if id is not None:
+        # log("ID: %r" % id)
         last_seen = 'id'
         data = acc_ws + id
         acc_ws = ''
@@ -135,12 +138,14 @@ def wrepl(matchobj):
 
     str = matchobj.group('str')
     if str is not None:
+        # log("STR: %r" % str);
         last_seen = 'rest'
-        data = acc_ws + matchobj.expand(repl_str)
+        data = acc_ws + '%s%s%s' % (m4_lquote, quotes_escaper(str), m4_rquote)
         acc_ws = ''
         return data
 
     rest = matchobj.group(0)
+    # log("REST: %r" % rest)
     prefix = ''
     if not (last_seen == 'id' and rest.startswith('(')):
         prefix += acc_ws
@@ -148,10 +153,23 @@ def wrepl(matchobj):
     last_seen = 'rest'
     return prefix + rest
 
+def makeqesc(specialchars):
+    specials = ''.join(specialchars)
+    def escaper(str):
+        newstr = ''
+        for c in str:
+            # log("HELLO %r" % c)
+            if c in specials:
+                newstr += r'\x%2x' % ord(c)
+            else:
+                newstr += c;
+        return newstr
+    return escaper
+
 def m4_massage_input(data):
-    global acc_ws, repl_str, repl_line
-    # replacement for comments and strings:
-    repl_str = r'%s\g<0>%s' % (m4_lquote, m4_rquote)
+    global acc_ws, repl_line, quotes_escaper
+    # replacement for quote chars in strings
+    quotes_escaper = makeqesc(list(set(m4_lquote + m4_rquote)))
     # replacement for line
     repl_line = r'%s(%s\g<file>%s)%s(\g<line>)' % (m4_file, m4_lquote, m4_rquote, m4_line)
 
@@ -198,5 +216,7 @@ def do_combine():
 
 if __name__ == "__main__":
     parse_args(sys.argv[1:])
+    if not input_files:
+        die("no input files");
     do_combine()
 
