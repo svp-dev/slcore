@@ -187,7 +187,7 @@ for arg in "$@"; do
       -l)  query=1; shift;;
       -n)  prev_arg=NCORES; shift;;
       -Ws,*)   
-	  lowarg=${arg# ,}; 
+	  lowarg=${arg#*,}; 
 	  lowarg=${lowarg//,/ } ;
 	  SIMARGS="$SIMARGS $lowarg"
 	  shift;;

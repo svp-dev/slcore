@@ -1,5 +1,11 @@
 2009-07-27  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	Fix handling of extra simulator command-line parameters.
+	
+	* tools/bin/slr.in: Properly parse `-Ws'. 
+	
+2009-07-27  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	Make tools more human-friendly.
 	
 	* tools/bin/slr.in,	
