@@ -1,5 +1,12 @@
 2009-07-27  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	Minor packaging fix.
+	
+	* tools/bin/Makefile.am (bin_SCRIPTS): Ensure `slt-many' gets
+	installed.
+
+2009-07-27  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	Use more bashims to reduce the number of sub-processes spawned by
 	tools.
 

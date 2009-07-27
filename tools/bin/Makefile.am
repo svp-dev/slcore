@@ -12,7 +12,7 @@
 ##
 
 # 
-bin_SCRIPTS = cce slc slr slt timeout
+bin_SCRIPTS = cce slc slr slt timeout slt-many
 dist_bin_SCRIPTS = scu spp sag
 
 EXTRA_DIST = cce.in slc.in slr.in slt.in timeout.in slt-many.in
