@@ -1,14 +1,9 @@
 2009-07-30  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
 	Merge the following changes.
-	
-	2009-07-27  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
-	Fix handling of extra simulator command-line parameters.
 	
-	* tools/bin/slr.in: Properly parse `-Ws'. 
-	
-2009-07-30  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+        2009-07-30  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
 	Be friendly with existing SL code.
 
@@ -29,12 +24,33 @@
 	* tools/bin/slc.in: Append $extra_ppflags to $slc_cflags when some
 	.sl files are present in the input.
 
+	
+        2009-07-27  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
+	Run M4 after the C preprocessor.
+	
+	* tools/bin/slc.in: Use `cm4' to run M4 after the C
+	preprocessor. Document the feature.
+
+	* tools/bin/cce.in: Set toolchain parameters accordingly.
+	
+	* tools/bin/slt.in: Update accordingly.
+
+
+        2009-07-27  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
+	Introduce new tool `cm4'.
+	
+	* tools/bin/cm4.in: New.
+	* tools/bin/Makefile.am: Update accordingly.
+
 2009-07-27  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
-	Merge the following changes.
-
-	2009-07-27  Raphael 'kena' Poss  <r.c.poss@uva.nl>
-
+	Fix handling of extra simulator command-line parameters.
+	
+	* tools/bin/slr.in: Properly parse `-Ws'. 
+	
+2009-07-27  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
 	Make tools more human-friendly.
 	
@@ -52,40 +68,19 @@
 	* tools/lib/r-mtsparc-sim.sh.in: Print only the short utility name
 	in warning and error messages, instead of the full path.	
 
-        2009-07-27  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+2009-07-27  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
 	Provide test script for `quicksort' benchmark.
 
 	* programs/benchmarks/quicksort/testqs.sh: New. It was mentioned
 	in `Makefile.am' but nonexistent. 
 
-        2009-07-27  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+2009-07-27  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
 	Add shell goodies to the `slenv' script.
 
 	* deploy/slenv: Also set `PS1' with bash and zsh to inform which
 	version is currently selected.
-
-2009-07-27  Raphael 'kena' Poss  <r.c.poss@uva.nl>
-
-	Run M4 after the C preprocessor.
-	
-	* tools/bin/slc.in: Use `cm4' to run M4 after the C
-	preprocessor. Document the feature.
-
-	* tools/bin/cce.in: Set toolchain parameters accordingly.
-	
-	* tools/bin/slt.in: Update accordingly.
-
-
-2009-07-27  Raphael 'kena' Poss  <r.c.poss@uva.nl>
-
-	Introduce new tool `cm4'.
-	
-	* tools/bin/cm4.in: New.
-	* tools/bin/Makefile.am: Update accordingly.
-
->>>>>>> master:ChangeLog
 
 2009-07-27  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
