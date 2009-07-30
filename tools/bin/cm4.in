@@ -1,0 +1,228 @@
+#! @python@
+# -*- mode: python -*-
+
+import sys
+import subprocess
+import os
+import re
+
+m4 = os.getenv("M4", "@M4@")
+m4_args = []
+m4_lquote = '`'
+m4_rquote = "'"
+m4_file = "__file__"
+m4_line = "__line__"
+verbose = False
+dump_trans = None
+output_file = '-'
+input_files = []
+
+def die(msg):
+    print >>sys.stderr, "%s: %s" % (sys.argv[0], msg)
+    sys.exit(1)
+
+def log(msg):
+    if verbose: 
+        print >>sys.stderr, "%s: %s" % (sys.argv[0], msg)
+        sys.stderr.flush()
+
+def parse_args(args):
+    """
+    Command-line argument parsing:
+
+    -o FILE             Output to FILE (default: -)
+    -v                  Be verbose
+    -fcm4-lquote=S      Set opening M4 quote (default: `)
+    -fcm4-rquote=S      Set closing M4 quote (default: ')
+    -fcm4-file=S        Set M4 macro name for setting current file name (default __file__)
+    -fcm4-line=S        Set M4 macro name for setting current line number (default __line__)
+    -fcm4-dump=FILE     Capture filtered input to FILE (default: don't capture)
+    -Wm4,OPTION         Add OPTION to M4 command-line
+
+    Other command-line arguments are read as input files.
+    """
+    global m4_args, m4_lquote, m4_rquote, m4_file, m4_line
+    global verbose, output_file, input_files, dump_trans
+
+    ret = []
+    l = len(args)
+    i = 0
+    while i < l:
+        arg = args[i]
+        if arg == '-v':   verbose = True
+        elif arg == '-o': output_file = args[i + 1]; i = i + 2; continue       
+        elif arg.startswith('-fcm4-lquote='):  m4_lquote = arg.split('=',1)[1]
+        elif arg.startswith('-fcm4-rquote='):  m4_rquote = arg.split('=',1)[1]
+        elif arg.startswith('-fcm4-file='):    m4_file = arg.split('=',1)[1]
+        elif arg.startswith('-fcm4-line='):    m4_line = arg.split('=',1)[1]
+        elif arg.startswith('-fcm4-dump='):    dump_trans = arg.split('=',1)[1]
+        elif arg.startswith('-Wm4,'):          m4_args += arg.split(',')[1:]
+        elif arg == '--': input_files += args[i+1:]; return
+        elif arg == '-':  input_files.append(arg)
+        elif arg.startswith('-'): 
+            die('unrecognized command-line option "%s"' % arg)
+        else:              input_files.append(arg)
+        i += 1
+
+    if verbose:
+        log("m4 = %s" % repr(m4))
+        log("output_file = %s" % repr(output_file))
+        log("dump_trans = %s" % repr(dump_trans))
+        log("m4_args = %s" % repr(m4_args))
+        log("input_files = %s" % repr(input_files))
+        log("m4_lquote = %s" % repr(m4_lquote))
+        log("m4_rquote = %s" % repr(m4_rquote))
+        log("m4_file = %s" % repr(m4_file))
+        log("m4_line = %s" % repr(m4_line))
+    return ret
+
+# regex for C comments: 
+re_com = r'/[*].*?[*]/|//.*?(?=\n)'
+# regex for C strings:
+re_str = r'''(?P<str>"(?:[^\\"]|\\.)*"|['](?:[^\\']|\\.)*['])'''
+# regex for whitespace
+re_ws = r'(?P<ws>\s+)'
+# regex for line directives
+re_line = r'#(?:[ \t]*line|)[ \t]+(?P<line>[0-9]+)[ \t]+"(?P<file>.*?)".*?(?=\n)'
+# regex for id
+re_id = r'(?P<id>[a-zA-Z_][$a-zA-Z0-9_]*)' 
+re_all = r'%s|%s|%s|%s|(?P<rest>\(|[^\(\'\"\#a-zA-Z_]+|.)' % (re_str, re_ws, re_line, re_id)
+
+acc_nl = None
+def com_repl(matchobj):
+    global acc_nl
+    nl = matchobj.group('nl')
+    if nl is not None:
+        data = '\n' * (acc_nl + len(nl))
+        acc_nl = 0
+        return data
+    com = matchobj.group('com')
+    if com is not None:
+        acc_nl += com.count('\n')
+        return ' '
+    return matchobj.group(0)
+
+def do_comments(data):
+    global acc_nl
+    res = '%s|(?P<com>%s)|(?P<nl>\n+)' % (re_str,re_com)
+    rec = re.compile(res, re.S|re.M)
+    acc_nl = 0
+    data = re.sub(rec, com_repl, data)
+    data += '\n' * acc_nl
+    return data
+
+repl_line = None
+acc_ws = None
+
+last_seen = None
+def wrepl(matchobj):
+    global acc_ws, last_seen, m4_lquote, m4_rquote
+
+    if matchobj.group('line') is not None:
+        # log("LINE")
+        acc_ws += '\n' * matchobj.group(0).count('\n') + matchobj.expand(repl_line)
+        return ""
+
+    ws = matchobj.group('ws')
+    if ws is not None:
+        # log("WS: %r" % ws)
+        acc_ws += ws
+        return ""
+
+    id = matchobj.group('id')
+    if id is not None:
+        # log("ID: %r" % id)
+        last_seen = 'id'
+        data = acc_ws + id
+        acc_ws = ''
+        return data
+
+    str = matchobj.group('str')
+    if str is not None:
+        # log("STR: %r" % str);
+        last_seen = 'rest'
+        data = acc_ws + '%s%s%s' % (m4_lquote, quotes_escaper(str), m4_rquote)
+        acc_ws = ''
+        return data
+
+    rest = matchobj.group(0)
+    # log("REST: %r" % rest)
+    prefix = ''
+    if not (last_seen == 'id' and rest.startswith('(')):
+        prefix += acc_ws
+        acc_ws = ''
+    last_seen = 'rest'
+    return prefix + rest
+
+def makeqesc(specialchars):
+    specials = ''.join(specialchars)
+    def escaper(str):
+        newstr = ''
+        for c in str:
+            # log("HELLO %r" % c)
+            if c in specials:
+                newstr += r'\x%2x' % ord(c)
+            else:
+                newstr += c;
+        return newstr
+    return escaper
+
+def m4_massage_input(data):
+    global acc_ws, repl_line, quotes_escaper
+    # replacement for quote chars in strings
+    quotes_escaper = makeqesc(list(set(m4_lquote + m4_rquote)))
+    # replacement for line
+    repl_line = r'%s(%s\g<file>%s)%s(\g<line>)' % (m4_file, m4_lquote, m4_rquote, m4_line)
+
+    rec = re.compile(re_all, re.S|re.M)
+    acc_ws = ''
+    data = re.sub(rec, wrepl, data)
+    data += acc_ws
+    return data
+
+def do_m4(data):
+    m4_cmdline = [m4] + m4_args + ['-']
+    log("exec m4: %s" % repr(m4_cmdline))
+    if output_file is not None and output_file != '-':
+        m4out = file(output_file, 'w')
+    else: 
+        m4out = sys.stdout
+
+    m4p = subprocess.Popen(m4_cmdline, stdin=subprocess.PIPE, stdout=m4out)
+    _ = m4p.communicate(input = data)
+    if m4p.returncode != 0: sys.exit(m4p.returncode)
+
+def maybe_capture(cond, name, data):
+    if cond is not None:
+        log("writing %s to %s" % (name, cond))
+        if cond == '-':
+            outfile = sys.stdout
+        else:
+            outfile = file(cond, 'w')
+        outfile.write(data)
+        if cond != '-': outfile.close()
+
+def do_combine():
+    data = ''
+    for fname in input_files:
+        if fname == '-': 
+            title = '<stdin>'
+            f = sys.stdin
+        else: 
+            title = fname
+            f = file(fname)
+        data += '\n# 1 "%s"\n' % title
+        data += f.read()
+        if fname != '-': f.close()
+        
+    data = do_comments(data)
+    data = m4_massage_input(data)
+    maybe_capture(dump_trans, "massaged source", data)
+    do_m4(data)
+
+if __name__ == "__main__":
+    parse_args(sys.argv[1:])
+    if not input_files:
+        die("no input files");
+    do_combine()
+

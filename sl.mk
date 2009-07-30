@@ -24,6 +24,7 @@ SLC_VARS = \
 	CCE=$(abs_top_builddir)/tools/bin/cce \
 	SLR=$(abs_top_builddir)/tools/bin/slr \
 	SLT=$(abs_top_builddir)/tools/bin/slt \
+	CM4=$(abs_top_builddir)/tools/bin/cm4 \
 	SLC=$(SLC_LOCAL)
 
 SLC_RUN = $(SLC_VARS) $(SLC_LOCAL)

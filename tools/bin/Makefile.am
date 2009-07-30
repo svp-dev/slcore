@@ -12,10 +12,10 @@
 ##
 
 # 
-bin_SCRIPTS = cce slc slr slt timeout slt-many
+bin_SCRIPTS = cce slc slr slt timeout slt-many cm4
 dist_bin_SCRIPTS = scu spp sag
 
-EXTRA_DIST = cce.in slc.in slr.in slt.in timeout.in slt-many.in
+EXTRA_DIST = cce.in slc.in slr.in slt.in timeout.in slt-many.in cm4.in
 
 CLEANFILES = $(bin_SCRIPTS)
 
@@ -39,11 +39,12 @@ edit_scripts = $(SED) \
 	       -e 's|@slt_helper[@]|$(bindir)/slt|g' \
 	       -e 's|@sag_helper[@]|$(bindir)/sag|g' \
 	       -e 's|@spp_helper[@]|$(bindir)/spp|g' \
+	       -e 's|@cm4_helper[@]|$(bindir)/cm4|g' \
 	       -e 's|@slc_version[@]|$(PACKAGE_VERSION)|g' \
 	       -e 's|@slc_revision[@]|$(SVN_REVISION)|g' \
 	       -e 's|@bugreports[@]|$(PACKAGE_BUGREPORT)|g'
 
-cce slr slc slt timeout slt-many: $(top_srcdir)/ChangeLog
+cce slr slc slt timeout slt-many cm4: $(top_srcdir)/ChangeLog
 	$(AM_V_at)rm -f $@ $@.tmp
 	$(AM_V_GEN)$(edit_scripts) $(srcdir)/$@.in >$@.tmp
 	$(AM_V_at)chmod +x $@.tmp
@@ -56,6 +57,7 @@ slc: slc.in
 slt: slt.in
 timeout: timeout.in
 slt-many: slt-many.in
+cm4: cm4.in
 
 #
 # Documentation for the scripts

@@ -86,9 +86,9 @@ Output codes for compilation:
 
     ?    Compilation succeeded, but a failure was expected.
  
-    XT   Translation failed.
-
     XP   Preprocessing failed.
+
+    XT   Translation failed.
 
     XC   Compilation failed.
 
@@ -148,21 +148,21 @@ Temporary files:
   During testing a number of intermediate files are generated. If the
   SOURCE file is named test.sl, the following files are generated:
 
-    IMPL/test.log         Test log
+    IMPL/test.log          Test log
 
-    IMPL/test.{c,cc,utc}  Source code after transformation
+    IMPL/test.{i,ii,ui}    Source code after preprocessing
 
-    IMPL/test.{i,ii,ui}   Source code after preprocessing
+    IMPL/test.t.{c,cc,utc} Source code after transformation
 
-    IMPL/test.s0          Raw assembly output
+    IMPL/test.s0           Raw assembly output
 
-    IMPL/test.s           Assembly output
+    IMPL/test.s            Assembly output
 
-    IMPL/test.o           Object file
+    IMPL/test.o            Object file
 
-    IMPL/test.x           Executable to be used as input to \`slr'
+    IMPL/test.x            Executable to be used as input to \`slr'
 
-    IMPL/test.out         Output during execution
+    IMPL/test.out          Output during execution
 
   If a test is successful the corresponding files are erased after the
   test completes, unless the environment variable KEEP is set and
@@ -460,15 +460,15 @@ report_compile() {
       signal)  color=31; char="! "; fail=1 ;;
       timeout) color=31; char="8 "; fail=1 ;; 
       ok)      
-	  if xfail T P C F A L
+	  if xfail P T C F A L
           then color=31; char="? "; fail=1 
     	  else color=32; char=" L"
 	  fi ;;
     error) 
        case $errcode in
           1) color=31; char="X "; fail=1 ;;
-          2) if xfail T; then color=33; char="/T"; else color=31; char="XT"; fail=1; fi;;
-          3) if xfail P; then color=33; char="/P"; else color=31; char="XP"; fail=1; fi;;
+          2) if xfail P; then color=33; char="/P"; else color=31; char="XP"; fail=1; fi;;
+          3) if xfail T; then color=33; char="/T"; else color=31; char="XT"; fail=1; fi;;
           4) if xfail C; then color=33; char="/C"; else color=31; char="XC"; fail=1; fi;;
           5) if xfail F; then color=33; char="/F"; else color=31; char="XF"; fail=1; fi;;
           6) if xfail A; then color=33; char="/A"; else color=31; char="XA"; fail=1; fi;;
@@ -482,7 +482,7 @@ report_compile() {
     dorun=0
   fi
 
-  if xign T P C F A L; then color=37; fail=0; fi
+  if xign P T C F A L; then color=37; fail=0; fi
 
   place_chars $offset $color "$char"
 }
