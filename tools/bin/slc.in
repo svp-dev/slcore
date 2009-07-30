@@ -12,15 +12,16 @@ copyright="Copyright (C) 2009 The SL project."
 # The complete GNU General Public Licence Notice can be found as the
 # `COPYING' file in the root directory.
 #
-# $Id$
+# $Id: slc.in 2539 2009-07-27 12:10:10Z kena $
 #
 PS4='+ slc($$): '
 if test -n "$TRACE"; then set -x; fi
-set -e
+set -eu
 root=$(cd $(dirname "$0"); pwd)
 timeout=$root/timeout
 TIMEOUT=${TIMEOUT:-10000}; export TIMEOUT
 cce_helper=${CCE:-@cce_helper@}
+cm4_helper=${CM4:-@cm4_helper@}
 basename=${0##*/}
 TMPDIR=${TMPDIR:-/tmp}
 
@@ -44,7 +45,18 @@ check=
 prev_arg=
 followaction=
 
-inputs=
+in_pp_spec=
+in_pp_ind=
+in_tr_spec=
+in_tr_ind=
+in_cc_spec=
+in_cc_ind=
+in_filt_spec=
+in_filt_ind=
+in_as_spec=
+in_as_ind=
+in_ld_spec=
+in_ld_ind=
 tempfiles=
 tempdirs=
 inflight=
@@ -52,15 +64,20 @@ outfile=
 tmpdir=
 
 keep=
-if test -n "$KEEP"; then
+if test -n "${KEEP:-}"; then
  keep=1
 fi
 
+slc_asflags=
+slc_cflags=
+slc_ppflags=
+slc_ldflags=
 extra_inc=
 extra_ppflags=
 extra_asflags=
 extra_cflags=
 extra_ldflags=
+extra_tflags=
 
 M4=${M4:-@M4@}
 
@@ -155,6 +172,8 @@ for arg in "$@"; do
 
       -I*)           extra_inc="$extra_inc $arg" ;;
       -Wa,*)         extra_asflags="$extra_asflags $arg" ;;
+      -Wm4,*)         extra_tflags="$extra_tflags $arg" ;;
+      -fcm4*)         extra_tflags="$extra_tflags $arg" ;;
 
       -W*|-d*|-pedantic|-ansi|-std*)
          extra_ppflags="$extra_ppflags $arg"
@@ -174,18 +193,18 @@ for arg in "$@"; do
 
       -)        in_pp_spec="$in_pp_spec $arg";;
 
-      -*)	extra_cflags="$extra_cflags $arg";;
+      -*)	extra_ppflags="$extra_ppflags $arg"; extra_cflags="$extra_cflags $arg";;
 
+# SLC file types
+      *.t.c|*.t.cc|*.t.utc) check_exists "$arg" && in_cc_spec="$in_cc_spec $arg";;
+      *.utc) check_exists "$arg" && in_pp_spec="$in_pp_spec $arg";;
+      *.iu|*.sl)  check_exists "$arg" && in_tr_spec="$in_tr_spec $arg";;
+      *.s0)  check_exists "$arg" && in_filt_spec="$in_filt_spec $arg";;
 # Legacy file types
-      *.i|*.ii) check_exists "$arg" && in_cc_spec="$in_cc_spec $arg";;
+      *.i|*.ii) check_exists "$arg" && in_tr_spec="$in_tr_spec $arg";;
       *.C|*.cxx|*.c++|*.cc|*.cp|*.cpp) check_exists "$arg" && in_pp_spec="$in_pp_spec $arg";;
       *.S|*.c) check_exists "$arg" && in_pp_spec="$in_pp_spec $arg";;
       *.s)     check_exists "$arg" && in_as_spec="$in_as_spec $arg";;
-# SLC file types
-      *.iu)  check_exists "$arg" && in_cc_spec="$in_cc_spec $arg";;
-      *.utc) check_exists "$arg" && in_pp_spec="$in_pp_spec $arg";;
-      *.sl)  check_exists "$arg" && in_slt_spec="$in_slt_spec $arg";;
-      *.s0)  check_exists "$arg" && in_filt_spec="$in_filt_spec $arg";;
 # Default behavior: feed input to linker
       *) check_exists "$arg" && in_ld_spec="$in_ld_spec $arg";;
   esac
@@ -195,7 +214,7 @@ if test -n "${prev_arg:-}"; then die "argument to \`$arg' is missing"; fi
 
 # Special actions that do not require processing
 if test "x$slc_mode" = xdisplay_version; then
-   rev='$Rev$'
+   rev='$Rev: 2539 $'
    rev=${rev# *}
    cat <<EOF
 $basename $version (rev $slrev/$rev)
@@ -219,10 +238,10 @@ the selected SVP implementation, using the separate utility \`cce'.
 The following transforms are applied depending on the type of the
 input (determined by the file name suffix):
 
+- preprocess: the source code is filtered by the C/C++ preprocessor.
+
 - translate: the SVP language is translated to an actual SVP
 dialect. This transform uses the M4 preprocessor.
-
-- preprocess: the source code is filtered by the C/C++ preprocessor.
 
 - compile: the source code is transformed to raw assembly; the
 compiler used depends on the SVP dialect and the target
@@ -248,12 +267,12 @@ Options:
                      this mode $basename checks that the required tools
                      are available.
 
-  -EE                Stop after the translation stage; do not preprocess.
-                     The output is in the form of translated source code,
+  -E                 Stop after the preprocessing stage; do not translate.
+                     The output is in the form of preprocessed source code,
                      which is sent to the standard output.
 
-  -E                 Stop after the preprocessing stage; do not compile.
-                     The output is in the form of preprocessed source code,
+  -EE                Stop after the translation stage; do not compile.
+                     The output is in the form of translated source code,
                      which is sent to the standard output.
 
   -S0                Stop after the first stage of compilation proper; do not
@@ -275,8 +294,8 @@ SVP implementation selection:
                      and alias expansion. See \`cce --help' for details. The
                      default implementation is "seqc".
 
-Input file types:
-  file.sl            SVP code which must be translated.
+New input file types:
+  file.sl            SL code which should not be preprocessed.
 
   file.utc           muTC source code which must be preprocessed.
 
@@ -290,12 +309,10 @@ accordingly.
 General options:
   -Idir              Add the directory "dir" to the list of directories
                      to be searched for header files. This applies
-                     both to the initial translation by M4 and to the
-                     underlying compiler.
+                     both to preprocessing and the translation by M4.
 
   -P                 Inhibit generation of linemarkers in the output
-                     from both the initial translation by M4 and the C
-                     preprocessor.
+                     from both the preprocessor and the translation by M4.
 
   -combine=[PHASES]  Group input files into a single output for each of
                      the specified PHASES.
@@ -305,11 +322,14 @@ General options:
   -o file            Place output in "file". This implies -combine for the
                      phase where \`$basename' is configured to stop.
 
+  -Wm4,option        Pass "option" as an option to M4.
 
 Compiler debugging options:
   -v                 Print (on standard error output) the commands executed
                      to run the stages of compilation. Also print the
                      settings and version number of the tools involved.
+
+  -fcm4-dump=file    Dump the m4 input to file "file".
 
   -ftrace-m4=file    Dump the m4 macro expansion trace to file "file".
 
@@ -425,27 +445,19 @@ fi
 ###################################
 # Command line additions
 ###################################
-# Include directories
-slc_ppflags="$slc_ppflags $extra_inc"
-slc_tflags="$slc_tflags $extra_inc"
-case $slc_complang in
-    cpp) 
-	slc_cflags="$slc_cflags $CXXFLAGS" 
-	slc_ppflags="$slc_ppflags $CXXPPFLAGS"
-	;;
-    c)  
-	slc_cflags="$slc_cflags $CFLAGS"
-	slc_ppflags="$slc_ppflags $CPPFLAGS"
-	;;
-    utc) 
-	slc_cflags="$slc_cflags $UTCFLAGS"
-	slc_ppflags="$slc_ppflags $UTCPPFLAGS"
-	;;
-esac
-slc_ppflags="$slc_ppflags -DSVP_ARCH=$slc_arch -DSVP_DIALECT=$slc_dialect -DSVP_OS=$slc_os $extra_ppflags"
-slc_cflags="$slc_cflags $extra_cflags"
-slc_asflags="$slc_asflags $slc_cflags $ASFLAGS $extra_asflags"
-slc_ldflags="$slc_ldflags $slc_cflags $LDFLAGS $extra_ldflags"
+# Gathering flags per tool category
+slc_ppflags="$slc_ppflags $extra_inc $extra_ppflags"
+slc_cflags="$slc_cflags -I. $extra_inc $extra_cflags"
+slc_asflags="$slc_asflags $slc_cflags $extra_asflags"
+slc_ldflags="$slc_ldflags $slc_cflags $extra_ldflags"
+
+# special behavior for .sl
+found_sl=
+for d in $in_tr_spec; do case $d in *.sl) found_sl=1; break;; esac; done
+if test -n "$found_sl"; then
+    echo "$basename: warning: the preprocessor-unfriendly .sl extension is being deprecated (use .c)" >&2
+    slc_cflags="$slc_cflags $extra_ppflags"
+fi
 
 
 ###################################
@@ -453,20 +465,29 @@ slc_ldflags="$slc_ldflags $slc_cflags $LDFLAGS $extra_ldflags"
 ###################################
 
 # -E: stop after errors
-m4flags="-E"
+cm4flags="-Wm4,-E -fcm4-lquote=[[ -fcm4-rquote=]]"
+
+if test -n "$verbose"; then
+  cm4flags="$cm4flags -v"
+fi
 
 if test -n "$synclines"; then
-  m4flags="$m4flags -s"
+  cm4flags="$cm4flags -Wm4,-s"
 else
   # cpp -P: do not generate synclines
   slc_ppflags="$slc_ppflags -P"
 fi
 
 if test -n "$m4trace"; then
-  m4flags="$m4flags -dV -o $m4trace"
+  cm4flags="$cm4flags -Wm4,-dV -Wm4,-o -Wm4,$m4trace"
 fi
-
-m4flags="$m4flags $slc_tflags"
+for fl in $slc_tflags; do
+    cm4flags="$cm4flags -Wm4,$fl"
+done
+for ei in $extra_inc; do
+    cm4flags="$cm4flags -Wm4,$ei"
+done
+cm4flags="$cm4flags $extra_tflags"
 
 ###################################
 # Construction of compilation chain
@@ -475,16 +496,16 @@ m4flags="$m4flags $slc_tflags"
 # Select file extension for intermediate source files
 case $slc_complang in
     c)
-	cc_ext=i
-	pp_ext=c
+	pp_ext=i
+	tr_ext=t.c
 	;;
     cpp)
-	cc_ext=ii
-	pp_ext=cc
+	pp_ext=ii
+	tr_ext=t.cc
 	;;
     utc)
-	cc_ext=iu
-	pp_ext=utc
+	pp_ext=iu
+	tr_ext=t.utc
 	;;
     *)
 	die "unrecognized mode $mode" ;;
@@ -508,8 +529,8 @@ fi
 # Decide what phases to do and where to stop
 defout=-
 case $slc_mode in 
-    trans) finalstage=T;;
     pp) finalstage=P;;
+    trans) finalstage=T;;
     cc) finalstage=C;;
     filt) finalstage=F;;
     as) finalstage=A;;
@@ -533,7 +554,7 @@ prepare_chain() {
     if test "x$skip" = "x"; then
 	if ! expr "$combine" : ".*$stage" >/dev/null; then
 	    for f in $inputs; do
-		fn=${f##*/}; fn=${fn%.*}
+		fn=${f##*/}; fn=${fn%.*}; fn=${fn%.t}
 		case $f in
 		    *.S) 
 			target=$tmpdir/$fn.s
@@ -558,7 +579,7 @@ prepare_chain() {
 		transform="$transform:$f"
 	    done
 	    if test -n "$transform"; then 
-		fn=${first##*/}; fn=${fn%.*}
+		fn=${first##*/}; fn=${fn%.*}; fn=${fn%.t}
 		targetbase=$fn.$addext
 		if test "x$finalstage" = "x$stage"; then
 		    if test "x$finalname" = "x-"; then
@@ -573,7 +594,7 @@ prepare_chain() {
 		transforms="$transforms $stage:$target$transform"
 	    fi
 	    if test "x$finalstage" = "x$stage"; then skip=1; fi
-	    eval "$indvar=\$$indvar' $target'"
+	    if test "$indvar" != "unused"; then eval "$indvar=\$$indvar' $target'"; fi
 	fi
     else
 	for f in $specfiles; do
@@ -589,8 +610,8 @@ prepare_chain() {
 
 skip=
 transforms=
-prepare_chain "$in_slt_spec" $pp_ext T in_pp_ind "$in_slt_spec" "translation"
-prepare_chain "$in_pp_ind $in_pp_spec" $cc_ext P in_cc_ind "$in_pp_spec" "preprocessor"
+prepare_chain "$in_pp_spec" $pp_ext P in_tr_ind "$in_pp_spec" "preprocessor"
+prepare_chain "$in_tr_ind $in_tr_spec" $tr_ext T in_cc_ind "$in_tr_spec" "translation"
 prepare_chain "$in_cc_ind $in_cc_spec" s0 C in_filt_ind "$in_cc_spec" "compiler"
 prepare_chain "$in_filt_ind $in_filt_spec" s F in_as_ind "$in_filt_spec" "post-filter"
 prepare_chain "$in_as_ind $in_as_spec" o A in_ld_ind "$in_as_spec" "assembler"
@@ -608,7 +629,7 @@ fi
 if test -n "$verbose"; then
   echo "---- $basename: options and settings ----" >&2
   for i in root keep impl \
-           M4 m4flags \
+           cm4_helper cm4flags \
            combine outfile tmpdir; do
     eval "echo '  ' $i '->' \$$i" >&2
   done
@@ -622,37 +643,29 @@ for t in $transforms; do
   IFS=':' read action target indeps <<EOF 
 $t
 EOF
-  indeps=${indeps//:/ }
-  deps=
-  for d in $indeps; do
-      case $d in
-	  *.iu) deps="$deps -x cpp-output $d -x none";;
-	  *) deps="$deps $d" ;;
-      esac
-  done
+  deps=${indeps//:/ }
   capturestdout=
   case $action in
       R) tempfiles="$tempfiles $target"; continue ;;
-      T) 
-	  res=2
-          m4deps=
-          for d in $deps; do
-	      case $d in
-		  *.sl)
-		      m4dsrcdir=$(dirname "$d")
-		      m4deps="$m4deps -I$m4dsrcdir $d"
-		      slc_ppflags="$slc_ppflags -I$m4dsrcdir -I."	
-		      ;;
-		  *) m4deps="$m4deps $d";;
-	      esac
-          done
-	  cmd="$M4 $m4flags $m4deps"
-	  if ! test "$slc_mode" = "trans" -a -z "$outfile"; then capturestdout=1; fi
-	  ;;
       P)
-	  res=3
+	  res=2
+          for d in $deps; do
+	      dsrcdir=$(dirname "$d")
+	      slc_cflags="$slc_cflags -I$dsrcdir"
+          done
 	  cmd="$slc_compiler -E $deps $slc_ppflags"
 	  if ! test "$slc_mode" = "pp" -a -z "$outfile"; then capturestdout=1; fi
+	  ;;
+      T) 
+	  res=3
+          cm4deps=
+          for d in $deps; do
+	      cm4dsrcdir=$(dirname "$d")
+	      cm4deps="$cm4deps -Wm4,-I$cm4dsrcdir $d"
+	      slc_cflags="$slc_cflags -I$cm4dsrcdir"
+          done
+	  cmd="$cm4_helper $cm4flags $cm4deps"
+	  if ! test "$slc_mode" = "trans" -a -z "$outfile"; then capturestdout=1; fi
 	  ;;
       C)
 	  res=4
