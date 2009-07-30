@@ -1,3 +1,24 @@
+2009-07-30  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
+	Be friendly with existing SL code.
+
+	Current SL code (in .sl files) somehow depend on M4 being run
+	before the C preprocessor. More specifically, it requires C
+	preprocessor macro definitions (-DXXXX) to be expanded *after*
+	processing by M4. This is incompatible with the latest changes
+	which cause CPP to be run before M4. To alleviate the issue
+	temporarily (until all .sl files are converted to the new
+	ordering), the preprocessor macro definitions are added to the 2nd
+	preprocessor run (compile, after M4). 
+
+	This may cause issues if the macros at the 1st preprocessor run
+	expand to text containing macro names, expecting CPP to not expand
+	twice! This "feature" will be removed when the .sl extension is
+	phased out entirely.
+	
+	* tools/bin/slc.in: Append $extra_ppflags to $slc_cflags when some
+	.sl files are present in the input.
+
 2009-07-27  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
 	Merge the following changes.

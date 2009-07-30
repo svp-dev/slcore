@@ -445,11 +445,19 @@ fi
 ###################################
 # Command line additions
 ###################################
-# Include directories
+# Gathering flags per tool category
 slc_ppflags="$slc_ppflags $extra_inc $extra_ppflags"
 slc_cflags="$slc_cflags -I. $extra_inc $extra_cflags"
 slc_asflags="$slc_asflags $slc_cflags $extra_asflags"
 slc_ldflags="$slc_ldflags $slc_cflags $extra_ldflags"
+
+# special behavior for .sl
+found_sl=
+for d in $in_tr_spec; do case $d in *.sl) found_sl=1; break;; esac; done
+if test -n "$found_sl"; then
+    echo "$basename: warning: the preprocessor-unfriendly .sl extension is being deprecated (use .c)" >&2
+    slc_cflags="$slc_cflags $extra_ppflags"
+fi
 
 
 ###################################
