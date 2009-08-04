@@ -1,5 +1,13 @@
 2009-08-04  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	Make `slt' yet a little more useful.
+	
+	* tools/bin/slt.in: Set `KEEP' when running `slr' so that all the
+	run files are left around after `slr' completes, in case they are
+	needed should the test fail. 
+
+2009-08-04  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	Use the new `print' instruction semantics introduced in r2581.
 
 	The `print' instruction now takes stream and formatting bits as
