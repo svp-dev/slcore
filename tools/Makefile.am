@@ -7,7 +7,8 @@ nobase_dist_pkgdata_DATA = \
 	include/slc_m4sforeach.m4 \
 	include/slr.slh \
 	include/fibre.slh \
-	include/svp/lib.slh
+	include/svp/lib.slh \
+	include/svp/testoutput.h
 
 EXTRA_DIST = \
 	include/m4sugar.m4 \

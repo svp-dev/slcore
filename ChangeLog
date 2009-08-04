@@ -1,5 +1,12 @@
 2009-08-04  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	Minor packaging fix.
+	
+	* tools/Makefile.am: Distribute and install the new
+	`testoutput.h'.
+
+2009-08-04  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	Make `slt' yet a little more useful.
 	
 	* tools/bin/slt.in: Set `KEEP' when running `slr' so that all the
