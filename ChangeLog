@@ -1,5 +1,15 @@
 2009-08-04  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	Continue removing dependency on `lib/' from `tools/'
+	
+	* tools/tests/2_args/args1.sl: Rename to...
+	* tools/tests/2_args/args1-old.sl: ... here, and copy to...	
+	* tools/tests/2_args/args1.c: ...here. Use new header style, drop
+	dependency on `svp_assert' and use `svp_abort' from
+	`<svp/abort.h>' directly.
+
+2009-08-04  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	More C-ification of SL code in `tools'.
 	
 	* tools/lib/arggen.sl: Rename to...
