@@ -1,3 +1,25 @@
+2009-08-04  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
+	Make `slt' yet a little more useful.
+	
+	* tools/bin/slt.in: Set `KEEP' when running `slr' so that all the
+	run files are left around after `slr' completes, in case they are
+	needed should the test fail. 
+
+2009-08-04  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
+	Use the new `print' instruction semantics introduced in r2581.
+
+	The `print' instruction now takes stream and formatting bits as
+	input, as discussed in notes [mgsim2] and [mgsim5]. Use them.
+	
+	* lib/mtalpha-sim/include/svp_os.h: Update `__write1' to comply to
+	the new print instruction definition.
+
+	* tools/include/svp/testoutput.h: New. Provide basic output
+	interface for test programs so that code in `tools' do not require
+	the SL library.
+	
 2009-08-03  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
 	Refactor headers in `tools/include'. Update test suite accordingly.

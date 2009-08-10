@@ -542,7 +542,7 @@ do_run() {
 	  command=${command//TEST/$testsrc}
 	  echo "$command >>$baseout.out" >>$baseout.log
 	  set +e
-	  $command >>$baseout.out 2>>$baseout.log
+	  KEEP=1 $command >>$baseout.out 2>>$baseout.log
 	  x=$?
 	  set -e
 	  
