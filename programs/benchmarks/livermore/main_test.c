@@ -1,17 +1,13 @@
-m4_include(svp/iomacros.slh)
-m4_include(svp/perf.slh)
-m4_include(slr.slh)
+#include <svp/iomacros.h>
+#include <svp/perf.h>
+#include <svp/slr.h>
 
 slr_decl(slr_var(unsigned, L, "number of iterations (default 1)"),
 	 slr_var(unsigned, N, "livermore problem size (leave empty or 0 for default)"),
 	 slr_var(int, B, "inner create block size (leave empty or -1 for default)"));
 
-//first, define the method name of kernel
-//to execute here.
-m4_define([[ACTUALKERNEL]],[[kernel]]KERNEL)
-
-m4_define([[MAX_LOOPS]], 10000)
-uint64_t cycle_counts[MAX_LOOPS];
+#define MAX_LOOPS 10000
+int64_t cycle_counts[MAX_LOOPS];
 
 sl_def(t_main, void)
 {
