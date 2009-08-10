@@ -1,5 +1,20 @@
 2009-08-03  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	Continue deprecating `.slh' stuff in `tools/'.
+
+	* tools/include/fibre.slh: Copy to...
+	* tools/include/fibre.h: here. Use CPP syntax more. Do not include
+	`svp/assert.slh' since it is not needed.
+
+	* tools/include/fibre.slh: Deprecate.
+
+	* tools/tests/0_slr_args: Rename to...
+	* tools/tests/0_slr: here.
+	
+	* tools/tests/0_slr/fibre.c: New.
+
+2009-08-03  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	Start deprecating `.slh' stuff in `tools/'.
 	
 	* tools/include/slc.m4: Introduce new macros `sl_cquote' and
