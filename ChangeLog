@@ -1,5 +1,34 @@
 2009-08-07  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	Start C-ifying in `programs/'.
+	
+	* sl.mk: Build from `.c' instead of `.sl'.
+		
+	* programs/demo/fibre.sl,
+	* programs/demo/fibre.sl.d1,
+	* programs/demo/fibre.sl.d2,
+	* programs/demo/fibre.sl.d3,
+	* programs/demo/answer.sl,
+	* programs/demo/helloworld.sl,
+	* programs/demo/fibonacci.sl,
+	* programs/demo/roman.sl,
+	* programs/demo/10threads.sl: Rename to...
+
+	* programs/demo/fibre.c,
+	* programs/demo/fibre.c.d1,
+	* programs/demo/fibre.c.d2,
+	* programs/demo/fibre.c.d3,
+	* programs/demo/answer.c,
+	* programs/demo/helloworld.c,
+	* programs/demo/fibonacci.c,
+	* programs/demo/roman.c,	
+	* programs/demo/10threads.c: ... here. Use CPP syntax where
+	appropriate.
+	
+	* programs/demo/Makefile.am: Update accordingly.
+
+2009-08-07  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	Fix `svp_assert'.
 
 	Due to the way the `printf' macro works (uses `typeof' internally)

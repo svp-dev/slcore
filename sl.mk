@@ -29,7 +29,7 @@ SLC_VARS = \
 
 SLC_RUN = $(SLC_VARS) $(SLC_LOCAL)
 
-SUFFIXES = .sl .x
+SUFFIXES = .x
 
 slc_verbose = $(slc_verbose_$(V))
 slc_verbose_ = $(slc_verbose_$(AM_DEFAULT_VERBOSITY))
@@ -60,7 +60,7 @@ SLC_BEFORE = function slc_compile() { \
 	  printf 'echo; echo "\tslr "$$(basename "$$0" .x)".bin.XXXX"; echo; exit 1\n' >>"$@"; \
 	fi; }
 
-.sl.x:
+.c.x:
 	@$(SLC_BEFORE); $(SLC_VARS) SLC_OUT="${@:.x=.bin}" slc_compile $<
 
 
