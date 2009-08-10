@@ -1,5 +1,11 @@
 2009-08-10  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	Extend test suite.
+
+	* lib/tests/assert.c: New.
+
+2009-08-10  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	Update copyright notices.
 	
 	* reheader.pl: Drop support for `sl_begin_header' and
