@@ -1,4 +1,4 @@
-#include <fibre.h>
+#include <svp/fibre.h>
 
 /*
  * SLT_RUN: 

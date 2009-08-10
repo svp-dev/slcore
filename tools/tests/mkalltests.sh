@@ -15,16 +15,15 @@ echo 'TESTSUITE = '
 # 2009-04-02: FIXME: disable index tests for now as they require
 # break, which is not implemented fully yet.
 
-find . -name \*.sl \
-  | grep -v '/x_' \
+find . -name \*.sl -or -name \*.c \
+  | grep -v '/x_' | grep -v '\.ut\.\|\.t\.' \
   | sed -e 's/^\.\/\(.*\)$/TESTSUITE += \1/g' | sort
 
 echo 'XTESTSUITE = '
 
-find . -name \*.sl \
-  | grep '/x_' \
+find . -name \*.sl -or -name \*.c \
+  | grep '/x_' | grep -v '\.ut\.\|\.t\.' \
   | sed -e 's/^\.\/\(.*\)$/XTESTSUITE += \1/g' | sort
-
 
 chmod -w alltests.mk
 

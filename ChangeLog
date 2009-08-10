@@ -1,5 +1,67 @@
 2009-08-03  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	Refactor headers in `tools/include'. Update test suite accordingly.
+	
+	* tools/include/fibre.h,
+	* tools/include/slr.h: Rename to...
+	* tools/include/svp/fibre.h,
+	* tools/include/svp/slr.h: ... here.
+	
+	* tools/include/slr.slh,
+	* tools/include/fibre.slh: Update accordingly.
+
+	* tools/include/svp/lib.slh: Copy to...	
+	* tools/include/svp/compiler.h: here. Use CPP syntax more. Define
+	`nop' locally. Move `svp_abort' definition to...
+
+	* tools/include/svp/abort.h: here.
+
+	* tools/include/svp/abort.h,
+	* tools/include/svp/compiler.h: Warn if `__GNUC__' is not defined.
+
+	* tools/include/svp/lib.slh: Deprecate.
+
+	* tools/tests/0_trivial/x_abort.sl,
+	* tools/tests/0_trivial/nop.sl,
+	* tools/tests/1_create/crnop.sl,
+	* tools/tests/1_create/crnop2.sl,
+	* tools/tests/1_create/crnop3.sl,
+	* tools/tests/1_create/crnopdefs.sl,
+	* tools/tests/1_create/x_inffamily.sl,
+	* tools/tests/2_args/delayshared.sl,
+	* tools/tests/2_args/globpass.sl,
+	* tools/tests/2_args/useexit2.sl: Rename to...
+	
+	* tools/tests/0_trivial/x_abort-old.sl,
+	* tools/tests/0_trivial/nop-old.sl,
+	* tools/tests/1_create/crnop-old.sl,
+	* tools/tests/1_create/crnop2-old.sl,
+	* tools/tests/1_create/crnop3-old.sl,
+	* tools/tests/1_create/crnopdefs-old.sl,
+	* tools/tests/1_create/x_inffamily-old.sl,
+	* tools/tests/2_args/delayshared-old.sl,
+	* tools/tests/2_args/globpass-old.sl,
+	* tools/tests/2_args/useexit2-old.sl: ... here, and copy to...
+
+	* tools/tests/0_trivial/x_abort.c,
+	* tools/tests/0_trivial/nop.c,
+	* tools/tests/1_create/crnop.c,
+	* tools/tests/1_create/crnop2.c,
+	* tools/tests/1_create/crnop3.c,
+	* tools/tests/1_create/crnopdefs.c,
+	* tools/tests/1_create/x_inffamily.c,
+	* tools/tests/2_args/delayshared.c,
+	* tools/tests/2_args/globpass.c,
+	* tools/tests/2_args/useexit2.c: ... here. Use new headers.
+
+	* tests.mk: Also recognize .c as a unit test extension. Define
+	`C_LOG_COMPILER' the same as `SL_LOG_COMPILER'.
+
+	* tools/tests/mkalltests.sh: Pull .c files into the test suite,
+	but exclude `.t.' temporaries.
+
+2009-08-03  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	Continue deprecating `.slh' stuff in `tools/'.
 
 	* tools/include/fibre.slh: Copy to...

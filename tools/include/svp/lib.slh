@@ -14,6 +14,8 @@ sl_begin_header([[SLC_SVP_LIB_SLH]])m4_dnl -*- m4 -*-
 //
 // $Id$
 //
+m4_warning([[this header is deprecated.]])
+m4_warning([[Use #include <svp/compiler.h> or <svp/abort.h> instead.]])
 
 #include "svp_os.h"
 

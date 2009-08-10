@@ -15,7 +15,7 @@ sl_begin_header([[SLC_FIBRE_SLH]])m4_dnl -*- m4 -*-
 // $Id$
 //
 m4_warning([[this header is deprecated.]])
-m4_warning([[Use #include <fibre.h> instead.]])
+m4_warning([[Use #include <svp/fibre.h> instead.]])
 
 m4_include(cstddef.slh)
 m4_include(svp/assert.slh)
