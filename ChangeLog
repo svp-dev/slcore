@@ -1,5 +1,55 @@
 2009-08-10  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	C-ify the Livermore loops code.
+
+	* programs/benchmarks/livermore/k1.sl,
+	* programs/benchmarks/livermore/k10.sl,
+	* programs/benchmarks/livermore/k11.sl,
+	* programs/benchmarks/livermore/k12.sl,
+	* programs/benchmarks/livermore/k13.sl,
+	* programs/benchmarks/livermore/k14.sl,
+	* programs/benchmarks/livermore/k2-alt.sl,
+	* programs/benchmarks/livermore/k2.sl,
+	* programs/benchmarks/livermore/k3.sl,
+	* programs/benchmarks/livermore/k4-alt.sl,
+	* programs/benchmarks/livermore/k4.sl,
+	* programs/benchmarks/livermore/k5.sl,
+	* programs/benchmarks/livermore/k6.sl,
+	* programs/benchmarks/livermore/k7.sl,
+	* programs/benchmarks/livermore/k8.sl,
+	* programs/benchmarks/livermore/k9.sl,
+	* programs/benchmarks/livermore/ll.slh,
+	* programs/benchmarks/livermore/main_bench.sl,
+	* programs/benchmarks/livermore/main_simple.sl,
+	* programs/benchmarks/livermore/main_test.sl: Rename to...
+
+	* programs/benchmarks/livermore/k1.c,
+	* programs/benchmarks/livermore/k10.c,
+	* programs/benchmarks/livermore/k11.c,
+	* programs/benchmarks/livermore/k12.c,
+	* programs/benchmarks/livermore/k13.c,
+	* programs/benchmarks/livermore/k14.c,
+	* programs/benchmarks/livermore/k2-alt.c,
+	* programs/benchmarks/livermore/k2.c,
+	* programs/benchmarks/livermore/k3.c,
+	* programs/benchmarks/livermore/k4-alt.c,
+	* programs/benchmarks/livermore/k4.c,
+	* programs/benchmarks/livermore/k5.c,
+	* programs/benchmarks/livermore/k6.c,
+	* programs/benchmarks/livermore/k7.c,
+	* programs/benchmarks/livermore/k8.c,
+	* programs/benchmarks/livermore/k9.c,
+	* programs/benchmarks/livermore/ll.h,
+	* programs/benchmarks/livermore/main_bench.c,
+	* programs/benchmarks/livermore/main_simple.c,
+	* programs/benchmarks/livermore/main_test.c: ... here. Use CPP
+	syntax where appropriate.
+
+	* programs/benchmarks/livermore/Makefile.am,
+	* programs/benchmarks/livermore/genmk.sh: Update accordingly.
+
+2009-08-10  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	C-ify the NAS IS code.
 	
 	* programs/benchmarks/nas/is/IS.sl,

@@ -1,11 +1,11 @@
-m4_include(slr.slh)
-m4_include(svp/perf.slh)
-m4_include(svp/iomacros.slh)
+#include <svp/slr.h>
+#include <svp/perf.h>
+#include <svp/iomacros.h>
 
 slr_decl(slr_var(size_t, L, "number of iterations"),
 	 slr_var(size_t, N, "problem size"));
 
-m4_define([[MAX_N]], 10*1024*1024)
+#define MAX_N 10*1024*1024
 
 
 sl_def(ll4_inner, void,

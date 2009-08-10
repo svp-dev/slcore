@@ -1,9 +1,5 @@
-m4_include(svp/assert.slh)
-m4_include(fibre.slh)
-
-//first, define the method name of kernel
-//to execute here.
-m4_define([[ACTUALKERNEL]], [[kernel]]KERNEL)
+#include <svp/assert.h>
+#include <svp/fibre.h>
 
 sl_def(t_main, void)
 {
