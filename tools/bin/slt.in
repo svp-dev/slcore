@@ -513,7 +513,7 @@ do_compile() {
   local offset command x
   offset=$1
   echo "===== TEST: $testsrc, COMPILE ======" >$baseout.log
-  command="$slc -v -t $outdir -b $impl -o $baseout.x $testsrc $COMPILE_ARGS"
+  command="$slc -v -t $outdir -b $impl -o $baseout.x $testsrc -I. $COMPILE_ARGS"
   echo "$command" >>$baseout.log
   set +e
   KEEP=1 TIMEOUT=60 $command >>$baseout.log 2>&1

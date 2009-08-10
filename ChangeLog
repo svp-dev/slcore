@@ -1,5 +1,17 @@
 2009-08-10  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	Properly search for includes.
+
+	The default search path for includes does *not* contain the
+	current directory; only the source file's directory. This implies
+	an extra `-I.' when the build directory contains generated headers
+	used from the source directory.
+	
+	* sl.mk,
+	* tools/bin/slt.in: Use `-I.' where appropriate.
+
+2009-08-10  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	C-ify the FFT code.
 	
 	* programs/benchmarks/fft/fft.slh,
