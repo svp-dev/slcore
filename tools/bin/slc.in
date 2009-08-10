@@ -198,7 +198,7 @@ for arg in "$@"; do
 # SLC file types
       *.t.c|*.t.cc|*.t.utc) check_exists "$arg" && in_cc_spec="$in_cc_spec $arg";;
       *.utc) check_exists "$arg" && in_pp_spec="$in_pp_spec $arg";;
-      *.iu|*.sl)  check_exists "$arg" && in_tr_spec="$in_tr_spec $arg";;
+      *.iu)  check_exists "$arg" && in_tr_spec="$in_tr_spec $arg";;
       *.s0)  check_exists "$arg" && in_filt_spec="$in_filt_spec $arg";;
 # Legacy file types
       *.i|*.ii) check_exists "$arg" && in_tr_spec="$in_tr_spec $arg";;
@@ -295,8 +295,6 @@ SVP implementation selection:
                      default implementation is "seqc".
 
 New input file types:
-  file.sl            SL code which should not be preprocessed.
-
   file.utc           muTC source code which must be preprocessed.
 
   file.iu            muTC source code which should not be preprocessed.
@@ -399,15 +397,15 @@ Diagnostics:
 
 Examples:
 
-  $basename test.sl
+  $basename test.c
 
-  $basename -o test test1.sl test2.sl
+  $basename -o test test1.c test2.c
 
-  $basename -EE test.sl
+  $basename -EE test.c
 
-  $basename -S -o test.s test.sl
+  $basename -S -o test.s test.c
 
-  $basename -o test test.sl ccode.c
+  $basename -o test test.c ccode.c
 
 Report bugs and suggestions to $bugreports.
 EOF
@@ -446,19 +444,10 @@ fi
 # Command line additions
 ###################################
 # Gathering flags per tool category
-slc_ppflags="$slc_ppflags $extra_inc $extra_ppflags"
-slc_cflags="$slc_cflags -I. $extra_inc $extra_cflags"
+slc_ppflags="$slc_ppflags $extra_inc $extra_ppflags $extra_cflags"
+slc_cflags="$slc_cflags $extra_cflags"
 slc_asflags="$slc_asflags $slc_cflags $extra_asflags"
 slc_ldflags="$slc_ldflags $slc_cflags $extra_ldflags"
-
-# special behavior for .sl
-found_sl=
-for d in $in_tr_spec; do case $d in *.sl) found_sl=1; break;; esac; done
-if test -n "$found_sl"; then
-    echo "$basename: warning: the preprocessor-unfriendly .sl extension is being deprecated (use .c)" >&2
-    slc_cflags="$slc_cflags $extra_ppflags"
-fi
-
 
 ###################################
 # Settings special for M4
@@ -649,10 +638,6 @@ EOF
       R) tempfiles="$tempfiles $target"; continue ;;
       P)
 	  res=2
-          for d in $deps; do
-	      dsrcdir=$(dirname "$d")
-	      slc_cflags="$slc_cflags -I$dsrcdir"
-          done
 	  cmd="$slc_compiler -E $deps $slc_ppflags"
 	  if ! test "$slc_mode" = "pp" -a -z "$outfile"; then capturestdout=1; fi
 	  ;;
@@ -669,7 +654,7 @@ EOF
 	  ;;
       C)
 	  res=4
-	  cmd="$slc_compiler -o $target -combine -S $deps $slc_cflags"
+	  cmd="$slc_compiler -o $target -combine -S -nostdinc $deps $slc_cflags"
 	  ;;
       F)
 	  res=5

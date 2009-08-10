@@ -6,15 +6,14 @@ rm -f alltests.mk
 exec >alltests.mk
 echo 'TESTSUITE = ' 
 
-find . -name \*.sl \
-  | grep -v '/x_' \
+find . -name \*.c \
+  | grep -v '/x_' | grep -v '\.ut\.\|\.t\.' \
   | sed -e 's/^\.\/\(.*\)$/TESTSUITE += \1/g' | sort
 
 echo 'XTESTSUITE = '
 
-find . -name \*.sl \
-  | grep '/x_' \
+find . -name \*.c \
+  | grep '/x_' | grep -v '\.ut\.\|\.t\.' \
   | sed -e 's/^\.\/\(.*\)$/XTESTSUITE += \1/g' | sort
 
 chmod -w alltests.mk
-
