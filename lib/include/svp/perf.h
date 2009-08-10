@@ -20,7 +20,8 @@
 
 #if defined (__i386__)
 
-static __inline__ int64_t get_cycles(void) __attribute__((always_inline)) 
+__attribute__ ((__always_inline__)) 
+static __inline__ int64_t get_cycles(void) 
 {
   int32_t __res__[2];
 #if defined (_LP64)                      // 64 bit mode
