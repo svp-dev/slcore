@@ -1,5 +1,13 @@
 2009-08-07  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	Use new header names more.
+	
+	* tools/include/svp/fibre.h,
+	* tools/include/svp/slr.h,
+	* tools/lib/arggen.c: Use `.h' instead of `.slh'.
+
+2009-08-07  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	Rationalize compilation process. This makes µTC-ptl work again.
 
 	* tools/include/slc.m4,	
