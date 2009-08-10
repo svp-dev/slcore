@@ -32,9 +32,13 @@ host_host_ptl_libslc_a_SOURCES = \
 BUILT_SOURCES += \
 	host-host-ptl/include/ptl_create.h
 
+
+SLC_PTL = $(SLC_RUN) -b ptl -nostdlib
+
+
 host-host-ptl/slrt.o: $(srcdir)/host-host-ptl/slrt.c $(srcdir)/host-host-seqc/load.c
 	$(AM_V_at)$(MKDIR_P) host-host-ptl
-	$(AM_V_CC)$(CC) $(CFLAGS) -I$(srcdir)/t-ptl/include -c -o $@ $< $(AM_CXXFLAGS) $(CXXFLAGS)
+	$(slc_verbose)$(SLC_PTL) -I$(srcdir)/t-ptl/include -c -o $@ $< $(AM_CXXFLAGS) $(CXXFLAGS)
 
 CLEANFILES += \
 	host-host-ptl/slrt.o

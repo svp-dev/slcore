@@ -49,5 +49,3 @@ m4_define([[sl_cdquote]], [["]])
 m4_changecom(//)
 m4_wrap_lifo([[m4_divert_pop(0)]])
 m4_divert_push(0)
-
-#include "sl_support.h"

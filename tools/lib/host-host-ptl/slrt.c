@@ -16,7 +16,7 @@
 
 #include "../host-host-seqc/load.c"
 
-extern void lib_main(void);
+extern "C" void lib_main(void);
 
 // configuration tag for slr
 const char *__tag__ = "slr_runner:host:";
