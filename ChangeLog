@@ -1,5 +1,17 @@
 2009-08-07  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	Fix `svp_assert'.
+
+	Due to the way the `printf' macro works (uses `typeof' internally)
+	it is not possible to pass a literal character string as a
+	formatted argument without casting it to `const char*'
+	explicitly. Since `svp_assert' now uses `printf' this restriction
+	applies.
+	
+	* lib/include/svp/assert.h: Cast the two strings appropriately.
+
+2009-08-07  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	Use explicit width integer types more.
 
 	* lib/include/svp/div.h,

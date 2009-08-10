@@ -26,10 +26,11 @@
 
 #define svp_assert(e)  \
     ((void) (likely(e) ? 0 : svp__assert (#e, __FILE__, __LINE__)))
-#define svp__assert(e, file, line) \
-  ({ \
-    printf("%s:%u: failed assertion `%s'\n", file, line, e); \
-    svp_abort(); \
+#define svp__assert(e, file, line)			     \
+  ({							     \
+    printf("%s:%u: failed assertion `%s'\n",		     \
+	   (const char*)file, line, (const char*)e);	     \
+    svp_abort(); 0;					     \
    })
 
 #endif
