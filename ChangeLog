@@ -1,5 +1,12 @@
 2009-08-07  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	Simplify more.
+	
+	* tools/bin/cce.in: Do not add the default includes to
+	`slc_cflags'.
+
+2009-08-07  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	Remove support for compiling `.sl' files.
 
 	* tools/bin/slt.in,
