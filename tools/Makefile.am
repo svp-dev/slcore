@@ -11,7 +11,8 @@ nobase_dist_pkgdata_DATA = \
 	include/svp/slr.h \
 	include/svp/fibre.h \
 	include/svp/compiler.h \
-	include/svp/abort.h
+	include/svp/abort.h \
+	include/svp/testoutput.h
 
 EXTRA_DIST = \
 	include/m4sugar.m4 \
