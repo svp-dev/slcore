@@ -1,5 +1,5 @@
 //
-// fft_test.sl: this file is part of the slc project.
+// fft_test.c: this file is part of the slc project.
 //
 // Copyright (C) 2009 The SL project.
 //
@@ -14,13 +14,13 @@
 // $Id$
 //
 
-m4_include(svp/iomacros.slh)
-m4_include(svp/assert.slh)
-m4_include(svp/perf.slh)
-m4_include(slr.slh)
+#include <svp/iomacros.h>
+#include <svp/assert.h>
+#include <svp/perf.h>
+#include <svp/slr.h>
 
-m4_define([[TABLE_SIZE]], 8)
-m4_include(fft.slh)
+#define TABLE_SIZE 8
+#include "fft.h"
 
 
 static cpx_t X[1 << TABLE_SIZE];
@@ -97,7 +97,10 @@ sl_def(t_main, void)
   int br = (slr_len(BR) > 0);
 
   p1 = get_cycles();
-  sl_create(,,,,,,, FFT, sl_glarg(cpx_t*restrict, gX, Y), sl_glarg(unsigned long, gM, M), sl_glarg(long, gBR, br));
+  sl_create(,,,,,,, FFT, 
+	    sl_glarg(cpx_t*restrict, gX, Y), 
+	    sl_glarg(unsigned long, gM, M), 
+	    sl_glarg(long, gBR, br));
   sl_sync();
   p2 = get_cycles();
   if (slr_len(Pc) > 0)
@@ -106,7 +109,9 @@ sl_def(t_main, void)
     sl_create(,,,N,,,, copy_y_z);
     sl_sync();
 
-    sl_create(,,,,,,, FFT_Inv, sl_glarg(cpx_t*restrict, gZ, Z), sl_glarg(unsigned long, gM2, sl_geta(gM)));
+    sl_create(,,,,,,, FFT_Inv, 
+	      sl_glarg(cpx_t*restrict, gZ, Z), 
+	      sl_glarg(unsigned long, gM2, sl_geta(gM)));
     sl_sync();
 
     if (slr_len(Pf) > 0) {

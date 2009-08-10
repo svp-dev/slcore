@@ -1,5 +1,5 @@
 //
-// fft_extra.sl: this file is part of the slc project.
+// fft_extra.c: this file is part of the slc project.
 //
 // Copyright (C) 2009 The SL project.
 //
@@ -13,8 +13,6 @@
 //
 // $Id$
 //
-
-m4_include(fft.slh)
 
 sl_def(FFT_Swap, void,
        sl_glparm(cpx_t*restrict, X),

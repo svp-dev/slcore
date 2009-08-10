@@ -1,5 +1,5 @@
 //
-// fft_impl2.sl: this file is part of the slc project.
+// fft_impl2.c: this file is part of the slc project.
 //
 // Copyright (C) 2009 The SL project.
 //
@@ -14,19 +14,18 @@
 // $Id$
 //
 
-
-m4_include(slr.slh)
-m4_include(fft.slh)
-
 enum { MAX_M = TABLE_SIZE, MAX_N = 1 << MAX_M };
 
 static const cpx_t sc_table[ MAX_N ] = {
-#include "fft_table2_[[]]TABLE_SIZE.h"
+#define HEADERNAME MAKENAME(2, TABLE_SIZE)
+#define HEADER STRINGIFY(HEADERNAME)
+
+#include HEADER
 };
 const void* sc_table_ptr = sc_table;
 
 sl_def(FFT_2, void, 
-       sl_glparm(unsigned long,LE2), 
+       sl_glparm(unsigned long, LE2), 
        sl_glparm(const cpx_t* restrict, cos_sin), 
        sl_glparm(cpx_t* restrict, X),
        sl_glparm(unsigned long, Z))

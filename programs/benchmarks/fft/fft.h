@@ -1,6 +1,5 @@
-sl_begin_header(FFT_SLH)
 //
-// fft.slh: this file is part of the slc project.
+// fft.h: this file is part of the slc project.
 //
 // Copyright (C) 2009 The SL project.
 //
@@ -14,8 +13,10 @@ sl_begin_header(FFT_SLH)
 //
 // $Id$
 //
+#ifndef FFT_H
+# define FFT_H
 
-m4_define([[FT]], double)
+#define FT double
 
 typedef struct { FT re; FT im; } cpx_t;
 
@@ -38,5 +39,10 @@ sl_decl(FFT_Inv, void,
 	sl_glparm(cpx_t*restrict, X),
 	sl_glparm(unsigned long, M));
 
+#define STRINGIFY_(N) # N
+#define STRINGIFY(N) STRINGIFY_(N)
+#define MAKENAME_(N, SZ) fft_table ## N ## _ ## SZ ## _data.h
+#define MAKENAME(N, SZ) MAKENAME_(N, SZ)
 
-sl_end_header(FFT_SLH)
+
+#endif

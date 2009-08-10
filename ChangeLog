@@ -1,3 +1,33 @@
+2009-08-10  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
+	C-ify the FFT code.
+	
+	* programs/benchmarks/fft/fft.slh,
+	* programs/benchmarks/fft/fft_bench.sl,
+	* programs/benchmarks/fft/fft_bench1.sl,
+	* programs/benchmarks/fft/fft_bench2.sl,
+	* programs/benchmarks/fft/fft_extra.sl,
+	* programs/benchmarks/fft/fft_impl1.sl,
+	* programs/benchmarks/fft/fft_impl2.sl,
+	* programs/benchmarks/fft/fft_test.sl,
+	* programs/benchmarks/fft/fft_test1.sl,
+	* programs/benchmarks/fft/fft_test2.sl: Rename to...
+
+	* programs/benchmarks/fft/fft.h,
+	* programs/benchmarks/fft/fft_bench.c,
+	* programs/benchmarks/fft/fft_bench1.c,
+	* programs/benchmarks/fft/fft_bench2.c,
+	* programs/benchmarks/fft/fft_extra.c,
+	* programs/benchmarks/fft/fft_impl1.c,
+	* programs/benchmarks/fft/fft_impl2.c,
+	* programs/benchmarks/fft/fft_test.c,
+	* programs/benchmarks/fft/fft_test1.c,	
+	* programs/benchmarks/fft/fft_test2.c: ... here. Use CPP syntax
+	where appropriate.
+
+	* programs/benchmarks/fft/Makefile.am: Update accordingly. Drop
+	debug flag and allow (some) optimization for the table generators.
+	
 2009-08-07  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
 	Start C-ifying in `programs/'.

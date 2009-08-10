@@ -1,5 +1,5 @@
 //
-// fft_bench.sl: this file is part of the slc project.
+// fft_bench.c: this file is part of the slc project.
 //
 // Copyright (C) 2009 The SL project.
 //
@@ -14,12 +14,11 @@
 // $Id$
 //
 
-m4_include(slr.slh)
-m4_include(svp/assert.slh)
-m4_include(fibre.slh)
+#include <svp/assert.h>
+#include <svp/fibre.h>
 
-m4_define([[TABLE_SIZE]], 16)
-m4_include(fft.slh)
+#define TABLE_SIZE 16
+#include "fft.h"
 
 static cpx_t X[1 << TABLE_SIZE];
 extern const void* sc_table_ptr;
