@@ -50,7 +50,7 @@ sl_def(svp_io_putf, void,
 {
   double x = sl_getp(gx);
   unsigned prec = sl_getp(gprec);
-  const unsigned base = sl_getp(gbase);
+  const unsigned long base = sl_getp(gbase);
 
   if (unlikely(x != x)) output_string("nan", 1);
   else if (unlikely(x == 1e5000)) output_string("+inf", 1);
@@ -64,13 +64,13 @@ sl_def(svp_io_putf, void,
       while (x >= base) { x /= base; ++exp; }
       while (x && x < 1.0) { x *= base; --exp; }
 
-      unsigned d = (unsigned)x;
+      unsigned long d = (unsigned long)x;
       output_char(digits[d], 1);
       output_char('.', 1);
 
       x = (x - d) * base;
       while(--prec) {
-	d = (unsigned)x;
+	d = (unsigned long)x;
 	output_char(digits[d], 1);
 	x = (x - d) * base;
       }
@@ -78,25 +78,25 @@ sl_def(svp_io_putf, void,
       /* -- print the exponent -- */
       output_char('E', 1);
       if (exp < 0) { output_char('-', 1); exp = -exp; } else output_char('+', 1);
-      unsigned uexp = exp;
-      sl_proccall(svp_io_putun, sl_glarg(unsigned long, gn, uexp), sl_glarg(unsigned, gbase, base));
+      uint64_t uexp = exp;
+      sl_proccall(svp_io_putun, sl_glarg(uint64_t, gn, uexp), sl_glarg(unsigned, gbase, base));
     }
 }
 sl_enddef
 
 sl_def(svp_io_putun, void,
-       sl_glparm(unsigned long, gn),
+       sl_glparm(uint64_t, gn),
        sl_glparm(unsigned, gbase))
 {
-  unsigned long x = sl_getp(gn);
-  const unsigned base = sl_getp(gbase);
+  uint64_t x = sl_getp(gn);
+  const unsigned long base = sl_getp(gbase);
   if (x < base) output_char(digits[x], 1);
   else {
-      unsigned long root = 1;
+      uint64_t root = 1;
       while (divu(x, root) >= base)
 	root *= base;
       while (root) {
-	unsigned long rs = root;
+	uint64_t rs = root;
 	divmodu(x, rs);
 	output_char(digits[rs], 1);
 	rs = base;
@@ -108,14 +108,14 @@ sl_def(svp_io_putun, void,
 sl_enddef
 
 sl_def(svp_io_putn, void,
-       sl_glparm(long, gn),
+       sl_glparm(int64_t, gn),
        sl_glparm(unsigned, gbase))
 {
-  long x = sl_getp(gn);
-  const unsigned base = sl_getp(gbase);
+  int64_t x = sl_getp(gn);
+  const unsigned long base = sl_getp(gbase);
   if (!x) output_char('0', 1);
   else {
-    long root;
+    int64_t root;
     if (x < 0) {
       root = -1;
       output_char('-', 1);
@@ -123,7 +123,7 @@ sl_def(svp_io_putn, void,
     while (divs(x, root) >= base)
       root *= base;
     while (root) {
-      long rs = root;
+      int64_t rs = root;
       divmods(x, rs);
       output_char(digits[rs], 1);
       rs = (long)base;
@@ -150,8 +150,8 @@ sl_def(svp_io_printf, void,
     if (likely(*fmt != '%'))
       output_char(*fmt, 1);
     else {
-      long sdata;
-      unsigned long udata;
+      int64_t sdata;
+      uint64_t udata;
       double fdata;
       char cfmt = *++fmt;
 
@@ -197,15 +197,15 @@ sl_def(svp_io_printf, void,
 			    sl_glarg(unsigned, base, 10));
 	break;
       case 'd': sl_proccall(svp_io_putn,
-			    sl_glarg(long, n, sdata),
+			    sl_glarg(int64_t, n, sdata),
 			    sl_glarg(unsigned, base, 10));
 	break;
       case 'u': sl_proccall(svp_io_putun,
-			    sl_glarg(unsigned long, n, udata),
+			    sl_glarg(uint64_t, n, udata),
 			    sl_glarg(unsigned, base, 10));
 	break;
       case 'x': sl_proccall(svp_io_putun,
-			    sl_glarg(unsigned long, n, udata),
+			    sl_glarg(uint64_t, n, udata),
 			    sl_glarg(unsigned, base, 16));
 	break;
       default: output_char('%', 1); output_char(*fmt, 1); break;

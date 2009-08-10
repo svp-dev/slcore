@@ -90,7 +90,7 @@ sl_decl(__divmodqs, void, sl_shparm(int64_t, x), sl_shparm(int64_t, y));
     })
 
 #define divs(X, Y) ({				\
-    long __divs_x = (X), __divs_y = (Y);	\
+    int64_t __divs_x = (X), __divs_y = (Y);	\
     divmods(__divs_x, __divs_y);		\
     (__typeof__((X) / (Y)))__divs_y;		\
   })
@@ -102,7 +102,7 @@ sl_decl(__divmodqs, void, sl_shparm(int64_t, x), sl_shparm(int64_t, y));
   })
 
 #define mods(X, Y) ({				\
-    long __mods_x = (X), __mods_y = (Y);	\
+    int64_t __mods_x = (X), __mods_y = (Y);	\
     divmods(__mods_x, __mods_y);		\
     (__typeof__((X) % (Y)))__mods_x;		\
   })

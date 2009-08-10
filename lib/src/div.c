@@ -24,7 +24,7 @@
   Type divisor = (Divisor);						\
   Type dividend = (Dividend);						\
   Type answer = 0;							\
-  unsigned long long shiftcount = 1;					\
+  unsigned long shiftcount = 1;						\
 									\
   if (unlikely(!divisor)) svp_abort();					\
   while (likely((divisor & (1ULL << ((sizeof(Type) << 3) - 1))) == 0) ) { \
@@ -49,8 +49,8 @@
   Type divisor = (Divisor);						\
   Type dividend = (Dividend);						\
   Type answer = 0;							\
-  unsigned long long shiftcount = 1;					\
-  long long dendsign = 1, invsign = -1;					\
+  unsigned long shiftcount = 1;						\
+  long  dendsign = 1, invsign = -1;					\
   if (unlikely(!divisor)) svp_abort();					\
   if (divisor > 0) { invsign = -invsign;				\
     divisor = -divisor; }						\
