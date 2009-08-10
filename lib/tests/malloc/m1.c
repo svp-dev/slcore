@@ -1,5 +1,5 @@
 //
-// div2.sl: this file is part of the slc project.
+// m1.c: this file is part of the SL toolchain.
 //
 // Copyright (C) 2009 The SL project.
 //
@@ -14,18 +14,16 @@
 // $Id$
 //
 
-m4_include(svp/iomacros.slh)
-m4_include(svp/assert.slh)
-m4_include(svp/div.slh)
+#include <cmalloc.h>
 
 sl_def(t_main, void)
 {
-  unsigned long x = 69, y = 5;
-  divmodu(x, y);
-  unsigned long x1 = x, y1 = y;
-  while (x1--) putc('.'); putc('\n');
-  while (y1--) putc('.'); putc('\n');
-  svp_assert(x == 4);
-  svp_assert(y == 13);
+   char *p;
+
+   p = (char*)sl_funcall(malloc_place, ptr, [[malloc]], sl_farg(size_t, 10));
+
+   p[5] = 'h';
+
+   sl_funcall(malloc_place, void, [[free]], sl_farg(void*, p));
 }
 sl_enddef

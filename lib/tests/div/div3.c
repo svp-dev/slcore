@@ -1,5 +1,5 @@
 //
-// m1.sl: this file is part of the SL toolchain.
+// div3.c: this file is part of the slc project.
 //
 // Copyright (C) 2009 The SL project.
 //
@@ -14,16 +14,14 @@
 // $Id$
 //
 
-m4_include(cmalloc.slh)
+#include <svp/div.h>
 
 sl_def(t_main, void)
 {
-   char *p;
+  unsigned long xqu = 42, yqu = 5;
+  divmodu(xqu, yqu);
 
-   p = (char*)sl_funcall(malloc_place, ptr, [[malloc]], sl_farg(size_t, 10));
-
-   p[5] = 'h';
-
-   sl_funcall(malloc_place, void, [[free]], sl_farg(void*, p));
+  signed long xqs = 42, yqs = 5;
+  divmods(xqs, yqs);
 }
 sl_enddef

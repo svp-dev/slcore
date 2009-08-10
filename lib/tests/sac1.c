@@ -1,5 +1,5 @@
 //
-// div3.sl: this file is part of the slc project.
+// sac1.c: this file is part of the SL toolchain.
 //
 // Copyright (C) 2009 The SL project.
 //
@@ -14,14 +14,22 @@
 // $Id$
 //
 
-m4_include(svp/div.slh)
+#include <sac_helpers.h>
+#include <svp/iomacros.h>
 
 sl_def(t_main, void)
 {
-  unsigned long xqu = 42, yqu = 5;
-  divmodu(xqu, yqu);
+	const char msg[] = "hello world\n";
 
-  signed long xqs = 42, yqs = 5;
-  divmods(xqs, yqs);
+	char *p1;
+
+	p1 = (char*)malloc(7);
+	strncpy(p1, msg, 5);
+	p1[5] = '\n';
+	p1[6] = '\0';
+
+	puts(p1);
+
+	free(p1);
 }
 sl_enddef

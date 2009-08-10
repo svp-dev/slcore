@@ -1,5 +1,5 @@
 //
-// m2.sl: this file is part of the SL toolchain.
+// m2.c: this file is part of the SL toolchain.
 //
 // Copyright (C) 2009 The SL project.
 //
@@ -14,8 +14,8 @@
 // $Id$
 //
 
-m4_include(cmalloc.slh)
-m4_include(svp/iomacros.slh)
+#include <cmalloc.h>
+#include <svp/iomacros.h>
 
 sl_def(t_main, void)
 {

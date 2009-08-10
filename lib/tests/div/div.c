@@ -1,5 +1,5 @@
 //
-// div.sl: this file is part of the slc project.
+// div.c: this file is part of the slc project.
 //
 // Copyright (C) 2009 The SL project.
 //
@@ -14,15 +14,15 @@
 // $Id$
 //
 
-m4_include(svp/div.slh)
-m4_include(svp/iomacros.slh)
-m4_include(slr.slh)
+#include <svp/div.h>
+#include <svp/iomacros.h>
+#include <svp/slr.h>
 
 sl_def(testu, void,
-       sl_glparm(unsigned long long, x),
-       sl_glparm(unsigned long long, y))
+       sl_glparm(uint64_t, x),
+       sl_glparm(uint64_t, y))
 {
-  unsigned long long lx = sl_getp(x), ly = sl_getp(y);
+  uint64_t lx = sl_getp(x), ly = sl_getp(y);
   printf("unsigned: %u : %u = ", lx, ly);
   divmodu(lx, ly);
   printf("%u : %u\n", lx, ly);
@@ -30,10 +30,10 @@ sl_def(testu, void,
 sl_enddef
 
 sl_def(tests, void,
-       sl_glparm(signed long long, x),
-       sl_glparm(signed long long, y))
+       sl_glparm(int64_t, x),
+       sl_glparm(int64_t, y))
 {
-  signed long long lx = sl_getp(x), ly = sl_getp(y);
+  int64_t lx = sl_getp(x), ly = sl_getp(y);
   printf("signed: %d : %d = ", lx, ly);
   divmods(lx, ly);
   printf("%d : %d\n", lx, ly);
@@ -63,10 +63,10 @@ sl_def(t_main, void)
 {
   puts("----\n");
   sl_proccall(testu,
-	      sl_glarg(unsigned long long, x, slr_get(ua)[0]),
-	      sl_glarg(unsigned long long, y, slr_get(ub)[0]));
+	      sl_glarg(uint64_t, x, slr_get(ua)[0]),
+	      sl_glarg(uint64_t, y, slr_get(ub)[0]));
   sl_proccall(tests,
-	      sl_glarg(signed long long, x, slr_get(sa)[0]),
-	      sl_glarg(signed long long, y, slr_get(sb)[0]));
+	      sl_glarg(int64_t, x, slr_get(sa)[0]),
+	      sl_glarg(int64_t, y, slr_get(sb)[0]));
 }
 sl_enddef
