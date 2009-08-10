@@ -14,7 +14,7 @@
 // $Id$
 //
 
-#include <cstddef.slh>
+#include <cstddef.h>
 #include <svp/testoutput.h>
 
 #ifdef FIBRE_DATA

@@ -16,7 +16,7 @@
 #ifndef __FIBRE_SLH__
 # define __FIBRE_SLH__
 
-#include <cstddef.slh>
+#include <cstddef.h>
 
 extern struct fibre_base_t {
        int tag;
