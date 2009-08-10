@@ -1,5 +1,19 @@
 2009-08-10  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	C-ify the NAS IS code.
+	
+	* programs/benchmarks/nas/is/IS.sl,
+	* programs/benchmarks/nas/is/random.sl: Rename to...
+
+	* programs/benchmarks/nas/is/IS.c,	
+	* programs/benchmarks/nas/is/random.c: ... here. Use CPP syntax
+	where appropriate.
+	
+	* programs/benchmarks/nas/is/Makefile.am: Update accordingly.
+
+
+2009-08-10  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	C-ify the SHA code.
 	
 	* programs/benchmarks/sha/sha1.sl: Rename to...

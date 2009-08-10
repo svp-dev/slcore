@@ -1,5 +1,5 @@
-m4_include(svp/iomacros.slh)
-m4_include(svp/perf.slh)
+#include <svp/iomacros.h>
+#include <svp/perf.h>
 
 static int      KS=0;
 static double	R23, R46, T23, T46;

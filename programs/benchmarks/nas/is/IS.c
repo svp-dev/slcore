@@ -1,11 +1,11 @@
-m4_include(slr.slh)
-m4_include(svp/div.slh)
-m4_include(svp/assert.slh)
-m4_include(svp/iomacros.slh)
-m4_include(svp/perf.slh)
-//m4_include(buckets.1.128.slh)
-m4_define(INT, int)
-m4_define(SIZE, unsigned)
+#include <svp/slr.h>
+#include <svp/div.h>
+#include <svp/assert.h>
+#include <svp/iomacros.h>
+#include <svp/perf.h>
+//#include "buckets.1.128.h"
+#define INT int
+#define SIZE unsigned
 
 //extern int num_buckets_log;  // defined in buckets.x.y.slh
 int num_physical_cores;
@@ -51,15 +51,8 @@ INT smaller_than_bucket[MAX_SUPPORTED_BUCKETS];
 INT ranks[MAX_SUPPORTED_KEY];
 
 
-m4_define([[first_element]],
-[[ ((divu(([[$1]]), ([[$3]])) * ([[$2]])) + 
-    ((([[$2]]) < (modu([[$1]], [[$3]]))) ? 1 : 0)) 
-]])
-
-m4_define([[num_elements]],
-[[
-  (divu(($1), ($3)) + ((($2) < (modu(($1), ($3)))) ? 1 : 0))
-]])
+#define first_element(_1, _2, _3) ((divu((_1),(_3)) * (_2)) + (((_2) < (modu((_1), (_3)))) ? 1 : 0))
+#define num_elements(_1, _2, _3) (divu((_1), (_3)) + (((_2) < (modu((_1), (_3)))) ? 1 : 0))
 
 /*
 #define first_element(num_elements, index, stripes) \
@@ -78,44 +71,33 @@ sl_decl(randlc, double,
 
 double X = 314159265.00, A = 1220703125.00;
 
-m4_define([[start_timing]],
-[[
-  do{[[$1]] = get_cycles();}while(0)
-]])
-m4_define([[stop_timing]],
-[[
-  do{[[$1]] = get_cycles() - [[$1]];}while(0)
-]])
+#define start_timing(_1) do { _1 = get_cycles(); } while(0)
+#define stop_timing(_1) do { _1 = get_cycles() - _1; } while(0)
 
-m4_define([[start_global_counter]],
-[[
-do {
-  if (!global_counter_started) {
-  global_counter_started = 1;
-  uninteresting_cycles = get_cycles();
-  } else {
-  uninteresting_cycles += get_cycles() - paused_global_counter;
-  }
-}
-while(0)
-]])
+#define start_global_counter()						\
+  do {									\
+    if (!global_counter_started) {					\
+      global_counter_started = 1;					\
+      uninteresting_cycles = get_cycles();				\
+    } else {								\
+      uninteresting_cycles += get_cycles() - paused_global_counter;	\
+    }									\
+  }									\
+  while(0)
 
-m4_define([[pause_global_counter]],
-[[
-do{
-  paused_global_counter = get_cycles();
-}while(0)
-]])
+#define pause_global_counter()			\
+  do{						\
+    paused_global_counter = get_cycles();	\
+  } while(0)
 
-m4_define([[global_counter]],
-[[(get_cycles - uninteresting_cycles)]])
+#define global_counter (get_cycles() - uninteresting_cycles)
 
-m4_define([[my_printf]],
-[[
-  pause_global_counter();
-  printf($@);
-  start_global_counter();
-]])
+#define my_printf(Fmt, ...)			\
+  do {						\
+    pause_global_counter();			\
+    printf(Fmt, ## __VA_ARGS__);		\
+    start_global_counter();			\
+  } while(0)
 
 long uninteresting_cycles;
 int global_counter_started = 0;
