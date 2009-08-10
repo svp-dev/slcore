@@ -14,6 +14,8 @@ sl_begin_header([[SLC_SLR_SLH]])m4_dnl -*- m4 -*-
 //
 // $Id$
 //
+m4_warning([[this header is deprecated.]])
+m4_warning([[Use #include <slr.h> instead.]])
 
 m4_include(cstddef.slh)
 extern struct __slr_base_t { ptrdiff_t offset; size_t nitems; } *__slr_base;
