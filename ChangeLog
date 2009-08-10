@@ -1,5 +1,27 @@
 2009-08-07  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	C-ify test suite in `lib/'.
+	
+	* lib/tests/div/div.sl,
+	* lib/tests/div/div2.sl,
+	* lib/tests/div/div3.sl,
+	* lib/tests/malloc/m1.sl,
+	* lib/tests/malloc/m2.sl,	
+	* lib/tests/sac1.sl: Rename to...
+
+	* lib/tests/div/div.c,
+	* lib/tests/div/div2.c,
+	* lib/tests/div/div3.c,
+	* lib/tests/malloc/m1.c,
+	* lib/tests/malloc/m2.c,	
+	* lib/tests/sac1.c: ... here. Use CPP syntax where appropriate.
+
+	* lib/tests/div/div.c,
+	* lib/tests/div/div2.c,
+	* lib/tests/div/div3.c: Use types with specific widths.
+
+2009-08-07  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	Make Bash 4 happy.
 
 	* tools/lib/r-host.sh,

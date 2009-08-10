@@ -1,5 +1,5 @@
 //
-// sac1.sl: this file is part of the SL toolchain.
+// div2.c: this file is part of the slc project.
 //
 // Copyright (C) 2009 The SL project.
 //
@@ -14,22 +14,18 @@
 // $Id$
 //
 
-m4_include(sac_helpers.slh)
-m4_include(svp/iomacros.slh);
+#include <svp/iomacros.h>
+#include <svp/assert.h>
+#include <svp/div.h>
 
 sl_def(t_main, void)
 {
-	const char msg[] = "hello world\n";
-
-	char *p1;
-
-	p1 = (char*)malloc(7);
-	strncpy(p1, msg, 5);
-	p1[5] = '\n';
-	p1[6] = '\0';
-
-	puts(p1);
-
-	free(p1);
+  uint64_t x = 69, y = 5;
+  divmodu(x, y);
+  uint64_t x1 = x, y1 = y;
+  while (x1--) putc('.'); putc('\n');
+  while (y1--) putc('.'); putc('\n');
+  svp_assert(x == 4);
+  svp_assert(y == 13);
 }
 sl_enddef
