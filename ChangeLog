@@ -1,5 +1,35 @@
 2009-08-10  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	Remove old files.
+	
+	* tools/tests/0_slr/args-old.sl,
+	* tools/tests/0_trivial/nop-old.sl,
+	* tools/tests/0_trivial/x_abort-old.sl,
+	* tools/tests/1_create/crnop-old.sl,
+	* tools/tests/1_create/crnop2-old.sl,
+	* tools/tests/1_create/crnop3-old.sl,
+	* tools/tests/1_create/crnopdefs-old.sl,
+	* tools/tests/1_create/x_crnosync-old.sl,
+	* tools/tests/1_create/x_inffamily-old.sl,
+	* tools/tests/2_args/args1-old.sl,
+	* tools/tests/2_args/delayshared-old.sl,
+	* tools/tests/2_args/globpass-old.sl,
+	* tools/tests/2_args/useexit2-old.sl,
+	* tools/tests/3_mem/sideeffect-old.sl,
+	* tools/tests/8_funs/add-old.sl,
+	* tools/tests/8_funs/f1-old.sl,
+	* tools/tests/8_funs/f2-old.sl,
+	* tools/tests/8_funs/f3-old.sl,
+	* tools/tests/8_funs/f4-old.sl,
+	* tools/tests/8_funs/f5-old.sl,
+	* tools/tests/8_funs/f6-old.sl,
+	* tools/tests/8_funs/f7-old.sl,
+	* tools/tests/8_funs/f8-old.sl,	
+	* tools/tests/8_funs/f9-old.sl: Remove test code, as is now
+	replaced by `.c' files with CPP syntax.
+
+2009-08-10  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	Minor packaging fixes. `make distcheck' passes.
 
 	* programs/benchmarks/fft/Makefile.am: Typo: `fft.h'.
