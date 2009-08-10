@@ -1,5 +1,9 @@
 2009-08-10  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	* lib/include/svp/perf.h: Fix `__attribute__' syntax.
+
+2009-08-10  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	Properly search for includes.
 
 	The default search path for includes does *not* contain the
