@@ -1,5 +1,14 @@
 2009-08-07  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	Make Bash 4 happy.
+
+	* tools/lib/r-host.sh,
+	* tools/lib/r-mtalpha-sim.sh.in,	
+	* tools/lib/r-mtsparc-sim.sh.in: Protect expansions of `$*' and
+	`$@' since Bash 4 complains if there are no positional arguments.
+
+2009-08-07  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	Simplify more.
 	
 	* tools/bin/cce.in: Do not add the default includes to

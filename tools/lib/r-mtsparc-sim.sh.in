@@ -39,6 +39,7 @@ if test -n "${DEBUG:-}"; then
    do_debug=$DEBUGGER
 fi
 if test -n "${VERBOSE:-}"; then
-   echo "$basename: running: ${RUNNER_PREFIX:-} $do_debug $MGSIM_SPARC ${SIMARGS:-} -t $* -L16 $datafile -L17 $fdatafile $program" >&2
+   echo "$basename: running: ${RUNNER_PREFIX:-} $do_debug $MGSIM_SPARC ${SIMARGS:-} -t ${*:-} -L16 $datafile -L17 $fdatafile $program" >&2
 fi  
+set +u
 exec ${RUNNER_PREFIX:-} $do_debug $MGSIM_SPARC ${SIMARGS:-} -t "$@" -L16 "$datafile" -L17 "$fdatafile" "$program"
