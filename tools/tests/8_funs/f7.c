@@ -1,5 +1,5 @@
 //
-// arggen.sl: this file is part of the slc project.
+// f7.sl: this file is part of the SL toolchain.
 //
 // Copyright (C) 2009 The SL project.
 //
@@ -14,17 +14,15 @@
 // $Id$
 //
 
-m4_include(svp/iomacros.slh)
-m4_include(cstddef.slh)
+#include <svp/testoutput.h>
 
-#ifdef FIBRE_DATA
-#include "fdata.c"
-#else
-#include "data.c"
-#endif
+int a;
+
+int* foo() { return &a; }
 
 sl_def(t_main, void)
 {
-  write(&__slr_data, sizeof(__slr_data));
+  int * p = (int*) sl_funcall(,ptr,foo);
+  output_int(&a - p, 1); output_char('\n', 1);
 }
 sl_enddef

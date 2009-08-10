@@ -20,7 +20,7 @@ pkglib_SCRIPTS = \
 	r-mtsparc-sim.sh
 
 nobase_dist_pkgdata_DATA = \
-	arggen.sl \
+	arggen.c \
 	t-utc/slimpl.m4 \
 	t-utc0/slimpl.m4 \
 	t-utc0/include/sl_support.h 

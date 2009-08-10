@@ -15,10 +15,10 @@
  */
 
 #include <svp/slr.h>
+#include <svp/testoutput.h>
 
 slr_decl(slr_var(int, a), 
-	 slr_var(int, b),
-	 slr_var(int, c, "result"));
+	 slr_var(int, b, "2nd variable"));
 
 /*
  * SLT_RUN:  a=10  b=-10
@@ -28,7 +28,8 @@ sl_def(t_main, void)
 {
   int a = slr_get(a)[0];
   int b = slr_get(b)[0];
-  int *c = slr_get(c);
-  *c = a + b;
+  int c = a + b;
+  output_int(c, 1);
+  output_char('\n', 1);
 }
 sl_enddef

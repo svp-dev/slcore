@@ -5,7 +5,7 @@ def gencall(out, nrshareds, nrglobals, ty):
         sc = "f"
     else:
         sc = ""
-    print >>out, "m4_include(svp/iomacros.slh)\n"
+    print >>out, "#include <svp/testoutput.h>\n"
     print >>out, "sl_def(foo_%d_%d, void, sl_glparm(%s*, output)" % (nrshareds, nrglobals, ty),
     if nrshareds or nrglobals:
         print >>out, ","
@@ -31,8 +31,8 @@ def gencall(out, nrshareds, nrglobals, ty):
                    ["\tsl_gl%sarg(%s,garg%d,%d)" % (sc,ty,x,x) for x in xrange(nrglobals)]),
     print >>out, "  );"
     print >>out, "  long iresult = result;"
-    print >>out, "  putn(iresult);"
-    print >>out, "  putc('\\n');\n}\nsl_enddef"
+    print >>out, "  output_int(iresult, 1);"
+    print >>out, "  output_char('\\n', 1);\n}\nsl_enddef"
     print >>out, "sl_def(t_main, void) { sl_proccall(do_call); } sl_enddef"
 
 
