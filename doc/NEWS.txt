@@ -7,6 +7,36 @@ compiler.
 
 .. _SVP: http://www.svp-home.org/
 
+SLC 2.1.0a, 2009
+================
+
+- Development version only.
+
+- Now using the C preprocessor before M4: the ``.sl`` and ``.slh``
+  extensions disappear in favor of ``.c`` and ``.h``; ``#include`` and
+  ``#define`` can now be used freely and can contain SL macros.
+
+- As a result of using the C preprocessor first, C comments inside SL
+  macros do not cause strange behavior any more.
+
+- The ``slr``, ``slt`` and ``timeout`` scripts now react better to
+  signals and terminal hangups.
+
+- A new ``make`` target, ``make check-slt`` is provided to run the
+  testsuite with ASCII-art output (eye-candy). ``make check`` is
+  modified to use the new "parallel tests" feature from Automake 1.11
+  which supports concurrency more efficiently than ``slt``.
+
+- A new utility ``slt-many`` is provided to run ``slt`` on a custom
+  list of test files / directories provided on the command line and
+  provide a test results summary.
+
+Known issues:
+
+- only "simple" function return types are supported in function calls
+  from thread functions. Also only 6 function arguments are supported,
+  of "simple" types as well. See CSA note [sl1] for details.
+
 SLC 2.0.3a, 2009
 ================
 

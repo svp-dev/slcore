@@ -79,7 +79,7 @@ Note: this will update ``PATH`` as well. Once the variables are set,
 the command-line utilities can be used directly even before ``make
 install`` has been run, e.g.::
 
-   $ cd programs/demo && slc 10threads.sl && slr a.out
+   $ cd programs/demo && slc 10threads.c && slr a.out
 
 
 Committing work
