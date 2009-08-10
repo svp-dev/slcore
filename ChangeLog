@@ -1,5 +1,13 @@
 2009-08-07  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	Minor fix to automated test suite.
+
+	* tools/tests/mkalltests.sh,
+	* lib/tests/mkalltests.sh: Prevent capturing sources that result
+	from previous test runs.
+
+2009-08-07  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	C-ify test suite in `lib/'.
 	
 	* lib/tests/div/div.sl,
