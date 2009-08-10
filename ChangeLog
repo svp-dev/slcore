@@ -1,5 +1,15 @@
 2009-08-10  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	Bootstrap new toolchain version.
+	
+	* configure.ac: Bump version number.
+	
+	* doc/NEWS.txt: Document major changes.
+
+	* doc/HACKING.txt: Make `.sl' disappear.
+
+2009-08-10  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	Remove old files.
 	
 	* tools/tests/0_slr/args-old.sl,
