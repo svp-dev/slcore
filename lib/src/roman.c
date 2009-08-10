@@ -14,8 +14,8 @@
 // $Id$
 //
 
-m4_include(svp/lib.slh)
-m4_include(svp/roman.slh)
+#include <svp/compiler.h>
+#include <svp/testoutput.h>
 
 static struct roman_table_t {
   long base;
@@ -38,8 +38,8 @@ static struct roman_table_t {
 sl_def(roman, void, sl_glparm(short, x))
 {
   long num = sl_getp(x);
-  if (num < 0) {
-    __write1('-');
+  if (unlikely(num < 0)) {
+    output_char('-', 1);
     num = -num;
   }
 
@@ -47,9 +47,9 @@ sl_def(roman, void, sl_glparm(short, x))
   const char *s;
 
   for (p = roman_table; p->base; ++p)
-    while(num >= p->base) {
-       for (s = p->repr; *s; ++s) __write1(*s);
-       num = num - p->base;
+    while(likely(num >= p->base)) {
+      for (s = p->repr; *s; ++s) output_char(*s, 1);
+      num = num - p->base;
     };
 }
 sl_enddef

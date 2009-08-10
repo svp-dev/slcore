@@ -1,5 +1,5 @@
 //
-// io.sl: this file is part of the slc project.
+// io.c: this file is part of the slc project.
 //
 // Copyright (C) 2009 The SL project.
 //
@@ -14,41 +14,34 @@
 // $Id$
 //
 
-m4_include(svp/lib.slh)
-m4_include(svp/div.slh)
-m4_include(svp/io.slh)
+#include <svp/compiler.h>
+#include <svp/div.h>
+#include <svp/io.h>
+#include <svp/testoutput.h>
 
 static const char *digits = "0123456789abcdef";
 
 sl_def(svp_io_putc, void,
        sl_glparm(char, c))
 {
-  __write1(sl_getp(c));
+  output_char(sl_getp(c), 1);
 }
 sl_enddef
 
 sl_def(svp_io_write, void,
        sl_glparm(void*, gptr),
-       sl_glparm(unsigned, gsz))
+       sl_glparm(size_t, gsz))
 {
-  const char *p = (const char*)(void*)sl_getp(gptr);
-  unsigned i = 0, sz = sl_getp(gsz);
-  while (likely(i < sz))
-    __write1(p[i++]);
+  output_bytes(sl_getp(gptr), sl_getp(gsz), 1);
 }
 sl_enddef
 
 sl_def(svp_io_puts, void,
        sl_glparm(const char *, gstr))
 {
-  const char *str = sl_getp(gstr);
-  char c;
-  while (likely(c = *str++))
-    __write1(c);
+  output_string(sl_getp(gstr), 1);
 }
 sl_enddef
-
-#define _puts(S) do { const char *p = (S); while(*p) __write1(*p++); } while(0)
 
 sl_def(svp_io_putf, void,
        sl_glfparm(double, gx),
@@ -59,12 +52,12 @@ sl_def(svp_io_putf, void,
   unsigned prec = sl_getp(gprec);
   const unsigned base = sl_getp(gbase);
 
-  if (unlikely(x != x)) _puts("nan");
-  else if (unlikely(x == 1e5000)) _puts("+inf");
-  else if (unlikely(x == -1e5000)) _puts("-inf");
+  if (unlikely(x != x)) output_string("nan", 1);
+  else if (unlikely(x == 1e5000)) output_string("+inf", 1);
+  else if (unlikely(x == -1e5000)) output_string("-inf", 1);
   else {
       /* -- print the mantissa -- */
-      if (x < 0.) { __write1('-'); x = -x; } else __write1('+');
+    if (x < 0.) { output_char('-', 1); x = -x; } else output_char('+', 1);
 
       /* -- find exponent and normalize -- */
       int exp = 0;
@@ -72,40 +65,40 @@ sl_def(svp_io_putf, void,
       while (x && x < 1.0) { x *= base; --exp; }
 
       unsigned d = (unsigned)x;
-      __write1(digits[d]);
-      __write1('.');
+      output_char(digits[d], 1);
+      output_char('.', 1);
 
       x = (x - d) * base;
       while(--prec) {
 	d = (unsigned)x;
-	__write1(digits[d]);
+	output_char(digits[d], 1);
 	x = (x - d) * base;
       }
 
       /* -- print the exponent -- */
-      __write1('E');
-      if (exp < 0) { __write1('-'); exp = -exp; } else __write1('+');
+      output_char('E', 1);
+      if (exp < 0) { output_char('-', 1); exp = -exp; } else output_char('+', 1);
       unsigned uexp = exp;
-      sl_proccall(svp_io_putun, sl_glarg(unsigned long long, gn, uexp), sl_glarg(unsigned, gbase, base));
+      sl_proccall(svp_io_putun, sl_glarg(unsigned long, gn, uexp), sl_glarg(unsigned, gbase, base));
     }
 }
 sl_enddef
 
 sl_def(svp_io_putun, void,
-       sl_glparm(unsigned long long, gn),
+       sl_glparm(unsigned long, gn),
        sl_glparm(unsigned, gbase))
 {
-  unsigned long long x = sl_getp(gn);
+  unsigned long x = sl_getp(gn);
   const unsigned base = sl_getp(gbase);
-  if (x < base) __write1(digits[x]);
+  if (x < base) output_char(digits[x], 1);
   else {
-      unsigned long long root = 1;
+      unsigned long root = 1;
       while (divu(x, root) >= base)
 	root *= base;
       while (root) {
-	unsigned long long rs = root;
+	unsigned long rs = root;
 	divmodu(x, rs);
-	__write1(digits[rs]);
+	output_char(digits[rs], 1);
 	rs = base;
 	divmodu(root, rs);
 	root = rs;
@@ -115,25 +108,25 @@ sl_def(svp_io_putun, void,
 sl_enddef
 
 sl_def(svp_io_putn, void,
-       sl_glparm(long long, gn),
+       sl_glparm(long, gn),
        sl_glparm(unsigned, gbase))
 {
-  long long x = sl_getp(gn);
+  long x = sl_getp(gn);
   const unsigned base = sl_getp(gbase);
-  if (!x) __write1('0');
+  if (!x) output_char('0', 1);
   else {
-    long long root;
+    long root;
     if (x < 0) {
       root = -1;
-      __write1('-');
+      output_char('-', 1);
     } else root = 1;
     while (divs(x, root) >= base)
       root *= base;
     while (root) {
-      long long rs = root;
+      long rs = root;
       divmods(x, rs);
-      __write1(digits[rs]);
-      rs = (long long)base;
+      output_char(digits[rs], 1);
+      rs = (long)base;
       divmods(root, rs);
       root = rs;
     }
@@ -155,10 +148,10 @@ sl_def(svp_io_printf, void,
        sz = sl_getp(gsz); *fmt; ++fmt) {
 
     if (likely(*fmt != '%'))
-      __write1(*fmt);
+      output_char(*fmt, 1);
     else {
-      long long sdata;
-      unsigned long long udata;
+      long sdata;
+      unsigned long udata;
       double fdata;
       char cfmt = *++fmt;
 
@@ -172,7 +165,7 @@ sl_def(svp_io_printf, void,
 	case 4: udata = data->ul; sdata = (data++)->sl; break;
 	case 2: udata = data->us; sdata = (data++)->ss; break;
 	case 1: udata = data->ub; sdata = (data++)->sb; break;
-	default: __write1('?'); udata = 0; sdata = 0; ++data; break;
+	default: output_char('?', 1); udata = 0; sdata = 0; ++data; break;
 	}
 	break;
       case 'f':
@@ -204,18 +197,18 @@ sl_def(svp_io_printf, void,
 			    sl_glarg(unsigned, base, 10));
 	break;
       case 'd': sl_proccall(svp_io_putn,
-			    sl_glarg(long long, n, sdata),
+			    sl_glarg(long, n, sdata),
 			    sl_glarg(unsigned, base, 10));
 	break;
       case 'u': sl_proccall(svp_io_putun,
-			    sl_glarg(unsigned long long, n, udata),
+			    sl_glarg(unsigned long, n, udata),
 			    sl_glarg(unsigned, base, 10));
 	break;
       case 'x': sl_proccall(svp_io_putun,
-			    sl_glarg(unsigned long long, n, udata),
+			    sl_glarg(unsigned long, n, udata),
 			    sl_glarg(unsigned, base, 16));
 	break;
-      default: __write1('%'); __write1(*fmt); break;
+      default: output_char('%', 1); output_char(*fmt, 1); break;
       }
     }
   }

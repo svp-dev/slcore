@@ -3,6 +3,8 @@
 
 #ifdef __mt_freestanding__
 
+#include <lib/compiler.h>
+
 # if defined(__alpha__) || defined(__mtalpha__)
 #  define output_float(F, Stream, Precision) __asm__ __volatile("printf %0, %1" : : "f"(F), \
 								"r"(Stream | (Precision << 4)))
@@ -16,17 +18,17 @@
 #  warning "Don't know how to define debug_int/debug_float on this platform."
 # endif
 
-# define output_string(S, Stream)		 \
-  do {						 \
-    const char *__ptr = (S);			 \
-    while(*__ptr) output_char(*__ptr++, Stream); \
-  } while(0)
-
-# define output_bytes(S, L, Stream)				\
+# define output_string(S, Stream)				\
   do {								\
     const char *__ptr = (S);					\
-    unsigned long __i = 0, __max = (L);				\
-    while(__i < __max) output_char(__ptr[__i++], Stream);	\
+    while(likely(*__ptr)) output_char(*__ptr++, Stream);	\
+  } while(0)
+
+# define output_bytes(S, L, Stream)					\
+  do {									\
+    const char *__ptr = (const char*)(void*)(S);			\
+    unsigned long __i = 0, __max = (L);					\
+    while(likely(__i < __max)) output_char(__ptr[__i++], Stream);	\
   } while(0)
 
 #else 

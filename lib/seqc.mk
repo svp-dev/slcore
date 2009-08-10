@@ -13,15 +13,15 @@ host_host_seqc_libsl_a_LIBADD = \
 
 SLC_SEQC = $(SLC_RUN) -b seqc -nostdlib $(AM_CFLAGS) $(CFLAGS)
 
-host-host-seqc/io.o: $(srcdir)/src/io.sl
+host-host-seqc/io.o: $(srcdir)/src/io.c
 	$(AM_V_at)$(MKDIR_P) host-host-seqc
 	$(slc_verbose)$(SLC_SEQC) -c -o $@ $<
 
-host-host-seqc/div.o: $(srcdir)/src/div.sl
+host-host-seqc/div.o: $(srcdir)/src/div.c
 	$(AM_V_at)$(MKDIR_P) host-host-seqc
 	$(slc_verbose)$(SLC_SEQC) -c -o $@ $<
 
-host-host-seqc/roman.o: $(srcdir)/src/roman.sl
+host-host-seqc/roman.o: $(srcdir)/src/roman.c
 	$(AM_V_at)$(MKDIR_P) host-host-seqc
 	$(slc_verbose)$(SLC_SEQC) -c -o $@ $<
 
