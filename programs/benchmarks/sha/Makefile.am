@@ -12,7 +12,7 @@
 ##
 
 # 
-DEMOS = sha1.sl
+DEMOS = sha1.c
 TESTS = $(DEMOS)
 
 EXTRA_DIST = $(DEMOS)
@@ -20,8 +20,8 @@ EXTRA_DIST = $(DEMOS)
 include $(top_srcdir)/tests.mk
 
 if ENABLE_DEMOS
-noinst_DATA = $(DEMOS:.sl=.x)
-CLEANFILES = $(DEMOS:.sl=.x) $(DEMOS:.sl=.bin.*)
+noinst_DATA = $(DEMOS:.c=.x)
+CLEANFILES = $(DEMOS:.c=.x) $(DEMOS:.c=.bin.*)
 endif
 
 

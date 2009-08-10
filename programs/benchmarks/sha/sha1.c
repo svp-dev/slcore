@@ -1,8 +1,8 @@
 
-m4_include(cstdint.slh)
-m4_include(cstddef.slh)
-m4_include(slr.slh)
-m4_include(svp/assert.slh)
+#include <cstdint.h>
+#include <cstddef.h>
+#include <svp/slr.h>
+#include <svp/assert.h>
 
 #define ROL32(W, bits) (((W) << bits) | ((W) >> (32 - bits)))
 
