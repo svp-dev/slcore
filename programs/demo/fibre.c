@@ -1,6 +1,6 @@
-m4_include(fibre.slh)
-m4_include(svp/iomacros.slh)
-m4_include(cstddef.slh)
+#include <svp/fibre.h>
+#include <svp/iomacros.h>
+#include <cstddef.h>
 
 // SLT_RUN: 
 // SLT_RUN: -f TEST.d1

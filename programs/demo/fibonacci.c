@@ -14,11 +14,11 @@
 // $Id$
 //
 
-m4_include(svp/iomacros.slh)
-m4_include(svp/assert.slh)
-m4_include(slr.slh)
+#include <svp/iomacros.h>
+#include <svp/assert.h>
+#include <svp/slr.h>
 
-m4_define(INT, unsigned long long)
+#define INT unsigned long
 
 sl_def(fibo_compute, void,
        sl_shparm(INT, prev), sl_shparm(INT, prev2), sl_glparm(INT*, fibo))

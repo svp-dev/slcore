@@ -12,15 +12,15 @@
 ##
 
 # 
-DEMOS = 10threads.sl answer.sl fibonacci.sl helloworld.sl roman.sl fibre.sl
+DEMOS = 10threads.c answer.c fibonacci.c helloworld.c roman.c fibre.c
 TESTS = $(DEMOS)
 
 include $(top_srcdir)/tests.mk
 
 EXTRA_DIST = $(DEMOS)
-EXTRA_DIST += fibre.sl.d1 fibre.sl.d2 fibre.sl.d3
+EXTRA_DIST += fibre.c.d1 fibre.c.d2 fibre.c.d3
 
 if ENABLE_DEMOS
-noinst_DATA = $(DEMOS:.sl=.x)
-CLEANFILES = $(DEMOS:.sl=.x) $(DEMOS:.sl=.bin.*)
+noinst_DATA = $(DEMOS:.c=.x)
+CLEANFILES = $(DEMOS:.c=.x) $(DEMOS:.c=.bin.*)
 endif

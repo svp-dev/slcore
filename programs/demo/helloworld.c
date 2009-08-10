@@ -14,7 +14,7 @@
 // $Id$
 //
 
-m4_include(svp/iomacros.slh)
+#include <svp/iomacros.h>
 
 sl_def(t_main, void)
 {

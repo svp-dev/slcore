@@ -14,8 +14,8 @@
 // $Id$
 //
 
-m4_include(svp/iomacros.slh)
-m4_include(svp/roman.slh)
+#include <svp/iomacros.h>
+#include <svp/roman.h>
 
 sl_def(foo, void, sl_shparm(int, a))
 {
