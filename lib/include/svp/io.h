@@ -17,6 +17,7 @@
 # define __SVP_IO_H__
 
 #include <svp/argslot.h>
+#include <cstddef.h>
 
 /* Print a single character to the console output. */
 sl_decl(svp_io_putc, void,
@@ -29,7 +30,7 @@ sl_decl(svp_io_puts, void,
 /* Print an arbitrary number of bytes to the console output. */
 sl_decl(svp_io_write, void,
 	sl_glparm(void *, gptr),
-	sl_glparm(unsigned, gsize));
+	sl_glparm(size_t, gsize));
 
 /* Print a floating point number to the console output. */
 /* Note: the floating point is normalized before printing. */
