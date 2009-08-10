@@ -239,7 +239,6 @@ done
 for d in $slc_incdir; do
   slc_tflags="$slc_tflags -I$d"
   slc_ppflags="$slc_ppflags -I$d"
-  slc_cflags="$slc_cflags -I$d"
 done
 IFS=$save_IFS
 
