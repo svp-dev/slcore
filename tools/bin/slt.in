@@ -357,6 +357,7 @@ fi
 
 testbase=${1##*/}
 case $testbase in
+  *.c)      testname=${testbase%.c};;
   *.sl)     testname=${testbase%.sl};;
   *.S)      testname=${testbase%.S};;
   *.s)      testname=${testbase%.s};;
