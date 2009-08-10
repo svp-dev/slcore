@@ -14,3 +14,9 @@ NEWS
 *~
 a.out
 foo*
+*.bak
+_*
+*.o
+*.s0
+*.t.c
+*.t.cc
