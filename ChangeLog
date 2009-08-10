@@ -1,3 +1,22 @@
+2009-08-03  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
+	Start deprecating `.slh' stuff in `tools/'.
+	
+	* tools/include/slc.m4: Introduce new macros `sl_cquote' and
+	`sl_cdquote' that expands to C's single and double quotes,
+	respectively.
+	
+	* tools/include/slr.slh: Copy to...
+	* tools/include/slr.h: here. Use m4 macros instead of CPP macros
+	for the `__slr' stuff. Use `sl_cdquote' where appropriate to
+	defeat the extra C string quoting performed by `slc' before
+	running M4.
+
+	* tools/include/slr.slh: Deprecate.
+
+	* tools/tests/0_slr_args/args.sl: Copy to...
+	* tools/tests/0_slr_args/args.c: here. Use new syntax.
+
 2009-07-30  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
 	Merge the following changes.

@@ -14,7 +14,7 @@ m4_init()
 #
 # $Id$
 
-# m4_incr: helper macro
+# m4_step: increment variable by 1
 m4_define([[m4_step]],[[m4_define([[$1]], m4_incr($1))]])
 
 # sl_breakable() - helper macro, returns 1 if type is non-void or
@@ -38,6 +38,11 @@ m4_ifndef([[$1_found]],[[m4_define([[$1_found]],1)m4_divert_push(0)]],[[m4_diver
 m4_define([[sl_end_header]],[[m4_dnl
 m4_divert_pop()
 ]])
+
+# Provide a helper M4 macro that defeats
+# extra quoting after preprocessing
+m4_define([[sl_cquote]], [[']])
+m4_define([[sl_cdquote]], [["]])
 
 # Initialize C mode: disable m4 comments, 
 # stop diverting.
