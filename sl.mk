@@ -49,11 +49,14 @@ SLC_BEFORE = function slc_compile() { \
 	$(slc_shverbose) set -x ; \
 	if test -n "$$SLC_OUT"; then rm -f "$$SLC_OUT" "$$SLC_OUT".{mtalpha,ptl,seqc}; fi && \
 	echo "  SLC    $$SLC_OUT".seqc && \
-	$(SLC_LOCAL) $${SLC_OUT:+-o "$$SLC_OUT".seqc} -b seqc "$$@" -I$(srcdir) $(AM_CFLAGS) $(CFLAGS) && \
+	$(SLC_LOCAL) $${SLC_OUT:+-o "$$SLC_OUT".seqc} -b seqc "$$@" -I$(srcdir) -I$(builddir) \
+	      $(AM_CFLAGS) $(CFLAGS) && \
 	echo "  SLC    $$SLC_OUT".ptl && \
-        $(SLC_LOCAL) $${SLC_OUT:+-o "$$SLC_OUT".ptl} -b ptl "$$@" -I$(srcdir) $(AM_CXXFLAGS) $(CXXFLAGS) && \
+        $(SLC_LOCAL) $${SLC_OUT:+-o "$$SLC_OUT".ptl} -b ptl "$$@" -I$(srcdir) -I$(builddir) \
+	      $(AM_CXXFLAGS) $(CXXFLAGS) && \
 	$(slc_ifmtalpha) echo "  SLC    $$SLC_OUT".mtalpha && \
-        $(slc_ifmtalpha) $(SLC_LOCAL) $${SLC_OUT:+-o "$$SLC_OUT".mtalpha} -b ppp "$$@" -I$(srcdir) && \
+        $(slc_ifmtalpha) $(SLC_LOCAL) $${SLC_OUT:+-o "$$SLC_OUT".mtalpha} -b ppp "$$@" \
+	      -I$(srcdir) -I$(builddir) && \
 	if test -n "$$SLC_OUT"; then \
 	  printf '\#! /bin/sh\n' >"$@" && \
 	  printf 'echo "This script is only a stub. Run the actual program with:"\n' >>"$@" && \
