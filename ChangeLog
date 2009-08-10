@@ -1,5 +1,17 @@
 2009-08-07  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	Use explicit width integer types more.
+
+	* lib/include/svp/div.h,
+	* lib/include/svp/io.h,
+	* lib/include/svp/iomacros.h,
+	* lib/src/div.c,
+	* lib/src/io.c: Use `int64_t' and `uint64_t' where
+	appropriate. Use `long' in a few places to avoid unnecessary
+	truncation in code generation.
+
+2009-08-07  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	Minor fix to automated test suite.
 
 	* tools/tests/mkalltests.sh,

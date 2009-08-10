@@ -38,11 +38,11 @@
 				  sl_glarg(unsigned, __gb, 10))
 
 #define putn(N) sl_proccall(svp_io_putn,			\
-			    sl_glarg(long, __gn, (N)),	\
+			    sl_glarg(int64_t, __gn, (N)),	\
 			    sl_glarg(unsigned, __gb, 10))
 
 #define putu(N) sl_proccall(svp_io_putun,				\
-			    sl_glarg(unsigned long, __gn, (N)),	\
+			    sl_glarg(uint64_t, __gn, (N)),	\
 			    sl_glarg(unsigned, __gb, 10))
 
 /* the following M4 code tries very hard to simulate printf's vararg

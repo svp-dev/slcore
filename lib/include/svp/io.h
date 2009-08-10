@@ -41,7 +41,7 @@ sl_decl(svp_io_putf, void,
 
 /* Print an unsigned integer to the console output. */
 sl_decl(svp_io_putun, void,
-	sl_glparm(unsigned long, gn),
+	sl_glparm(uint64_t, gn),
 	sl_glparm(unsigned, gbase));
 
 /* Print a nul-terminated string to the console output. */
@@ -57,7 +57,7 @@ sl_decl(svp_io_putf, void,
 
 /* Print a signed integer to the console output. */
 sl_decl(svp_io_putn, void,
-	sl_glparm(long, gn),
+	sl_glparm(int64_t, gn),
 	sl_glparm(unsigned, gbase));
 
 /* Format and print arguments to the console output. */
