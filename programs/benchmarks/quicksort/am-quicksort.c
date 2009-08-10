@@ -14,13 +14,13 @@
 // $Id$
 //
 
-m4_include(cstddef.slh)
-m4_include(svp/perf.slh)
-m4_include(svp/iomacros.slh)
-m4_include(slr.slh)
+#include <cstddef.h>
+#include <svp/perf.h>
+#include <svp/iomacros.h>
+#include <svp/slr.h>
 
-m4_define(INT, int)
-m4_define(SIZE, unsigned)
+#define INT int
+#define SIZE unsigned
 
 sl_def(quicksort2, void,
        sl_glparm(INT*, data),

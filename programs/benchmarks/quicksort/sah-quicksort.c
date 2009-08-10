@@ -14,12 +14,12 @@
 // $Id$
 //
 
-m4_include(cstddef.slh)
-m4_include(svp/perf.slh)
-m4_include(svp/iomacros.slh)
-m4_include(slr.slh)
+#include <cstddef.h>
+#include <svp/perf.h>
+#include <svp/iomacros.h>
+#include <svp/slr.h>
 
-m4_define(DLEN, 1024)
+#define DLEN 1024
 
 slr_decl(slr_var(int, Pc, "if nonempty: print number of cycles used"));
 
