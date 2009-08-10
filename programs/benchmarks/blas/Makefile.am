@@ -12,31 +12,32 @@
 ##
 
 # 
-DEMOS = blas-test-saxpy.sl
+DEMOS = blas-test-saxpy.c
 TESTS = $(DEMOS)
 
 EXTRA_DIST = \
-	templates/xaxpy.sl \
-	templates/xaxpyc.sl \
-	templates/xdot.sl \
-	templates/xdotc.sl \
-	caxpy.sl \
-	cdotc.sl \
-	cdotu.sl \
-	daxpy.sl \
-	ddot.sl \
-	saxpy.sl \
-	sdot.sl \
-	zaxpy.sl \
-	zdotc.sl \
-	zdotu.sl \
+	templates/xaxpy.c \
+	templates/xaxpyc.c \
+	templates/xdot.c \
+	templates/xdotc.c \
+	blas_complex.h \
+	caxpy.c \
+	cdotc.c \
+	cdotu.c \
+	daxpy.c \
+	ddot.c \
+	saxpy.c \
+	sdot.c \
+	zaxpy.c \
+	zdotc.c \
+	zdotu.c \
 	$(DEMOS)
 
 
 include $(top_srcdir)/tests.mk
 
 if ENABLE_DEMOS
-noinst_DATA = $(DEMOS:.sl=.x)
-CLEANFILES = $(DEMOS:.sl=.x) $(DEMOS:.sl=.bin.*)
+noinst_DATA = $(DEMOS:.c=.x)
+CLEANFILES = $(DEMOS:.c=.x) $(DEMOS:.c=.bin.*)
 endif
 

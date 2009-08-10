@@ -14,7 +14,7 @@
 // $Id$
 //
 
-m4_define(FLOAT, float)
-m4_define(COMPLEX, blas_complex)
-m4_define(FUNCTION, caxpy)
-m4_include(templates/xaxpyc.sl)
+#define FLOAT float
+#define COMPLEX blas_complex
+#define FUNCTION caxpy
+#include "templates/xaxpyc.c"

@@ -1,5 +1,5 @@
 //
-// sdot.sl: this file is part of the slc project.
+// zaxpy.sl: this file is part of the slc project.
 //
 // Copyright (C) 2009 The SL project.
 //
@@ -14,6 +14,7 @@
 // $Id$
 //
 
-m4_define(FLOAT, float)
-m4_define(FUNCTION, sdot)
-m4_include(templates/xdot.sl)
+#define FLOAT double
+#define COMPLEX blas_zomplex
+#define FUNCTION zaxpy
+#include "templates/xaxpyc.c"

@@ -1,5 +1,5 @@
 //
-// daxpy.sl: this file is part of the slc project.
+// sdot.sl: this file is part of the slc project.
 //
 // Copyright (C) 2009 The SL project.
 //
@@ -14,6 +14,6 @@
 // $Id$
 //
 
-m4_define(FLOAT, double)
-m4_define(FUNCTION, daxpy)
-m4_include(templates/xaxpy.sl)
+#define FLOAT float
+#define FUNCTION sdot
+#include "templates/xdot.c"

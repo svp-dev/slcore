@@ -1,5 +1,5 @@
 //
-// zaxpy.sl: this file is part of the slc project.
+// saxpy.sl: this file is part of the slc project.
 //
 // Copyright (C) 2009 The SL project.
 //
@@ -14,7 +14,6 @@
 // $Id$
 //
 
-m4_define(FLOAT, double)
-m4_define(COMPLEX, blas_zomplex)
-m4_define(FUNCTION, zaxpy)
-m4_include(templates/xaxpyc.sl)
+#define FLOAT float
+#define FUNCTION saxpy
+#include "templates/xaxpy.c"

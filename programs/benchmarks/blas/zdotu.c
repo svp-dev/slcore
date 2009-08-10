@@ -1,5 +1,5 @@
 //
-// cdotu.sl: this file is part of the slc project.
+// zdotu.sl: this file is part of the slc project.
 //
 // Copyright (C) 2009 The SL project.
 //
@@ -14,9 +14,9 @@
 // $Id$
 //
 
-m4_define(COMPLEX, blas_complex)
-m4_define(FLOAT, float)
-m4_define(FUNCTION, cdotu)
-m4_define(OP1, -)
-m4_define(OP2, +)
-m4_include(templates/xdotc.sl)
+#define COMPLEX blas_zomplex
+#define FLOAT double
+#define FUNCTION zdotu
+#define OP1 -
+#define OP2 +
+#include "templates/xdotc.c"
