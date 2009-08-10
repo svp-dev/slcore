@@ -12,16 +12,16 @@
 ##
 
 # 
-DEMOS = fft_bench1.sl fft_bench2.sl fft_test1.sl fft_test2.sl
-TESTS = fft_test1.sl fft_test2.sl
+DEMOS = fft_bench1.c fft_bench2.c fft_test1.c fft_test2.c
+TESTS = fft_test1.c fft_test2.c
 
 include $(top_srcdir)/tests.mk
 
-EXTRA_DIST = $(DEMOS) fft_bench.sl fft_test.sl fft_impl1.sl fft_impl2.sl fft.slh fft_extra.sl
+EXTRA_DIST = $(DEMOS) fft_bench.c fft_test.c fft_impl1.c fft_impl2.c fft.ch fft_extra.c
 
 if ENABLE_DEMOS
-noinst_DATA = $(DEMOS:.sl=.x)
-CLEANFILES = $(DEMOS:.sl=.x) $(DEMOS:.sl=.bin.*)
+noinst_DATA = $(DEMOS:.c=.x)
+CLEANFILES = $(DEMOS:.c=.x) $(DEMOS:.c=.bin.*)
 endif
 
 #####  Special targets for the FFT demo #####
@@ -30,43 +30,43 @@ dist_noinst_SCRIPTS = testfft.sh gen_table_2.sh
 
 noinst_PROGRAMS = 
 
-BUILT_SOURCES = fft_table1_16.h fft_table1_8.h fft_table2_16.h fft_table2_8.h
+BUILT_SOURCES = fft_table1_16_data.h fft_table1_8_data.h fft_table2_16_data.h fft_table2_8_data.h
 dist_noinst_DATA = $(BUILT_SOURCES)
 
-fft_bench1.x: fft_bench.sl fft_impl1.sl fft.slh fft_table1_16.h
-fft_bench2.x: fft_bench.sl fft_impl2.sl fft.slh fft_table2_16.h
-fft_test1.x: fft_test.sl fft_impl1.sl fft_extra.sl fft.slh fft_table1_8.h
-fft_test2.x: fft_test.sl fft_impl2.sl fft_extra.sl fft.slh fft_table2_8.h
+fft_bench1.x: fft_bench.c fft_impl1.c fft.h fft_table1_16_data.h
+fft_bench2.x: fft_bench.c fft_impl2.c fft.h fft_table2_16_data.h
+fft_test1.x: fft_test.c fft_impl1.c fft_extra.c fft.h fft_table1_8_data.h
+fft_test2.x: fft_test.c fft_impl2.c fft_extra.c fft.h fft_table2_8_data.h
 
 if MAINTAINER_MODE
 
 noinst_PROGRAMS += gen_table_1_16 gen_table_1_8
 gen_table_1_16_SOURCES = gen_table_1.c
 gen_table_1_16_CPPFLAGS = -DTABLE_SIZE=16
-gen_table_1_16_CFLAGS = -g -O0 -ffloat-store
+gen_table_1_16_CFLAGS = -O1 -fno-fast-math -ffloat-store
 gen_table_1_16_LDFLAGS = -lm
 
 gen_table_1_8_SOURCES = gen_table_1.c
 gen_table_1_8_CPPFLAGS = -DTABLE_SIZE=8
-gen_table_1_8_CFLAGS = -g -O0 -ffloat-store
+gen_table_1_8_CFLAGS = -O1 -fno-fast-math -ffloat-store
 gen_table_1_8_LDFLAGS = -lm
 
-fft_table2_16.h: $(srcdir)/gen_table_2.sh
+fft_table2_16_data.h: $(srcdir)/gen_table_2.sh
 	$(AM_V_at) rm -f "$@"
 	$(AM_V_GEN) TABLE_SIZE=16 $(SHELL) $(srcdir)/gen_table_2.sh >"$@"
 	$(AM_V_at) chmod -w "$@"
 
-fft_table2_8.h: $(srcdir)/gen_table_2.sh
+fft_table2_8_data.h: $(srcdir)/gen_table_2.sh
 	$(AM_V_at) rm -f "$@"
 	$(AM_V_GEN) TABLE_SIZE=8 $(SHELL) $(srcdir)/gen_table_2.sh >"$@"
 	$(AM_V_at) chmod -w "$@"
 
-fft_table1_8.h: gen_table_1_8$(EXEEXT)
+fft_table1_8_data.h: gen_table_1_8$(EXEEXT)
 	$(AM_V_at) rm -f "$@"
 	$(AM_V_GEN) ./gen_table_1_8$(EXEEXT) >"$@"
 	$(AM_V_at) chmod -w "$@"
 
-fft_table1_16.h: gen_table_1_16$(EXEEXT)
+fft_table1_16_data.h: gen_table_1_16$(EXEEXT)
 	$(AM_V_at) rm -f "$@"
 	$(AM_V_GEN) ./gen_table_1_16$(EXEEXT) >"$@"
 	$(AM_V_at) chmod -w "$@"

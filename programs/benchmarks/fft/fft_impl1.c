@@ -1,5 +1,5 @@
 //
-// fft_impl1.sl: this file is part of the slc project.
+// fft_impl1.c: this file is part of the slc project.
 //
 // Copyright (C) 2009 The SL project.
 //
@@ -14,9 +14,11 @@
 // $Id$
 //
 
-m4_include(fft.slh)
+#define HEADERNAME MAKENAME(1, TABLE_SIZE)
+#define HEADER STRINGIFY(HEADERNAME)
 
-#include "fft_table1_[[]]TABLE_SIZE.h"
+#include HEADER
+
 const void* sc_table_ptr = sc_table;
 
 sl_def(FFT_2, void,

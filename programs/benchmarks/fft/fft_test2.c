@@ -6,7 +6,7 @@
 // program seems implementation dependent;
 // so ignore the diff during testing:
 // XIGNORE: *:D
-m4_include(fft_test.sl)
-m4_include(fft_impl2.sl)
-m4_include(fft_extra.sl)
+#include "fft_test.c"
+#include "fft_impl2.c"
+#include "fft_extra.c"
 
