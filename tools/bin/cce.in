@@ -219,7 +219,7 @@ if test -z "$found"; then
 else
     slc_trans=$found
     slc_tflags="$slc_tflags -I$slc_trans"
-    slc_cflags="$slc_cflags -I$slc_trans/include"
+    slc_ppflags="$slc_ppflags -include $slc_trans/include/sl_support.h"
 fi
 
 for m4_preinc in slc_m4sugar.m4 slc.m4; do
@@ -298,7 +298,7 @@ esac
 case $slc_arch-$slc_os in
     mt*-sim)
         slc_ppflags="$slc_ppflags -D__mt_freestanding__ -D__WORDSIZE=64"
-        slc_cflags="$slc_cflags -D__mt_freestanding__ -D__WORDSIZE=64"
+        # slc_cflags="$slc_cflags -D__mt_freestanding__ -D__WORDSIZE=64"
         # slc_cflags="$slc_cflags -nostdinc"
 	slc_ldflags="$slc_ldflags -Wl,-Ttext -Wl,0 -nostdlib"
 	;;
@@ -314,7 +314,7 @@ case $slc_os in
         IFS=:
         for d in $slc_datadir; do
             slc_ppflags="$slc_ppflags -I$d/$slc_arch-$slc_os/include"
-            slc_cflags="$slc_cflags -I$d/$slc_arch-$slc_os/include"
+            # slc_cflags="$slc_cflags -I$d/$slc_arch-$slc_os/include"
         done
 	if test "$slc_use_slrt" != "no"; then
             found=

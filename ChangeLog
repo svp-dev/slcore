@@ -1,5 +1,34 @@
 2009-08-07  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	Rationalize compilation process. This makes µTC-ptl work again.
+
+	* tools/include/slc.m4,	
+	* tools/bin/cce.in: Include `sl_support.h' earlier (before M4 is
+	run), since the first preprocessor pass should see the C++
+	includes for µTC-ptl.
+
+	* tools/lib/t-pppalpha/include/sl_support.h,
+	* tools/lib/t-ptl/include/sl_support.h,
+	* tools/lib/t-utc0/include/sl_support.h,	
+	* tools/lib/t-seqc/include/sl_support.h: Protect the `#define'
+	directives that must be visible after M4 is run. 
+
+	* tools/lib/t-ptl/slimpl.m4: Use `0' instead of `NULL' since
+	`NULL' is not visible any more when M4 runs.
+
+	* tools/lib/ptl.mk,	
+	* tools/lib/seqc.mk: Use `slc' to compile `slrt.c' since it
+	requires the contents of `sl_support.h' and this now requires the
+	M4 pass.
+
+	* tools/lib/host-host-seqc/slrt.c: Do not include `sl_support.h'
+	any more since it is automatically prepended by `slc' now.
+
+	* tools/lib/host-host/ptl/slrt.c: Properly declare `lib_main' with
+	C linkage.
+	
+2009-08-07  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	Fix some minor bugs.
 
 	* tools/include/svp/testoutput.h: `compiler.h' is found in `svp/',
