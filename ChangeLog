@@ -32,6 +32,10 @@
 	* tools/tests/0_slr_args/args.sl: Copy to...
 	* tools/tests/0_slr_args/args.c: here. Use new syntax.
 
+2009-08-03  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
+	* tools/bin/slt.in: Accept .c as an input file extension.
+
 2009-07-30  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
 	Merge the following changes.
