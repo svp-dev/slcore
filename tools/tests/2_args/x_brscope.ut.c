@@ -1,5 +1,5 @@
 //
-// x_brscope.ut.c: this file is part of the slc project.
+// x_brscope.ut.c: this file is part of the SL toolchain.
 //
 // Copyright (C) 2009 The SL project.
 //
@@ -11,14 +11,12 @@
 // The complete GNU General Public Licence Notice can be found as the
 // `COPYING' file in the root directory.
 //
-// $Id$
-//
 
 #include <libutc.h>
 
 ut_def(foo, int) {} ut_enddef
 
-// XFAIL: C (use of br before it becomes visible)
+[[]]// XFAIL: C (use of br before it becomes visible)
 ut_def(t_main, void)
 {
   int b;

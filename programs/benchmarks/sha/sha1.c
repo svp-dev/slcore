@@ -1,3 +1,16 @@
+//
+// sha1.c: this file is part of the SL toolchain.
+//
+// Copyright (C) 2009 The SL project.
+//
+// This program is free software; you can redistribute it and/or
+// modify it under the terms of the GNU General Public License
+// as published by the Free Software Foundation; either version 3
+// of the License, or (at your option) any later version.
+//
+// The complete GNU General Public Licence Notice can be found as the
+// `COPYING' file in the root directory.
+//
 
 #include <cstdint.h>
 #include <cstddef.h>
@@ -200,7 +213,7 @@ sl_def(sha_main_inner, void,
 }
 sl_enddef
 
-sl_def(buf_copy, void, 
+sl_def(buf_copy, void,
        sl_glparm(const uint32_t*restrict, src),
        sl_glparm(uint32_t*restrict, dst))
 {
@@ -223,14 +236,14 @@ sl_def(sha_main_outer, void,
 
   /* word extension: not easily made concurrent! */
   uint32_t w[80];
-  sl_create(,,,16,,,, buf_copy, 
-	    sl_glarg(const uint32_t*restrict, src, input), 
+  sl_create(,,,16,,,, buf_copy,
+	    sl_glarg(const uint32_t*restrict, src, input),
 	    sl_glarg(uint32_t*restrict, dst, w));
   sl_sync();
   for (i = 16; i < 80; ++i) {
     uint32_t x = w[i-3] ^ w[i-8] ^ w[i-14] ^ w[i-16];
     w[i] = x << 1 | x >> (32-1);
-  }   
+  }
 
   sl_create(,,,4,,,, sha_main_inner,
 	    sl_glarg(const uint32_t*restrict, wg, w),

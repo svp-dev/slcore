@@ -1,5 +1,5 @@
 //
-// climits.h: this file is part of the slc project.
+// climits.h: this file is part of the SL toolchain.
 //
 // Copyright (C) 2009 The SL project.
 //
@@ -11,10 +11,9 @@
 // The complete GNU General Public Licence Notice can be found as the
 // `COPYING' file in the root directory.
 //
-// $Id$
-//
-#ifndef __CLIMITS_H__
-# define __CLIMITS_H__
+
+#ifndef SLC_CLIMITS_H
+# define SLC_CLIMITS_H
 
 #ifdef __mt_freestanding__
 
@@ -90,4 +89,4 @@
 
 #endif
 
-#endif
+#endif // ! SLC_CLIMITS_H

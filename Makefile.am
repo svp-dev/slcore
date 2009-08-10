@@ -42,14 +42,13 @@ check-slt:
 if MAINTAINER_MODE
 
 find_sources = \
-	find $(srcdir)/tools $(srcdir)/lib \
+	find $(srcdir)/tools $(srcdir)/lib $(srcdir)/programs \
 	  -name '*.h' \
 	-or -name '*.c' \
-	-or -name '*.sl' \
-	-or -name '*.slh' \
 	-or -name '*.cpp' \
 	-or -name '*.cc' \
-	-or -name '*.hh'
+	-or -name '*.hh' | \
+	grep -v 'lib/src/malloc.c' 
 
 # Update copyright notice.
 rehead:

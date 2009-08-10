@@ -1,5 +1,5 @@
 //
-// cmalloc.slh: this file is part of the SL toolchain.
+// cmalloc.h: this file is part of the SL toolchain.
 //
 // Copyright (C) 2009 The SL project.
 //
@@ -11,10 +11,9 @@
 // The complete GNU General Public Licence Notice can be found as the
 // `COPYING' file in the root directory.
 //
-// $Id$
-//
-#ifndef __CMALLOC_H__
-# define __CMALLOC_H__
+
+#ifndef SLC_CMALLOC_H
+# define SLC_CMALLOC_H
 
 #include <cstddef.h>
 
@@ -38,4 +37,4 @@ extern void* realloc(void*, size_t);
 
 #endif
 
-#endif
+#endif // ! SLC_CMALLOC_H

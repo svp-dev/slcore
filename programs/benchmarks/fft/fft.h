@@ -1,5 +1,5 @@
 //
-// fft.h: this file is part of the slc project.
+// fft.h: this file is part of the SL toolchain.
 //
 // Copyright (C) 2009 The SL project.
 //
@@ -11,10 +11,9 @@
 // The complete GNU General Public Licence Notice can be found as the
 // `COPYING' file in the root directory.
 //
-// $Id$
-//
-#ifndef FFT_H
-# define FFT_H
+
+#ifndef SLC_PROGRAMS_BENCHMARKS_FFT_FFT_H
+# define SLC_PROGRAMS_BENCHMARKS_FFT_FFT_H
 
 #define FT double
 
@@ -45,4 +44,4 @@ sl_decl(FFT_Inv, void,
 #define MAKENAME(N, SZ) MAKENAME_(N, SZ)
 
 
-#endif
+#endif // ! SLC_PROGRAMS_BENCHMARKS_FFT_FFT_H

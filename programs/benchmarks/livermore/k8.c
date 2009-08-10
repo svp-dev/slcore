@@ -1,3 +1,18 @@
+//
+// k8.c: this file is part of the SL toolchain.
+//
+// Copyright (C) 2009 The SL project.
+//
+// This program is free software; you can redistribute it and/or
+// modify it under the terms of the GNU General Public License
+// as published by the Free Software Foundation; either version 3
+// of the License, or (at your option) any later version.
+//
+// The complete GNU General Public Licence Notice can be found as the
+// `COPYING' file in the root directory.
+//
+
+[[]]
 //---------------------------------
 //      LIVERMORE KERNEL 8
 //        ADI Integration
@@ -11,19 +26,19 @@
 //  for ( ky=1 ; ky<n ; ky++ )
 //  {
 //    du1[ky] = u1[nl1][ky+1][kx] - u1[nl1][ky-1][kx];
-//    
+//
 //    du2[ky] = u2[nl1][ky+1][kx] - u2[nl1][ky-1][kx];
-//    
+//
 //    du3[ky] = u3[nl1][ky+1][kx] - u3[nl1][ky-1][kx];
-//    
+//
 //    u1[nl2][ky][kx]=
 //     u1[nl1][ky][kx]+a11*du1[ky]+a12*du2[ky]+a13*du3[ky] + sig*
 //     (u1[nl1][ky][kx+1]-2.0*u1[nl1][ky][kx]+u1[nl1][ky][kx-1]);
-//               
+//
 //    u2[nl2][ky][kx]=
 //     u2[nl1][ky][kx]+a21*du1[ky]+a22*du2[ky]+a23*du3[ky] + sig*
 //     (u2[nl1][ky][kx+1]-2.0*u2[nl1][ky][kx]+u2[nl1][ky][kx-1]);
-//               
+//
 //     u3[nl2][ky][kx]=
 //      u3[nl1][ky][kx]+a31*du1[ky]+a32*du2[ky]+a33*du3[ky] + sig*
 //     (u3[nl1][ky][kx+1]-2.0*u3[nl1][ky][kx]+u3[nl1][ky][kx-1]);
@@ -52,36 +67,36 @@ sl_def(innerk8,void,
        sl_glfparm(double, la33))
 {
   sl_index(inner);
-	
+
   sl_getp(ldu1)[inner] = U1[0][inner+1][sl_getp(outer)] - U1[0][inner-1][sl_getp(outer)];
   sl_getp(ldu2)[inner] = U2[0][inner+1][sl_getp(outer)] - U2[0][inner-1][sl_getp(outer)];
   sl_getp(ldu3)[inner] = U3[0][inner+1][sl_getp(outer)] - U3[0][inner-1][sl_getp(outer)];
-  
+
   U1[1][inner][sl_getp(outer)] =
-    U1[0][inner][sl_getp(outer)] + 
-    sl_getp(la11) * sl_getp(ldu1)[inner] + 
-    sl_getp(la12) * sl_getp(ldu2)[inner] + 
-    sl_getp(la13) * sl_getp(ldu3)[inner] + 
-    sl_getp(lsig) * (U1[0][inner][sl_getp(outer)+1] - 
-		     2.0*U1[0][inner][sl_getp(outer)] + 
+    U1[0][inner][sl_getp(outer)] +
+    sl_getp(la11) * sl_getp(ldu1)[inner] +
+    sl_getp(la12) * sl_getp(ldu2)[inner] +
+    sl_getp(la13) * sl_getp(ldu3)[inner] +
+    sl_getp(lsig) * (U1[0][inner][sl_getp(outer)+1] -
+		     2.0*U1[0][inner][sl_getp(outer)] +
 		     U1[0][inner][sl_getp(outer)-1]);
-  
+
   U2[1][inner][sl_getp(outer)] =
-    U2[0][inner][sl_getp(outer)] + 
-    sl_getp(la21) * sl_getp(ldu1)[inner] + 
-    sl_getp(la22) * sl_getp(ldu2)[inner] + 
-    sl_getp(la23) * sl_getp(ldu3)[inner] + 
-    sl_getp(lsig) * (U2[0][inner][sl_getp(outer)+1] - 
-		     2.0*U2[0][inner][sl_getp(outer)] + 
+    U2[0][inner][sl_getp(outer)] +
+    sl_getp(la21) * sl_getp(ldu1)[inner] +
+    sl_getp(la22) * sl_getp(ldu2)[inner] +
+    sl_getp(la23) * sl_getp(ldu3)[inner] +
+    sl_getp(lsig) * (U2[0][inner][sl_getp(outer)+1] -
+		     2.0*U2[0][inner][sl_getp(outer)] +
 		     U2[0][inner][sl_getp(outer)-1]);
-  
+
   U3[1][inner][sl_getp(outer)] =
-    U3[0][inner][sl_getp(outer)] + 
-    sl_getp(la31) * sl_getp(ldu1)[inner] + 
-    sl_getp(la32) * sl_getp(ldu2)[inner] + 
-    sl_getp(la33) * sl_getp(ldu3)[inner] + 
-    sl_getp(lsig) * (U3[0][inner][sl_getp(outer)+1] - 
-		     2.0*U3[0][inner][sl_getp(outer)] + 
+    U3[0][inner][sl_getp(outer)] +
+    sl_getp(la31) * sl_getp(ldu1)[inner] +
+    sl_getp(la32) * sl_getp(ldu2)[inner] +
+    sl_getp(la33) * sl_getp(ldu3)[inner] +
+    sl_getp(lsig) * (U3[0][inner][sl_getp(outer)+1] -
+		     2.0*U3[0][inner][sl_getp(outer)] +
 		     U3[0][inner][sl_getp(outer)-1]);
 }
 sl_enddef

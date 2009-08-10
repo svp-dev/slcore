@@ -1,5 +1,5 @@
 //
-// cstdint.slh: this file is part of the slc project.
+// cstdint.h: this file is part of the SL toolchain.
 //
 // Copyright (C) 2009 The SL project.
 //
@@ -11,10 +11,9 @@
 // The complete GNU General Public Licence Notice can be found as the
 // `COPYING' file in the root directory.
 //
-// $Id$
-//
-#ifndef __CSTDINT_H__
-# define __CSTDINT_H__
+
+#ifndef SLC_CSTDINT_H
+# define SLC_CSTDINT_H
 
 #ifdef __mt_freestanding__
 
@@ -256,4 +255,4 @@ typedef unsigned long long int  uintmax_t;
 
 #endif
 
-#endif
+#endif // ! SLC_CSTDINT_H

@@ -1,3 +1,18 @@
+//
+// k10.c: this file is part of the SL toolchain.
+//
+// Copyright (C) 2009 The SL project.
+//
+// This program is free software; you can redistribute it and/or
+// modify it under the terms of the GNU General Public License
+// as published by the Free Software Foundation; either version 3
+// of the License, or (at your option) any later version.
+//
+// The complete GNU General Public Licence Notice can be found as the
+// `COPYING' file in the root directory.
+//
+
+[[]]
 //---------------------------------
 //      LIVERMORE KERNEL 10
 //     Difference Predictors
@@ -36,7 +51,7 @@ sl_def(innerk10, void,
 {
 	sl_index(i);
 	double ar, br, cr;
-	
+
 	ar        =      sl_getp(lcx)[i][ 4];
 	br        = ar - sl_getp(lpx)[i][ 4];
 	sl_getp(lpx)[i][ 4] = ar;
@@ -65,6 +80,6 @@ sl_def(kernel10,void)
   sl_create(,, 0, inner[KERNEL], 1, blocksize[KERNEL],, innerk10,
 	    sl_glarg(array2d restrict, llcx, Cx),
 	    sl_glarg(array2d restrict, llpx, Px));
-  sl_sync();	
+  sl_sync();
 }
 sl_enddef

@@ -1,5 +1,5 @@
 //
-// x_invbreak3.ut.c: this file is part of the slc project.
+// x_invbreak3.ut.c: this file is part of the SL toolchain.
 //
 // Copyright (C) 2009 The SL project.
 //
@@ -11,12 +11,10 @@
 // The complete GNU General Public Licence Notice can be found as the
 // `COPYING' file in the root directory.
 //
-// $Id$
-//
 
 #include <libutc.h>
 
-// XFAIL: C (not a thread function)
+[[]]// XFAIL: C (not a thread function)
 int foo(void)
 {
   ut_break(10);

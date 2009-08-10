@@ -1,3 +1,32 @@
+//
+// k4-alt.c: this file is part of the SL toolchain.
+//
+// Copyright (C) 2009 The SL project.
+//
+// This program is free software; you can redistribute it and/or
+// modify it under the terms of the GNU General Public License
+// as published by the Free Software Foundation; either version 3
+// of the License, or (at your option) any later version.
+//
+// The complete GNU General Public Licence Notice can be found as the
+// `COPYING' file in the root directory.
+//
+
+[[]]
+//
+// k4-alt.c: this file is part of the SL toolchain.
+//
+// Copyright (C) 2009 The SL project.
+//
+// This program is free software; you can redistribute it and/or
+// modify it under the terms of the GNU General Public License
+// as published by the Free Software Foundation; either version 3
+// of the License, or (at your option) any later version.
+//
+// The complete GNU General Public Licence Notice can be found as the
+// `COPYING' file in the root directory.
+//
+
 #include <svp/slr.h>
 #include <svp/perf.h>
 #include <svp/iomacros.h>
@@ -21,7 +50,7 @@ sl_enddef
 
 
 
-sl_def(ll4_outer, void, 
+sl_def(ll4_outer, void,
        sl_glparm(double*restrict, X),
        sl_glparm(double*restrict, Y),
        sl_glparm(unsigned long, N5))
@@ -63,7 +92,7 @@ sl_def(t_main, void)
 
   for (i = 0; i < L; ++i) {
     uint64_t c1 = get_cycles();
-    
+
     sl_create(,,6,N,m,,, ll4_outer,
 	      sl_glarg(double*restrict, gX, X),
 	      sl_glarg(double*restrict, gY, Y),
@@ -72,7 +101,7 @@ sl_def(t_main, void)
 
     counts[i] = get_cycles() - c1;
   }
-  for (i = 0; i < L; ++i) 
+  for (i = 0; i < L; ++i)
     printf("%u\n", counts[i]);
 }
 sl_enddef

@@ -1,5 +1,5 @@
 //
-// x_crnotstm.sl: this file is part of the slc project.
+// x_crnotstm.c: this file is part of the SL toolchain.
 //
 // Copyright (C) 2009 The SL project.
 //
@@ -11,12 +11,10 @@
 // The complete GNU General Public Licence Notice can be found as the
 // `COPYING' file in the root directory.
 //
-// $Id$
-//
 
 sl_def(foo, void) {} sl_enddef
 
-// XFAIL: *:C (create not statement)
+[[]]// XFAIL: *:C (create not statement)
 sl_def(t_main, void)
 {
   sl_family_t f;

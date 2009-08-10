@@ -1,5 +1,5 @@
 //
-// x_dupdecl2.sl: this file is part of the slc project.
+// x_dupdecl2.c: this file is part of the SL toolchain.
 //
 // Copyright (C) 2009 The SL project.
 //
@@ -10,8 +10,6 @@
 //
 // The complete GNU General Public Licence Notice can be found as the
 // `COPYING' file in the root directory.
-//
-// $Id$
 //
 
 sl_def(foo, void, sl_shparm(int, y), sl_glparm(int, x)) {} sl_enddef

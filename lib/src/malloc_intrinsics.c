@@ -11,8 +11,6 @@
 // The complete GNU General Public Licence Notice can be found as the
 // `COPYING' file in the root directory.
 //
-// $Id$
-//
 
 #include "svp_os.h"
 #include "malloc_intrinsics.h"

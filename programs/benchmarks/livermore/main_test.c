@@ -1,3 +1,17 @@
+//
+// main_test.c: this file is part of the SL toolchain.
+//
+// Copyright (C) 2009 The SL project.
+//
+// This program is free software; you can redistribute it and/or
+// modify it under the terms of the GNU General Public License
+// as published by the Free Software Foundation; either version 3
+// of the License, or (at your option) any later version.
+//
+// The complete GNU General Public Licence Notice can be found as the
+// `COPYING' file in the root directory.
+//
+
 #include <svp/iomacros.h>
 #include <svp/perf.h>
 #include <svp/slr.h>
@@ -16,7 +30,7 @@ sl_def(t_main, void)
   //cycle counter
   uint64_t cycles;
   uint64_t totalcycles = 0;
-  
+
   //set the required problem size
   // if the value is <=0 then use default PSIZE
   //(assumes and unspecified value is set to zero)
@@ -30,26 +44,26 @@ sl_def(t_main, void)
   if (slr_len(B))
     if (*slr_get(B) >= 0)
       blocksize[KERNEL] = *slr_get(B);
-  
+
   //number of loops
-  if (slr_len(L) && *slr_get(L) < MAX_LOOPS) 
+  if (slr_len(L) && *slr_get(L) < MAX_LOOPS)
     loops = *slr_get(L);
 
   puts("--------------------------\n");
   puts("   LIVERMORE LOOPS:  \n");
-  puts("   *** ACTUALKERNEL *** \n\n"); 
+  puts("   *** ACTUALKERNEL *** \n\n");
   puts("Inner Loops: "); putu(inner[KERNEL]);
   puts("\nOuter Loops: ");
   putu(loops);
   puts("\nBlock Size: ");
   putu(blocksize[KERNEL]);
   puts("\nComputing...\n");
-  
-  //this main loop can be controlled with the array 
+
+  //this main loop can be controlled with the array
   //'outer' above to repeat a particular benchmark
   //several times, perhaps in order to form
   //a more reliable average.
-  
+
   //now spawn the kernel
   for (i = 0; i < loops; ++i)
     {
@@ -77,4 +91,3 @@ sl_def(t_main, void)
   putf(avg, 7); putc('\n');
 }
 sl_enddef
-

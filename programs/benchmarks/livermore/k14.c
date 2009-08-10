@@ -1,3 +1,18 @@
+//
+// k14.c: this file is part of the SL toolchain.
+//
+// Copyright (C) 2009 The SL project.
+//
+// This program is free software; you can redistribute it and/or
+// modify it under the terms of the GNU General Public License
+// as published by the Free Software Foundation; either version 3
+// of the License, or (at your option) any later version.
+//
+// The complete GNU General Public Licence Notice can be found as the
+// `COPYING' file in the root directory.
+//
+
+[[]]
 //---------------------------------
 //      LIVERMORE KERNEL 14
 //  1-D PIC (Particle In Cell)
@@ -45,7 +60,7 @@ sl_def(innerphase1, void,
        sl_glparm(double*restrict, grdl))
 {
   sl_index(k);
-  
+
   sl_getp(vxl)[k] = 0.0;
   sl_getp(xxl)[k] = 0.0;
   sl_getp(ixl)[k] = (long) sl_getp(grdl)[k];
@@ -67,7 +82,7 @@ sl_def(innerphase2, void,
 {
 	sl_index(k);
 
-	sl_getp(vxl)[k] = sl_getp(vxl)[k] + sl_getp(ex1l)[k] + 
+	sl_getp(vxl)[k] = sl_getp(vxl)[k] + sl_getp(ex1l)[k] +
 	  ( sl_getp(xxl)[k] - sl_getp(xil)[k] ) * sl_getp(dex1l)[k];
 	sl_getp(xxl)[k] = sl_getp(xxl)[k] + sl_getp(vxl)[k]  + sl_getp(flxl);
 	sl_getp(irl)[k] = sl_getp(xxl)[k];
@@ -83,7 +98,7 @@ sl_def(innerphase3, void,
        sl_glparm(double*restrict, rhl))
 {
   sl_index(k);
-  
+
   sl_getp(rhl)[ sl_getp(irl)[k]-1 ] += 1.0 - sl_getp(rxl)[k];
   sl_getp(rhl)[ sl_getp(irl)[k]   ] += sl_getp(rxl)[k];
 }
@@ -105,7 +120,7 @@ sl_def(kernel14, void)
 	    sl_glarg(double*restrict, dex1ll, Dex1),
 	    sl_glarg(double*restrict, grdll, Grd));
   sl_sync();
-  
+
   sl_create(,, 0, inner[KERNEL], 1, blocksize[KERNEL],, innerphase2,
 	    sl_glarg(double*restrict, vxlll, V),
 	    sl_glarg(double*restrict, ex1lll, Y),
@@ -116,7 +131,7 @@ sl_def(kernel14, void)
 	    sl_glarg(long*restrict, irll, Ir),
 	    sl_glarg(double*restrict, rxll, Rx));
   sl_sync();
-  
+
   sl_create(,, 0, inner[KERNEL], 1, blocksize[KERNEL],, innerphase3,
 	    sl_glarg(double*restrict, rxlll, Rx),
 	    sl_glarg(long*, irlll, Ir),

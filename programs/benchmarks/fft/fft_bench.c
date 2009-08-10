@@ -1,5 +1,5 @@
 //
-// fft_bench.c: this file is part of the slc project.
+// fft_bench.c: this file is part of the SL toolchain.
 //
 // Copyright (C) 2009 The SL project.
 //
@@ -10,8 +10,6 @@
 //
 // The complete GNU General Public Licence Notice can be found as the
 // `COPYING' file in the root directory.
-//
-// $Id$
 //
 
 #include <svp/assert.h>
@@ -37,7 +35,7 @@ sl_def(t_main, void)
   unsigned N = 1 << M;
   unsigned i;
 
-  for (i = 0; i < L; ++i) {  
+  for (i = 0; i < L; ++i) {
     sl_create(,PLACE_LOCAL,1,M+1,1,,, FFT_1,
 	      sl_glarg(cpx_t*restrict, gX, X),
 	      sl_glarg(unsigned long, gN, N/2),

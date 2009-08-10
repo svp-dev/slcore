@@ -1,5 +1,5 @@
 //
-// x_wrbv.ut.c: this file is part of the slc project.
+// x_wrbv.ut.c: this file is part of the SL toolchain.
 //
 // Copyright (C) 2009 The SL project.
 //
@@ -11,8 +11,6 @@
 // The complete GNU General Public Licence Notice can be found as the
 // `COPYING' file in the root directory.
 //
-// $Id$
-//
 
 #include <libutc.h>
 
@@ -22,7 +20,7 @@ ut_def(foo, int)
 }
 ut_enddef
 
-// XFAIL: C (break is immutable)
+[[]]// XFAIL: C (break is immutable)
 ut_def(t_main, void)
 {
   ut_create(f,,,,,, int, foo);

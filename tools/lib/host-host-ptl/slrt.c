@@ -1,5 +1,5 @@
 //
-// slrt.c: this file is part of the slc project.
+// slrt.c: this file is part of the SL toolchain.
 //
 // Copyright (C) 2009 The SL project.
 //
@@ -10,8 +10,6 @@
 //
 // The complete GNU General Public Licence Notice can be found as the
 // `COPYING' file in the root directory.
-//
-// $Id$
 //
 
 #include "../host-host-seqc/load.c"
@@ -24,7 +22,7 @@ const char *__datatag__ = "slr_datatag:ptl-host-host-ptl:";
 
 int main(int argc, const char **argv) {
   load(argv[0], argv[1], &__slr_base);
-  load(argv[0], argv[2], &__fibre_base); 
+  load(argv[0], argv[2], &__fibre_base);
   lib_main();
   return 0;
 }

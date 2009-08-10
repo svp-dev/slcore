@@ -1,5 +1,5 @@
 //
-// compiler.h: this file is part of the slc project.
+// compiler.h: this file is part of the SL toolchain.
 //
 // Copyright (C) 2009 The SL project.
 //
@@ -11,10 +11,9 @@
 // The complete GNU General Public Licence Notice can be found as the
 // `COPYING' file in the root directory.
 //
-// $Id$
-//
-#ifndef __SVP_COMPILER_H__
-# define __SVP_COMPILER_H__
+
+#ifndef SLC_SVP_COMPILER_H
+# define SLC_SVP_COMPILER_H
 
 #ifndef __GNUC__
 # warn __GNUC__ is not defined. Some macros here may not work.
@@ -43,4 +42,4 @@
 # define nop() __asm__ __volatile__("nop");
 #endif
 
-#endif
+#endif // ! SLC_SVP_COMPILER_H

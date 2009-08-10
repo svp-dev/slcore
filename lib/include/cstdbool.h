@@ -1,5 +1,5 @@
 //
-// cstdbool.slh: this file is part of the slc project.
+// cstdbool.h: this file is part of the SL toolchain.
 //
 // Copyright (C) 2009 The SL project.
 //
@@ -11,10 +11,9 @@
 // The complete GNU General Public Licence Notice can be found as the
 // `COPYING' file in the root directory.
 //
-// $Id$
-//
-#ifndef __CSTDBOOL_H__
-# define __CSTDBOOL_H__
+
+#ifndef SLC_CSTDBOOL_H
+# define SLC_CSTDBOOL_H
 
 #ifdef __mt_freestanding__
 
@@ -32,4 +31,4 @@
 
 #endif
 
-#endif
+#endif // ! SLC_CSTDBOOL_H

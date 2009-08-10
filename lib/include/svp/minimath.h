@@ -1,6 +1,5 @@
-sl_begin_header([[SLC_SVP_MINIMATH_SLH]])m4_dnl -*- m4 -*-
 //
-// minimath.slh: this file is part of the slc project.
+// minimath.h: this file is part of the SL toolchain.
 //
 // Copyright (C) 2009 The SL project.
 //
@@ -12,8 +11,9 @@ sl_begin_header([[SLC_SVP_MINIMATH_SLH]])m4_dnl -*- m4 -*-
 // The complete GNU General Public Licence Notice can be found as the
 // `COPYING' file in the root directory.
 //
-// $Id$
-//
+
+#ifndef SLC_SVP_MINIMATH_H
+# define SLC_SVP_MINIMATH_H
 
 #ifdef __mt_freestanding__
 
@@ -65,4 +65,4 @@ extern double fmax (double __x, double __y) ; extern double __fmax (double __x, 
 #include <math.h>
 #endif
 
-sl_end_header([[SLC_SVP_MINIMATH_SLH]])
+#endif // ! SLC_SVP_MINIMATH_H

@@ -1,5 +1,5 @@
 //
-// fft_test.c: this file is part of the slc project.
+// fft_test.c: this file is part of the SL toolchain.
 //
 // Copyright (C) 2009 The SL project.
 //
@@ -10,8 +10,6 @@
 //
 // The complete GNU General Public Licence Notice can be found as the
 // `COPYING' file in the root directory.
-//
-// $Id$
 //
 
 #include <svp/iomacros.h>
@@ -97,9 +95,9 @@ sl_def(t_main, void)
   int br = (slr_len(BR) > 0);
 
   p1 = get_cycles();
-  sl_create(,,,,,,, FFT, 
-	    sl_glarg(cpx_t*restrict, gX, Y), 
-	    sl_glarg(unsigned long, gM, M), 
+  sl_create(,,,,,,, FFT,
+	    sl_glarg(cpx_t*restrict, gX, Y),
+	    sl_glarg(unsigned long, gM, M),
 	    sl_glarg(long, gBR, br));
   sl_sync();
   p2 = get_cycles();
@@ -109,8 +107,8 @@ sl_def(t_main, void)
     sl_create(,,,N,,,, copy_y_z);
     sl_sync();
 
-    sl_create(,,,,,,, FFT_Inv, 
-	      sl_glarg(cpx_t*restrict, gZ, Z), 
+    sl_create(,,,,,,, FFT_Inv,
+	      sl_glarg(cpx_t*restrict, gZ, Z),
 	      sl_glarg(unsigned long, gM2, sl_geta(gM)));
     sl_sync();
 

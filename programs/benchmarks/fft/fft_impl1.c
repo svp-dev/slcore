@@ -1,5 +1,5 @@
 //
-// fft_impl1.c: this file is part of the slc project.
+// fft_impl1.c: this file is part of the SL toolchain.
 //
 // Copyright (C) 2009 The SL project.
 //
@@ -10,8 +10,6 @@
 //
 // The complete GNU General Public Licence Notice can be found as the
 // `COPYING' file in the root directory.
-//
-// $Id$
 //
 
 #define HEADERNAME MAKENAME(1, TABLE_SIZE)
@@ -65,4 +63,3 @@ sl_def(FFT_1, void,
   sl_setp(token, t);
 }
 sl_enddef
-
