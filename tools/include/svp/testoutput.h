@@ -45,7 +45,7 @@
 #  define output_int(N, Stream) ((((Stream) == 2)? std::cerr : std::cout) << std::dec << (long)(N))
 #  define output_uint(N, Stream) ((((Stream) == 2)? std::cerr : std::cout) << std::dec << (unsigned long)(N))
 #  define output_string(S, Stream) ((((Stream) == 2)? std::cerr : std::cout) << (const char*)(S))
-#  define output_bytes(S, L, Stream) ((((Stream) == 2)? std::cerr : std::cout).write((const char*)(S), (L)))
+#  define output_bytes(S, L, Stream) ((((Stream) == 2)? std::cerr : std::cout).write((const char*)(void*)(S), (L)))
 # else
 #  include <stdio.h>
 #  define output_float(F, Stream, Precision) fprintf((Stream) == 2 ? stderr : stdout, "%.*le", (Precision), (double)(F))

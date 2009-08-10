@@ -1,5 +1,12 @@
 2009-08-05  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	Minor fix for C++ implementation.
+
+	* tools/include/svp/testoutput.h: Properly cast in C++ version of
+	`output_bytes'.
+
+2009-08-05  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	C-ize sources in 'lib/'. Minor interface updates.
 	
 	* lib/src/div.sl,
