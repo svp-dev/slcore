@@ -1,5 +1,16 @@
 2009-08-07  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	Remove support for compiling `.sl' files.
+
+	* tools/bin/slt.in,
+	* tools/bin/slt-many.in,
+	* tools/bin/slc.in: Simplify.
+	
+	* tools/tests/mkalltests.sh,
+	* lib/tests/mkalltests.sh: Use `.c' files only.
+	
+2009-08-07  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	Use new header names more.
 	
 	* tools/include/svp/fibre.h,

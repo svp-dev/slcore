@@ -26,7 +26,7 @@ bugreports=@bugreports@
 slt=${SLT:-@slt_helper@}
 
 if test $# = 0; then
-   tests=$(find . -name '*.sl'|grep -v '/_'|sort)
+   tests=$(find . -name '*.c'|grep -v '/_'|sort)
 elif test "$1" = "-h" -o "$1" = "--help"; then
    cat <<EOF
 SL test helper.
@@ -37,9 +37,9 @@ recursively on an list of tests or directories.
 When run with no arguments, \`$basename' searches the current directory
 and all subdirectories for test programs and runs \`slt' on them.
 
-Test programs must have filenames with the extension .sl to be
+Test programs must have filenames with the extension .c to be
 picked up by this script automatically. When specified explicitely,
-test programs can have extension .sl, .S or .s. File or directory
+test programs can have extension .c, .S or .s. File or directory
 names starting with an underscore (_) are ignored.
 
 If arguments are specified, the behavior depends on the type of each
@@ -61,7 +61,7 @@ Examples:
 
   KEEP=1 $basename tests/0_minimal/0_trivial
 
-  $basename tests/2*/0*/helloworld.sl
+  $basename tests/2*/0*/helloworld.c
 
 Usage: $0 [TEST]... [DIR]...
 
@@ -102,7 +102,7 @@ else
   tests=""
   for arg in "$@"; do
     if test -d "$arg"; then
-      found=$(find $arg -name '*.sl' -or -name '*.[sS]'|grep -v '/_'|sort)
+      found=$(find $arg -name '*.c' -or -name '*.[sS]'|grep -v '/_'|sort)
       for f in $found; do
 	  if test -r "$f"; then
 	      tests="$tests $f"

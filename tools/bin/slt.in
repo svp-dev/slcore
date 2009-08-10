@@ -146,7 +146,7 @@ Output comparison:
 
 Temporary files:
   During testing a number of intermediate files are generated. If the
-  SOURCE file is named test.sl, the following files are generated:
+  SOURCE file is named test.c, the following files are generated:
 
     IMPL/test.log          Test log
 
@@ -170,15 +170,15 @@ Temporary files:
 
 Examples:
 
-  for i in *.sl; do slt \$i seqc ptl utc0; done
+  for i in *.c; do slt \$i seqc ptl utc0; done
 
-  10threads.sl                                    LR=  LRD  LX- :(
-  answer.sl                                       LR=  LRD  LX- :(
-  empty.sl                                        LR=  LRD  LRD \o/
-  fibonacci.sl                                 LRR=  LRRD XC--- :(
-  helloworld.sl                                   LR=  LRD  LRX :(
-  quicksort.sl                                    LX-  LX- XP-- :(
-  roman.sl                                        LR=  LRD  LX- :(
+  10threads.c                                    LR=  LRD  LX- :(
+  answer.c                                       LR=  LRD  LX- :(
+  empty.c                                        LR=  LRD  LRD \o/
+  fibonacci.c                                 LRR=  LRRD XC--- :(
+  helloworld.c                                   LR=  LRD  LRX :(
+  quicksort.c                                    LX-  LX- XP-- :(
+  roman.c                                        LR=  LRD  LX- :(
 
 
 Usage: $0 [SOURCE] [IMPLEMENTATION]...
@@ -264,7 +264,7 @@ Implementation-specific extra compilation and execution arguments:
 
   For example:
 
-  # $basename test.sl seqc ppp:-O3 ppp::-n~1
+  # $basename test.c seqc ppp:-O3 ppp::-n~1
 
   Indicates that three implementations should be tested; the second
   with -O3 added to the compilation command line, the third with
@@ -358,7 +358,6 @@ fi
 testbase=${1##*/}
 case $testbase in
   *.c)      testname=${testbase%.c};;
-  *.sl)     testname=${testbase%.sl};;
   *.S)      testname=${testbase%.S};;
   *.s)      testname=${testbase%.s};;
   *)
