@@ -17,7 +17,7 @@ TESTS = fft_test1.c fft_test2.c
 
 include $(top_srcdir)/tests.mk
 
-EXTRA_DIST = $(DEMOS) fft_bench.c fft_test.c fft_impl1.c fft_impl2.c fft.ch fft_extra.c
+EXTRA_DIST = $(DEMOS) fft_bench.c fft_test.c fft_impl1.c fft_impl2.c fft.h fft_extra.c
 
 if ENABLE_DEMOS
 noinst_DATA = $(DEMOS:.c=.x)

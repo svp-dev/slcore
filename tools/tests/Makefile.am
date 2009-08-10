@@ -25,3 +25,4 @@ endif
 
 include $(top_srcdir)/tests.mk
 
+EXTRA_DIST += 0_slr/fibre.c.d

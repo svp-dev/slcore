@@ -1,5 +1,13 @@
 2009-08-10  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	Minor packaging fixes. `make distcheck' passes.
+
+	* programs/benchmarks/fft/Makefile.am: Typo: `fft.h'.
+	
+	* tools/tests/Makefile.am: Distribute `0_slr/fibre.c.d'.
+
+2009-08-10  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	C-ify the Livermore loops code.
 
 	* programs/benchmarks/livermore/k1.sl,
