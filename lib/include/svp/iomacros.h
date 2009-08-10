@@ -17,7 +17,6 @@
 # define __SVP_IOMACROS_H__
 
 #include <svp/io.h>
-#include <cstddef.h>
 
 /*
  * The following macro definitions encapsulate the corresponding

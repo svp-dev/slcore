@@ -3,7 +3,7 @@
 
 #ifdef __mt_freestanding__
 
-#include <lib/compiler.h>
+#include <svp/compiler.h>
 
 # if defined(__alpha__) || defined(__mtalpha__)
 #  define output_float(F, Stream, Precision) __asm__ __volatile("printf %0, %1" : : "f"(F), \

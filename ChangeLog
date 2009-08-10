@@ -1,3 +1,15 @@
+2009-08-07  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
+	Fix some minor bugs.
+
+	* tools/include/svp/testoutput.h: `compiler.h' is found in `svp/',
+	not `lib/'.
+	
+	* lib/include/svp/iomacros.h: Move include of `cstddef.h' for
+	`size_t' to...	
+	* lib/include/svp/io.h: ... here, because it is used to declare
+	`svp_io_write'.
+
 2009-08-05  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
 	Minor fix for C++ implementation.
