@@ -1,5 +1,16 @@
 2009-08-10  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	C-ify the SHA code.
+	
+	* programs/benchmarks/sha/sha1.sl: Rename to...
+	
+	* programs/benchmarks/sha/sha1.c: ... here. Use CPP syntax where
+	appropriate.
+
+	* programs/benchmarks/sha/Makefile.am: Update accordingly.
+
+2009-08-10  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	C-ify the quicksort code.
 	
 	* programs/benchmarks/quicksort/am-quicksort.c, 
