@@ -1,5 +1,5 @@
 //
-// div.slh: this file is part of the slc project.
+// div.h: this file is part of the SL toolchain.
 //
 // Copyright (C) 2009 The SL project.
 //
@@ -11,10 +11,9 @@
 // The complete GNU General Public Licence Notice can be found as the
 // `COPYING' file in the root directory.
 //
-// $Id$
-//
-#ifndef __SVP_DIV_H__
-# define __SVP_DIV_H__
+
+#ifndef SLC_SVP_DIV_H
+# define SLC_SVP_DIV_H
 
 #include <cstdint.h>
 
@@ -109,4 +108,4 @@ sl_decl(__divmodqs, void, sl_shparm(int64_t, x), sl_shparm(int64_t, y));
 
 #endif
 
-#endif
+#endif // ! SLC_SVP_DIV_H

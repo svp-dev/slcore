@@ -1,15 +1,16 @@
-//---------------------------------
-// Livemore Loops -- SLC (uTC)
-// M.A.Hicks, CSA Group, UvA
-// Implementation based of various
-// reference implementations
-// including the original FORTRAN
-// but mostly from
-// Roy Longbottom, 1996.
-//---------------------------------
-//      LIVERMORE KERNEL 8
-//        ADI Integration
-//---------------------------------
+//
+// livermore8.c: this file is part of the SL toolchain.
+//
+// Copyright (C) 2009 The SL project.
+//
+// This program is free software; you can redistribute it and/or
+// modify it under the terms of the GNU General Public License
+// as published by the Free Software Foundation; either version 3
+// of the License, or (at your option) any later version.
+//
+// The complete GNU General Public Licence Notice can be found as the
+// `COPYING' file in the root directory.
+//
 
 double du1[51],du2[51],du3[51];
 double a11, a12,a13,a21,a22,a23,a31,a32,a33, sig;
@@ -32,7 +33,7 @@ sl_def(innerk8,void,
         sl_glfparm(double, la33))
 {
 	sl_index(inner);
-	
+
 	sl_getp(ldu1)[inner] = u1[0][inner+1][sl_getp(outer)] - u1[0][inner-1][sl_getp(outer)];
 	sl_getp(ldu2)[inner] = u2[0][inner+1][sl_getp(outer)] - u2[0][inner-1][sl_getp(outer)];
 	sl_getp(ldu3)[inner] = u3[0][inner+1][sl_getp(outer)] - u3[0][inner-1][sl_getp(outer)];
@@ -50,7 +51,7 @@ sl_def(innerk8,void,
 		(u3[0][inner][sl_getp(outer)+1]-2.0*u3[0][inner][sl_getp(outer)]+u3[0][inner][sl_getp(outer)-1]);
 }
 sl_enddef
-	
+
 sl_def(outerk8,void,
        sl_glparm(double*, lldu1),
        sl_glparm(double*, lldu2),
@@ -68,7 +69,7 @@ sl_def(outerk8,void,
 {
 	sl_index(iteration);
 
-	
+
 	sl_create(,, 1,10,1,,,innerk8,
 		sl_glarg(unsigned int, oouter,iteration),
 		sl_glarg(double*, ldu1,sl_getp(lldu1)),

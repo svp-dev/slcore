@@ -1,5 +1,5 @@
 //
-// io.slh: this file is part of the slc project.
+// io.h: this file is part of the SL toolchain.
 //
 // Copyright (C) 2009 The SL project.
 //
@@ -11,10 +11,9 @@
 // The complete GNU General Public Licence Notice can be found as the
 // `COPYING' file in the root directory.
 //
-// $Id$
-//
-#ifndef __SVP_IO_H__
-# define __SVP_IO_H__
+
+#ifndef SLC_SVP_IO_H
+# define SLC_SVP_IO_H
 
 #include <svp/argslot.h>
 #include <cstddef.h>
@@ -76,4 +75,4 @@ sl_decl(svp_io_printf, void,
 	sl_glparm(const unsigned char*, gsz),
 	sl_glparm(svp_arg_slot*, gdata));
 
-#endif
+#endif // ! SLC_SVP_IO_H

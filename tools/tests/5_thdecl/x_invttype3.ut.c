@@ -1,5 +1,5 @@
 //
-// x_invttype3.ut.c: this file is part of the slc project.
+// x_invttype3.ut.c: this file is part of the SL toolchain.
 //
 // Copyright (C) 2009 The SL project.
 //
@@ -11,12 +11,10 @@
 // The complete GNU General Public Licence Notice can be found as the
 // `COPYING' file in the root directory.
 //
-// $Id$
-//
 
 #include <libutc.h>
 
 ut_decl(foo, int, ut_shparm(int, a), ut_glparm(int, b));
 
-// XFAIL: C (mismatched number of parameters)
+[[]]// XFAIL: C (mismatched number of parameters)
 ut_decl((*foop), int, ut_shparm(int, a), ut_glparm(int, b), ut_glparm(int, c)) = &foo;

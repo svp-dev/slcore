@@ -1,3 +1,18 @@
+//
+// k9.c: this file is part of the SL toolchain.
+//
+// Copyright (C) 2009 The SL project.
+//
+// This program is free software; you can redistribute it and/or
+// modify it under the terms of the GNU General Public License
+// as published by the Free Software Foundation; either version 3
+// of the License, or (at your option) any later version.
+//
+// The complete GNU General Public Licence Notice can be found as the
+// `COPYING' file in the root directory.
+//
+
+[[]]
 //---------------------------------
 //      LIVERMORE KERNEL 9
 //     Integrate Predictors
@@ -27,16 +42,16 @@ sl_def(innerk9, void,
       sl_glfparm(double, lc0))
 {
 	sl_index(i);
-	
-	sl_getp(lpx)[i][0] = 
-	  sl_getp(ldm28) * sl_getp(lpx)[i][12] + 
-	  sl_getp(ldm27) * sl_getp(lpx)[i][11] + 
+
+	sl_getp(lpx)[i][0] =
+	  sl_getp(ldm28) * sl_getp(lpx)[i][12] +
+	  sl_getp(ldm27) * sl_getp(lpx)[i][11] +
 	  sl_getp(ldm26) * sl_getp(lpx)[i][10] +
-	  sl_getp(ldm25) * sl_getp(lpx)[i][ 9] + 
-	  sl_getp(ldm24) * sl_getp(lpx)[i][ 8] + 
+	  sl_getp(ldm25) * sl_getp(lpx)[i][ 9] +
+	  sl_getp(ldm24) * sl_getp(lpx)[i][ 8] +
 	  sl_getp(ldm23) * sl_getp(lpx)[i][ 7] +
-	  sl_getp(ldm22) * sl_getp(lpx)[i][ 6] + 
-	  sl_getp(lc0) * ( sl_getp(lpx)[i][ 4] + 
+	  sl_getp(ldm22) * sl_getp(lpx)[i][ 6] +
+	  sl_getp(lc0) * ( sl_getp(lpx)[i][ 4] +
 			   sl_getp(lpx)[i][ 5]) +
 	  sl_getp(lpx)[i][ 2];
 }

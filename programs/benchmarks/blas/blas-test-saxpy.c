@@ -1,5 +1,5 @@
 //
-// blas-test-saxpy.sl: this file is part of the slc project.
+// blas-test-saxpy.c: this file is part of the SL toolchain.
 //
 // Copyright (C) 2009 The SL project.
 //
@@ -11,10 +11,6 @@
 // The complete GNU General Public Licence Notice can be found as the
 // `COPYING' file in the root directory.
 //
-// $Id$
-//
-
-// compile with slc blas-test-saxpy.sl blas/saxpy.sl
 
 #include <svp/perf.h>
 #include <svp/iomacros.h>
@@ -36,7 +32,7 @@ sl_decl(saxpy, void,
 	sl_glparm(long, incy));
 
 // SLT_RUN: N=1000
-// XIGNORE: *:D
+[[]]// XIGNORE: *:D
 
 sl_def(t_main, void)
 {

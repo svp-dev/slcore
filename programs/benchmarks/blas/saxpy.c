@@ -1,5 +1,5 @@
 //
-// saxpy.sl: this file is part of the slc project.
+// saxpy.c: this file is part of the SL toolchain.
 //
 // Copyright (C) 2009 The SL project.
 //
@@ -10,8 +10,6 @@
 //
 // The complete GNU General Public Licence Notice can be found as the
 // `COPYING' file in the root directory.
-//
-// $Id$
 //
 
 #define FLOAT float

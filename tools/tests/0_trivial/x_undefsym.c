@@ -1,5 +1,5 @@
 //
-// x_undefsym.sl: this file is part of the slc project.
+// x_undefsym.c: this file is part of the SL toolchain.
 //
 // Copyright (C) 2009 The SL project.
 //
@@ -11,12 +11,10 @@
 // The complete GNU General Public Licence Notice can be found as the
 // `COPYING' file in the root directory.
 //
-// $Id$
-//
 
 extern int __do_not_exist;
 
-// XFAIL: *:L
+[[]]// XFAIL: *:L
 sl_def(t_main, void)
 {
   __do_not_exist = 1;

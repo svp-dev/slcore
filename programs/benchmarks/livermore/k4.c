@@ -1,3 +1,18 @@
+//
+// k4.c: this file is part of the SL toolchain.
+//
+// Copyright (C) 2009 The SL project.
+//
+// This program is free software; you can redistribute it and/or
+// modify it under the terms of the GNU General Public License
+// as published by the Free Software Foundation; either version 3
+// of the License, or (at your option) any later version.
+//
+// The complete GNU General Public Licence Notice can be found as the
+// `COPYING' file in the root directory.
+//
+
+[[]]
 //---------------------------------
 //      LIVERMORE KERNEL 4
 //     Banded Linear Equations
@@ -43,15 +58,15 @@ sl_def(outerk4, void,
 {
   sl_index(i);
   unsigned int counter = i - 6;
-  
-	
+
+
   //check that previous loop iteration has finished
   //because innerk4 reads previous result from xl[]
   //	int temp = sl_getp(writelock);
 
   //loop uses an internal stride of 5 by multiplying a 1 stride counter
   //this means the range of the loop must be divided by 5
-	
+
   sl_create(,, 0, inner[KERNEL] / 5, 1, SHARED_BLOCK,, innerk4,
 	    sl_shfarg(double, ttotal, sl_getp(xl)[i-1]),
 	    sl_glarg(double*restrict, xxl, sl_getp(xl)),
@@ -81,16 +96,16 @@ sl_def(kernel4, void)
 {
 	// outer loop as sequential loop
 	unsigned int counter;
-	
+
 	for(counter=6; counter<inner[KERNEL];counter+=MSTEP){
-		
+
 		sl_create(,, 0,inner[KERNEL],1,blocksize[KERNEL],,innerk4,
 			sl_shfarg(double, ttotal, X[counter-1]),
 			sl_glarg(double*restrict,xxl, X),
 			sl_glarg(double*restrict, yyl, Y),
 			sl_glarg(unsigned int, llw,(counter-6)));
 		sl_sync();
-		
+
 		X[counter-1] = Y[4] * sl_geta(ttotal);
 	}
 }

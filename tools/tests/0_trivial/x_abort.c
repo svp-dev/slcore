@@ -1,5 +1,5 @@
 //
-// x_abort.sl: this file is part of the slc project.
+// x_abort.c: this file is part of the SL toolchain.
 //
 // Copyright (C) 2009 The SL project.
 //
@@ -11,12 +11,11 @@
 // The complete GNU General Public Licence Notice can be found as the
 // `COPYING' file in the root directory.
 //
-// $Id$
-//
 
 #include <svp/abort.h>
 
-// XFAIL: *:R
+[[]]// XFAIL: *:R
+
 sl_def(t_main, void)
 {
   svp_abort();

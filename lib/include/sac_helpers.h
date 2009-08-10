@@ -1,5 +1,5 @@
 //
-// sac_helpers.slh: this file is part of the SL toolchain.
+// sac_helpers.h: this file is part of the SL toolchain.
 //
 // Copyright (C) 2009 The SL project.
 //
@@ -11,10 +11,9 @@
 // The complete GNU General Public Licence Notice can be found as the
 // `COPYING' file in the root directory.
 //
-// $Id$
-//
-#ifndef __SAC_HELPERS_H__
-# define __SAC_HELPERS_H__
+
+#ifndef SLC_SAC_HELPERS_H
+# define SLC_SAC_HELPERS_H
 
 #include <cstddef.h>
 #include <cmalloc.h>
@@ -42,4 +41,4 @@ m4_define([[strncpy]],[[m4_dnl
 m4_warning([[using strncpy as in C is discouraged. Use sl_funcall(... [[strncpy]] ...) instead.]])m4_dnl
 sl_funcall(, [[ptr]], [[strncpy]], sl_farg(char*, [[$1]]), sl_farg(const char*,[[$2]]), sl_farg(size_t, [[$3]]))]])
 
-#endif
+#endif // ! SLC_SAC_HELPERS_H

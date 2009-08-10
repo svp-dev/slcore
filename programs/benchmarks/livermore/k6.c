@@ -1,3 +1,18 @@
+//
+// k6.c: this file is part of the SL toolchain.
+//
+// Copyright (C) 2009 The SL project.
+//
+// This program is free software; you can redistribute it and/or
+// modify it under the terms of the GNU General Public License
+// as published by the Free Software Foundation; either version 3
+// of the License, or (at your option) any later version.
+//
+// The complete GNU General Public Licence Notice can be found as the
+// `COPYING' file in the root directory.
+//
+
+[[]]
 //---------------------------------
 //      LIVERMORE KERNEL 6
 //         general linear
@@ -17,12 +32,12 @@
 
 // muTC/SL implementation courtesy of M.A.Hicks
 
-// NB on Implementation 
+// NB on Implementation
 // Access to array b[][]
 // subscripts are reversed so that
 // a pointer (b[]) can be passed to
 // innerk6. This avoids a lot of extra
-// pointer arithmetic in each leaf thread 
+// pointer arithmetic in each leaf thread
 
 sl_def(innerk6, void,
        sl_shfparm(double, total),
@@ -31,11 +46,11 @@ sl_def(innerk6, void,
        sl_glparm(int, outer))
 {
   sl_index(i);
-  
+
   double temp = sl_getp(total) + (sl_getp(bl)[i] * sl_getp(wl)[(sl_getp(outer)-i)-1]);
-  
+
   sl_setp(total,temp);
-  
+
   //if this is the last thread, write back the value!
   //doing this here exploits the ability of the outer sync
   //to ensure this write has completed
@@ -49,9 +64,9 @@ sl_def(outerk6,void,
        sl_glparm(double*restrict, wwl),
        sl_glparm(array2d, bbl))
 {
-  sl_index(i);	
+  sl_index(i);
   int temp;
-  
+
   //creation here needs to be sequentialised
   temp = sl_getp(syncher);
   sl_create(,, 0, i, 1, SHARED_BLOCK,, innerk6,

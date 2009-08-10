@@ -1,5 +1,5 @@
 //
-// iomacros.slh: this file is part of the slc project.
+// iomacros.h: this file is part of the SL toolchain.
 //
 // Copyright (C) 2009 The SL project.
 //
@@ -11,10 +11,9 @@
 // The complete GNU General Public Licence Notice can be found as the
 // `COPYING' file in the root directory.
 //
-// $Id$
-//
-#ifndef __SVP_IOMACROS_H__
-# define __SVP_IOMACROS_H__
+
+#ifndef SLC_SVP_IOMACROS_H
+# define SLC_SVP_IOMACROS_H
 
 #include <svp/io.h>
 
@@ -81,4 +80,4 @@ m4_define([[printf]],
 } while(0)]])
 
 
-#endif
+#endif // ! SLC_SVP_IOMACROS_H

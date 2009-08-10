@@ -1,3 +1,17 @@
+//
+// random.c: this file is part of the SL toolchain.
+//
+// Copyright (C) 2009 The SL project.
+//
+// This program is free software; you can redistribute it and/or
+// modify it under the terms of the GNU General Public License
+// as published by the Free Software Foundation; either version 3
+// of the License, or (at your option) any later version.
+//
+// The complete GNU General Public Licence Notice can be found as the
+// `COPYING' file in the root directory.
+//
+
 #include <svp/iomacros.h>
 #include <svp/perf.h>
 
@@ -5,13 +19,13 @@ static int      KS=0;
 static double	R23, R46, T23, T46;
 
 
-sl_def(randlc, void, 
-    sl_glparm(double*, X), 
+sl_def(randlc, void,
+    sl_glparm(double*, X),
     sl_glparm(double*, A),
     sl_glparm(double*, result)) {
 
   //long p1 = get_cycles();
-      
+
       double* X = sl_getp(X);
       double* A = sl_getp(A);
       double* result = sl_getp(result);
@@ -25,13 +39,13 @@ sl_def(randlc, void,
       double		Z;
       int     		i, j;
 
-      if (KS == 0) 
+      if (KS == 0)
       {
         R23 = 1.0;
         R46 = 1.0;
         T23 = 1.0;
         T46 = 1.0;
-    
+
         for (i=1; i<=23; i++)
         {
           R23 = 0.50 * R23;
@@ -61,7 +75,7 @@ sl_def(randlc, void,
       X1 = j;
       X2 = *X - T23 * X1;
       T1 = A1 * X2 + A2 * X1;
-      
+
       j  = R23 * T1;
       T2 = j;
       Z = T1 - T23 * T2;
@@ -74,6 +88,5 @@ sl_def(randlc, void,
 
       //long p2 = get_cycles();
       //printf("Generating key took %d %d cycles.\n", p2-p1, p3-p1);
-} 
+}
 sl_enddef
-

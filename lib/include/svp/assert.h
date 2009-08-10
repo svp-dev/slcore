@@ -1,5 +1,5 @@
 //
-// assert.slh: this file is part of the slc project.
+// assert.h: this file is part of the SL toolchain.
 //
 // Copyright (C) 2009 The SL project.
 //
@@ -11,10 +11,9 @@
 // The complete GNU General Public Licence Notice can be found as the
 // `COPYING' file in the root directory.
 //
-// $Id$
-//
-#ifndef __SVP_ASSERT_H__
-# define __SVP_ASSERT_H__
+
+#ifndef SLC_SVP_ASSERT_H
+# define SLC_SVP_ASSERT_H
 
 #include <svp/iomacros.h>
 #include <svp/abort.h>
@@ -35,4 +34,4 @@
 
 #endif
 
-#endif
+#endif // ! SLC_SVP_ASSERT_H

@@ -15,15 +15,6 @@ my $boundupper = "#ifndef %CPPNAME%
 # define %CPPNAME%";
 my $boundlower = "#endif // ! %CPPNAME%";
 
-my $m4_boundupper = "sl_begin_header([[%CPPNAME%]])m4_dnl -*- m4 -*-";
-my $m4_boundlower = "sl_end_header([[%CPPNAME%]])";
-
-my $cxx_hint =
-"//                                                             -*- C++ -*-
-";
-
-
-
 my $header =
 "//
 // %BASENAME%: this file is part of the SL toolchain.
@@ -38,8 +29,6 @@ my $header =
 // The complete GNU General Public Licence Notice can be found as the
 // `COPYING' file in the root directory.
 //
-// \$Id\$
-//
 
 ";
 
@@ -50,7 +39,7 @@ sub rehead ($)
 
   # The short name, without the path from builddir to srcdir.
   $_ = $fname;
-  s,^.*include/,,g; s,^.*impl/(.*),$1,g;
+  s,^.*include/,,g; 
   my $shortname = $_;
   s,.*/,,g;
   my $basename = $_;
@@ -72,23 +61,10 @@ sub rehead ($)
   s,%CPPNAME%,$cppname,g;
   my $xboundlower = $_;
 
-  $_ = $m4_boundupper;
-  s,%BASENAME%,$basename,g;
-  s,%CPPNAME%,$cppname,g;
-  my $m4_xboundupper = $_;
-
-  $_ = $m4_boundlower;
-  s,%BASENAME%,$basename,g;
-  s,%CPPNAME%,$cppname,g;
-  my $m4_xboundlower = $_;
-
   $_ = $header;
   s,%BASENAME%,$basename,g;
   s,%CPPNAME%,$cppname,g;
   my $xheader = $_;
-
-  if ($fname =~ /\.(cc|hh|hxx|h)$/)
-    { $xheader = $cxx_hint . $xheader; }
 
   # print STDERR "Processing $fname...\n";
 
@@ -137,7 +113,7 @@ sub rehead ($)
   s,([ \t\n])*$,\n,sg;
 
   # Adjust cpp guards.
-  if ($fname =~ /\.(cc|hh|hxx|h|c|sl)$/) {
+  if ($fname =~ /\.(cc|hh|hxx|h|c)$/) {
     if (/^\# *ifndef[^\n]*\n[\n\t ]*\# *define[^\n]*\n/s)
       {
 	s,^\# *ifndef[^\n]*\n[\n\t ]*\# *define[^\n]*\n,$xboundupper\n,sg;
@@ -150,14 +126,6 @@ sub rehead ($)
     
     s/^/$xheader/sg;
     }
-  if ($fname =~ /\.slh$/) {
-    if (/^ *sl_begin_header/s) {
-      s,^ *sl_begin_header[^\n]*\n((/\*.*?\*/)|(//[^\n]*\n)|[ \t\n])*,$m4_xboundupper\n$xheader,sg;
-      }
-    if (/ *sl_end_header[^\n]*\n[\n\t ]*$/s) {
-      s, *sl_end_header[^\n]*\n[\n\t ]*$,$m4_xboundlower\n,sg;
-      }
-    }
 
   # Make sure we have a unique ending eol.
   s/\n+\z/\n/;
@@ -169,8 +137,6 @@ sub rehead ($)
 
   open(FILE, ">", $fname) or die "cannot open $fname for writing: $!\n";
   print FILE $content;
-  my @svn = ("svn", "propset", "svn:keywords", "Id", "$fname");
-  system(@svn);
 }
 
 foreach my $file (@ARGV)

@@ -1,5 +1,5 @@
 //
-// roman.slh: this file is part of the slc project.
+// roman.h: this file is part of the SL toolchain.
 //
 // Copyright (C) 2009 The SL project.
 //
@@ -11,11 +11,10 @@
 // The complete GNU General Public Licence Notice can be found as the
 // `COPYING' file in the root directory.
 //
-// $Id$
-//
-#ifndef __SVP_ROMAN_H__
-# define __SVP_ROMAN_H__
+
+#ifndef SLC_SVP_ROMAN_H
+# define SLC_SVP_ROMAN_H
 
 sl_decl(roman, void, sl_glparm(short, x));
 
-#endif
+#endif // ! SLC_SVP_ROMAN_H

@@ -1,5 +1,5 @@
 //
-// perf.slh: this file is part of the slc project.
+// perf.h: this file is part of the SL toolchain.
 //
 // Copyright (C) 2009 The SL project.
 //
@@ -11,17 +11,16 @@
 // The complete GNU General Public Licence Notice can be found as the
 // `COPYING' file in the root directory.
 //
-// $Id$
-//
-#ifndef __SVP_PERF_H__
-# define __SVP_PERF_H__
+
+#ifndef SLC_SVP_PERF_H
+# define SLC_SVP_PERF_H
 
 #include <cstdint.h>
 
 #if defined (__i386__)
 
-__attribute__ ((__always_inline__)) 
-static __inline__ int64_t get_cycles(void) 
+__attribute__ ((__always_inline__))
+static __inline__ int64_t get_cycles(void)
 {
   int32_t __res__[2];
 #if defined (_LP64)                      // 64 bit mode
@@ -63,4 +62,4 @@ static __inline__ int64_t get_cycles(void)
 
 #endif
 
-#endif
+#endif // ! SLC_SVP_PERF_H

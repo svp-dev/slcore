@@ -1,5 +1,5 @@
 //
-// x_extcreate.sl: this file is part of the slc project.
+// x_extcreate.c: this file is part of the SL toolchain.
 //
 // Copyright (C) 2009 The SL project.
 //
@@ -11,12 +11,10 @@
 // The complete GNU General Public Licence Notice can be found as the
 // `COPYING' file in the root directory.
 //
-// $Id$
-//
 
 sl_decl(ext, void);
 
-// XFAIL: *:L (symbol not defined)
+[[]]// XFAIL: *:L (symbol not defined)
 
 sl_def(t_main, void)
 {

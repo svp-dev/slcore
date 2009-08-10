@@ -1,22 +1,38 @@
-//---------------------------------
-// Livemore Loops -- SLC (uTC)
+//
+// ll.h: this file is part of the SL toolchain.
+//
+// Copyright (C) 2009 The SL project.
+//
+// This program is free software; you can redistribute it and/or
+// modify it under the terms of the GNU General Public License
+// as published by the Free Software Foundation; either version 3
+// of the License, or (at your option) any later version.
+//
+// The complete GNU General Public Licence Notice can be found as the
+// `COPYING' file in the root directory.
+//
+
+[[]]
+// ---------------------------------
+// Livemore Loops
 // M.A.Hicks, CSA Group, UvA
 
 // Implementation based of various reference implementations
 // including the original FORTRAN but mostly from Roy Longbottom, 1996.
 
-//---------------------------------
+// ---------------------------------
 // Livermore Header File
 // This file contains the various data structures used throughout
 // the execution of the Livermore kernels.
-//---------------------------------
+// ---------------------------------
 
 // Loop number specifications:
 // INNER - Specifies the number of times that the loop
 // should perform the calculation being measured
 // [this is a specified aspect of the loops]
 // NB -- SEE LARGEST DEFINITION BELOW
-static unsigned long inner[25] = 
+
+static unsigned long inner[25] =
   {0, // (padding)
    1000, //1
    500,
@@ -42,7 +58,7 @@ static unsigned long inner[25] =
    10,
    10,
    10,   //24
-};  
+};
 // define the largest inner loop size for the arrays below
 m4_define([[LARGEST]], [[8000]])
 
@@ -50,7 +66,7 @@ m4_define([[LARGEST]], [[8000]])
 //the block size of the outer create is set to the value below:
 //N.B. Default is 0
 m4_define([[SHARED_BLOCK]],[[2]]) //used by loops 3,5,6,11
-static unsigned long blocksize[25] = 
+static unsigned long blocksize[25] =
 { 999, // (padding)
   0, //1
   0,

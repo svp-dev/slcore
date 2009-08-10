@@ -1,3 +1,17 @@
+//
+// IS.c: this file is part of the SL toolchain.
+//
+// Copyright (C) 2009 The SL project.
+//
+// This program is free software; you can redistribute it and/or
+// modify it under the terms of the GNU General Public License
+// as published by the Free Software Foundation; either version 3
+// of the License, or (at your option) any later version.
+//
+// The complete GNU General Public Licence Notice can be found as the
+// `COPYING' file in the root directory.
+//
+
 #include <svp/slr.h>
 #include <svp/div.h>
 #include <svp/assert.h>
@@ -32,7 +46,7 @@ int num_buckets_log; //command line argument
 
 //#define bucket_start(i) bucket_limits[i]
 //#define bucket_end(i) bucket_limits[i+1]
-#define bucket_start(i) (i * (1<<SHIFT_KEY_TO_BUCKET)) 
+#define bucket_start(i) (i * (1<<SHIFT_KEY_TO_BUCKET))
 #define bucket_end(i) ((i+1) * (1<<SHIFT_KEY_TO_BUCKET))
 //#define compute_num_buckets ((sizeof(bucket_limits)/sizeof(int)) - 1)
 #define compute_num_buckets (1<<num_buckets_log)
@@ -45,7 +59,7 @@ SIZE num_keys;
 INT bucket_size[MAX_SUPPORTED_BUCKETING_THREADS][MAX_SUPPORTED_BUCKETS];  //!!! NUM_CORES
 INT bucket_sizes[MAX_SUPPORTED_BUCKETS];
 INT* bucket_ptrs[MAX_SUPPORTED_BUCKETS];
-INT bucket_start[MAX_SUPPORTED_BUCKETING_THREADS][MAX_SUPPORTED_BUCKETS]; 
+INT bucket_start[MAX_SUPPORTED_BUCKETING_THREADS][MAX_SUPPORTED_BUCKETS];
 INT smaller_than_bucket[MAX_SUPPORTED_BUCKETS];
   //INT ranks[MAX_KEY];
 INT ranks[MAX_SUPPORTED_KEY];
@@ -64,8 +78,8 @@ INT ranks[MAX_SUPPORTED_KEY];
     (index < (no_elements % stripes) ? 1 : 0)))
 */
 
-sl_decl(randlc, double, 
-    sl_glparm(double*, X), 
+sl_decl(randlc, double,
+    sl_glparm(double*, X),
     sl_glparm(double*, A),
     sl_glparm(double*, result));
 
@@ -117,7 +131,7 @@ sl_def(generate_key, void, sl_glparm(int*, result)) {
     key += rez;
   }
   int* result = sl_getp(result);
-  *result = (int)(MAX_KEY/4 * key); 
+  *result = (int)(MAX_KEY/4 * key);
   //if (iii < 10)
   //printf("key %d: %d\n", iii++, (int)(MAX_KEY/4 * key));
 }
@@ -133,7 +147,7 @@ sl_enddef
     for (step = 1; step < n; step <<= 1); \
     for (result = 0; step; step >>= 1) \
       if ((result | step) < n && vec[result + step] <= val) {\
-        result |= step; /* same as result+=step */\ 
+        result |= step; /* same as result+=step */\
       } \
   } while(0)
 
@@ -147,9 +161,9 @@ sl_def(compute_bucket_sizes, void) {
   // Would a sequential create be more
   // efficient?
   int start = first_element(num_keys, ii, num_bucketing_threads);
-  
+
   int tempxxx = num_elements(1,2,3);
-  
+
   int size = num_elements(num_keys, ii, num_bucketing_threads);
   //printf("compute_bucket_sizes: index = %d   start = %d   size = %d   NUM_CORES = %d   num_keys = %d\n",
   //        ii, start, size,
@@ -202,7 +216,7 @@ sl_def(compute_ranks, void) {
 
   int cur_rank = smaller_than_bucket[index];
   int temp;
-  for (i = start_key + 1; i < end_key; i++) 
+  for (i = start_key + 1; i < end_key; i++)
     if (ranks[i] != 0) {
       temp = ranks[i];
       ranks[i] = cur_rank;
@@ -211,7 +225,7 @@ sl_def(compute_ranks, void) {
 }
 sl_enddef
 
-sl_def(do_compute_ranks, void) {//       sl_glparm(int, 
+sl_def(do_compute_ranks, void) {//       sl_glparm(int,
   sl_index(index);
   int my_index = index;
   int i = 0;
@@ -228,7 +242,7 @@ sl_def(do_compute_ranks, void) {//       sl_glparm(int,
 
   int cur_rank = smaller_than_bucket[index];
   int temp;
-  for (i = start_key + 1; i < end_key; i++) 
+  for (i = start_key + 1; i < end_key; i++)
     if (ranks[i] != 0) {
       temp = ranks[i];
       ranks[i] = cur_rank;
@@ -239,7 +253,7 @@ sl_enddef
 
 sl_def(compute_ranks2, void) {
   sl_index(index);
-  //int num_my_buckets = num_elements(NUM_BUCKETS, index, 
+  //int num_my_buckets = num_elements(NUM_BUCKETS, index,
   //    num_physical_cores);
   sl_create(,,index,NUM_BUCKETS,num_physical_cores,,,
       do_compute_ranks);//, sl_glarg(int, startindex));
@@ -271,12 +285,12 @@ slr_decl(slr_var(int, data, "data to sort"),
 
 sl_def(t_main, void) {
   int64_t p1, p2;
-  int64_t computing_sizes_cycles, 
+  int64_t computing_sizes_cycles,
           bucketing_cycles, computing_ranks_cycles;
 
-  if (slr_len(physical_cores)) 
+  if (slr_len(physical_cores))
     num_physical_cores = slr_get(physical_cores)[0];
-  else 
+  else
     num_physical_cores = 1;
   if (slr_len(num_buckets_log))
     num_buckets_log = slr_get(num_buckets_log)[0];
@@ -306,7 +320,7 @@ sl_def(t_main, void) {
     break;
   }
   */
-  
+
   printf("num_keys: %d\t max_key: %d\t num_cores: %d\t num_buckets: %d\n",        num_keys, MAX_KEY, num_physical_cores, NUM_BUCKETS);
 
   start_global_counter();
@@ -337,12 +351,12 @@ sl_def(t_main, void) {
     smaller += bucket_sizes[j];
   }
   stop_timing(computing_sizes_cycles);
-  my_printf("Computing sizes took %d cycles.\n", 
+  my_printf("Computing sizes took %d cycles.\n",
       computing_sizes_cycles);
 
   // compute standard deviation of bucket sizes
   double mean = 0;
-  for (i = 0; i < NUM_BUCKETS; i++) 
+  for (i = 0; i < NUM_BUCKETS; i++)
     mean += bucket_sizes[i];
   mean = mean / NUM_BUCKETS;
 
@@ -351,20 +365,20 @@ sl_def(t_main, void) {
   for (i = 0; i < NUM_BUCKETS; i++) {
     dif = (bucket_sizes[i] - mean);
     dif = dif * dif;
-    stddev += dif; 
+    stddev += dif;
   }
   //stddev = sqrt(stddev / NUM_BUCKETS);
   stddev /= NUM_BUCKETS;
 
   my_printf("Average bucket size: %d\t square of stddev: %d\n",
       (int)mean, (int)stddev);
-  
+
   // now a thread t can write unsynchronized to a bucket k
-  // in range bucket_start[t][k] ... 
+  // in range bucket_start[t][k] ...
   // bucket_start[t][k] + bucket_size[t][k]. Of course, these
   // have to be translated with bucket_ptrs[k]
 
-  
+
   // copy the keys to keys2 by respecting the buckets
   start_timing(bucketing_cycles);
   sl_create(,,0,num_bucketing_threads,1,,,bucket_keys);
@@ -377,17 +391,17 @@ sl_def(t_main, void) {
   start_timing(computing_ranks_cycles);
   //sl_create(,,0,NUM_BUCKETS,1,,,compute_ranks);
   //sl_sync();
-  
+
   sl_proccall(compute_ranks2);
   stop_timing(computing_ranks_cycles);
   my_printf("Computing the ranks took %d cycles.\n",
       computing_ranks_cycles);
 
-  my_printf("Done: cycles = %d\t global counter = %d\n", 
-      computing_sizes_cycles + bucketing_cycles + 
+  my_printf("Done: cycles = %d\t global counter = %d\n",
+      computing_sizes_cycles + bucketing_cycles +
       computing_ranks_cycles, global_counter);
   printf("Total cycles (including printing) = %d\n", get_cycles());
-  
+
 
   //puts("Ranks: ");
   //for (i = 0; i < 32; i++) printf("%d ", ranks[i]);
@@ -395,4 +409,3 @@ sl_def(t_main, void) {
   } while(0);
 }
 sl_enddef
-

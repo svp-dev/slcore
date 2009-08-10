@@ -1,5 +1,5 @@
 //
-// x_invsh3.sl: this file is part of the slc project.
+// x_invsh3.c: this file is part of the SL toolchain.
 //
 // Copyright (C) 2009 The SL project.
 //
@@ -11,10 +11,8 @@
 // The complete GNU General Public Licence Notice can be found as the
 // `COPYING' file in the root directory.
 //
-// $Id$
-//
 
-// XFAIL: *:C
+[[]]// XFAIL: *:C
 // (multiple storage specifiers)
 
 sl_decl(foo, void, sl_shparm(register int, a));

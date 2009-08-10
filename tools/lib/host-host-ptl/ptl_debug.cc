@@ -1,6 +1,5 @@
-//                                                             -*- C++ -*-
 //
-// ptl_debug.cc: this file is part of the slc project.
+// ptl_debug.cc: this file is part of the SL toolchain.
 //
 // Copyright (C) 2008, 2009 The SL project.
 //
@@ -11,8 +10,6 @@
 //
 // The complete GNU General Public Licence Notice can be found as the
 // `COPYING' file in the root directory.
-//
-// $Id$
 //
 
 #include "ptl_debug.h"
@@ -138,4 +135,4 @@ int __DESTROY(const char* file, int line, const char* name, pthread_mutex_t* mut
 }
 
 // end #ifdef UTC_CONFIG_DEBUG
-#endif // ! SLC_LIB_HOST_HOST_PTL_PTL_DEBUG_CC
+#endif // ! SLC_TOOLS_LIB_HOST_HOST_PTL_PTL_DEBUG_CC

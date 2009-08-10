@@ -1,3 +1,18 @@
+//
+// k7.c: this file is part of the SL toolchain.
+//
+// Copyright (C) 2009 The SL project.
+//
+// This program is free software; you can redistribute it and/or
+// modify it under the terms of the GNU General Public License
+// as published by the Free Software Foundation; either version 3
+// of the License, or (at your option) any later version.
+//
+// The complete GNU General Public Licence Notice can be found as the
+// `COPYING' file in the root directory.
+//
+
+[[]]
 //---------------------------------
 //      LIVERMORE KERNEL 7
 //      equation of state
@@ -28,16 +43,16 @@ sl_def(innerk7, void,
        sl_glparm(double, ql))
 {
   sl_index(i);
-  
-  sl_getp(xl)[i] = 
-    sl_getp(ul)[i] +	              
-    sl_getp(rl) * ( sl_getp(zl)[i] + 
-		    sl_getp(rl) * sl_getp(yl)[i] ) + 
-    sl_getp(tl) * ( sl_getp(ul)[i+3] + 
-		    sl_getp(rl) * ( sl_getp(ul)[i+2] + 
+
+  sl_getp(xl)[i] =
+    sl_getp(ul)[i] +
+    sl_getp(rl) * ( sl_getp(zl)[i] +
+		    sl_getp(rl) * sl_getp(yl)[i] ) +
+    sl_getp(tl) * ( sl_getp(ul)[i+3] +
+		    sl_getp(rl) * ( sl_getp(ul)[i+2] +
 				    sl_getp(rl) * sl_getp(ul)[i+1] ) +
-		    sl_getp(tl) * ( sl_getp(ul)[i+6] + 
-				    sl_getp(ql) * ( sl_getp(ul)[i+5] + 
+		    sl_getp(tl) * ( sl_getp(ul)[i+6] +
+				    sl_getp(ql) * ( sl_getp(ul)[i+5] +
 						    sl_getp(ql) * sl_getp(ul)[i+4] ) ) );
 }
 sl_enddef

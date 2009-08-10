@@ -1,4 +1,3 @@
-//                                                             -*- C++ -*-
 //
 // malloc_intrinsics.h: this file is part of the SL toolchain.
 //
@@ -11,8 +10,6 @@
 //
 // The complete GNU General Public Licence Notice can be found as the
 // `COPYING' file in the root directory.
-//
-// $Id$
 //
 
 #define restrict __restrict__
