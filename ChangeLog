@@ -1,5 +1,20 @@
 2009-08-10  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	C-ify the quicksort code.
+	
+	* programs/benchmarks/quicksort/am-quicksort.c, 
+	* programs/benchmarks/quicksort/am-quicksort-iterative.c,
+	* programs/benchmarks/quicksort/sah-quicksort.c: Rename to...
+
+	* programs/benchmarks/quicksort/am-quicksort.c, 
+	* programs/benchmarks/quicksort/am-quicksort-iterative.c,
+	* programs/benchmarks/quicksort/sah-quicksort.c: ... here. Use CPP
+	syntax where appropriate.
+
+	* programs/benchmarks/quicksort/Makefile.am: Update accordingly.
+
+2009-08-10  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	C-ify the BLAS code.
 	
 	* programs/benchmarks/blas/blas-test-saxpy.sl,
