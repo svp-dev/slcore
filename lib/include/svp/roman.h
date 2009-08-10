@@ -1,6 +1,5 @@
-sl_begin_header([[SLC_CMALLOC_SLH]])m4_dnl -*- m4 -*-
 //
-// cmalloc.slh: this file is part of the SL toolchain.
+// roman.slh: this file is part of the slc project.
 //
 // Copyright (C) 2009 The SL project.
 //
@@ -14,23 +13,9 @@ sl_begin_header([[SLC_CMALLOC_SLH]])m4_dnl -*- m4 -*-
 //
 // $Id$
 //
+#ifndef __SVP_ROMAN_H__
+# define __SVP_ROMAN_H__
 
-m4_include(cstddef.slh)
-
-#define malloc_place 5
-
-#ifdef __mt_freestanding__
-
-extern void* malloc(size_t);
-extern void free(void*);
-extern void* calloc(size_t, size_t);
-extern void* realloc(void*, size_t);
-
-#else
-
-#include <stdlib.h>
+sl_decl(roman, void, sl_glparm(short, x));
 
 #endif
-
-
-sl_end_header([[SLC_CMALLOC_SLH]])

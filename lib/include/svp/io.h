@@ -1,4 +1,3 @@
-sl_begin_header([[SLC_SVP_IO_SLH]])m4_dnl -*- m4 -*-
 //
 // io.slh: this file is part of the slc project.
 //
@@ -14,8 +13,10 @@ sl_begin_header([[SLC_SVP_IO_SLH]])m4_dnl -*- m4 -*-
 //
 // $Id$
 //
+#ifndef __SVP_IO_H__
+# define __SVP_IO_H__
 
-m4_include(svp/argslot.slh)
+#include <svp/argslot.h>
 
 /* Print a single character to the console output. */
 sl_decl(svp_io_putc, void,
@@ -74,4 +75,4 @@ sl_decl(svp_io_printf, void,
 	sl_glparm(const unsigned char*, gsz),
 	sl_glparm(svp_arg_slot*, gdata));
 
-sl_end_header([[SLC_SVP_IO_SLH]])
+#endif

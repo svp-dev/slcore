@@ -1,6 +1,5 @@
-sl_begin_header([[SLC_SVP_ROMAN_SLH]])m4_dnl -*- m4 -*-
 //
-// roman.slh: this file is part of the slc project.
+// argslot.slh: this file is part of the slc project.
 //
 // Copyright (C) 2009 The SL project.
 //
@@ -14,7 +13,26 @@ sl_begin_header([[SLC_SVP_ROMAN_SLH]])m4_dnl -*- m4 -*-
 //
 // $Id$
 //
+#ifndef __SVP_ARGSLOT_H__
+# define __SVP_ARGSLOT_H__
 
-sl_decl(roman, void, sl_glparm(short, x));
+#include <cstdint.h>
 
-sl_end_header([[SLC_SVP_ROMAN_SLH]])
+/* argument slot suitable to simulate
+   C's variable argument lists */
+
+typedef union {
+  uint8_t ub;
+  int8_t sb;
+  uint16_t us;
+  int16_t ss;
+  uint32_t ul;
+  int32_t sl;
+  uint64_t uq;
+  int64_t sq;
+  float f;
+  double d;
+  void *ptr;
+} svp_arg_slot;
+
+#endif

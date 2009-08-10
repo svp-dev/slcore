@@ -1,6 +1,5 @@
-sl_begin_header([[SLC_CSTDDEF_SLH]])m4_dnl -*- m4 -*-
 //
-// cstddef.slh: this file is part of the slc project.
+// cstddef.h: this file is part of the slc project.
 //
 // Copyright (C) 2009 The SL project.
 //
@@ -14,6 +13,8 @@ sl_begin_header([[SLC_CSTDDEF_SLH]])m4_dnl -*- m4 -*-
 //
 // $Id$
 //
+#ifndef __CSTDDEF_H__
+# define __CSTDDEF_H__
 
 #ifdef __mt_freestanding__
 
@@ -38,8 +39,12 @@ typedef int wchar_t;
 
 #else
 
+#ifdef __cplusplus
+#include <cstddef>
+#else
 #include <stddef.h>
+#endif
 
 #endif
 
-sl_end_header([[SLC_CSTDDEF_SLH]])
+#endif

@@ -1,4 +1,3 @@
-sl_begin_header([[SLC_SVP_PERF_SLH]])m4_dnl -*- m4 -*-
 //
 // perf.slh: this file is part of the slc project.
 //
@@ -14,11 +13,15 @@ sl_begin_header([[SLC_SVP_PERF_SLH]])m4_dnl -*- m4 -*-
 //
 // $Id$
 //
+#ifndef __SVP_PERF_H__
+# define __SVP_PERF_H__
 
-m4_include(cstdint.slh)
+#include <cstdint.h>
 
-m4_define([[get_cycles]],[[({
 #if defined (__i386__)
+
+static __inline__ int64_t get_cycles(void) __attribute__((always_inline)) 
+{
   int32_t __res__[2];
 #if defined (_LP64)                      // 64 bit mode
   __asm__ __volatile__  (               // serialize (save rbx)
@@ -41,17 +44,22 @@ m4_define([[get_cycles]],[[({
       "xorl %%eax,%%eax \n cpuid \n popl %%ebx \n"
       ::: "%eax", "%ecx", "%edx");
 #endif
-  *(int64_t*)__res__;
-#else
-#if defined(__alpha__) || defined(__mtalpha__)
-  int64_t __cycles_c__;
-  __asm__ __volatile__ ("rpcc %0" : "=r"(__cycles_c__) : : "memory");
-  __cycles_c__;
-#else
-# warning Reading the time stamp counter is not defined on your system.
-  (int64_t)0;
-#endif
-#endif
-})]])
+  return *(int64_t*)__res__;
+}
 
-sl_end_header([[SLC_SVP_PERF_SLH]])
+#elif defined(__alpha__) || defined(__mtalpha__)
+
+#define get_cycles() ({ \
+      int64_t __cycles_c__;					      \
+      __asm__ __volatile__ ("rpcc %0" : "=r"(__cycles_c__) : : "memory"); \
+      __cycles_c__;							\
+    })
+
+#else
+
+# warning Reading the time stamp counter is not defined on your system.
+#define get_cycles() ((int64_t)0)
+
+#endif
+
+#endif

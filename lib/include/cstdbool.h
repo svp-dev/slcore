@@ -1,6 +1,5 @@
-sl_begin_header([[SLC_SVP_ARGSLOT_SLH]])m4_dnl -*- m4 -*-
 //
-// argslot.slh: this file is part of the slc project.
+// cstdbool.slh: this file is part of the slc project.
 //
 // Copyright (C) 2009 The SL project.
 //
@@ -14,24 +13,23 @@ sl_begin_header([[SLC_SVP_ARGSLOT_SLH]])m4_dnl -*- m4 -*-
 //
 // $Id$
 //
+#ifndef __CSTDBOOL_H__
+# define __CSTDBOOL_H__
 
-m4_include(cstdint.slh)
+#ifdef __mt_freestanding__
 
-/* argument slot suitable to simulate
-   C's variable argument lists */
+#define bool _Bool
+#define true 1
+#define false 0
+#define __bool_true_false_are_defined 1
 
-typedef union {
-  uint8_t ub;
-  int8_t sb;
-  uint16_t us;
-  int16_t ss;
-  uint32_t ul;
-  int32_t sl;
-  uint64_t uq;
-  int64_t sq;
-  float f;
-  double d;
-  void *ptr;
-} svp_arg_slot;
+#else
 
-sl_end_header([[SLC_SVP_ARGSLOT_SLH]])
+/* bool, true, false already defined in C++ */
+#ifndef __cplusplus
+#include <stdbool.h>
+#endif
+
+#endif
+
+#endif

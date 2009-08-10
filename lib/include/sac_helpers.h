@@ -1,4 +1,3 @@
-sl_begin_header([[SLC_SAC_HELPERS_SLH]])m4_dnl -*- m4 -*-
 //
 // sac_helpers.slh: this file is part of the SL toolchain.
 //
@@ -14,9 +13,11 @@ sl_begin_header([[SLC_SAC_HELPERS_SLH]])m4_dnl -*- m4 -*-
 //
 // $Id$
 //
+#ifndef __SAC_HELPERS_H__
+# define __SAC_HELPERS_H__
 
-m4_include(cstddef.slh)
-m4_include(cmalloc.slh)
+#include <cstddef.h>
+#include <cmalloc.h>
 
 #ifdef __mt_freestanding__
 
@@ -32,6 +33,7 @@ extern char* strncpy(char *, const char*, size_t);
 m4_define([[malloc]],[[m4_dnl
 m4_warning([[using malloc as in C is discouraged. Use sl_funcall(... [[malloc]] ...) instead.]])m4_dnl
 sl_funcall([[malloc_place]], [[ptr]], [[malloc]], sl_farg(size_t, [[$1]]))]])
+
 m4_define([[free]],[[m4_dnl
 m4_warning([[using free as in C is discouraged. Use sl_funcall(... [[free]] ...) instead.]])m4_dnl
 sl_funcall([[malloc_place]], [[ptr]], [[free]], sl_farg(void*, [[$1]]))]])
@@ -40,4 +42,4 @@ m4_define([[strncpy]],[[m4_dnl
 m4_warning([[using strncpy as in C is discouraged. Use sl_funcall(... [[strncpy]] ...) instead.]])m4_dnl
 sl_funcall(, [[ptr]], [[strncpy]], sl_farg(char*, [[$1]]), sl_farg(const char*,[[$2]]), sl_farg(size_t, [[$3]]))]])
 
-sl_end_header([[SLC_SAC_HELPERS_SLH]])
+#endif

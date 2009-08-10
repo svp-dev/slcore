@@ -1,3 +1,34 @@
+2009-08-05  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
+	Kill extension .slh in 'lib/'.
+	
+	* lib/include/svp/roman.slh, 
+	* lib/include/svp/perf.slh, 
+	* lib/include/svp/assert.slh, 
+	* lib/include/svp/div.slh, 
+	* lib/include/svp/io.slh, 
+	* lib/include/svp/iomacros.slh, 
+	* lib/include/sac_helpers.slh, 
+	* lib/include/cstdint.slh, 
+	* lib/include/cstddef.slh, 
+	* lib/include/cmalloc.slh, 
+	* lib/include/cstdbool.slh, 
+	* lib/include/climits.slh: Rename to...
+
+	* lib/include/svp/roman.h, 
+	* lib/include/svp/perf.h, 
+	* lib/include/svp/assert.h, 
+	* lib/include/svp/div.h, 
+	* lib/include/svp/io.h, 
+	* lib/include/svp/iomacros.h, 
+	* lib/include/sac_helpers.h, 
+	* lib/include/cstdint.h, 
+	* lib/include/cstddef.h, 
+	* lib/include/cmalloc.h, 
+	* lib/include/cstdbool.h, 
+	* lib/include/climits.h: ... here. Use CPP syntax where
+	applicable.
+
 2009-08-04  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
 	Get rid of extension .sl in `tools/'.

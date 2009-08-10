@@ -1,4 +1,3 @@
-sl_begin_header([[SLC_SVP_IOMACROS_SLH]])m4_dnl -*- m4 -*-
 //
 // iomacros.slh: this file is part of the slc project.
 //
@@ -14,8 +13,11 @@ sl_begin_header([[SLC_SVP_IOMACROS_SLH]])m4_dnl -*- m4 -*-
 //
 // $Id$
 //
+#ifndef __SVP_IOMACROS_H__
+# define __SVP_IOMACROS_H__
 
-m4_include(svp/io.slh)
+#include <svp/io.h>
+#include <cstddef.h>
 
 /*
  * The following macro definitions encapsulate the corresponding
@@ -23,42 +25,29 @@ m4_include(svp/io.slh)
  * for use as statements in programs.
  */
 
-m4_define([[putc]],
-[[
-sl_proccall(svp_io_putc, sl_glarg(char, c, ([[$1]])))
-]])
+#define putc(C) sl_proccall(svp_io_putc, sl_glarg(char, __gc, (C)))
 
-m4_define([[puts]],
-[[
-sl_proccall(svp_io_puts, sl_glarg(const char*, s, ([[$1]])))
-]])
+#define puts(S) sl_proccall(svp_io_puts, sl_glarg(const char*, __gs, (S)))
 
-m4_define([[write]],
-[[
-sl_proccall(svp_io_write, sl_glarg(void*, s, ([[$1]])), sl_glarg(unsigned, i, ([[$2]])))
-]])
+#define write(Buf, Len)	 sl_proccall(svp_io_write,			\
+				     sl_glarg(void*, __gs, (Buf)),	\
+				     sl_glarg(size_t, __gl, (Len)))
 
-m4_define([[putf]],
-[[
-sl_proccall(svp_io_putf,
-              sl_glfarg(double, d, ([[$1]])),
-              sl_glarg(unsigned, gprec, ([[$2]])),
-              sl_glarg(unsigned, gbase, 10))
-]])
+#define putf(N, Prec) sl_proccall(svp_io_putf,				\
+				  sl_glfarg(double, __gn, (N)),		\
+				  sl_glarg(unsigned, __gp, (Prec)),	\
+				  sl_glarg(unsigned, __gb, 10))
 
-m4_define([[putn]],
-[[
-sl_proccall(svp_io_putn,
-	    sl_glarg(long long, n, ([[$1]])),
-            sl_glarg(unsigned, gbase, 10))
-]])
+#define putn(N) sl_proccall(svp_io_putn,			\
+			    sl_glarg(long long, __gn, (N)),	\
+			    sl_glarg(unsigned, __gb, 10))
 
-m4_define([[putu]],
-[[
-sl_proccall(svp_io_putun,
-            sl_glarg(unsigned long long, n, ([[$1]])),
-            sl_glarg(unsigned, gbase, 10))
-]])
+#define putu(N) sl_proccall(svp_io_putun,				\
+			    sl_glarg(unsigned long long, __gn, (N)),	\
+			    sl_glarg(unsigned, __gb, 10))
+
+/* the following M4 code tries very hard to simulate printf's vararg
+   syntax without actual support for varargs in the compiler. */
 
 m4_define([[printf]],
 [[do {
@@ -93,4 +82,4 @@ m4_define([[printf]],
 } while(0)]])
 
 
-sl_end_header([[SLC_SVP_IOMACROS_SLH]])
+#endif

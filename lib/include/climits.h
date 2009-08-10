@@ -1,6 +1,5 @@
-sl_begin_header([[SLC_CLIMITS_SLH]])m4_dnl -*- m4 -*-
 //
-// climits.slh: this file is part of the slc project.
+// climits.h: this file is part of the slc project.
 //
 // Copyright (C) 2009 The SL project.
 //
@@ -14,6 +13,8 @@ sl_begin_header([[SLC_CLIMITS_SLH]])m4_dnl -*- m4 -*-
 //
 // $Id$
 //
+#ifndef __CLIMITS_H__
+# define __CLIMITS_H__
 
 #ifdef __mt_freestanding__
 
@@ -81,8 +82,12 @@ sl_begin_header([[SLC_CLIMITS_SLH]])m4_dnl -*- m4 -*-
 
 #else
 
+#ifdef __cplusplus
+#include <climits>
+#else
 #include <limits.h>
+#endif
 
 #endif
 
-sl_end_header([[SLC_CLIMITS_SLH]])
+#endif
