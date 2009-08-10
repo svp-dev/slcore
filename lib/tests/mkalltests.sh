@@ -7,13 +7,13 @@ exec >alltests.mk
 echo 'TESTSUITE = ' 
 
 find . -name \*.c \
-  | grep -v '/x_' | grep -v '\.ut\.\|\.t\.' \
+  | grep -v '/x_' | grep -v '\.ut\.\|\.t\.\|/_' \
   | sed -e 's/^\.\/\(.*\)$/TESTSUITE += \1/g' | sort
 
 echo 'XTESTSUITE = '
 
 find . -name \*.c \
-  | grep '/x_' | grep -v '\.ut\.\|\.t\.' \
+  | grep '/x_' | grep -v '\.ut\.\|\.t\.\|/_' \
   | sed -e 's/^\.\/\(.*\)$/XTESTSUITE += \1/g' | sort
 
 chmod -w alltests.mk
