@@ -1,4 +1,5 @@
 #include <svp/fibre.h>
+#include <svp/testoutput.h>
 
 /*
  * SLT_RUN: 
@@ -13,8 +14,8 @@ sl_def(t_main, void)
     x += *(int*)fibre_data(1);
     x += *(int*)fibre_data(2);
     x += *(int*)fibre_data(3);
-    int *a = (int*)fibre_data(4);
-    *a = x;
+    output_int(x, 1);
+    output_char('\n', 1);
   }
 }
 sl_enddef

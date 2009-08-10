@@ -1,3 +1,67 @@
+2009-08-04  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
+	More C-ification of SL code in `tools'.
+	
+	* tools/lib/arggen.sl: Rename to...
+	* tools/lib/arggen.c: ... here. Use new output interface.
+
+	* tools/bin/slr.in,
+	* tools/lib/Makefile.am: Update accordingly.
+
+	* tools/tests/7_args/gencall.py: Use new test output interface.
+	* tools/tests/mkalltests.sh: Generate files with extension .c
+	instead of .sl from `gencall.py'.
+
+	* tools/tests/0_slr/args.c,
+	* tools/tests/0_slr/fibre.c,	
+	* tools/tests/2_args/delayshared.c: Use new test output interface.
+
+	* tools/tests/0_slr/fibre.c.d: New. This data file is required by
+	the `SLT_RUN' definition in `fibre.c'.
+	
+	* tools/tests/1_create/x_crnosync.sl,
+	* tools/tests/3_mem/sideeffect.sl,
+	* tools/tests/8_funs/add.sl,
+	* tools/tests/8_funs/f1.sl,
+	* tools/tests/8_funs/f2.sl,
+	* tools/tests/8_funs/f3.sl,
+	* tools/tests/8_funs/f4.sl,
+	* tools/tests/8_funs/f5.sl,
+	* tools/tests/8_funs/f6.sl,
+	* tools/tests/8_funs/f7.sl,
+	* tools/tests/8_funs/f8.sl,
+	* tools/tests/8_funs/f9.sl: Rename to...
+
+	* tools/tests/1_create/x_crnosync-old.sl,
+	* tools/tests/3_mem/sideeffect-old.sl,
+	* tools/tests/8_funs/add-old.sl,
+	* tools/tests/8_funs/f1-old.sl,
+	* tools/tests/8_funs/f2-old.sl,
+	* tools/tests/8_funs/f3-old.sl,
+	* tools/tests/8_funs/f4-old.sl,
+	* tools/tests/8_funs/f5-old.sl,
+	* tools/tests/8_funs/f6-old.sl,
+	* tools/tests/8_funs/f7-old.sl,
+	* tools/tests/8_funs/f8-old.sl,
+	* tools/tests/8_funs/f9-old.sl: ... here, and copy to...
+	
+	* tools/tests/1_create/x_crnosync.c,
+	* tools/tests/3_mem/sideeffect.c,
+	* tools/tests/8_funs/add.c,
+	* tools/tests/8_funs/f1.c,
+	* tools/tests/8_funs/f2.c,
+	* tools/tests/8_funs/f3.c,
+	* tools/tests/8_funs/f4.c,
+	* tools/tests/8_funs/f5.c,
+	* tools/tests/8_funs/f6.c,
+	* tools/tests/8_funs/f7.c,
+	* tools/tests/8_funs/f8.c,	
+	* tools/tests/8_funs/f9.c: ... here. Use new header syntax and
+	test output interface.
+
+	* tools/tests/m-problem.sl: Remove. Was duplicate of
+	`3_mem/sideeffect.sl'.
+
 2009-08-03  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
 	Refactor headers in `tools/include'. Update test suite accordingly.
@@ -122,6 +186,10 @@
 	* tools/include/svp/testoutput.h: New. Provide basic output
 	interface for test programs so that code in `tools' do not require
 	the SL library.
+<<<<<<< Updated upstream:ChangeLog
+=======
+
+>>>>>>> Stashed changes:ChangeLog
 	
 2009-08-03  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 

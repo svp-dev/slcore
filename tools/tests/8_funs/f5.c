@@ -1,5 +1,5 @@
 //
-// m-problem.sl: this file is part of the slc project.
+// f5.sl: this file is part of the SL toolchain.
 //
 // Copyright (C) 2009 The SL project.
 //
@@ -14,24 +14,13 @@
 // $Id$
 //
 
-m4_include(svp/iomacros.slh)
+#include <svp/testoutput.h>
 
-// PROBLEM: the following program
-// prints "42", although SVP suggests
-// it should print "10" instead.
-
-int blah;
-
-sl_def(foo, void)
-{
-  blah = 10;
-}
-sl_enddef
+float foo() { return .5; }
 
 sl_def(t_main, void)
 {
-  blah = 42;
-  sl_proccall(foo);
-  putn(blah); putc('\n');
+  float x = sl_funcall(,double,foo);
+  output_float(x, 1, 3); output_char('\n', 1);
 }
 sl_enddef

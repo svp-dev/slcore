@@ -15,7 +15,7 @@
 //
 
 #include <svp/compiler.h>
-#include <svp/iomacros.slh>
+#include <svp/testoutput.h>
 
 sl_def(foo, void, sl_shparm(int, a))
 {
@@ -45,7 +45,7 @@ sl_def(t_main, void)
   sl_seta(a, 42);
   sl_sync();
 
-  putn(sl_geta(a));
-  putc('\n');
+  output_int(sl_geta(a), 1);
+  output_char('\n', 1);
 }
 sl_enddef

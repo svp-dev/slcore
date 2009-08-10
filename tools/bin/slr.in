@@ -269,14 +269,14 @@ fi
 # search arggen.sl in the datadirs
 arggen=
 for d in $slc_datadir; do
-    if test -r "$d/arggen.sl"; then
-	arggen=$d/arggen.sl
+    if test -r "$d/arggen.c"; then
+	arggen=$d/arggen.c
 	break
     fi
 done
 IFS=$saveIFS
 if test -z "$arggen"; then
-    die 1 "arggen.sl not found in $slc_datadir"
+    die 1 "arggen.c not found in $slc_datadir"
 fi
 
 # if a slrvars cache file is specified, use it
@@ -354,7 +354,7 @@ if test -n "$dodata"; then
 	fi
 	$python "$sag_helper" d $vars <"$tmpdir"/args.spec >"$tmpdir"/data.c
 
-	# compile arggen.sl with slr var data in C
+	# compile arggen.c with slr var data in C
 	mkdir -p "$tmpdir"/slc-rec
 	if test -n "$VERBOSE"; then
 	    echo "$basename: running: TMPDIR=$tmpdir/slc-rec @BASH@ $slc_helper -b $datatag -o $tmpdir/gen.x -I$tmpdir $arggen" >&2
@@ -401,7 +401,7 @@ s/  */,/g;
 s/[dD]/e/g;
 s/,$//g' | $python "$sag_helper" f >"$tmpdir"/fdata.c
 	
-	# compile arggen.sl with Fibre data in C
+	# compile arggen.c with Fibre data in C
 	mkdir -p "$tmpdir"/slc-rec
 	if test -n "$VERBOSE"; then
 	    echo "$basename: running: TMPDIR=$tmpdir/slc-rec @BASH@ $slc_helper -b $datatag -o $tmpdir/gen.x -I$tmpdir -DFIBRE_DATA=1 $arggen" >&2
