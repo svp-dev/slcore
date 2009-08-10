@@ -1,4 +1,3 @@
-sl_begin_header([[SLC_CSTDINT_SLH]])m4_dnl -*- m4 -*-
 //
 // cstdint.slh: this file is part of the slc project.
 //
@@ -14,6 +13,8 @@ sl_begin_header([[SLC_CSTDINT_SLH]])m4_dnl -*- m4 -*-
 //
 // $Id$
 //
+#ifndef __CSTDINT_H__
+# define __CSTDINT_H__
 
 #ifdef __mt_freestanding__
 
@@ -250,7 +251,13 @@ typedef unsigned long long int  uintmax_t;
 #endif
 
 #else
+
+#ifdef __cplusplus
+#include <cstdint>
+#else
 #include <stdint.h>
 #endif
 
-sl_end_header([[SLC_CSTDINT_SLH]])
+#endif
+
+#endif

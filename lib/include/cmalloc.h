@@ -1,6 +1,5 @@
-sl_begin_header([[SLC_CSTDBOOL_SLH]])m4_dnl -*- m4 -*-
 //
-// cstdbool.slh: this file is part of the slc project.
+// cmalloc.slh: this file is part of the SL toolchain.
 //
 // Copyright (C) 2009 The SL project.
 //
@@ -14,18 +13,29 @@ sl_begin_header([[SLC_CSTDBOOL_SLH]])m4_dnl -*- m4 -*-
 //
 // $Id$
 //
+#ifndef __CMALLOC_H__
+# define __CMALLOC_H__
+
+#include <cstddef.h>
+
+
+#define malloc_place 5
 
 #ifdef __mt_freestanding__
 
-#define bool _Bool
-#define true 1
-#define false 0
-#define __bool_true_false_are_defined 1
+extern void* malloc(size_t);
+extern void free(void*);
+extern void* calloc(size_t, size_t);
+extern void* realloc(void*, size_t);
 
 #else
 
-#include <stdbool.h>
+#ifdef __cplusplus
+#include <cstdlib>
+#else
+#include <stdlib.h>
+#endif
 
 #endif
 
-sl_end_header([[SLC_CSTDBOOL_SLH]])
+#endif
