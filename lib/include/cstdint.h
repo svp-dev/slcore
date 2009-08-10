@@ -252,11 +252,7 @@ typedef unsigned long long int  uintmax_t;
 
 #else
 
-#ifdef __cplusplus
-#include <cstdint>
-#else
 #include <stdint.h>
-#endif
 
 #endif
 

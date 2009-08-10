@@ -35,15 +35,15 @@ mtalpha_sim_libsl_a_CONTENTS = \
 
 SLC_MTALPHA = $(SLC_RUN) -b ppp-mtalpha -nostdlib
 
-mtalpha-sim/io.o: $(srcdir)/src/io.sl
+mtalpha-sim/io.o: $(srcdir)/src/io.c
 	$(AM_V_at)$(MKDIR_P) mtalpha-sim
 	$(slc_verbose)$(SLC_MTALPHA) -c -o $@ $<
 
-mtalpha-sim/div.o: $(srcdir)/src/div.sl
+mtalpha-sim/div.o: $(srcdir)/src/div.c
 	$(AM_V_at)$(MKDIR_P) mtalpha-sim
 	$(slc_verbose)$(SLC_MTALPHA) -c -o $@ $<
 
-mtalpha-sim/roman.o: $(srcdir)/src/roman.sl
+mtalpha-sim/roman.o: $(srcdir)/src/roman.c
 	$(AM_V_at)$(MKDIR_P) mtalpha-sim
 	$(slc_verbose)$(SLC_MTALPHA) -c -o $@ $<
 
