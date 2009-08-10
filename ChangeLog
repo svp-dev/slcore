@@ -1,5 +1,46 @@
 2009-08-10  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	C-ify the BLAS code.
+	
+	* programs/benchmarks/blas/blas-test-saxpy.sl,
+	* programs/benchmarks/blas/caxpy.sl,
+	* programs/benchmarks/blas/cdotc.sl,
+	* programs/benchmarks/blas/cdotu.sl,
+	* programs/benchmarks/blas/daxpy.sl,
+	* programs/benchmarks/blas/ddot.sl,
+	* programs/benchmarks/blas/saxpy.sl,
+	* programs/benchmarks/blas/sdot.sl,
+	* programs/benchmarks/blas/templates/xaxpy.sl,
+	* programs/benchmarks/blas/templates/xaxpyc.sl,
+	* programs/benchmarks/blas/templates/xdot.sl,
+	* programs/benchmarks/blas/templates/xdotc.sl,
+	* programs/benchmarks/blas/zaxpy.sl,
+	* programs/benchmarks/blas/zdotc.sl,
+	* programs/benchmarks/blas/zdotu.sl,
+	* programs/benchmarks/blas/complex.slh: Rename to...
+
+	* programs/benchmarks/blas/blas-test-saxpy.c,
+	* programs/benchmarks/blas/caxpy.c,
+	* programs/benchmarks/blas/cdotc.c,
+	* programs/benchmarks/blas/cdotu.c,
+	* programs/benchmarks/blas/daxpy.c,
+	* programs/benchmarks/blas/ddot.c,
+	* programs/benchmarks/blas/saxpy.c,
+	* programs/benchmarks/blas/sdot.c,
+	* programs/benchmarks/blas/templates/xaxpy.c,
+	* programs/benchmarks/blas/templates/xaxpyc.c,
+	* programs/benchmarks/blas/templates/xdot.c,
+	* programs/benchmarks/blas/templates/xdotc.c,
+	* programs/benchmarks/blas/zaxpy.c,
+	* programs/benchmarks/blas/zdotc.c,
+	* programs/benchmarks/blas/zdotu.c,	
+	* programs/benchmarks/blas/blas_complex.h: ... here. Use CPP
+	syntax where appropriate.
+
+	* programs/benchmarks/blas/Makefile.am: Update accordingly.
+	
+2009-08-10  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	* lib/include/svp/perf.h: Fix `__attribute__' syntax.
 
 2009-08-10  Raphael 'kena' Poss  <r.c.poss@uva.nl>

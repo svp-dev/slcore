@@ -16,9 +16,9 @@
 
 // compile with slc blas-test-saxpy.sl blas/saxpy.sl
 
-m4_include(svp/perf.slh)
-m4_include(svp/iomacros.slh)
-m4_include(slr.slh)
+#include <svp/perf.h>
+#include <svp/iomacros.h>
+#include <svp/slr.h>
 
 slr_decl(slr_var(long, N, "problem size"));
 
@@ -60,4 +60,4 @@ sl_def(t_main, void)
 }
 sl_enddef
 
-m4_include(saxpy.sl)
+#include "saxpy.c"

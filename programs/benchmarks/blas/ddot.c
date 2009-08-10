@@ -1,5 +1,5 @@
 //
-// zdotc.sl: this file is part of the slc project.
+// ddot.sl: this file is part of the slc project.
 //
 // Copyright (C) 2009 The SL project.
 //
@@ -14,9 +14,6 @@
 // $Id$
 //
 
-m4_define(COMPLEX, blas_zomplex)
-m4_define(FLOAT, double)
-m4_define(FUNCTION, zdotc)
-m4_define(OP1, +)
-m4_define(OP2, -)
-m4_include(templates/xdotc.sl)
+#define FLOAT float
+#define FUNCTION ddot
+#include "templates/xdot.c"
