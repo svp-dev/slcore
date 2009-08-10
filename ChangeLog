@@ -980,10 +980,6 @@
 	* tools/include/svp/testoutput.h: New. Provide basic output
 	interface for test programs so that code in `tools' do not require
 	the SL library.
-<<<<<<< Updated upstream:ChangeLog
-=======
-
->>>>>>> Stashed changes:ChangeLog
 	
 2009-08-03  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
