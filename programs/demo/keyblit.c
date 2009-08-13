@@ -20,13 +20,14 @@ sl_def(t_main, void)
   sl_create(,,,10,,,, key_blit,
 	    sl_glarg(unsigned long*restrict, _1, img),
 	    sl_glarg(unsigned long*restrict, _2, sprite),
-	    sl_sharg(unsigned long, _3, 3));
+	    sl_glarg(unsigned long, _3, 3));
   sl_sync();
+
 }
+sl_enddef
 
 unsigned long img[10] = {1, 1, 1, 1, 1, 1, 1, 1, 1, 1};
 unsigned long sprite[10] = {3, 11, 3, 22, 3, 3, 3, 33, 3, 3}; 
-sl_enddef
 
 #else //! SIMPLE_MAIN
 
@@ -61,7 +62,7 @@ sl_def(t_main, void)
   sl_create(,,,len,,,, key_blit,
 	    sl_glarg(unsigned long*restrict, _1, (unsigned long*)fibre_data(0)),
 	    sl_glarg(unsigned long*restrict, _2, (unsigned long*)fibre_data(1)),
-	    sl_sharg(unsigned long, _3, *(unsigned long*)fibre_data(2)));
+	    sl_glarg(unsigned long, _3, *(unsigned long*)fibre_data(2)));
   sl_sync();
   sl_create(,,,len,,,, printarray,
 	    sl_sharg(long, token, 0),
