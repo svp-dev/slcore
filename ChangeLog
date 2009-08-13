@@ -1,5 +1,11 @@
 2009-08-13  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	Fix example.
+
+	* programs/demo/keyblit.c: Place `sl_enddef' properly.
+
+2009-08-13  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	More MT alpha code optimizations.
 
 	* programs/bin/spp: Optimize default family settings away,
