@@ -1,5 +1,14 @@
 2009-08-13  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	Restore ability to process multiple input files.
+
+	When `slc' was made more robust to special characters, a
+	regression was introduced. This is now fixed.
+
+	* tools/bin/slc.in: `"${inputs[@]}"', not `$inputs'.
+
+2009-08-13  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	Fix example.
 
 	* programs/demo/keyblit.c: Place `sl_enddef' properly.
