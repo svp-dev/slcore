@@ -70,6 +70,7 @@ if test -n "${KEEP:-}"; then
  keep=1
 fi
 
+slc_debug_flags=()
 slc_asflags=()
 slc_cflags=()
 slc_ppflags=()
@@ -185,6 +186,8 @@ for arg in "$@"; do
       -nostartfiles) slc_use_slrt=no ;;
       -nodefaultlibs) slc_use_libsl=no ;;
       -nostdlib) slc_use_slrt=no; slc_use_libsl=no ;;
+
+      -g*|-p|-pg) slc_debug_flags+=("$arg");;
 
       -)        in_pp_spec+=("$arg");;
 
@@ -419,7 +422,7 @@ EOF
 fi
 
 # Here check the configuration
-eval $(slc_use_slrt=$slc_use_slrt slc_use_libsl=$slc_use_libsl "$cce_helper" -s "$impl")
+eval $(slc_use_slrt=$slc_use_slrt slc_use_libsl=$slc_use_libsl slc_debug_flags="${slc_debug_flags[*]}" "$cce_helper" -s "$impl")
 
 # If we were requested to test the configuration, do it now
 if test -n "$check"; then
@@ -450,8 +453,8 @@ fi
 # Command line additions
 ###################################
 # Gathering flags per tool category
-slc_ppflags+=("${extra_inc[@]}" "${extra_ppflags[@]}" "${extra_cflags[@]}")
-slc_cflags+=("${extra_cflags[@]}")
+slc_ppflags+=("${extra_inc[@]}" "${extra_ppflags[@]}" "${extra_cflags[@]}" "${slc_debug_flags[@]}")
+slc_cflags+=("${extra_cflags[@]}" "${slc_debug_flags[@]}")
 slc_asflags+=("${slc_cflags[@]}" "${extra_asflags[@]}")
 slc_ldflags+=("${slc_cflags[@]}" "${extra_ldflags[@]}")
 
