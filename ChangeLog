@@ -1,3 +1,11 @@
+2009-08-13  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
+	Protect against uses of `-g' and the like when they are unsupported.
+	
+	* tools/bin/cce.in,	
+	* tools/bin/slc.in: Catch uses of `-g', `-p' and `-pg'; eat them
+	away an print a message when they are not supported by the target.
+
 2009-08-12  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
 	Make shell scripts more robust. 

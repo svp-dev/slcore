@@ -299,12 +299,18 @@ esac
 # Extra flag selection
 case $slc_arch-$slc_os in
     mt*-sim)
+	
         slc_ppflags+=(-D__mt_freestanding__ -D__WORDSIZE=64)
         # slc_cflags="$slc_cflags -D__mt_freestanding__ -D__WORDSIZE=64"
         # slc_cflags="$slc_cflags -nostdinc"
 	slc_ldflags+=(-Wl,-Ttext -Wl,0 -nostdlib)
+	if test -n "$slc_debug_flags"; then
+	    echo "$basename: warning: flags unsupported by $slc_arch-$slc_os: $slc_debug_flags" >&2
+	fi
+	slc_debug_flags=()
 	;;
     *)
+	slc_debug_flags=("$slc_debug_flags")
 	;;
 esac
 
