@@ -1,3 +1,14 @@
+2009-08-11  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
+	Rename thread symbols in SL->mtalpha compilation.
+
+	This makes it more obvious when looking at the generated assembly
+	where the mangled names come from.
+	
+	* tools/bin/spp,	
+	* tools/lib/t-pppalpha/include/sl_support.h: Change the prefix of
+	renamed thread functions to `__slf_' instead of `_x_'.
+
 2009-08-10  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
 	Extend test suite.
