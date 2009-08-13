@@ -1,5 +1,18 @@
 2009-08-13  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	New demo program.
+
+	The `blitz' programs takes three arrays as input, then applies the
+	3rd (sprite) onto the 1st (image) using the 2nd (mask), using the
+	`bitblt' operation.
+	
+	* programs/demo/blitz.c.d,
+	* programs/demo/blitz.c: New.
+
+	* programs/demo/Makefile.am: Update accordingly.
+
+2009-08-13  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	Code optimizations for MT alpha.
 
 	Assembly optimizations common to all MT targets are moved
