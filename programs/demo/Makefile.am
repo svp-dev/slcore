@@ -12,13 +12,13 @@
 ##
 
 # 
-DEMOS = 10threads.c answer.c fibonacci.c helloworld.c roman.c fibre.c blitz.c
+DEMOS = 10threads.c answer.c fibonacci.c helloworld.c roman.c fibre.c bitblt.c keyblit.c
 TESTS = $(DEMOS)
 
 include $(top_srcdir)/tests.mk
 
 EXTRA_DIST = $(DEMOS)
-EXTRA_DIST += fibre.c.d1 fibre.c.d2 fibre.c.d3 blitz.c.d
+EXTRA_DIST += fibre.c.d1 fibre.c.d2 fibre.c.d3 bitblt.c.d keyblit.c.d
 
 if ENABLE_DEMOS
 noinst_DATA = $(DEMOS:.c=.x)
