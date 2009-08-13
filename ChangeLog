@@ -1,3 +1,9 @@
+2009-08-12  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
+	Reinstate preprocessor flags for dependency tracking.
+	
+	* tools/bin/slc.in: Reinstate the `-M' flags. Pass `-A'. Simplify.
+
 2009-08-11  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
 	Support new compilation stage `E'.
