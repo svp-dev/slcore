@@ -2,6 +2,26 @@
 
 	New demo program.
 
+	The `keyblit' programs takes two arrays and one integer as
+	input (the key), then applies the 2nd array (sprite) onto the
+	1st (background) for every item of the sprite that is not equal to
+	the key.
+	
+	* programs/demo/keyblit.c.d,
+	* programs/demo/keyblit.c: New.
+
+	* programs/demo/blitz.c.d,
+	* programs/demo/blitz.c: Rename to...
+	
+	* programs/demo/bitblt.c.d,
+	* programs/demo/bitblt.c: ... here.
+
+	* programs/demo/Makefile.am: Update accordingly.
+
+2009-08-13  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
+	New demo program.
+
 	The `blitz' programs takes three arrays as input, then applies the
 	3rd (sprite) onto the 1st (image) using the 2nd (mask), using the
 	`bitblt' operation.
