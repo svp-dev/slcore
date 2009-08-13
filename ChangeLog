@@ -1,5 +1,11 @@
 2009-08-13  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	More MT alpha code optimizations.
+	
+	* tools/lib/t-utc0/slimpl.m4: Use type `long' for thread indexes.
+
+2009-08-13  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	Restore ability to process multiple input files.
 
 	When `slc' was made more robust to special characters, a

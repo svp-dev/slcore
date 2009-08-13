@@ -48,7 +48,7 @@ m4_copy([[sl_glparm]],[[sl_glfparm]])
 
 # Pass transparently the index declaration. Work around bug #34 where core compiler
 # does not have a type for "index".
-m4_define([[sl_index]], [[index int [[$1]]]])
+m4_define([[sl_index]], [[index long [[$1]]]])
 
 # Pull shared and global argument declarations.
 m4_define([[sl_sharg]],[[[[$1]]:__a_[[$2]]:m4_if([[$3]],,,[[= [[$3]]]])]])
