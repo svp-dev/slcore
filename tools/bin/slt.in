@@ -520,39 +520,40 @@ do_compile() {
   local offset command x
   offset=$1
   echo "===== TEST: $testsrc, COMPILE ======" >$baseout.log
-  command="$slc -v -t $outdir -b $impl -o $baseout.x $testsrc -I. $COMPILE_ARGS"
-  echo "$command" >>$baseout.log
+  command=("$slc" -v -t "$outdir" -b "$impl" -o "$baseout.x" "$testsrc" -I. ${COMPILE_ARGS:+"${COMPILE_ARGS[@]}"})
+  echo "${command[*]}" >>$baseout.log
   set +e
-  KEEP=1 TIMEOUT=60 $command >>$baseout.log 2>&1
+  KEEP=1 TIMEOUT=60 "${command[@]}" >>$baseout.log 2>&1
   x=$?
   set -e
 
-  report_compile $x $offset $baseout.log
+  report_compile $x $offset "$baseout.log"
 }
 
 do_run() {
   local offset command x i
-  local -a vars
+  local -a vars varstuff
   offset=$1
 
   dodiff=1
   if test $dorun = 0; then
-    echo "Not running program." >>$baseout.log
+    echo "Not running program." >>"$baseout.log"
     for ((i=0; i<$nruns; ++i)); do place_chars $(($offset + $i)) 37 "-"; done
     dodiff=0
   else
-      printf '' >$baseout.out
+      printf '' >"$baseout.out"
       while read -a vars ; do
-	  echo "===== RUNNING PROGRAM: ${vars[*]} =====" >>$baseout.log
-	  command="$timeout $runner -t $baseout.x ${vars[*]} $RUN_ARGS"
-	  command=${command//TEST/$testsrc}
-	  echo "$command >>$baseout.out" >>$baseout.log
+	  echo "===== RUNNING PROGRAM: ${vars[*]} =====" >>"$baseout.log"
+	  varstuff=("${vars[@]}" ${RUN_ARGS:+"${RUN_ARGS[@]}"})
+	  varstuff=("${varstuff[@]//TEST/$testsrc}")
+	  command=("$timeout" "$runner" -t "$baseout.x" "${varstuff[@]}")
+	  echo "${command[*]} >>$baseout.out" >>"$baseout.log"
 	  set +e
-	  KEEP=1 $command >>$baseout.out 2>>$baseout.log
+	  KEEP=1 "${command[@]}" >>"$baseout.out" 2>>"$baseout.log"
 	  x=$?
 	  set -e
 	  
-	  report_run $x $offset $baseout.log
+	  report_run $x $offset "$baseout.log"
 	  offset=$(($offset + 1))
       done <"$runspec"
   fi
@@ -564,13 +565,13 @@ do_diff() {
   refout=$2
 
   if test $fail = 1 -o $dorun = 0 -o $dodiff = 0; then
-    echo "Not testing output." >>$baseout.log
+    echo "Not testing output." >>"$baseout.log"
     place_chars $offset 37 "-"
   else
-      echo "===== CHECKING OUTPUT =====" >>$baseout.log
-      echo "diff -u $refout $baseout.out" >>$baseout.log
+      echo "===== CHECKING OUTPUT =====" >>"$baseout.log"
+      echo "diff -u $refout $baseout.out" >>"$baseout.log"
       if diff -u "$refout" "$baseout.out" >>"$baseout.log" 2>&1; then
-	  echo "Output identical to reference" >>$baseout.log
+	  echo "Output identical to reference" >>"$baseout.log"
 	  if xfail D; then char=?; color=31; fail=1; else char=D; color=32; fi
       else
 	  if xfail D; then char="/"; color=33; else char=X; color=31; fail=1; fi
@@ -620,17 +621,17 @@ do_preptest() {
     spec="$1::"
     impl=${spec%%:*}
     cargs=${spec#*:}; cargs=${cargs%%:*}; cargs=${cargs//\~/ }
+    COMPILE_ARGS=($cargs)
     rargs=${spec#*:*:}; rargs=${rargs%%:*}; rargs=${rargs//\~/ }
+    RUN_ARGS=($rargs)
 
     reldir=${testdir#$SRCDIR}
     reldir=${reldir#/}
 
     if test -z "$reldir"; then reldir=.; fi
     if test -n "$SRCDIR"; then
-	cargs="$cargs -I$SRCDIR/$reldir"
+	COMPILE_ARGS+=("-I$SRCDIR/$reldir")
     fi
-    export COMPILE_ARGS="$cargs"
-    export RUN_ARGS="$rargs"
 
     outdir=$reldir/_${1//[\~\/:.--- ]/_}
     outdir=${outdir#./}

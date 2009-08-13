@@ -16,7 +16,7 @@ copyright="Copyright (C) 2009 The SL project."
 #
 PS4='+ slc($$): '
 if test -n "$TRACE"; then set -x; fi
-set -eu
+set -e
 root=$(cd $(dirname "$0"); pwd)
 timeout=$root/timeout
 TIMEOUT=${TIMEOUT:-10000}; export TIMEOUT
@@ -45,22 +45,22 @@ check=
 prev_arg=
 followaction=
 
-in_pp_spec=
-in_pp_ind=
-in_tr_spec=
-in_tr_ind=
-in_cc_spec=
-in_cc_ind=
-in_filt1_spec=
-in_filt1_ind=
-in_filt2_spec=
-in_filt2_ind=
-in_as_spec=
-in_as_ind=
-in_ld_spec=
-in_ld_ind=
-tempfiles=
-tempdirs=
+in_pp_spec=()
+in_pp_ind=()
+in_tr_spec=()
+in_tr_ind=()
+in_cc_spec=()
+in_cc_ind=()
+in_filt1_spec=()
+in_filt1_ind=()
+in_filt2_spec=()
+in_filt2_ind=()
+in_as_spec=()
+in_as_ind=()
+in_ld_spec=()
+in_ld_ind=()
+tempfiles=()
+tempdirs=()
 inflight=
 outfile=
 tmpdir=
@@ -70,22 +70,22 @@ if test -n "${KEEP:-}"; then
  keep=1
 fi
 
-slc_asflags=
-slc_cflags=
-slc_ppflags=
-slc_ldflags=
-extra_inc=
-extra_ppflags=
-extra_asflags=
-extra_cflags=
-extra_ldflags=
-extra_tflags=
+slc_asflags=()
+slc_cflags=()
+slc_ppflags=()
+slc_ldflags=()
+extra_inc=()
+extra_ppflags=()
+extra_asflags=()
+extra_cflags=()
+extra_ldflags=()
+extra_tflags=()
 
 M4=${M4:-@M4@}
 
 # Setting up some cleanup mechanism
 cleanup() {
-  for f in $inflight $tempfiles $tempdirs; do
+  for f in ${inflight:+"$inflight"} "${tempfiles[@]}" "${tempdirs[@]}"; do
     if test -z "$keep"; then 
       test -n "$verbose" && echo "$basename: $f: deleting temporary" >&2
       if test -d "$f"; then 
@@ -100,8 +100,8 @@ cleanup() {
     fi
   done
   inflight=
-  tempfiles=
-  tempdirs=
+  tempfiles=()
+  tempdirs=()
 }
 trap cleanup 0 ERR HUP INT TERM QUIT
 
@@ -132,7 +132,7 @@ for arg in "$@"; do
      case $act in
         ignore) continue;;
         touch) touch "$arg" ; continue;;
-        pparg) extra_ppflags="$extra_ppflags $pparg $arg"; continue;;
+        pparg) extra_ppflags+=("$pparg" "$arg"); continue;;
      esac
   fi
 
@@ -161,24 +161,24 @@ for arg in "$@"; do
       -combine=*) combine=${arg#*=} ;;
       -combine)   combine=C ;;
 
-      -L*|-Wl,*)          extra_ldflags="$extra_ldflags $arg" ;;
-      -l*)                in_ld_spec="$in_ld_spec $arg" ;;
+      -L*|-Wl,*)          extra_ldflags+=("$arg") ;;
+      -l*)                in_ld_spec+=("$arg") ;;
       -i*|-MF|-MT|-MQ)    followaction=pparg; pparg=$arg ;;
-      -A*|-D*|-U*|-C*|-H|-M*)   extra_ppflags="$extra_ppflags $arg" ;;
+      -A*|-D*|-U*|-C*|-H|-M*)   extra_ppflags+=("$arg") ;;
 
-      -I*)            extra_inc="$extra_inc $arg" ;;
-      -Wa,*)          extra_asflags="$extra_asflags $arg" ;;
-      -Wm4,*|-fcm4*)  extra_tflags="$extra_tflags $arg" ;;
+      -I*)            extra_inc+=("$arg") ;;
+      -Wa,*)          extra_asflags+=("$arg") ;;
+      -Wm4,*|-fcm4*)  extra_tflags+=("$arg") ;;
 
       -W*|-d*|-pedantic*|-ansi|-std*)
-         extra_ppflags="$extra_ppflags $arg"
-	 extra_cflags="$extra_cflags $arg"
+         extra_ppflags+=("$arg")
+	 extra_cflags+=("$arg")
 	 ;;
 
       -x)  die "$arg not supported yet" ;;
       -nostdinc*) 
                 echo "$basename: warning: $arg may not behave as expected" >&2
-                extra_ppflags="$extra_ppflags $arg"
+                extra_ppflags+=("$arg")
                 ;;
       -mutc*)   die "-mutc is deprecated, use -b instead" ;;
 
@@ -186,23 +186,23 @@ for arg in "$@"; do
       -nodefaultlibs) slc_use_libsl=no ;;
       -nostdlib) slc_use_slrt=no; slc_use_libsl=no ;;
 
-      -)        in_pp_spec="$in_pp_spec $arg";;
+      -)        in_pp_spec+=("$arg");;
 
-      -*)	extra_ppflags="$extra_ppflags $arg"; extra_cflags="$extra_cflags $arg";;
+      -*)	extra_ppflags+=("$arg"); extra_cflags+=("$arg");;
 
 # SLC file types
-      *.t.c|*.t.cc|*.t.utc) check_exists "$arg" && in_cc_spec="$in_cc_spec $arg";;
-      *.utc) check_exists "$arg" && in_pp_spec="$in_pp_spec $arg";;
-      *.iu)  check_exists "$arg" && in_tr_spec="$in_tr_spec $arg";;
-      *.s0)  check_exists "$arg" && in_filt1_spec="$in_filt_spec $arg";;
+      *.t.c|*.t.cc|*.t.utc) check_exists "$arg" && in_cc_spec+=("$arg");;
+      *.utc) check_exists "$arg" && in_pp_spec+=("$arg");;
+      *.iu)  check_exists "$arg" && in_tr_spec+=("$arg");;
+      *.s0)  check_exists "$arg" && in_filt1_spec+=("$arg");;
 # Legacy file types
-      *.i|*.ii) check_exists "$arg" && in_tr_spec="$in_tr_spec $arg";;
-      *.C|*.cxx|*.c++|*.cc|*.cp|*.cpp) check_exists "$arg" && in_pp_spec="$in_pp_spec $arg";;
-      *.S|*.c) check_exists "$arg" && in_pp_spec="$in_pp_spec $arg";;
-      *.t.s)   check_exists "$arg" && in_as_spec="$in_as_spec $arg";;
-      *.s)     check_exists "$arg" && in_filt2_spec="$in_as_spec $arg";;
+      *.i|*.ii) check_exists "$arg" && in_tr_spec+=("$arg");;
+      *.C|*.cxx|*.c++|*.cc|*.cp|*.cpp) check_exists "$arg" && in_pp_spec+=("$arg");;
+      *.S|*.c) check_exists "$arg" && in_pp_spec+=("$arg");;
+      *.t.s)   check_exists "$arg" && in_as_spec+=("$arg");;
+      *.s)     check_exists "$arg" && in_filt2_spec+=("$arg");;
 # Default behavior: feed input to linker
-      *) check_exists "$arg" && in_ld_spec="$in_ld_spec $arg";;
+      *) check_exists "$arg" && in_ld_spec+=("$arg");;
   esac
 done
 if test -n "${prev_arg:-}"; then die "argument to \`$arg' is missing"; fi
@@ -423,15 +423,15 @@ eval $(slc_use_slrt=$slc_use_slrt slc_use_libsl=$slc_use_libsl "$cce_helper" -s 
 
 # If we were requested to test the configuration, do it now
 if test -n "$check"; then
-    if ! test -d $slc_trans; then
+    if ! test -d "$slc_trans"; then
 	echo "$slc_trans: does not exist or is not a directory" >&2
 	exit 1
     else echo "Found translator: $slc_trans"; fi
-    if ! $slc_compiler --version >/dev/null 2>&1; then
+    if ! "${slc_compiler[@]}" --version >/dev/null 2>&1; then
 	echo "$slc_compiler: cannot run" >&2
 	exit 1
     else echo "Found compiler: $slc_compiler"; fi
-    if ! $slc_aslink --version >/dev/null 2>&1; then
+    if ! "${slc_aslink[@]}" --version >/dev/null 2>&1; then
 	echo "$slc_aslink: cannot run" >&2
 	exit 1
     else echo "Found assembler/linker compiler: $slc_aslink"; fi
@@ -450,39 +450,39 @@ fi
 # Command line additions
 ###################################
 # Gathering flags per tool category
-slc_ppflags="$slc_ppflags $extra_inc $extra_ppflags $extra_cflags"
-slc_cflags="$slc_cflags $extra_cflags"
-slc_asflags="$slc_asflags $slc_cflags $extra_asflags"
-slc_ldflags="$slc_ldflags $slc_cflags $extra_ldflags"
+slc_ppflags+=("${extra_inc[@]}" "${extra_ppflags[@]}" "${extra_cflags[@]}")
+slc_cflags+=("${extra_cflags[@]}")
+slc_asflags+=("${slc_cflags[@]}" "${extra_asflags[@]}")
+slc_ldflags+=("${slc_cflags[@]}" "${extra_ldflags[@]}")
 
 ###################################
 # Settings special for M4
 ###################################
 
-# -E: stop after errors
-cm4flags="-Wm4,-E -fcm4-lquote=[[ -fcm4-rquote=]]"
+# m4 -E: stop after errors
+cm4flags=(-Wm4,-E -fcm4-lquote=[[ -fcm4-rquote=]])
 
 if test -n "$verbose"; then
-  cm4flags="$cm4flags -v"
+  cm4flags+=(-v)
 fi
 
 if test -n "$synclines"; then
-  cm4flags="$cm4flags -Wm4,-s"
+  cm4flags+=(-Wm4,-s)
 else
   # cpp -P: do not generate synclines
-  slc_ppflags="$slc_ppflags -P"
+  slc_ppflags+=(-P)
 fi
 
 if test -n "$m4trace"; then
-  cm4flags="$cm4flags -Wm4,-dV -Wm4,-o -Wm4,$m4trace"
+  cm4flags+=(-Wm4,-dV -Wm4,-o "-Wm4,$m4trace")
 fi
-for fl in $slc_tflags; do
-    cm4flags="$cm4flags -Wm4,$fl"
+for fl in "${slc_tflags[@]}"; do
+    cm4flags+=("-Wm4,$fl")
 done
-for ei in $extra_inc; do
-    cm4flags="$cm4flags -Wm4,$ei"
+for ei in "${extra_inc[@]}"; do
+    cm4flags+=("-Wm4,$ei")
 done
-cm4flags="$cm4flags $extra_tflags"
+cm4flags+=("${extra_tflags[@]}")
 
 ###################################
 # Construction of compilation chain
@@ -514,11 +514,11 @@ if test -n "$tmpdir"; then
         fi
     else
         mkdir -p "$tmpdir"
-	tempdirs=$tmpdir
+	tempdirs=("$tmpdir")
     fi
 else
     tmpdir=$(mktemp -d $TMPDIR/slc.XXXXXXXX)
-    tempdirs=$tmpdir
+    tempdirs=("$tmpdir")
 fi
 
 # Decide what phases to do and where to stop
@@ -536,14 +536,17 @@ combine="$finalstage$combine"
 finalname=${outfile:-$defout}
 
 prepare_chain() {
-    local inputs addext stage indvar specfiles phrase
-    local f first f final target some
+    local -a inputs specfiles
+    local addext stage indvar phrase
+    local f first final target 
     
-    inputs=$1
+    inputsarray=$1
+    eval "inputs=(\"\${$inputsarray[@]}\")"
     addext=$2
     stage=$3
     indvar=$4
-    specfiles=$5
+    specfilesarray=$5
+    eval "specfiles=(\"\${$specfilesarray[@]}\")"
     phrase=$6
     
     target=
@@ -554,23 +557,23 @@ prepare_chain() {
 		case $f in
 		    *.S) 
 			target=$tmpdir/$fn.s
-			in_filt2_ind="$in_filt2_ind $target"
+			in_filt2_ind+=("$target")
 			;;
                     -)
                         target=$tmpdir/STDIN.$addext
-                        eval "$indvar=\$$indvar' $target'"
+                        eval "$indvar+=(\"\$target\")"
 			;;
 		    *)
 			target=$tmpdir/$fn.$addext
-			eval "$indvar=\$$indvar' $target'"
+			eval "$indvar+=(\"\$target\")"
 			;;
 		esac
-		transforms="R:$target $transforms $stage:$target:$f"
+		transforms=("R:$target" "${transforms[@]}" "$stage:$target:$f")
 	    done
 	else
 	    transform=
 	    first=
-	    for f in $inputs; do
+	    for f in "${inputs[@]}"; do
 		if test -z "$first"; then first=$f; fi
 		transform="$transform:$f"
 	    done
@@ -585,15 +588,15 @@ prepare_chain() {
 		    fi
 		else
 		    target=$tmpdir/$targetbase
-		    transforms="R:$target $transforms"
+		    transforms=("R:$target" "${transforms[@]}")
 		fi
-		transforms="$transforms $stage:$target$transform"
+		transforms+=("$stage:$target$transform")
 	    fi
 	    if test "x$finalstage" = "x$stage"; then skip=1; fi
-	    if test "$indvar" != "unused"; then eval "$indvar=\$$indvar' $target'"; fi
+	    if test "$indvar" != "unused"; then eval "$indvar+=(\"\$target\")"; fi
 	fi
     else
-	for f in $specfiles; do
+	for f in "${specfiles[@]}"; do
 	    echo "$basename: $f: $phrase input file unused because $phrase not run" >&2
 	done
     fi
@@ -605,17 +608,23 @@ prepare_chain() {
 # *_ind: derivatives
 
 skip=
-transforms=
-prepare_chain "$in_pp_spec" $pp_ext P in_tr_ind "$in_pp_spec" "preprocessor"
-prepare_chain "$in_tr_ind $in_tr_spec" $tr_ext T in_cc_ind "$in_tr_spec" "translation"
-prepare_chain "$in_cc_ind $in_cc_spec" s0 C in_filt1_ind "$in_cc_spec" "compiler"
-prepare_chain "$in_filt1_ind $in_filt1_spec" s F in_filt2_ind "$in_filt1_spec" "post-filter1"
-prepare_chain "$in_filt2_ind $in_filt2_spec" t.s E in_as_ind "$in_filt2_spec" "post-filter2"
-prepare_chain "$in_as_ind $in_as_spec" o A in_ld_ind "$in_as_spec" "assembler"
-prepare_chain "$in_ld_ind $in_ld_spec" x L unused "$in_ld_spec" "linker"
+transforms=()
+prepare_chain "in_pp_spec"	$pp_ext	P	in_tr_ind	in_pp_spec	preprocessor
+tr_inputs=("${in_tr_ind[@]}" "${in_tr_spec[@]}")
+prepare_chain tr_inputs		$tr_ext	T	in_cc_ind	in_tr_spec	translation
+cc_inputs=("${in_cc_ind[@]}" "${in_cc_spec[@]}")
+prepare_chain cc_inputs		s0	C	in_filt1_ind	in_cc_spec	compiler
+f1_inputs=("${in_filt1_ind[@]}" "${in_filt1_spec[@]}")
+prepare_chain f1_inputs		s	F	in_filt2_ind	in_filt1_spec	post-filter1
+f2_inputs=("${in_filt2_ind[@]}" "${in_filt2_spec[@]}")
+prepare_chain f2_inputs		t.s	E	in_as_ind	in_filt2_spec	post-filter2
+as_inputs=("${in_as_ind[@]}" "${in_as_spec[@]}")
+prepare_chain as_inputs		o	A	in_ld_ind	in_as_spec	assembler
+ld_inputs=("${in_ld_ind[@]}" "${in_ld_spec[@]}")
+prepare_chain ld_inputs		x	L	unused		in_ld_spec	linker
 
-if test -z "$transforms"; then
-   $slc_compiler $slc_cflags
+if test 0 = "${#transforms[@]}"; then
+   "${slc_compiler[@]}" "${slc_cflags[@]}"
    exit 0
 fi
 
@@ -632,78 +641,79 @@ if test -n "$verbose"; then
   done
   set | grep '^slc_'
   echo "---- $basename: build plan -----" >&2
-  for i in $transforms; do echo $i >&2; done
+  for i in "${transforms[@]}"; do echo $i >&2; done
   echo "---- $basename: processing... ----" >&2
 fi
 
-for t in $transforms; do
+for t in "${transforms[@]}"; do
   IFS=':' read action target indeps <<EOF 
 $t
 EOF
+  # FIXME: the following should be an array
   deps=${indeps//:/ }
   capturestdout=
   case $action in
-      R) tempfiles="$tempfiles $target"; continue ;;
+      R) tempfiles+=("$target"); continue ;;
       P)
 	  res=2
-	  cmd="$slc_compiler -E $deps $slc_ppflags"
+	  cmd=("${slc_compiler[@]}" -E $deps "${slc_ppflags[@]}")
 	  if ! test "$slc_mode" = "pp" -a -z "$outfile"; then capturestdout=1; fi
 	  ;;
       T) 
 	  res=3
-          cm4deps=
+          cm4deps=()
           for d in $deps; do
 	      cm4dsrcdir=$(dirname "$d")
-	      cm4deps="$cm4deps -Wm4,-I$cm4dsrcdir $d"
-	      slc_cflags="$slc_cflags -I$cm4dsrcdir"
+	      cm4deps+=("-Wm4,-I$cm4dsrcdir" "$d")
+	      slc_cflags+=("-I$cm4dsrcdir")
           done
-	  cmd="$cm4_helper $cm4flags $cm4deps"
+	  cmd=("$cm4_helper" "${cm4flags[@]}" "${cm4deps[@]}")
 	  if ! test "$slc_mode" = "trans" -a -z "$outfile"; then capturestdout=1; fi
 	  ;;
       C)
 	  res=4
-	  cmd="$slc_compiler -o $target -combine -S -nostdinc $deps $slc_cflags"
+	  cmd=("${slc_compiler[@]}" -o "$target" -combine -S -nostdinc $deps "${slc_cflags[@]}")
 	  ;;
       F)
 	  res=5
 	  if test "x$slc_filter1" = "xcp"; then
-	      cmd="cat $deps"
+	      cmd=(cat $deps)
 	      capturestdout=1
 	  else
-	      cmd="$slc_filter1 $target $deps"
+	      cmd=("${slc_filter1[@]}" "$target" $deps)
 	  fi
 	  ;;
       E)
 	  res=6
 	  if test "x$slc_filter2" = "xcp"; then
-	      cmd="cat $deps"
+	      cmd=(cat $deps)
 	      capturestdout=1
 	  else
-	      cmd="$slc_filter2 $target $deps"
+	      cmd=("${slc_filter2[@]}" "$target" $deps)
 	  fi
 	  ;;
       A)
 	  res=7
-	  cmd="$slc_aslink -c -o $target $deps $slc_asflags"
+	  cmd=("${slc_aslink[@]}" -c -o "$target" $deps "${slc_asflags[@]}")
 	  ;;
       L)
 	  res=8
-	  cmd="$slc_aslink -o $target $deps $slc_ldflags"
+	  cmd=("${slc_aslink[@]}" -o "$target" $deps "${slc_ldflags[@]}")
 	  ;;
   esac
 
   inflight=$target
   export SLC_PHASE=$action
   if test -n "$capturestdout"; then
-      if test -n "$verbose"; then echo "$action: $cmd >$target" >&2; fi
+      if test -n "$verbose"; then echo "$action: ${cmd[*]} >$target" >&2; fi
       set +e
-      $timeout $cmd >"$target"
+      "$timeout" "${cmd[@]}" >"$target"
       cmdcode=$?
       set -e
   else
-      if test -n "$verbose"; then echo "$action: $cmd" >&2; fi
+      if test -n "$verbose"; then echo "$action: ${cmd[*]}" >&2; fi
       set +e
-      $timeout $cmd
+      "$timeout" "${cmd[@]}"
       cmdcode=$?
       set -e
   fi

@@ -16,7 +16,7 @@ copyright="Copyright (C) 2009 The SL project."
 #
 PS4='+ slt-many($$): '
 if test -n "$TRACE"; then set -x; fi
-set -e
+set -eu
 
 version=@slc_version@
 slrev=@slc_revision@
@@ -97,35 +97,39 @@ Script written by Raphael 'kena' Poss, with input from Mike Lankamp,
 Thomas Bernard, Simon Polstra.
 EOF
    exit 0
-else
-  # collect arguments and test files
-  tests=""
-  for arg in "$@"; do
-    if test -d "$arg"; then
-      found=$(find $arg -name '*.c' -or -name '*.[sS]'|grep -v '/_'|sort)
-      for f in $found; do
-	  if test -r "$f"; then
-	      tests="$tests $f"
-	  fi
-      done
-    else  
-      if test -r "$arg"; then
-        tests="$tests $arg"
-      fi
-    fi
-  done
 fi
+   
+# collect arguments and test files
+tests=()
+saveIFS=$IFS
+IFS='
+'
+for arg in "$@"; do
+    if test -d "$arg"; then
+	found=$(find $arg -name '*.c' -or -name '*.[sS]'|grep -v '/_'|sort)
+	for f in $found; do
+	    if test -r "$f"; then
+		tests+=("$f")
+	    fi
+	done
+    else  
+	if test -r "$arg"; then
+            tests+=("$arg")
+	fi
+    fi
+done
+IFS=$saveIFS
 
-if ! $slt --version >/dev/null 2>&1; then
+if ! "$slt" --version >/dev/null 2>&1; then
   echo "\`$slt' not found or not executable, cannot run. (maybe set PATH or SLT?)" >&2
   exit 1
 fi
 
-if test -z "$tests"; then
+nrtests=${#tests[@]}
+if test 0 = $nrtests; then
   echo "No tests selected! (run from test directory or select tests on command line)" >&2
   exit 1
 fi
-nrtests=$(echo "$tests"|tr ' ' '\n'|grep -v '^$'|wc -l)
 echo "$nrtests test(s) selected."
 
 SLT_IMPL_LIST=${SLT_IMPL_LIST:-seqc ptl ppp utc0}
@@ -156,9 +160,9 @@ report() {
 
 export SLT_IMPL_LIST
 trap report INT TERM QUIT HUP
-for t in $tests; do
+for t in "${tests[@]}"; do
   set +e
-  $slt "$t"
+  "$slt" "$t"
   x=$?
   set -e
   count=$(expr $count + 1)
