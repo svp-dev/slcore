@@ -1,5 +1,24 @@
 2009-08-12  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	Make shell scripts more robust. 
+
+	This allows for example to run `slc -DPACKAGE_NAME=\"foo bar\"',
+	as Automake does. Previously the spaces and quoted quotes would
+	confuse command line construction in `slc'.
+	
+	* tools/bin/slr.in,
+	* tools/bin/slc.in,
+	* tools/bin/slt.in,
+	* tools/bin/cce.in,
+	* tools/bin/slt-many.in: Use array variables where appropriate.
+
+	* tools/lib/r-host.sh,
+	* tools/lib/r-mtsparc-sim.sh.in, 	
+	* tools/lib/r-mtalpha-sim.sh.in: Properly handle the case where
+	there are no remaining command-line parameters.
+
+2009-08-12  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	Reinstate preprocessor flags for dependency tracking.
 	
 	* tools/bin/slc.in: Reinstate the `-M' flags. Pass `-A'. Simplify.

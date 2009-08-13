@@ -41,5 +41,4 @@ fi
 if test -n "${VERBOSE:-}"; then
    echo "$basename: running: ${RUNNER_PREFIX:-} $do_debug $MGSIM_SPARC ${SIMARGS:-} -t ${*:-} -L16 $datafile -L17 $fdatafile $program" >&2
 fi  
-set +u
-exec ${RUNNER_PREFIX:-} $do_debug $MGSIM_SPARC ${SIMARGS:-} -t "$@" -L16 "$datafile" -L17 "$fdatafile" "$program"
+exec ${RUNNER_PREFIX:-} $do_debug $MGSIM_SPARC ${SIMARGS:-} -t ${1:+"$@"} -L16 "$datafile" -L17 "$fdatafile" "$program"

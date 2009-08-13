@@ -35,5 +35,4 @@ fi
 if test -n "${VERBOSE:-}"; then
   echo "$basename: running: ${RUNNER_PREFIX:-} $do_debug $d/$b $datafile $fdatafile ${*:-}" >&2
 fi
-set +u
-exec ${RUNNER_PREFIX:-} $do_debug "$d/$b" "$datafile" "$fdatafile" "$@"
+exec ${RUNNER_PREFIX:-} $do_debug "$d/$b" "$datafile" "$fdatafile" ${1:+"$@"}
