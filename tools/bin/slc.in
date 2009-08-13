@@ -157,33 +157,25 @@ for arg in "$@"; do
       -o)	prev_arg=outfile;;
       -ftrace-m4=*) m4trace=${arg#*=} ;;
       -save-temps) keep=yes ;;
-      -v)       verbose=yes ;;
+      -v)         verbose=yes ;;
       -combine=*) combine=${arg#*=} ;;
       -combine)   combine=C ;;
 
-      -L*|-Wl,*)     extra_ldflags="$extra_ldflags $arg" ;;
-      -l*)           in_ld_spec="$in_ld_spec $arg" ;;
-      -i*)           followaction=pparg; pparg=$arg ;;
-      -D*|-U*|-C*|-H)  extra_ppflags="$extra_ppflags $arg" ;;
+      -L*|-Wl,*)          extra_ldflags="$extra_ldflags $arg" ;;
+      -l*)                in_ld_spec="$in_ld_spec $arg" ;;
+      -i*|-MF|-MT|-MQ)    followaction=pparg; pparg=$arg ;;
+      -A*|-D*|-U*|-C*|-H|-M*)   extra_ppflags="$extra_ppflags $arg" ;;
 
-      -MG|-MP|-MD|-MMD)
-                echo "$basename: warning: $arg ignored" >&2;;
-      -MT|-MQ)
-                echo "$basename: warning: $arg ignored" >&2; followaction=ignore ;;
-      -MF)
-                echo "$basename: warning: $arg ignored" >&2; followaction=touch ;;
+      -I*)            extra_inc="$extra_inc $arg" ;;
+      -Wa,*)          extra_asflags="$extra_asflags $arg" ;;
+      -Wm4,*|-fcm4*)  extra_tflags="$extra_tflags $arg" ;;
 
-      -I*)           extra_inc="$extra_inc $arg" ;;
-      -Wa,*)         extra_asflags="$extra_asflags $arg" ;;
-      -Wm4,*)         extra_tflags="$extra_tflags $arg" ;;
-      -fcm4*)         extra_tflags="$extra_tflags $arg" ;;
-
-      -W*|-d*|-pedantic|-ansi|-std*)
+      -W*|-d*|-pedantic*|-ansi|-std*)
          extra_ppflags="$extra_ppflags $arg"
 	 extra_cflags="$extra_cflags $arg"
 	 ;;
 
-      -x|-M|-MM)  die "$arg not supported yet" ;;
+      -x)  die "$arg not supported yet" ;;
       -nostdinc*) 
                 echo "$basename: warning: $arg may not behave as expected" >&2
                 extra_ppflags="$extra_ppflags $arg"
