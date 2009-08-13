@@ -51,8 +51,10 @@ in_tr_spec=
 in_tr_ind=
 in_cc_spec=
 in_cc_ind=
-in_filt_spec=
-in_filt_ind=
+in_filt1_spec=
+in_filt1_ind=
+in_filt2_spec=
+in_filt2_ind=
 in_as_spec=
 in_as_ind=
 in_ld_spec=
@@ -143,7 +145,8 @@ for arg in "$@"; do
       -EE)	slc_mode=trans;;
       -E)	slc_mode=pp;;
       -S0)      slc_mode=cc;;
-      -S)	slc_mode=filt;;
+      -S)	slc_mode=filt1;;
+      -S1)      slc_mode=filt2;;
       -c)       slc_mode=as;;
 
       -b)	prev_arg=impl;;
@@ -199,12 +202,13 @@ for arg in "$@"; do
       *.t.c|*.t.cc|*.t.utc) check_exists "$arg" && in_cc_spec="$in_cc_spec $arg";;
       *.utc) check_exists "$arg" && in_pp_spec="$in_pp_spec $arg";;
       *.iu)  check_exists "$arg" && in_tr_spec="$in_tr_spec $arg";;
-      *.s0)  check_exists "$arg" && in_filt_spec="$in_filt_spec $arg";;
+      *.s0)  check_exists "$arg" && in_filt1_spec="$in_filt_spec $arg";;
 # Legacy file types
       *.i|*.ii) check_exists "$arg" && in_tr_spec="$in_tr_spec $arg";;
       *.C|*.cxx|*.c++|*.cc|*.cp|*.cpp) check_exists "$arg" && in_pp_spec="$in_pp_spec $arg";;
       *.S|*.c) check_exists "$arg" && in_pp_spec="$in_pp_spec $arg";;
-      *.s)     check_exists "$arg" && in_as_spec="$in_as_spec $arg";;
+      *.t.s)   check_exists "$arg" && in_as_spec="$in_as_spec $arg";;
+      *.s)     check_exists "$arg" && in_filt2_spec="$in_as_spec $arg";;
 # Default behavior: feed input to linker
       *) check_exists "$arg" && in_ld_spec="$in_ld_spec $arg";;
   esac
@@ -247,17 +251,20 @@ dialect. This transform uses the M4 preprocessor.
 compiler used depends on the SVP dialect and the target
 architecture.
 
-- filter: (for the Microgrids implementations) the raw assembly is
-further distilled.
+- filter1: (for the Microgrids implementations) the raw assembly
+produced by the compiler is corrected to become valid.
+
+- filter2: (for the Microgrids implementations) the assembly is
+further optimized.
 
 - assemble; the assembler used depends on the target architecture.
 
 - link; the linker used depends on the target architecture.
 
-Except for the two additional transforms (translate and filter),
-\`$basename' mimics the driver of the GNU Compiler Collection (\`gcc'). For
-general information about default behavior, additional flags and
-processing order, see gcc(1).
+Except for the three additional transforms (translate, filter1 and
+filter2), \`$basename' mimics the driver of the GNU Compiler
+Collection (\`gcc'). For general information about default behavior,
+additional flags and processing order, see gcc(1).
 
 Usage: $0 [ARG]...
 
@@ -280,9 +287,14 @@ Options:
                      The output is in the form of an unprocessed assembler code
                      file for each non-assembler input file specified.
 
-  -S                 Stop after the second stage of compilation proper;
-                     do not assemble. The output is in the form of an assembler
-                     code file for each non-assembler input file specified.
+  -S                 Stop after the second stage of compilation
+                     proper; do not optimize the assembly. The output
+                     is in the form of an assembler code file for each
+                     non-assembler input file specified.
+
+  -S1                Stop after the assembly optimization; do not assemble. 
+                     The output is in the form of an optimized assembler code
+                     file for each assembler input file specified.
 
   -c                 Compile or assemble the source files, but do not link.
                      The linking stage is not done. The output is in the
@@ -387,9 +399,11 @@ Diagnostics:
 
   5                  Post-compilation filtering failed.
 
-  6                  Assembly failed.
+  6                  Assembly optimization failed.
 
-  7                  Linking failed.
+  7                  Assembly failed.
+
+  8                  Linking failed.
 
   127                A tool was not found.
 
@@ -521,7 +535,8 @@ case $slc_mode in
     pp) finalstage=P;;
     trans) finalstage=T;;
     cc) finalstage=C;;
-    filt) finalstage=F;;
+    filt1) finalstage=F;;
+    filt2) finalstage=E;;
     as) finalstage=A;;
     ld) finalstage=L; defout=a.out;;
 esac
@@ -547,7 +562,7 @@ prepare_chain() {
 		case $f in
 		    *.S) 
 			target=$tmpdir/$fn.s
-			in_as_ind="$in_as_ind $target"
+			in_filt2_ind="$in_filt2_ind $target"
 			;;
                     -)
                         target=$tmpdir/STDIN.$addext
@@ -601,8 +616,9 @@ skip=
 transforms=
 prepare_chain "$in_pp_spec" $pp_ext P in_tr_ind "$in_pp_spec" "preprocessor"
 prepare_chain "$in_tr_ind $in_tr_spec" $tr_ext T in_cc_ind "$in_tr_spec" "translation"
-prepare_chain "$in_cc_ind $in_cc_spec" s0 C in_filt_ind "$in_cc_spec" "compiler"
-prepare_chain "$in_filt_ind $in_filt_spec" s F in_as_ind "$in_filt_spec" "post-filter"
+prepare_chain "$in_cc_ind $in_cc_spec" s0 C in_filt1_ind "$in_cc_spec" "compiler"
+prepare_chain "$in_filt1_ind $in_filt1_spec" s F in_filt2_ind "$in_filt1_spec" "post-filter1"
+prepare_chain "$in_filt2_ind $in_filt2_spec" t.s E in_as_ind "$in_filt2_spec" "post-filter2"
 prepare_chain "$in_as_ind $in_as_spec" o A in_ld_ind "$in_as_spec" "assembler"
 prepare_chain "$in_ld_ind $in_ld_spec" x L unused "$in_ld_spec" "linker"
 
@@ -658,19 +674,28 @@ EOF
 	  ;;
       F)
 	  res=5
-	  if test "x$slc_filter" = "xcp"; then
+	  if test "x$slc_filter1" = "xcp"; then
 	      cmd="cat $deps"
 	      capturestdout=1
 	  else
-	      cmd="$slc_filter $target $deps"
+	      cmd="$slc_filter1 $target $deps"
+	  fi
+	  ;;
+      E)
+	  res=6
+	  if test "x$slc_filter2" = "xcp"; then
+	      cmd="cat $deps"
+	      capturestdout=1
+	  else
+	      cmd="$slc_filter2 $target $deps"
 	  fi
 	  ;;
       A)
-	  res=6
+	  res=7
 	  cmd="$slc_aslink -c -o $target $deps $slc_asflags"
 	  ;;
       L)
-	  res=7
+	  res=8
 	  cmd="$slc_aslink -o $target $deps $slc_ldflags"
 	  ;;
   esac

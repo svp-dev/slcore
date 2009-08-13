@@ -253,12 +253,14 @@ case $slc_dialect-$slc_arch in
 	    c)   slc_compiler="$CC" ;;
 	    utc) echo "$basename: warning: no compiler for $dialect-$arch" >&2 ;;
 	esac
-	slc_filter=cp
+	slc_filter1=cp
+	slc_filter2=cp
 	;;
     ppp-*)
         archcomp=$(eval "echo \${CC_$basearchvar:-$scu_helper}")
 	slc_compiler="$python $spp_helper $slc_transbase compile $slc_arch $archcomp"
-	slc_filter="$python $spp_helper $slc_transbase filter $slc_arch $archcomp"
+	slc_filter1="$python $spp_helper $slc_transbase filter $slc_arch $archcomp"
+	slc_filter2=cp
 	;;
     *-*)
 	case $slc_complang in
@@ -266,7 +268,8 @@ case $slc_dialect-$slc_arch in
 	    c)   slc_compiler=$(eval "echo \${CC_$basearchvar:-$scu_helper} -std=gnu99") ;;
 	    utc) slc_compiler=$(eval "echo \${UTCC_$archvar:-$scu_helper} -std=utc") ;;
 	esac
-	slc_filter=cp
+	slc_filter1=cp
+	slc_filter2=cp
 	;;
     
 esac
