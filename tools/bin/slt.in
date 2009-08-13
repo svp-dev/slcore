@@ -94,6 +94,8 @@ Output codes for compilation:
 
     XF   Post-compilation failed.
 
+    XE   Assembly optimization failed.
+
     XA   Assembly failed.
 
     XL   Linking failed.
@@ -105,6 +107,8 @@ Output codes for compilation:
     /C   Compilation failed, as expected.
 
     /F   Post-compilation failed, as expected.
+
+    /E   Assembly optimization failed, as expected.
 
     /A   Assembly failed, as expected.
 
@@ -156,7 +160,9 @@ Temporary files:
 
     IMPL/test.s0           Raw assembly output
 
-    IMPL/test.s            Assembly output
+    IMPL/test.s            Processed assembly output
+
+    IMPL/test.t.s          Optimized assembly output.
 
     IMPL/test.o            Object file
 
@@ -471,8 +477,9 @@ report_compile() {
           3) if xfail T; then color=33; char="/T"; else color=31; char="XT"; fail=1; fi;;
           4) if xfail C; then color=33; char="/C"; else color=31; char="XC"; fail=1; fi;;
           5) if xfail F; then color=33; char="/F"; else color=31; char="XF"; fail=1; fi;;
-          6) if xfail A; then color=33; char="/A"; else color=31; char="XA"; fail=1; fi;;
-          7) if xfail L; then color=33; char="/L"; else color=31; char="XL"; fail=1; fi;;
+          6) if xfail E; then color=33; char="/E"; else color=31; char="XE"; fail=1; fi;;
+          7) if xfail A; then color=33; char="/A"; else color=31; char="XA"; fail=1; fi;;
+          8) if xfail L; then color=33; char="/L"; else color=31; char="XL"; fail=1; fi;;
           *) color=31; char="??"; fail=1 ;;
        esac
        dorun=0
@@ -482,7 +489,7 @@ report_compile() {
     dorun=0
   fi
 
-  if xign P T C F A L; then color=37; fail=0; fi
+  if xign P T C F E A L; then color=37; fail=0; fi
 
   place_chars $offset $color "$char"
 }

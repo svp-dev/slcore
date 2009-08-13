@@ -1,5 +1,20 @@
 2009-08-11  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	Support new compilation stage `E'.
+
+	This stage transforms `.s' files to `.t.s' before passing them to
+	the assembler. This is groundwork to add generic assembly
+	optimizations valid across compilers, such as adding 'swch' on MT
+	asembly.
+	
+	* tools/bin/cce.in: Set `slc_filter1' and `slc_filter2' instead of `slc_filter'. 
+
+	* tools/bin/slc.in: Use them. Support new flag `-S1'.
+
+	* tools/bin/slt.in: Support the new exit code. Document accordingly.
+	
+2009-08-11  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	Rename thread symbols in SL->mtalpha compilation.
 
 	This makes it more obvious when looking at the generated assembly
