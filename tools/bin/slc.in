@@ -555,7 +555,7 @@ prepare_chain() {
     target=
     if test "x$skip" = "x"; then
 	if ! expr "$combine" : ".*$stage" >/dev/null; then
-	    for f in $inputs; do
+	    for f in "${inputs[@]}"; do
 		fn=${f##*/}; fn=${fn%.*}; fn=${fn%.t}
 		case $f in
 		    *.S) 
