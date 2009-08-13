@@ -265,6 +265,10 @@ class pppalpha(object):
    fargregs = 12
    ilocalregs = 19
 
+   # registers that are known to not be empty
+   # when a thread starts: by default, all legacy regs.
+   default_presets = set(("$%d" % x for x in xrange(31)))
+
    def __init__(self):
       regs = { 
          'i' : { 'l' : [None]*32, 'g' : [None]*32, 's' : [None]*32, 'd' : [None]*32 },
@@ -700,23 +704,41 @@ class pppalpha(object):
          yield line
       inf.close()
 
+
    def lexer(self, lines):
       """
       Split code from comments, produce a generator of (code, comment).
       """
       #w = re.compile(r'\s+')
-      r = re.compile(r'([^#]*)((#.*)?)')
+      r = re.compile(r'''((?:"(?:[^\\"]|\\.)*"|'(?:\\.|.)|[^#])*)((#.*)?)''')
       for line in lines:
-         #wline = w.sub(' ', line)
-         #m = r.match(wline)
          m = r.match(line)
-         asm = m.group(1).strip()
+         asm = m.group(1)
          comment = m.group(2)
          if comment is None:
             comment = ''
          else:
-            comment = comment[1:].strip()
+            comment = comment[1:]
          yield (asm, comment)
+
+   def splitsemi(self, tokens):
+      """
+      Split lines at semicolons
+      """
+      r = re.compile(r''';|(?P<rest>(?:"(?:[^\\"]|\\.)*"|'(?:\\.|.)|[^;])+)''')
+      for (asm, comment) in tokens:
+         done = False
+         for m in r.finditer(asm):
+            rest = m.group('rest')
+            if rest is not None:
+               rest = rest.strip()
+               if rest:
+                  yield (rest, comment)
+                  done = True
+         if not done and len(comment) > 0:
+            yield ('', comment)
+                  
+         
 
    def parser(self, tokens):
       """
@@ -810,6 +832,7 @@ class pppalpha(object):
       for n in fundata['prologue']:
          yield n
       yield ('directive', '.prologue %d' % (fundata['prologuen']), '')
+      yield ('empty', '', 'MTREG_SET')
       for n in items:
          yield n
 
@@ -825,11 +848,19 @@ class pppalpha(object):
       yield ('directive', '.registers %d %d %d %d %d %d' % tuple(regs), '')
       if fundata['use_gp']:
          yield ('directive', '.base $l%d' % fundata['specials']['gp'], '')
-      for n in items:
-         yield n
+
+      p = fundata['presets']
+      # print p
+      for (type, content, comment) in items:
+         if type == 'empty' and comment == 'MTREG_SET':
+            if fundata['use_gp']: yield ('empty','','MTREG_SPEC: $l%d' % fundata['specials']['gp'])
+            if fundata['use_sp']: yield ('empty','','MTREG_SPEC: $l%d' % fundata['specials']['tlsp'])
+            if fundata['use_pv']: yield ('empty','','MTREG_SPEC: $l%d' % fundata['specials']['pv'])
+            yield ('empty', '', 'MTREG_SET: %s' % ','.join(p))
+         else:
+            yield (type, content, comment)
       yield ('directive', '.end %s' % name, '')
       yield ('directive', '.base $%d' % self.legacy_regs['gp'], '')
-
 
    def flattener(self, items):
       """
@@ -843,9 +874,41 @@ class pppalpha(object):
          else:
             yield (type, content, comment)
 
+   def grouper2(self, items):
+      """
+      Group function code together.
+      Produce a generator of (type, code, comment).
+      """
+
+      presets = self.default_presets.copy()
+      presets.add("$l0")
+
+      state = 0
+      queue = []
+      for (type, content, comment) in items:
+         if state == 0:
+            if content.startswith('.ent'):
+               name = content.split(' ',1)[1]
+               state = 1
+               queue.append((type, content, comment))
+               continue
+         else:
+            queue.append((type, content, comment))
+            if not content.startswith('.end'):
+               continue
+            yield ('fun',{'name':name,'body':queue,'presets':presets},'')
+            queue = []
+            state = 0
+            continue
+         for q in queue:
+            yield q
+         queue = []
+         state = 0
+         yield (type, content, comment)
+
    def grouper(self, items):
       """
-      Group function code together (when applicable).
+      Group thread function code together (when applicable).
       Produce a generator of (type, code, comment).
 
       For functions, emit a single item with type == "fun". In this case
@@ -856,6 +919,7 @@ class pppalpha(object):
 
       state = 0
       queue = []
+      presets = set(["$l0"])
 
       for (type, content, comment) in items:
          if state == 0:
@@ -882,7 +946,7 @@ class pppalpha(object):
             maybe_name = content.split(' ')[1]
             if maybe_name == name:
                state = 0
-               yield ('fun',{'name':name[6:],'body':queue, 'specials':{}, 'prologue':[], 'pprologue':[],'prologuen':0},'')
+               yield ('fun',{'name':name[6:],'body':queue, 'specials':{}, 'prologue':[], 'pprologue':[],'prologuen':0,'presets':presets.copy()},'')
                queue = []
                continue
 
@@ -950,11 +1014,11 @@ class pppalpha(object):
          yield (type, content, comment)
    
    def remdefaults(self, fundata, items):
-      resp = re.compile(r'setplace \$l\d+, 0$')
-      resb = re.compile(r'setstart \$l\d+, 0$')
-      resl = re.compile(r'setlimit \$l\d+, 1$')
-      ress = re.compile(r'setstep \$l\d+, 1$')
-      resbl = re.compile(r'setblock \$l\d+, 0$')
+      resp = re.compile(r'setplace \$l?\d+, 0$')
+      resb = re.compile(r'setstart \$l?\d+, 0$')
+      resl = re.compile(r'setlimit \$l?\d+, 1$')
+      ress = re.compile(r'setstep \$l?\d+, 1$')
+      resbl = re.compile(r'setblock \$l?\d+, 0$')
       for (type, content, comment) in items:
          if type == 'other' and \
             (resp.match(content) is not None \
@@ -1004,7 +1068,7 @@ class pppalpha(object):
          yield (type, content, comment)
          
    def seereg(self, reg, str):
-      r = re.compile(r'\$[ld]f?\d+')
+      r = re.compile(r'\$[ld]?f?\d+')
       for m in r.findall(str):
          if m == reg:
             return True
@@ -1134,6 +1198,58 @@ class pppalpha(object):
       for (type, content, comment) in items:
          yield (type, content, comment)
 
+   def prunenopend(self, fundata, items):
+      queue = []
+      for (type, content, comment) in items:
+         if type == 'empty':
+            #pprint.pprint((type, content, comment, queue))
+            yield (type, content, comment)
+            continue
+         elif type == 'other':
+            #pprint.pprint((type, content, comment, queue))
+            if content in ['nop', 'fnop', 'swch']:
+               queue.append((type, content, comment))
+               continue
+            elif content == 'end':
+               if len(queue)>0:
+                  yield ('empty','','MT: optimized away: %s' % ','.join((c[1] for c in queue)))
+               queue = []
+         for q in queue:
+            yield q
+         queue = []
+         yield (type, content, comment)
+
+      for q in queue:
+         yield q
+
+   def findlabels(self, fundata, items):
+      r = re.compile(r'(\$L\d+)')
+      deflabels = set()
+      uselabels = set()
+      for (type, content, comment) in items:
+         yield (type, content, comment)
+         if type == 'label':
+            m = r.match(content)
+            if m is not None:
+               deflabels.add(m.group(1))
+         if type == 'other':
+            for m in r.finditer(content):
+               uselabels.add(m.group(1))
+      fundata['deflabels'] = deflabels
+      fundata['uselabels'] = uselabels
+   
+   def killunusedlabels(self, fundata, items):
+      #print 'def = ', fundata['deflabels']
+      #print 'used = ', fundata['uselabels']
+      unused = fundata['deflabels'] - fundata['uselabels']
+      for (type, content, comment) in items:
+         if type == 'label':
+            lbl = content[:-1]
+            if lbl in unused:
+               yield ('empty','','MT: optimized away: %s' % lbl)
+               continue
+         yield (type, content, comment)
+
    def protectend(self, fundata, items):
       atlabel = True
       for (type, content, comment) in items:
@@ -1150,23 +1266,35 @@ class pppalpha(object):
       re1way = re.compile(r'\w+\s([^,]+)$')
       re2way = re.compile(r'(?:mov|cvt\S*|itof\S*|ftoi\S*)\s([^,]+),([^,]+)$')
       rexway = re.compile(r'\w+\s([^,]+),(.*)')
-      reld = re.compile(r'(ld[lqts]|allocate)')
-      re3wayll = re.compile(r'(add|sub|mul|div|sqrt)[ts]')
+      reld = re.compile(r'(ld[lqts]|ld[bw]u|ldgp|allocate)')
+      re3wayll = re.compile(r'(add|sub|mul|div|sqrt)[fgts]')
       w1way = re.compile(r'(setempty|rpcc|ldfp)')
 
-      allregs = ['$l%d' % x for x in xrange(31 - self.iargregs) if x not in (17, 18)] + \
+      allregs = set(['$l%d' % x for x in xrange(31 - self.iargregs) if x not in (17, 18)] + \
           ['$lf%d' % x for x in xrange(31 - self.fargregs)] + \
           ['$d%d' % x for x in xrange(self.iargregs / 2)] + \
-          ['$df%d' % x for x in xrange(self.fargregs / 2)]
+          ['$df%d' % x for x in xrange(self.fargregs / 2)] + \
+          ['$%d' % x for x in xrange(31)])
          
-      # initially exlude index and sp reg
-      maybell = [x for x in list(allregs) if x != "$l0"] 
+      # initially exclude index
+      maybell = allregs.copy()
       for (type, content, comment) in items:
+         #print (type,content,comment)
          yield (type, content, comment)
          if type == 'label':
-            maybell = list(allregs)
+            maybell = allregs.copy()
+
+         elif type == 'empty':
+            if comment.startswith('MTREG_SET:'):
+               hint = set(comment.split(':',1)[1].strip().split(','))
+               maybell = maybell - hint
+            elif comment.startswith('MTREG_SPEC:'):
+               hint = set(comment.split(':',1)[1].strip().split(','))
+               maybell = maybell - hint
+               allregs = allregs - hint
 
          elif type == 'other':
+            #print "BAR %s :: %s ::" % (content, comment)
             reads = []
             shortwrites = []
             longwrites = []
@@ -1226,41 +1354,43 @@ class pppalpha(object):
                   shortwrites.append(r1)
             
             test = 0
-            q = []
+            q = set()
 
             # if one of the "maybe regs" is read from,
             # assume we are reading result from long latency.
+            #print "maybell = %r" % (maybell,)
+            #print "reads = %r" % (reads,)
             for rx in maybell:
                for r in reads:
                   if self.seereg(rx,r):
                      test = 1
-                     q.append(rx)
+                     q.add(rx)
             if test == 1:
-               yield ('other','swch','MT: prev insn may read result of long latency op (%s)' % ','.join(q))
+               yield ('other','swch','MT: long latency: %s' % ','.join(q))
 
             # all the registers that are "short written"
             # will not cause long latency during next use
             for rx in maybell:
                for r in shortwrites:
                   if self.seereg(rx, r):
-                     q.append(rx)
+                     q.add(rx)
 
             # remove touched registers from the long latency registers
             for r in q:
-               maybell = [x for x in maybell if x != r]
+               maybell = set((x for x in maybell if x != r))
             # add generated long latency
             for rx in allregs:
                for r in longwrites:
                   if self.seereg(rx, r):
-                     maybell.append(rx)
+                     maybell.add(rx)
             
 
    def addswchbr(self, fundata, items):
-      rebr = re.compile(r'f?(br|beq|bne|bge|ble|bgt|blt|blbc)\s')
+      rebr = re.compile(r'(f?(br|beq|bne|bge|ble|bgt|blt|blbc)|jsr|ret|jmp|jsr_coroutine)\s')
       for (type, content, comment) in items:
          yield (type, content, comment)
          if rebr.match(content) is not None:
-            yield ('other','swch','MT: swch after branch')
+            yield ('other','swch','MT: branch')
 
    def addswchdep(self, fundata, items):
       redeps = re.compile(r'.*\$df?\d+')
@@ -1324,7 +1454,7 @@ class pppalpha(object):
    def printer(self, items):
       for (type, content, comment) in items:
          if comment:
-            tail = "# %s" % comment
+            tail = "#%s" % comment
          else:
             tail = ""
          if type == "label":
@@ -1335,8 +1465,11 @@ class pppalpha(object):
             head = ''
          yield '%s%s\n' % (head, tail)
 
-   def filter(self, arch, compiler, output, *inputs):
-
+   def filter(self, output, *inputs):
+      """ 
+      Transform compiler output (invalid, raw asm) to good-looking
+      .s files that can be assembled by an external assembler.
+      """
       try:
          outf = file(output, "w")
       except Exception, e:
@@ -1346,6 +1479,7 @@ class pppalpha(object):
       for inname in inputs:
          lines = self.reader(inname)
          tokens = self.lexer(lines)
+         tokens = self.splitsemi(tokens)
          items = self.parser(tokens)
          groups = self.grouper(items)
          groups = self.funfilter(self.barkatjsr, groups)
@@ -1356,12 +1490,12 @@ class pppalpha(object):
          groups = self.funfilter(self.xsplit, groups)
          groups = self.funfilter(self.makespecial, groups)
          groups = self.funfilter(self.optprologue, groups)
-         groups = self.funfilter(self.remdefaults, groups)
-         groups = self.funfilter(self.addswchll, groups)
+         #groups = self.funfilter(self.remdefaults, groups)
+         #groups = self.funfilter(self.addswchll, groups)
          # groups = self.funfilter(self.addswchdep, groups)
-         groups = self.funfilter(self.addswchbr, groups)
-         groups = self.funfilter(self.rmdupswch, groups)
-         groups = self.funfilter(self.protectend, groups)
+         #groups = self.funfilter(self.addswchbr, groups)
+         #groups = self.funfilter(self.rmdupswch, groups)
+         #groups = self.funfilter(self.protectend, groups)
 
          groups = self.funfilter(self.xjoin1, groups)
          groups = self.funfilter(self.markused, groups)
@@ -1379,9 +1513,43 @@ class pppalpha(object):
          for line in lines:
             # print "YOO:", line,
             outf.write(line)
-
-
       outf.close()
+
+   def filter2(self, output, *inputs):
+      """
+      Enhance already valid assembly.
+      """
+      try:
+         outf = file(output, "w")
+      except Exception, e:
+         print >>sys.stderr, sys.argv[0] + ':', output, ': %r' % e
+         sys.exit(1)
+
+      for inname in inputs:
+         lines = self.reader(inname)
+         tokens = self.lexer(lines)
+         tokens = self.splitsemi(tokens)
+         items = self.parser(tokens)
+         groups = self.grouper2(items)
+         groups = self.funfilter(self.remdefaults, groups)
+         groups = self.funfilter(self.findlabels, groups)
+         groups = self.funfilter(self.killunusedlabels, groups)
+         groups = self.funfilter(self.addswchll, groups)
+         # groups = self.funfilter(self.addswchdep, groups)
+         groups = self.funfilter(self.addswchbr, groups)
+         groups = self.funfilter(self.rmdupswch, groups)
+         groups = self.funfilter(self.prunenopend, groups)
+         groups = self.funfilter(self.protectend, groups)
+         items = self.flattener(groups)
+         items = self.forcezero(items)
+         lines = self.printer(items)
+         for line in lines:
+            # print "YOO:", line,
+            outf.write(line)
+      outf.close()
+
+class utc0(pppalpha):
+   pass
 
 if __name__ == "__main__":
    module = sys.argv[1]
