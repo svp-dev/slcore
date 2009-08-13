@@ -1014,11 +1014,12 @@ class pppalpha(object):
          yield (type, content, comment)
    
    def remdefaults(self, fundata, items):
-      resp = re.compile(r'setplace \$l?\d+, 0$')
-      resb = re.compile(r'setstart \$l?\d+, 0$')
-      resl = re.compile(r'setlimit \$l?\d+, 1$')
-      ress = re.compile(r'setstep \$l?\d+, 1$')
-      resbl = re.compile(r'setblock \$l?\d+, 0$')
+      resp = re.compile(r'setplace \$l?\d+,\s*0\s*$')
+      resb = re.compile(r'setstart \$l?\d+,\s*0\s*$')
+      resl = re.compile(r'setlimit \$l?\d+,\s*1\s*$')
+      ress = re.compile(r'setstep \$l?\d+,\s*1\s*$')
+      resbl = re.compile(r'setblock \$l?\d+,\s*0\s*$')
+      justignored = False
       for (type, content, comment) in items:
          if type == 'other' and \
             (resp.match(content) is not None \
@@ -1027,8 +1028,13 @@ class pppalpha(object):
                    or ress.match(content) is not None \
                    or resbl.match(content) is not None):
                # default setting, ignore
-            yield ('empty','','MT: "%s" ignored (uses default) %s' % (content,comment))
+            yield ('empty','','MT: "%s" ignored (uses default) # %s' % (content,comment))
+            justignored = True
             continue
+         elif type == 'other' and justignored and content == 'swch':
+            yield ('empty','','MT: swch ignored too # %s' % comment)
+            continue
+         justignored = False
          yield (type, content, comment)
 
    def rmdupswch(self, fundata, items):

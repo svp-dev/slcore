@@ -1,5 +1,14 @@
 2009-08-13  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	More MT alpha code optimizations.
+
+	* programs/bin/spp: Optimize default family settings away,
+	including cases where there is no whitespace before the constant
+	value. For every killed instruction, also eliminate the following
+	`swch' if it is there.
+ 
+2009-08-13  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	New demo program.
 
 	The `keyblit' programs takes two arrays and one integer as
