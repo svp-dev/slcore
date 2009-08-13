@@ -259,8 +259,8 @@ case $slc_dialect-$slc_arch in
     ppp-*)
         archcomp=$(eval "echo \${CC_$basearchvar:-\"\$scu_helper\"}")
 	slc_compiler=("$python" "$spp_helper" "$slc_transbase" compile $slc_arch $archcomp)
-	slc_filter1=("$python" "$spp_helper" "$slc_transbase" filter $slc_arch $archcomp)
-	slc_filter2=(cp)
+	slc_filter1=("$python" "$spp_helper" "$slc_transbase" filter)
+	slc_filter2=("$python" "$spp_helper" "$slc_transbase" filter2)
 	;;
     *-*)
 	case $slc_complang in
@@ -269,13 +269,19 @@ case $slc_dialect-$slc_arch in
 	    utc) slc_compiler=($(eval "echo \${UTCC_$archvar:-$scu_helper} -std=utc")) ;;
 	esac
 	slc_filter1=(cp)
-	slc_filter2=(cp)
+	slc_filter2=("$python" "$spp_helper" "$slc_transbase" filter2)
 	;;
     
 esac
 
 # Compiler flags selection; default to optimize
-slc_cflags+=("-O2")
+case $slc_dialect in
+    ppp)
+	slc_cflags+=(-O2) ;;
+    utc0)
+	slc_cflags+=(-O1) ;;
+    *) ;;
+esac
 
 # Assembler and linker selection
 case $slc_complang-$slc_arch in
