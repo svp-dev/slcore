@@ -1,5 +1,22 @@
 2009-08-15  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	Make assembly optimization controllable.
+
+	The following flags are introduced: `-fasmopt' (counterpart
+	`-fno-asmopt') enable or disable assembly optimization. Any flags
+	of the form `-fasmopt-NAME' (counterpart `-fno-asmopt-NAME')
+	enable or disable a specific optimization. `-fasmopt-all' and
+	`-fasmopt-none' are also recognized.
+ 	
+	* tools/bin/slc.in: Capture command-line arguments `-fasmopt',
+	`-fno-asmopt', `-fasmopt-*' and `-fno-asmopt-*'. Pass them to
+	`filter2' accordingly. Document them.
+
+	* tools/bin/spp (filter2): Recognize `asmopt' options from slc and
+	run optimization stages conditionnally.
+
+2009-08-15  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	More MT alpha code optimizations.	
 	
 	* tools/lib/t-utc0/slimpl.m4: Annotate the index register with an

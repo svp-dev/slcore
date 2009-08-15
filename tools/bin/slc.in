@@ -37,6 +37,7 @@ synclines=yes
 combine=
 verbose=
 verdisplay=
+do_filt2=yes
 
 slc_use_slrt=yes
 slc_use_libsl=yes
@@ -81,6 +82,7 @@ extra_asflags=()
 extra_cflags=()
 extra_ldflags=()
 extra_tflags=()
+extra_f2flags=()
 
 M4=${M4:-@M4@}
 
@@ -188,6 +190,11 @@ for arg in "$@"; do
       -nostdlib) slc_use_slrt=no; slc_use_libsl=no ;;
 
       -g*|-p|-pg) slc_debug_flags+=("$arg");;
+
+      -fasmopt)      do_filt2=yes ;;
+      -fno-asmopt)   do_filt2= ;;
+      -fasmopt-*)    extra_f2flags+=("${arg#-fasmopt-}");;
+      -fno-asmopt-*) extra_f2flags+=(no-"${arg#-fno-asmopt-}");;
 
       -)        in_pp_spec+=("$arg");;
 
@@ -328,6 +335,41 @@ General options:
                      phase where \`$basename' is configured to stop.
 
   -Wm4,option        Pass "option" as an option to M4.
+
+  -fno-asmopt        Do not enhance the assembly code between
+                     post-compilation fixup and assembly. The fixed
+                     assembly is passed directly to the assembler
+                     without further optimizations.
+
+MT-specific optimizations:
+  -fno-asmopt-remdefaults  Do not remove family setup instructions that
+                           use default values.
+
+  -fno-asmopt-findlabels   Do not collect local block labels.
+
+  -fno-asmopt-killunusedlabels  Do not remove unused local block labels.
+
+  -fno-asmopt-addswchll    Do not add the context switch annotation after
+                           potential uses of a long-latency operation.
+
+  -fno-asmopt-addswchbr    Do not add the context switch annotation after
+                           branches.
+
+  -fno-asmopt-rmdupswch    Do not trim clusters of multiple switch
+                           annotations.
+
+  -fno-asmopt-prunenopend  Do not remove sequences of no-ops and switch
+                           annotations when they occur before a thread
+                           end annotation.
+
+  -fno-asmopt-protectend   Do not insert an extra no-op instruction when
+                           a thread end annotation happens just after a
+                           label.
+
+As for gcc(1), options with long names starting with -f have both
+positive and negative forms; the negative form of -ffoo would be
+-fno-foo. This manual documents only one of these two forms, whichever
+one is not the default.
 
 Compiler debugging options:
   -v                 Print (on standard error output) the commands executed
@@ -693,11 +735,14 @@ EOF
 	  ;;
       E)
 	  res=6
-	  if test "x$slc_filter2" = "xcp"; then
+	  if test "x$slc_filter2" = "xcp" -o -z "$do_filt2"; then
+	      if test 0 -lt ${#extra_f2flags[*]}; then
+		  echo "$basename: warning: options ignored: \"${extra_f2flags[*]}\"" >&2
+	      fi
 	      cmd=(cat $deps)
 	      capturestdout=1
 	  else
-	      cmd=("${slc_filter2[@]}" "$target" $deps)
+	      cmd=("${slc_filter2[@]}" "stages:${extra_f2flags[*]}" "$target" $deps)
 	  fi
 	  ;;
       A)
