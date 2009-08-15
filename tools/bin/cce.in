@@ -316,7 +316,7 @@ case $slc_arch-$slc_os in
 	slc_debug_flags=()
 	;;
     *)
-	slc_debug_flags=("$slc_debug_flags")
+	slc_debug_flags=(${slc_debug_flags:+"$slc_debug_flags"})
 	;;
 esac
 

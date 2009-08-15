@@ -1239,7 +1239,7 @@ class pppalpha(object):
             m = r.match(content)
             if m is not None:
                deflabels.add(m.group(1))
-         if type == 'other':
+         else:
             for m in r.finditer(content):
                uselabels.add(m.group(1))
       fundata['deflabels'] = deflabels
