@@ -1,5 +1,13 @@
 2009-08-15  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	More MT alpha code optimizations.	
+	
+	* tools/lib/t-utc0/slimpl.m4: Annotate the index register with an
+	assembly comment, so that its special role can be picked up later
+	by `spp'.
+
+2009-08-15  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	* tools/bin/slc.in: `-save-temps' implies `-t .', as for `gcc'.
 
 2009-08-13  Raphael 'kena' Poss  <r.c.poss@uva.nl>
