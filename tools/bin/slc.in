@@ -236,87 +236,136 @@ elif test "x$slc_mode" = xdisplay_help; then
    cat <<EOF
 SVP Language Compiler.
 
-\`$basename' is a generic compiler driver for SVP programs. It provides a
-unified command line interface for compiling SVP code. The actual
-tools used for compilations are selected automatically depending on
-the selected SVP implementation, using the separate utility \`cce'.
+\`$basename' is a generic compiler driver for SVP programs. It
+provides a unified command line interface for compiling SVP code. The
+actual tools used for compilations are selected automatically
+depending on the selected SVP implementation, using the separate
+utility \`cce'.
 
-The following transforms are applied depending on the type of the
-input (determined by the file name suffix):
+The following stages are run depending on the type of the input
+(determined by the file name suffix):
 
-- preprocess: the source code is filtered by the C/C++ preprocessor.
+  Preprocess:  the source code is filtered by the C/C++ preprocessor.
 
-- translate: the SVP language is translated to an actual SVP
-dialect. This transform uses the M4 preprocessor.
+  Translate:   SL constructs in the preprocessed code are translated
+               using M4 to an actual SVP dialect.
 
-- compile: the source code is transformed to raw assembly; the
-compiler used depends on the SVP dialect and the target
-architecture.
+  Compile:     the source code is transformed to raw assembly; the
+               compiler used depends on the SVP dialect and the target
+               architecture.
 
-- filter1: (for the Microgrids implementations) the raw assembly
-produced by the compiler is corrected to become valid.
+  Fixup:       (for the Microgrids implementations) if necessary, the
+               raw assembly produced by the compiler is corrected to
+               become valid.
 
-- filter2: (for the Microgrids implementations) the assembly is
-further optimized.
+  Enhance:     (for the Microgrids implementations) the assembly code
+               is further optimized.
 
-- assemble; the assembler used depends on the target architecture.
+  Assemble:    the assembly code is transformed to object code; the
+               assembler used depends on the target architecture.
 
-- link; the linker used depends on the target architecture.
+  Link:        objects and libraries are linked together; the linker
+               used depends on the target architecture.
 
-Except for the three additional transforms (translate, filter1 and
-filter2), \`$basename' mimics the driver of the GNU Compiler
-Collection (\`gcc'). For general information about default behavior,
-additional flags and processing order, see gcc(1).
+The relationship with stages and file name extensions (intermediary
+code) can be summarized as follows:
+
+  .c -(P)-> .i -(T)-> .t.c (or .t.cc or .t.utc) -(C)-> .s0 -(F)-> .s
+  -(E)-> .t.s -(A)-> .o -(L)-> executable
+
+  .S -(P)-> .s -(E)-> .t.s -(A)-> .o -(L)-> executable
+
+  Only for \`-b ptl': .cc -(P)-> .ii -(T)-> .t.cc -(C)-> .s0 -(F)-> .s
+  -(E)-> .t.s -(A)-> .o -(L)-> executable
+
+  Only for \`-b utc0': .utc -(P)-> .iu -(T)-> .t.utc -(C)-> .s0 -(F)->
+  .s -(E)-> .t.s -(A)-> .o -(L)-> executable
+
+Except for the three additional stages (translate, fixup and enhance),
+\`$basename' mimics the driver of the GNU Compiler Collection
+(\`gcc'). For general information about default behavior, additional
+flags and processing order, see gcc(1).
 
 Usage: $0 [ARG]...
 
 Options:
 
-  -check             Check the environment; do not process anything. In
-                     this mode $basename checks that the required tools
-                     are available.
+  -check  Check the environment; do not process anything. In this
+          mode \`$basename' checks that the required tools are
+          available.
 
-  -E                 Stop after the preprocessing stage; do not translate.
-                     The output is in the form of preprocessed source code,
-                     which is sent to the standard output.
+  -E      Stop after the preprocessing stage; do not translate.  The
+          output is in the form of preprocessed source code, which is
+          sent to the standard output.
 
-  -EE                Stop after the translation stage; do not compile.
-                     The output is in the form of translated source code,
-                     which is sent to the standard output.
+  -EE     Stop after the translation stage; do not compile.  The
+          output is in the form of translated source code, which is
+          sent to the standard output.
 
-  -S0                Stop after the first stage of compilation proper; do not
-                     perform post-compilation filtering on assembly. 
-                     The output is in the form of an unprocessed assembler code
-                     file for each non-assembler input file specified.
+  -S0     Stop after the first stage of compilation proper; do not
+          perform post-compilation fixup on assembly.  The output is
+          in the form of an unprocessed assembler code file with
+          extension .s0 for each non-assembler input file specified.
 
-  -S                 Stop after the second stage of compilation
-                     proper; do not optimize the assembly. The output
-                     is in the form of an assembler code file for each
-                     non-assembler input file specified.
+  -S      Stop after the second stage of compilation proper; do not
+          optimize the assembly. The output is in the form of an
+          assembler code file with extension .s for each non-assembler
+          input file specified or any input file with extension .s0.
 
-  -S1                Stop after the assembly optimization; do not assemble. 
-                     The output is in the form of an optimized assembler code
-                     file for each assembler input file specified.
+  -S1     Stop after the assembly optimization; do not assemble.  The
+          output is in the form of an optimized assembler code file
+          with extension .t.s for each assembler input file specified,
+          except those already with extension .t.s.
 
-  -c                 Compile or assemble the source files, but do not link.
-                     The linking stage is not done. The output is in the
-                     form of an object file for each source file.
+  -c      Compile or assemble the source files, but do not link.  The
+          linking stage is not done. The output is in the form of an
+          object file for each source file.
 
 SVP implementation selection:
-  -b spec            Generate code for the SVP implementation specified by
-                     "spec". "spec" is passed through \`cce' for validation
-                     and alias expansion. See \`cce --help' for details. The
-                     default implementation is "seqc".
+  -b spec  Generate code for the SVP implementation specified by
+           "spec". "spec" is passed through \`cce' for validation and
+           alias expansion. See \`cce --help' for details. The default
+           implementation is "seqc".
 
-New input file types:
-  file.utc           muTC source code which must be preprocessed.
+Input file types:
+  file.c      C source code which must be preprocessed and translated.
 
-  file.iu            muTC source code which should not be preprocessed.
+  file.{cc,cxx,c++,C,cp,cpp,CPP}  C++ source code which must be
+                                  preprocessed and translated.
 
-  file.s0            Assembler code which should be further distilled.
+  file.utc    muTC source code which must be preprocessed and
+              translated.
 
-The regular GCC file types are also recognized and are transformed
-accordingly.
+  file.i      C source code which must be translated but should not be
+              preprocessed.
+
+  file.ii     C++ source code which must be translated but should not
+              be preprocessed.
+
+  file.iu     muTC source code which must be translated but should not
+              be preprocessed.
+
+  file.t.c    C source code which should not be translated nor
+              preprocessed.
+
+  file.t.cc   C++ source code which should not be translated nor
+              preprocessed.
+
+  file.t.utc  muTC source code which should not be translated nor
+              preprocessed.
+
+  file.s0     Assembly code which should be corrected (fixup).
+
+  file.S      Assembler code which should be preprocessed and further
+              optimized.
+
+  file.s      Assembler code which should be further optimized
+              (enhance).
+
+  file.t.s    Assembler code which should not be further optimized.
+
+  other       An object file to be fed straight into linking. Any
+              file name with no recognized suffix is treated this way.
 
 General options:
   -Idir              Add the directory "dir" to the list of directories
@@ -333,6 +382,12 @@ General options:
 
   -o file            Place output in "file". This implies -combine for the
                      phase where \`$basename' is configured to stop.
+
+  -nostartfiles      Do not use the standard startup files when linking.
+
+  -nodefaultlibs     Do not use the standard system library when linking.
+
+  -nostdlib          Implies options -nostartfiles and -nodefaultlibs.
 
   -Wm4,option        Pass "option" as an option to M4.
 
@@ -376,43 +431,34 @@ Compiler debugging options:
                      to run the stages of compilation. Also print the
                      settings and version number of the tools involved.
 
-  -fcm4-dump=file    Dump the m4 input to file "file".
-
-  -ftrace-m4=file    Dump the m4 macro expansion trace to file "file".
-
   -save-temps        Keep intermediate files. If this option is not set,
                      intermediate files generated during compilation are
                      deleted before the program terminates.
 
   -t dir             Output directory for intermediate files. If this option
-                     is not set, a subdirectory of the standard temporary 
-                     directory (TMPDIR or /tmp) is used.
+                     is not set, a subdirectory of the standard temporary
+                     directory (TMPDIR or /tmp) is used; unless -save-temps
+                     is specified, in which case the current directory is
+                     used instead.
 
+  -fcm4-dump=file    Dump the M4 input code to file "file".
+
+  -fm4-trace=file    Dump the M4 macro expansion trace to file "file".
 
 Other options:
   -h, --help         Print this help; do not process anything.
 
-  --version          Print $basename's version number; do not process 
+  --version          Print $basename's version number; do not process
                      anything.
 
-All other options are passed transparently to the appropriate
-tools; in particular, the following options may prove useful:
+All other options valid for gcc(1) are passed transparently to the
+appropriate tools, except for the following:
 
-  -Dmacro, -Umacro   Set/unset C/C++ preprocessor macros.
+  -x                 This is not supported yet. \`$basename' handles
+                     input based on file name extension only.
 
-  -Wa,option         Pass "option" as an option to the assembler.
-
-  -Wl,option         Pass "option" as an option to the linker.
-
-  -Ldir              Search "dir" for libraries when linking.
-
-  -llibrary          Link with the library named "library".
-
-  -nostartfiles      Do not use the standard startup files when linking.
-
-  -nodefaultlibs     Do not use the standard system library when linking.
-
-  -nostdlib          Implies options -nostartfiles and -nodefaultlibs.
+  -nostdinc          This option is supported but not yield the same
+                     semantics as when used with gcc(1).
 
 Environment variables:
   M4                 M4 preprocessor to use. Default is "m4".
@@ -425,7 +471,7 @@ Environment variables:
 Diagnostics:
   0                  No error occured.
 
-  1                  Invalid parameters passed to \`$basename' or 
+  1                  Invalid parameters passed to \`$basename' or
                      invalid configuration.
 
   2                  Translation failed.

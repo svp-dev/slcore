@@ -1,5 +1,14 @@
 2009-08-15  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	Update documentation.
+	
+	* tools/bin/slc.in: Do not document gcc flags which have unchanged
+	behavior. Mention explicitly the status of -x and
+	-nostdinc. Properly explain stages in the introduction. List input
+	file types with behavior in full.
+
+2009-08-15  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	Make assembly optimization controllable.
 
 	The following flags are introduced: `-fasmopt' (counterpart
