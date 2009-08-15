@@ -180,7 +180,6 @@ for arg in "$@"; do
                 echo "$basename: warning: $arg may not behave as expected" >&2
                 extra_ppflags+=("$arg")
                 ;;
-      -mutc*)   die "-mutc is deprecated, use -b instead" ;;
 
       -nostartfiles) slc_use_slrt=no ;;
       -nodefaultlibs) slc_use_libsl=no ;;
@@ -204,7 +203,7 @@ for arg in "$@"; do
       *.s0)  check_exists "$arg" && in_filt1_spec+=("$arg");;
 # Legacy file types
       *.i|*.ii) check_exists "$arg" && in_tr_spec+=("$arg");;
-      *.C|*.cxx|*.c++|*.cc|*.cp|*.cpp) check_exists "$arg" && in_pp_spec+=("$arg");;
+      *.C|*.cxx|*.c++|*.cc|*.cp|*.cpp|*.CPP) check_exists "$arg" && in_pp_spec+=("$arg");;
       *.S|*.c) check_exists "$arg" && in_pp_spec+=("$arg");;
       *.t.s)   check_exists "$arg" && in_as_spec+=("$arg");;
       *.s)     check_exists "$arg" && in_filt2_spec+=("$arg");;

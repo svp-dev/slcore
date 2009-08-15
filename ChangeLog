@@ -1,5 +1,12 @@
 2009-08-15  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	Cleanup command line argument handling.
+
+	* tools/bin/slc.in: Remove `-mutc' entirely. Also support files
+	with extension .CPP.
+
+2009-08-15  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	Minor interface updates.
 
 	* tools/bin/slc.in: Fixup handling of -t, -save-temps and
