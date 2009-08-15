@@ -86,13 +86,13 @@ M4=${M4:-@M4@}
 # Setting up some cleanup mechanism
 cleanup() {
   for f in ${inflight:+"$inflight"} "${tempfiles[@]}" "${tempdirs[@]}"; do
-    if test -z "$keep"; then 
+    if test -z "$keep"; then
       test -n "$verbose" && echo "$basename: $f: deleting temporary" >&2
-      if test -d "$f"; then 
+      if test -d "$f"; then
 	  if ! rmdir "$f" ; then
 	      echo "$basename: $f: warning: could not delete directory" >&2
 	  fi
-      else 
+      else
 	  rm -f "$f"
       fi
     else
@@ -176,7 +176,7 @@ for arg in "$@"; do
 	 ;;
 
       -x)  die "$arg not supported yet" ;;
-      -nostdinc*) 
+      -nostdinc*)
                 echo "$basename: warning: $arg may not behave as expected" >&2
                 extra_ppflags+=("$arg")
                 ;;
@@ -212,7 +212,7 @@ for arg in "$@"; do
   esac
 done
 if test -n "${prev_arg:-}"; then die "argument to \`$arg' is missing"; fi
-   
+
 
 # Special actions that do not require processing
 if test "x$slc_mode" = xdisplay_version; then
@@ -522,7 +522,7 @@ if test -n "$check"; then
 	echo "$slc_aslink: cannot run" >&2
 	exit 1
     else echo "Found assembler/linker compiler: $slc_aslink"; fi
-    
+
     echo "Good." >&2
 fi
 
@@ -647,8 +647,8 @@ finalname=${outfile:-$defout}
 prepare_chain() {
     local -a inputs specfiles
     local addext stage indvar phrase
-    local f first final target 
-    
+    local f first final target
+
     inputsarray=$1
     eval "inputs=(\"\${$inputsarray[@]}\")"
     addext=$2
@@ -657,14 +657,14 @@ prepare_chain() {
     specfilesarray=$5
     eval "specfiles=(\"\${$specfilesarray[@]}\")"
     phrase=$6
-    
+
     target=
     if test "x$skip" = "x"; then
 	if ! expr "$combine" : ".*$stage" >/dev/null; then
 	    for f in "${inputs[@]}"; do
 		fn=${f##*/}; fn=${fn%.*}; fn=${fn%.t}
 		case $f in
-		    *.S) 
+		    *.S)
 			target=$tmpdir/$fn.s
 			in_filt2_ind+=("$target")
 			;;
@@ -686,7 +686,7 @@ prepare_chain() {
 		if test -z "$first"; then first=$f; fi
 		transform="$transform:$f"
 	    done
-	    if test -n "$transform"; then 
+	    if test -n "$transform"; then
 		fn=${first##*/}; fn=${fn%.*}; fn=${fn%.t}
 		targetbase=$fn.$addext
 		if test "x$finalstage" = "x$stage"; then
@@ -748,14 +748,14 @@ if test -n "$verbose"; then
            combine outfile tmpdir; do
     eval "echo '  ' $i '->' \$$i" >&2
   done
-  set | grep '^slc_'
+  set | grep '^slc_' >&2
   echo "---- $basename: build plan -----" >&2
   for i in "${transforms[@]}"; do echo $i >&2; done
   echo "---- $basename: processing... ----" >&2
 fi
 
 for t in "${transforms[@]}"; do
-  IFS=':' read action target indeps <<EOF 
+  IFS=':' read action target indeps <<EOF
 $t
 EOF
   # FIXME: the following should be an array
@@ -768,7 +768,7 @@ EOF
 	  cmd=("${slc_compiler[@]}" -E $deps "${slc_ppflags[@]}")
 	  if ! test "$slc_mode" = "pp" -a -z "$outfile"; then capturestdout=1; fi
 	  ;;
-      T) 
+      T)
 	  res=3
           cm4deps=()
           for d in $deps; do
