@@ -141,7 +141,7 @@ esac
 # Expand two-word aliases according to inventory
 case $alias in
     *-*-*)   ;; # more than two word: pass to next stage
-    *) 
+    *)
 	IFS='-' read dialect arch <<EOF
 $alias
 EOF
@@ -172,7 +172,7 @@ case $alias in
 $alias
 EOF
 	;;
-    *) 
+    *)
      # Any other form, unrecognized for now
 	die "$alias: unknown alias" ;;
 esac
@@ -271,7 +271,7 @@ case $slc_dialect-$slc_arch in
 	slc_filter1=(cp)
 	slc_filter2=("$python" "$spp_helper" "$slc_transbase" filter2)
 	;;
-    
+
 esac
 
 # Compiler flags selection; default to optimize
@@ -294,7 +294,7 @@ esac
 
 # Extra defines
 case $slc_arch in
-    mtalpha) 
+    mtalpha)
         slc_cflags+=(-mcpu=ev6 -mfix -mcix -mmax -mbwx -fno-math-errno -fno-trapping-math)
         ;;
     *)
@@ -305,7 +305,6 @@ esac
 # Extra flag selection
 case $slc_arch-$slc_os in
     mt*-sim)
-	
         slc_ppflags+=(-D__mt_freestanding__ -D__WORDSIZE=64)
         # slc_cflags="$slc_cflags -D__mt_freestanding__ -D__WORDSIZE=64"
         # slc_cflags="$slc_cflags -nostdinc"
@@ -323,7 +322,7 @@ esac
 # OS selection
 case $slc_os in
     x) ;;
-    *) 
+    *)
         save_IFS=$IFS
         IFS=:
         for d in $slc_datadir; do
@@ -346,7 +345,7 @@ case $slc_os in
 	    fi
         fi
 
-	for d in $slc_libdir; do   
+	for d in $slc_libdir; do
 	    slc_ldflags+=("-L$d/$slc_arch-$slc_os")
         done
 	case $slc_dialect in
