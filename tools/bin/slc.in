@@ -67,9 +67,6 @@ outfile=
 tmpdir=
 
 keep=
-if test -n "${KEEP:-}"; then
- keep=1
-fi
 
 slc_debug_flags=()
 slc_asflags=()
@@ -530,12 +527,6 @@ if test -n "$check"; then
     echo "Good." >&2
 fi
 
-########################
-# Set KEEP if specified
-########################
-if test -n "$keep"; then
-   export KEEP=1
-fi
 
 ###################################
 # Command line additions
@@ -575,9 +566,12 @@ for ei in "${extra_inc[@]}"; do
 done
 cm4flags+=("${extra_tflags[@]}")
 
-###################################
-# Construction of compilation chain
-###################################
+################
+# Misc settings
+################
+
+# Propagate $verbose
+export SLC_VERBOSE=${verbose:-no}
 
 # Select file extension for intermediate source files
 case $slc_complang in
@@ -597,9 +591,24 @@ case $slc_complang in
 	die "unrecognized mode $mode" ;;
 esac
 
-# if -save-temps is given, then imply -t .
+#########################################
+# Handle KEEP, TMPDIR, -save-temps and -t
+#########################################
+
+# if -save-temps is given explicitly but -t is not specified,
+# then imply -t .
 if test -n "$keep" -a -z "$tmpdir"; then
     tmpdir=.
+fi
+
+# if KEEP is set, imply -save-temps but do not change tmpdir
+if test -n "${KEEP:-}"; then
+ keep=1
+fi
+
+# propagate KEEP
+if test -n "$keep"; then
+   export KEEP=1
 fi
 
 # Create temporary directory if necessary
@@ -617,9 +626,14 @@ else
     tempdirs=("$tmpdir")
 fi
 
+###################################
+# Construction of compilation chain
+###################################
+
+
 # Decide what phases to do and where to stop
 defout=-
-case $slc_mode in 
+case $slc_mode in
     pp) finalstage=P;;
     trans) finalstage=T;;
     cc) finalstage=C;;

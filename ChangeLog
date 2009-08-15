@@ -1,5 +1,13 @@
 2009-08-15  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	Minor interface updates.
+
+	* tools/bin/slc.in: Fixup handling of -t, -save-temps and
+	KEEP. Propagate `$verbose' as SLC_VERBOSE so that `spp' can pick
+	it up.
+
+2009-08-15  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	Update documentation.
 	
 	* tools/bin/slc.in: Do not document gcc flags which have unchanged
