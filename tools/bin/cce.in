@@ -24,14 +24,14 @@ slc_incdir=${SLC_INCDIR:-@slc_incdir@}
 spp_helper=${SPP:-@spp_helper@}
 scu_helper=${SCU:-@scu_helper@}
 
-CC=${CC:-@CC@}
-CXX=${CXX:-@CXX@}
-CC_ALPHA=${CC_ALPHA:-@CC_ALPHA@}
-UTCC_MTALPHA=${UTCC_ALPHA:-@UTCC_MTALPHA@}
+CC_HOST=${CC_HOST_OVERRIDE:-@CC_HOST@}
+CXX_HOST=${CXX_HOST_OVERRIDE:-@CXX_HOST@}
+CC_ALPHA=${CC_ALPHA_OVERRIDE:-@CC_ALPHA@}
+UTCC_MTALPHA=${UTCC_ALPHA_OVERRIDE:-@UTCC_MTALPHA@}
 CC_MTALPHA=$UTCC_MTALPHA
 
-CC_SPARC=${CC_SPARC:-@CC_SPARC@}
-UTCC_MTSPARC=${UTCC_SPARC:-@UTCC_MTSPARC@}
+CC_SPARC=${CC_SPARC_OVERRIDE:-@CC_SPARC@}
+UTCC_MTSPARC=${UTCC_SPARC_OVERRIDE:-@UTCC_MTSPARC@}
 CC_MTSPARC=$UTCC_MTSPARC
 
 version=@slc_version@
@@ -57,9 +57,9 @@ Options:
   -v, --version      print version number, then exit
 
 Environment variables:
-  CC CXX
-  CC_ALPHA UTCC_MTALPHA
-  CC_SPARC UTCC_MTSPARC  
+  CC_HOST_OVERRIDE CXX_HOST_OVERRIDE
+  CC_ALPHA_OVERRIDE UTCC_MTALPHA_OVERRIDE
+  CC_SPARC_OVERRIDE UTCC_MTSPARC_OVERRIDE
 
 Example one-word implementation aliases:
 
@@ -249,8 +249,8 @@ case $slc_dialect-$slc_arch in
     *-x) slc_compiler=("$scu_helper" compile) ;;
     *-host)
 	case $slc_complang in
-	    cpp) slc_compiler=($CXX) ;;
-	    c)   slc_compiler=($CC) ;;
+	    cpp) slc_compiler=($CXX_HOST) ;;
+	    c)   slc_compiler=($CC_HOST) ;;
 	    utc) echo "$basename: warning: no compiler for $dialect-$arch" >&2 ;;
 	esac
 	slc_filter1=(cp)
@@ -286,8 +286,8 @@ esac
 # Assembler and linker selection
 case $slc_complang-$slc_arch in
     *-x)      slc_aslink=("$scu_helper" assemble/link) ;;
-    cpp-host) slc_aslink=(${CXX:-g++}) ;;
-    *-host)   slc_aslink=(${CC:-gcc}) ;;
+    cpp-host) slc_aslink=(${CXX_HOST:-g++}) ;;
+    *-host)   slc_aslink=(${CC_HOST:-gcc}) ;;
     cpp-*)    slc_aslink=($(eval "echo \${CXX_$archvar:-\"\$scu_helper\"}")) ;;
     *-*)      slc_aslink=($(eval "echo \${CC_$archvar:-\"\$scu_helper\"}")) ;;
 esac

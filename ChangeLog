@@ -1,5 +1,19 @@
 2009-08-16  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	Sanitize the user interface.
+	
+	Rename the environment variables that override external tool
+	locations to names ending with `_OVERRIDE'. This allows working in
+	an environment where `CC' and/or `CXX' are defined to call `slc'
+	instead of `gcc', such as when using Autoconf's `configure' script
+	with CC=slc.
+
+	* tools/bin/cce.in: Rename the environment variables.
+
+	* tools/bin/Makefile.am: Update accordingly.
+
+2009-08-16  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	Fix bug in command line handling.
 	
 	* tools/bin/cce.in: Avoid creating an empty argument in

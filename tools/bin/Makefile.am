@@ -21,8 +21,8 @@ CLEANFILES = $(bin_SCRIPTS)
 
 edit_scripts = $(SED) \
 	       -e 's|@BASH[@]|$(BASH)|g' \
-	       -e 's|@CC[@]|$(CC)|g' \
-	       -e 's|@CXX[@]|$(CXX)|g' \
+	       -e 's|@CC_HOST[@]|$(CC)|g' \
+	       -e 's|@CXX_HOST[@]|$(CXX)|g' \
 	       -e 's|@M4[@]|$(M4)|g' \
 	       -e 's|@CC_ALPHA[@]|$(CC_ALPHA)|g' \
 	       -e 's|@UTCC_MTALPHA[@]|$(UTCC_MTALPHA)|g' \
