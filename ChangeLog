@@ -1,3 +1,10 @@
+2009-08-16  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
+	Fix bug in assembly optimizations.
+	
+	* tools/bin/spp (pppalpha.findlabels): Also look at directives,
+	which may contain label uses (e.g. `.gprel').
+
 2009-08-15  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
 	More MT alpha code optimizations.	
