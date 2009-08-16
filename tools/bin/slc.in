@@ -75,6 +75,7 @@ slc_asflags=()
 slc_cflags=()
 slc_ppflags=()
 slc_ldflags=()
+slc_pp_prefix=()
 extra_inc=()
 extra_ppflags=()
 extra_asflags=()
@@ -664,7 +665,9 @@ EOF
       R) tempfiles+=("$target"); continue ;;
       P)
 	  res=2
-	  cmd=("${slc_compiler[@]}" -E $deps "${slc_ppflags[@]}")
+	  dosl=
+	  for d in $deps; do case $d in *.S) ;; *) dosl=1;; esac; done
+	  cmd=("${slc_compiler[@]}" -E ${dosl:+"${slc_pp_prefix[@]}"} $deps "${slc_ppflags[@]}")
 	  if ! test "$slc_mode" = "pp" -a -z "$outfile"; then capturestdout=1; fi
 	  ;;
       T) 

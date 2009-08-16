@@ -219,7 +219,7 @@ if test -z "$found"; then
 else
     slc_trans=$found
     slc_tflags+=("-I$slc_trans")
-    slc_ppflags+=(-include "$slc_trans/include/sl_support.h")
+    slc_pp_prefix=(-include "$slc_trans/include/sl_support.h")
 fi
 
 for m4_preinc in slc_m4sugar.m4 slc.m4; do
