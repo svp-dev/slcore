@@ -18,7 +18,8 @@ EXTRA_DIST += \
 	host-host-ptl/include/template.pl
 
 nobase_pkglib_DATA += host-host-ptl/slrt.o
-nobase_pkglib_LIBRARIES += host-host-ptl/libslc.a
+nobase_pkglib_LIBRARIES += \
+	host-host-ptl/libslc.a 
 
 host_host_ptl_libslc_a_CPPFLAGS = \
 	-I$(srcdir)/host-host-ptl/include \
@@ -27,7 +28,9 @@ host_host_ptl_libslc_a_CPPFLAGS = \
 host_host_ptl_libslc_a_SOURCES = \
 	host-host-ptl/ptl_debug.cc \
 	host-host-ptl/ptl_vars.cc \
-	host-host-ptl/ptl_svp.cc
+	host-host-ptl/ptl_svp.cc \
+	host-host-seqc/main.c \
+	host-host-seqc/load.c
 
 BUILT_SOURCES += \
 	host-host-ptl/include/ptl_create.h
@@ -35,8 +38,7 @@ BUILT_SOURCES += \
 
 SLC_PTL = $(SLC_RUN) -b ptl -nostdlib
 
-
-host-host-ptl/slrt.o: $(srcdir)/host-host-ptl/slrt.c $(srcdir)/host-host-seqc/load.c
+host-host-ptl/%.o: $(srcdir)/host-host-ptl/%.c
 	$(AM_V_at)$(MKDIR_P) host-host-ptl
 	$(slc_verbose)$(SLC_PTL) -I$(srcdir)/t-ptl/include -c -o $@ $< $(AM_CXXFLAGS) $(CXXFLAGS)
 

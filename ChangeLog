@@ -1,5 +1,29 @@
 2009-08-16  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	Allow programs to override `main'.
+
+	* tools/lib/mtalpha-sim/slrt.s: Jump to `main', not `t_main'.
+	
+	* tools/lib/mtalpha-sim/main.c: Implement `main' as a create of a
+	family of one thread running `t_main'.
+
+	* tools/lib/host-host-seqc/load.c: Encapsulate data loads in
+	function `svp_start'.
+
+	* tools/lib/host-host-seqc/slrt.c: Move `main' function to...	
+	* tools/lib/host-host-seqc/main.c: ... here, and implement as a
+	call to `svp_start'.
+	
+	* tools/lib/mtalpha.mk,
+	* tools/lib/ptl.mk,	
+	* tools/lib/seqc.mk: Update accordingly. Bundle `main.c' in
+	`-lslc', so that it gets picked up by the linker unless the
+	program overrides main.
+
+	* tools/bin/cce.in: Link with -lslc always.
+
+2009-08-16  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	Sanitize the user interface.
 	
 	Rename the environment variables that override external tool
