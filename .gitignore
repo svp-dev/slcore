@@ -20,3 +20,9 @@ _*
 *.s0
 *.t.c
 *.t.cc
+*.t.utc
+*.t.s
+*.iu
+*.i
+*.ii
+*.log
