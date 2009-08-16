@@ -1,5 +1,13 @@
 2009-08-16  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	Fix bug in compilation chain.
+	
+	* tools/bin/cce.in,	
+	* tools/bin/slc.in: Avoid including `sl_support.h' when
+	preprocessing assembly source (.S -> .s).
+
+2009-08-16  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	Fix bug in command line handling.
 	
 	* tools/bin/cce.in: Avoid creating an empty argument in
