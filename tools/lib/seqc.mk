@@ -4,7 +4,11 @@ nobase_dist_pkgdata_DATA += \
 	t-seqc/slimpl.m4 \
 	t-seqc/include/sl_support.h
 
-EXTRA_DIST += host-host-seqc/slrt.c 
+EXTRA_DIST += \
+	host-host-seqc/load.c \
+	host-host-seqc/lib_main.c  \
+	host-host-seqc/main.c  \
+	host-host-seqc/slrt.c 
 
 nobase_pkglib_DATA += \
 	host-host-seqc/slrt.o \

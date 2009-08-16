@@ -1,5 +1,12 @@
 2009-08-16  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	Packaging fix.
+
+	* tools/lib/mtalpha.mk,
+	* tools/lib/seqc.mk: Distribute more source files.
+	
+2009-08-16  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	Allow programs to override `main'.
 
 	* tools/lib/mtalpha-sim/slrt.s: Jump to `main', not `t_main'.

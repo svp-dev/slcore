@@ -2,6 +2,7 @@
 
 EXTRA_DIST += \
 	mtalpha-sim/slrt.s \
+	mtalpha-sim/main.c \
 	mtalpha-sim/callgate.s
 
 nobase_dist_pkgdata_DATA += \
