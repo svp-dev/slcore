@@ -1,5 +1,12 @@
 2009-08-16  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	Fix potential bug in function call gate for MT-alpha.
+
+	* tools/lib/mtalpha-sim/callgate.s: Also initialize $f8 and $f9,
+	as they are callee-save registers too.
+
+2009-08-16  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	Fix bug in compilation chain.
 	
 	* tools/bin/cce.in,	
