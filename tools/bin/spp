@@ -723,9 +723,10 @@ class pppalpha(object):
 
    def splitsemi(self, tokens):
       """
-      Split lines at semicolons
+      Split lines at semicolons and labels
       """
       r = re.compile(r''';|(?P<rest>(?:"(?:[^\\"]|\\.)*"|'(?:\\.|.)|[^;])+)''')
+      relabel = re.compile(r'\S+?:')
       for (asm, comment) in tokens:
          done = False
          for m in r.finditer(asm):
@@ -733,7 +734,14 @@ class pppalpha(object):
             if rest is not None:
                rest = rest.strip()
                if rest:
-                  yield (rest, comment)
+                  m = relabel.match(rest)
+                  if m is not None:
+                     lbl, more = rest.split(':',1)
+                     yield (lbl + ':', comment)
+                     if more:
+                        yield (more.strip(), comment)
+                  else:
+                     yield (rest, comment)
                   done = True
          if not done and len(comment) > 0:
             yield ('', comment)
@@ -746,7 +754,7 @@ class pppalpha(object):
       Type can be "directive", "empty", "label", "other".
       """
 
-      relabel = re.compile(r'[^:]+:')
+      relabel = re.compile(r'\S+?:')
       redir = re.compile(r'\.[a-z]+')
 
       for (asm, comment) in tokens:
@@ -1213,7 +1221,7 @@ class pppalpha(object):
             continue
          elif type == 'other':
             #pprint.pprint((type, content, comment, queue))
-            if content in ['nop', 'fnop', 'swch']:
+            if content in ['nop', 'fnop', 'swch'] and comment != 'MT: branch':
                queue.append((type, content, comment))
                continue
             elif content == 'end':
@@ -1259,11 +1267,11 @@ class pppalpha(object):
    def protectend(self, fundata, items):
       atlabel = True
       for (type, content, comment) in items:
-         if type == 'label':
+         if type == 'label' or (type == 'other' and content == 'swch' and comment == 'MT: branch'):
             atlabel = True
-         if type == 'other':
+         elif type == 'other':
             if content == 'end' and atlabel:
-               yield ('other', 'nop', 'MT: end after label')
+               yield ('other', 'nop', 'MT: end after label or branch')
             atlabel = False
          yield (type, content, comment)
 
@@ -1272,7 +1280,7 @@ class pppalpha(object):
       re1way = re.compile(r'\w+\s([^,]+)$')
       re2way = re.compile(r'(?:mov|cvt\S*|itof\S*|ftoi\S*)\s([^,]+),([^,]+)$')
       rexway = re.compile(r'\w+\s([^,]+),(.*)')
-      reld = re.compile(r'(ld[lqts]|ld[bw]u|ldgp|allocate)')
+      reld = re.compile(r'(ld[lqts]|ld[bw]u|allocate)')
       re3wayll = re.compile(r'(add|sub|mul|div|sqrt)[fgts]')
       w1way = re.compile(r'(setempty|rpcc|ldfp)')
 
@@ -1285,9 +1293,10 @@ class pppalpha(object):
       # initially exclude index
       maybell = allregs.copy()
       for (type, content, comment) in items:
-         #print (type,content,comment)
+         #print (type,content[:3],comment)
          yield (type, content, comment)
-         if type == 'label':
+         if type == 'label' or (type == 'other' and content[:3] in ['jsr','bsr','ret']):
+            #print "FOO"
             maybell = allregs.copy()
 
          elif type == 'empty':
@@ -1349,7 +1358,8 @@ class pppalpha(object):
                m2 = reld.match(content)
                if m2 is not None:
                   longwrites.append(r1)
-               elif content.startswith('lda'):
+               elif content.startswith('lda') or content.startswith('ldgp'):
+                  #print "FOO"
                   shortwrites.append(r1)
                elif content.startswith('cred') or content.startswith('crei'):
                   longwrites.append(r1)

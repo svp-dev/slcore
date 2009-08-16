@@ -1,5 +1,21 @@
 2009-08-16  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	Make assembly optimizations more robust.
+
+	* tools/bin/spp (pppalpha.splitsemi): Separate labels and
+	instructions when they appear together.
+	
+	* tools/bin/spp (pppalpha.addwchll): Treat unconditional branches
+	like labels as the register states are unknown upon return.
+
+	* tools/bin/spp (pppalpha.prunenopend): Do not remove `swch' when
+	it appears after a branch.
+
+	* tools/bin/spp (pppalpha.protectend): Force a "nop" after a
+	branch instruction and before "end".
+
+2009-08-16  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	Fix potential bug in function call gate for MT-alpha.
 
 	* tools/lib/mtalpha-sim/callgate.s: Also initialize $f8 and $f9,
