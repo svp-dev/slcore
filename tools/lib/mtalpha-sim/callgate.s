@@ -63,6 +63,8 @@ $docall:
 	cpys $f31, $f31, $f5 # flush callee-save reg
 	cpys $f31, $f31, $f6 # flush callee-save reg
 	cpys $f31, $f31, $f7 # flush callee-save reg
+	cpys $f31, $f31, $f8 # flush callee-save reg
+	cpys $f31, $f31, $f9 # flush callee-save reg
 	cpys $f31, $f31, $f0 # init FP return reg
 
 	# call function
