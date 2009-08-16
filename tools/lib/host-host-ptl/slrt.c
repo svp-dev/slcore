@@ -12,17 +12,6 @@
 // `COPYING' file in the root directory.
 //
 
-#include "../host-host-seqc/load.c"
-
-extern "C" void lib_main(void);
-
 // configuration tag for slr
 const char *__tag__ = "slr_runner:host:";
 const char *__datatag__ = "slr_datatag:ptl-host-host-ptl:";
-
-int main(int argc, const char **argv) {
-  load(argv[0], argv[1], &__slr_base);
-  load(argv[0], argv[2], &__fibre_base);
-  lib_main();
-  return 0;
-}
