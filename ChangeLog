@@ -1,3 +1,7 @@
+2009-08-15  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
+	* tools/bin/slc.in: `-save-temps' implies `-t .', as for `gcc'.
+
 2009-08-13  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
 	More MT alpha code optimizations.

@@ -509,6 +509,11 @@ case $slc_complang in
 	die "unrecognized mode $mode" ;;
 esac
 
+# if -save-temps is given, then imply -t .
+if test -n "$keep" -a -z "$tmpdir"; then
+    tmpdir=.
+fi
+
 # Create temporary directory if necessary
 if test -n "$tmpdir"; then
     if test -e "$tmpdir"; then
