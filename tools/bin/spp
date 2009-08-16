@@ -19,6 +19,7 @@ import pprint
 import sys
 import subprocess
 import re
+import os
 
 def die(msg):
    print >>sys.stderr, "%s:" % sys.argv[0], msg
@@ -1531,10 +1532,39 @@ class pppalpha(object):
             outf.write(line)
       outf.close()
 
-   def filter2(self, output, *inputs):
+   def filter2(self, flags, output, *inputs):
       """
       Enhance already valid assembly.
       """
+
+      stages = ['remdefaults', 'findlabels', 'killunusedlabels',
+                'addswchll', 'addswchbr', 'rmdupswch',
+                'prunenopend', 'protectend']
+      # parse flags
+      opts = dict(((s,1) for s in stages))
+      flags = flags.split(':',1)[1]
+      if len(flags) > 0:
+         for f in flags.split(' '):
+            if f == 'no-all' or f == 'none':
+               for k in opts.keys(): opts[k] = 0
+            elif f == 'all':
+               for k in opts.keys(): opts[k] = 1
+            else:
+               if f.startswith('no-'):
+                  name = f[3:]
+                  value = 0
+               else:
+                  name = f
+                  value = 1
+               if name not in stages:
+                  die('error: unrecognized command line option "-f%s-%s"' %
+                      (value and "asmopt" or "no-asmopt", name))
+               opts[name] = value
+
+      verbose = (os.getenv('SLC_VERBOSE','no') == 'yes')
+
+      if verbose: print >>sys.stderr, 'asmopts: %r' % opts
+
       try:
          outf = file(output, "w")
       except Exception, e:
@@ -1547,15 +1577,10 @@ class pppalpha(object):
          tokens = self.splitsemi(tokens)
          items = self.parser(tokens)
          groups = self.grouper2(items)
-         groups = self.funfilter(self.remdefaults, groups)
-         groups = self.funfilter(self.findlabels, groups)
-         groups = self.funfilter(self.killunusedlabels, groups)
-         groups = self.funfilter(self.addswchll, groups)
-         # groups = self.funfilter(self.addswchdep, groups)
-         groups = self.funfilter(self.addswchbr, groups)
-         groups = self.funfilter(self.rmdupswch, groups)
-         groups = self.funfilter(self.prunenopend, groups)
-         groups = self.funfilter(self.protectend, groups)
+         for k in stages:
+            if opts[k]:
+               #if verbose: print >>sys.stderr, 'stage: %s' % k
+               groups = self.funfilter(getattr(self, k), groups)
          items = self.flattener(groups)
          items = self.forcezero(items)
          lines = self.printer(items)

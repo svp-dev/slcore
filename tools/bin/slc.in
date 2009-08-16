@@ -37,6 +37,7 @@ synclines=yes
 combine=
 verbose=
 verdisplay=
+do_filt2=yes
 
 slc_use_slrt=yes
 slc_use_libsl=yes
@@ -66,9 +67,6 @@ outfile=
 tmpdir=
 
 keep=
-if test -n "${KEEP:-}"; then
- keep=1
-fi
 
 slc_debug_flags=()
 slc_asflags=()
@@ -82,19 +80,20 @@ extra_asflags=()
 extra_cflags=()
 extra_ldflags=()
 extra_tflags=()
+extra_f2flags=()
 
 M4=${M4:-@M4@}
 
 # Setting up some cleanup mechanism
 cleanup() {
   for f in ${inflight:+"$inflight"} "${tempfiles[@]}" "${tempdirs[@]}"; do
-    if test -z "$keep"; then 
+    if test -z "$keep"; then
       test -n "$verbose" && echo "$basename: $f: deleting temporary" >&2
-      if test -d "$f"; then 
+      if test -d "$f"; then
 	  if ! rmdir "$f" ; then
 	      echo "$basename: $f: warning: could not delete directory" >&2
 	  fi
-      else 
+      else
 	  rm -f "$f"
       fi
     else
@@ -178,17 +177,21 @@ for arg in "$@"; do
 	 ;;
 
       -x)  die "$arg not supported yet" ;;
-      -nostdinc*) 
+      -nostdinc*)
                 echo "$basename: warning: $arg may not behave as expected" >&2
                 extra_ppflags+=("$arg")
                 ;;
-      -mutc*)   die "-mutc is deprecated, use -b instead" ;;
 
       -nostartfiles) slc_use_slrt=no ;;
       -nodefaultlibs) slc_use_libsl=no ;;
       -nostdlib) slc_use_slrt=no; slc_use_libsl=no ;;
 
       -g*|-p|-pg) slc_debug_flags+=("$arg");;
+
+      -fasmopt)      do_filt2=yes ;;
+      -fno-asmopt)   do_filt2= ;;
+      -fasmopt-*)    extra_f2flags+=("${arg#-fasmopt-}");;
+      -fno-asmopt-*) extra_f2flags+=(no-"${arg#-fno-asmopt-}");;
 
       -)        in_pp_spec+=("$arg");;
 
@@ -201,7 +204,7 @@ for arg in "$@"; do
       *.s0)  check_exists "$arg" && in_filt1_spec+=("$arg");;
 # Legacy file types
       *.i|*.ii) check_exists "$arg" && in_tr_spec+=("$arg");;
-      *.C|*.cxx|*.c++|*.cc|*.cp|*.cpp) check_exists "$arg" && in_pp_spec+=("$arg");;
+      *.C|*.cxx|*.c++|*.cc|*.cp|*.cpp|*.CPP) check_exists "$arg" && in_pp_spec+=("$arg");;
       *.S|*.c) check_exists "$arg" && in_pp_spec+=("$arg");;
       *.t.s)   check_exists "$arg" && in_as_spec+=("$arg");;
       *.s)     check_exists "$arg" && in_filt2_spec+=("$arg");;
@@ -210,7 +213,7 @@ for arg in "$@"; do
   esac
 done
 if test -n "${prev_arg:-}"; then die "argument to \`$arg' is missing"; fi
-   
+
 
 # Special actions that do not require processing
 if test "x$slc_mode" = xdisplay_version; then
@@ -230,87 +233,136 @@ elif test "x$slc_mode" = xdisplay_help; then
    cat <<EOF
 SVP Language Compiler.
 
-\`$basename' is a generic compiler driver for SVP programs. It provides a
-unified command line interface for compiling SVP code. The actual
-tools used for compilations are selected automatically depending on
-the selected SVP implementation, using the separate utility \`cce'.
+\`$basename' is a generic compiler driver for SVP programs. It
+provides a unified command line interface for compiling SVP code. The
+actual tools used for compilations are selected automatically
+depending on the selected SVP implementation, using the separate
+utility \`cce'.
 
-The following transforms are applied depending on the type of the
-input (determined by the file name suffix):
+The following stages are run depending on the type of the input
+(determined by the file name suffix):
 
-- preprocess: the source code is filtered by the C/C++ preprocessor.
+  Preprocess:  the source code is filtered by the C/C++ preprocessor.
 
-- translate: the SVP language is translated to an actual SVP
-dialect. This transform uses the M4 preprocessor.
+  Translate:   SL constructs in the preprocessed code are translated
+               using M4 to an actual SVP dialect.
 
-- compile: the source code is transformed to raw assembly; the
-compiler used depends on the SVP dialect and the target
-architecture.
+  Compile:     the source code is transformed to raw assembly; the
+               compiler used depends on the SVP dialect and the target
+               architecture.
 
-- filter1: (for the Microgrids implementations) the raw assembly
-produced by the compiler is corrected to become valid.
+  Fixup:       (for the Microgrids implementations) if necessary, the
+               raw assembly produced by the compiler is corrected to
+               become valid.
 
-- filter2: (for the Microgrids implementations) the assembly is
-further optimized.
+  Enhance:     (for the Microgrids implementations) the assembly code
+               is further optimized.
 
-- assemble; the assembler used depends on the target architecture.
+  Assemble:    the assembly code is transformed to object code; the
+               assembler used depends on the target architecture.
 
-- link; the linker used depends on the target architecture.
+  Link:        objects and libraries are linked together; the linker
+               used depends on the target architecture.
 
-Except for the three additional transforms (translate, filter1 and
-filter2), \`$basename' mimics the driver of the GNU Compiler
-Collection (\`gcc'). For general information about default behavior,
-additional flags and processing order, see gcc(1).
+The relationship with stages and file name extensions (intermediary
+code) can be summarized as follows:
+
+  .c -(P)-> .i -(T)-> .t.c (or .t.cc or .t.utc) -(C)-> .s0 -(F)-> .s
+  -(E)-> .t.s -(A)-> .o -(L)-> executable
+
+  .S -(P)-> .s -(E)-> .t.s -(A)-> .o -(L)-> executable
+
+  Only for \`-b ptl': .cc -(P)-> .ii -(T)-> .t.cc -(C)-> .s0 -(F)-> .s
+  -(E)-> .t.s -(A)-> .o -(L)-> executable
+
+  Only for \`-b utc0': .utc -(P)-> .iu -(T)-> .t.utc -(C)-> .s0 -(F)->
+  .s -(E)-> .t.s -(A)-> .o -(L)-> executable
+
+Except for the three additional stages (translate, fixup and enhance),
+\`$basename' mimics the driver of the GNU Compiler Collection
+(\`gcc'). For general information about default behavior, additional
+flags and processing order, see gcc(1).
 
 Usage: $0 [ARG]...
 
 Options:
 
-  -check             Check the environment; do not process anything. In
-                     this mode $basename checks that the required tools
-                     are available.
+  -check  Check the environment; do not process anything. In this
+          mode \`$basename' checks that the required tools are
+          available.
 
-  -E                 Stop after the preprocessing stage; do not translate.
-                     The output is in the form of preprocessed source code,
-                     which is sent to the standard output.
+  -E      Stop after the preprocessing stage; do not translate.  The
+          output is in the form of preprocessed source code, which is
+          sent to the standard output.
 
-  -EE                Stop after the translation stage; do not compile.
-                     The output is in the form of translated source code,
-                     which is sent to the standard output.
+  -EE     Stop after the translation stage; do not compile.  The
+          output is in the form of translated source code, which is
+          sent to the standard output.
 
-  -S0                Stop after the first stage of compilation proper; do not
-                     perform post-compilation filtering on assembly. 
-                     The output is in the form of an unprocessed assembler code
-                     file for each non-assembler input file specified.
+  -S0     Stop after the first stage of compilation proper; do not
+          perform post-compilation fixup on assembly.  The output is
+          in the form of an unprocessed assembler code file with
+          extension .s0 for each non-assembler input file specified.
 
-  -S                 Stop after the second stage of compilation
-                     proper; do not optimize the assembly. The output
-                     is in the form of an assembler code file for each
-                     non-assembler input file specified.
+  -S      Stop after the second stage of compilation proper; do not
+          optimize the assembly. The output is in the form of an
+          assembler code file with extension .s for each non-assembler
+          input file specified or any input file with extension .s0.
 
-  -S1                Stop after the assembly optimization; do not assemble. 
-                     The output is in the form of an optimized assembler code
-                     file for each assembler input file specified.
+  -S1     Stop after the assembly optimization; do not assemble.  The
+          output is in the form of an optimized assembler code file
+          with extension .t.s for each assembler input file specified,
+          except those already with extension .t.s.
 
-  -c                 Compile or assemble the source files, but do not link.
-                     The linking stage is not done. The output is in the
-                     form of an object file for each source file.
+  -c      Compile or assemble the source files, but do not link.  The
+          linking stage is not done. The output is in the form of an
+          object file for each source file.
 
 SVP implementation selection:
-  -b spec            Generate code for the SVP implementation specified by
-                     "spec". "spec" is passed through \`cce' for validation
-                     and alias expansion. See \`cce --help' for details. The
-                     default implementation is "seqc".
+  -b spec  Generate code for the SVP implementation specified by
+           "spec". "spec" is passed through \`cce' for validation and
+           alias expansion. See \`cce --help' for details. The default
+           implementation is "seqc".
 
-New input file types:
-  file.utc           muTC source code which must be preprocessed.
+Input file types:
+  file.c      C source code which must be preprocessed and translated.
 
-  file.iu            muTC source code which should not be preprocessed.
+  file.{cc,cxx,c++,C,cp,cpp,CPP}  C++ source code which must be
+                                  preprocessed and translated.
 
-  file.s0            Assembler code which should be further distilled.
+  file.utc    muTC source code which must be preprocessed and
+              translated.
 
-The regular GCC file types are also recognized and are transformed
-accordingly.
+  file.i      C source code which must be translated but should not be
+              preprocessed.
+
+  file.ii     C++ source code which must be translated but should not
+              be preprocessed.
+
+  file.iu     muTC source code which must be translated but should not
+              be preprocessed.
+
+  file.t.c    C source code which should not be translated nor
+              preprocessed.
+
+  file.t.cc   C++ source code which should not be translated nor
+              preprocessed.
+
+  file.t.utc  muTC source code which should not be translated nor
+              preprocessed.
+
+  file.s0     Assembly code which should be corrected (fixup).
+
+  file.S      Assembler code which should be preprocessed and further
+              optimized.
+
+  file.s      Assembler code which should be further optimized
+              (enhance).
+
+  file.t.s    Assembler code which should not be further optimized.
+
+  other       An object file to be fed straight into linking. Any
+              file name with no recognized suffix is treated this way.
 
 General options:
   -Idir              Add the directory "dir" to the list of directories
@@ -328,50 +380,82 @@ General options:
   -o file            Place output in "file". This implies -combine for the
                      phase where \`$basename' is configured to stop.
 
+  -nostartfiles      Do not use the standard startup files when linking.
+
+  -nodefaultlibs     Do not use the standard system library when linking.
+
+  -nostdlib          Implies options -nostartfiles and -nodefaultlibs.
+
   -Wm4,option        Pass "option" as an option to M4.
+
+  -fno-asmopt        Do not enhance the assembly code between
+                     post-compilation fixup and assembly. The fixed
+                     assembly is passed directly to the assembler
+                     without further optimizations.
+
+MT-specific optimizations:
+  -fno-asmopt-remdefaults  Do not remove family setup instructions that
+                           use default values.
+
+  -fno-asmopt-findlabels   Do not collect local block labels.
+
+  -fno-asmopt-killunusedlabels  Do not remove unused local block labels.
+
+  -fno-asmopt-addswchll    Do not add the context switch annotation after
+                           potential uses of a long-latency operation.
+
+  -fno-asmopt-addswchbr    Do not add the context switch annotation after
+                           branches.
+
+  -fno-asmopt-rmdupswch    Do not trim clusters of multiple switch
+                           annotations.
+
+  -fno-asmopt-prunenopend  Do not remove sequences of no-ops and switch
+                           annotations when they occur before a thread
+                           end annotation.
+
+  -fno-asmopt-protectend   Do not insert an extra no-op instruction when
+                           a thread end annotation happens just after a
+                           label.
+
+As for gcc(1), options with long names starting with -f have both
+positive and negative forms; the negative form of -ffoo would be
+-fno-foo. This manual documents only one of these two forms, whichever
+one is not the default.
 
 Compiler debugging options:
   -v                 Print (on standard error output) the commands executed
                      to run the stages of compilation. Also print the
                      settings and version number of the tools involved.
 
-  -fcm4-dump=file    Dump the m4 input to file "file".
-
-  -ftrace-m4=file    Dump the m4 macro expansion trace to file "file".
-
   -save-temps        Keep intermediate files. If this option is not set,
                      intermediate files generated during compilation are
                      deleted before the program terminates.
 
   -t dir             Output directory for intermediate files. If this option
-                     is not set, a subdirectory of the standard temporary 
-                     directory (TMPDIR or /tmp) is used.
+                     is not set, a subdirectory of the standard temporary
+                     directory (TMPDIR or /tmp) is used; unless -save-temps
+                     is specified, in which case the current directory is
+                     used instead.
 
+  -fcm4-dump=file    Dump the M4 input code to file "file".
+
+  -fm4-trace=file    Dump the M4 macro expansion trace to file "file".
 
 Other options:
   -h, --help         Print this help; do not process anything.
 
-  --version          Print $basename's version number; do not process 
+  --version          Print $basename's version number; do not process
                      anything.
 
-All other options are passed transparently to the appropriate
-tools; in particular, the following options may prove useful:
+All other options valid for gcc(1) are passed transparently to the
+appropriate tools, except for the following:
 
-  -Dmacro, -Umacro   Set/unset C/C++ preprocessor macros.
+  -x                 This is not supported yet. \`$basename' handles
+                     input based on file name extension only.
 
-  -Wa,option         Pass "option" as an option to the assembler.
-
-  -Wl,option         Pass "option" as an option to the linker.
-
-  -Ldir              Search "dir" for libraries when linking.
-
-  -llibrary          Link with the library named "library".
-
-  -nostartfiles      Do not use the standard startup files when linking.
-
-  -nodefaultlibs     Do not use the standard system library when linking.
-
-  -nostdlib          Implies options -nostartfiles and -nodefaultlibs.
+  -nostdinc          This option is supported but not yield the same
+                     semantics as when used with gcc(1).
 
 Environment variables:
   M4                 M4 preprocessor to use. Default is "m4".
@@ -384,7 +468,7 @@ Environment variables:
 Diagnostics:
   0                  No error occured.
 
-  1                  Invalid parameters passed to \`$basename' or 
+  1                  Invalid parameters passed to \`$basename' or
                      invalid configuration.
 
   2                  Translation failed.
@@ -439,16 +523,10 @@ if test -n "$check"; then
 	echo "$slc_aslink: cannot run" >&2
 	exit 1
     else echo "Found assembler/linker compiler: $slc_aslink"; fi
-    
+
     echo "Good." >&2
 fi
 
-########################
-# Set KEEP if specified
-########################
-if test -n "$keep"; then
-   export KEEP=1
-fi
 
 ###################################
 # Command line additions
@@ -488,9 +566,12 @@ for ei in "${extra_inc[@]}"; do
 done
 cm4flags+=("${extra_tflags[@]}")
 
-###################################
-# Construction of compilation chain
-###################################
+################
+# Misc settings
+################
+
+# Propagate $verbose
+export SLC_VERBOSE=${verbose:-no}
 
 # Select file extension for intermediate source files
 case $slc_complang in
@@ -510,9 +591,24 @@ case $slc_complang in
 	die "unrecognized mode $mode" ;;
 esac
 
-# if -save-temps is given, then imply -t .
+#########################################
+# Handle KEEP, TMPDIR, -save-temps and -t
+#########################################
+
+# if -save-temps is given explicitly but -t is not specified,
+# then imply -t .
 if test -n "$keep" -a -z "$tmpdir"; then
     tmpdir=.
+fi
+
+# if KEEP is set, imply -save-temps but do not change tmpdir
+if test -n "${KEEP:-}"; then
+ keep=1
+fi
+
+# propagate KEEP
+if test -n "$keep"; then
+   export KEEP=1
 fi
 
 # Create temporary directory if necessary
@@ -530,9 +626,14 @@ else
     tempdirs=("$tmpdir")
 fi
 
+###################################
+# Construction of compilation chain
+###################################
+
+
 # Decide what phases to do and where to stop
 defout=-
-case $slc_mode in 
+case $slc_mode in
     pp) finalstage=P;;
     trans) finalstage=T;;
     cc) finalstage=C;;
@@ -547,8 +648,8 @@ finalname=${outfile:-$defout}
 prepare_chain() {
     local -a inputs specfiles
     local addext stage indvar phrase
-    local f first final target 
-    
+    local f first final target
+
     inputsarray=$1
     eval "inputs=(\"\${$inputsarray[@]}\")"
     addext=$2
@@ -557,14 +658,14 @@ prepare_chain() {
     specfilesarray=$5
     eval "specfiles=(\"\${$specfilesarray[@]}\")"
     phrase=$6
-    
+
     target=
     if test "x$skip" = "x"; then
 	if ! expr "$combine" : ".*$stage" >/dev/null; then
 	    for f in "${inputs[@]}"; do
 		fn=${f##*/}; fn=${fn%.*}; fn=${fn%.t}
 		case $f in
-		    *.S) 
+		    *.S)
 			target=$tmpdir/$fn.s
 			in_filt2_ind+=("$target")
 			;;
@@ -586,7 +687,7 @@ prepare_chain() {
 		if test -z "$first"; then first=$f; fi
 		transform="$transform:$f"
 	    done
-	    if test -n "$transform"; then 
+	    if test -n "$transform"; then
 		fn=${first##*/}; fn=${fn%.*}; fn=${fn%.t}
 		targetbase=$fn.$addext
 		if test "x$finalstage" = "x$stage"; then
@@ -648,14 +749,14 @@ if test -n "$verbose"; then
            combine outfile tmpdir; do
     eval "echo '  ' $i '->' \$$i" >&2
   done
-  set | grep '^slc_'
+  set | grep '^slc_' >&2
   echo "---- $basename: build plan -----" >&2
   for i in "${transforms[@]}"; do echo $i >&2; done
   echo "---- $basename: processing... ----" >&2
 fi
 
 for t in "${transforms[@]}"; do
-  IFS=':' read action target indeps <<EOF 
+  IFS=':' read action target indeps <<EOF
 $t
 EOF
   # FIXME: the following should be an array
@@ -670,7 +771,7 @@ EOF
 	  cmd=("${slc_compiler[@]}" -E ${dosl:+"${slc_pp_prefix[@]}"} $deps "${slc_ppflags[@]}")
 	  if ! test "$slc_mode" = "pp" -a -z "$outfile"; then capturestdout=1; fi
 	  ;;
-      T) 
+      T)
 	  res=3
           cm4deps=()
           for d in $deps; do
@@ -696,11 +797,14 @@ EOF
 	  ;;
       E)
 	  res=6
-	  if test "x$slc_filter2" = "xcp"; then
+	  if test "x$slc_filter2" = "xcp" -o -z "$do_filt2"; then
+	      if test 0 -lt ${#extra_f2flags[*]}; then
+		  echo "$basename: warning: options ignored: \"${extra_f2flags[*]}\"" >&2
+	      fi
 	      cmd=(cat $deps)
 	      capturestdout=1
 	  else
-	      cmd=("${slc_filter2[@]}" "$target" $deps)
+	      cmd=("${slc_filter2[@]}" "stages:${extra_f2flags[*]}" "$target" $deps)
 	  fi
 	  ;;
       A)

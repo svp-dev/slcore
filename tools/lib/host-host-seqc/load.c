@@ -20,13 +20,13 @@
 void *__slr_base;
 void *__fibre_base;
 
-void fail(const char *progname, const char *where)
+static void fail(const char *progname, const char *where)
 {
   fprintf(stderr, "%s: %s: %s\n", progname, where, strerror(errno));
   exit(1);
 }
 
-void load(const char *progname, const char* fname, void**ptr)
+static void load(const char *progname, const char* fname, void**ptr)
 {
   if (!fname) {
     fprintf(stderr, "%s: warning: no data file specified (did you use slr?)\n", progname);
@@ -56,3 +56,12 @@ void load(const char *progname, const char* fname, void**ptr)
     *ptr = 0;
   fclose(f);
 }
+
+extern void lib_main(void);
+
+void svp_start(int argc, const char **argv) {
+  load(argv[0], argv[1], &__slr_base);
+  load(argv[0], argv[2], &__fibre_base);
+  lib_main();
+}
+

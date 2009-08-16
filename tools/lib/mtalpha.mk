@@ -15,25 +15,29 @@ nobase_pkglib_DATA += \
 	mtalpha-sim/libslc.a
 
 mtalpha_sim_libslc_a_CONTENTS = \
-	mtalpha-sim/callgate.o 
+	mtalpha-sim/callgate.o \
+	mtalpha-sim/main.o
 
-mtalpha-sim/libslc.a: $(mtalpha_sim_libslc_a_CONTENTS)
+mtalpha-sim/lib%.a:
 	$(AM_V_at)rm -f $@
 	$(AM_V_AR)$(AR_MTALPHA) cru $@ $^
 	$(AM_V_at)$(RANLIB_MTALPHA) $@
 
+mtalpha-sim/libslc.a: $(mtalpha_sim_libslc_a_CONTENTS)
+
 SLC_MTALPHA = $(SLC_RUN) -b ppp-mtalpha -nostdlib
 
-mtalpha-sim/callgate.o: $(srcdir)/mtalpha-sim/callgate.s
+mtalpha-sim/%.o: $(srcdir)/mtalpha-sim/%.s
 	$(AM_V_at)$(MKDIR_P) mtalpha-sim
 	$(slc_verbose)$(SLC_MTALPHA) -c -o $@ $<
 
-mtalpha-sim/slrt.o: $(srcdir)/mtalpha-sim/slrt.s
+mtalpha-sim/%.o: $(srcdir)/mtalpha-sim/%.c
 	$(AM_V_at)$(MKDIR_P) mtalpha-sim
 	$(slc_verbose)$(SLC_MTALPHA) -c -o $@ $<
 
 CLEANFILES += \
 	mtalpha-sim/callgate.o \
+	mtalpha-sim/main.o \
 	mtalpha-sim/slrt.o \
 	mtalpha-sim/libslc.a
 

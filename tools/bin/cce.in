@@ -24,14 +24,14 @@ slc_incdir=${SLC_INCDIR:-@slc_incdir@}
 spp_helper=${SPP:-@spp_helper@}
 scu_helper=${SCU:-@scu_helper@}
 
-CC=${CC:-@CC@}
-CXX=${CXX:-@CXX@}
-CC_ALPHA=${CC_ALPHA:-@CC_ALPHA@}
-UTCC_MTALPHA=${UTCC_ALPHA:-@UTCC_MTALPHA@}
+CC_HOST=${CC_HOST_OVERRIDE:-@CC_HOST@}
+CXX_HOST=${CXX_HOST_OVERRIDE:-@CXX_HOST@}
+CC_ALPHA=${CC_ALPHA_OVERRIDE:-@CC_ALPHA@}
+UTCC_MTALPHA=${UTCC_ALPHA_OVERRIDE:-@UTCC_MTALPHA@}
 CC_MTALPHA=$UTCC_MTALPHA
 
-CC_SPARC=${CC_SPARC:-@CC_SPARC@}
-UTCC_MTSPARC=${UTCC_SPARC:-@UTCC_MTSPARC@}
+CC_SPARC=${CC_SPARC_OVERRIDE:-@CC_SPARC@}
+UTCC_MTSPARC=${UTCC_SPARC_OVERRIDE:-@UTCC_MTSPARC@}
 CC_MTSPARC=$UTCC_MTSPARC
 
 version=@slc_version@
@@ -57,9 +57,9 @@ Options:
   -v, --version      print version number, then exit
 
 Environment variables:
-  CC CXX
-  CC_ALPHA UTCC_MTALPHA
-  CC_SPARC UTCC_MTSPARC  
+  CC_HOST_OVERRIDE CXX_HOST_OVERRIDE
+  CC_ALPHA_OVERRIDE UTCC_MTALPHA_OVERRIDE
+  CC_SPARC_OVERRIDE UTCC_MTSPARC_OVERRIDE
 
 Example one-word implementation aliases:
 
@@ -141,7 +141,7 @@ esac
 # Expand two-word aliases according to inventory
 case $alias in
     *-*-*)   ;; # more than two word: pass to next stage
-    *) 
+    *)
 	IFS='-' read dialect arch <<EOF
 $alias
 EOF
@@ -172,7 +172,7 @@ case $alias in
 $alias
 EOF
 	;;
-    *) 
+    *)
      # Any other form, unrecognized for now
 	die "$alias: unknown alias" ;;
 esac
@@ -249,8 +249,8 @@ case $slc_dialect-$slc_arch in
     *-x) slc_compiler=("$scu_helper" compile) ;;
     *-host)
 	case $slc_complang in
-	    cpp) slc_compiler=($CXX) ;;
-	    c)   slc_compiler=($CC) ;;
+	    cpp) slc_compiler=($CXX_HOST) ;;
+	    c)   slc_compiler=($CC_HOST) ;;
 	    utc) echo "$basename: warning: no compiler for $dialect-$arch" >&2 ;;
 	esac
 	slc_filter1=(cp)
@@ -271,7 +271,7 @@ case $slc_dialect-$slc_arch in
 	slc_filter1=(cp)
 	slc_filter2=("$python" "$spp_helper" "$slc_transbase" filter2)
 	;;
-    
+
 esac
 
 # Compiler flags selection; default to optimize
@@ -286,15 +286,15 @@ esac
 # Assembler and linker selection
 case $slc_complang-$slc_arch in
     *-x)      slc_aslink=("$scu_helper" assemble/link) ;;
-    cpp-host) slc_aslink=(${CXX:-g++}) ;;
-    *-host)   slc_aslink=(${CC:-gcc}) ;;
+    cpp-host) slc_aslink=(${CXX_HOST:-g++}) ;;
+    *-host)   slc_aslink=(${CC_HOST:-gcc}) ;;
     cpp-*)    slc_aslink=($(eval "echo \${CXX_$archvar:-\"\$scu_helper\"}")) ;;
     *-*)      slc_aslink=($(eval "echo \${CC_$archvar:-\"\$scu_helper\"}")) ;;
 esac
 
 # Extra defines
 case $slc_arch in
-    mtalpha) 
+    mtalpha)
         slc_cflags+=(-mcpu=ev6 -mfix -mcix -mmax -mbwx -fno-math-errno -fno-trapping-math)
         ;;
     *)
@@ -305,7 +305,6 @@ esac
 # Extra flag selection
 case $slc_arch-$slc_os in
     mt*-sim)
-	
         slc_ppflags+=(-D__mt_freestanding__ -D__WORDSIZE=64)
         # slc_cflags="$slc_cflags -D__mt_freestanding__ -D__WORDSIZE=64"
         # slc_cflags="$slc_cflags -nostdinc"
@@ -323,7 +322,7 @@ esac
 # OS selection
 case $slc_os in
     x) ;;
-    *) 
+    *)
         save_IFS=$IFS
         IFS=:
         for d in $slc_datadir; do
@@ -346,13 +345,10 @@ case $slc_os in
 	    fi
         fi
 
-	for d in $slc_libdir; do   
+	for d in $slc_libdir; do
 	    slc_ldflags+=("-L$d/$slc_arch-$slc_os")
         done
-	case $slc_dialect in
-	    seqc) ;;
-	    *) slc_ldflags+=("-lslc") ;;
-	esac
+	slc_ldflags+=("-lslc")
 	if test "$slc_use_libsl" != "no"; then
             slc_ldflags+=("-lsl")
 	fi
