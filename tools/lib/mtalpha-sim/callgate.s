@@ -2,57 +2,49 @@
 
 	.text
 	.align 4
-	.globl _sl_callgate
-	.ent _sl_callgate
-_sl_callgate:
+	.globl __sl_callgate
+	.ent __sl_callgate
+__sl_callgate:
 	.registers 0 0 31 0 0 31
+	mov $l0, $30   # SP(parent)
+	ldfp $l1       # TLSP
 
-	ldq $9, 0($0)  # load call protocol
-	ldq $27, 8($0) # load callee function pointer into PV
-	ldfp $30   # set up stack pointer
+	ldq $9, -8($30)  # load call protocol
+	ldq $27, -16($30) # load PV
+
 	mov $30, $15   # set up frame pointer
 
-	beq $9, $docall		; swch
-	ldq $16, 32($0)
-	ldt $f16, 32($0)
+	beq $9, $docall
+	ldq $16, -24($0)
+	ldt $f16, -32($0)
 
 	subl $9, 1, $9
-	beq $9, $docall		; swch
-	ldq $17, 40($0)		
-	ldt $f17, 40($0)
+	beq $9, $docall
+	ldq $17, -40($0)		
+	ldt $f17, -48($0)
 
 	subl $9, 1, $9
-	beq $9, $docall		; swch
-	ldq $18, 48($0)
-	ldt $f18, 48($0)
+	beq $9, $docall
+	ldq $18, -56($0)
+	ldt $f18, -64($0)
 
 	subl $9, 1, $9
-	beq $9, $docall		; swch
-	ldq $19, 56($0)
-	ldt $f19, 56($0)
+	beq $9, $docall
+	ldq $19, -72($0)
+	ldt $f19, -80($0)
 
 	subl $9, 1, $9
-	beq $9, $docall		; swch
-	ldq $20, 64($0)
-	ldt $f20, 64($0)
+	beq $9, $docall
+	ldq $20, -88($0)
+	ldt $f20, -96($0)
 
 	subl $9, 1, $9
-	beq $9, $docall		; swch
-	ldq $21, 72($0)
-	ldt $f21, 72($0)
-
-	subl $9, 1, $9
-	beq $9, $docall		; swch
-
-	# if we reach here, the call protocol is unsupported yet.
-	nop
-	nop
-$die:	pal1d 0
-	br $die			; swch
-	.align 6
+	beq $9, $docall
+	ldq $21, -104($0)
+	ldt $f21, -112($0)
 
 $docall:
-	mov $0, $10 # save up for later
+	mov $27, $10 # save up for later
 	mov $31, $11 # flush callee-save reg
 	mov $31, $12 # flush callee-save reg
 	mov $31, $13 # flush callee-save reg
@@ -70,10 +62,11 @@ $docall:
 	# call function
 	jsr $26,($27)		; swch
 
-	# save return value to predefined location
-	stq $0, 16($10)
-	stt $f0, 24($10)		; end
+	# save return value(s)
+	stq $0, -8($30)
+	stt $f0, -16($30)
+	end	
 
-	.end _sl_callgate
+	.end __sl_callgate
 	
 	

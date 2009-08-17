@@ -1,3 +1,11 @@
+2009-08-18  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
+	Preliminary support for rewriting function calls in assembly.
+	
+	* tools/bin/spp,
+	* tools/lib/mtalpha-sim/callgate.s,
+	* tools/lib/t-pppalpha/include/sl_support.h: New features.
+
 2009-08-17  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
 	Fix script `slenv'.
