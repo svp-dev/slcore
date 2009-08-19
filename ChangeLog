@@ -1,5 +1,9 @@
 2009-08-19  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	* tools/tests/8_funs/f8.c: Use types correctly.
+
+2009-08-19  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	Merge the following changes.
 
 	2009-08-19  Raphael 'kena' Poss  <r.c.poss@uva.nl>
