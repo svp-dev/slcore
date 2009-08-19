@@ -1,5 +1,12 @@
 2009-08-19  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	Reinstate the C divide operator.
+	
+	* tools/bin/cce.in: Enable use of the C divide operator for the
+	macros in <svp/div.h> always.
+
+2009-08-19  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	Rebase on later toolchain.
 
 	* deploy/alpha.h.patch,
