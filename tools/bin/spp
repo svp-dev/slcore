@@ -147,16 +147,18 @@ class pppalpha(object):
 
    reg_mapping = {
       # Globals
-      'g0' : 't9',
-      'g1' : 't8',
-      'g2' : 't7',
-      'g3' : 't6',
-      'g4' : 't5',
-      'g5' : 't4',
-      'g6' : 't3',
-      'g7' : 't2',
-      'g8' : 't1',
-      'g9' : 't0',
+      'g0' : 't11',
+      'g1' : 't10',
+      'g2' : 't9',
+      'g3' : 't8',
+      'g4' : 't7',
+      'g5' : 't6',
+      'g6' : 't5',
+      'g7' : 't4',
+      'g8' : 't3',
+      'g9' : 't2',
+      'g10' : 't1',
+      'g11' : 't0',
 
       'gf0' : 'ft11',
       'gf1' : 'ft10',
@@ -182,6 +184,8 @@ class pppalpha(object):
       'd3' : 't7',
       's4' : 't8',
       'd4' : 't9',
+      's5' : 't10',
+      'd5' : 't11',
 
       'sf0' : 'ft0',
       'df0' : 'ft1',
@@ -220,37 +224,35 @@ class pppalpha(object):
 
       # Special locals
       'l31' : 'zero',
-      'l20' : 'sp',
-      'l19' : 'gp',
-      'l18' : 'fp',
-      'l17' : 'ra',
-      'l16' : 's5',
+      'l18' : 'sp',
+      'l17' : 'gp',
+      'l16' : 'fp',
+      'l15' : 'ra',
+      'l14' : 's5',
 
-      'l15' : 's4',
-      'l14' : 's3',
-      'l13' : 's2',
-      'l12' : 's1',
-      'l11' : 's0',
-      'l10' : 'pv',
-      'l9' : 'a0',
-      'l8' : 'a1',
-      'l7' : 'a2',
-      'l6' : 'a3',
-      'l5' : 'a4',
-      'l4' : 'a5',
-      'l3' : 'rv',
-      'l2' : 'at',
-      'l1' : 't11',
-      'l0' : 't10'
+      'l13' : 's4',
+      'l12' : 's3',
+      'l11' : 's2',
+      'l10' : 's1',
+      'l9' : 's0',
+      'l8' : 'pv',
+      'l7' : 'a0',
+      'l6' : 'a1',
+      'l5' : 'a2',
+      'l4' : 'a3',
+      'l3' : 'a4',
+      'l2' : 'a5',
+      'l1' : 'rv',
+      'l0' : 'at',
       }
 
    reg_aliases = {
-      'tlsp' : 'l20',
-      'gp' : 'l19',
-      'pv' : 'l10',
-      'ra' : 'l17',
-      'fp' : 'l18',
-      'rv' : 'l3',
+      'tlsp' : 'l18',
+      'gp' : 'l17',
+      'pv' : 'l8',
+      'ra' : 'l15',
+      'fp' : 'l16',
+      'rv' : 'l1',
       'idx_init' : 'l0',
       'basearg' : 'l1',
       'zero' : 'l31',
@@ -262,9 +264,9 @@ class pppalpha(object):
    # Magic numbers
    #iargregs = 6 # 1 reserved for PV
    #fargregs = 4
-   iargregs = 9 # 1 reserved for PV
+   iargregs = 11 # 1 reserved for PV
    fargregs = 12
-   ilocalregs = 21
+   ilocalregs = 19
 
    # registers that are known to not be empty
    # when a thread starts: by default, all legacy regs.
@@ -1069,7 +1071,6 @@ class pppalpha(object):
          assert len(r) == 1 and r[0]['cat'] == 'l'
          regnr = r[0]['nr'] 
          if fundata['usedregs'][regnr]:
-            print "USEG ARG %d in %s: %r" % (areg, fundata['name'], regnr)
             tosave.append(regnr)
          else: 
             break
@@ -1081,7 +1082,6 @@ class pppalpha(object):
          assert len(rf) == 1 and rf[0]['cat'] == 'l'
          fregnr = rf[0]['nr'] 
          if fundata['usedfregs'][fregnr]:
-            print "USEG FARG %d in %s: %r" % (areg, fundata['name'], fregnr)
             ftosave.append(fregnr)
          else:
             break
@@ -1107,7 +1107,6 @@ class pppalpha(object):
 
 
       r = re.compile('^jsr\s+\$l(\d+)\s*,\s*\(\s*\$l(\d+)\s*\)')
-      rd = re.compile('^jsr\s+\$[lgsd]\d+\s*,\s*\(\s*\$l(\d+)\s*\)\s*,\s*__(div|rem)([lqs])(u?)')
       for (type, content, comment) in items:
          if type == "other" and content.startswith('jsr'):
             m = r.match(content)
@@ -1142,27 +1141,7 @@ class pppalpha(object):
                   yield ('other','ldt $lf%d, -16($l%d)' % (frvreg, spreg), 'restore FRV')
                yield ('empty','','MT: call end')
                continue
-            m = rd.match(content)
-            if m is not None:
-               pv = int(m.group(1))
-               fun = m.group(2)
-               width = m.group(3)
-               sign = m.group(4) and 'u' or 's'
-               yield ('empty','','MT: div call begin (%s %s %s)' % (fun, width, sign))
-               yield ('other','allocate $l%d, 0, 0, 0, 0' % rareg, 'RA <- fid')
-               yield ('other','ldq $l%d, __divmod%s%s($l%d) !literal' % (pv, width, sign, gpreg), 'PV <- fptr')
-               yield ('other','stq $l0, -8($l%d)' % spreg, '')
-               yield ('other','stq $l1, -16($l%d)' % spreg, '')
-               yield ('other','crei $l%d, 0($l%d)' % (rareg, pv), 'start call')
-               yield ('other','mov $l%d, $31' % rareg, 'wait for return')
-               if fun == 'div':
-                  yield ('other','mov $l1, $l%d' % pv, 'PV <- quotient')
-               else:
-                  yield ('other','mov $l0, $l%d' % pv, 'PV <- remainder')
-               yield ('other','ldq $l0, -8($l%d)' % spreg, '')
-               yield ('other','ldq $l1, -16($l%d)' % spreg, '')
-               yield ('empty','','MT: div call end')
-               continue
+
             die("%s: unsupported call: %s" % (fundata['name'],content))
             
          else:

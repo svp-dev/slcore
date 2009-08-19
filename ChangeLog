@@ -1,3 +1,17 @@
+2009-08-19  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
+	Reduce support to function calls only.
+
+	The previous changes would also rewrite calls to the divide
+	routines; but this is not needed any more since the decision was
+	made separately to implement a hardware integer divide instead.
+	
+	* tools/bin/spp: Reinstate the use of t10 and t11 for parameter
+	passing.
+
+	* tools/lib/t-pppalpha/include/sl_support.h: Lower the maximum
+	number of locals again.
+
 2009-08-18  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
 	Preliminary support for rewriting function calls in assembly.
