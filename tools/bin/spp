@@ -644,11 +644,15 @@ class pppalpha(object):
             for r in rl:
                if r['cat'] in 'sdg':
                   fixed.add(r['legnr'])
+                  
          for r in fixed:
             fargs.append('-ffixed-$%s%d' % (v,r))
       # Indicate to GCC it does not need to save
-      # RA before it uses it:
-      # fargs.append('-fcall-saved-$%d' % self.aliases["ra"]['legnr'])
+      # s0 .. s5, fs0 ... fs7 before it uses them:
+      for i in xrange(6):
+         fargs.append('-fcall-used-$%d' % self.legacy_regs['s%d' % i])
+      for i in xrange(8):
+         fargs.append('-fcall-used-$f%d' % self.legacy_fregs['fs%d' % i])
 
       cmd = [compiler] + fargs + list(args) # + ['-fverbose-asm']
       try:         
@@ -770,37 +774,47 @@ class pppalpha(object):
          else:
             yield ('other', asm, comment)
 
+   def replaceret(self, fundata, items):
+      """
+      Replace ret by 'end'
+      """
+      for (type, content, comment) in items:
+         if type == 'other' and content.startswith('ret '):
+            yield ('other','end','MT: end thread')
+         else:
+            yield (type, content, comment)
+            
    def munchret(self, fundata, items):
       """
-      Replace ret and possible frame adjustment by end thread
+      Remove possible frame adjustment before end thread
       """
-      spreg = self.legacy_regs['sp']
-      gpreg = self.legacy_regs['gp']
-      rareg = self.legacy_regs['ra']
-      fpreg = self.legacy_regs['fp']
-      reanyreg = r'(\$f?\d+)'
-      respecial = r'(\$(%d|%d|%d|%d))' % (spreg, gpreg, rareg, fpreg)
-      rekill = r'(mov %s,\s*\$%d|ld. %s,\d+\(\$%d\))' % (reanyreg, spreg, respecial, spreg)
+      spreg = self.reg_aliases['tlsp']
+      rekill = r'ld. \$lf?\d+,\d+\(\$%s\)' % spreg
       rekill = re.compile(rekill)
 
       queue = []
       for (i, (type, content, comment)) in enumerate(items):
-         if content.startswith('ret '):
+         if type == 'other' and content == 'end':
             hello = 1
-            qnew = []
+            qkill = []
+            qpreserve = []
             while hello:
                if len(queue) == 0:
                   hello = 0
                else:
-                  r = queue[-1][1]
-                  if rekill.match(r):
-                     qnew.insert(0,r)
+                  (t,c,cm) = queue[-1]
+                  if t in ['empty','directive']:
+                     qpreserve.insert(0, (t,c,cm))
+                     queue.pop()
+                  elif t == 'other' and rekill.match(c):
+                     qkill.insert(0,(t,c,cm))
                      queue.pop()
                   else:
                      hello = 0
-            for r in qnew:
-               queue.append(('empty','','MT: optimized away: %s' % r))
-            # queue.append(('other','nop','MT: end thread'))
+            for r in qkill:
+               queue.append(('empty','','MT: cleanup: %s' % r[1]))
+            for r in qpreserve:
+               queue.append(r)
             queue.append(('other','end','MT: end thread'))
          else:
             queue.append((type, content, comment))
@@ -1220,7 +1234,7 @@ class pppalpha(object):
          rmask = fundata['usedregs']
          dorename = 0
          newnr = nr
-         if rmask[nr] == True and False in rmask[:self.ilocalregs]:
+         if rmask[nr] == True and False in rmask[:nr]: # self.ilocalregs]:
             freenr = [i for (i,r) in enumerate(rmask) if r == False][0]
             newnr = freenr
             dorename = 1
@@ -1306,7 +1320,7 @@ class pppalpha(object):
    def prunenopend(self, fundata, items):
       queue = []
       for (type, content, comment) in items:
-         if type == 'empty':
+         if type in ['empty','directive']:
             #pprint.pprint((type, content, comment, queue))
             yield (type, content, comment)
             continue
@@ -1317,7 +1331,7 @@ class pppalpha(object):
                continue
             elif content == 'end':
                if len(queue)>0:
-                  yield ('empty','','MT: optimized away: %s' % ','.join((c[1] for c in queue)))
+                  yield ('empty','','MT: cleanup before end: %s' % ','.join((c[1] for c in queue)))
                queue = []
          for q in queue:
             yield q
@@ -1351,7 +1365,7 @@ class pppalpha(object):
          if type == 'label':
             lbl = content[:-1]
             if lbl in unused:
-               yield ('empty','','MT: optimized away: %s' % lbl)
+               yield ('empty','','MT: unused label: %s' % lbl)
                continue
          yield (type, content, comment)
 
@@ -1537,10 +1551,23 @@ class pppalpha(object):
 
       return items
 
+   def avoidframespills(self, fundata, items):
+      p = []
+      r = re.compile('st. \$lf?\d+')
+      for (type, content, comment) in fundata['prologue']:
+         if type == 'other' and r.match(content) is not None:
+            p.append(('empty','','MT: frame spill: %s' % content))
+            continue
+         p.append((type, content, comment))
+      fundata['prologue'] = p
+      return items
+                   
+      
+
    def killgpreload(self, fundata, items):
       for (type, content, comment) in items:
          if type == 'other' and '!gpdisp!' in content:
-            yield ('empty', '', 'MT: unneeded: %s' % content)
+            yield ('empty', '', 'MT: GP reload: %s' % content)
          else:
             yield (type, content, comment)
    
@@ -1557,7 +1584,7 @@ class pppalpha(object):
       newprologue = []
       for (type, content, comment) in fundata['prologue']:
          if type == 'other' and (rareg in content or content.startswith("stq %s," % fpreg)):
-            newprologue.append(('empty','','MT: optimized away: %s' % content))
+            newprologue.append(('empty','','MT: FP spill: %s' % content))
          else:
             newprologue.append((type, content,comment))
 
@@ -1599,11 +1626,13 @@ class pppalpha(object):
          # groups = self.funfilter(self.barkatjsr, groups)
          groups = self.funfilter(self.detectregs, groups)
          groups = self.funfilter(self.regextract, groups)
-         groups = self.funfilter(self.munchret, groups)
+         groups = self.funfilter(self.replaceret, groups)
          groups = self.funfilter(self.renameregs, groups)
          groups = self.funfilter(self.xsplit, groups)
+         groups = self.funfilter(self.avoidframespills, groups)
          groups = self.funfilter(self.makespecial, groups)
          groups = self.funfilter(self.killgpreload, groups)
+         groups = self.funfilter(self.munchret, groups)
          groups = self.funfilter(self.optprologue, groups)
          #groups = self.funfilter(self.remdefaults, groups)
          #groups = self.funfilter(self.addswchll, groups)
@@ -1619,7 +1648,7 @@ class pppalpha(object):
          groups = self.funfilter(self.makespecialtransform('tlsp'), groups)
          groups = self.funfilter(self.makespecialtransform('fp'), groups)
          groups = self.funfilter(self.makespecialtransform('ra'), groups)
-         groups = self.funfilter(self.makespecialtransform('pv'), groups)
+         #groups = self.funfilter(self.makespecialtransform('pv'), groups)
          #groups = self.funfilter(self.makespecialtransform('rv'), groups)
          groups = self.funfilter(self.rewritejsr, groups)
          groups = self.funfilter(self.compress, groups)

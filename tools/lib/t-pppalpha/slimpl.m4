@@ -129,44 +129,50 @@ m4_define([[sl_kill]],[[__sl_dokill([[$1]])]])
 
 m4_define([[sl_index]],[[__sl_declindex([[$1]])]])
 
-m4_define([[sl_farg]], [[[[$1]]:[[$2]]]])
+# Pass transparently function calls
+m4_define([[sl_farg]], [[[[$2]]]])
+m4_define([[sl_funcall]], [[[[$3]](m4_shift3($@))]])
 
-m4_define([[sl_funcall]],[[m4_dnl
-m4_set_contains([[sl_inline_functions]],[[$3]],[[[[$3]](m4_shift3($@))]],[[m4_dnl
-m4_pushdef([[fcall_args]],m4_dquote(m4_shift3($@)))m4_dnl
-m4_pushdef([[fcall_argcount]],0)m4_dnl
-({
-	  struct {
-            long protocol;
-	    void *fptr;
-	    union { long v; unsigned long uv; void *p; } retval;
-	    double fretval;
-            m4_foreach([[_sl_farg]],m4_quote(fcall_args),[[
-union { long __pad__; m4_car(m4_unquote(m4_split(_sl_farg,:))) v; } arg[[]]fcall_argcount;
-m4_step([[fcall_argcount]])
-]])
-} __sl_fargs;
-__sl_fargs.protocol = fcall_argcount;
-__sl_fargs.fptr = ([[$3]]);
-m4_popdef([[fcall_argcount]])m4_dnl
-m4_pushdef([[fcall_argcount]],0)m4_dnl
-            m4_foreach([[_sl_farg]],m4_quote(fcall_args),[[
-__sl_fargs.arg[[]]fcall_argcount.v = (m4_unquote(m4_cdr(m4_unquote(m4_split(_sl_farg,:)))));
-m4_step([[fcall_argcount]])
-]])
-m4_popdef([[fcall_argcount]])m4_dnl
-m4_popdef([[fcall_args]])m4_dnl
-sl_create(,[[$1]],(long)(void*)&__sl_fargs,((long)(void*)&__sl_fargs)+1,,,, _sl_callgate);
-sl_sync();
-m4_case([[$2]],
-        [[void]],[[]],
-        [[double]],[[__sl_fargs.fretval;]],
-        [[long]],[[__sl_fargs.retval.v;]],
-        [[ulong]],[[__sl_fargs.retval.uv;]],
-        [[ptr]],[[(void*)__sl_fargs.retval.p;]],
-        [[m4_fatal([[unknown return type in funcall ("$2", not one of void/double/long/ptr)]])]])
-})]])m4_dnl
-]])
+
+
+# m4_define([[sl_farg]], [[[[$1]]:[[$2]]]])
+
+# m4_define([[sl_funcall]],[[m4_dnl
+# m4_set_contains([[sl_inline_functions]],[[$3]],[[[[$3]](m4_shift3($@))]],[[m4_dnl
+# m4_pushdef([[fcall_args]],m4_dquote(m4_shift3($@)))m4_dnl
+# m4_pushdef([[fcall_argcount]],0)m4_dnl
+# ({
+# 	  struct {
+#             long protocol;
+# 	    void *fptr;
+# 	    union { long v; unsigned long uv; void *p; } retval;
+# 	    double fretval;
+#             m4_foreach([[_sl_farg]],m4_quote(fcall_args),[[
+# union { long __pad__; m4_car(m4_unquote(m4_split(_sl_farg,:))) v; } arg[[]]fcall_argcount;
+# m4_step([[fcall_argcount]])
+# ]])
+# } __sl_fargs;
+# __sl_fargs.protocol = fcall_argcount;
+# __sl_fargs.fptr = ([[$3]]);
+# m4_popdef([[fcall_argcount]])m4_dnl
+# m4_pushdef([[fcall_argcount]],0)m4_dnl
+#             m4_foreach([[_sl_farg]],m4_quote(fcall_args),[[
+# __sl_fargs.arg[[]]fcall_argcount.v = (m4_unquote(m4_cdr(m4_unquote(m4_split(_sl_farg,:)))));
+# m4_step([[fcall_argcount]])
+# ]])
+# m4_popdef([[fcall_argcount]])m4_dnl
+# m4_popdef([[fcall_args]])m4_dnl
+# sl_create(,[[$1]],(long)(void*)&__sl_fargs,((long)(void*)&__sl_fargs)+1,,,, _sl_callgate);
+# sl_sync();
+# m4_case([[$2]],
+#         [[void]],[[]],
+#         [[double]],[[__sl_fargs.fretval;]],
+#         [[long]],[[__sl_fargs.retval.v;]],
+#         [[ulong]],[[__sl_fargs.retval.uv;]],
+#         [[ptr]],[[(void*)__sl_fargs.retval.p;]],
+#         [[m4_fatal([[unknown return type in funcall ("$2", not one of void/double/long/ptr)]])]])
+# })]])m4_dnl
+# ]])
 
 
 
