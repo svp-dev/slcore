@@ -298,9 +298,9 @@ case $slc_arch in
         slc_cflags+=(-mcpu=ev6 -mfix -mcix -mmax -mbwx -fno-math-errno -fno-trapping-math)
         ;;
     *)
-	slc_ppflags+=(-DHAVE_C_DIVIDE)
 	;;
 esac
+slc_ppflags+=(-DUSE_C_DIVIDE)
 
 # Extra flag selection
 case $slc_arch-$slc_os in
