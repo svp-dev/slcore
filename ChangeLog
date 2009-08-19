@@ -1,5 +1,9 @@
 2009-08-19  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	* tools/lib/mtalpha-sim/callgate.s: Simplify. 
+
+2009-08-19  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	More support for function calls.
 	
 	* tools/bin/spp: Try hard to avoid spilling "preserved" registers

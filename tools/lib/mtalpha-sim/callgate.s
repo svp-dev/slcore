@@ -44,7 +44,7 @@ __sl_callgate:
 	ldt $f21, -112($0)
 
 $docall:
-	mov $27, $10 # save up for later
+	mov $31, $10 # flush callee-save reg
 	mov $31, $11 # flush callee-save reg
 	mov $31, $12 # flush callee-save reg
 	mov $31, $13 # flush callee-save reg
@@ -60,7 +60,7 @@ $docall:
 	cpys $f31, $f31, $f0 # init FP return reg
 
 	# call function
-	jsr $26,($27)		; swch
+	jsr $26,($27)
 
 	# save return value(s)
 	stq $0, -8($30)
