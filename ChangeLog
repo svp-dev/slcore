@@ -1,3 +1,18 @@
+2009-08-19  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
+	Rebase on later toolchain.
+
+	* deploy/alpha.h.patch,
+	* deploy/alpha.md.patch,	
+	* deploy/constraints.md.patch: New. These were tested on GCC 4.4x;
+	they add support for a special "divide" instruction introduced on
+	the MT alpha.
+
+	* deploy/reqs.mk: Apply the patches when installing GCC.
+
+	* deploy/Makefile-reqs.orig: Bump version numbers and change GCC
+	mirror.
+
 2009-08-17  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
 	Fix script `slenv'.

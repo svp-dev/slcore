@@ -41,21 +41,21 @@ BASE_REPO = https://svn.svp-home.org
 ## BASE_REPO = svn+ssh://kena@mac-chris.science.uva.nl/Library/SVN/CSA
 
 ### Desired versions for the tools
-BINUTILS_REV = 2430
+BINUTILS_REV = 2667
 BINUTILS_REPO = $(BASE_REPO)/sw/svp/mg/binutils/trunk
 
-UTC_GCC_REV = 2182
-UTC_GCC_REPO = $(BASE_REPO)/sw/svp/mg/gcc/trunk
+UTC_GCC_REV = 2669
+UTC_GCC_REPO = $(BASE_REPO)/sw/svp/mg/gcc/branches/mt-ra-shared-branch
 
-MGSIM_REV = 2513
+MGSIM_REV = 2668
 MGSIM_REPO = $(BASE_REPO)/sw/svp/mg/mgsim/trunk
 
-SLC_REV = 2514
+SLC_REV = 2661
 SLC_REPO = $(BASE_REPO)/sw/svp/slc/trunk
 
-GCC_VERSION = 4.4.0
+GCC_VERSION = 4.4.1
 GCC_ARCHIVE = gcc-core-$(GCC_VERSION).tar.bz2
-GCC_MIRROR = http://gcc.cybermirror.org/releases/gcc-$(GCC_VERSION)
+GCC_MIRROR = ftp://ftp.nluug.nl/mirror/languages/gcc/releases/gcc-$(GCC_VERSION)
 
 
 ####
