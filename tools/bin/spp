@@ -147,114 +147,116 @@ class pppalpha(object):
 
    reg_mapping = {
       # Globals
-      'g0' : 's5',
-      'g1' : 's4',
-      'g2' : 's3',
-      'g3' : 's2',
-      'g4' : 's1',
-      'g5' : 's0',
-      'g6' : 'a0',
-      'g7' : 'a1',
-      'g8' : 'a2',
-      'g9' : 'a3',
-      'g10' : 'a4',
-      'g11' : 'a5',
+      'g0' : 't11',
+      'g1' : 't10',
+      'g2' : 't9',
+      'g3' : 't8',
+      'g4' : 't7',
+      'g5' : 't6',
+      'g6' : 't5',
+      'g7' : 't4',
+      'g8' : 't3',
+      'g9' : 't2',
+      'g10' : 't1',
+      'g11' : 't0',
 
-      'gf0' : 'fs7',
-      'gf1' : 'fs6',
-      'gf2' : 'fs5',
-      'gf3' : 'fs4',
-      'gf4'  : 'fs3',
-      'gf5' : 'fs2',
-      'gf6' : 'fs1',
-      'gf7' : 'fs0',
-      'gf8' : 'fa0',
-      'gf9' : 'fa1',
-      'gf10' : 'fa2',
-      'gf11' : 'fa3',
+      'gf0' : 'ft11',
+      'gf1' : 'ft10',
+      'gf2' : 'ft9',
+      'gf3' : 'ft8',
+      'gf4'  : 'ft7',
+      'gf5' : 'ft6',
+      'gf6' : 'ft5',
+      'gf7' : 'ft4',
+      'gf8' : 'ft3',
+      'gf9' : 'ft2',
+      'gf10' : 'ft1',
+      'gf11' : 'ft0',
       
       # Shareds
-      's0' : 'a5',
-      'd0' : 'a4',
-      's1' : 'a3',
-      'd1' : 'a2',
-      's2' : 'a1',
-      'd2' : 'a0',
-      's3' : 's0',
-      'd3' : 's1',
-      's4' : 's2',
-      'd4' : 's3',
+      's0' : 't0',
+      'd0' : 't1',
+      's1' : 't2',
+      'd1' : 't3',
+      's2' : 't4',
+      'd2' : 't5',
+      's3' : 't6',
+      'd3' : 't7',
+      's4' : 't8',
+      'd4' : 't9',
+      's5' : 't10',
+      'd5' : 't11',
 
-      'sf0' : 'fa3',
-      'df0' : 'fa2',
-      'sf1' : 'fa1',
-      'df1' : 'fa0',
-      'sf2' : 'fs0',
-      'df2' : 'fs1',
-      'sf3' : 'fs2',
-      'df3' : 'fs3',
-      'sf4' : 'fs4',
-      'df4' : 'fs5',
-      'sf5' : 'fs6',
-      'df5' : 'fs7',
+      'sf0' : 'ft0',
+      'df0' : 'ft1',
+      'sf1' : 'ft2',
+      'df1' : 'ft3',
+      'sf2' : 'ft4',
+      'df2' : 'ft5',
+      'sf3' : 'ft6',
+      'df3' : 'ft7',
+      'sf4' : 'ft8',
+      'df4' : 'ft9',
+      'sf5' : 'ft10',
+      'df5' : 'ft11',
       
       'lf31' : 'fzero',
       
-      'lf0' : 'ft0',
-      'lf1' : 'ft1',
-      'lf2' : 'ft2',
-      'lf3' : 'ft3',
-      'lf4' : 'ft4',
-      'lf5' : 'ft5',
-      'lf6' : 'ft6',
-      'lf7' : 'ft7',
-      'lf8' : 'ft8',
-      'lf9' : 'ft9',
-      'lf10' : 'ft10',
-      'lf11' : 'ft11',
-      'lf12' : 'ft12',
-      'lf13' : 'ft13',
-      'lf14' : 'ft14',
-      'lf15' : 'frv',
-      'lf16' : 'frv2',
-      'lf17' : 'fa4',
-      'lf18' : 'fa5',
+      'lf0' : 'ft12',
+      'lf1' : 'ft13',
+      'lf2' : 'ft14',
+      'lf3' : 'frv',
+      'lf4' : 'frv2',
+      'lf5' : 'fa5',
+      'lf6' : 'fa4',
+      'lf7' : 'fa3',
+      'lf8' : 'fa2',
+      'lf9' : 'fa1',
+      'lf10' : 'fa0',
+      'lf11' : 'fs0',
+      'lf12' : 'fs1',
+      'lf13' : 'fs2',
+      'lf14' : 'fs3',
+      'lf15' : 'fs4',
+      'lf16' : 'fs5',
+      'lf17' : 'fs6',
+      'lf18' : 'fs7',
 
       # Special locals
       'l31' : 'zero',
       'l18' : 'sp',
       'l17' : 'gp',
-      'l16' : 'pv',
+      'l16' : 'fp',
       'l15' : 'ra',
-      'l14' : 'fp',
-      'l13' : 'rv',
-      # "Normal" locals
-      'l12' : 'at',
-      'l11' : 't11',
-      'l10' : 't10',
-      'l9' : 't9',
-      'l8' : 't8',
-      'l7' : 't7',
-      'l6' : 't6',
-      'l5' : 't5',
-      'l4' : 't4',
-      'l3' : 't3',
-      'l2' : 't2',
-      'l1' : 't1',
-      'l0' : 't0'
+      'l14' : 's5',
+
+      'l13' : 's4',
+      'l12' : 's3',
+      'l11' : 's2',
+      'l10' : 's1',
+      'l9' : 's0',
+      'l8' : 'pv',
+      'l7' : 'a0',
+      'l6' : 'a1',
+      'l5' : 'a2',
+      'l4' : 'a3',
+      'l3' : 'a4',
+      'l2' : 'a5',
+      'l1' : 'rv',
+      'l0' : 'at',
       }
 
    reg_aliases = {
       'tlsp' : 'l18',
       'gp' : 'l17',
-      'pv' : 'l16',
+      'pv' : 'l8',
       'ra' : 'l15',
-      'fp' : 'l14',
-      'rv' : 'l13',
+      'fp' : 'l16',
+      'rv' : 'l1',
       'idx_init' : 'l0',
-      'tlsp_init' : 'l1',
       'basearg' : 'l1',
       'zero' : 'l31',
+      'frv' : 'lf3',
       'fzero' : 'lf31',
       'fbasearg' : 'lf1'
       }
@@ -642,11 +644,15 @@ class pppalpha(object):
             for r in rl:
                if r['cat'] in 'sdg':
                   fixed.add(r['legnr'])
+                  
          for r in fixed:
             fargs.append('-ffixed-$%s%d' % (v,r))
       # Indicate to GCC it does not need to save
-      # RA before it uses it:
-      fargs.append('-fcall-saved-$%d' % self.aliases["ra"]['legnr'])
+      # s0 .. s5, fs0 ... fs7 before it uses them:
+      for i in xrange(6):
+         fargs.append('-fcall-used-$%d' % self.legacy_regs['s%d' % i])
+      for i in xrange(8):
+         fargs.append('-fcall-used-$f%d' % self.legacy_fregs['fs%d' % i])
 
       cmd = [compiler] + fargs + list(args) # + ['-fverbose-asm']
       try:         
@@ -684,7 +690,7 @@ class pppalpha(object):
          r = match.group(1)
          #if r == "$31" or r == "$f31":
          #   return r
-         return '$' + subst[r[1:]]
+         return '$' + subst.get(r[1:], r)
       
       return repl
 
@@ -768,37 +774,47 @@ class pppalpha(object):
          else:
             yield ('other', asm, comment)
 
+   def replaceret(self, fundata, items):
+      """
+      Replace ret by 'end'
+      """
+      for (type, content, comment) in items:
+         if type == 'other' and content.startswith('ret '):
+            yield ('other','end','MT: end thread')
+         else:
+            yield (type, content, comment)
+            
    def munchret(self, fundata, items):
       """
-      Replace ret and possible frame adjustment by end thread
+      Remove possible frame adjustment before end thread
       """
-      spreg = self.legacy_regs['sp']
-      gpreg = self.legacy_regs['gp']
-      rareg = self.legacy_regs['ra']
-      fpreg = self.legacy_regs['fp']
-      reanyreg = r'(\$f?\d+)'
-      respecial = r'(\$(%d|%d|%d|%d))' % (spreg, gpreg, rareg, fpreg)
-      rekill = r'(mov %s,\s*\$%d|ld. %s,\d+\(\$%d\))' % (reanyreg, spreg, respecial, spreg)
+      spreg = self.reg_aliases['tlsp']
+      rekill = r'ld. \$lf?\d+,\d+\(\$%s\)' % spreg
       rekill = re.compile(rekill)
 
       queue = []
       for (i, (type, content, comment)) in enumerate(items):
-         if content.startswith('ret '):
+         if type == 'other' and content == 'end':
             hello = 1
-            qnew = []
+            qkill = []
+            qpreserve = []
             while hello:
                if len(queue) == 0:
                   hello = 0
                else:
-                  r = queue[-1][1]
-                  if rekill.match(r):
-                     qnew.insert(0,r)
+                  (t,c,cm) = queue[-1]
+                  if t in ['empty','directive']:
+                     qpreserve.insert(0, (t,c,cm))
+                     queue.pop()
+                  elif t == 'other' and rekill.match(c):
+                     qkill.insert(0,(t,c,cm))
                      queue.pop()
                   else:
                      hello = 0
-            for r in qnew:
-               queue.append(('empty','','MT: optimized away: %s' % r))
-            # queue.append(('other','nop','MT: end thread'))
+            for r in qkill:
+               queue.append(('empty','','MT: cleanup: %s' % r[1]))
+            for r in qpreserve:
+               queue.append(r)
             queue.append(('other','end','MT: end thread'))
          else:
             queue.append((type, content, comment))
@@ -815,20 +831,20 @@ class pppalpha(object):
       spreg = '$%d' % self.legacy_regs['sp']
       use_gp = 0
       gpreg = '$%d' % self.legacy_regs['gp']
-      use_pv = 0
-      pvreg = '$%d' % self.legacy_regs['pv']
+      #use_pv = 0
+      #pvreg = '$%d' % self.legacy_regs['pv']
       for (type, content, comment) in items:
          if type == 'other':
-            if spreg in content:
+            if spreg in content or content.startswith('jsr'):
                use_sp = 1
-            elif gpreg in content:
+            if gpreg in content:
                use_gp = 1
-            elif ('jsr' in content) and (pvreg in content):
-               use_pv = 1
+            #elif ('jsr' in content) and (pvreg in content):
+            #   use_pv = 1
          yield (type, content, comment)
       fundata['use_sp'] = use_sp
       fundata['use_gp'] = use_gp
-      fundata['use_pv'] = use_pv
+      #fundata['use_pv'] = use_pv
 
    def xjoin1(self, fundata, items):
       """
@@ -864,7 +880,7 @@ class pppalpha(object):
          if type == 'empty' and comment == 'MTREG_SET':
             if fundata['use_gp']: yield ('empty','','MTREG_SPEC: $l%d' % fundata['specials']['gp'])
             if fundata['use_sp']: yield ('empty','','MTREG_SPEC: $l%d' % fundata['specials']['tlsp'])
-            if fundata['use_pv']: yield ('empty','','MTREG_SPEC: $l%d' % fundata['specials']['pv'])
+            #if fundata['use_pv']: yield ('empty','','MTREG_SPEC: $l%d' % fundata['specials']['pv'])
             yield ('empty', '', 'MTREG_SET: %s' % ','.join(p))
          else:
             yield (type, content, comment)
@@ -982,6 +998,7 @@ class pppalpha(object):
       for (type, content, comment) in items:
          if content.startswith('.frame ') \
                 or content.startswith('.mask ') \
+                or content.startswith('.fmask ') \
                 or content.startswith('.globl ') \
                 or content.startswith('.ent ') \
                 or content.startswith('.end '):
@@ -1060,6 +1077,89 @@ class pppalpha(object):
          else:
             yield (type, content, comment)
 
+   def findusedcallregs(self, fundata, items):
+      tosave = []
+      for areg in xrange(0,6):
+         legnr = self.legacy_regs['a%d'%areg]
+         r = self.reg_inv[legnr]
+         assert len(r) == 1 and r[0]['cat'] == 'l'
+         regnr = r[0]['nr'] 
+         if fundata['usedregs'][regnr]:
+            tosave.append(regnr)
+         else: 
+            break
+
+      ftosave = []
+      for areg in xrange(0,6):
+         flegnr = self.legacy_fregs['fa%d'%areg]
+         rf = self.freg_inv[flegnr]
+         assert len(rf) == 1 and rf[0]['cat'] == 'l'
+         fregnr = rf[0]['nr'] 
+         if fundata['usedfregs'][fregnr]:
+            ftosave.append(fregnr)
+         else:
+            break
+
+      fundata['usedcallregs'] = tosave
+      fundata['usedcallfregs'] = ftosave
+      return items
+
+   def rewritejsr(self, fundata, items):
+      spreg = fundata['specials']['tlsp']
+      gpreg = fundata['specials']['gp']
+      rareg = fundata['specials']['ra']
+      rvreg = int(self.reg_aliases['rv'][1:])
+      frvreg = int(self.reg_aliases['frv'][2:])
+
+      rvused = fundata['usedregs'][rvreg]
+      frvused = fundata['usedfregs'][frvreg]
+      usedcallregs = fundata['usedcallregs']
+      usedcallfregs = fundata['usedcallfregs']
+      protocol = max(len(usedcallregs),len(usedcallfregs))
+      # struct { protocol/retval, fptr/fretval, args... }
+      gate_struct_size = 8 + 8 + 8 * 2 * protocol 
+
+
+      r = re.compile('^jsr\s+\$l(\d+)\s*,\s*\(\s*\$l(\d+)\s*\)')
+      for (type, content, comment) in items:
+         if type == "other" and content.startswith('jsr'):
+            m = r.match(content)
+            if m is not None:
+               ra = int(m.group(1))
+               pv = int(m.group(2))
+
+               # compute structure
+               yield ('empty','','MT: call begin')
+               yield ('other','lda $l%d, %d($l31)' % (ra, protocol), 'RA <- nr_call_regs')
+               yield ('other','stq $l%d, -8($l%d)' % (ra, spreg), '.protocol := RA (nr_call_regs)')
+               yield ('other','stq $l%d, -16($l%d)' % (pv, spreg), '.fptr := PV')
+               arg_offset = -24
+               for i in xrange(protocol):
+                  if len(usedcallregs)>i:
+                     yield ('other', 'stq $l%d, %d($l%d)' % (usedcallregs[i], arg_offset, spreg), '.arg[%d]' % i)
+                  if len(usedcallfregs)>i:
+                     yield ('other', 'stt $lf%d, %d($l%d)' % (usedcallfregs[i], arg_offset - 8, spreg), 
+                            '.farg[%d]' % i)
+                  arg_offset -= 16
+               yield ('other','ldq $l%d, __sl_callgate($l%d) !literal' % (pv, gpreg), 'PV <- callgate')
+               yield ('other','allocate $l%d, 0, 0, 0, 0' % ra, 'RA <- fid')
+               yield ('other','setstart $l%d, $l%d' % (ra, spreg), 'setstart(SP)')
+               yield ('other','lda $l%d, 1($l%d)' % (spreg, spreg), 'SP <= SP + 1')
+               yield ('other','setlimit $l%d, $l%d' % (ra, spreg), 'setlimit(SP+1)')
+               yield ('other','crei $l%d, 0($l%d)' % (ra, pv), 'start call')
+               yield ('other','lda $l%d, -1($l%d)' % (spreg, spreg), 'SP <= SP - 1')
+               yield ('other','mov $l%d, $l31' % ra, 'wait for return')
+               if rvused:
+                  yield ('other','ldq $l%d, -8($l%d)' % (rvreg, spreg), 'restore RV')
+               if frvused:
+                  yield ('other','ldt $lf%d, -16($l%d)' % (frvreg, spreg), 'restore FRV')
+               yield ('empty','','MT: call end')
+               continue
+
+            die("%s: unsupported call: %s" % (fundata['name'],content))
+            
+         else:
+            yield (type, content, comment)
 
    def barkatjsr(self, fundata, items):
       for (type, content, comment) in items:
@@ -1098,6 +1198,9 @@ class pppalpha(object):
       rfmask = [False] * 32
       rgmask = [False] * 32
       rgfmask = [False] * 32
+      spreg = int(self.reg_aliases['tlsp'][1:])
+      gpreg = int(self.reg_aliases['gp'][1:])
+      rareg = int(self.reg_aliases['ra'][1:])
       for (type, content, comment) in items:
          if type == 'other':
             for rm in r1.finditer(content):
@@ -1112,6 +1215,11 @@ class pppalpha(object):
             for rm in r4.finditer(content):
                n = int(rm.group(1))
                rgfmask[n] = True
+            if content.startswith('jsr'):
+               # ensure specials are there for calls
+               rmask[spreg] = True
+               rmask[gpreg] = True
+               rmask[rareg] = True
          yield (type, content, comment)
       fundata['usedregs'] = rmask
       fundata['usedfregs'] = rfmask
@@ -1126,7 +1234,7 @@ class pppalpha(object):
          rmask = fundata['usedregs']
          dorename = 0
          newnr = nr
-         if rmask[nr] == True and False in rmask[:self.ilocalregs]:
+         if rmask[nr] == True and False in rmask[:nr]: # self.ilocalregs]:
             freenr = [i for (i,r) in enumerate(rmask) if r == False][0]
             newnr = freenr
             dorename = 1
@@ -1160,10 +1268,6 @@ class pppalpha(object):
       else:
          newnr = lastfound + 1
          
-      ## FIXME: WORKAROUND BUG IN SIMULATOR
-      #if newnr < 2:
-      #   newnr = 2
-
       if newnr < regs[2]:
          yield ('empty','','MT: compressed integer locals from %d to %d' % (regs[2], newnr))
          regs[2] = newnr
@@ -1216,7 +1320,7 @@ class pppalpha(object):
    def prunenopend(self, fundata, items):
       queue = []
       for (type, content, comment) in items:
-         if type == 'empty':
+         if type in ['empty','directive']:
             #pprint.pprint((type, content, comment, queue))
             yield (type, content, comment)
             continue
@@ -1227,7 +1331,7 @@ class pppalpha(object):
                continue
             elif content == 'end':
                if len(queue)>0:
-                  yield ('empty','','MT: optimized away: %s' % ','.join((c[1] for c in queue)))
+                  yield ('empty','','MT: cleanup before end: %s' % ','.join((c[1] for c in queue)))
                queue = []
          for q in queue:
             yield q
@@ -1261,7 +1365,7 @@ class pppalpha(object):
          if type == 'label':
             lbl = content[:-1]
             if lbl in unused:
-               yield ('empty','','MT: optimized away: %s' % lbl)
+               yield ('empty','','MT: unused label: %s' % lbl)
                continue
          yield (type, content, comment)
 
@@ -1421,7 +1525,6 @@ class pppalpha(object):
       assert gli > 0
       assert li > 3
       pvargreg = gli - 1
-      pvreg = li - 3
       gpreg = li - 2
       spreg = li - 1
       pprologue = fundata['pprologue']
@@ -1433,6 +1536,7 @@ class pppalpha(object):
             assert pprologue[0][1].startswith('ldgp')
             newpprologue.append(('other','ldgp $l%d, 0($g%d)' % (gpreg, pvargreg),''))
          else:
+            #pprint.pprint(pprologue)
             assert (len(pprologue) == 2 and 'gpdisp' in pprologue[0][1] and 'gpdisp' in pprologue[1][1])
             disp = pprologue[0][1].split('!')[2]
             newpprologue.append(('other','ldah $l%d, 0($g%d) !gpdisp!%s' % (gpreg, pvargreg, disp),''))
@@ -1440,13 +1544,33 @@ class pppalpha(object):
          fundata['pprologue'] = newpprologue
       else:
          assert len(pprologue) == 0
-      if fundata['use_pv']:
-         fundata['prologue'].insert(0, ('other','mov $g%d, $l%d' % (pvargreg, pvreg), 'MT: init PV'))
+      #if fundata['use_pv']:
+      #   fundata['prologue'].insert(0, ('other','mov $g%d, $l%d' % (pvargreg, pvreg), 'MT: init PV'))
       if fundata['use_sp'] and spreg != 1:
          fundata['prologue'].insert(0, ('other','ldfp $l%d' % spreg,'MT: init SP'))
 
       return items
 
+   def avoidframespills(self, fundata, items):
+      p = []
+      r = re.compile('st. \$lf?\d+')
+      for (type, content, comment) in fundata['prologue']:
+         if type == 'other' and r.match(content) is not None:
+            p.append(('empty','','MT: frame spill: %s' % content))
+            continue
+         p.append((type, content, comment))
+      fundata['prologue'] = p
+      return items
+                   
+      
+
+   def killgpreload(self, fundata, items):
+      for (type, content, comment) in items:
+         if type == 'other' and '!gpdisp!' in content:
+            yield ('empty', '', 'MT: GP reload: %s' % content)
+         else:
+            yield (type, content, comment)
+   
    def optprologue(self, fundata, items):
       fpreg = '$' + self.reg_aliases['fp']
       rareg = '$' + self.reg_aliases['ra']
@@ -1460,7 +1584,7 @@ class pppalpha(object):
       newprologue = []
       for (type, content, comment) in fundata['prologue']:
          if type == 'other' and (rareg in content or content.startswith("stq %s," % fpreg)):
-            newprologue.append(('empty','','MT: optimized away: %s' % content))
+            newprologue.append(('empty','','MT: FP spill: %s' % content))
          else:
             newprologue.append((type, content,comment))
 
@@ -1499,13 +1623,16 @@ class pppalpha(object):
          tokens = self.splitsemi(tokens)
          items = self.parser(tokens)
          groups = self.grouper(items)
-         groups = self.funfilter(self.barkatjsr, groups)
+         # groups = self.funfilter(self.barkatjsr, groups)
          groups = self.funfilter(self.detectregs, groups)
          groups = self.funfilter(self.regextract, groups)
-         groups = self.funfilter(self.munchret, groups)
+         groups = self.funfilter(self.replaceret, groups)
          groups = self.funfilter(self.renameregs, groups)
          groups = self.funfilter(self.xsplit, groups)
+         groups = self.funfilter(self.avoidframespills, groups)
          groups = self.funfilter(self.makespecial, groups)
+         groups = self.funfilter(self.killgpreload, groups)
+         groups = self.funfilter(self.munchret, groups)
          groups = self.funfilter(self.optprologue, groups)
          #groups = self.funfilter(self.remdefaults, groups)
          #groups = self.funfilter(self.addswchll, groups)
@@ -1516,12 +1643,14 @@ class pppalpha(object):
 
          groups = self.funfilter(self.xjoin1, groups)
          groups = self.funfilter(self.markused, groups)
+         groups = self.funfilter(self.findusedcallregs, groups)
          groups = self.funfilter(self.makespecialtransform('gp'), groups)
          groups = self.funfilter(self.makespecialtransform('tlsp'), groups)
          groups = self.funfilter(self.makespecialtransform('fp'), groups)
          groups = self.funfilter(self.makespecialtransform('ra'), groups)
-         groups = self.funfilter(self.makespecialtransform('pv'), groups)
-         groups = self.funfilter(self.makespecialtransform('rv'), groups)
+         #groups = self.funfilter(self.makespecialtransform('pv'), groups)
+         #groups = self.funfilter(self.makespecialtransform('rv'), groups)
+         groups = self.funfilter(self.rewritejsr, groups)
          groups = self.funfilter(self.compress, groups)
          groups = self.funfilter(self.xjoin2, groups)
          items = self.flattener(groups)
