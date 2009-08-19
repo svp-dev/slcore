@@ -1,3 +1,10 @@
+2009-08-17  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
+	Fix script `slenv'.
+	
+	* deploy/slenv: Fix shell detection. Allow local configuration to
+	add stuff as well.
+
 2009-08-16  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
 	Packaging fix.
