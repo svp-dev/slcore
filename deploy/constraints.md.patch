@@ -1,0 +1,15 @@
+--- constraints.md.orig	2009-08-19 13:48:45.000000000 +0200
++++ constraints.md	2009-08-19 13:48:53.000000000 +0200
+@@ -23,12 +23,6 @@
+ 
+ ;; Integer register constraints.
+ 
+-(define_register_constraint "a" "R24_REG"
+- "General register 24, input to division routine")
+-
+-(define_register_constraint "b" "R25_REG"
+- "General register 24, input to division routine")
+-
+ (define_register_constraint "c" "R27_REG"
+  "General register 27, function call address")
+ 

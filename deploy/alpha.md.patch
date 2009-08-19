@@ -1,0 +1,372 @@
+--- alpha.md.orig	2009-08-18 16:43:23.000000000 +0200
++++ alpha.md	2009-08-18 16:43:11.000000000 +0200
+@@ -787,12 +787,10 @@
+   "umulh %1,%2,%0"
+   [(set_attr "type" "imul")
+    (set_attr "opsize" "udi")])
+-
+-;; The divide and remainder operations take their inputs from r24 and
+-;; r25, put their output in r27, and clobber r23 and r28 on all
+-;; systems except Unicos/Mk. On Unicos, the standard library provides
+-;; subroutines which use the standard calling convention and work on
+-;; DImode operands.
++
++;; The divide and remainder operations on Unicos, the standard library
++;; provides subroutines which use the standard calling convention and
++;; work on DImode operands.
+ 
+ ;; ??? Force sign-extension here because some versions of OSF/1 and
+ ;; Interix/NT don't do the right thing if the inputs are not properly
+@@ -800,126 +798,61 @@
+ ;; problem.  Is it worth the complication here to eliminate the sign
+ ;; extension?
+ 
+-(define_expand "divsi3"
+-  [(set (match_dup 3)
+-	(sign_extend:DI (match_operand:SI 1 "nonimmediate_operand" "")))
+-   (set (match_dup 4)
+-	(sign_extend:DI (match_operand:SI 2 "nonimmediate_operand" "")))
+-   (parallel [(set (match_dup 5)
+-		   (sign_extend:DI (div:SI (match_dup 3) (match_dup 4))))
+-	      (clobber (reg:DI 23))
+-	      (clobber (reg:DI 28))])
+-   (set (match_operand:SI 0 "nonimmediate_operand" "")
+-	(subreg:SI (match_dup 5) 0))]
+-  "! TARGET_ABI_OPEN_VMS && ! TARGET_ABI_UNICOSMK"
+-{
+-  operands[3] = gen_reg_rtx (DImode);
+-  operands[4] = gen_reg_rtx (DImode);
+-  operands[5] = gen_reg_rtx (DImode);
+-})
+-
+-(define_expand "udivsi3"
+-  [(set (match_dup 3)
+-	(sign_extend:DI (match_operand:SI 1 "nonimmediate_operand" "")))
+-   (set (match_dup 4)
+-	(sign_extend:DI (match_operand:SI 2 "nonimmediate_operand" "")))
+-   (parallel [(set (match_dup 5)
+-		   (sign_extend:DI (udiv:SI (match_dup 3) (match_dup 4))))
+-	      (clobber (reg:DI 23))
+-	      (clobber (reg:DI 28))])
+-   (set (match_operand:SI 0 "nonimmediate_operand" "")
+-	(subreg:SI (match_dup 5) 0))]
+-  "! TARGET_ABI_OPEN_VMS && ! TARGET_ABI_UNICOSMK"
+-{
+-  operands[3] = gen_reg_rtx (DImode);
+-  operands[4] = gen_reg_rtx (DImode);
+-  operands[5] = gen_reg_rtx (DImode);
+-})
+-
+-(define_expand "modsi3"
+-  [(set (match_dup 3)
+-	(sign_extend:DI (match_operand:SI 1 "nonimmediate_operand" "")))
+-   (set (match_dup 4)
+-	(sign_extend:DI (match_operand:SI 2 "nonimmediate_operand" "")))
+-   (parallel [(set (match_dup 5)
+-		   (sign_extend:DI (mod:SI (match_dup 3) (match_dup 4))))
+-	      (clobber (reg:DI 23))
+-	      (clobber (reg:DI 28))])
+-   (set (match_operand:SI 0 "nonimmediate_operand" "")
+-	(subreg:SI (match_dup 5) 0))]
+-  "! TARGET_ABI_OPEN_VMS && ! TARGET_ABI_UNICOSMK"
+-{
+-  operands[3] = gen_reg_rtx (DImode);
+-  operands[4] = gen_reg_rtx (DImode);
+-  operands[5] = gen_reg_rtx (DImode);
+-})
+-
+-(define_expand "umodsi3"
+-  [(set (match_dup 3)
+-	(sign_extend:DI (match_operand:SI 1 "nonimmediate_operand" "")))
+-   (set (match_dup 4)
+-	(sign_extend:DI (match_operand:SI 2 "nonimmediate_operand" "")))
+-   (parallel [(set (match_dup 5)
+-		   (sign_extend:DI (umod:SI (match_dup 3) (match_dup 4))))
+-	      (clobber (reg:DI 23))
+-	      (clobber (reg:DI 28))])
+-   (set (match_operand:SI 0 "nonimmediate_operand" "")
+-	(subreg:SI (match_dup 5) 0))]
+-  "! TARGET_ABI_OPEN_VMS && ! TARGET_ABI_UNICOSMK"
+-{
+-  operands[3] = gen_reg_rtx (DImode);
+-  operands[4] = gen_reg_rtx (DImode);
+-  operands[5] = gen_reg_rtx (DImode);
+-})
++(define_insn "divsi3"
++  [(set (match_operand:SI 0 "register_operand" "=r")
++	(div:SI (match_operand:SI 1 "reg_or_0_operand" "%rJ")
++		 (match_operand:SI 2 "reg_or_8bit_operand" "rI")))]
++  "!TARGET_ABI_UNICOSMK"
++  "divl %r1,%2,%0"
++  [(set_attr "opsize" "si")])
+ 
+-(define_expand "divdi3"
+-  [(parallel [(set (match_operand:DI 0 "register_operand" "")
+-		   (div:DI (match_operand:DI 1 "register_operand" "")
+-			   (match_operand:DI 2 "register_operand" "")))
+-	      (clobber (reg:DI 23))
+-	      (clobber (reg:DI 28))])]
+-  "! TARGET_ABI_OPEN_VMS && ! TARGET_ABI_UNICOSMK"
+-  "")
++(define_insn "*divsi_se"
++  [(set (match_operand:DI 0 "register_operand" "=r")
++	(sign_extend:DI
++	  (div:SI (match_operand:SI 1 "reg_or_0_operand" "%rJ")
++		   (match_operand:SI 2 "reg_or_8bit_operand" "rI"))))]
++  "!TARGET_ABI_UNICOSMK"
++  "divl %r1,%2,%0"
++  [(set_attr "opsize" "si")])
++   
++(define_insn "udivsi3"
++  [(set (match_operand:SI 0 "register_operand" "=r")
++	(udiv:SI (match_operand:SI 1 "reg_or_0_operand" "%rJ")
++		 (match_operand:SI 2 "reg_or_8bit_operand" "rI")))]
++  "!TARGET_ABI_UNICOSMK"
++  "divlu %r1,%2,%0"
++  [(set_attr "opsize" "si")])
++                                 
++(define_insn "*udivsi_se"
++  [(set (match_operand:DI 0 "register_operand" "=r")
++	(sign_extend:DI
++	  (udiv:SI (match_operand:SI 1 "reg_or_0_operand" "%rJ")
++		   (match_operand:SI 2 "reg_or_8bit_operand" "rI"))))]
++  "!TARGET_ABI_UNICOSMK"
++  "divlu %r1,%2,%0"
++  [(set_attr "opsize" "si")])
++  
++(define_insn "divdi3"
++  [(set (match_operand:DI 0 "register_operand" "=r")
++	(div:DI (match_operand:DI 1 "reg_or_0_operand" "%rJ")
++		 (match_operand:DI 2 "reg_or_8bit_operand" "rI")))]
++  ""
++  "divq %r1,%2,%0"
++  [(set_attr "opsize" "di")])
+ 
+-(define_expand "udivdi3"
+-  [(parallel [(set (match_operand:DI 0 "register_operand" "")
+-		   (udiv:DI (match_operand:DI 1 "register_operand" "")
+-			    (match_operand:DI 2 "register_operand" "")))
+-	      (clobber (reg:DI 23))
+-	      (clobber (reg:DI 28))])]
+-  "! TARGET_ABI_OPEN_VMS && ! TARGET_ABI_UNICOSMK"
+-  "")
++(define_insn "udivdi3"
++  [(set (match_operand:DI 0 "register_operand" "=r")
++	(udiv:DI (match_operand:DI 1 "reg_or_0_operand" "%rJ")
++		 (match_operand:DI 2 "reg_or_8bit_operand" "rI")))]
++  ""
++  "divqu %r1,%2,%0"
++  [(set_attr "opsize" "udi")])
+ 
+ (define_expand "moddi3"
+   [(use (match_operand:DI 0 "register_operand" ""))
+    (use (match_operand:DI 1 "register_operand" ""))
+    (use (match_operand:DI 2 "register_operand" ""))]
+-  "!TARGET_ABI_OPEN_VMS"
+-{
+-  if (TARGET_ABI_UNICOSMK)
+-    emit_insn (gen_moddi3_umk (operands[0], operands[1], operands[2]));
+-  else
+-    emit_insn (gen_moddi3_dft (operands[0], operands[1], operands[2]));
+-  DONE;
+-})
+-
+-(define_expand "moddi3_dft"
+-  [(parallel [(set (match_operand:DI 0 "register_operand" "")
+-		   (mod:DI (match_operand:DI 1 "register_operand" "")
+-			   (match_operand:DI 2 "register_operand" "")))
+-	      (clobber (reg:DI 23))
+-	      (clobber (reg:DI 28))])]
+-  "! TARGET_ABI_OPEN_VMS && ! TARGET_ABI_UNICOSMK"
+-  "")
+-
+-;; On Unicos/Mk, we do as the system's C compiler does:
+-;; compute the quotient, multiply and subtract.
+-
+-(define_expand "moddi3_umk"
+-  [(use (match_operand:DI 0 "register_operand" ""))
+-   (use (match_operand:DI 1 "register_operand" ""))
+-   (use (match_operand:DI 2 "register_operand" ""))]
+-  "TARGET_ABI_UNICOSMK"
++  ""
+ {
+   rtx div, mul = gen_reg_rtx (DImode);
+ 
+@@ -935,29 +868,7 @@
+   [(use (match_operand:DI 0 "register_operand" ""))
+    (use (match_operand:DI 1 "register_operand" ""))
+    (use (match_operand:DI 2 "register_operand" ""))]
+-  "! TARGET_ABI_OPEN_VMS"
+-{
+-  if (TARGET_ABI_UNICOSMK)
+-    emit_insn (gen_umoddi3_umk (operands[0], operands[1], operands[2]));
+-  else
+-    emit_insn (gen_umoddi3_dft (operands[0], operands[1], operands[2]));
+-  DONE;
+-})
+-
+-(define_expand "umoddi3_dft"
+-  [(parallel [(set (match_operand:DI 0 "register_operand" "")
+-		   (umod:DI (match_operand:DI 1 "register_operand" "")
+-			    (match_operand:DI 2 "register_operand" "")))
+-	      (clobber (reg:DI 23))
+-	      (clobber (reg:DI 28))])]
+-  "! TARGET_ABI_OPEN_VMS && ! TARGET_ABI_UNICOSMK"
+-  "")
+-
+-(define_expand "umoddi3_umk"
+-  [(use (match_operand:DI 0 "register_operand" ""))
+-   (use (match_operand:DI 1 "register_operand" ""))
+-   (use (match_operand:DI 2 "register_operand" ""))]
+-  "TARGET_ABI_UNICOSMK"
++  ""
+ {
+   rtx div, mul = gen_reg_rtx (DImode);
+ 
+@@ -969,146 +880,6 @@
+   DONE;
+ })
+ 
+-;; Lengths of 8 for ldq $t12,__divq($gp); jsr $t9,($t12),__divq as
+-;; expanded by the assembler.
+-
+-(define_insn_and_split "*divmodsi_internal_er"
+-  [(set (match_operand:DI 0 "register_operand" "=c")
+-	(sign_extend:DI (match_operator:SI 3 "divmod_operator"
+-			[(match_operand:DI 1 "register_operand" "a")
+-			 (match_operand:DI 2 "register_operand" "b")])))
+-   (clobber (reg:DI 23))
+-   (clobber (reg:DI 28))]
+-  "TARGET_EXPLICIT_RELOCS && ! TARGET_ABI_OPEN_VMS"
+-  "#"
+-  "&& reload_completed"
+-  [(parallel [(set (match_dup 0)
+-		   (sign_extend:DI (match_dup 3)))
+-	      (use (match_dup 0))
+-	      (use (match_dup 4))
+-	      (clobber (reg:DI 23))
+-	      (clobber (reg:DI 28))])]
+-{
+-  const char *str;
+-  switch (GET_CODE (operands[3]))
+-    {
+-    case DIV: 
+-      str = "__divl";
+-      break; 
+-    case UDIV:
+-      str = "__divlu";
+-      break;
+-    case MOD:
+-      str = "__reml";
+-      break;
+-    case UMOD:
+-      str = "__remlu";
+-      break;
+-    default:
+-      gcc_unreachable ();
+-    }
+-  operands[4] = GEN_INT (alpha_next_sequence_number++);
+-  emit_insn (gen_movdi_er_high_g (operands[0], pic_offset_table_rtx,
+-				  gen_rtx_SYMBOL_REF (DImode, str),
+-				  operands[4]));
+-}
+-  [(set_attr "type" "jsr")
+-   (set_attr "length" "8")])
+-
+-(define_insn "*divmodsi_internal_er_1"
+-  [(set (match_operand:DI 0 "register_operand" "=c")
+-	(sign_extend:DI (match_operator:SI 3 "divmod_operator"
+-                        [(match_operand:DI 1 "register_operand" "a")
+-                         (match_operand:DI 2 "register_operand" "b")])))
+-   (use (match_operand:DI 4 "register_operand" "c"))
+-   (use (match_operand 5 "const_int_operand" ""))
+-   (clobber (reg:DI 23))
+-   (clobber (reg:DI 28))]
+-  "TARGET_EXPLICIT_RELOCS && ! TARGET_ABI_OPEN_VMS"
+-  "jsr $23,($27),__%E3%j5"
+-  [(set_attr "type" "jsr")
+-   (set_attr "length" "4")])
+-
+-(define_insn "*divmodsi_internal"
+-  [(set (match_operand:DI 0 "register_operand" "=c")
+-	(sign_extend:DI (match_operator:SI 3 "divmod_operator"
+-			[(match_operand:DI 1 "register_operand" "a")
+-			 (match_operand:DI 2 "register_operand" "b")])))
+-   (clobber (reg:DI 23))
+-   (clobber (reg:DI 28))]
+-  "! TARGET_ABI_OPEN_VMS && ! TARGET_ABI_UNICOSMK"
+-  "%E3 %1,%2,%0"
+-  [(set_attr "type" "jsr")
+-   (set_attr "length" "8")])
+-
+-(define_insn_and_split "*divmoddi_internal_er"
+-  [(set (match_operand:DI 0 "register_operand" "=c")
+-	(match_operator:DI 3 "divmod_operator"
+-			[(match_operand:DI 1 "register_operand" "a")
+-			 (match_operand:DI 2 "register_operand" "b")]))
+-   (clobber (reg:DI 23))
+-   (clobber (reg:DI 28))]
+-  "TARGET_EXPLICIT_RELOCS && ! TARGET_ABI_OPEN_VMS"
+-  "#"
+-  "&& reload_completed"
+-  [(parallel [(set (match_dup 0) (match_dup 3))
+-	      (use (match_dup 0))
+-	      (use (match_dup 4))
+-	      (clobber (reg:DI 23))
+-	      (clobber (reg:DI 28))])]
+-{
+-  const char *str;
+-  switch (GET_CODE (operands[3]))
+-    {
+-    case DIV: 
+-      str = "__divq";
+-      break; 
+-    case UDIV:
+-      str = "__divqu";
+-      break;
+-    case MOD:
+-      str = "__remq";
+-      break;
+-    case UMOD:
+-      str = "__remqu";
+-      break;
+-    default:
+-      gcc_unreachable ();
+-    }
+-  operands[4] = GEN_INT (alpha_next_sequence_number++);
+-  emit_insn (gen_movdi_er_high_g (operands[0], pic_offset_table_rtx,
+-				  gen_rtx_SYMBOL_REF (DImode, str),
+-				  operands[4]));
+-}
+-  [(set_attr "type" "jsr")
+-   (set_attr "length" "8")])
+-
+-(define_insn "*divmoddi_internal_er_1"
+-  [(set (match_operand:DI 0 "register_operand" "=c")
+-	(match_operator:DI 3 "divmod_operator"
+-                        [(match_operand:DI 1 "register_operand" "a")
+-                         (match_operand:DI 2 "register_operand" "b")]))
+-   (use (match_operand:DI 4 "register_operand" "c"))
+-   (use (match_operand 5 "const_int_operand" ""))
+-   (clobber (reg:DI 23))
+-   (clobber (reg:DI 28))]
+-  "TARGET_EXPLICIT_RELOCS && ! TARGET_ABI_OPEN_VMS"
+-  "jsr $23,($27),__%E3%j5"
+-  [(set_attr "type" "jsr")
+-   (set_attr "length" "4")])
+-
+-(define_insn "*divmoddi_internal"
+-  [(set (match_operand:DI 0 "register_operand" "=c")
+-	(match_operator:DI 3 "divmod_operator"
+-			[(match_operand:DI 1 "register_operand" "a")
+-			 (match_operand:DI 2 "register_operand" "b")]))
+-   (clobber (reg:DI 23))
+-   (clobber (reg:DI 28))]
+-  "! TARGET_ABI_OPEN_VMS && ! TARGET_ABI_UNICOSMK"
+-  "%E3 %1,%2,%0"
+-  [(set_attr "type" "jsr")
+-   (set_attr "length" "8")])
+-
+ ;; Next are the basic logical operations.  We only expose the DImode operations
+ ;; to the rtl expanders, but SImode versions exist for combine as well as for
+ ;; the atomic operation splitters.

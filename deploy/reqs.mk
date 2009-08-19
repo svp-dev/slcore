@@ -6,7 +6,7 @@
 
 ######## YOU SHOULD NOT NEED TO EDIT THE FOLLOWING ########
 
-REQDIR = $(PREFIX)/slreqs-$(BINUTILS_REV)-$(UTC_GCC_REV)-$(GCC_VERSION)
+REQDIR = $(PREFIX)/slreqs-$(BINUTILS_REV)-$(UTC_GCC_REV)-$(GCC_VERSION)p
 SLDIR = $(PREFIX)/sl-$(MGSIM_REV)-$(SLC_REV)
 
 BUILD = sl-reqs/build
@@ -117,9 +117,17 @@ $(SOURCES)/gcc-$(GCC_VERSION)/extract_done: $(SOURCES)/$(GCC_ARCHIVE)
 	  $(TAR) -xjf $(GCC_ARCHIVE) && \
 	  touch gcc-$(GCC_VERSION)/extract_done)
 
+$(SOURCES)/gcc-$(GCC_VERSION)/patch_done: $(SOURCES)/gcc-$(GCC_VERSION)/extract_done
+	rm -f $@
+	(cd $(SOURCES)/gcc-$(GCC_VERSION)/gcc/config/alpha && \
+	   patch -p0 <$$OLDPWD/alpha.h.patch && \
+	   patch -p0 <$$OLDPWD/alpha.md.patch && \
+	   patch -p0 <$$OLDPWD/constraints.md.patch && \
+	   touch ../../../patch_done)
+
 $(REQDIR)/bin/alpha-linux-gnu-gcc: \
 	$(REQDIR)/bin/alpha-linux-gnu-as \
-	$(SOURCES)/gcc-$(GCC_VERSION)/extract_done
+	$(SOURCES)/gcc-$(GCC_VERSION)/patch_done
 	mkdir -p $(BUILD)/gcc-alpha-$(GCC_VERSION)
 	(SRC=$$PWD/$(SOURCES)/gcc-$(GCC_VERSION); \
           cd $(BUILD)/gcc-alpha-$(GCC_VERSION) && \
