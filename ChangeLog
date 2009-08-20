@@ -1,5 +1,20 @@
 2009-08-20  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	Update copyright notices.
+
+	* programs/benchmarks/livermore/k2-alt.c,
+	* programs/benchmarks/livermore/k4-alt.c,
+	* programs/demo/bitblt.c,
+	* programs/demo/keyblit.c,
+	* tools/lib/host-host-ptl/slrt.c,
+	* tools/lib/host-host-seqc/lib_main.c,
+	* tools/lib/host-host-seqc/load.c,
+	* tools/lib/host-host-seqc/main.c,
+	* tools/lib/host-host-seqc/slrt.c,
+	* tools/lib/mtalpha-sim/main.c: Update header.
+
+2009-08-20  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	One more little step towards C: support `main'.
 	
 	* tools/lib/mtalpha-sim/slrt.s: Print the return value of `main'

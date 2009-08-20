@@ -12,6 +12,5 @@
 // `COPYING' file in the root directory.
 //
 
-// configuration tag for slr
 const char *__tag__ = "slr_runner:host:";
 const char *__datatag__ = "slr_datatag:ptl-host-host-ptl:";
