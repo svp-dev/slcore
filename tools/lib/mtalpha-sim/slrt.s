@@ -1,4 +1,4 @@
-# slrt.s: this file is part of the slc project.
+# slrt.s: this file is part of the SL toolchain.
 #
 # Copyright (C) 2009 The SL project
 #
@@ -57,11 +57,24 @@ _start:
 	bne $l0, $bad
 	nop
 	end
-$bad:	
+$bad:
+	ldah $l1, msg($l29) !gprelhigh
+	lda $l2, 115($l31)  # char <- 's'
+	lda $l1, msg($l1) !gprellow
+	.align 4
+$L0:
+	print $l2, 194  # print char -> stderr
+	lda $l1, 1($l1)
+	ldbu $l2, 0($l1)
+	sextb $l2, $l2
+	bne $l2, $L0
+
+	print $l0, 130 # print int -> stderr
+$fini:	
 	nop
 	nop
 	pal1d 0
-	br $bad
+	br $fini
 	.end _start
 
 	.comm __slr_base,8,8
@@ -70,7 +83,11 @@ $bad:
 	.section .rodata
 	.ascii "\0slr_runner:mtalpha-sim:\0"
 	.ascii "\0slr_datatag:ppp-mtalpha-sim:\0"
-	
+
+msg:	
+	.ascii "slrt: main returned \0"
+
+
 	.globl __pseudo_argv
 	.align 3
 __pseudo_argv:
