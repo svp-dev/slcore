@@ -1,3 +1,17 @@
+//
+// keyblit.c: this file is part of the SL toolchain.
+//
+// Copyright (C) 2009 The SL project.
+//
+// This program is free software; you can redistribute it and/or
+// modify it under the terms of the GNU General Public License
+// as published by the Free Software Foundation; either version 3
+// of the License, or (at your option) any later version.
+//
+// The complete GNU General Public Licence Notice can be found as the
+// `COPYING' file in the root directory.
+//
+
 sl_def(key_blit, void,
        sl_glparm(unsigned long*restrict, img),
        sl_glparm(unsigned long*restrict, sprite),
@@ -27,7 +41,7 @@ sl_def(t_main, void)
 sl_enddef
 
 unsigned long img[10] = {1, 1, 1, 1, 1, 1, 1, 1, 1, 1};
-unsigned long sprite[10] = {3, 11, 3, 22, 3, 3, 3, 33, 3, 3}; 
+unsigned long sprite[10] = {3, 11, 3, 22, 3, 3, 3, 33, 3, 3};
 
 #else //! SIMPLE_MAIN
 
@@ -70,5 +84,7 @@ sl_def(t_main, void)
   sl_sync();
 }
 sl_enddef
-       
-#endif //! SIMPLE_MAIN
+
+#endif
+
+[[]]

@@ -64,4 +64,3 @@ void svp_start(int argc, const char **argv) {
   load(argv[0], argv[2], &__fibre_base);
   lib_main();
 }
-
