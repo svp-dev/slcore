@@ -1,3 +1,15 @@
+2009-08-20  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
+	One more little step towards C: support `main'.
+	
+	* tools/lib/mtalpha-sim/slrt.s: Print the return value of `main'
+	before exiting, if it is not zero.
+
+	* tools/tests/8_funs/main1.c,
+	* tools/tests/8_funs/main2.c,	
+	* tools/tests/8_funs/x_main.c: New. These check that the compiler
+	supports `main' decently.
+
 2009-08-19  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
 	* tools/tests/8_funs/f8.c: Use types correctly.
