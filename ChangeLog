@@ -1,5 +1,11 @@
 2009-08-20  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	Extend test suite.
+	
+	* tools/tests/8_funs/ochar.c: New.
+
+2009-08-20  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	Update copyright notices.
 
 	* programs/benchmarks/livermore/k2-alt.c,
