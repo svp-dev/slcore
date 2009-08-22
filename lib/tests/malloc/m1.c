@@ -18,10 +18,10 @@ sl_def(t_main, void)
 {
    char *p;
 
-   p = (char*)sl_funcall(malloc_place, ptr, [[malloc]], sl_farg(size_t, 10));
+   p = (char*)malloc(10);
 
    p[5] = 'h';
 
-   sl_funcall(malloc_place, void, [[free]], sl_farg(void*, p));
+   free(p);
 }
 sl_enddef

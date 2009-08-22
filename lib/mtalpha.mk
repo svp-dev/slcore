@@ -7,6 +7,8 @@ EXTRA_DIST += \
 	src/mtalpha/memcpy.s \
 	src/malloc_intrinsics.h \
 	src/malloc_intrinsics.c \
+	src/malloc_wrappers.c \
+	src/callgate.h \
 	src/malloc.c \
 	src/strlib.c
 
@@ -29,6 +31,7 @@ mtalpha_sim_libsl_a_CONTENTS = \
 	mtalpha-sim/remq.o \
 	mtalpha-sim/memset.o \
 	mtalpha-sim/memcpy.o \
+	mtalpha-sim/malloc_wrappers.o \
 	mtalpha-sim/malloc_intrinsics.o \
 	mtalpha-sim/malloc.o \
 	mtalpha-sim/strlib.o
@@ -40,6 +43,7 @@ mtalpha-sim/%.o: $(srcdir)/src/%.c
 	$(slc_verbose)$(SLC_MTALPHA) -c -o $@ $<
 
 MALLOC_DEFS = -DLACKS_SYS_TYPES_H \
+	-DUSE_DL_PREFIX \
 	-DHAVE_MMAP=0 \
 	-DMORECORE_CANNOT_TRIM \
 	-DMALLOC_FAILURE_ACTION="" \
@@ -100,6 +104,7 @@ CLEANFILES += \
 	mtalpha-sim/remq.o \
 	mtalpha-sim/memcpy.o \
 	mtalpha-sim/memset.o \
+	mtalpha-sim/malloc_wrappers.o \
 	mtalpha-sim/malloc_intrinsics.o \
 	mtalpha-sim/malloc.o \
 	mtalpha-sim/strlib.o \

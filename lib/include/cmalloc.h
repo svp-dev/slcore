@@ -17,9 +17,6 @@
 
 #include <cstddef.h>
 
-
-#define malloc_place 5
-
 #ifdef __mt_freestanding__
 
 extern void* malloc(size_t);

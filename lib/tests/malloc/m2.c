@@ -19,8 +19,8 @@ sl_def(t_main, void)
 {
    char *p1; char *p2;
 
-   p1 = (char*)sl_funcall(malloc_place, ptr, [[malloc]], sl_farg(size_t, 10));
-   p2 = (char*)sl_funcall(malloc_place, ptr, [[malloc]], sl_farg(size_t, 10));
+   p1 = (char*)malloc(10);
+   p2 = (char*)malloc(10);
 
    p1[0] = '4';
    p1[1] = '\0';
@@ -30,8 +30,8 @@ sl_def(t_main, void)
 
    puts(p1); puts(p2);
 
-   sl_funcall(malloc_place, void, [[free]], sl_farg(void*, p1));
-   sl_funcall(malloc_place, void, [[free]], sl_farg(void*, p2));
+   free(p1);
+   free(p2);
 
 }
 sl_enddef
