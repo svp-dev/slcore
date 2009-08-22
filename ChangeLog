@@ -1,5 +1,12 @@
 2009-08-22  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	Reduce distribution archive size.
+
+	* programs/benchmarks/fft/Makefile.am: Do not distribute
+	sine/cosine table data. Let it be generated at build time.
+
+2009-08-22  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	Simplify interface to memory allocation.
 
 	This changeset reinstates `malloc' and others as "regular" C
