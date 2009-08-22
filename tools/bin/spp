@@ -228,14 +228,14 @@ class pppalpha(object):
       'l17' : 'gp',
       'l16' : 'fp',
       'l15' : 'ra',
-      'l14' : 's5',
+      'l14' : 'pv',
+      'l13' : 's5',
 
-      'l13' : 's4',
-      'l12' : 's3',
-      'l11' : 's2',
-      'l10' : 's1',
-      'l9' : 's0',
-      'l8' : 'pv',
+      'l12' : 's4',
+      'l11' : 's3',
+      'l10' : 's2',
+      'l9' : 's1',
+      'l8' : 's0',
       'l7' : 'a0',
       'l6' : 'a1',
       'l5' : 'a2',
@@ -249,7 +249,7 @@ class pppalpha(object):
    reg_aliases = {
       'tlsp' : 'l18',
       'gp' : 'l17',
-      'pv' : 'l8',
+      'pv' : 'l14',
       'ra' : 'l15',
       'fp' : 'l16',
       'rv' : 'l1',
@@ -1648,7 +1648,7 @@ class pppalpha(object):
          groups = self.funfilter(self.makespecialtransform('tlsp'), groups)
          groups = self.funfilter(self.makespecialtransform('fp'), groups)
          groups = self.funfilter(self.makespecialtransform('ra'), groups)
-         #groups = self.funfilter(self.makespecialtransform('pv'), groups)
+         groups = self.funfilter(self.makespecialtransform('pv'), groups)
          #groups = self.funfilter(self.makespecialtransform('rv'), groups)
          groups = self.funfilter(self.rewritejsr, groups)
          groups = self.funfilter(self.compress, groups)

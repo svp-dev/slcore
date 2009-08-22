@@ -1,5 +1,13 @@
 2009-08-23  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	More MT Alpha code optimizations.
+	
+	* tools/bin/spp: Avoid using the legacy PV to pass thread
+	arguments, by aliasing the legacy PV reg number to the top of the
+	local register window. Re-enable renaming of PV.
+
+2009-08-23  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	More tests for function calls.
 
 	* tools/include/svp/compiler.h: Define `noinline'.
