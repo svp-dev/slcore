@@ -812,7 +812,7 @@ class pppalpha(object):
                   else:
                      hello = 0
             for r in qkill:
-               queue.append(('empty','','MT: cleanup: %s' % r[1]))
+               queue.append(('empty','','MT: killed cleanup: %s' % r[1]))
             for r in qpreserve:
                queue.append(r)
             queue.append(('other','end','MT: end thread'))
@@ -1332,7 +1332,7 @@ class pppalpha(object):
                continue
             elif content == 'end':
                if len(queue)>0:
-                  yield ('empty','','MT: cleanup before end: %s' % ','.join((c[1] for c in queue)))
+                  yield ('empty','','MT: killed cleanup: %s' % ','.join((c[1] for c in queue)))
                queue = []
          for q in queue:
             yield q
@@ -1557,7 +1557,7 @@ class pppalpha(object):
       r = re.compile('st. \$lf?\d+')
       for (type, content, comment) in fundata['prologue']:
          if type == 'other' and r.match(content) is not None:
-            p.append(('empty','','MT: frame spill: %s' % content))
+            p.append(('empty','','MT: killed frame spill: %s' % content))
             continue
          p.append((type, content, comment))
       fundata['prologue'] = p
@@ -1568,7 +1568,7 @@ class pppalpha(object):
    def killgpreload(self, fundata, items):
       for (type, content, comment) in items:
          if type == 'other' and '!gpdisp!' in content:
-            yield ('empty', '', 'MT: GP reload: %s' % content)
+            yield ('empty', '', 'MT: killed GP reload: %s' % content)
          else:
             yield (type, content, comment)
    
@@ -1600,9 +1600,9 @@ class pppalpha(object):
          else:
             tail = ""
          if type == "label":
-            head = '%s ' % content
+            head = '%-40s\t' % content
          elif content:
-            head = '\t%s\t\t' % content
+            head = '\t%-32s\t' % content
          else:
             head = ''
          yield '%s%s\n' % (head, tail)

@@ -1,5 +1,12 @@
 2009-08-23  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	Minor cosmetics in MT Alpha codegen
+	
+	* tools/bin/spp: Change messages in comments and assembly
+	formatting.
+
+2009-08-23  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	MT Alpha codegen optimization and fixes.
 
 	* tools/bin/spp: Run `rewritejsr' before renaming specials. This
