@@ -828,9 +828,9 @@ class pppalpha(object):
       Check if GP, SP, PV are used (in case they need to be initialized...)
       """
       use_sp = 0
-      spreg = '$%d' % self.legacy_regs['sp']
+      spreg = '$%s' % self.reg_aliases['tlsp']
       use_gp = 0
-      gpreg = '$%d' % self.legacy_regs['gp']
+      gpreg = '$%s' % self.reg_aliases['gp']
       #use_pv = 0
       #pvreg = '$%d' % self.legacy_regs['pv']
       for (type, content, comment) in items:
@@ -1105,9 +1105,10 @@ class pppalpha(object):
       return items
 
    def rewritejsr(self, fundata, items):
-      spreg = fundata['specials']['tlsp']
-      gpreg = fundata['specials']['gp']
-      rareg = fundata['specials']['ra']
+      spreg = int(self.reg_aliases['tlsp'][1:])
+      gpreg = int(self.reg_aliases['gp'][1:])
+      rareg = int(self.reg_aliases['ra'][1:])
+      pvreg = int(self.reg_aliases['pv'][1:])
       rvreg = int(self.reg_aliases['rv'][1:])
       frvreg = int(self.reg_aliases['frv'][2:])
 
@@ -1624,15 +1625,15 @@ class pppalpha(object):
          items = self.parser(tokens)
          groups = self.grouper(items)
          # groups = self.funfilter(self.barkatjsr, groups)
-         groups = self.funfilter(self.detectregs, groups)
          groups = self.funfilter(self.regextract, groups)
-         groups = self.funfilter(self.replaceret, groups)
          groups = self.funfilter(self.renameregs, groups)
+         groups = self.funfilter(self.detectregs, groups)
+         groups = self.funfilter(self.replaceret, groups)
+         groups = self.funfilter(self.munchret, groups)
          groups = self.funfilter(self.xsplit, groups)
          groups = self.funfilter(self.avoidframespills, groups)
          groups = self.funfilter(self.makespecial, groups)
          groups = self.funfilter(self.killgpreload, groups)
-         groups = self.funfilter(self.munchret, groups)
          groups = self.funfilter(self.optprologue, groups)
          #groups = self.funfilter(self.remdefaults, groups)
          #groups = self.funfilter(self.addswchll, groups)
@@ -1644,15 +1645,17 @@ class pppalpha(object):
          groups = self.funfilter(self.xjoin1, groups)
          groups = self.funfilter(self.markused, groups)
          groups = self.funfilter(self.findusedcallregs, groups)
+         groups = self.funfilter(self.rewritejsr, groups)
+         groups = self.funfilter(self.markused, groups)
          groups = self.funfilter(self.makespecialtransform('gp'), groups)
          groups = self.funfilter(self.makespecialtransform('tlsp'), groups)
          groups = self.funfilter(self.makespecialtransform('fp'), groups)
          groups = self.funfilter(self.makespecialtransform('ra'), groups)
          groups = self.funfilter(self.makespecialtransform('pv'), groups)
          #groups = self.funfilter(self.makespecialtransform('rv'), groups)
-         groups = self.funfilter(self.rewritejsr, groups)
          groups = self.funfilter(self.compress, groups)
          groups = self.funfilter(self.xjoin2, groups)
+         groups = self.funfilter(self.munchret, groups)
          items = self.flattener(groups)
          items = self.forcezero(items)
          lines = self.printer(items)
