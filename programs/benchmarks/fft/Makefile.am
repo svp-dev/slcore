@@ -31,14 +31,11 @@ dist_noinst_SCRIPTS = testfft.sh gen_table_2.sh
 noinst_PROGRAMS = 
 
 BUILT_SOURCES = fft_table1_16_data.h fft_table1_8_data.h fft_table2_16_data.h fft_table2_8_data.h
-dist_noinst_DATA = $(BUILT_SOURCES)
 
 fft_bench1.x: fft_bench.c fft_impl1.c fft.h fft_table1_16_data.h
 fft_bench2.x: fft_bench.c fft_impl2.c fft.h fft_table2_16_data.h
 fft_test1.x: fft_test.c fft_impl1.c fft_extra.c fft.h fft_table1_8_data.h
 fft_test2.x: fft_test.c fft_impl2.c fft_extra.c fft.h fft_table2_8_data.h
-
-if MAINTAINER_MODE
 
 noinst_PROGRAMS += gen_table_1_16 gen_table_1_8
 gen_table_1_16_SOURCES = gen_table_1.c
@@ -71,4 +68,4 @@ fft_table1_16_data.h: gen_table_1_16$(EXEEXT)
 	$(AM_V_GEN) ./gen_table_1_16$(EXEEXT) >"$@"
 	$(AM_V_at) chmod -w "$@"
 
-endif
+
