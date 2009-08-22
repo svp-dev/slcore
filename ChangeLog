@@ -1,3 +1,22 @@
+2009-08-23  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
+	More tests for function calls.
+
+	* tools/include/svp/compiler.h: Define `noinline'.
+
+	* tools/tests/8_funs/f1.c,
+	* tools/tests/8_funs/f2.c,
+	* tools/tests/8_funs/f3.c,
+	* tools/tests/8_funs/f4.c,
+	* tools/tests/8_funs/f5.c,
+	* tools/tests/8_funs/f6.c,
+	* tools/tests/8_funs/f7.c,
+	* tools/tests/8_funs/f8.c,
+	* tools/tests/8_funs/f9.c: Simplify.
+	* tools/tests/8_funs/bigret.c: New.
+
+	* lib/tests/malloc/m3.c: New.
+
 2009-08-22  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
 	Reduce distribution archive size.

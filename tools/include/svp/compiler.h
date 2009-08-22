@@ -42,4 +42,7 @@
 # define nop() __asm__ __volatile__("nop");
 #endif
 
+/* noinline */
+#define noinline __attribute__((__noinline__))
+
 #endif // ! SLC_SVP_COMPILER_H

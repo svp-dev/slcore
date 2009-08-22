@@ -13,12 +13,14 @@
 //
 
 #include <svp/testoutput.h>
+#include <svp/compiler.h>
 
-unsigned long foo() { return ~0L; }
+noinline unsigned long foo() { return ~0L; }
 
 sl_def(t_main, void)
 {
-  unsigned long x = sl_funcall(,ulong,foo);
-  output_uint(~x, 1); output_char('\n', 1);
+  unsigned long x = foo(); 
+  output_uint(~x, 1); 
+  output_char('\n', 1);
 }
 sl_enddef

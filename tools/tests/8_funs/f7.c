@@ -13,14 +13,16 @@
 //
 
 #include <svp/testoutput.h>
+#include <svp/compiler.h>
 
 int a;
 
-int* foo() { return &a; }
+noinline int* foo() { return &a; }
 
 sl_def(t_main, void)
 {
-  int * p = (int*) sl_funcall(,ptr,foo);
-  output_int(&a - p, 1); output_char('\n', 1);
+  int *p = foo();
+  output_int(&a - p, 1); 
+  output_char('\n', 1);
 }
 sl_enddef
