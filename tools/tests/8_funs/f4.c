@@ -13,12 +13,14 @@
 //
 
 #include <svp/testoutput.h>
+#include <svp/compiler.h>
 
-long foo() { return -1; }
+noinline long foo() { return -1; }
 
 sl_def(t_main, void)
 {
-  long x = sl_funcall(,long,foo);
-  output_int(x, 1); output_char('\n', 1);
+  long x = foo();
+  output_int(x, 1);
+  output_char('\n', 1);
 }
 sl_enddef

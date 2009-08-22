@@ -16,6 +16,6 @@ void foo() {};
 
 sl_def(t_main, void)
 {
-  sl_funcall(PLACE_DEFAULT,void,foo);
+  foo();
 }
 sl_enddef

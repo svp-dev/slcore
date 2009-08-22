@@ -13,12 +13,14 @@
 //
 
 #include <svp/testoutput.h>
+#include <svp/compiler.h>
 
-double foo() { return .5; }
+noinline double foo() { return .5; }
 
 sl_def(t_main, void)
 {
-  double x = sl_funcall(,double,foo);
-  output_float(x, 1, 3); output_char('\n', 1);
+  double x = foo();
+  output_float(x, 1, 3); 
+  output_char('\n', 1);
 }
 sl_enddef

@@ -1,5 +1,5 @@
 //
-// f8.c: this file is part of the SL toolchain.
+// bigret.c: this file is part of the SL toolchain.
 //
 // Copyright (C) 2009 The SL project.
 //
@@ -15,12 +15,21 @@
 #include <svp/testoutput.h>
 #include <svp/compiler.h>
 
-noinline unsigned int foo() { return ~0L; }
+struct foo {
+  char hello[100];
+};
+
+noinline
+struct foo hello(void)
+{
+  struct foo l = { "hello!" };
+  return l;
+}
 
 sl_def(t_main, void)
 {
-  unsigned int x = foo();
-  output_uint(~x, 1); 
+  struct foo a = hello();
+  output_string(a.hello, 1);
   output_char('\n', 1);
 }
 sl_enddef

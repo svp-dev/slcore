@@ -12,10 +12,12 @@
 // `COPYING' file in the root directory.
 //
 
-void foo() {};
+#include <svp/compiler.h>
+
+noinline void foo() { nop(); };
 
 sl_def(t_main, void)
 {
-  sl_funcall(,void,foo);
+  foo();
 }
 sl_enddef
