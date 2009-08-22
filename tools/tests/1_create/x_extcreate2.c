@@ -1,5 +1,5 @@
 //
-// x_extcreate.sl: this file is part of the slc project.
+// x_extcreate2.c: this file is part of the SL toolchain.
 //
 // Copyright (C) 2009 The SL project.
 //
@@ -11,8 +11,6 @@
 // The complete GNU General Public Licence Notice can be found as the
 // `COPYING' file in the root directory.
 //
-// $Id: x_extcreate.sl 2155 2009-06-02 18:33:22Z kena $
-//
 
 sl_decl(foo, void, sl_glparm(int, a));
 
@@ -20,7 +18,7 @@ sl_decl(foo, void, sl_glparm(int, a));
 
 sl_def(t_main, void)
 {
-  sl_create(,,0,10,1,0,, foo, sl_glarg(int, x));
+  sl_create(,,0,10,1,0,, foo, sl_glarg(int, x, 0));
   sl_sync();
 }
 sl_enddef

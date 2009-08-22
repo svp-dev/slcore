@@ -1,5 +1,13 @@
 2009-08-23  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	Homogeneize test suite.
+
+	* tools/tests/1_create/x_extcreate2.sl: Rename to...	
+	* tools/tests/1_create/x_extcreate2.c: ... here. Do not forget to
+	initialize global arg.
+
+2009-08-23  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	Better support for function calls on MT Alpha.
 
 	* tools/bin/spp: Support more branch forms in `rewritejsr'. Be
