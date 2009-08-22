@@ -1,5 +1,14 @@
 2009-08-23  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	Better support for function calls on MT Alpha.
+
+	* tools/bin/spp: Support more branch forms in `rewritejsr'. Be
+	more careful when "eating" instructions before `end'. Force a read
+	to RV/FRV after the function call so that the memory load is
+	guaranteed to complete before the register is reused.
+
+2009-08-23  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	Minor cosmetics in MT Alpha codegen
 	
 	* tools/bin/spp: Change messages in comments and assembly
