@@ -1,4 +1,25 @@
+2009-08-22  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
+	Simplify interface to memory allocation.
+
+	This changeset reinstates `malloc' and others as "regular" C
+	functions, implemented as wrappers that delegate a call to
+	`dlmalloc' etc via an exclusive place.
+	
+	* lib/src/callgate.h,		
+	* lib/src/malloc_wrappers.c: New. Protect `dlmalloc' and others
+	via a mutex place.
+
+	* lib/mtalpha.mk: Update accordingly. Compile `malloc.c' with
+	USE_DL_PREFIX.
+
+	* lib/include/cmalloc.h,
+	* lib/include/sac_helpers.h,
+	* lib/tests/malloc/m1.c,
+	* lib/tests/malloc/m2.c: Simplify.
+
 2009-08-21  Simon Polstra <s.polstra@uva.nl>
+
         Added test for an externally defined thread with a single
 	parameter. 
 
