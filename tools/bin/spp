@@ -272,6 +272,8 @@ class pppalpha(object):
    # when a thread starts: by default, all legacy regs.
    default_presets = set(("$%d" % x for x in xrange(31)))
 
+   jre = re.compile(r'jsr\s|bs?r\s.*!samegp')
+
    def __init__(self):
       regs = { 
          'i' : { 'l' : [None]*32, 'g' : [None]*32, 's' : [None]*32, 'd' : [None]*32 },
@@ -788,12 +790,11 @@ class pppalpha(object):
       """
       Remove possible frame adjustment before end thread
       """
-      spreg = self.reg_aliases['tlsp']
-      rekill = r'ld. \$lf?\d+,\d+\(\$%s\)' % spreg
+      rekill = r'(ld.|ldah|mov|nop|fnop|unop)\s+|(bis|cpys)\s+\$lf?31,\$lf?31,\$lf?31' 
       rekill = re.compile(rekill)
 
       queue = []
-      for (i, (type, content, comment)) in enumerate(items):
+      for (type, content, comment) in items:
          if type == 'other' and content == 'end':
             hello = 1
             qkill = []
@@ -806,7 +807,11 @@ class pppalpha(object):
                   if t in ['empty','directive']:
                      qpreserve.insert(0, (t,c,cm))
                      queue.pop()
-                  elif t == 'other' and rekill.match(c):
+                  elif t == 'other' and \
+                         rekill.match(c) and \
+                         '$s' not in c and \
+                         '$d' not in c and \
+                         'SYNC' not in cm:
                      qkill.insert(0,(t,c,cm))
                      queue.pop()
                   else:
@@ -827,6 +832,7 @@ class pppalpha(object):
       """
       Check if GP, SP, PV are used (in case they need to be initialized...)
       """
+      jre = self.jre
       use_sp = 0
       spreg = '$%s' % self.reg_aliases['tlsp']
       use_gp = 0
@@ -835,7 +841,7 @@ class pppalpha(object):
       #pvreg = '$%d' % self.legacy_regs['pv']
       for (type, content, comment) in items:
          if type == 'other':
-            if spreg in content or content.startswith('jsr'):
+            if spreg in content or jre.match(content):
                use_sp = 1
             if gpreg in content:
                use_gp = 1
@@ -1121,18 +1127,86 @@ class pppalpha(object):
       gate_struct_size = 8 + 8 + 8 * 2 * protocol 
 
 
-      r = re.compile('^jsr\s+\$l(\d+)\s*,\s*\(\s*\$l(\d+)\s*\)')
+      jsrre = re.compile('jsr\s+\$l(\d+)\s*,\s*\(\s*\$l(\d+)\s*\)')
+      brre = re.compile('br\s+\$l31\s*,\s*(\S+)\s*!samegp')
+      bsrre = re.compile('bsr\s+\$l(\d+)\s*,\s*(\S+)\s*!samegp')
       for (type, content, comment) in items:
-         if type == "other" and content.startswith('jsr'):
-            m = r.match(content)
+         if type == "other":
+            m = brre.match(content)
+            if m is not None:
+               # handle "BR"
+               lbl = m.group(1)
+               yield ('empty','','MT: br call begin: %s' % content)
+               yield ('other','lda $l%d, %d($l31)' % (rareg, protocol), 'RA <- nr_call_regs')
+               yield ('other','stq $l%d, -8($l%d)' % (rareg, spreg), '.protocol := RA (nr_call_regs)')
+               yield ('other','allocate $l%d, 0, 0, 0, 0' % rareg, 'RA <- fid')
+               yield ('other','ldah $l%d, %s($l%d) !gprelhigh' % (pvreg, lbl, gpreg), 'PV <- target')
+               yield ('other','lda $l%d, %s($l%d) !gprellow' % (pvreg, lbl, pvreg), 'PV <- target')
+               yield ('other','stq $l%d, -16($l%d)' % (pvreg, spreg), '.fptr := PV')
+               arg_offset = -24
+               for i in xrange(protocol):
+                  if len(usedcallregs)>i:
+                     yield ('other', 'stq $l%d, %d($l%d)' % (usedcallregs[i], arg_offset, spreg), '.arg[%d]' % i)
+                  if len(usedcallfregs)>i:
+                     yield ('other', 'stt $lf%d, %d($l%d)' % (usedcallfregs[i], arg_offset - 8, spreg), 
+                            '.farg[%d]' % i)
+                  arg_offset -= 16
+               yield ('other','ldq $l%d, __sl_callgate($l%d) !literal' % (pvreg, gpreg), 'PV <- callgate')
+               yield ('other','setstart $l%d, $l%d' % (rareg, spreg), 'setstart(SP)')
+               yield ('other','lda $l%d, 1($l%d)' % (spreg, spreg), 'SP <= SP + 1')
+               yield ('other','setlimit $l%d, $l%d' % (rareg, spreg), 'setlimit(SP+1)')
+               yield ('other','crei $l%d, 0($l%d)' % (rareg, pvreg), 'start call')
+               yield ('other','mov $l%d, $l31' % rareg, 'SYNC: wait for return')
+               yield ('other','end','call is end of thread')
+               yield ('empty','','MT: br call end')
+               continue
+
+            m = bsrre.match(content)
+            if m is not None:
+               # handle "BSR"
+               ra = int(m.group(1))
+               lbl = m.group(2)
+               yield ('empty','','MT: bsr call begin: %s' % content)
+               yield ('other','lda $l%d, %d($l31)' % (ra, protocol), 'RA <- nr_call_regs')
+               yield ('other','stq $l%d, -8($l%d)' % (ra, spreg), '.protocol := RA (nr_call_regs)')
+               yield ('other','allocate $l%d, 0, 0, 0, 0' % ra, 'RA <- fid')
+               yield ('other','ldah $l%d, %s($l%d) !gprelhigh' % (pvreg, lbl, gpreg), 'PV <- target')
+               yield ('other','lda $l%d, %s($l%d) !gprellow' % (pvreg, lbl, pvreg), 'PV <- target')
+               yield ('other','stq $l%d, -16($l%d)' % (pvreg, spreg), '.fptr := PV')
+               arg_offset = -24
+               for i in xrange(protocol):
+                  if len(usedcallregs)>i:
+                     yield ('other', 'stq $l%d, %d($l%d)' % (usedcallregs[i], arg_offset, spreg), '.arg[%d]' % i)
+                  if len(usedcallfregs)>i:
+                     yield ('other', 'stt $lf%d, %d($l%d)' % (usedcallfregs[i], arg_offset - 8, spreg), 
+                            '.farg[%d]' % i)
+                  arg_offset -= 16
+               yield ('other','ldq $l%d, __sl_callgate($l%d) !literal' % (pvreg, gpreg), 'PV <- callgate')
+               yield ('other','setstart $l%d, $l%d' % (ra, spreg), 'setstart(SP)')
+               yield ('other','lda $l%d, 1($l%d)' % (spreg, spreg), 'SP <= SP + 1')
+               yield ('other','setlimit $l%d, $l%d' % (ra, spreg), 'setlimit(SP+1)')
+               yield ('other','crei $l%d, 0($l%d)' % (ra, pvreg), 'start call')
+               yield ('other','lda $l%d, -1($l%d)' % (spreg, spreg), 'SP <= SP - 1')
+               yield ('other','mov $l%d, $l31' % ra, 'SYNC: wait for return')
+               if rvused:
+                  yield ('other','ldq $l%d, -8($l%d)' % (rvreg, spreg), 'restore RV')
+                  yield ('other','mov $l%d, $l%d' % (rvreg, rvreg), 'complete memory load')
+               if frvused:
+                  yield ('other','ldt $lf%d, -16($l%d)' % (frvreg, spreg), 'restore FRV')
+                  yield ('other','cpys $lf%d, $lf%d, $lf%d' % (frvreg, frvreg, frvreg), 'complete memory load')
+               yield ('empty','','MT: bsr call end')
+               continue
+
+            m = jsrre.match(content)
             if m is not None:
                ra = int(m.group(1))
                pv = int(m.group(2))
 
                # compute structure
-               yield ('empty','','MT: call begin')
+               yield ('empty','','MT: jsr call begin: %s' % content)
                yield ('other','lda $l%d, %d($l31)' % (ra, protocol), 'RA <- nr_call_regs')
                yield ('other','stq $l%d, -8($l%d)' % (ra, spreg), '.protocol := RA (nr_call_regs)')
+               yield ('other','allocate $l%d, 0, 0, 0, 0' % ra, 'RA <- fid')
                yield ('other','stq $l%d, -16($l%d)' % (pv, spreg), '.fptr := PV')
                arg_offset = -24
                for i in xrange(protocol):
@@ -1143,24 +1217,25 @@ class pppalpha(object):
                             '.farg[%d]' % i)
                   arg_offset -= 16
                yield ('other','ldq $l%d, __sl_callgate($l%d) !literal' % (pv, gpreg), 'PV <- callgate')
-               yield ('other','allocate $l%d, 0, 0, 0, 0' % ra, 'RA <- fid')
                yield ('other','setstart $l%d, $l%d' % (ra, spreg), 'setstart(SP)')
                yield ('other','lda $l%d, 1($l%d)' % (spreg, spreg), 'SP <= SP + 1')
                yield ('other','setlimit $l%d, $l%d' % (ra, spreg), 'setlimit(SP+1)')
                yield ('other','crei $l%d, 0($l%d)' % (ra, pv), 'start call')
                yield ('other','lda $l%d, -1($l%d)' % (spreg, spreg), 'SP <= SP - 1')
-               yield ('other','mov $l%d, $l31' % ra, 'wait for return')
+               yield ('other','mov $l%d, $l31' % ra, 'SYNC: wait for return')
                if rvused:
                   yield ('other','ldq $l%d, -8($l%d)' % (rvreg, spreg), 'restore RV')
+                  yield ('other','mov $l%d, $l%d' % (rvreg, rvreg), 'complete memory load')
                if frvused:
                   yield ('other','ldt $lf%d, -16($l%d)' % (frvreg, spreg), 'restore FRV')
-               yield ('empty','','MT: call end')
+                  yield ('other','cpys $lf%d, $lf%d, $lf%d' % (frvreg, frvreg, frvreg), 'complete memory load')
+               yield ('empty','','MT: jsr call end')
                continue
 
-            die("%s: unsupported call: %s" % (fundata['name'],content))
+            if content.startswith('jsr') or (content.startswith('b') and '!samegp' in content):
+               die("%s: unsupported call: %s" % (fundata['name'],content))
             
-         else:
-            yield (type, content, comment)
+         yield (type, content, comment)
 
    def barkatjsr(self, fundata, items):
       for (type, content, comment) in items:
@@ -1195,6 +1270,7 @@ class pppalpha(object):
       r2 = re.compile(r'\$lf(\d+)')
       r3 = re.compile(r'\$g(\d+)')
       r4 = re.compile(r'\$gf(\d+)')
+      jre = self.jre
       rmask = [False] * 32
       rfmask = [False] * 32
       rgmask = [False] * 32
@@ -1216,7 +1292,7 @@ class pppalpha(object):
             for rm in r4.finditer(content):
                n = int(rm.group(1))
                rgfmask[n] = True
-            if content.startswith('jsr'):
+            if jre.match(content):
                # ensure specials are there for calls
                rmask[spreg] = True
                rmask[gpreg] = True
@@ -1389,6 +1465,7 @@ class pppalpha(object):
       reld = re.compile(r'(ld[lqts]|ld[bw]u|allocate)')
       re3wayll = re.compile(r'(add|sub|mul|div|sqrt)[fgts]')
       w1way = re.compile(r'(setempty|rpcc|ldfp)')
+      jre = self.jre
 
       allregs = set(['$l%d' % x for x in xrange(31 - self.iargregs) if x not in (17, 18)] + \
           ['$lf%d' % x for x in xrange(31 - self.fargregs)] + \
@@ -1401,7 +1478,7 @@ class pppalpha(object):
       for (type, content, comment) in items:
          #print (type,content[:3],comment)
          yield (type, content, comment)
-         if type == 'label' or (type == 'other' and content[:3] in ['jsr','bsr','ret']):
+         if type == 'label' or (type == 'other' and jre.match(content)):
             #print "FOO"
             maybell = allregs.copy()
 
