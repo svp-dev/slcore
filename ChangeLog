@@ -1,5 +1,16 @@
 2009-08-23  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	MT Alpha codegen optimization and fixes.
+
+	* tools/bin/spp: Run `rewritejsr' before renaming specials. This
+	requires to re-run `markused' after `rewritejsr' so that the
+	renaming of specials can pick up any new use of RA or PV
+	introduced by `rewritejsr'.  Also re-run `munchret' after
+	`rewritejsr' so that extra loads before `end' can be optimized
+	away.
+	
+2009-08-23  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	More MT Alpha code optimizations.
 	
 	* tools/bin/spp: Avoid using the legacy PV to pass thread
