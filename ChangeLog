@@ -1,5 +1,14 @@
 2009-08-23  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	Better support for function calls on MT Alpha.
+
+	* tools/bin/spp: Ensure that the registers used to pass function
+	arguments are made non-empty early, in case they are pushed to the
+	stack in a call before they are actually initialized for another
+	call. This is exemplified in test `tools/tests/8_funs/f10.c'.	
+
+2009-08-23  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	Extend test suite.
 
 	* tools/tests/8_funs/f10.c,

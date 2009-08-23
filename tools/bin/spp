@@ -1110,6 +1110,36 @@ class pppalpha(object):
       fundata['usedcallfregs'] = ftosave
       return items
 
+   def findcallspills(self, fundata, items):
+      sp = self.reg_aliases['tlsp']
+      respill = r'st[qt]\s+\$l(f?\d+)\s*,\s*\d+\(\$%s\)' % sp
+      respill = re.compile(respill)
+      tosave = set()
+      ftosave = set()
+      for (type, content, comment) in items:
+         if type == 'other':
+            m = respill.match(content)
+            if m is not None:
+               reg = m.group(1)
+               if reg[0] == 'f':
+                  ftosave.add(int(reg[1:]))
+               else:
+                  tosave.add(int(reg))
+         yield (type, content, comment)
+      fundata['spilledcallregs'] = tosave
+      fundata['spilledcallfregs'] = ftosave
+
+   def protectcallregs(self, fundata, items):
+      if fundata['hasjumps']:
+         init = []
+         for r in set(fundata['usedcallregs']): # | fundata['spilledcallregs']:
+            init.append(('other','mov $l31, $l%d' % r, 'init call reg'))
+         for r in set(fundata['usedcallfregs']): # | fundata['spilledcallfregs']:
+            init.append(('other','cpys $lf31, $lf31, $lf%d' % r, 'init call freg'))
+         fundata['prologue'] = fundata['prologue'] + init
+      return items
+      
+
    def rewritejsr(self, fundata, items):
       spreg = int(self.reg_aliases['tlsp'][1:])
       gpreg = int(self.reg_aliases['gp'][1:])
@@ -1237,12 +1267,14 @@ class pppalpha(object):
             
          yield (type, content, comment)
 
-   def barkatjsr(self, fundata, items):
+   def findcalls(self, fundata, items):
+      jre = self.jre
+      hasjumps = False
       for (type, content, comment) in items:
-         if type == "other" and content.startswith('jsr'):
-            die("%s: unsupported call: %s" % (fundata['name'],content))
+         if type == "other" and jre.match(content):
+            hasjumps = True
          yield (type, content, comment)
-         
+      fundata['hasjumps'] = hasjumps
 
    def renameregs(self, fundata, items):
       rd = fundata['regs']
@@ -1701,28 +1733,28 @@ class pppalpha(object):
          tokens = self.splitsemi(tokens)
          items = self.parser(tokens)
          groups = self.grouper(items)
-         # groups = self.funfilter(self.barkatjsr, groups)
          groups = self.funfilter(self.regextract, groups)
          groups = self.funfilter(self.renameregs, groups)
          groups = self.funfilter(self.detectregs, groups)
          groups = self.funfilter(self.replaceret, groups)
          groups = self.funfilter(self.munchret, groups)
+
          groups = self.funfilter(self.xsplit, groups)
+
          groups = self.funfilter(self.avoidframespills, groups)
          groups = self.funfilter(self.makespecial, groups)
          groups = self.funfilter(self.killgpreload, groups)
          groups = self.funfilter(self.optprologue, groups)
-         #groups = self.funfilter(self.remdefaults, groups)
-         #groups = self.funfilter(self.addswchll, groups)
-         # groups = self.funfilter(self.addswchdep, groups)
-         #groups = self.funfilter(self.addswchbr, groups)
-         #groups = self.funfilter(self.rmdupswch, groups)
-         #groups = self.funfilter(self.protectend, groups)
+
+         groups = self.funfilter(self.markused, groups)
+         groups = self.funfilter(self.findcalls, groups)
+         groups = self.funfilter(self.findusedcallregs, groups)
+         # groups = self.funfilter(self.findcallspills, groups)
+         groups = self.funfilter(self.protectcallregs, groups)
+         groups = self.funfilter(self.rewritejsr, groups)
 
          groups = self.funfilter(self.xjoin1, groups)
-         groups = self.funfilter(self.markused, groups)
-         groups = self.funfilter(self.findusedcallregs, groups)
-         groups = self.funfilter(self.rewritejsr, groups)
+
          groups = self.funfilter(self.markused, groups)
          groups = self.funfilter(self.makespecialtransform('gp'), groups)
          groups = self.funfilter(self.makespecialtransform('tlsp'), groups)
