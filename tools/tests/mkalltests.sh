@@ -9,6 +9,10 @@ for ns in 1 2 3 4; do
     (cd 7_* && python ./gencall.py $ns $ng float >fp_${ns}_$ng.c)
   done
 done
+for ns in 1 2 3 40; do
+  (cd 9_* && python ./genmany.py $ns 0 >many$ns.c)
+  (cd 9_* && python ./genmany.py $ns 1 >manyf$ns.c)
+done
 exec >alltests.mk
 echo 'TESTSUITE = ' 
 
