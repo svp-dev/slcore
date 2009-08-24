@@ -1,5 +1,44 @@
 2009-08-24  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	Reorganize test suite.
+
+	Make the numerical prefixes follow "increasing order of
+	difficulty" for the compiler, as was originally intended.
+
+	* tools/tests/0_slr: Rename to...
+	* tools/tests/2_slr: ...here.
+	
+	* tools/tests/2_args: Rename to...
+	* tools/tests/1_createargs: ...here.
+
+	* tools/tests/3_mem: Rename to...
+	* tools/tests/2_usegp: ...here.
+
+	* tools/tests/4_index: Rename to...
+	* tools/tests/3_index: ...here.
+
+	* tools/tests/5_thdecl: Rename to...
+	* tools/tests/4_thdecl: ...here.
+	
+	* tools/tests/6_break: Rename to...
+	* tools/tests/3_break: ...here.
+	
+	* tools/tests/7_args: Rename to...
+	* tools/tests/2_manyglobals: ...here.
+
+	* tools/tests/8_funs: Rename to...
+	* tools/tests/4_funcalls: ...here.
+	
+	* tools/tests/9_manyregs: Rename to...
+	* tools/tests/2_manylocals: ...here.
+	
+	* tools/tests/livemore8.c: Rename to...
+	* tools/tests/2_manyglobals/livermore8.c: ...here.
+
+	* tools/tests/mkalltests.sh: Update accordingly.
+	
+2009-08-24  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	Make the test environment more user-friendly. 
 
 	(requested by S. Polstra)
