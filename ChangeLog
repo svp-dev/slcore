@@ -1,3 +1,21 @@
+2009-08-24  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
+	Make call gate more robust on MT-Alpha.
+
+	When a function using varargs is being called, it will first try
+	to push all the argument registers to the stack upon entry. This
+	fails if only some where initialized by the caller (in our case,
+	the call gate).
+
+	* tools/lib/mtalpha-sim/slrt.s,	
+	* tools/lib/mtalpha-sim/callgate.s: Ensure all call argument
+	registers are not empty.
+
+	* tools/bin/spp,
+	* tools/lib/mtalpha-sim/slrt.s,		
+	* tools/lib/mtalpha-sim/callgate.s: Improve readability by using
+	`clr' and `fclr' instead of `mov $31' and `cpys $f31'.
+
 2009-08-23  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
 	Better support for function calls on MT Alpha.

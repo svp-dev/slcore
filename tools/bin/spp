@@ -1133,9 +1133,9 @@ class pppalpha(object):
       if fundata['hasjumps']:
          init = []
          for r in set(fundata['usedcallregs']): # | fundata['spilledcallregs']:
-            init.append(('other','mov $l31, $l%d' % r, 'init call reg'))
+            init.append(('other','clr $l%d' % r, 'init call reg'))
          for r in set(fundata['usedcallfregs']): # | fundata['spilledcallfregs']:
-            init.append(('other','cpys $lf31, $lf31, $lf%d' % r, 'init call freg'))
+            init.append(('other','fclr $lf%d' % r, 'init call freg'))
          fundata['prologue'] = fundata['prologue'] + init
       return items
       

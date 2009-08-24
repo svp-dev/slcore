@@ -29,25 +29,36 @@ _start:
 	stq $l17,0($l0)
 
 	mov $l30, $l15 # set up frame pointer
-	mov $l31, $l9 # flush callee-save reg
-	mov $l31, $l10 # flush callee-save reg
-	mov $l31, $l11 # flush callee-save reg
-	mov $l31, $l12 # flush callee-save reg
-	mov $l31, $l13 # flush callee-save reg
-	mov $l31, $l14 # flush callee-save reg
-	cpys $lf31, $lf31, $lf2 # flush callee-save reg
-	cpys $lf31, $lf31, $lf3 # flush callee-save reg
-	cpys $lf31, $lf31, $lf4 # flush callee-save reg
-	cpys $lf31, $lf31, $lf5 # flush callee-save reg
-	cpys $lf31, $lf31, $lf6 # flush callee-save reg
-	cpys $lf31, $lf31, $lf7 # flush callee-save reg
-	cpys $lf31, $lf31, $lf8 # flush callee-save reg
-	cpys $lf31, $lf31, $lf9 # flush callee-save reg
-	cpys $lf31, $lf31, $lf0 # init FP return reg
+	clr $l9 # flush callee-save reg
+	clr $l10 # flush callee-save reg
+	clr $l11 # flush callee-save reg
+	clr $l12 # flush callee-save reg
+	clr $l13 # flush callee-save reg
+	clr $l14 # flush callee-save reg
+	fclr $lf2 # flush callee-save reg
+	fclr $lf3 # flush callee-save reg
+	fclr $lf4 # flush callee-save reg
+	fclr $lf5 # flush callee-save reg
+	fclr $lf6 # flush callee-save reg
+	fclr $lf7 # flush callee-save reg
+	fclr $lf8 # flush callee-save reg
+	fclr $lf9 # flush callee-save reg
+	fclr $lf0 # init FP return reg
 
 	# initialize argc and argv for main()
 	lda $l16,1($l31)
 	ldq $l17,__pseudo_argv($l29) !literal
+	ldq $l18,__pseudo_environ($l29) !literal
+	# initialize the other argument regs
+	clr $l19
+	clr $l20
+	clr $l21
+	fclr $lf16
+	fclr $lf17
+	fclr $lf18
+	fclr $lf19
+	fclr $lf20
+	fclr $lf21
 
 	# call main()
 	ldq $l27,main($l29) !literal!1
@@ -92,6 +103,7 @@ msg:
 	.align 3
 __pseudo_argv:
 	.long $progname
+__pseudo_environ:
 	.long 0
 $progname:
 	.ascii "a.out\0"
