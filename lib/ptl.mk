@@ -3,6 +3,8 @@
 nobase_dist_pkgdata_DATA += \
 	host-host-ptl/include/svp_os.h
 
+if ENABLE_SLC_PTL
+
 nobase_pkglib_LIBRARIES += host-host-ptl/libsl.a 
 
 host_host_ptl_libsl_a_SOURCES =
@@ -24,6 +26,8 @@ host-host-ptl/div.o: $(srcdir)/src/div.c
 host-host-ptl/roman.o: $(srcdir)/src/roman.c
 	$(AM_V_at)$(MKDIR_P) host-host-ptl
 	$(slc_verbose)$(SLC_PTL) -c -o $@ $<
+
+endif
 
 CLEANFILES += \
 	host-host-ptl/io.o \

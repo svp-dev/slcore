@@ -1,3 +1,39 @@
+2009-08-25  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
+	Start to emancipate `programs'.
+
+	* configure.ac: Move reusable Autoconf code to...
+	
+	* build-aux/mgbinutils.m4,
+	* build-aux/mggcc.m4,
+	* build-aux/mgsim.m4,
+	* build-aux/slc.m4,	
+	* build-aux/slctests.m4: ...here. Rename SLC target conditionals
+	to `ENABLE_SLC_...'. Add a new conditional for muTC-ptl as well
+	`ENABLE_SLC_PTL'. Handle the definition of SLC_LIBDIR and other
+	locations early.
+
+	* sl.mk,
+	* tests.mk,
+	* slc/lib/mtalpha.mk,
+	* slc/lib/ptl.mk,
+	* lib/mtalpha.mk,
+	* lib/ptl.mk: Use the new conditional names and tool locations.
+
+	* build-aux/Makefile.am: New. Distribute and install the reusable
+	macros.
+
+	* programs/configure.ac: New. Use the new macros.	
+	* configure.ac: Remove tasks now performed by the
+	sub-configure and reusable macros. Use the reusable macros.
+
+	* Makefile.am,	
+	* programs/Makefile.am: Add `build-aux' to aclocal's search path.
+
+	* programs/sl.mk,
+	* programs/tests.mk: New. Delegate include to top-level files of
+	the same name (This is a temporary hack).
+	
 2009-08-24  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
 	Reorganize source tree.

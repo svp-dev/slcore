@@ -11,20 +11,17 @@
 ## `COPYING' file in the root directory.
 ##
 
-SLC_LOCAL = $(abs_top_builddir)/slc/bin/slc
-
-
 SLC_VARS = \
-	SLC_INCDIR=$(abs_top_srcdir)/slc/include:$(abs_top_builddir)/slc/include:$(abs_top_srcdir)/lib/include:$(abs_top_builddir)/lib/include \
-	SLC_LIBDIR=$(abs_top_srcdir)/slc/lib:$(abs_top_builddir)/slc/lib:$(abs_top_srcdir)/lib:$(abs_top_builddir)/lib \
-	SLC_DATADIR=$(abs_top_srcdir)/slc/lib:$(abs_top_builddir)/slc/lib:$(abs_top_srcdir)/lib:$(abs_top_builddir)/lib \
-	SPP=$(abs_top_srcdir)/slc/bin/spp \
-	SCU=$(abs_top_srcdir)/slc/bin/scu \
-	SAG=$(abs_top_srcdir)/slc/bin/sag \
-	CCE=$(abs_top_builddir)/slc/bin/cce \
-	SLR=$(abs_top_builddir)/slc/bin/slr \
-	SLT=$(abs_top_builddir)/slc/bin/slt \
-	CM4=$(abs_top_builddir)/slc/bin/cm4 \
+	SLC_INCDIR=$(SLC_INCDIR) \
+	SLC_LIBDIR=$(SLC_LIBDIR) \
+	SLC_DATADIR=$(SLC_DATADIR) \
+	SPP=$(SPP) \
+	SCU=$(SCU) \
+	SAG=$(SAG) \
+	CCE=$(CCE) \
+	SLR=$(SLR) \
+	SLT=$(SLT) \
+	CM4=$(CM4) \
 	SLC=$(SLC_LOCAL)
 
 SLC_RUN = $(SLC_VARS) $(SLC_LOCAL)
@@ -39,10 +36,16 @@ slc_shverbose = $(slc_shverbose_$(V))
 slc_shverbose_ = $(slc_shverbose_$(AM_DEFAULT_VERBOSITY))
 slc_shverbose_0 = :
 
-if ENABLE_MTALPHA
+if ENABLE_SLC_MTALPHA
 slc_ifmtalpha =
 else
 slc_ifmtalpha = :
+endif
+
+if ENABLE_SLC_PTL
+slc_ifptl =
+else
+slc_ifptl = :
 endif
 
 SLC_BEFORE = function slc_compile() { \
@@ -51,8 +54,8 @@ SLC_BEFORE = function slc_compile() { \
 	echo "  SLC    $$SLC_OUT".seqc && \
 	$(SLC_LOCAL) $${SLC_OUT:+-o "$$SLC_OUT".seqc} -b seqc "$$@" -I$(srcdir) -I$(builddir) \
 	      $(AM_CFLAGS) $(CFLAGS) && \
-	echo "  SLC    $$SLC_OUT".ptl && \
-        $(SLC_LOCAL) $${SLC_OUT:+-o "$$SLC_OUT".ptl} -b ptl "$$@" -I$(srcdir) -I$(builddir) \
+	$(slc_ifptl) echo "  SLC    $$SLC_OUT".ptl && \
+        $(slc_ifptl) $(SLC_LOCAL) $${SLC_OUT:+-o "$$SLC_OUT".ptl} -b ptl "$$@" -I$(srcdir) -I$(builddir) \
 	      $(AM_CXXFLAGS) $(CXXFLAGS) && \
 	$(slc_ifmtalpha) echo "  SLC    $$SLC_OUT".mtalpha && \
         $(slc_ifmtalpha) $(SLC_LOCAL) $${SLC_OUT:+-o "$$SLC_OUT".mtalpha} -b ppp "$$@" \

@@ -16,7 +16,7 @@ nobase_dist_pkgdata_DATA += \
 	mtalpha-sim/include/svp_os.h \
 	mtalpha-sim/include/svp_asmdiv.h
 
-if ENABLE_MTALPHA
+if ENABLE_SLC_MTALPHA
 
 nobase_pkglib_DATA += \
    mtalpha-sim/libsl.a
