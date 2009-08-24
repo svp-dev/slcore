@@ -180,14 +180,12 @@ fi
 AC_SUBST([CONFIG_STATUS_DEPENDENCIES], ['$(top_srcdir)/ChangeLog'])
 AC_CONFIG_FILES([
 	Makefile
-        tools/Makefile
-	tools/bin/Makefile
-	tools/lib/Makefile
-        tools/lib/r-mtalpha-sim.sh
-        tools/lib/r-mtsparc-sim.sh
-	tools/tests/Makefile
+        slc/Makefile
+	slc/bin/Makefile
+	slc/lib/Makefile
+        slc/lib/r-mtalpha-sim.sh
+        slc/lib/r-mtsparc-sim.sh
 	lib/Makefile
-	lib/tests/Makefile
 	doc/Makefile
 	programs/Makefile
 	programs/demo/Makefile
@@ -199,8 +197,9 @@ AC_CONFIG_FILES([
 	programs/benchmarks/nas/is/Makefile
 	programs/benchmarks/sha/Makefile
 	programs/benchmarks/livermore/Makefile
+	tests/Makefile
 ])
-#AC_CONFIG_FILES([tools/bin/cm4], [chmod +x tools/bin/cm4])
+#AC_CONFIG_FILES([slc/bin/cm4], [chmod +x slc/bin/cm4])
 
 AC_OUTPUT
 

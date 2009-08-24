@@ -50,9 +50,8 @@ do
   fi
 done
 
-run tools/tests           ./mkalltests.sh
-run lib/tests             ./mkalltests.sh
+run tests		./mkalltests.sh
 run programs/benchmarks/livermore ./genmk.sh
-run .                     $AUTORECONF -v -f -i
+run .			$AUTORECONF -v -f -i
 
 echo "Reconfiguration done."

@@ -1,5 +1,36 @@
 2009-08-24  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	Reorganize source tree.
+	
+	* tools/tests/mkalltests.sh,
+	* lib/tests/mkalltests.sh: Merge into...
+	* tests/mkalltests.sh: ...here.
+
+	* tools/tests/Makefile.am,
+	* lib/tests/Makefile.am: Merge into...
+	* tests/Makefile.am: ...here.
+	
+	* tools: Rename to...
+	* slc: ...here.
+
+	* tools/tests,
+	* tools/tests/2_manyglobals,
+	* tools/tests/1_slr,
+	* lib/tests: Rename to...
+	* tests/0_slc,
+	* tools/0_slc/2_manyargs,
+	* tests/1_slr,
+	* tests/2_lib: ...here.
+
+	* tests.mk,
+	* sl.mk,
+	* configure.ac,
+	* Makefile.am,
+	* slc/Makefile.am,
+	* lib/Makefile.am: Update accordingly.
+
+2009-08-24  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	Improve MT Alpha code generation.
 
 	When the compiler runs out of local registers for automatic

@@ -11,20 +11,20 @@
 ## `COPYING' file in the root directory.
 ##
 
-SLC_LOCAL = $(abs_top_builddir)/tools/bin/slc
+SLC_LOCAL = $(abs_top_builddir)/slc/bin/slc
 
 
 SLC_VARS = \
-	SLC_INCDIR=$(abs_top_srcdir)/tools/include:$(abs_top_builddir)/tools/include:$(abs_top_srcdir)/lib/include:$(abs_top_builddir)/lib/include \
-	SLC_LIBDIR=$(abs_top_srcdir)/tools/lib:$(abs_top_builddir)/tools/lib:$(abs_top_srcdir)/lib:$(abs_top_builddir)/lib \
-	SLC_DATADIR=$(abs_top_srcdir)/tools/lib:$(abs_top_builddir)/tools/lib:$(abs_top_srcdir)/lib:$(abs_top_builddir)/lib \
-	SPP=$(abs_top_srcdir)/tools/bin/spp \
-	SCU=$(abs_top_srcdir)/tools/bin/scu \
-	SAG=$(abs_top_srcdir)/tools/bin/sag \
-	CCE=$(abs_top_builddir)/tools/bin/cce \
-	SLR=$(abs_top_builddir)/tools/bin/slr \
-	SLT=$(abs_top_builddir)/tools/bin/slt \
-	CM4=$(abs_top_builddir)/tools/bin/cm4 \
+	SLC_INCDIR=$(abs_top_srcdir)/slc/include:$(abs_top_builddir)/slc/include:$(abs_top_srcdir)/lib/include:$(abs_top_builddir)/lib/include \
+	SLC_LIBDIR=$(abs_top_srcdir)/slc/lib:$(abs_top_builddir)/slc/lib:$(abs_top_srcdir)/lib:$(abs_top_builddir)/lib \
+	SLC_DATADIR=$(abs_top_srcdir)/slc/lib:$(abs_top_builddir)/slc/lib:$(abs_top_srcdir)/lib:$(abs_top_builddir)/lib \
+	SPP=$(abs_top_srcdir)/slc/bin/spp \
+	SCU=$(abs_top_srcdir)/slc/bin/scu \
+	SAG=$(abs_top_srcdir)/slc/bin/sag \
+	CCE=$(abs_top_builddir)/slc/bin/cce \
+	SLR=$(abs_top_builddir)/slc/bin/slr \
+	SLT=$(abs_top_builddir)/slc/bin/slt \
+	CM4=$(abs_top_builddir)/slc/bin/cm4 \
 	SLC=$(SLC_LOCAL)
 
 SLC_RUN = $(SLC_VARS) $(SLC_LOCAL)

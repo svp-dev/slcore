@@ -13,8 +13,17 @@
 
 # 
 
-EXTRA_DIST = deploy/Makefile-reqs.orig deploy/reqs.mk deploy/README deploy/slenv
-SUBDIRS = . tools lib programs doc
+EXTRA_DIST = deploy/Makefile-reqs.orig \
+	deploy/reqs.mk \
+	deploy/README \
+	deploy/alpha.h.patch \
+	deploy/alpha.md.patch \
+	deploy/constraints.md.patch \
+	deploy/reqs.mk \
+	deploy/reqs.mk \
+	deploy/slenv
+
+SUBDIRS = . slc lib tests programs doc
 
 README: $(srcdir)/doc/README.txt
 	$(AM_V_at)rm -f $@
@@ -30,7 +39,7 @@ NEWS: $(srcdir)/doc/NEWS.txt
 # usage and faster results, use `make check')
 
 check-slt:
-	$(AM_V_at)for d in tools lib; do (cd $$d && $(MAKE) $(AM_MAKEFLAGS) all); done
+	$(AM_V_at)for d in slc lib; do (cd $$d && $(MAKE) $(AM_MAKEFLAGS) all); done
 	$(AM_V_at)set -e; for d in `find . -type d \
 	    -and -exec test -r '{}'/Makefile \; \
 	    -and -exec test -r $(srcdir)/'{}'/Makefile.am \; \
@@ -42,7 +51,7 @@ check-slt:
 if MAINTAINER_MODE
 
 find_sources = \
-	find $(srcdir)/tools $(srcdir)/lib $(srcdir)/programs \
+	find $(srcdir)/slc $(srcdir)/lib $(srcdir)/programs \
 	  -name '*.h' \
 	-or -name '*.c' \
 	-or -name '*.cpp' \
@@ -64,7 +73,7 @@ show-vars:
 	@for n in $(SLC_VARS); do \
 	   echo "export $$n;"; \
 	done
-	@echo "export PATH=$(abs_top_builddir)/tools/bin:$$PATH;"
+	@echo "export PATH=$(abs_top_builddir)/slc/bin:$$PATH;"
 
 ACLOCAL_AMFLAGS = -I m4
 DISTCHECK_CONFIGURE_FLAGS = --enable-testsuite --disable-demos

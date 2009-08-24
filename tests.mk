@@ -38,7 +38,7 @@ SL_LOG_COMPILER = \
 	$(SLC_VARS) SRCDIR=$(srcdir) \
 	SLT_IMPL_LIST="$(SLT_IMPL_LIST)" \
 	DUMP_LOGS=1 TEXT_ONLY=1 SEQUENTIAL=1 \
-	$(BASH) $(abs_top_builddir)/tools/bin/slt
+	$(BASH) $(abs_top_builddir)/slc/bin/slt
 
 C_LOG_COMPILER = $(SL_LOG_COMPILER)
 
@@ -46,7 +46,7 @@ C_LOG_COMPILER = $(SL_LOG_COMPILER)
 check-slt: $(check_DATA) $(TESTS)
 	-echo; echo "Current directory:" `pwd`
 	$(AM_V_at)$(SLC_VARS) SLT_IMPL_LIST="$(SLT_IMPL_LIST)" SRCDIR=$(srcdir) \
-	    $(top_builddir)/tools/bin/slt-many \
+	    $(top_builddir)/slc/bin/slt-many \
 	    `for t in $(TESTS); do if test -r $$t; then echo $$t; else echo $(srcdir)/$$t; fi; done`
 
 clean-local:

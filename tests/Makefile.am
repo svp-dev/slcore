@@ -11,8 +11,6 @@
 ## `COPYING' file in the root directory.
 ##
 
-# 
-
 include $(srcdir)/alltests.mk
 EXTRA_DIST = $(TESTSUITE) $(XTESTSUITE)
 
@@ -25,4 +23,4 @@ endif
 
 include $(top_srcdir)/tests.mk
 
-EXTRA_DIST += 0_slr/fibre.c.d
+EXTRA_DIST += 1_slr/fibre.c.d
