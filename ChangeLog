@@ -1,5 +1,21 @@
 2009-08-24  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	Improve MT Alpha code generation.
+
+	When the compiler runs out of local registers for automatic
+	variables it may uses RA and/or FP for them. This causes a spill
+	but also a reload before the end of the function. Since the result
+	of this reload is not used, it may cause a pipeline stall in the
+	next instance of the thread when the register is reused.
+
+	This change attempts to protect this situation by forcing these
+	loads to complete before the thread terminates.
+	
+	* tools/bin/spp: New transforms `detectload' and
+	`completeload'. Use them.
+
+2009-08-24  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	Reorganize test suite.
 
 	Make the numerical prefixes follow "increasing order of

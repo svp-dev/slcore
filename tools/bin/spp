@@ -786,6 +786,38 @@ class pppalpha(object):
          else:
             yield (type, content, comment)
             
+   def makedetectload(self, keyname, regname):
+      """
+      Is there any load of RA or FP from the stack?
+      """
+      def detectload(fundata, items):
+         hasregload = False
+         spreg = fundata['specials']['tlsp']
+         spec = fundata['specials'][regname]
+         r = re.compile(r'ldq\s+\$l%d\s*,\s*\d+\(\$l%d\)' % (spec, spreg))
+         for (type, content, comment) in items:
+            if type == "other":
+               if r.match(content): hasregload = True
+            yield (type, content, comment)
+
+         fundata[keyname] = hasregload
+      return detectload
+
+   def makecompleteload(self, keyname, regname):
+      """
+      Force a read on RA and FP before "end" if they were used.
+      """
+      def completeload(fundata, items):
+         hasload = fundata[keyname]
+         regnr = fundata['specials'][regname]
+         for (type, content, comment) in items:
+            if type == 'other' and content == "end":
+               if hasload:
+                  yield ('other','mov $l%d, $l%d' % (regnr, regnr), 'maybe complete ldq')
+            yield (type, content, comment)
+      return completeload
+
+
    def munchret(self, fundata, items):
       """
       Remove possible frame adjustment before end thread
@@ -1765,6 +1797,10 @@ class pppalpha(object):
          groups = self.funfilter(self.compress, groups)
          groups = self.funfilter(self.xjoin2, groups)
          groups = self.funfilter(self.munchret, groups)
+         groups = self.funfilter(self.makedetectload('hasraload','ra'), groups)
+         groups = self.funfilter(self.makecompleteload('hasraload','ra'), groups)
+         groups = self.funfilter(self.makedetectload('hasfpload','fp'), groups)
+         groups = self.funfilter(self.makecompleteload('hasfpload','fp'), groups)
          items = self.flattener(groups)
          items = self.forcezero(items)
          lines = self.printer(items)
