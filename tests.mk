@@ -27,7 +27,7 @@ endif
 
 if ENABLE_CHECK_UTC
 if ENABLE_MTALPHA
-EXTRA_TEST_IMPL += utc0:-O0 utc0:-O1 utc0:-O2 utcx
+EXTRA_TEST_IMPL += utc0:-O0 utc0:-O1 utcx
 endif
 endif
 
@@ -44,7 +44,11 @@ C_LOG_COMPILER = $(SL_LOG_COMPILER)
 
 .PHONY: check-slt
 check-slt: $(check_DATA) $(TESTS)
-	$(AM_V_at)echo; echo "Current directory:" `pwd`
+	-echo; echo "Current directory:" `pwd`
 	$(AM_V_at)$(SLC_VARS) SLT_IMPL_LIST="$(SLT_IMPL_LIST)" SRCDIR=$(srcdir) \
 	    $(top_builddir)/tools/bin/slt-many \
 	    `for t in $(TESTS); do if test -r $$t; then echo $$t; else echo $(srcdir)/$$t; fi; done`
+
+clean-local:
+	$(AM_V_at)find . -name _\* -type d | xargs rm -rf
+
