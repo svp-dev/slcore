@@ -1,5 +1,21 @@
 2009-08-24  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	Make the test environment more user-friendly. 
+
+	(requested by S. Polstra)
+
+	* tests.mk: Add new rule `clean-local' to remove output from
+	tests. Do not compile `utc0' test targets with -O2, since this is
+	not supported anyways.
+	
+	* tools/bin/slt.in: Condense the list of left overs (if any) to
+	only display the file name extensions.
+
+	* tools/bin/slc.in: Insert spaces in the output of `-v' to make it
+	more readable.
+
+2009-08-24  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	Make call gate more robust on MT-Alpha.
 
 	When a function using varargs is being called, it will first try

@@ -710,17 +710,15 @@ sighandle() {
 }
 
 check_proc() {
-    local x b bf
+    local x b bf lover
     x=$1
     if test -n "$signalled"; then 
 	trap - INT QUIT HUP ALRM TERM PIPE
 	for b in $basenames; do
-	    for bf in $b.*; do
-		if test -e "$bf"; then
-		    echo "$basename: left over: $bf" >&2
-		fi
-	    done
+	    lover=($b.*)
+	    echo "$basename: left over: $b[${lover[@]#$b}]" >&2
 	done
+	echo >&2
 	kill -$signalled $$
 	exit 128
     elif test $x != 0; then
@@ -804,12 +802,10 @@ else
 	fi
     done
     for b in $basenames; do
-	for bf in $b.*; do
-	    if test -e "$bf"; then
-		echo "$basename: left over: $bf" >&2
-	    fi
-	done
+	lover=($b.*)
+	echo "$basename: left over: $b[${lover[@]#$b}]" >&2
     done
+    echo >&2
 fi
 exit $fail
 

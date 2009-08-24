@@ -742,17 +742,21 @@ fi
 # Start processing
 
 # Print configuration if requested
-if test -n "$verbose"; then
-  echo "---- $basename: options and settings ----" >&2
-  for i in root keep impl \
-           cm4_helper cm4flags \
+if test -n "$verbose"; then (
+  echo "---- $basename: options and settings ----" 
+  for i in version slrev root keep impl \
+           finalstage \
            combine outfile tmpdir; do
-    eval "echo '  ' $i '->' \$$i" >&2
+    eval "echo \"   $i -> \$$i\"" 
   done
-  set | grep '^slc_' >&2
-  echo "---- $basename: build plan -----" >&2
-  for i in "${transforms[@]}"; do echo $i >&2; done
-  echo "---- $basename: processing... ----" >&2
+  for i in cm4flags extra_f2flags; do
+    eval "echo \"   $i -> \${$i[*]}\"" 
+  done
+  set | grep '^slc_' | sed -e 's/^/   /g' 
+  echo; echo "---- $basename: build plan -----"
+  for i in "${transforms[@]}"; do echo "   $i" ; done
+  echo; echo "---- $basename: processing ----" 
+  ) >&2
 fi
 
 for t in "${transforms[@]}"; do
@@ -833,7 +837,7 @@ EOF
       set -e
   fi
   inflight=
-  if test -n "$verbose"; then echo "=> $cmdcode" >&2; fi
+  if test -n "$verbose"; then { echo "=> $cmdcode" ; echo; } >&2; fi
   if test $cmdcode -gt 126; then
       if test -n "$verbose"; then echo "signal or command not found: exit $cmdcode" >&2; fi
       exit $cmdcode
