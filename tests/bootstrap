@@ -18,7 +18,7 @@ else
   AUTORECONF=autoreconf
 fi
 
-./mkalltests.sh
+./build-aux/mkalltests.sh
 $AUTORECONF -v -f -i
 
 echo "Reconfiguration done."

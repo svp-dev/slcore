@@ -18,7 +18,7 @@ else
   AUTORECONF=autoreconf
 fi
 
-(cd tests && ./mkalltests.sh)
+(cd tests && ./build-aux/mkalltests.sh)
 (cd programs/benchmarks/livermore && ./genmk.sh)
 $AUTORECONF -v -f -i
 

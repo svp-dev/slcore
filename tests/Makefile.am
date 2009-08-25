@@ -11,7 +11,7 @@
 ## `COPYING' file in the root directory.
 ##
 
-include $(srcdir)/alltests.mk
+include $(srcdir)/build-aux/alltests.mk
 EXTRA_DIST = $(TESTSUITE) $(XTESTSUITE)
 
 if ENABLE_TESTSUITE
@@ -21,8 +21,8 @@ TESTS += $(XTESTSUITE)
 endif
 endif
 
-include $(top_srcdir)/tests.mk
+include $(srcdir)/build-aux/slctests.mk
 
 EXTRA_DIST += 1_slr/fibre.c.d
 
-ACLOCAL_AMFLAGS = -I ../build-aux
+ACLOCAL_AMFLAGS = -I build-aux

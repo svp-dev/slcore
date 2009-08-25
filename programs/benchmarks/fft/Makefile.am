@@ -15,7 +15,7 @@
 DEMOS = fft_bench1.c fft_bench2.c fft_test1.c fft_test2.c
 TESTS = fft_test1.c fft_test2.c
 
-include $(top_srcdir)/tests.mk
+include $(top_srcdir)/build-aux/slctests.mk
 
 EXTRA_DIST = $(DEMOS) fft_bench.c fft_test.c fft_impl1.c fft_impl2.c fft.h fft_extra.c
 

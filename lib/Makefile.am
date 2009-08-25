@@ -32,7 +32,7 @@ nobase_dist_pkgdata_DATA = \
 	include/svp/iomacros.h \
 	include/svp/perf.h
 
-include $(top_srcdir)/sl.mk
+include $(top_srcdir)/build-aux/sl.mk
 nobase_pkglib_DATA = 
 nobase_pkglib_LIBRARIES = 
 CLEANFILES =

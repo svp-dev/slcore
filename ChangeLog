@@ -1,5 +1,40 @@
 2009-08-25  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	Homogeneize use of `build-aux'.
+
+	Each independent part of the source tree should now expect the
+	build helper files to be present in its own top-level `build-aux'.
+
+	* tests/mkalltests.sh: Rename to...	
+	* tests/build-aux/mkalltests.sh: ...here. Generate `alltests.mk'
+	in `build-aux' as well.
+	* bootstrap,
+	* tests/bootstrap: Update accordingly.
+
+	* tests/sl.mk,
+	* tests/tests.mk,
+	* programs/sl.mk,	
+	* programs/tests.mk: Remove. These should now populated in the
+	`build-aux' automatically, separately.
+
+	* build-aux/tests.mk: Rename to...	
+	* build-aux/slctests.mk: ...here, since it will be soon installed
+	and the name `tests.mk' is a little too generic.
+
+	* Makefile.am,
+	* slc/lib/Makefile.am,
+	* lib/Makefile.am,
+	* programs/Makefile.am,
+	* programs/benchmarks/blas/Makefile.am,
+	* programs/benchmarks/fft/Makefile.am,
+	* programs/benchmarks/livermore/Makefile.am,
+	* programs/benchmarks/sha/Makefile.am,
+	* programs/demo/Makefile.am,	
+	* tests/Makefile.am: Expect .mk files in the local
+	`build-aux'. Include `slctests.mk' instead of `tests.mk'.
+	
+2009-08-25  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	Sanitize build options.
 
 	* build-aux/slc.m4: Explicitly indicate that `--with-slc'

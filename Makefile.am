@@ -65,7 +65,7 @@ rehead:
 
 endif
 
-include $(top_srcdir)/sl.mk
+include $(srcdir)/build-aux/sl.mk
 show-vars:
 	@echo
 	@echo ": Set the following to work from the source directory;"

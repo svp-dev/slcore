@@ -11,7 +11,7 @@
 ## `COPYING' file in the root directory.
 ##
 
-include $(top_srcdir)/sl.mk
+include $(top_srcdir)/build-aux/sl.mk
 
 EXTRA_TEST_IMPL =
 
