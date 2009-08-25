@@ -18,8 +18,8 @@ else
   AUTORECONF=autoreconf
 fi
 
-(cd tests && ./mkalltests.sh)
-(cd programs/benchmarks/livermore && ./genmk.sh)
+./mkalltests.sh
 $AUTORECONF -v -f -i
 
 echo "Reconfiguration done."
+

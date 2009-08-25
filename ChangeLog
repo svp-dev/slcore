@@ -1,5 +1,14 @@
 2009-08-25  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	Provide `bootstrap' scripts in sub-projects.
+	
+	* bootstrap: Simplify, and duplicate useful parts to...
+	
+	* programs/bootstrap: ... here, and...
+	* tests/bootstrap: here.
+
+2009-08-25  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	Start to emancipate `tests'.
 
 	* tests/configure.ac: New.	
