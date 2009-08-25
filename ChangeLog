@@ -1,5 +1,11 @@
 2009-08-25  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	Rename the top-level package to `sl'.
+
+	* configure.ac: Change package name.
+
+2009-08-25  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	* ChangeLog: Rename to...
 	* slc/ChangeLog.1: ...here.
 	
