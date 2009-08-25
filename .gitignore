@@ -1,7 +1,9 @@
 Makefile.in
 Makefile
 configure
-build-aux
+build-aux/depcomp
+build-aux/missing
+build-aux/install-sh
 autom4te.cache
 aclocal.m4
 build
