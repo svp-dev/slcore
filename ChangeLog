@@ -1,5 +1,18 @@
 2009-08-25  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	Start to emancipate `tests'.
+
+	* tests/configure.ac: New.	
+	* tests/Makefile.am: Add `build-aux' to aclocal's search path.
+
+	* tests/sl.mk,	
+	* tests/tests.mk: New. Delegate include to top-level files of the
+	same name (This is a temporary hack).
+
+	* configure.ac: Update accordingly.
+	
+2009-08-25  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	Start to emancipate `programs'.
 
 	* configure.ac: Move reusable Autoconf code to...

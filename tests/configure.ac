@@ -1,4 +1,4 @@
-## Makefile.am: this file is part of the SL toolchain.
+## configure.ac: this file is part of the SL demo suite.
 ## 
 ## Copyright (C) 2009 The SL project
 ##
@@ -11,18 +11,20 @@
 ## `COPYING' file in the root directory.
 ##
 
-include $(srcdir)/alltests.mk
-EXTRA_DIST = $(TESTSUITE) $(XTESTSUITE)
+AC_PREREQ([2.61])
+AC_INIT([sl-tests], [2.1.0a], [sl-users@nic.surfnet.nl])
+AC_CONFIG_AUX_DIR([build-aux])
 
-if ENABLE_TESTSUITE
-TESTS = $(TESTSUITE)
-if ENABLE_XFAIL_TESTS
-TESTS += $(XTESTSUITE)
-endif
-endif
+AM_INIT_AUTOMAKE([1.11 tar-ustar no-define foreign dist-bzip2
+                  color-tests silent-rules parallel-tests])
 
-include $(top_srcdir)/tests.mk
+AM_SILENT_RULES([yes])
 
-EXTRA_DIST += 1_slr/fibre.c.d
+SLC_PATH_LOCAL([..])
+AC_WITH_SLC
+AC_SLC_TESTS
 
-ACLOCAL_AMFLAGS = -I ../build-aux
+AC_CONFIG_FILES([Makefile])
+
+AC_OUTPUT
+

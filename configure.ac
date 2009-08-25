@@ -64,11 +64,6 @@ AC_PROG_RANLIB
 
 ######### Options #########
 
-AC_ARG_ENABLE([testsuite],
-[AC_HELP_STRING([--enable-testsuite], [activate unit tests for features and regressions (default is disabled)])], 
-[], [enable_testsuite=no])
-AM_CONDITIONAL([ENABLE_TESTSUITE], [test "x$enable_testsuite" = "xyes"])
-
 SLC_PATH_LOCAL([.])
 AC_WITH_SLC
 AC_SLC_TESTS
@@ -91,10 +86,10 @@ AC_CONFIG_FILES([
         slc/lib/r-mtsparc-sim.sh
 	lib/Makefile
 	doc/Makefile
-	tests/Makefile
 ])
 
 AC_CONFIG_SUBDIRS([programs])
+AC_CONFIG_SUBDIRS([tests])
 
 AC_OUTPUT
 
