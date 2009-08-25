@@ -1,4 +1,4 @@
-## configure.ac: this file is part of the SL demo suite.
+## slcvars.mk: this file is part of the SL toolchain.
 ## 
 ## Copyright (C) 2009 The SL project
 ##
@@ -11,20 +11,17 @@
 ## `COPYING' file in the root directory.
 ##
 
-AC_PREREQ([2.61])
-AC_INIT([sl-tests], [2.1.0a], [sl-users@nic.surfnet.nl])
-AC_CONFIG_AUX_DIR([build-aux])
+SLC_VARS = \
+	SLC_INCDIR=$(SLC_INCDIR) \
+	SLC_LIBDIR=$(SLC_LIBDIR) \
+	SLC_DATADIR=$(SLC_DATADIR) \
+	SPP=$(SPP) \
+	SCU=$(SCU) \
+	SAG=$(SAG) \
+	CCE=$(CCE) \
+	SLR=$(SLR) \
+	SLT=$(SLT) \
+	CM4=$(CM4) \
+	SLC=$(SLC_LOCAL)
 
-AM_INIT_AUTOMAKE([1.11 tar-ustar no-define foreign dist-bzip2
-                  color-tests silent-rules parallel-tests])
-
-AM_SILENT_RULES([yes])
-
-SLC_PATH_LOCAL([../slc])
-AC_WITH_SLC
-AC_SLC_TESTS
-
-AC_CONFIG_FILES([Makefile])
-
-AC_OUTPUT
-
+SLC_RUN = $(SLC_VARS) $(SLC_LOCAL)

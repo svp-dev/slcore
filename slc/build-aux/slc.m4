@@ -17,7 +17,7 @@ AC_DEFUN([SLC_PATH_LOCAL],
     AC_CACHE_CHECK([for SLC sources in local distribution],
                    [slc_cv_local_src],
                    [slc_cv_local_src=no
-                    if test -r "$srcdir/$1/slc/bin/slc.in"; then
+                    if test -r "$srcdir/$1/tools/bin/slc.in"; then
                        slc_cv_local_src="$1"
                     fi])
 ])])
@@ -126,18 +126,20 @@ AC_DEFUN([AC_WITH_SLC],
     if test "x$SLC_BASE" != x; then
       AC_MSG_WARN([using $slc_cv_local_src instead of $SLC_BASE])
     fi
-    SLC_INCDIR='$(abs_top_srcdir)'/$slc_cv_local_src/slc/include:'$(abs_top_builddir)'/$slc_cv_local_src/slc/include:'$(abs_top_srcdir)'/$slc_cv_local_src/lib/include:'$(abs_top_builddir)'/$slc_cv_local_src/lib/include
-    SLC_LIBDIR='$(abs_top_srcdir)'/$slc_cv_local_src/slc/lib:'$(abs_top_builddir)'/$slc_cv_local_src/slc/lib:'$(abs_top_srcdir)'/$slc_cv_local_src/lib:'$(abs_top_builddir)'/$slc_cv_local_src/lib
-    SLC_DATADIR='$(abs_top_srcdir)'/$slc_cv_local_src/slc/lib:'$(abs_top_builddir)'/$slc_cv_local_src/slc/lib:'$(abs_top_srcdir)'/$slc_cv_local_src/lib:'$(abs_top_builddir)'/$slc_cv_local_src/lib
-    SPP='$(abs_top_srcdir)'/$slc_cv_local_src/slc/bin/spp
-    SCU='$(abs_top_srcdir)'/$slc_cv_local_src/slc/bin/scu
-    SAG='$(abs_top_srcdir)'/$slc_cv_local_src/slc/bin/sag
-    CCE='$(abs_top_builddir)'/$slc_cv_local_src/slc/bin/cce
-    SLR='$(abs_top_builddir)'/$slc_cv_local_src/slc/bin/slr
-    SLT='$(abs_top_builddir)'/$slc_cv_local_src/slc/bin/slt
-    SLT_MANY='$(abs_top_builddir)'/$slc_cv_local_src/slc/bin/slt-many
-    CM4='$(abs_top_builddir)'/$slc_cv_local_src/slc/bin/cm4
-    SLC_LOCAL='$(abs_top_builddir)'/$slc_cv_local_src/slc/bin/slc
+    base_src='$(abs_top_srcdir)'/$slc_cv_local_src
+    base_build='$(abs_top_builddir)'/$slc_cv_local_src
+    SLC_INCDIR=$base_src/tools/include:$base_build/tools/include:$base_src/lib/include:$base_build/lib/include
+    SLC_LIBDIR=$base_src/tools/lib:$base_build/tools/lib:$base_src/lib:$base_build/lib
+    SLC_DATADIR=$base_src/tools/lib:$base_build/tools/lib:$base_src/lib:$base_build/lib
+    SPP=$base_src/tools/bin/spp
+    SCU=$base_src/tools/bin/scu
+    SAG=$base_src/tools/bin/sag
+    CCE=$base_build/tools/bin/cce
+    SLR=$base_build/tools/bin/slr
+    SLT=$base_build/tools/bin/slt
+    SLT_MANY=$base_build/tools/bin/slt-many
+    CM4=$base_build/tools/bin/cm4
+    SLC_LOCAL=$base_build/tools/bin/slc
     SLC_BASE=
   fi
   AC_ARG_VAR([SLC_BASE], [base SLC installation directory (should be autodetected)])

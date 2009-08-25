@@ -23,23 +23,13 @@ EXTRA_DIST = deploy/Makefile-reqs.orig \
 	deploy/reqs.mk \
 	deploy/slenv
 
-SUBDIRS = . slc lib tests programs doc
-
-README: $(srcdir)/doc/README.txt
-	$(AM_V_at)rm -f $@
-	$(AM_V_GEN)cp $(srcdir)/doc/README.txt $@
-	$(AM_V_at)chmod -w $@
-
-NEWS: $(srcdir)/doc/NEWS.txt
-	$(AM_V_at)rm -f $@
-	$(AM_V_GEN)cp $(srcdir)/doc/NEWS.txt $@
-	$(AM_V_at)chmod -w $@
+SUBDIRS = . slc tests programs
 
 # run `slt' on the console (eye candy, for more intensive CPU
 # usage and faster results, use `make check')
 
 check-slt:
-	$(AM_V_at)for d in slc lib; do (cd $$d && $(MAKE) $(AM_MAKEFLAGS) all); done
+	$(AM_V_at)cd slc && $(MAKE) $(AM_MAKEFLAGS) all
 	$(AM_V_at)set -e; for d in `find . -type d \
 	    -and -exec test -r '{}'/Makefile \; \
 	    -and -exec test -r $(srcdir)/'{}'/Makefile.am \; \
@@ -61,7 +51,7 @@ find_sources = \
 rehead:
 	$(find_sources) | xargs perl $(srcdir)/reheader.pl
 
-include $(srcdir)/build-aux/sl.mk
+include $(srcdir)/slc/build-aux/slcvars.mk
 
 show-vars:
 	@echo
@@ -74,4 +64,3 @@ show-vars:
 
 DISTCHECK_CONFIGURE_FLAGS = --enable-testsuite --disable-build-programs
 
-ACLOCAL_AMFLAGS = -I build-aux -I m4

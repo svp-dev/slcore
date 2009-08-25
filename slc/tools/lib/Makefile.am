@@ -12,29 +12,23 @@
 ##
 
 # 
-EXTRA_DIST = \
-	src/io.c \
-	src/roman.c \
-	src/div.c
+dist_pkglib_SCRIPTS = \
+	r-host.sh
+
+pkglib_SCRIPTS = \
+	r-mtalpha-sim.sh \
+	r-mtsparc-sim.sh
 
 nobase_dist_pkgdata_DATA = \
-	include/cstdint.h \
-	include/cstddef.h \
-	include/cstdbool.h \
-	include/climits.h \
-	include/cmalloc.h \
-	include/sac_helpers.h \
-	include/svp/argslot.h \
-	include/svp/assert.h \
-	include/svp/div.h \
-	include/svp/io.h \
-	include/svp/roman.h \
-	include/svp/iomacros.h \
-	include/svp/perf.h
+	arggen.c \
+	t-utc/slimpl.m4 \
+	t-utc0/slimpl.m4 \
+	t-utc0/include/sl_support.h 
 
 include $(top_srcdir)/build-aux/sl.mk
-nobase_pkglib_DATA = 
+nobase_pkglib_DATA =
 nobase_pkglib_LIBRARIES = 
+EXTRA_DIST =
 CLEANFILES =
 MAINTAINERCLEANFILES = 
 BUILT_SOURCES = 
@@ -42,4 +36,3 @@ BUILT_SOURCES =
 include $(srcdir)/seqc.mk
 include $(srcdir)/ptl.mk
 include $(srcdir)/mtalpha.mk
-

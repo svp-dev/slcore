@@ -1,43 +1,28 @@
-SUBDIRS = bin . lib
+## Makefile.am: this file is part of the SL toolchain.
+## 
+## Copyright (C) 2009 The SL project
+##
+## This program is free software; you can redistribute it and/or
+## modify it under the terms of the GNU General Public License
+## as published by the Free Software Foundation; either version 2
+## of the License, or (at your option) any later version.
+##
+## The complete GNU General Public Licence Notice can be found as the
+## `COPYING' file in the root directory.
+##
 
-nobase_dist_pkgdata_DATA = \
-	include/slc.m4 \
-	include/slc_m4sugar.m4 \
-	include/slc_m4sversion.m4 \
-	include/slc_m4sforeach.m4 \
-	include/slr.slh \
-	include/fibre.slh \
-	include/svp/lib.slh \
-	include/svp/slr.h \
-	include/svp/fibre.h \
-	include/svp/compiler.h \
-	include/svp/abort.h \
-	include/svp/testoutput.h
+# 
 
-EXTRA_DIST = \
-	include/m4sugar.m4 \
-	include/m4sugar_version.m4 \
-	include/m4sugar_foreach.m4 \
-	include/m4sugar_transform.sed
+SUBDIRS = . tools lib doc
 
-MAINTAINERCLEANFILES = \
-	include/slc_m4sugar.m4 \
-	include/slc_m4sversion.m4 \
-	include/slc_m4sforeach.m4
+README: $(srcdir)/doc/README.txt
+	$(AM_V_at)rm -f $@
+	$(AM_V_GEN)cp $(srcdir)/doc/README.txt $@
+	$(AM_V_at)chmod -w $@
 
-include/slc_m4sugar.m4: $(srcdir)/include/m4sugar.m4 $(srcdir)/include/m4sugar_transform.sed
-	$(AM_V_at)$(MKDIR_P) include
-	$(AM_V_GEN)$(SED) -f $(srcdir)/include/m4sugar_transform.sed $< >$@.tmp
-	$(AM_V_at)mv $@.tmp $@
+NEWS: $(srcdir)/doc/NEWS.txt
+	$(AM_V_at)rm -f $@
+	$(AM_V_GEN)cp $(srcdir)/doc/NEWS.txt $@
+	$(AM_V_at)chmod -w $@
 
-include/slc_m4sversion.m4: $(srcdir)/include/m4sugar_version.m4 $(srcdir)/include/m4sugar_transform.sed
-	$(AM_V_at)$(MKDIR_P) include
-	$(AM_V_GEN)$(SED) -f $(srcdir)/include/m4sugar_transform.sed $< >$@.tmp
-	$(AM_V_at)mv $@.tmp $@
-
-include/slc_m4sforeach.m4: $(srcdir)/include/m4sugar_foreach.m4 $(srcdir)/include/m4sugar_transform.sed
-	$(AM_V_at)$(MKDIR_P) include
-	$(AM_V_gen)$(SED) -f $(srcdir)/include/m4sugar_transform.sed $< >$@.tmp
-	$(AM_V_at)mv $@.tmp $@
-
-
+ACLOCAL_AMFLAGS = -I build-aux -I m4

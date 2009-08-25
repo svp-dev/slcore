@@ -11,20 +11,7 @@
 ## `COPYING' file in the root directory.
 ##
 
-SLC_VARS = \
-	SLC_INCDIR=$(SLC_INCDIR) \
-	SLC_LIBDIR=$(SLC_LIBDIR) \
-	SLC_DATADIR=$(SLC_DATADIR) \
-	SPP=$(SPP) \
-	SCU=$(SCU) \
-	SAG=$(SAG) \
-	CCE=$(CCE) \
-	SLR=$(SLR) \
-	SLT=$(SLT) \
-	CM4=$(CM4) \
-	SLC=$(SLC_LOCAL)
-
-SLC_RUN = $(SLC_VARS) $(SLC_LOCAL)
+include $(top_srcdir)/build-aux/slcvars.mk
 
 SUFFIXES = .x
 

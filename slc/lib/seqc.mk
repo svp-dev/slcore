@@ -1,40 +1,31 @@
 ########## Sequential-C implementation ##########
 
 nobase_dist_pkgdata_DATA += \
-	t-seqc/slimpl.m4 \
-	t-seqc/include/sl_support.h
+	host-host-seqc/include/svp_os.h 
 
-EXTRA_DIST += \
-	host-host-seqc/load.c \
-	host-host-seqc/lib_main.c  \
-	host-host-seqc/main.c  \
-	host-host-seqc/slrt.c 
+nobase_pkglib_LIBRARIES += host-host-seqc/libsl.a
 
-nobase_pkglib_DATA += \
-	host-host-seqc/slrt.o \
-	host-host-seqc/libslc.a
+host_host_seqc_libsl_a_SOURCES = 
+host_host_seqc_libsl_a_LIBADD = \
+	host-host-seqc/div.o \
+	host-host-seqc/roman.o \
+	host-host-seqc/io.o
 
-host_host_seqc_libslc_a_CONTENTS = \
-	host-host-seqc/load.o \
-	host-host-seqc/lib_main.o \
-	host-host-seqc/main.o
+SLC_SEQC = $(SLC_RUN) -b seqc -nostdlib $(AM_CFLAGS) $(CFLAGS)
 
-host-host-seqc/%.a:
-	$(AM_V_at)rm -f $@
-	$(AM_V_AR)$(AR) cru $@ $^
-	$(AM_V_at)$(RANLIB) $@
-
-host-host-seqc/libslc.a: $(host_host_seqc_libslc_a_CONTENTS)
-
-SLC_SEQC = $(SLC_RUN) -b seqc -nostdlib
-
-host-host-seqc/%.o: $(srcdir)/host-host-seqc/%.c
+host-host-seqc/io.o: $(srcdir)/src/io.c
 	$(AM_V_at)$(MKDIR_P) host-host-seqc
-	$(slc_verbose)$(SLC_SEQC) -I$(srcdir)/t-seqc/include -c -o $@ $< $(AM_CFLAGS) $(CFLAGS)
+	$(slc_verbose)$(SLC_SEQC) -c -o $@ $<
+
+host-host-seqc/div.o: $(srcdir)/src/div.c
+	$(AM_V_at)$(MKDIR_P) host-host-seqc
+	$(slc_verbose)$(SLC_SEQC) -c -o $@ $<
+
+host-host-seqc/roman.o: $(srcdir)/src/roman.c
+	$(AM_V_at)$(MKDIR_P) host-host-seqc
+	$(slc_verbose)$(SLC_SEQC) -c -o $@ $<
 
 CLEANFILES += \
-	host-host-seqc/slrt.o \
-	host-host-seqc/load.o \
-	host-host-seqc/main.o \
-	host-host-seqc/lib_main.o \
-	host-host-seqc/libslc.a 
+	host-host-seqc/io.o \
+	host-host-seqc/div.o \
+	host-host-seqc/roman.o 

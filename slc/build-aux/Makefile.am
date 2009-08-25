@@ -6,3 +6,5 @@ dist_m4data_DATA = \
 	slc.m4 \
 	slctests.m4
 
+dist_pkgdata_DATA = sl.mk slctests.mk slcvars.mk
+

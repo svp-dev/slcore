@@ -1,5 +1,44 @@
 2009-08-25  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	Start to emancipate `slc'.
+
+	* slc: Rename to...
+	* slc/tools: ...here.
+
+	* build-aux: Rename to...
+	* slc/build-aux: ...here.
+
+	* slc/build-aux/slc.m4,
+	* tests/configure.ac,
+	* programs/configure.ac: Update paths accordingly.
+
+	* m4,
+	* doc,
+	* lib: Rename to...
+	* slc/m4,
+	* slc/doc,
+	* slc/lib: ...here.
+
+	* configure.ac,
+	* Makefile.am: Move slc-specific rules to...
+	* slc/configure.ac,
+	* slc/Makefile.am: ...here.
+	
+	* configure.ac,
+	* Makefile.am: Simplify. Add new config subdir `slc'.
+
+	* slc/build-aux/sl.mk: Extract variable definitions into...
+	* slc/build-aux/slcvars.mk: ...here.
+
+	* Makefile.am: Use `slcvars.mk' instead of `sl.mk' to avoid a
+	dependency on `SLC_CHECK_TARGETS'.
+	
+	* slc/build-aux/Makefile.am: Distribute the .mk files.
+
+	* slc/boostrap: New.
+	
+2009-08-25  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	Minor packaging fixes.
 
 	* programs/benchmarks/fft/Makefile.am: Clean up generated headers
