@@ -1,5 +1,11 @@
 2009-08-25  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	Minor packaging fix.
+	
+	* slc/configure.ac: Run `AC_PROG_LN_S' since it is needed here.
+
+2009-08-25  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	Start to emancipate `slc'.
 
 	* slc: Rename to...
