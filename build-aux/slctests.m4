@@ -2,6 +2,11 @@ AC_DEFUN([AC_SLC_TESTS],
 [dnl
 AC_REQUIRE([SLC_CHECK_TARGETS])
 
+AC_ARG_ENABLE([testsuite],
+[AC_HELP_STRING([--enable-testsuite], [activate unit tests for features and regressions (default is enabled)])], 
+[], [enable_testsuite=yes])
+AM_CONDITIONAL([ENABLE_TESTSUITE], [test "x$enable_testsuite" = "xyes"])
+
 AC_ARG_ENABLE([xfail-tests],
 [AC_HELP_STRING([--enable-xfail-tests], [activate unit tests for error detection (default is disabled)])], 
 [], [enable_xfail_tests=no])

@@ -1,5 +1,16 @@
 2009-08-25  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	Sanitize build options.
+
+	* build-aux/slc.m4: Explicitly indicate that `--with-slc'
+	overrides the local sources if it is provided.
+
+	* build-aux/slctests.m4: Enable the testsuite by default.
+
+	* Makefile.am: Use the new option name `--disable-build-programs'.
+	
+2009-08-25  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	Provide `bootstrap' scripts in sub-projects.
 	
 	* bootstrap: Simplify, and duplicate useful parts to...

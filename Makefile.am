@@ -75,6 +75,6 @@ show-vars:
 	done
 	@echo "export PATH=$(abs_top_builddir)/slc/bin:$$PATH;"
 
-DISTCHECK_CONFIGURE_FLAGS = --enable-testsuite --disable-demos
+DISTCHECK_CONFIGURE_FLAGS = --enable-testsuite --disable-build-programs
 
 ACLOCAL_AMFLAGS = -I build-aux -I m4

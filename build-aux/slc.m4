@@ -118,6 +118,9 @@ AC_DEFUN([AC_WITH_SLC],
     if test "x$SLC_BASE" != x; then
       AC_MSG_WARN([using $slc_cv_user_hint instead of $SLC_BASE])
     fi
+    if test "x$slc_cv_local_src" != xno; then
+      AC_MSG_WARN([using $slc_cv_user_hint instead of local sources])
+    fi
     SLC_BASE=$slc_cv_user_hint
   elif test "x$slc_cv_local_src" != xno; then
     if test "x$SLC_BASE" != x; then
