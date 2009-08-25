@@ -1,5 +1,11 @@
 2009-08-25  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	Rename the package to `sl-core'.
+
+	* configure.ac: Change package name.
+
+2009-08-25  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	* ChangeLog: initialize.
 
 See `ChangeLog.1' for earlier changes.
