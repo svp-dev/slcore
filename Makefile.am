@@ -48,8 +48,6 @@ check-slt:
 	   (cd $$d && $(MAKE) $(AM_MAKEFLAGS) check-slt) \
 	done
 
-if MAINTAINER_MODE
-
 find_sources = \
 	find $(srcdir)/slc $(srcdir)/lib $(srcdir)/programs \
 	  -name '*.h' \
@@ -63,9 +61,8 @@ find_sources = \
 rehead:
 	$(find_sources) | xargs perl $(srcdir)/reheader.pl
 
-endif
-
 include $(srcdir)/build-aux/sl.mk
+
 show-vars:
 	@echo
 	@echo ": Set the following to work from the source directory;"

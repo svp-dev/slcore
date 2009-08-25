@@ -1,5 +1,21 @@
 2009-08-25  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	Minor packaging fixes.
+
+	* programs/benchmarks/fft/Makefile.am: Clean up generated headers
+	on `distclean'. Simplify.
+
+2009-08-25  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
+	Get rid of Automake's "maintainer mode".
+
+	* configure.ac,
+	* Makefile.am,
+	* tools/bin/Makefile.am: Do not use MAINTAINER_MODE. (Be optimistic
+	about the behavior of `missing' when `help2man' does not exist.)
+
+2009-08-25  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	Homogeneize use of `build-aux'.
 
 	Each independent part of the source tree should now expect the

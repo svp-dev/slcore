@@ -18,7 +18,6 @@ AC_CONFIG_AUX_DIR([build-aux])
 AM_INIT_AUTOMAKE([1.11 tar-ustar no-define foreign dist-bzip2
                   color-tests silent-rules parallel-tests])
 
-AM_MAINTAINER_MODE
 AM_SILENT_RULES([yes])
 
 ######### Required features #########
