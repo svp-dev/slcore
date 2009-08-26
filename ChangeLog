@@ -1,5 +1,12 @@
 2009-08-25  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	Minor packaging fixes.
+
+	* programs/benchmarks/fft/Makefile.am: Clean up generated headers
+	on `distclean'. Simplify.
+
+2009-08-25  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	Get rid of Automake's "maintainer mode".
 
 	* configure.ac,
