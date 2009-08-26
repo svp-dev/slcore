@@ -13,7 +13,7 @@
 
 # 
 
-SUBDIRS = . tools lib doc
+SUBDIRS = build-aux tools lib doc
 
 README: $(srcdir)/doc/README.txt
 	$(AM_V_at)rm -f $@

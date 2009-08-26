@@ -1,3 +1,4 @@
+
 m4datadir = $(datadir)/aclocal
 dist_m4data_DATA = \
 	mgbinutils.m4 \
@@ -7,4 +8,6 @@ dist_m4data_DATA = \
 	slctests.m4
 
 dist_pkgdata_DATA = sl.mk slctests.mk slcvars.mk
+bin_SCRIPTS = sl-init-autoconf
+
 
