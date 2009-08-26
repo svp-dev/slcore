@@ -1,5 +1,12 @@
 2009-08-26  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	Minor packaging fixes.
+	
+	* build-aux/slc.m4: Fail if the SL tools cannot be found. Use
+	`sl-core' instead of `slc' to fetch installed files from.
+
+2009-08-26  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	Make package more reusable for other trees.
 
 	There are two ways the parts of the source tree can be used:

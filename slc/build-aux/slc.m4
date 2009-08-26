@@ -141,12 +141,14 @@ AC_DEFUN([AC_WITH_SLC],
     CM4=$base_build/tools/bin/cm4
     SLC_LOCAL=$base_build/tools/bin/slc
     SLC_BASE=
+  elif test "x$SLC_BASE" = x; then
+    AC_MSG_ERROR([Cannot find the SL toolchain. Use --with-slc or set SLC_BASE.])
   fi
   AC_ARG_VAR([SLC_BASE], [base SLC installation directory (should be autodetected)])
   if test "x$SLC_BASE" != x; then
-    SLC_LIBDIR=$SLC_BASE/lib/slc
-    SLC_INCDIR=$SLC_BASE/share/slc/include
-    SLC_DATADIR=$SLC_BASE/share/slc
+    SLC_LIBDIR=$SLC_BASE/lib/sl-core
+    SLC_INCDIR=$SLC_BASE/share/sl-core/include
+    SLC_DATADIR=$SLC_BASE/share/sl-core
     SPP=$SLC_BASE/bin/spp
     SCU=$SLC_BASE/bin/scu
     SAG=$SLC_BASE/bin/sag
