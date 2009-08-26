@@ -1,3 +1,9 @@
+2009-08-26  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
+	Make package less dependent on the base tree.
+	
+	* bootstrap: Make less verbose. Use the new `sl-init-autoconf'.
+
 2009-08-25  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
 	* ChangeLog: initialize.
