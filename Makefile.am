@@ -39,8 +39,6 @@ check-slt:
 	   (cd $$d && $(MAKE) $(AM_MAKEFLAGS) check-slt) \
 	done
 
-if MAINTAINER_MODE
-
 find_sources = \
 	find $(srcdir)/tools $(srcdir)/lib $(srcdir)/programs \
 	  -name '*.h' \
@@ -53,8 +51,6 @@ find_sources = \
 # Update copyright notice.
 rehead:
 	$(find_sources) | xargs perl $(srcdir)/reheader.pl
-
-endif
 
 include $(top_srcdir)/sl.mk
 show-vars:
