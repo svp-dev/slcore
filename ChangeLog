@@ -1,3 +1,10 @@
+2009-08-26  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
+	Minor packaging fix.
+	
+	* bootstrap: Use the new `sl-init-autoconf' script. Be less
+	verbose.
+
 2009-08-25  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
 	Rename the top-level package to `sl'.

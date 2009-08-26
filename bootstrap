@@ -2,8 +2,9 @@
 # slc, a SVP generic compiler.
 # Copyright (C) 2009 The CSA group, The SL project.
 
-set -ex
+set -e
 
+echo "Detecting which Autotools to use..."
 # Some systems ship both the latest Automake and
 # an older version, and default to the older. Try
 # to detect this.
@@ -18,6 +19,8 @@ else
   AUTORECONF=autoreconf
 fi
 
+slc/build-aux/sl-init-autoconf tests/build-aux
+slc/build-aux/sl-init-autoconf programs/build-aux
 (cd tests && ./build-aux/mkalltests.sh)
 (cd programs/benchmarks/livermore && ./genmk.sh)
 $AUTORECONF -v -f -i
