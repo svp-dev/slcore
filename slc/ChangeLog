@@ -1,5 +1,14 @@
 2009-08-26  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	Fix packaging. This allows `make distcheck' to succeed.
+
+	* build-aux/Makefile.am: Distribute `sl-init-autoconf'.
+
+	* tools/bin/Makefile.am: Fix manpage dependencies to please
+	`distcleancheck'.
+
+2009-08-26  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	Minor packaging fixes.
 	
 	* build-aux/slc.m4: Fail if the SL tools cannot be found. Use

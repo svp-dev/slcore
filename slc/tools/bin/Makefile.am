@@ -44,7 +44,7 @@ edit_scripts = $(SED) \
 	       -e 's|@slc_revision[@]|$(SVN_REVISION)|g' \
 	       -e 's|@bugreports[@]|$(PACKAGE_BUGREPORT)|g'
 
-cce slr slc slt timeout slt-many cm4: $(top_srcdir)/ChangeLog
+cce slr slc slt timeout slt-many cm4: $(top_srcdir)/configure.ac
 	$(AM_V_at)rm -f $@ $@.tmp
 	$(AM_V_GEN)$(edit_scripts) $(srcdir)/$@.in >$@.tmp
 	$(AM_V_at)chmod +x $@.tmp
@@ -64,13 +64,15 @@ cm4: cm4.in
 #
 dist_man1_MANS = cce.1 slc.1 slr.1 slt.1 slt-many.1
 
-cce.1 slc.1 slr.1 slt.1 slt-many.1:
-	$(HELP2MAN) -N --output=$@ `test -r $(srcdir)/$(@:.1=) && echo $(srcdir) || echo .`/$(@:.1=)
+cce.1 slc.1 slr.1 slt.1 slt-many.1: $(top_srcdir)/configure.ac
+	$(AM_V_at)$(MAKE) $(AM_MAKEFLAGS) $(@:.1=)
+	$(AM_V_GEN)$(HELP2MAN) -N --output=$@ \
+	    `test -r $(srcdir)/$(@:.1=) && echo $(srcdir) || echo .`/$(@:.1=)
 
-cce.1: cce
-slc.1: slc
-slr.1: slr
-slt.1: slt
-slt-many.1: slt-many
+cce.1: cce.in
+slc.1: slc.in
+slr.1: slr.in
+slt.1: slt.in
+slt-many.1: slt-many.in
 
 MAINTAINERCLEANFILES = $(dist_man1_MANS)
