@@ -1,0 +1,18 @@
+2009-08-26  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
+	Minor packaging fixes.
+
+	* benchmarks/livermore/genmk.sh: Be more verbose.
+
+2009-08-26  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
+	Make package less dependent on the base tree.
+	
+	* bootstrap: Make less verbose. Use the new `sl-init-autoconf'.
+
+2009-08-25  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
+	* ChangeLog: initialize.
+
+See `slc/ChangeLog.1' for earlier changes.
+

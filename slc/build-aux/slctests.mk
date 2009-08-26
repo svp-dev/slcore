@@ -11,7 +11,7 @@
 ## `COPYING' file in the root directory.
 ##
 
-include $(top_srcdir)/sl.mk
+include $(top_srcdir)/build-aux/sl.mk
 
 EXTRA_TEST_IMPL =
 
@@ -20,15 +20,11 @@ EXTRA_TEST_IMPL += ptl
 endif
 
 if ENABLE_CHECK_PPP
-if ENABLE_MTALPHA
 EXTRA_TEST_IMPL += ppp::-n~1 ppp
-endif
 endif
 
 if ENABLE_CHECK_UTC
-if ENABLE_MTALPHA
 EXTRA_TEST_IMPL += utc0:-O0 utc0:-O1 utcx
-endif
 endif
 
 SLT_IMPL_LIST ?= seqc $(EXTRA_TEST_IMPL)
@@ -38,7 +34,7 @@ SL_LOG_COMPILER = \
 	$(SLC_VARS) SRCDIR=$(srcdir) \
 	SLT_IMPL_LIST="$(SLT_IMPL_LIST)" \
 	DUMP_LOGS=1 TEXT_ONLY=1 SEQUENTIAL=1 \
-	$(BASH) $(abs_top_builddir)/tools/bin/slt
+	$(BASH) $(SLT)
 
 C_LOG_COMPILER = $(SL_LOG_COMPILER)
 
@@ -46,7 +42,7 @@ C_LOG_COMPILER = $(SL_LOG_COMPILER)
 check-slt: $(check_DATA) $(TESTS)
 	-echo; echo "Current directory:" `pwd`
 	$(AM_V_at)$(SLC_VARS) SLT_IMPL_LIST="$(SLT_IMPL_LIST)" SRCDIR=$(srcdir) \
-	    $(top_builddir)/tools/bin/slt-many \
+	    $(SLT_MANY) \
 	    `for t in $(TESTS); do if test -r $$t; then echo $$t; else echo $(srcdir)/$$t; fi; done`
 
 clean-local:

@@ -11,33 +11,18 @@
 ## `COPYING' file in the root directory.
 ##
 
-# 
-DEMOS = blas-test-saxpy.c
-TESTS = $(DEMOS)
+include $(srcdir)/build-aux/alltests.mk
+EXTRA_DIST = $(TESTSUITE) $(XTESTSUITE)
 
-EXTRA_DIST = \
-	templates/xaxpy.c \
-	templates/xaxpyc.c \
-	templates/xdot.c \
-	templates/xdotc.c \
-	blas_complex.h \
-	caxpy.c \
-	cdotc.c \
-	cdotu.c \
-	daxpy.c \
-	ddot.c \
-	saxpy.c \
-	sdot.c \
-	zaxpy.c \
-	zdotc.c \
-	zdotu.c \
-	$(DEMOS)
-
-
-include $(top_srcdir)/build-aux/slctests.mk
-
-if ENABLE_DEMOS
-noinst_DATA = $(DEMOS:.c=.x)
-CLEANFILES = $(DEMOS:.c=.x) $(DEMOS:.c=.bin.*)
+if ENABLE_TESTSUITE
+TESTS = $(TESTSUITE)
+if ENABLE_XFAIL_TESTS
+TESTS += $(XTESTSUITE)
+endif
 endif
 
+include $(srcdir)/build-aux/slctests.mk
+
+EXTRA_DIST += 1_slr/fibre.c.d
+
+ACLOCAL_AMFLAGS = -I build-aux

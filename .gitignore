@@ -1,7 +1,7 @@
 Makefile.in
 Makefile
-configure
 build-aux
+configure
 autom4te.cache
 aclocal.m4
 build
