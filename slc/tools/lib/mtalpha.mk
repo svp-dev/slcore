@@ -9,7 +9,7 @@ nobase_dist_pkgdata_DATA += \
 	t-pppalpha/slimpl.m4 \
 	t-pppalpha/include/sl_support.h
 
-if ENABLE_MTALPHA
+if ENABLE_SLC_MTALPHA
 
 nobase_pkglib_DATA += \
 	mtalpha-sim/slrt.o \

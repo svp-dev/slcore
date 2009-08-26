@@ -12,32 +12,17 @@
 ##
 
 # 
-DEMOS = blas-test-saxpy.c
-TESTS = $(DEMOS)
 
-EXTRA_DIST = \
-	templates/xaxpy.c \
-	templates/xaxpyc.c \
-	templates/xdot.c \
-	templates/xdotc.c \
-	blas_complex.h \
-	caxpy.c \
-	cdotc.c \
-	cdotu.c \
-	daxpy.c \
-	ddot.c \
-	saxpy.c \
-	sdot.c \
-	zaxpy.c \
-	zdotc.c \
-	zdotu.c \
-	$(DEMOS)
+SUBDIRS = build-aux tools lib doc
 
+README: $(srcdir)/doc/README.txt
+	$(AM_V_at)rm -f $@
+	$(AM_V_GEN)cp $(srcdir)/doc/README.txt $@
+	$(AM_V_at)chmod -w $@
 
-include $(top_srcdir)/build-aux/slctests.mk
+NEWS: $(srcdir)/doc/NEWS.txt
+	$(AM_V_at)rm -f $@
+	$(AM_V_GEN)cp $(srcdir)/doc/NEWS.txt $@
+	$(AM_V_at)chmod -w $@
 
-if ENABLE_DEMOS
-noinst_DATA = $(DEMOS:.c=.x)
-CLEANFILES = $(DEMOS:.c=.x) $(DEMOS:.c=.bin.*)
-endif
-
+ACLOCAL_AMFLAGS = -I build-aux -I m4

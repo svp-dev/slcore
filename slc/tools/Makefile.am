@@ -1,4 +1,4 @@
-SUBDIRS = bin . lib tests
+SUBDIRS = bin . lib
 
 nobase_dist_pkgdata_DATA = \
 	include/slc.m4 \

@@ -1,4 +1,4 @@
-## Makefile.am: this file is part of the SL toolchain.
+## slcvars.mk: this file is part of the SL toolchain.
 ## 
 ## Copyright (C) 2009 The SL project
 ##
@@ -11,18 +11,17 @@
 ## `COPYING' file in the root directory.
 ##
 
-# 
+SLC_VARS = \
+	SLC_INCDIR=$(SLC_INCDIR) \
+	SLC_LIBDIR=$(SLC_LIBDIR) \
+	SLC_DATADIR=$(SLC_DATADIR) \
+	SPP=$(SPP) \
+	SCU=$(SCU) \
+	SAG=$(SAG) \
+	CCE=$(CCE) \
+	SLR=$(SLR) \
+	SLT=$(SLT) \
+	CM4=$(CM4) \
+	SLC=$(SLC_LOCAL)
 
-include $(srcdir)/alltests.mk
-EXTRA_DIST = $(TESTSUITE) $(XTESTSUITE)
-
-if ENABLE_TESTSUITE
-TESTS = $(TESTSUITE)
-if ENABLE_XFAIL_TESTS
-TESTS += $(XTESTSUITE)
-endif
-endif
-
-include $(top_srcdir)/tests.mk
-
-EXTRA_DIST += 0_slr/fibre.c.d
+SLC_RUN = $(SLC_VARS) $(SLC_LOCAL)

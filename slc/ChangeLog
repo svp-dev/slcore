@@ -1,0 +1,55 @@
+2009-08-26  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
+	Fix packaging. This allows `make distcheck' to succeed.
+
+	* build-aux/Makefile.am: Distribute `sl-init-autoconf'.
+
+	* tools/bin/Makefile.am: Fix manpage dependencies to please
+	`distcleancheck'.
+
+2009-08-26  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
+	Minor packaging fixes.
+	
+	* build-aux/slc.m4: Fail if the SL tools cannot be found. Use
+	`sl-core' instead of `slc' to fetch installed files from.
+
+2009-08-26  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
+	Make package more reusable for other trees.
+
+	There are two ways the parts of the source tree can be used:
+	either together as sub-trees of the "base" package, or
+	independently of the base package after the `sl-core' package was
+	installed somewhere on the system.
+
+	In the former case the tools and makefile rules can be picked up
+	relative to the directory where they are reused; in the latter
+	case they must pick them up from some agreed-upon install
+	location.
+
+	The new `sl-init-autoconf' script implements this protocol by
+	fetching the aclocal and Makefile rules (.mk) from the "nearest"
+	location, either a source tree "nearby" (next to the
+	`sl-init-autoconf' script itself) or from the install locations.
+
+	* build-aux/sl-init-autoconf: New.
+	
+	* build-aux/Makefile.am: Install `sl-init-autoconf'. Also install
+	the `.mk' files to some location where `sl-init-autoconf' can find
+	them.
+
+	* Makefile.am: Recurse into `build-aux'.
+	
+2009-08-25  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
+	Rename the package to `sl-core'.
+
+	* configure.ac: Change package name.
+
+2009-08-25  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
+	* ChangeLog: initialize.
+
+See `ChangeLog.1' for earlier changes.
+

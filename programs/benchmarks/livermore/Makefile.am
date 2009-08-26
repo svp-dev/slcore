@@ -60,7 +60,7 @@ include $(srcdir)/ll.mk
 
 TESTS = $(DEMOS)
 
-include $(top_srcdir)/tests.mk
+include $(top_srcdir)/build-aux/slctests.mk
 
 if ENABLE_DEMOS
 noinst_DATA = $(DEMOS:.c=.x)

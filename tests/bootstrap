@@ -19,10 +19,14 @@ else
   AUTORECONF=autoreconf
 fi
 
-slc/build-aux/sl-init-autoconf tests/build-aux
-slc/build-aux/sl-init-autoconf programs/build-aux
-(cd tests && ./build-aux/mkalltests.sh)
-(cd programs/benchmarks/livermore && ./genmk.sh)
+if test -x ../slc/build-aux/sl-init-autoconf; then
+   ../slc/build-aux/sl-init-autoconf
+else
+   sl-init-autoconf
+fi
+
+./build-aux/mkalltests.sh
 $AUTORECONF -v -f -i
 
 echo "Reconfiguration done."
+
