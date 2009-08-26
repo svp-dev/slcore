@@ -64,12 +64,8 @@ cm4: cm4.in
 #
 dist_man1_MANS = cce.1 slc.1 slr.1 slt.1 slt-many.1
 
-if MAINTAINER_MODE
-
 cce.1 slc.1 slr.1 slt.1 slt-many.1:
-	rm -f $@
-	$(HELP2MAN) -N --output=$@.tmp `test -r $(srcdir)/$(@:.1=) && echo $(srcdir) || echo .`/$(@:.1=)
-	mv $@.tmp $@
+	$(HELP2MAN) -N --output=$@ `test -r $(srcdir)/$(@:.1=) && echo $(srcdir) || echo .`/$(@:.1=)
 
 cce.1: cce
 slc.1: slc
@@ -78,5 +74,3 @@ slt.1: slt
 slt-many.1: slt-many
 
 MAINTAINERCLEANFILES = $(dist_man1_MANS)
-
-endif
