@@ -45,15 +45,14 @@ extern void __sl_callgate(void);
   do {									\
     long __fid;								\
     __asm__ __volatile__("allocate %0, 0, 0, 0, 0\n"			\
-			 "\tsetstart %0, %1\n"				\
-			 "\tsetlimit %0, %2\n"				\
-			 "\tsetplace %0, %3\n"				\
+			 "\tsetstart %0, %2\n"				\
+			 "\tsetlimit %0, %3\n"				\
 			 "\tcrei %0, 0(%4)\n"				\
 			 "\tmov %0, $31 #SYNC\n"			\
 			 : "=&r"(__fid)					\
-			 : "rI"((&(Info))+1),				\
+			 : "0"(Place),					\
+			   "rI"((&(Info))+1),				\
 			   "rI"(((char*)(void*)((&(Info))+1))+1),	\
-			   "rI"(Place),					\
 			   "r"(__sl_callgate)				\
 			 : "memory");					\
   } while(0);

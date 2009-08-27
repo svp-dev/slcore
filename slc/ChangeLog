@@ -1,3 +1,22 @@
+2009-08-27  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
+	MT-Alpha ISA change: `allocate' takes the place identifier as input.
+
+	Creates using the default place must flush the register passed to
+	`allocate'. `setplace' disappears.
+
+	* tools/lib/t-pppalpha/include/sl_support.h,
+	* tools/lib/mtalpha-sim/main.c,
+	* lib/src/callgate.h,
+	* lib/src/mtalpha/mtdiv.s,
+	* tools/bin/spp (pppalpha.create, pppalpha.remdefaults,
+	pppalpha.rewritejsr): Pass the place identifier as input to
+	`allocate'. Do not use `setplace' any more.
+
+	* tools/bin/spp (pppalpha.addswchll): Recognize that `allocate'
+	reads its parameter. Also recognize that `clr' and `fclr' make the
+	target register immediately available for reading.
+	
 2009-08-26  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
 	Fix packaging. This allows `make distcheck' to succeed.

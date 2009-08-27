@@ -452,7 +452,7 @@ class pppalpha(object):
       else: # no break
          cri = shibase + nrargregs['shi']
 
-      print "__sl_allocate(%s, %d, %d, %d, %d);" % \
+      print "__sl_allocate(%s, _sl_place, %d, %d, %d, %d);" % \
           (tag, glibase, shibase, glfbase, shfbase)
 
 
@@ -526,7 +526,6 @@ class pppalpha(object):
          wregs.append('__sl_br_%s' % tag)
 
       print """
-      __sl_setplace(__sl_tag, _sl_place);
       __sl_setstart(__sl_tag, _sl_start);
       __sl_setlimit(__sl_tag, _sl_limit);
       __sl_setstep(__sl_tag, _sl_step);
@@ -1078,7 +1077,6 @@ class pppalpha(object):
          yield (type, content, comment)
    
    def remdefaults(self, fundata, items):
-      resp = re.compile(r'setplace \$l?\d+,\s*0\s*$')
       resb = re.compile(r'setstart \$l?\d+,\s*0\s*$')
       resl = re.compile(r'setlimit \$l?\d+,\s*1\s*$')
       ress = re.compile(r'setstep \$l?\d+,\s*1\s*$')
@@ -1086,8 +1084,7 @@ class pppalpha(object):
       justignored = False
       for (type, content, comment) in items:
          if type == 'other' and \
-            (resp.match(content) is not None \
-                   or resb.match(content) is not None \
+                (resb.match(content) is not None \
                    or resl.match(content) is not None \
                    or ress.match(content) is not None \
                    or resbl.match(content) is not None):
@@ -1201,6 +1198,7 @@ class pppalpha(object):
                yield ('empty','','MT: br call begin: %s' % content)
                yield ('other','lda $l%d, %d($l31)' % (rareg, protocol), 'RA <- nr_call_regs')
                yield ('other','stq $l%d, -8($l%d)' % (rareg, spreg), '.protocol := RA (nr_call_regs)')
+               yield ('other','clr $l%d' % rareg, 'use default place')
                yield ('other','allocate $l%d, 0, 0, 0, 0' % rareg, 'RA <- fid')
                yield ('other','ldah $l%d, %s($l%d) !gprelhigh' % (pvreg, lbl, gpreg), 'PV <- target')
                yield ('other','lda $l%d, %s($l%d) !gprellow' % (pvreg, lbl, pvreg), 'PV <- target')
@@ -1231,6 +1229,7 @@ class pppalpha(object):
                yield ('empty','','MT: bsr call begin: %s' % content)
                yield ('other','lda $l%d, %d($l31)' % (ra, protocol), 'RA <- nr_call_regs')
                yield ('other','stq $l%d, -8($l%d)' % (ra, spreg), '.protocol := RA (nr_call_regs)')
+               yield ('other','clr $l%d' % ra, 'use default place')
                yield ('other','allocate $l%d, 0, 0, 0, 0' % ra, 'RA <- fid')
                yield ('other','ldah $l%d, %s($l%d) !gprelhigh' % (pvreg, lbl, gpreg), 'PV <- target')
                yield ('other','lda $l%d, %s($l%d) !gprellow' % (pvreg, lbl, pvreg), 'PV <- target')
@@ -1268,6 +1267,7 @@ class pppalpha(object):
                yield ('empty','','MT: jsr call begin: %s' % content)
                yield ('other','lda $l%d, %d($l31)' % (ra, protocol), 'RA <- nr_call_regs')
                yield ('other','stq $l%d, -8($l%d)' % (ra, spreg), '.protocol := RA (nr_call_regs)')
+               yield ('other','clr $l%d' % ra, 'use default place')
                yield ('other','allocate $l%d, 0, 0, 0, 0' % ra, 'RA <- fid')
                yield ('other','stq $l%d, -16($l%d)' % (pv, spreg), '.fptr := PV')
                arg_offset = -24
@@ -1526,9 +1526,9 @@ class pppalpha(object):
       re1way = re.compile(r'\w+\s([^,]+)$')
       re2way = re.compile(r'(?:mov|cvt\S*|itof\S*|ftoi\S*)\s([^,]+),([^,]+)$')
       rexway = re.compile(r'\w+\s([^,]+),(.*)')
-      reld = re.compile(r'(ld[lqts]|ld[bw]u|allocate)')
+      reld = re.compile(r'(ld[lqts]|ld[bw]u)')
       re3wayll = re.compile(r'(add|sub|mul|div|sqrt)[fgts]')
-      w1way = re.compile(r'(setempty|rpcc|ldfp)')
+      w1way = re.compile(r'(setempty|rpcc|ldfp|f?clr)')
       jre = self.jre
 
       allregs = set(['$l%d' % x for x in xrange(31 - self.iargregs) if x not in (17, 18)] + \
@@ -1608,7 +1608,9 @@ class pppalpha(object):
                elif content.startswith('lda') or content.startswith('ldgp'):
                   #print "FOO"
                   shortwrites.append(r1)
-               elif content.startswith('cred') or content.startswith('crei'):
+               elif content.startswith('cred') \
+                      or content.startswith('crei') \
+                      or content.startswith('allocate'):
                   longwrites.append(r1)
                   reads.append(r1)
                else:

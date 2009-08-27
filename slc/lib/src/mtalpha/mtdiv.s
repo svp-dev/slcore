@@ -15,6 +15,7 @@
 __divmodqu:
    .registers 0 2 4 0 0 0
 
+   clr $l3
    allocate $l3, 0, 1, 0, 0
 
    # Find the highest set bit
@@ -24,7 +25,6 @@ __divmodqu:
    mov     $d0, $l1; swch     # $l1 = dividend
 
    setlimit $l3, $l2; swch
-   setplace $l3, 0
    clr     $l2                # $l2 = answer
    cred    $l3,__divmodqu_loop
    mov     $l3, $31; swch
@@ -67,6 +67,7 @@ __divmodqu_loop:
 __divmodqs:
    .registers 0 2 6 0 0 0
 
+   clr $l5
    allocate $l5, 0, 1, 0, 0
 
    negq      1, $l3            # $l3 = invsign
@@ -91,7 +92,6 @@ __divmodqs:
    ctlz    $l2, $l2           # $l2 = shiftcount
 
    setlimit $l5, $l2; swch
-   setplace $l5, 0
 
    subq    $l2,   1, $l2
    sll     $l0, $l2, $l0      # $l0 = divisor

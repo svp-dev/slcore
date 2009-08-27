@@ -73,11 +73,11 @@
 [[#]]define __sl_epilogue(Name, ArgSpec)		\
   __sl_end_thread: (void)0; }
 
-[[#]]define __sl_allocate(Tag, GI, SI, GF, SF)				\
+[[#]]define __sl_allocate(Tag, Place, GI, SI, GF, SF)			\
   register long __sl_fid_ ## Tag;					\
-  __asm__ __volatile__ ("allocate %0, %1, %2, %3, %4\t# CREATE " #Tag \
-			: "=r"(__sl_fid_ ## Tag)		      \
-			: "I"(GI), "I"(SI), "I"(GF), "I"(SF))
+  __asm__ __volatile__ ("allocate %0, %2, %3, %4, %5\t# CREATE" #Tag	\
+			: "=r"(__sl_fid_ ## Tag)			\
+			: "0"(Place), "I"(GI), "I"(SI), "I"(GF), "I"(SF))
 
 [[#]]define __sl_setstart(Tag, Start) \
   __asm__ ("setstart %0, %2\t# CREATE " #Tag		\
@@ -88,11 +88,6 @@
   __asm__ ("setlimit %0, %2\t# CREATE " #Tag \
 	   : "=r"(__sl_fid_ ## Tag) \
 	   : "0"(__sl_fid_ ## Tag), "rI"(Limit))
-
-[[#]]define __sl_setplace(Tag, Place) \
-  __asm__ ("setplace %0, %2\t# CREATE " #Tag \
-	   : "=r"(__sl_fid_ ## Tag) \
-	   : "0"(__sl_fid_ ## Tag), "rI"(Place))
 
 [[#]]define __sl_setstep(Tag, Step) \
   __asm__ ("setstep %0, %2\t# CREATE " #Tag \
