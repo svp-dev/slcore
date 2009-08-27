@@ -17,6 +17,9 @@ AC_CONFIG_AUX_DIR([build-aux])
 
 AM_INIT_AUTOMAKE([1.11 tar-ustar no-define foreign dist-bzip2])
 
+SLC_PATH_LOCAL([slc])
+AC_WITH_SLC
+
 AC_CONFIG_FILES([Makefile])
 AC_CONFIG_SUBDIRS([slc])
 AC_CONFIG_SUBDIRS([tests])

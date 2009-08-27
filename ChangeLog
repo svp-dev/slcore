@@ -1,5 +1,16 @@
 2009-08-27  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	Fix rule `show-vars'.
+
+	* configure.ac: Use `AC_WITH_SLC' to ensure the variables are
+	substituted.
+	
+	* Makefile.am: Explain to aclocal where to find
+	`AC_WITH_SLC'. Point `PATH' to the correct location in
+	`show-vars'.
+	
+2009-08-27  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	Update the automated installers in `deploy'.
 
 	This changeset bundles the required patch to GNU M4 and installs

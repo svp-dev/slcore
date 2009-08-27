@@ -60,7 +60,8 @@ show-vars:
 	@for n in $(SLC_VARS); do \
 	   echo "export $$n;"; \
 	done
-	@echo "export PATH=$(abs_top_builddir)/slc/bin:$$PATH;"
+	@echo "export PATH=$(abs_top_builddir)/slc/tools/bin:$$PATH;"
 
+ACLOCAL_AMFLAGS = -I slc/build-aux
 DISTCHECK_CONFIGURE_FLAGS = --enable-testsuite --disable-build-programs
 
