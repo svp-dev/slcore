@@ -1,9 +1,12 @@
 This directory contains tools to help deploy a SL toolchain on a Unix
 box.
 
-The Makefile (Makefile.reqs derived from Makefile-reqs.orig) installs
-the SL toolchain using GNU make. See the comments at the start of the
-file for details.
+Overview
+========
+
+The Makefile installs the SL toolchain using GNU make. The process can
+be customized by copying the .default files, removing the extension
+.default and editing them.
 
 The files are installed in versioned directories so that different
 versions can be installed side-by-side. Once at least one version of
@@ -12,4 +15,34 @@ the toolchain is installed in a PREFIX directory, copy the script
 
 "slenv" provides an interactive menu to select one of the installed
 versions and setup environment variables accordingly.
+
+Process
+=======
+
+1. if necessary, copy the .mk.default files to .mk and edit as needed.
+
+2. run: ``make MAKE_OPTIONS=-jXX``, where XX is the number of cores on
+   the system.
+
+Requirements
+============
+
+The following tools are required:
+
+- C compiler
+- sh (Bourne-Again or POSIX)
+- awk (POSIX or svr4)
+- bzip2 (v1.0.2 or later)
+- gzip (v1.2.4 or later)
+- sed (POSIX or svr4)
+- svn client (v1.4 or later)
+- git client (v1.6 or later)
+- wget / fetch
+- GNU tar (v1.14 or later)
+- GNU GMP (v4.1 or later)
+- GNU MPFR (v2.3.2 or later)
+- GNU make (v3.80 or later)
+- GNU Autoconf (v2.63 or later)
+- GNU Automake (v1.11 or later)
+- GNU Texinfo (v4.13 or later)
 

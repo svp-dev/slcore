@@ -1,3 +1,36 @@
+2009-08-27  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
+	Update the automated installers in `deploy'.
+
+	This changeset bundles the required patch to GNU M4 and installs
+	M4 together with the other SL requirements. The configuration is
+	also simplified.
+
+	* deploy/Makefile-reqs.orig: Split into...
+	* deploy/tools.mk.defaults,
+	* deploy/versions.mk.defaults,
+	* deploy/layout.mk.defaults: ...this.
+
+	* deploy/reqs.mk: Split into...
+	* deploy/Makefile,
+	* deploy/rules/binutils.mk,
+	* deploy/rules/mgsim.mk,
+	* deploy/rules/mggcc.mk,
+	* deploy/rules/sl.mk,
+	* deploy/rules/gcc.mk: ...this.
+
+	* deploy/alpha.h.patch,
+	* deploy/alpha.md.patch,
+	* deploy/constraints.md.patch: Rename to...
+	* deploy/patches/alpha.h.patch,
+	* deploy/patches/alpha.md.patch,
+	* deploy/patches/constraints.md.patch: ...here.
+	
+	* deploy/patches/m4.patch,
+	* deploy/rules/m4.mk: New.
+
+	* deploy/README: Update accordingly.
+	
 2009-08-26  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
 	Minor packaging fix.

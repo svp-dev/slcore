@@ -1,0 +1,28 @@
+# -*- makefile -*-
+# 
+# To customize, make a copy of this file without extension .defaults,
+# then edit the following as needed.
+
+### SVN repository for the tools
+BASE_REPO = https://svn.svp-home.org
+## BASE_REPO = svn+ssh://kena@mac-chris.science.uva.nl/Library/SVN/CSA
+
+### Desired versions for the tools, where to find them
+BINUTILS_REV = 2733
+BINUTILS_REPO = $(BASE_REPO)/sw/svp/mg/binutils/trunk
+
+UTC_GCC_REV = 2727
+UTC_GCC_REPO = $(BASE_REPO)/sw/svp/mg/gcc/branches/mt-ra-shared-branch
+
+MGSIM_REV = 2734
+MGSIM_REPO = $(BASE_REPO)/sw/svp/mg/mgsim/trunk
+
+SLC_REV = 2737
+SLC_REPO = $(BASE_REPO)/sw/svp/sys/trunk/slc
+
+GCC_VERSION = 4.4.1
+GCC_ARCHIVE = gcc-core-$(GCC_VERSION).tar.bz2
+GCC_MIRROR = ftp://ftp.nluug.nl/mirror/languages/gcc/releases/gcc-$(GCC_VERSION)
+
+M4_VERSION = 1.6
+M4_REPO = git://git.sv.gnu.org/m4

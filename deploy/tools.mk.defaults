@@ -1,0 +1,49 @@
+# -*- makefile -*-
+# 
+# To customize, make a copy of this file without extension .defaults,
+# then edit the following as needed.
+
+####
+#### What tools can be used to download?
+####
+
+## Download a file using HTTP:
+FETCH = wget
+
+## Fetch a Subversion repository
+SVN = svn
+
+## SVN with a specific username:
+# SVN = svn --username=kena
+
+## GNU tar:
+TAR = tar
+
+####
+#### Where can GMP be found? 
+####
+
+## Default: no special flag required to GCC's configure;
+## libgmp is installed in the system-wide default location.
+GMP_CONF =
+
+## libgmp is installed in the home directory:
+## GMP_CONF = --with-gmp=$(HOME)/opt
+
+## libgmp is available via MacPorts:
+## GMP_CONF = --with-gmp=/opt/local
+
+####
+#### Where can MPFR be found? 
+####
+
+## Default: no special flag required to GCC's configure;
+## libmpfr is installed in the system-wide default location.
+MPFR_CONF =
+
+## libmpfr is installed in the home directory:
+## MPFR_CONF = --with-mpfr=$(HOME)/opt
+
+## libmpfr is available via MacPorts:
+## MPFR_CONF = --with-mpfr=/opt/local
+

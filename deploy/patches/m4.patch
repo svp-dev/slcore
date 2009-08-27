@@ -1,0 +1,142 @@
+diff --git a/doc/m4.texinfo b/doc/m4.texinfo
+index 248bb57..7ce9543 100644
+--- a/doc/m4.texinfo
++++ b/doc/m4.texinfo
+@@ -7740,11 +7740,12 @@
+ Line numbers start at 1 for each file.  If the file was found due to the
+ @option{-I} option or @env{M4PATH} environment variable, that is
+ reflected in the file name.  The syncline option (@option{-s},
+-@pxref{Preprocessor features, , Invoking m4}), and the
+-@samp{f} and @samp{l} flags of @code{debugmode} (@pxref{Debugmode}),
+-also use this notion of current file and line.  Redefining the three
+-location macros has no effect on syncline, debug, warning, or error
+-message output.
++@pxref{Preprocessor features, , Invoking m4}), and the @samp{f} and
++@samp{l} flags of @code{debugmode} (@pxref{Debugmode}), also use this
++notion of current file and line.  Redefining the three location macros
++has no effect on syncline, debug, warning, or error message output,
++although the line numbers and file names can be reset as described
++below.
+ 
+ This example reuses the file @file{incl.m4} mentioned earlier
+ (@pxref{Include}):
+@@ -7802,6 +7803,34 @@
+ @result{}12
+ @end example
+ 
++The @code{@w{__file__}} and @code{@w{__line__}} macros take an optional
++argument which allow to reset the current input file name and line
++number, respectively. If @option{-s} is enabled, a synchronization line
++will be emitted at the next newline in the input. Input line numbers
++will autoincrement from the new value, and the file name will stay
++active for the current input source until the input source is exhausted
++or the name is reset again. This feature can be used when the input to
++M4 already contains synchronization information, as when M4 is used as a
++filter between a preprocessor and a compiler.
++
++@comment options: -s
++@example
++$ @kbd{m4 -s}
++foo __line__(42)bar __line__
++baz __line__
++__line__
++@result{}#line 1 "stdin"
++@result{}foo bar 42
++@result{}#line 43
++@result{}baz 43
++@result{}44
++foo __file__(`newname')bar __file__
++baz __file__
++@result{}foo bar newname
++@result{}#line 46 "newname"
++@result{}baz newname
++@end example
++
+ The @code{@w{__program__}} macro behaves like @samp{$0} in shell
+ terminology.  If you invoke @code{m4} through an absolute path or a link
+ with a different spelling, rather than by relying on a @env{PATH} search
+diff --git a/src/builtin.c b/src/builtin.c
+index 0badfd8..835e520 100644
+--- a/src/builtin.c
++++ b/src/builtin.c
+@@ -1701,17 +1701,31 @@ m4_errprint (struct obstack *obs, int argc, macro_arguments *argv)
+ static void
+ m4___file__ (struct obstack *obs, int argc, macro_arguments *argv)
+ {
+-  bad_argc (arg_info (argv), argc, 0, 0);
+-  obstack_grow (obs, curr_quote.str1, curr_quote.len1);
+-  obstack_grow (obs, current_file, strlen (current_file));
+-  obstack_grow (obs, curr_quote.str2, curr_quote.len2);
++  bad_argc (arg_info (argv), argc, 0, 1);
++  if (argc > 1)
++    reset_file (ARG (1));
++  else
++    {
++      obstack_grow (obs, curr_quote.str1, curr_quote.len1);
++      obstack_grow (obs, current_file, strlen (current_file));
++      obstack_grow (obs, curr_quote.str2, curr_quote.len2);
++    }
+ }
+ 
+ static void
+ m4___line__ (struct obstack *obs, int argc, macro_arguments *argv)
+ {
+-  bad_argc (arg_info (argv), argc, 0, 0);
+-  shipout_int (obs, current_line);
++  int line;
++
++  bad_argc (arg_info (argv), argc, 0, 1);
++  if (argc > 1)
++    {
++      if (!numeric_arg (arg_info (argv), ARG (1), ARG_LEN (1), &line))
++	return;
++      reset_line (line);
++    }
++  else
++    shipout_int (obs, current_line);
+ }
+ 
+ static void
+diff --git a/src/input.c b/src/input.c
+index 129a5f2..940f975 100644
+--- a/src/input.c
++++ b/src/input.c
+@@ -2301,3 +2301,22 @@ lex_debug (void)
+     print_token ("lex", t, &td);
+ }
+ #endif /* DEBUG_INPUT */
++
++/*---------------------------------.
++ | Reset the current line counter. |
++ `--------------------------------*/
++void reset_line(int line)
++{
++  isp->line = line;
++  input_change = true;
++}
++
++/*-------------------------------.
++ | Reset the current file title. |
++ `------------------------------*/
++void reset_file(const char *title)
++{
++  isp->file = (char *) obstack_copy0 (&file_names, title, strlen (title));
++  output_current_line = -1;
++  input_change = true;
++}
+diff --git a/src/m4.h b/src/m4.h
+index 17184b2..6ed671d 100644
+--- a/src/m4.h
++++ b/src/m4.h
+@@ -562,6 +562,11 @@ void expand_format (struct obstack *, int, macro_arguments *);
+ void produce_frozen_state (const char *);
+ void reload_frozen_state (const char *);
+ 
++/* File: input.c --- input sources.  */
++
++void reset_line (int);
++void reset_file (const char *);
++
+ /* Debugging the memory allocator.  */
+ 
+ #ifdef WITH_DMALLOC
