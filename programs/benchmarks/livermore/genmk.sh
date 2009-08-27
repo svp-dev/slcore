@@ -1,5 +1,6 @@
 #! /bin/sh
 set -e
+echo "Generating Livermore loop programs..."
 exec >"ll.mk"
 
 plist=

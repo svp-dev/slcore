@@ -1,4 +1,4 @@
-## Makefile.am: this file is part of the SL toolchain.
+## slcvars.mk: this file is part of the SL toolchain.
 ## 
 ## Copyright (C) 2009 The SL project
 ##
@@ -11,17 +11,17 @@
 ## `COPYING' file in the root directory.
 ##
 
-# 
-DEMOS = sha1.c
-TESTS = $(DEMOS)
+SLC_VARS = \
+	SLC_INCDIR=$(SLC_INCDIR) \
+	SLC_LIBDIR=$(SLC_LIBDIR) \
+	SLC_DATADIR=$(SLC_DATADIR) \
+	SPP=$(SPP) \
+	SCU=$(SCU) \
+	SAG=$(SAG) \
+	CCE=$(CCE) \
+	SLR=$(SLR) \
+	SLT=$(SLT) \
+	CM4=$(CM4) \
+	SLC=$(SLC_LOCAL)
 
-EXTRA_DIST = $(DEMOS)
-
-include $(top_srcdir)/build-aux/slctests.mk
-
-if ENABLE_DEMOS
-noinst_DATA = $(DEMOS:.c=.x)
-CLEANFILES = $(DEMOS:.c=.x) $(DEMOS:.c=.bin.*)
-endif
-
-
+SLC_RUN = $(SLC_VARS) $(SLC_LOCAL)

@@ -1,4 +1,4 @@
-## Makefile.am: this file is part of the SL toolchain.
+## configure.ac: this file is part of the SL demo suite.
 ## 
 ## Copyright (C) 2009 The SL project
 ##
@@ -11,17 +11,20 @@
 ## `COPYING' file in the root directory.
 ##
 
-# 
-DEMOS = sha1.c
-TESTS = $(DEMOS)
+AC_PREREQ([2.61])
+AC_INIT([sl-tests], [2.1.0a], [sl-users@nic.surfnet.nl])
+AC_CONFIG_AUX_DIR([build-aux])
 
-EXTRA_DIST = $(DEMOS)
+AM_INIT_AUTOMAKE([1.11 tar-ustar no-define foreign dist-bzip2
+                  color-tests silent-rules parallel-tests])
 
-include $(top_srcdir)/build-aux/slctests.mk
+AM_SILENT_RULES([yes])
 
-if ENABLE_DEMOS
-noinst_DATA = $(DEMOS:.c=.x)
-CLEANFILES = $(DEMOS:.c=.x) $(DEMOS:.c=.bin.*)
-endif
+SLC_PATH_LOCAL([../slc])
+AC_WITH_SLC
+AC_SLC_TESTS
 
+AC_CONFIG_FILES([Makefile])
+
+AC_OUTPUT
 

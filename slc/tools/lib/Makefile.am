@@ -12,32 +12,27 @@
 ##
 
 # 
-DEMOS = blas-test-saxpy.c
-TESTS = $(DEMOS)
+dist_pkglib_SCRIPTS = \
+	r-host.sh
 
-EXTRA_DIST = \
-	templates/xaxpy.c \
-	templates/xaxpyc.c \
-	templates/xdot.c \
-	templates/xdotc.c \
-	blas_complex.h \
-	caxpy.c \
-	cdotc.c \
-	cdotu.c \
-	daxpy.c \
-	ddot.c \
-	saxpy.c \
-	sdot.c \
-	zaxpy.c \
-	zdotc.c \
-	zdotu.c \
-	$(DEMOS)
+pkglib_SCRIPTS = \
+	r-mtalpha-sim.sh \
+	r-mtsparc-sim.sh
 
+nobase_dist_pkgdata_DATA = \
+	arggen.c \
+	t-utc/slimpl.m4 \
+	t-utc0/slimpl.m4 \
+	t-utc0/include/sl_support.h 
 
-include $(top_srcdir)/build-aux/slctests.mk
+include $(top_srcdir)/build-aux/sl.mk
+nobase_pkglib_DATA =
+nobase_pkglib_LIBRARIES = 
+EXTRA_DIST =
+CLEANFILES =
+MAINTAINERCLEANFILES = 
+BUILT_SOURCES = 
 
-if ENABLE_DEMOS
-noinst_DATA = $(DEMOS:.c=.x)
-CLEANFILES = $(DEMOS:.c=.x) $(DEMOS:.c=.bin.*)
-endif
-
+include $(srcdir)/seqc.mk
+include $(srcdir)/ptl.mk
+include $(srcdir)/mtalpha.mk

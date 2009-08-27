@@ -1,0 +1,74 @@
+#! /bin/sh
+
+set -e
+
+SLC_ACLOCAL_FILES="mgbinutils.m4 mggcc.m4 mgsim.m4 slc.m4 slctests.m4"
+SLC_MK_FILES="sl.mk slctests.mk slcvars.mk"
+
+target=build-aux
+if test $# -gt 0; then
+  case $1 in
+    -*)
+      cat <<EOF
+Usage: $0 [TARGET]
+Fetch Autoconf/Automake helpers for using the SL toolchain.
+
+The optional argument indicates the target directory where the files
+are copied. It defaults to \`build-aux'.
+EOF
+     exit 0 
+     ;;
+    *)
+     target=$1
+     ;;
+  esac
+fi
+
+mydir=$(dirname "$0")
+root=$(cd "$mydir"; pwd)
+echo "Working in $(pwd)."
+
+
+for try in "$root" "$root/../share/sl-core"; do
+  if test -r "$try/sl.mk"; then
+    echo "Found Make rules files in $try."
+    SLC_MK_DIR=$try
+    break
+  fi
+done
+
+for try in "$root" "$root/../share/aclocal"; do
+  if test -r "$try/slc.m4"; then
+    echo "Found aclocal helpers in $try."
+    SLC_ACLOCAL_DIR=$try
+    break
+  fi
+done
+
+do_copy() {
+  echo "$1 -> $2"
+  cat >"$2" <<EOF
+# This file is a copy of $1, 
+# and was automatically imported by $0.
+
+EOF
+  cat "$1" >>"$2"
+}
+
+echo "Copying files to $target..."
+mkdir -p "$target"
+for f in $SLC_ACLOCAL_FILES; do
+   if ! test -f "$target/f" || grep -q '^# This file is a copy of' "$target/$f" 2>/dev/null; then
+     do_copy "$SLC_ACLOCAL_DIR/$f" "$target/$f"
+   else
+     echo "$target/$f already there"
+   fi
+done
+for f in $SLC_MK_FILES; do
+   if ! test -f "$target/f" || grep -q '^# This file is a copy of' "$target/$f" 2>/dev/null; then
+     do_copy "$SLC_MK_DIR/$f" "$target/$f"
+   else
+     echo "$target/$f already there"
+   fi
+done
+echo "Done."
