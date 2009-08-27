@@ -1,5 +1,13 @@
 2009-08-27  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	Update `deploy'.
+	
+	* deploy/versions.mk.defaults (SLC_REV): Bump revision number to
+	align with the MT-Alpha ISA change that happened in r2728, r2729,
+	r2738.
+
+2009-08-27  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	Fix rule `show-vars'.
 
 	* configure.ac: Use `AC_WITH_SLC' to ensure the variables are
