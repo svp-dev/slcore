@@ -1,3 +1,10 @@
+2009-08-29  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
+	Fix typo in `sac_helpers.h'.
+
+	* lib/include/sac_helpers.h (fast_safe_free): Delegate to
+	`fast_free', not `safe_free'.
+
 2009-08-28  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
 	Add more SAC to muTC helpers.
