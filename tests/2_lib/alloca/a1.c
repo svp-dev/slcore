@@ -1,5 +1,5 @@
 //
-// sac1.c: this file is part of the SL toolchain.
+// a1.c: this file is part of the SL toolchain.
 //
 // Copyright (C) 2009 The SL project.
 //
@@ -12,36 +12,14 @@
 // `COPYING' file in the root directory.
 //
 
-#include <sac_helpers.h>
-#include <svp/iomacros.h>
-#include <svp/compiler.h>
-
-noinline char *pass(char *reg) { return reg; }
+#include <calloca.h>
 
 sl_def(t_main, void)
 {
-	const char msg[] = "hello world\n";
+   char *p;
 
-	char *p1, *p2;
+   p = (char*)alloca(10);
 
-	p1 = (char*)malloc(7);
-	p2 = (char*)alloca(2);
-
-	strncpy(p1, msg, 5);
-	p1[5] = '\0';
-
-	p2[0] = '\n';
-	p2[1] = '\0';
-
-
-	puts(p1); 
-	puts(p2);
-
-	free(p1);
-
-	p2 = pass(p2);
-#ifdef safe_free
-	safe_free(p2);
-#endif
+   p[5] = 'h';
 }
 sl_enddef

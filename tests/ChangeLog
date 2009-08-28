@@ -1,3 +1,13 @@
+2009-08-28  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
+	Add tests for `alloca'.
+	
+	* 2_lib/alloca/a1.c,
+	* 2_lib/alloca/a2.c,
+	* 2_lib/alloca/a3.c: New.
+
+	* 2_lib/sac1.c: Also test `alloca' and `safe_free'.
+
 2009-08-26  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
 	Minor packaging fix.

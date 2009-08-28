@@ -1,5 +1,5 @@
 //
-// sac1.c: this file is part of the SL toolchain.
+// a2.c: this file is part of the SL toolchain.
 //
 // Copyright (C) 2009 The SL project.
 //
@@ -12,36 +12,35 @@
 // `COPYING' file in the root directory.
 //
 
-#include <sac_helpers.h>
+#include <calloca.h>
 #include <svp/iomacros.h>
-#include <svp/compiler.h>
 
-noinline char *pass(char *reg) { return reg; }
+sl_def(foo, void,
+       sl_glparm(char*, p1),
+       sl_glparm(char*, p2))
+{
+  char *p1 = sl_getp(p1);
+  char *p2 = sl_getp(p2);
+
+  p1[0] = '4';
+  p1[1] = '\0';
+  p2[0] = '2';
+  p2[1] = '\n';
+  p2[2] = '\0';
+}
+sl_enddef
 
 sl_def(t_main, void)
 {
-	const char msg[] = "hello world\n";
+  char *p1; char *p2;
 
-	char *p1, *p2;
+  p1 = (char*)alloca(10);
+  p2 = (char*)alloca(10);
 
-	p1 = (char*)malloc(7);
-	p2 = (char*)alloca(2);
+  sl_proccall(foo,
+	      sl_glarg(char*, gp1, p1),
+	      sl_glarg(char*, gp2, p2));
 
-	strncpy(p1, msg, 5);
-	p1[5] = '\0';
-
-	p2[0] = '\n';
-	p2[1] = '\0';
-
-
-	puts(p1); 
-	puts(p2);
-
-	free(p1);
-
-	p2 = pass(p2);
-#ifdef safe_free
-	safe_free(p2);
-#endif
+  puts(p1); puts(p2);
 }
 sl_enddef
