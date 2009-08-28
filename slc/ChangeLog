@@ -1,5 +1,11 @@
 2009-08-28  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	Add more SAC to muTC helpers.
+	
+	* lib/include/sac_helpers.h: Also provide `fast_safe_free'.
+
+2009-08-28  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	Packaging fix.
 	
 	* lib/Makefile.am: Distribute and install `calloca.h'.

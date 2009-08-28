@@ -26,6 +26,7 @@ extern char* strncpy(char *, const char*, size_t);
 
 #define __tlsp_p(Pointer)  (((long)(Pointer)) < 0)
 #define safe_free(Pointer) ((void)(__tlsp_p(Pointer) ? 0 : free(Pointer)))
+#define fast_safe_free(Pointer) ((void)(__tlsp_p(Pointer) ? 0 : safe_free(Pointer)))
 
 #else
 
