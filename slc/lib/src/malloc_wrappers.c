@@ -13,51 +13,23 @@
 //
 
 #include <cmalloc.h>
-#include "callgate.h"
-
-#define malloc_place 5
-extern void* dlmalloc(size_t);
-extern void dlfree(void*);
-extern void* dlcalloc(size_t, size_t);
-extern void* dlrealloc(void*, size_t);
 
 void* malloc(size_t sz)
 {
-  struct callinfo m;
-  m.head0.u = 1;
-  m.head1.fptr = dlmalloc;
-  m.arg0.u = sz;
-  CALL_WITH_INFO(m, malloc_place);
-  return m.head0.p;
+  return fast_malloc(sz);
 }
 
 void free(void* ptr)
 {
-  struct callinfo m;
-  m.head0.u = 1;
-  m.head1.fptr = dlfree;
-  m.arg0.p = ptr;
-  CALL_WITH_INFO(m, malloc_place);
+  return fast_free(ptr);
 }
 
 void* calloc(size_t cnt, size_t sz)
 {
-  struct callinfo m;
-  m.head0.u = 2;
-  m.head1.fptr = dlcalloc;
-  m.arg0.u = cnt;
-  m.arg1.u = sz;
-  CALL_WITH_INFO(m, malloc_place);
-  return m.head0.p;
+  return fast_calloc(cnt, sz);
 }
 
 void* realloc(void *ptr, size_t sz)
 {
-  struct callinfo m;
-  m.head0.u = 2;
-  m.head1.fptr = dlrealloc;
-  m.arg0.p = ptr;
-  m.arg1.u = sz;
-  CALL_WITH_INFO(m, malloc_place);
-  return m.head0.p;
+  return fast_realloc(ptr, sz);
 }

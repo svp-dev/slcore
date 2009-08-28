@@ -8,7 +8,6 @@ EXTRA_DIST += \
 	src/malloc_intrinsics.h \
 	src/malloc_intrinsics.c \
 	src/malloc_wrappers.c \
-	src/callgate.h \
 	src/malloc.c \
 	src/strlib.c
 
@@ -52,7 +51,8 @@ MALLOC_DEFS = -DLACKS_SYS_TYPES_H \
 	-DLACKS_STDLIB_H \
 	-DLACKS_STRING_H \
 	-DLACKS_SYS_PARAM_H \
-	-DLACKS_TIME
+	-DLACKS_TIME \
+	-DPAGESIZE=0x40000000U
 
 mtalpha-sim/malloc.o: $(srcdir)/src/malloc.c
 	$(AM_V_at)$(MKDIR_P) mtalpha-sim

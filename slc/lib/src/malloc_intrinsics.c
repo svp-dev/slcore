@@ -40,15 +40,19 @@ void mg_putux(unsigned long x) {
     }
 }
 
+#ifndef PAGESIZE
+#define PAGESIZE 1024*1024*1024
+#endif
+
 #ifndef HEAP_SIZE
-#define HEAP_SIZE 10*1024*1024
+#define HEAP_SIZE 10L*1024*1024*1024
 #endif
 
 #ifndef PAGE_BITS
-#define PAGE_BITS 12
+#define PAGE_BITS 30
 #endif
 
-char heap[HEAP_SIZE] __attribute__ ((aligned(4096)));
+char heap[HEAP_SIZE] __attribute__ ((aligned(PAGESIZE)));
 char *__brk = heap;
 
 

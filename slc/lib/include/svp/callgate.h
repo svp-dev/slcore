@@ -12,36 +12,14 @@
 // `COPYING' file in the root directory.
 //
 
-#ifndef SLC_CALLGATE_H
-# define SLC_CALLGATE_H
+#ifndef SLC_SVP_CALLGATE_H
+# define SLC_SVP_CALLGATE_H
 
 #ifdef __mt_freestanding__
-typedef union {
-  unsigned long u;
-  long s;
-  void *p;
-} mixedint;
-
-struct callinfo {
-  double farg5;
-  mixedint arg5;
-  double farg4;
-  mixedint arg4;
-  double farg3;
-  mixedint arg3;
-  double farg2;
-  mixedint arg2;
-  double farg1;
-  mixedint arg1;
-  double farg0;
-  mixedint arg0;
-  union { double retf; void *fptr; } head1;
-  mixedint head0;
-};
-
 extern void __sl_callgate(void);
 
-#define CALL_WITH_INFO(Info, Place)						\
+#if defined(__alpha__) || defined(__mtalpha__)
+#define CALL_WITH_INFO(Bottom, Place)					\
   do {									\
     long __fid;								\
     __asm__ __volatile__("allocate %0, 0, 0, 0, 0\n"			\
@@ -51,11 +29,13 @@ extern void __sl_callgate(void);
 			 "\tmov %0, $31 #SYNC\n"			\
 			 : "=&r"(__fid)					\
 			 : "0"(Place),					\
-			   "rI"((&(Info))+1),				\
-			   "rI"(((char*)(void*)((&(Info))+1))+1),	\
+			   "rI"(Bottom),				\
+			   "rI"(((char*)(void*)(Bottom))+1),		\
 			   "r"(__sl_callgate)				\
 			 : "memory");					\
   } while(0);
+
+#endif
 #endif
 
-#endif // ! SLC_CALLGATE_H
+#endif // ! SLC_SVP_CALLGATE_H

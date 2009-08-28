@@ -1,5 +1,26 @@
 2009-08-28  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	Improve global memory allocation.
+
+	This changeset introduces a set of `fast_' wrappers around memory
+	allocation functions toavoid an intermediary function context to
+	reach their respective algorithm. This was suggested by Chris
+	Jesshope. Also increase the `malloc' pool by larger chunks, so
+	that pool extension happens less often.
+	
+	* lib/src/callgate.h: Rename to...
+	* lib/include/svp/callgate.h: ...here. Simplify.
+
+	* lib/include/cmalloc.h: Provide wrappers.
+	
+	* lib/src/malloc_wrappers.c: Simplify by using the wrappers.
+	
+	* lib/mtalpha.mk,	
+	* lib/src/malloc_intrinsics.c: Make the page size bigger, so that
+	`malloc' increases its pool by bigger chunks.
+
+2009-08-28  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	Complete support for C's (non-standard) `alloca'.
 
 	Since `alloca' is merely play on the stack pointer and the frame
