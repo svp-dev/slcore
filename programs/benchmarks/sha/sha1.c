@@ -271,7 +271,7 @@ sl_def(sha1_kernel, void,
        sl_glparm(const uint32_t*restrict, w),
        sl_glparm(size_t, len_words))
 {
-  sl_create(,,,sl_getp(len_words), 16, 2,, sha_main_outer,
+  sl_create(,,,sl_getp(len_words), 16,,, sha_main_outer,
 	    sl_glarg(const uint32_t*restrict, wg, sl_getp(w)),
 	    sl_sharg(unsigned long, h0),
 	    sl_sharg(unsigned long, h1),

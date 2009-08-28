@@ -1,3 +1,17 @@
+2009-08-28  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
+	Extend the SHA benchmark code.
+	
+	* benchmarks/sha/sha1.c: Remove block size in call to
+	`sha_main_outer'.
+	
+	* benchmarks/sha/sha1_alt.c: New optimized version, thanks to
+	Mike Lankamp.
+
+	* benchmarks/sha/testsha.sh: New.
+	
+	* benchmarks/sha/Makefile.am: Update accordingly.
+	
 2009-08-26  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
 	Minor packaging fixes.

@@ -12,10 +12,10 @@
 ##
 
 # 
-DEMOS = sha1.c
+DEMOS = sha1.c sha1_alt.c
 TESTS = $(DEMOS)
 
-EXTRA_DIST = $(DEMOS)
+EXTRA_DIST = $(DEMOS) testsha.sh
 
 include $(top_srcdir)/build-aux/slctests.mk
 
