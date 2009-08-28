@@ -15,4 +15,4 @@ $(SLDIR)/bin/slc: $(SOURCES)/slc-$(SLC_REV)/configure $(SLDIR)/bin/mgsim-alpha
 	(SRC=$$PWD/$(SOURCES)/slc-$(SLC_REV); cd $(BUILD)/slc-$(SLC_REV) && \
 	 PATH=$(PREFIX)/slreqs-current/bin:$$PATH $$SRC/configure --prefix=$(SLDIR) && \
 	 ($(MAKE) $(MAKE_FLAGS) || true) && \
-	 ($(MAKE) install || $(MAKE) -C doc install-man1 || true))
+	 ($(MAKE) install || $(MAKE) -C tools/bin install-man1 || true))

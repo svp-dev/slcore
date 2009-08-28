@@ -1,3 +1,10 @@
+2009-08-28  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
+	Fix `deploy'
+	
+	* deploy/rules/sl.mk ($(SLDIR)/bin/slc): Pick up manpages from
+	`tools/bin', not `doc'.
+
 2009-08-27  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
 	Update `deploy'.
