@@ -17,15 +17,21 @@
 
 #include <cstddef.h>
 #include <cmalloc.h>
+#include <calloca.h>
 
 #ifdef __mt_freestanding__
 
 extern size_t strlen(const char*);
 extern char* strncpy(char *, const char*, size_t);
 
+#define __tlsp_p(Pointer)  (((long)(Pointer)) < 0)
+#define safe_free(Pointer) ((void)(__tlsp_p(Pointer) ? 0 : free(Pointer)))
+
 #else
 
 #include <string.h>
+
+#warning safe_free() is not defined here.
 
 #endif
 

@@ -1,3 +1,18 @@
+2009-08-28  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
+	Complete support for C's (non-standard) `alloca'.
+
+	Since `alloca' is merely play on the stack pointer and the frame
+	pointer everything was in place except the declaration of the name
+	`alloca' itself. This changeset provides a header for this
+	purpose.
+	
+	* lib/include/calloca.h: New.
+	
+	* lib/include/sac_helpers.h: Add `safe_free()', which calls
+	`free()' if and only if it detects its argument is not the result
+	of `alloca'. This is non-portable (Microgrid only).
+
 2009-08-27  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
 	MT-Alpha ISA change: `allocate' takes the place identifier as input.
