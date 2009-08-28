@@ -1,5 +1,11 @@
 2009-08-28  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	Packaging fix.
+	
+	* lib/Makefile.am: Distribute and install `calloca.h'.
+
+2009-08-28  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	Improve global memory allocation.
 
 	This changeset introduces a set of `fast_' wrappers around memory
