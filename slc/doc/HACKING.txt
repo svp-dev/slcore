@@ -7,27 +7,25 @@
 
 .. contents::
 
-Maintainer mode
+Getting started
 ===============
 
-When checking out the repository from Subversion, the source tree does
-not "look and feel" like the one that is distributed to users. 
+1. Obtain the top-level source tree (``sys``) from a public Git branch
+   or the CSA Subversion repository.
 
-Getting started
----------------
-
-1. Read ``doc/README.txt`` and ``doc/HACKING.txt`` thoroughly.
+1. Read ``slc/doc/README.txt`` and ``slc/doc/HACKING.txt`` thoroughly.
 
 2. Ensure you did #1, really. 
 
-3. Check all the requirements are available, install/upgrade as needed.
+3. Check all the requirements are available, install/upgrade as
+   needed. Use the Makefile in ``deploy`` if possible.
 
 4. Run::
 
      ./boostrap
      mkdir build
      cd build
-     ../configure --enable-maintainer-mode --enable-testsuite
+     ../configure 
      make
      make check
 
@@ -46,18 +44,6 @@ When working from SVN, the following *additional* requirements apply:
 
 - GNU Texinfo 4.13 or later
 
-Extra Makefile rules
---------------------
-
-A number of Makefile rules are enabled only in "maintainer mode",
-which is the state of the software between a checkout from SVN and a
-distribution package. The idea is that the outcome of these rules is
-packaged along during a distribution, so they do not need to be
-enabled in the final package.
-
-To enable these rules, use::
-
-   configure --enable-maintainer-mode
 
 Working from the source directory
 =================================
@@ -70,8 +56,8 @@ installation directory. This means they cannot be used "as-is" before
 This may be a hassle during development (would require to re-run
 ``make install`` after each change). To balance this, it is possible
 to set environment variables to indicate that the scripts should find
-the data in the source directory. Use ``make show-vars`` to set
-environment variables::
+the data in the source directory. Use ``make show-vars`` at the
+top-level source directory to set environment variables::
 
    $ eval `make show-vars`
 
@@ -89,30 +75,37 @@ When committing to the ``trunk`` branch of the repository:
 
 1. ensure that ``make distcheck`` succeeds.
 
-2. update the ``ChangeLog`` with a detailed description of your
-   changes. (use ``C-x 4 a`` in Emacs from an edited file to get the
-   entry automatically generated)
+2. update the appropriate ``ChangeLog`` with a detailed description of
+   your changes. (use ``C-x 4 a`` in Emacs from an edited file to get
+   the entry automatically generated)
+
+   .. note:: There are 4 change logs, pick the one recursively nearest
+      to each change to document them. Strip the beginning of the path
+      to each modified file relative to the location of the
+      ChangeLog. (see previous ChangeLog entries and follow the
+      pattern).
 
 3. save the output of ``svn diff`` to a file.
 
-4. perform the commit, ensuring that the latest ``ChangeLog`` entry is
-   pasted into the commit message.
+4. commit your set(s) of changes, one per software package, ensuring
+   that the latest ``ChangeLog`` entry for each commit is pasted into
+   the commit message.
 
-5. send the contents of the file from step #4 to the mailing list,
-   ensuring that the changes to the ``ChangeLog`` appear first in the
+5. send the contents of the file from step #3 to the mailing list,
+   ensuring that the changes to the change log(s) appear first in the
    e-mail.
 
 
 Distributing
 ============
 
-To package a copy of SLC for use by users who do not have access to
-the SVN repository, perform the following steps:
+To package a copy of the entire SL toolchain for use by users who do
+not have access to the SVN repository, perform the following steps:
 
 1. ensure that the documentation is consistent with the state of the
    software;
 
-2. ensure that ``doc/NEWS.txt`` contains the latest major changes;
+2. ensure that ``slc/doc/NEWS.txt`` contains the latest major changes;
 
 3. ensure that ``make distcheck`` succeeds.
 
@@ -122,11 +115,6 @@ the SVN repository, perform the following steps:
 
 After step #5 has completed, ``make dist`` will have output two
 archives (``.tar.gz`` and ``.tar.bz2``) suitable for distribution.
-
-.. note:: You should run ``make dist`` after committing to Subversion,
-   to ensure that the SVN revision number at the end of the
-   ``ChangeLog`` is up-to-date. This is used in the message output by
-   the ``--version`` flag on the utilities.
 
 Goodies
 =======

@@ -2,7 +2,7 @@
  Prerequisites for the SL compiler
 ===================================
 
-:Date: 2009-06-09
+:Date: 2009-08-30
 
 :Abstract: This document explains what are the prerequisites for the
   SL compiler and how to install them.
@@ -76,8 +76,6 @@ The SL compiler requires the following basic tools:
 
 - the Bourne-Again shell (bash);
 
-- GNU m4 version 1.4 or later; 
-
 - Python version 2.5 or later. 
 
 Additionally, the installation of the requirements themselves 
@@ -94,7 +92,6 @@ require the following:
 - GNU tar (v1.14 or later)
 - GNU GMP (v4.1 or later)
 - GNU MPFR (v2.3.2 or later)
-- GNU m4 (v1.4 or later)
 - GNU make (v3.80 or later)
 - GNU Autoconf (v2.63 or later)
 - GNU Automake (v1.10 or later)
@@ -126,12 +123,11 @@ Automated installation of prerequisites
 
 For convenience, all the steps described in the rest of this document
 have been collected into a single ``make`` rule file named
-``deploy/Makefile.reqs``.
+``deploy/Makefile``.
 
-A template for ``deploy/Makefile.reqs`` is present at the root of the
-source distribution as ``deploy/Makefile-reqs.orig``. Open this file
-with a text editor and read the comments at the start of the file for
-details and usage instructions.
+This can be configured by copying the accompanying ``.mk.default``
+files to ``.mk`` and editing the make variables appropriately. Open
+the files and read the comments for instructions.
 
 
 Prerequisites for the sequential C implementation
@@ -312,7 +308,8 @@ Example sequence of commands::
 Prerequisites for the alternate MT-Alpha implementation
 =======================================================
 
-Required: "stock" GCC 4.4 cross-compiler for Linux/Alpha.
+Required: "stock" GCC 4.4 cross-compiler for Linux/Alpha with patches
+to support a new divide instruction on the Alpha ISA.
 
 More specifically, slc's ``configure`` script looks for [#]_ the
 following program: ``alpha-linux-gnu-gcc``.
@@ -328,11 +325,17 @@ non-trivial to install:
 
 2. it requires some additional libraries on the host, namely GMP and MPFR.
 
+3. it requires patches (in ``deploy/patches``) to apply to the source
+   tree before building).
+
 Item #1 can be installed from any GNU binutils distribution; we
 recommend using the same tree as for the MT-Alpha target (see below).
 
 Item #2 is not described in this document. See the latest GCC
 installation documentation for details.
+
+Item #3 adds support for a new divide instruction, this is required
+for direct support for C's divide operator in SL.
 
 Linux/Alpha binutils
 --------------------
@@ -377,18 +380,22 @@ Required:
 
 - MPFR and GMP libraries already installed on the host system.
 
+- patches from ``deploy/patches``.
+
 Installation goes as follows:
 
 1. get the GCC source code from one of GNU's download sites.
 
-2. ``configure --prefix=... (some other flags, see below)``
+2. apply the patches.
 
-3. patch up the generated ``Makefile`` to prevent building libraries
+3. ``configure --prefix=... (some other flags, see below)``
+
+4. patch up the generated ``Makefile`` to prevent building libraries
    we do not use;
 
-4. ``make`` (optionally ``-jNN`` to speed up)
+5. ``make`` (optionally ``-jNN`` to speed up)
 
-5. ``make install``
+6. ``make install``
 
 The following command line arguments should be used:
 

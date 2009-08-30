@@ -19,6 +19,10 @@ SLC 2.1.0a, 2009
 - As a result of using the C preprocessor first, C comments inside SL
   macros do not cause strange behavior any more.
 
+- C function definitions and calls are supported on the MT-Alpha.
+
+- The C divide operator is reinstated.
+
 - The ``slr``, ``slt`` and ``timeout`` scripts now react better to
   signals and terminal hangups.
 
@@ -31,11 +35,10 @@ SLC 2.1.0a, 2009
   list of test files / directories provided on the command line and
   provide a test results summary.
 
-Known issues:
+Known limitations:
 
-- only "simple" function return types are supported in function calls
-  from thread functions. Also only 6 function arguments are supported,
-  of "simple" types as well. See CSA note [sl1] for details.
+- it is not (yet) possible to create a family of threads from a
+  regular C function.
 
 SLC 2.0.3a, 2009
 ================

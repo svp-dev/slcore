@@ -52,5 +52,20 @@ Acronym for: SLR Arguments Generator
 Role: emit assembly source code suitable to build a data file during
 program startup by ``slr``.
 
+spp
+===
+
+Acronym for: SLC's Program Processor
+
+Role: generate source code during expansion of SL macros and transform
+the generated assembly.
+
+cm4
+===
+
+Role: wrap around M4, protect C comments and string literals from M4
+macro expansions, and trim whitespace between identifiers and opening
+parentheses to make them visible as macro calls to M4.
+
 
 

@@ -35,18 +35,23 @@ The following tools are used by slc:
 
 - GNU bash 3.x (3.2 or later)
 
-- GNU m4 1.4.x (1.4.6 or later)
-
 - a standard ISO C99 compiler
 
 - a standard ISO C++ compiler
 
 - the POSIX thread library
 
+The following tools are also required, but can be installed using the
+automated deployment Makefile in the separate ``deploy`` package:
+
+- GNU m4 1.4.x (1.4.6 or later), with patches to allow resetting the
+  line counter and file name for error messages;
+
 - µTC MT-Alpha core compiler (v4.1.x) with mtalpha binutils
 
 - GCC 4.3.x (or later) configured as cross-compiler for
-  alpha-gnu-linux with alpha binutils
+  alpha-gnu-linux with alpha binutils, with patches to recognize a new
+  divide instruction for the DEC-Alpha.
 
 For more details about how to obtain and install the required tools,
 check out the document ``doc/requirements.pdf`` or
@@ -55,9 +60,9 @@ check out the document ``doc/requirements.pdf`` or
 Using slc
 =========
 
-slc comes with several demo programs. Looking at them is a good way to
-see what slc can support. They can be found in the ``demo``
-subdirectory.
+The SL toolchain comes with several demonstration programs. Looking at
+them is a good way to see what slc can support. They can be found in
+the ``demo`` subdirectory of the ``sl-programs`` package.
 
 See also
 ========
