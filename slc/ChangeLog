@@ -1,5 +1,13 @@
 2009-08-31  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	Minor packaging fix.
+	
+	* tools/bin/Makefile.am: Use unique temporary directory to build
+	the scripts. This allows proper behavior when building the man
+	pages in concurrent `make' invocations.
+
+2009-08-31  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	Improve autonomy of other packages using SLC.
 	
 	* build-aux/slc.m4: Also try find `slc' in PATH if not specified

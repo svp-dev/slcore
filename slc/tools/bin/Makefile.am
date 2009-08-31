@@ -45,11 +45,11 @@ edit_scripts = $(SED) \
 	       -e 's|@bugreports[@]|$(PACKAGE_BUGREPORT)|g'
 
 cce slr slc slt timeout slt-many cm4: $(top_srcdir)/configure.ac
-	$(AM_V_at)rm -f $@ $@.tmp
-	$(AM_V_GEN)$(edit_scripts) $(srcdir)/$@.in >$@.tmp
-	$(AM_V_at)chmod +x $@.tmp
-	$(AM_V_at)chmod a-w $@.tmp
-	$(AM_V_at)mv $@.tmp $@
+	$(AM_V_GEN)(D=$$$$.tmp; mkdir $$D && \
+	    $(edit_scripts) $(srcdir)/$@.in >$$D/sed_out && \
+            chmod +x,a-w $$D/sed_out && \
+            mv -f $$D/sed_out $@ && \
+            rm -rf $$D)
 
 cce: cce.in
 slr: slr.in
