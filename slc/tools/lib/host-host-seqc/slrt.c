@@ -12,5 +12,5 @@
 // `COPYING' file in the root directory.
 //
 
-const char *__tag__ = "slr_runner:host:";
-const char *__datatag__ = "slr_datatag:seqc-host-host-seqc:";
+const char *__tag__ = "\0slr_runner:host:";
+const char *__datatag__ = "\0slr_datatag:seqc-host-host-seqc:";
