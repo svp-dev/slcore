@@ -1,5 +1,13 @@
 2009-08-31  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	Improve autonomy of other packages using SLC.
+	
+	* build-aux/slc.m4: Also try find `slc' in PATH if not specified
+	with `--with-slc' or SLC_BASE. Reject double slashes in SLC_BASE
+	as this is known to cause issues with M4.
+
+2009-08-31  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	Fix `slr' bug.
 
 	Under some circumstances `slr' would not be able to find which

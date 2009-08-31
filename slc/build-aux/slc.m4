@@ -34,7 +34,7 @@ AC_DEFUN([SLC_PATH_USER],
                   AC_ARG_WITH([slc],
                      [AC_HELP_STRING([--with-slc=DIR],
                      [Base directory where SLC is installed (optional)])],
-                     [if test -r "$withval/bin/slc"; then
+                     [if test -x "$withval/bin/slc"; then
                         slc_cv_user_hint=$withval
                       fi])])
 ])# SLC_PATH_USER
@@ -142,10 +142,20 @@ AC_DEFUN([AC_WITH_SLC],
     SLC_LOCAL=$base_build/tools/bin/slc
     SLC_BASE=
   elif test "x$SLC_BASE" = x; then
-    AC_MSG_ERROR([Cannot find the SL toolchain. Use --with-slc or set SLC_BASE.])
+    AC_PATH_PROG([ac_SLC], [slc], [no])
+    if test "x$ac_SLC" = xno; then
+       AC_MSG_ERROR([Cannot find the SL toolchain. Use --with-slc or set SLC_BASE.])
+    else
+       SLC_BASE=`dirname "$ac_SLC"`/..
+    fi
   fi
   AC_ARG_VAR([SLC_BASE], [base SLC installation directory (should be autodetected)])
   if test "x$SLC_BASE" != x; then
+    SLC_BASE=`echo "$SLC_BASE"|sed -e 's,//*$,,g'`
+    if expr "x$SLC_BASE" : '.*//' >/dev/null 2>&1; then
+       AC_MSG_ERROR([Double slashes in path to SLC cause issues. ($SLC_BASE)])
+    fi
+
     SLC_LIBDIR=$SLC_BASE/lib/sl-core
     SLC_INCDIR=$SLC_BASE/share/sl-core/include
     SLC_DATADIR=$SLC_BASE/share/sl-core
