@@ -1,3 +1,9 @@
+2009-08-31  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
+	Fix packaging.
+
+	* lib/Makefile.am: Distribute and install `svp/callgate.h'.
+
 2009-08-30  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
 	Update documentation.

@@ -27,6 +27,7 @@ nobase_dist_pkgdata_DATA = \
 	include/sac_helpers.h \
 	include/svp/argslot.h \
 	include/svp/assert.h \
+	include/svp/callgate.h \
 	include/svp/div.h \
 	include/svp/io.h \
 	include/svp/roman.h \
