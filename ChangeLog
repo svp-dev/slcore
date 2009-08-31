@@ -1,6 +1,13 @@
+2009-08-31  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
+	Fix `deploy' (again).
+	
+	* deploy/slenv: Remove `~poss/opt/bin' from PATH definition since
+	this is now handled through the `slenv_local' helper.
+
 2009-08-28  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
-	Fix `deploy'
+	Fix `deploy'.
 	
 	* deploy/rules/sl.mk ($(SLDIR)/bin/slc): Pick up manpages from
 	`tools/bin', not `doc'.

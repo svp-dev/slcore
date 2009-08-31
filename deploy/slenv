@@ -100,7 +100,7 @@ PROMPT=\$(printf '%s\n%s' '(binutils-utgcc-gcc:%B\$(basename \$(cd $slreq_base;/
 fi;
 : ;
 : Tool locations ;
-export PATH=$sl_base/bin:$slreq_base/bin:~poss/opt/bin:\$PATH;
+export PATH=$sl_base/bin:$slreq_base/bin:\$PATH;
 export MANPATH=$sl_base/share/man:$slreq_base/share/man:\$MANPATH;
 export CC_ALPHA=$slreq_base/bin/alpha-linux-gnu-gcc;
 export UTCC_ALPHA=$slreq_base/bin/mtalpha-linux-gnu-gcc;
