@@ -1,3 +1,12 @@
+2009-09-15  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
+	Add test for `slr' bug.
+	
+	* 1_slr/bigdata.c,
+	* 1_slr/bigdata.c.d: New.
+
+	* Makefile.am: Update accordingly.
+
 2009-08-28  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
 	Add tests for `alloca'.

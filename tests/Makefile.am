@@ -23,6 +23,8 @@ endif
 
 include $(srcdir)/build-aux/slctests.mk
 
-EXTRA_DIST += 1_slr/fibre.c.d
+EXTRA_DIST += \
+	1_slr/fibre.c.d \
+	1_slr/bigdata.c.d
 
 ACLOCAL_AMFLAGS = -I build-aux
