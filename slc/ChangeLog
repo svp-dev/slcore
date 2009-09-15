@@ -1,3 +1,11 @@
+2009-09-08  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
+	Minor packaging fix.
+	
+	* tools/bin/Makefile.am: Make script generation dependent on the
+	`Makefile' itself, since they need to be re-made when tools are
+	reconfigured.
+
 2009-09-15  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
 	Fix bug in `slr'.

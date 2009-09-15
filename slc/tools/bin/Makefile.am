@@ -44,7 +44,7 @@ edit_scripts = $(SED) \
 	       -e 's|@slc_revision[@]|$(SVN_REVISION)|g' \
 	       -e 's|@bugreports[@]|$(PACKAGE_BUGREPORT)|g'
 
-cce slr slc slt timeout slt-many cm4: $(top_srcdir)/configure.ac
+cce slr slc slt timeout slt-many cm4: Makefile
 	$(AM_V_GEN)(D=$$$$.tmp; mkdir $$D && \
 	    $(edit_scripts) $(srcdir)/$@.in >$$D/sed_out && \
             chmod +x,a-w $$D/sed_out && \
