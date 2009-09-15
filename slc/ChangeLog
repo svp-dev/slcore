@@ -1,3 +1,12 @@
+2009-09-15  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
+	Fix bug in `slr'.
+
+	The `raw:' input scheme would attempt to load twice too many bytes
+	from the file, due to an invalid loop increment.
+
+	* tools/bin/sag: Fix bug.
+	
 2009-08-31  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
 	Minor packaging fix.

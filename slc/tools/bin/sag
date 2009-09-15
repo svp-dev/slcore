@@ -220,9 +220,9 @@ class SlrVarGenerator(object):
                 p = 0
                 ls = len(s)
                 bytes = []
-                while p + 8 < ls:
+                while p + 16 < ls:
                     bytes.append(','.join(('0x%x' % ord(x) for x in s[p:p+16])))
-                    p += 8
+                    p += 16
                 while p < ls:
                     bytes.append('0x%x' % ord(s[p]))
                     p += 1
