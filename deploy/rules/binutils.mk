@@ -18,6 +18,7 @@ $(REQDIR)/bin/alpha-linux-gnu-as: $(SOURCES)/binutils-$(BINUTILS_REV)/download_d
 	(SRC=$$PWD/$(SOURCES)/binutils-$(BINUTILS_REV); \
            cd $(BUILD)/binutils-alpha-$(BINUTILS_REV) && \
 	   $$SRC/configure --target=alpha-linux-gnu \
+			   --disable-werror \
 	                   --prefix=$(REQDIR) && \
 	   $(MAKE) $(MAKE_FLAGS) && \
 	   $(MAKE) install)
@@ -27,6 +28,7 @@ $(REQDIR)/bin/sparc-leon-linux-as: $(SOURCES)/binutils-$(BINUTILS_REV)/download_
 	(SRC=$$PWD/$(SOURCES)/binutils-$(BINUTILS_REV); \
            cd $(BUILD)/binutils-sparc-$(BINUTILS_REV) && \
 	   $$SRC/configure --target=sparc-leon-linux \
+			   --disable-werror \
 	                   --prefix=$(REQDIR) && \
 	   $(MAKE) $(MAKE_FLAGS) && \
 	   $(MAKE) install)
@@ -36,6 +38,7 @@ $(REQDIR)/bin/mtalpha-linux-gnu-as: $(SOURCES)/binutils-$(BINUTILS_REV)/download
 	(SRC=$$PWD/$(SOURCES)/binutils-$(BINUTILS_REV); \
            cd $(BUILD)/binutils-mtalpha-$(BINUTILS_REV) && \
 	   $$SRC/configure --target=mtalpha-linux-gnu \
+			   --disable-werror \
 	                   --prefix=$(REQDIR) && \
 	   $(MAKE) $(MAKE_FLAGS) && \
            $(MAKE) install)
@@ -45,6 +48,7 @@ $(REQDIR)/bin/mtsparc-leon-linux-as: $(SOURCES)/binutils-$(BINUTILS_REV)/downloa
 	(SRC=$$PWD/$(SOURCES)/binutils-$(BINUTILS_REV); \
            cd $(BUILD)/binutils-mtsparc-$(BINUTILS_REV) && \
 	   $$SRC/configure --target=mtsparc-leon-linux \
+			   --disable-werror \
 	                   --prefix=$(REQDIR) && \
 	   $(MAKE) $(MAKE_FLAGS) && \
            $(MAKE) install)

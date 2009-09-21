@@ -1,3 +1,11 @@
+2009-09-18  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
+	Increase compatibility with Snow Leopard.
+	
+	* deploy/rules/binutils.mk: Disable -Werror when building
+	binutils, as the newer GCC on Snow Leopard is getting overly
+	pedantic.
+
 2009-08-31  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
 	Fix `deploy' (again).
