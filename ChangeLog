@@ -1,3 +1,10 @@
+2009-09-21  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
+	Minor fix in `deploy'.
+	
+	* deploy/Makefile ($(PREFIX)/slenv): Ensure target is removed
+	before copying.
+
 2009-09-18  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
 	Increase compatibility with Snow Leopard.

@@ -33,6 +33,7 @@ all: \
 
 $(PREFIX)/slenv: slenv
 	mkdir -p $(PREFIX)
+	rm -f $@
 	cp $^ $@
 	chmod -w+x $@
 
