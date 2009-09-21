@@ -14,6 +14,7 @@
 # 
 EXTRA_DIST = \
 	src/io.c \
+	src/gfx.c \
 	src/roman.c \
 	src/div.c
 
@@ -30,6 +31,7 @@ nobase_dist_pkgdata_DATA = \
 	include/svp/callgate.h \
 	include/svp/div.h \
 	include/svp/io.h \
+	include/svp/gfx.h \
 	include/svp/roman.h \
 	include/svp/iomacros.h \
 	include/svp/perf.h

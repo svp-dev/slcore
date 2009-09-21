@@ -1,3 +1,20 @@
+2009-09-21  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
+	Add support for a graphical framebuffer.
+
+	This changeset adds support for the graphics output in the MG
+	simulator introduced in r2814-r2817, and simulates a framebuffer
+	using memory but no graphics when using the other SVP
+	implementations.
+	
+	* lib/include/svp/gfx.h,
+	* lib/src/gfx.c: New.
+
+	* lib/Makefile.am: Update accordingly.
+	
+	* lib/seqc.mk,
+	* lib/ptl.mk: Include `gfx.c' in the library.
+
 2009-09-08  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
 	Minor packaging fix.
