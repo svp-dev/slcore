@@ -16,19 +16,7 @@ host_host_ptl_libsl_a_LIBADD = \
 
 SLC_PTL = $(SLC_RUN) -b ptl -nostdlib $(CXXFLAGS)
 
-host-host-ptl/io.o: $(srcdir)/src/io.c
-	$(AM_V_at)$(MKDIR_P) host-host-ptl
-	$(slc_verbose)$(SLC_PTL) -c -o $@ $<
-
-host-host-ptl/gfx.o: $(srcdir)/src/gfx.c
-	$(AM_V_at)$(MKDIR_P) host-host-ptl
-	$(slc_verbose)$(SLC_PTL) -c -o $@ $<
-
-host-host-ptl/div.o: $(srcdir)/src/div.c
-	$(AM_V_at)$(MKDIR_P) host-host-ptl
-	$(slc_verbose)$(SLC_PTL) -c -o $@ $<
-
-host-host-ptl/roman.o: $(srcdir)/src/roman.c
+host-host-ptl/%.o: $(srcdir)/src/%.c
 	$(AM_V_at)$(MKDIR_P) host-host-ptl
 	$(slc_verbose)$(SLC_PTL) -c -o $@ $<
 

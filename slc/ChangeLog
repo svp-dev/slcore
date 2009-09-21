@@ -1,5 +1,12 @@
 2009-09-21  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	Simplify build.
+	
+	* lib/ptl.mk,	
+	* lib/seqc.mk: Simplify by providing a generic rule %.c -> %.o.
+
+2009-09-21  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	Add support for a graphical framebuffer.
 
 	This changeset adds support for the graphics output in the MG
