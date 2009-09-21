@@ -12,7 +12,17 @@
 ##
 
 # 
-DEMOS = 10threads.c answer.c fibonacci.c helloworld.c roman.c fibre.c bitblt.c keyblit.c
+DEMOS = \
+	helloworld.c \
+	answer.c \
+	roman.c \
+	10threads.c \
+	fibonacci.c \
+	fibre.c \
+	bitblt.c keyblit.c \
+	checkers.c \
+	mandel.c
+
 TESTS = $(DEMOS)
 
 include $(top_srcdir)/build-aux/slctests.mk
