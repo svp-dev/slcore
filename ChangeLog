@@ -1,5 +1,9 @@
 2009-09-21  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	* deploy/versions.mk.defaults: Bump version numbers. 
+
+2009-09-21  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	Minor fix in `deploy'.
 	
 	* deploy/Makefile ($(PREFIX)/slenv): Ensure target is removed

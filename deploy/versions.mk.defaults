@@ -11,13 +11,13 @@ BASE_REPO = https://svn.svp-home.org
 BINUTILS_REV = 2733
 BINUTILS_REPO = $(BASE_REPO)/sw/svp/mg/binutils/trunk
 
-UTC_GCC_REV = 2727
+UTC_GCC_REV = 2821
 UTC_GCC_REPO = $(BASE_REPO)/sw/svp/mg/gcc/branches/mt-ra-shared-branch
 
-MGSIM_REV = 2734
+MGSIM_REV = 2823
 MGSIM_REPO = $(BASE_REPO)/sw/svp/mg/mgsim/trunk
 
-SLC_REV = 2738
+SLC_REV = 2828
 SLC_REPO = $(BASE_REPO)/sw/svp/sys/trunk/slc
 
 GCC_VERSION = 4.4.1
