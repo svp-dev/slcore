@@ -52,11 +52,11 @@
 [[#]]define __sl_getsha(Name) __sl_sharg_ ## Name
 [[#]]define __sl_setsha(Name, Val) do {				\
     __asm__ __volatile__("# MT: writing shared " # Name " (%0)"	\
-			 : "=r"(__sl_arg_ ## Name)		\
+			 : "=rf"(__sl_arg_ ## Name)		\
 			 : "0"(__sl_arg_ ## Name));		\
     __sl_arg_ ## Name = (Val);				\
     __asm__ __volatile__("# MT: shared " # Name " ready (%0)"	\
-			 : "=r"(__sl_arg_ ## Name)		\
+			 : "=rf"(__sl_arg_ ## Name)		\
 			 : "0"(__sl_arg_ ## Name));		\
   } while(0)
 

@@ -1114,27 +1114,33 @@ class pppalpha(object):
 
    def findusedcallregs(self, fundata, items):
       tosave = []
+      ftosave = []
       for areg in xrange(0,6):
          legnr = self.legacy_regs['a%d'%areg]
+         flegnr = self.legacy_fregs['fa%d'%areg]
+
          r = self.reg_inv[legnr]
+         rf = self.freg_inv[flegnr]
+
          assert len(r) == 1 and r[0]['cat'] == 'l'
+         assert len(rf) == 1 and rf[0]['cat'] == 'l'
+
          regnr = r[0]['nr'] 
-         if fundata['usedregs'][regnr]:
-            tosave.append(regnr)
+         fregnr = rf[0]['nr'] 
+
+         if fundata['usedregs'][regnr] or fundata['usedfregs'][fregnr]:
+            if fundata['usedregs'][regnr]:
+               tosave.append(regnr)
+            else:
+               tosave.append(None)
+            if fundata['usedfregs'][fregnr]:
+               ftosave.append(fregnr)
+            else:
+               ftosave.append(None)
          else: 
             break
 
-      ftosave = []
-      for areg in xrange(0,6):
-         flegnr = self.legacy_fregs['fa%d'%areg]
-         rf = self.freg_inv[flegnr]
-         assert len(rf) == 1 and rf[0]['cat'] == 'l'
-         fregnr = rf[0]['nr'] 
-         if fundata['usedfregs'][fregnr]:
-            ftosave.append(fregnr)
-         else:
-            break
-
+      # print "FOO", fundata['name'], tosave, ftosave
       fundata['usedcallregs'] = tosave
       fundata['usedcallfregs'] = ftosave
       return items
@@ -1162,9 +1168,11 @@ class pppalpha(object):
       if fundata['hasjumps']:
          init = []
          for r in set(fundata['usedcallregs']): # | fundata['spilledcallregs']:
-            init.append(('other','clr $l%d' % r, 'init call reg'))
+            if r is not None:
+               init.append(('other','clr $l%d' % r, 'init call reg'))
          for r in set(fundata['usedcallfregs']): # | fundata['spilledcallfregs']:
-            init.append(('other','fclr $lf%d' % r, 'init call freg'))
+            if r is not None:
+               init.append(('other','fclr $lf%d' % r, 'init call freg'))
          fundata['prologue'] = fundata['prologue'] + init
       return items
       
@@ -1205,9 +1213,9 @@ class pppalpha(object):
                yield ('other','stq $l%d, -16($l%d)' % (pvreg, spreg), '.fptr := PV')
                arg_offset = -24
                for i in xrange(protocol):
-                  if len(usedcallregs)>i:
+                  if len(usedcallregs)>i and usedcallregs[i] is not None:
                      yield ('other', 'stq $l%d, %d($l%d)' % (usedcallregs[i], arg_offset, spreg), '.arg[%d]' % i)
-                  if len(usedcallfregs)>i:
+                  if len(usedcallfregs)>i and usedcallfregs[i] is not None:
                      yield ('other', 'stt $lf%d, %d($l%d)' % (usedcallfregs[i], arg_offset - 8, spreg), 
                             '.farg[%d]' % i)
                   arg_offset -= 16
@@ -1236,9 +1244,9 @@ class pppalpha(object):
                yield ('other','stq $l%d, -16($l%d)' % (pvreg, spreg), '.fptr := PV')
                arg_offset = -24
                for i in xrange(protocol):
-                  if len(usedcallregs)>i:
+                  if len(usedcallregs)>i and usedcallregs[i] is not None:
                      yield ('other', 'stq $l%d, %d($l%d)' % (usedcallregs[i], arg_offset, spreg), '.arg[%d]' % i)
-                  if len(usedcallfregs)>i:
+                  if len(usedcallfregs)>i and usedcallfregs[i] is not None:
                      yield ('other', 'stt $lf%d, %d($l%d)' % (usedcallfregs[i], arg_offset - 8, spreg), 
                             '.farg[%d]' % i)
                   arg_offset -= 16
@@ -1272,9 +1280,9 @@ class pppalpha(object):
                yield ('other','stq $l%d, -16($l%d)' % (pv, spreg), '.fptr := PV')
                arg_offset = -24
                for i in xrange(protocol):
-                  if len(usedcallregs)>i:
+                  if len(usedcallregs)>i and usedcallregs[i] is not None:
                      yield ('other', 'stq $l%d, %d($l%d)' % (usedcallregs[i], arg_offset, spreg), '.arg[%d]' % i)
-                  if len(usedcallfregs)>i:
+                  if len(usedcallfregs)>i and usedcallfregs[i] is not None:
                      yield ('other', 'stt $lf%d, %d($l%d)' % (usedcallfregs[i], arg_offset - 8, spreg), 
                             '.farg[%d]' % i)
                   arg_offset -= 16
@@ -1508,6 +1516,15 @@ class pppalpha(object):
             if lbl in unused:
                yield ('empty','','MT: unused label: %s' % lbl)
                continue
+         yield (type, content, comment)
+
+   def fixemptyf(self, fundata, items):
+      r = re.compile(r'setempty\s(\$lf.*)$')
+      for (type, content, comment) in items:
+         if type == 'other':
+            m = r.match(content)
+            if m is not None:
+               content = 'setemptyf %s' % m.group(1)
          yield (type, content, comment)
 
    def protectend(self, fundata, items):
@@ -1818,7 +1835,7 @@ class pppalpha(object):
 
       stages = ['remdefaults', 'findlabels', 'killunusedlabels',
                 'addswchll', 'addswchbr', 'rmdupswch',
-                'prunenopend', 'protectend']
+                'prunenopend', 'protectend', 'fixemptyf']
       # parse flags
       opts = dict(((s,1) for s in stages))
       flags = flags.split(':',1)[1]

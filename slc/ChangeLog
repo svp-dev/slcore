@@ -1,3 +1,22 @@
+2009-09-23  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
+	Fix bugs in MT-alpha code generation.
+	
+	* tools/lib/t-pppalpha/include/sl_support.h: Fix `sl_setp' for
+	floating-point shared parameters.
+
+	* tools/bin/spp (pppalpha.findusedcallregs, pppalpha.rewritejsr):
+	Be (more) careful about function calls where both int and fp
+	registers are used for function calls.
+
+	* tools/bin/spp (pppalpha.fixemptyf, pppalpha.filter2): Add new
+	pass to rename `setempty' to `setemptyf' is the argument is a
+	floating-point register. Use it.
+
+	* tools/lib/t-utc0/slimpl.m4: Attempt to implement empty shared
+	thread arguments by emitting an explicit load from the top of the
+	address space.
+	
 2009-09-21  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
 	Simplify build.
