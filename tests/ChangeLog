@@ -1,3 +1,15 @@
+2009-09-23  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
+	Extend the unit test suite.
+
+	The following bugs were found: `setempty' was not functional for
+	floating-point shared parameters; and function calls with
+	heterogenous register classes as arguments would not be called
+	properly.
+	
+	* 0_slc/1_createargs/delaysharedf.c,
+	* 0_slc/4_funcalls/f11.c: New. 
+
 2009-09-15  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
 	Add test for `slr' bug.
