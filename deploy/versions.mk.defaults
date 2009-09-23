@@ -8,16 +8,16 @@ BASE_REPO = https://svn.svp-home.org
 ## BASE_REPO = svn+ssh://kena@mac-chris.science.uva.nl/Library/SVN/CSA
 
 ### Desired versions for the tools, where to find them
-BINUTILS_REV = 2733
+BINUTILS_REV = 2831
 BINUTILS_REPO = $(BASE_REPO)/sw/svp/mg/binutils/trunk
 
 UTC_GCC_REV = 2821
 UTC_GCC_REPO = $(BASE_REPO)/sw/svp/mg/gcc/branches/mt-ra-shared-branch
 
-MGSIM_REV = 2823
+MGSIM_REV = 2834
 MGSIM_REPO = $(BASE_REPO)/sw/svp/mg/mgsim/trunk
 
-SLC_REV = 2828
+SLC_REV = 2837
 SLC_REPO = $(BASE_REPO)/sw/svp/sys/trunk/slc
 
 GCC_VERSION = 4.4.1

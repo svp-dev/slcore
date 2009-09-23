@@ -1,3 +1,8 @@
+2009-09-23  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
+	* deploy/versions.mk.defaults: Bump version numbers. This is
+	required to support "setemptyf".
+
 2009-09-21  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
 	* deploy/versions.mk.defaults: Bump version numbers. 
