@@ -1,6 +1,6 @@
---- alpha.md.orig	2009-08-18 16:43:23.000000000 +0200
-+++ alpha.md	2009-08-18 16:43:11.000000000 +0200
-@@ -787,12 +787,10 @@
+--- alpha.md.orig	2009-02-20 16:20:38.000000000 +0100
++++ alpha.md	2009-09-24 13:57:50.000000000 +0200
+@@ -800,12 +800,10 @@
    "umulh %1,%2,%0"
    [(set_attr "type" "imul")
     (set_attr "opsize" "udi")])
@@ -17,7 +17,7 @@
  
  ;; ??? Force sign-extension here because some versions of OSF/1 and
  ;; Interix/NT don't do the right thing if the inputs are not properly
-@@ -800,126 +798,61 @@
+@@ -813,126 +811,61 @@
  ;; problem.  Is it worth the complication here to eliminate the sign
  ;; extension?
  
@@ -192,7 +192,7 @@
  {
    rtx div, mul = gen_reg_rtx (DImode);
  
-@@ -935,29 +868,7 @@
+@@ -948,29 +881,7 @@
    [(use (match_operand:DI 0 "register_operand" ""))
     (use (match_operand:DI 1 "register_operand" ""))
     (use (match_operand:DI 2 "register_operand" ""))]
@@ -223,7 +223,7 @@
  {
    rtx div, mul = gen_reg_rtx (DImode);
  
-@@ -969,146 +880,6 @@
+@@ -982,146 +893,6 @@
    DONE;
  })
  
@@ -370,3 +370,62 @@
  ;; Next are the basic logical operations.  We only expose the DImode operations
  ;; to the rtl expanders, but SImode versions exist for combine as well as for
  ;; the atomic operation splitters.
+@@ -6745,58 +6516,15 @@
+   if (GET_CODE (operands[1]) == CONST_INT
+       && INTVAL (operands[1]) < 32768)
+     {
+-      if (INTVAL (operands[1]) >= 4096)
+-	{
+-	  /* We do this the same way as in the prologue and generate explicit
+-	     probes.  Then we update the stack by the constant.  */
+-
+-	  int probed = 4096;
+-
+-	  emit_insn (gen_probe_stack (GEN_INT (- probed)));
+-	  while (probed + 8192 < INTVAL (operands[1]))
+-	    emit_insn (gen_probe_stack (GEN_INT (- (probed += 8192))));
+-
+-	  if (probed + 4096 < INTVAL (operands[1]))
+-	    emit_insn (gen_probe_stack (GEN_INT (- INTVAL(operands[1]))));
+-	}
+-
+       operands[1] = GEN_INT (- INTVAL (operands[1]));
+       operands[2] = virtual_stack_dynamic_rtx;
+     }
+   else
+     {
+-      rtx out_label = 0;
+-      rtx loop_label = gen_label_rtx ();
+       rtx want = gen_reg_rtx (Pmode);
+-      rtx tmp = gen_reg_rtx (Pmode);
+-      rtx memref;
+ 
+       emit_insn (gen_subdi3 (want, stack_pointer_rtx,
+ 			     force_reg (Pmode, operands[1])));
+-      emit_insn (gen_adddi3 (tmp, stack_pointer_rtx, GEN_INT (-4096)));
+-
+-      if (GET_CODE (operands[1]) != CONST_INT)
+-	{
+-	  out_label = gen_label_rtx ();
+-	  emit_insn (gen_cmpdi (want, tmp));
+-	  emit_jump_insn (gen_bgeu (out_label));
+-	}
+-
+-      emit_label (loop_label);
+-      memref = gen_rtx_MEM (DImode, tmp);
+-      MEM_VOLATILE_P (memref) = 1;
+-      emit_move_insn (memref, const0_rtx);
+-      emit_insn (gen_adddi3 (tmp, tmp, GEN_INT(-8192)));
+-      emit_insn (gen_cmpdi (tmp, want));
+-      emit_jump_insn (gen_bgtu (loop_label));
+-
+-      memref = gen_rtx_MEM (DImode, want);
+-      MEM_VOLATILE_P (memref) = 1;
+-      emit_move_insn (memref, const0_rtx);
+-
+-      if (out_label)
+-	emit_label (out_label);
+-
+       emit_move_insn (stack_pointer_rtx, want);
+       emit_move_insn (operands[0], virtual_stack_dynamic_rtx);
+       DONE;

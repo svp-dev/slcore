@@ -1,3 +1,20 @@
+2009-09-24  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
+	Modify the stock GCC to better support C99's VLA's.
+
+	The stock GNU compiler uses "stack probing" to allocate VLA's or
+	large frames; where a loop is emitted to ensure all pages of the
+	allocated space are touched in order, so that the OS can see it
+	needs to grow the VM space for the process. We do not need this on
+	the Microgrid, so remove it. Also GCC would use fixed register
+	names in this loop, which breaks the alternate SL->MT code
+	generator.
+	
+	* deploy/patches/alpha.c.patch: New.
+	* deploy/rules/gcc.mk: Use it. 
+	
+	* deploy/patches/alpha.md.patch: Update.
+
 2009-09-23  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
 	* deploy/versions.mk.defaults: Bump version numbers. This is

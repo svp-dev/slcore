@@ -24,6 +24,7 @@ $(SOURCES)/gcc-$(GCC_VERSION)/patch_done: $(SOURCES)/gcc-$(GCC_VERSION)/extract_
 	rm -f $@
 	(cd $(SOURCES)/gcc-$(GCC_VERSION)/gcc/config/alpha && \
 	   patch -p0 <$$OLDPWD/patches/alpha.h.patch && \
+	   patch -p0 <$$OLDPWD/patches/alpha.c.patch && \
 	   patch -p0 <$$OLDPWD/patches/alpha.md.patch && \
 	   patch -p0 <$$OLDPWD/patches/constraints.md.patch && \
 	   touch ../../../patch_done)
