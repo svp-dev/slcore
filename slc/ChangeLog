@@ -1,3 +1,10 @@
+2009-09-24  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
+	Small optimization in MT-alpha code generation.
+	
+	* tools/bin/spp (pppalpha.makerepl): Prepend the dollar signs
+	early.
+
 2009-09-23  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
 	Fix bugs in MT-alpha code generation.

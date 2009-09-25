@@ -656,7 +656,7 @@ class pppalpha(object):
          fargs.append('-fcall-used-$f%d' % self.legacy_fregs['fs%d' % i])
 
       cmd = [compiler] + fargs + list(args) # + ['-fverbose-asm']
-      try:         
+      try:
          retcode = subprocess.call(cmd)
          sys.exit(retcode)
       except Exception, e:
@@ -680,18 +680,18 @@ class pppalpha(object):
             r = regs[spec][cat][i]
             key = "%s%d" % (pref,r['legnr'])
             assert not subst.has_key(key)
-            subst[key] = r['name']
+            subst[key] = '$' + r['name']
       for (spec, pref) in [('i',''),('f','f')]:
          for r in (r for r in regs[spec]['l'] if r is not None):
             key = "%s%d" % (pref,r['legnr'])
             assert not subst.has_key(key)
-            subst[key] = r['name']
-
+            subst[key] = '$' + r['name']
+      #print "MAKEREPL: ", subst
       def repl(match):
          r = match.group(1)
          #if r == "$31" or r == "$f31":
          #   return r
-         return '$' + subst.get(r[1:], r)
+         return subst.get(r[1:], r)
       
       return repl
 
