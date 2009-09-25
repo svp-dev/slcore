@@ -15,6 +15,9 @@
 #ifndef SLC_SVP_SEP_H
 # define SLC_SVP_SEP_H
 
+#ifdef __mt_freestanding__
+#define SVP_HAS_SEP 1
+
 #include <cstddef.h>
 
 // information returned by sep_alloc etc.
@@ -59,5 +62,8 @@ sl_decl(sep_dump_info, void);
 // to be called once (in the init routine)
 void sep_init(void* init_parameters);
 
+#else
+#define SVP_HAS_SEP 0
+#endif
 
 #endif // ! SLC_SVP_SEP_H

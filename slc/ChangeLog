@@ -1,5 +1,13 @@
 2009-09-25  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	Expose the availability of place management to programs.
+
+	* lib/include/svp/sep.h: Introduce the macro `SVP_HAS_SEP' is
+	introduced which signals to program the availability of place
+	management.
+
+2009-09-25  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	Integrate the place allocator in the library.
 
 	* tools/lib/mtalpha-sim/slrt.s: Move the definition of the
