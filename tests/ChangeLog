@@ -1,3 +1,15 @@
+2009-09-24  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
+	Extend the unit test suite.
+
+	The following bugs were found: when C99 VLA's would be allocated,
+	or local arrays with large sizes, the compiler would emit invalid
+	code due to the stack probing logic emitted by GCC. (Reported by
+	Carl Joslin).
+	
+	* 0_slc/4_vlas/bigvla.c,
+	* 0_slc/4_vlas/idxvla.c: New.
+
 2009-09-23  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
 	Extend the unit test suite.
