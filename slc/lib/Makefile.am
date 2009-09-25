@@ -16,6 +16,8 @@ EXTRA_DIST = \
 	src/io.c \
 	src/gfx.c \
 	src/roman.c \
+	src/mtinit.c \
+	src/mtsep.c \
 	src/div.c
 
 nobase_dist_pkgdata_DATA = \
@@ -32,6 +34,7 @@ nobase_dist_pkgdata_DATA = \
 	include/svp/div.h \
 	include/svp/io.h \
 	include/svp/gfx.h \
+	include/svp/sep.h \
 	include/svp/roman.h \
 	include/svp/iomacros.h \
 	include/svp/perf.h

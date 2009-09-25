@@ -9,6 +9,8 @@ EXTRA_DIST += \
 	src/malloc_intrinsics.c \
 	src/malloc_wrappers.c \
 	src/malloc.c \
+	src/mtinit.c \
+	src/mtsep.c \
 	src/strlib.c
 
 nobase_dist_pkgdata_DATA += \
@@ -22,6 +24,8 @@ nobase_pkglib_DATA += \
 
 mtalpha_sim_libsl_a_CONTENTS = \
 	mtalpha-sim/mtdiv.o \
+	mtalpha-sim/mtinit.o \
+	mtalpha-sim/mtsep.o \
 	mtalpha-sim/roman.o \
 	mtalpha-sim/io.o \
 	mtalpha-sim/divl.o \
@@ -107,6 +111,8 @@ CLEANFILES += \
 	mtalpha-sim/malloc_wrappers.o \
 	mtalpha-sim/malloc_intrinsics.o \
 	mtalpha-sim/malloc.o \
+	mtalpha-sim/mtinit.o \
+	mtalpha-sim/mtsep.o \
 	mtalpha-sim/strlib.o \
 	mtalpha-sim/libsl.a
 

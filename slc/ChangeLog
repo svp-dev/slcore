@@ -1,3 +1,18 @@
+2009-09-25  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
+	Integrate the place allocator in the library.
+
+	* tools/lib/mtalpha-sim/slrt.s: Move the definition of the
+	pointers to fibre and variable data, as well as their
+	initializations, to C code in...
+	
+	* slc/lib/src/mtinit.c: here. Call the place allocator
+	initialization as part of the library initialization.
+	
+	* slc/lib/Makefile.am: Mention the new files.
+
+	* slc/lib/mtalpha.mk: Compile them into the library.
+
 2009-09-24  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
 	Import Joe's work on place allocation.
