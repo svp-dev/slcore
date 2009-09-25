@@ -1,3 +1,14 @@
+2009-09-24  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
+	Import Joe's work on place allocation.
+
+	An initial version of a SVP place allocator was developed by Joe
+	Master using a first-fit algorithm; this was extended to provide
+	multiple allocation policies.
+	
+	* lib/include/svp/sep.h,
+	* lib/src/mtsep.c: New.
+
 2009-09-25  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
 	Fix symbolic place names in `seqc'.
