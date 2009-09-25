@@ -17,22 +17,20 @@
 #include <svp/compiler.h>
 #include <svp/slr.h>
 #include <svp/perf.h>
+#include <svp/sep.h>
 #include <svp/gfx.h>
+#include <svp/assert.h>
 
-// SLT_RUN: res=10,10 -n 1,4
+// SLT_RUN: res=10,10 nprocs=4 -n 1,1,4
 
-#ifdef __mt_freestanding__
-#define par_place 12
-#define excl_place 5
-#else
-#define par_place PLACE_DEFAULT
-#define excl_place PLACE_DEFAULT
-#endif
+sl_place_t par_place;
+sl_place_t excl_place;
 
 slr_decl(slr_var(unsigned, res, "resolution (W,H)"),
 	 slr_var(double, box, "bounding box (xmin,xmax,ymin,ymax)"),
 	 slr_var(unsigned, icount, "max # iterations"),
 	 slr_var(unsigned, blocksize, "# threads / core"),
+	 slr_var(unsigned, nprocs, "desired number of cores"),
 	 slr_var(int, verbose));
 
 
@@ -153,9 +151,35 @@ sl_def(t_main, void)
   unsigned long i, icount = 32;
   double pscale;
   int verbose = 0;
+  unsigned nprocs_wanted = 1;
 
   if (slr_len(verbose) && slr_get(verbose)[0])
     verbose = 1;
+
+  if (slr_len(nprocs))
+    nprocs_wanted = slr_get(nprocs)[0];
+
+#if SVP_HAS_SEP
+  sl_create(,sep_place->pid,,,,,, sep_alloc,
+	    sl_glarg(enum sep_alloc_policy, _s0, SAL_MIN),
+	    sl_glarg(int, _s1, nprocs_wanted),
+	    sl_sharg(struct placeinfo*, p1, 0));
+  sl_sync();
+  sl_create(,sep_place->pid,,,,,, sep_alloc,
+	    sl_glarg(enum sep_alloc_policy, _s2, SAL_DONTCARE),
+	    sl_glarg(int, _s3, 0),
+	    sl_sharg(struct placeinfo*, p2, 0));
+  sl_sync();
+  svp_assert(sl_geta(p1) != 0 && sl_geta(p2) != 0);
+  if (verbose)
+    printf("# Running compute with %d cores, exclusion with %d cores\n",
+	   sl_geta(p1)->ncores, sl_geta(p2)->ncores);
+
+  par_place = sl_geta(p1)->pid;
+  excl_place = sl_geta(p2)->pid | 1; // FIXME: manual exclusion bit
+#else
+  par_place = excl_place = PLACE_DEFAULT;
+#endif
 
   if (slr_len(icount))
     icount = slr_get(icount)[0];
@@ -231,5 +255,14 @@ sl_def(t_main, void)
 
   gfx_dump(0, 1, 0, 0);
   gfx_close();
+
+#if SVP_HAS_SEP
+  sl_create(,sep_place->pid,,,,,, sep_free,
+	    sl_glarg(struct placeinfo*, _sf0, sl_geta(p1)));
+  sl_sync();
+  sl_create(,sep_place->pid,,,,,, sep_free,
+	    sl_glarg(struct placeinfo*, _sf1, sl_geta(p2)));
+  sl_sync();
+#endif
 }
 sl_enddef
