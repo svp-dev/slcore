@@ -1,3 +1,13 @@
+2009-09-25  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
+	Fix symbolic place names in `seqc'.
+
+	The `seqc' implementation was out-of-sync with the others in not
+	defining `PLACE_LOCAL' and `PLACE_DEFAULT'.
+	
+	* tools/lib/t-seqc/include/sl_support.h: Rename `SVP_LOCAL' to
+	`PLACE_LOCAL' and define `PLACE_DEFAULT'.
+
 2009-09-24  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
 	Small optimization in MT-alpha code generation.
