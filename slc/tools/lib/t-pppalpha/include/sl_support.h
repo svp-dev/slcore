@@ -15,6 +15,9 @@
 #ifndef SLC_SL_SUPPORT_H
 # define SLC_SL_SUPPORT_H
 
+[[#]]ifndef SL_SUPPORT_DEFINED
+[[#]]define SL_SUPPORT_DEFINED
+
 [[#]]define __sl_getshp(Name)						\
   ({									\
     __asm__ __volatile__("# MT: read shared " # Name " (%0)"		\
@@ -161,5 +164,8 @@ typedef void (*__sl_fptr_t)(void);
 [[#]]define SVP_ENOERR 0
 [[#]]define SVP_EBROKEN 1
 [[#]]define SVP_EKILLED 2
+
+[[#]]endif
+
 
 #endif // ! SLC_SL_SUPPORT_H

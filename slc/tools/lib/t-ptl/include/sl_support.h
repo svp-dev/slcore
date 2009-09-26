@@ -15,6 +15,9 @@
 #ifndef SLC_SL_SUPPORT_H
 # define SLC_SL_SUPPORT_H
 
+[[#]]ifndef SL_SUPPORT_DEFINED
+[[#]]define SL_SUPPORT_DEFINED
+
 // the following two are required to enabled
 // C99 macro definitions in C++ mode
 # ifndef __STDC_LIMIT_MACROS
@@ -40,5 +43,7 @@ typedef uTC::place sl_place_t;
 [[#]]define SVP_ENOERR uTC::EXIT_NORMAL
 [[#]]define SVP_EBROKEN uTC::EXIT_BREAK
 [[#]]define SVP_EKILLED uTC::EXIT_KILL
+
+[[#]]endif
 
 #endif // ! SLC_SL_SUPPORT_H

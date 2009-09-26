@@ -15,6 +15,9 @@
 #ifndef SLC_SL_SUPPORT_H
 # define SLC_SL_SUPPORT_H
 
+[[#]]ifndef SL_SUPPORT_DEFINED
+[[#]]define SL_SUPPORT_DEFINED
+
 [[#]]define __svp_break(Val) do { \
     __asm__ __volatile__("break %0" : : "rI"(Val)); \
     while(1) __asm__ __volatile__("nop\n\tswch"); \
@@ -36,5 +39,7 @@ typedef long sl_place_t;
 [[#]]define SVP_ENORMAL 0
 [[#]]define SVP_EBROKEN 1
 [[#]]define SVP_EKILLED 2
+
+[[#]]endif
 
 #endif // ! SLC_SL_SUPPORT_H

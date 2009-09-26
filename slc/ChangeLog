@@ -1,3 +1,17 @@
+2009-09-26  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
+	Fix support for `slc -combine'.
+
+	When using `-combine=P', multiple inclusions of `sl_support.h'
+	would occur and cause multiple definitions to happen later during
+	compilation.
+	
+	* tools/lib/t-utc0/include/sl_support.h,
+	* tools/lib/t-seqc/include/sl_support.h,
+	* tools/lib/t-ptl/include/sl_support.h,	
+	* tools/lib/t-pppalpha/include/sl_support.h: Protect definitions
+	with conditional.
+
 2009-09-25  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
 	Add support for reusing `slr' parameters.
