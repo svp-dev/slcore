@@ -1,5 +1,15 @@
 2009-09-26  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	Add support for multiple source files per unit test.
+
+	* tools/bin/slt.in: Recognize `--' as separator between test
+	sources and the implementation list. For backward compatibility,
+	if the separator is not present, only one source file is
+	allowed. Handle multiple sources per test. (Requested by
+	M. Lankamp)
+
+2009-09-26  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	Fix support for `slc -combine'.
 
 	When using `-combine=P', multiple inclusions of `sl_support.h'
