@@ -277,43 +277,46 @@ Implementation-specific extra compilation and execution arguments:
   "-n 1" added to the execution command line.
 
 Environment variables:
-  SLC            Location of the SL compiler. Default is 
-                 "slc" in the same directory as \`$basename'.
+  SLC             Location of the SL compiler. Default is 
+                  "slc" in the same directory as \`$basename'.
 
-  SLR            Location of the SL runner. Default is 
-                 "slr" in the same directory as \`$basename'.
+  SLR             Location of the SL runner. Default is 
+                  "slr" in the same directory as \`$basename'.
 
-  KEEP           If set, do not erase intermediary files when a test
-                 succeeds. Default is not set.
+  EXTRA_RUN_ARGS  Extra command-line arguments to provide on each run
+                  of "slr".
 
-  TEXT_ONLY      If set and not empty, use plain text messages instead
-                 of colored/positioned characters on the console.
+  KEEP            If set, do not erase intermediary files when a test
+                  succeeds. Default is not set.
 
-  SEQUENTIAL     If set and not empty, run tests sequentially.
+  TEXT_ONLY       If set and not empty, use plain text messages instead
+                  of colored/positioned characters on the console.
 
-  DUMP_LOGS      If set and not empty, dump error logs on failure.
+  SEQUENTIAL      If set and not empty, run tests sequentially.
 
-  XIGNORE        If set and not empty, prepend to the XIGNORE pattern
-                 list set by programs. Can be used to mark specific
-                 implementations as not relevant for overall test results.
-                 Default is "XIGNORE=*x:*"
+  DUMP_LOGS       If set and not empty, dump error logs on failure.
 
-  SLT_IMPL_LIST  Used when no implementation names are supplied on
-                 the command line.
+  XIGNORE         If set and not empty, prepend to the XIGNORE pattern
+                  list set by programs. Can be used to mark specific
+                  implementations as not relevant for overall test results.
+                  Default is "XIGNORE=*x:*"
 
-  SRCDIR         If set and non-empty, use to truncate the beginning
-                 of the test path when creating the output
-                 directory. Also, use to generate an additional -I
-                 flag during compilation to support test files in a
-                 subtree of the current directory that include other
-                 sources from a counterpart in SRCDIR.
+  SLT_IMPL_LIST   Used when no implementation names are supplied on
+                  the command line.
+
+  SRCDIR          If set and non-empty, use to truncate the beginning
+                  of the test path when creating the output
+                  directory. Also, use to generate an additional -I
+                  flag during compilation to support test files in a
+                  subtree of the current directory that include other
+                  sources from a counterpart in SRCDIR.
 
 Diagnostics:
-  0              The test succeeded.
+  0               The test succeeded.
 
-  1              The test failed.
+  1               The test failed.
 
-  2              Invalid test parameters.
+  2               Invalid test parameters.
 
 Report bugs and suggestions to $bugreports.
 EOF
@@ -546,7 +549,7 @@ do_run() {
 	  echo "===== RUNNING PROGRAM: ${vars[*]} =====" >>"$baseout.log"
 	  varstuff=("${vars[@]}" ${RUN_ARGS:+"${RUN_ARGS[@]}"})
 	  varstuff=("${varstuff[@]//TEST/$testsrc}")
-	  command=("$timeout" "$runner" -t "$baseout.x" "${varstuff[@]}")
+	  command=("$timeout" "$runner" -t "$baseout.x" "${varstuff[@]}" $EXTRA_RUN_ARGS)
 	  echo "${command[*]} >>$baseout.out" >>"$baseout.log"
 	  set +e
 	  KEEP=1 "${command[@]}" >>"$baseout.out" 2>>"$baseout.log"

@@ -1,5 +1,12 @@
 2009-09-25  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	Add support for reusing `slr' parameters.
+	
+	* tools/bin/slt.in: Use the variable `EXTRA_RUN_ARGS' on each run
+	of `slr'. (Requested by M. Lankamp)
+
+2009-09-25  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	Expose the availability of place management to programs.
 
 	* lib/include/svp/sep.h: Introduce the macro `SVP_HAS_SEP' is
