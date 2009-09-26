@@ -191,9 +191,9 @@ Usage: $0 [SOURCE].. [--] [IMPLEMENTATION]...
 
 Options:
 
-  -h, --help    Print this help.
-  -v, --version Print a version number.
-
+  -h, --help     Print this help.
+  -v, --version  Print a version number.
+  -a ARG         Append ARG to every \`slr' command-line.
 
 Multiple implementations can be specified, and each multiple times. If
 no implementation is specified on the command line, the environment
@@ -287,9 +287,6 @@ Environment variables:
   SLR             Location of the SL runner. Default is 
                   "slr" in the same directory as \`$basename'.
 
-  EXTRA_RUN_ARGS  Extra command-line arguments to provide on each run
-                  of "slr".
-
   KEEP            If set, do not erase intermediary files when a test
                   succeeds. Default is not set.
 
@@ -327,9 +324,19 @@ EOF
    exit 0 
 }
 
+words=()
+extra_run_args=()
 found_sep=
 for arg in "$@"; do
+    if test -n "$append_args"; then
+	append_args=
+	extra_run_args+=("$arg")
+	continue
+    fi
     case $arg in
+	-a)
+	    test -n "$found_sep" || append_args=1
+	    ;;
 	--help|-h)
             usage
             exit 0
@@ -348,8 +355,9 @@ Written by Raphael 'kena' Poss.
 EOF
 	    exit 0
 	    ;;
-	--) found_sep=1; break ;;
-	-*) die "unrecognized option \`$arg'" ;;
+	--) found_sep=1; words+=(--) ;;
+	-*) test -n "$found_sep" && die "unrecognized option \`$arg'" ;;
+	*) words+=("$arg") ;;
     esac
 done
 
@@ -358,9 +366,9 @@ if test -n "$found_sep"; then
     fixture=()
     impl_list=()
     after_sep=
-    for arg in "$@"; do
+    for arg in "${words[@]}"; do
 	if test -n "$after_sep"; then
-	    impl_list+=($arg)
+	    impl_list+=("$arg")
 	else
 	    if test "x$arg" = "x--"; then
 		after_sep=1
@@ -368,15 +376,14 @@ if test -n "$found_sep"; then
 		if ! test -r "$arg"; then
 		    die "$arg: cannot read file" 
 		fi
-		fixture+=($arg)
+		fixture+=("$arg")
 	    fi
 	fi
     done
 else
     # arg format: file impl impl ...
-    fixture=($1)
-    shift
-    impl_list=("$@")
+    fixture=("${words[0]}")
+    impl_list=("${words[@]:1}")
 fi
 
 if test 0 = ${#fixture[*]}; then
@@ -583,9 +590,9 @@ do_run() {
       printf '' >"$baseout.out"
       while read -a vars ; do
 	  echo "===== RUNNING PROGRAM: ${vars[*]} =====" >>"$baseout.log"
-	  varstuff=("${vars[@]}" ${RUN_ARGS:+"${RUN_ARGS[@]}"})
+	  varstuff=("${vars[@]}" ${RUN_ARGS:+"${RUN_ARGS[@]}"} "${extra_run_args[@]}")
 	  varstuff=("${varstuff[@]//TEST/$testsrc}")
-	  command=("$timeout" "$runner" -t "$baseout.x" "${varstuff[@]}" $EXTRA_RUN_ARGS)
+	  command=("$timeout" "$runner" -t "$baseout.x" "${varstuff[@]}")
 	  echo "${command[*]} >>$baseout.out" >>"$baseout.log"
 	  set +e
 	  KEEP=1 "${command[@]}" >>"$baseout.out" 2>>"$baseout.log"

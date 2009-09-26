@@ -1,5 +1,16 @@
 2009-09-26  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	Fix support for reusing `slr' parameters in `slt'.
+
+	A previous patch introduced a new environment variable
+	EXTRA_RUN_ARGS. This approach is too intrusive as it can leak
+	across test cases in a shell environment.
+
+	* tools/bin/slt.in: Remove support for EXTRA_RUN_ARGS. Introduce a
+	new option `-a' with the same effect.
+
+2009-09-26  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	Add support for multiple source files per unit test.
 
 	* tools/bin/slt.in: Recognize `--' as separator between test
