@@ -17,6 +17,20 @@
 
 #ifdef __mt_freestanding__
 
+#if __FLT_EVAL_METHOD__ == 0
+typedef float float_t;
+typedef double double_t;
+#elif __FLT_EVAL_METHOD__ == 1
+typedef double float_t;
+typedef double double_t;
+#elif __FLT_EVAL_METHOD__ == 2 || __FLT_EVAL_METHOD__ == -1
+typedef long double float_t;
+typedef long double double_t;
+#else /* __FLT_EVAL_METHOD__ */
+        #error "Unsupported value of __FLT_EVAL_METHOD__."
+#endif /* __FLT_EVAL_METHOD__ */
+
+
 # define HUGE_VAL (__builtin_huge_val())
 # define HUGE_VALF (__builtin_huge_valf())
 # define INFINITY (__builtin_inff())
@@ -28,7 +42,7 @@
 
 # define MATH_ERRNO     1       /* errno set by math functions.  */
 # define MATH_ERREXCEPT 2       /* Exceptions raised by math functions.  */
-# define math_errhandling 1
+# define math_errhandling 0
 
 # define M_E            2.7182818284590452354   /* e */
 # define M_LOG2E        1.4426950408889634074   /* log_2 e */

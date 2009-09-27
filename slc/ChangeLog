@@ -1,5 +1,13 @@
 2009-09-27  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	Improve support for C99 math.
+	
+	* lib/include/cmath.h: Properly define `float_t' and
+	`double_t'. Set `math_errhandling' to 0 since there is actually no
+	handling implemented.
+
+2009-09-27  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	* tools/bin/slt.in: Compile tests with `-lm'.
 
 2009-09-27  Raphael 'kena' Poss  <r.c.poss@uva.nl>
