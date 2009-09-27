@@ -5,6 +5,7 @@ EXTRA_DIST += \
 	src/mtalpha/divide.S \
 	src/mtalpha/memset.S \
 	src/mtalpha/memcpy.s \
+	src/missing_uclibc_math.c \
 	src/malloc_intrinsics.h \
 	src/malloc_intrinsics.c \
 	src/malloc_wrappers.c \
@@ -20,6 +21,7 @@ nobase_dist_pkgdata_DATA += \
 if ENABLE_SLC_MTALPHA
 
 nobase_pkglib_DATA += \
+   mtalpha-sim/libm.a \
    mtalpha-sim/libsl.a
 
 mtalpha_sim_libsl_a_CONTENTS = \
@@ -38,6 +40,12 @@ mtalpha_sim_libsl_a_CONTENTS = \
 	mtalpha-sim/malloc_intrinsics.o \
 	mtalpha-sim/malloc.o \
 	mtalpha-sim/strlib.o
+
+include $(srcdir)/src/mtamathobjs.mk
+
+mtalpha_sim_libm_a_CONTENTS = \
+	$(MTAMATHOBJS) \
+	mtalpha-sim/missing_uclibc_math.o
 
 SLC_MTALPHA = $(SLC_RUN) -b ppp-mtalpha -nostdlib
 
@@ -95,6 +103,12 @@ mtalpha-sim/libsl.a: $(mtalpha_sim_libsl_a_CONTENTS)
 	$(AM_V_AR)$(AR_MTALPHA) cru $@ $^
 	$(AM_V_at)$(RANLIB_MTALPHA) $@
 
+mtalpha-sim/libm.a: $(mtalpha_sim_libm_a_CONTENTS)
+	$(AM_V_at)rm -f $@
+	$(AM_V_AR)$(AR_MTALPHA) cru $@ $^
+	$(AM_V_at)$(RANLIB_MTALPHA) $@
+
+
 endif
 
 CLEANFILES += \
@@ -114,5 +128,7 @@ CLEANFILES += \
 	mtalpha-sim/mtinit.o \
 	mtalpha-sim/mtsep.o \
 	mtalpha-sim/strlib.o \
+	mtalpha-sim/missing_uclibc_math.o \
+	mtalpha-sim/libm.a \
 	mtalpha-sim/libsl.a
 
