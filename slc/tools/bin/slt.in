@@ -566,7 +566,7 @@ do_compile() {
   offset=$1
   echo "===== TEST: ${fixture[*]}, COMPILE ======" >$baseout.log
   mkdir -p "$baseout.build"
-  command=("$slc" -v -t "$baseout.build" -b "$impl" -o "$baseout.x" "${fixture[@]}" -I. ${COMPILE_ARGS:+"${COMPILE_ARGS[@]}"})
+  command=("$slc" -v -t "$baseout.build" -b "$impl" -o "$baseout.x" "${fixture[@]}" -I. ${COMPILE_ARGS:+"${COMPILE_ARGS[@]}"} -lm)
   echo "${command[*]}" >>$baseout.log
   set +e
   KEEP=1 TIMEOUT=60 "${command[@]}" >>$baseout.log 2>&1

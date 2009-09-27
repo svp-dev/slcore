@@ -1,5 +1,9 @@
 2009-09-27  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	* tools/bin/slt.in: Compile tests with `-lm'.
+
+2009-09-27  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	Add support for C99 math on MT-alpha.
 
 	* lib/include/cfloat.h,
@@ -174,8 +178,7 @@
 	
 	* lib/src/mtamathobjs.mk: List the precompiled objects.
 	
-	* lib/mtalpha.mk: New target `mtalpha-sim/libm.a'.
-	
+	* lib/mtalpha.mk: New target `mtalpha-sim/libm.a'.	
 
 2009-09-26  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
