@@ -210,6 +210,7 @@ sl_def(do_test, void)
   call2i(isunordered);
 
 #undef x
+#undef xf
 #undef y
 #undef n
 }
@@ -237,6 +238,12 @@ sl_def(t_main, void)
   sl_create(,,,,,,, do_test);
   sl_sync();
 
+  double_t xd = x;
+  float_t xf = x;
+  output_float(xd, 1, 4);
+  output_char('\n', 1);
+  output_float(xf, 1, 4);
+  output_char('\n', 1);
   output_float(HUGE_VAL, 1, 4);
   output_char('\n', 1);
   output_float(HUGE_VALF, 1, 4);

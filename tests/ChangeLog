@@ -1,5 +1,11 @@
 2009-09-27  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	Check C99 math more.
+	
+	* 2_lib/math/avail.c: Test `float_t' and `double_t' as well.
+
+2009-09-27  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	Extend the unit test suite.
 	
 	* 2_lib/math/avail.c,
