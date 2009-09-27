@@ -1,5 +1,13 @@
 2009-09-27  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	Minor packaging fix.
+
+	* lib/Makefile.am: Install math headers.
+	
+	* lib/mtalpha.mk: Distribute math modules.
+
+2009-09-27  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	Improve support for C99 math.
 	
 	* lib/include/cmath.h: Properly define `float_t' and

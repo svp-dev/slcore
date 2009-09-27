@@ -42,6 +42,7 @@ mtalpha_sim_libsl_a_CONTENTS = \
 	mtalpha-sim/strlib.o
 
 include $(srcdir)/src/mtamathobjs.mk
+EXTRA_DIST += $(MTAMATHOBJS)
 
 mtalpha_sim_libm_a_CONTENTS = \
 	$(MTAMATHOBJS) \

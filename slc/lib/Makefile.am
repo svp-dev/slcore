@@ -27,6 +27,8 @@ nobase_dist_pkgdata_DATA = \
 	include/climits.h \
 	include/cmalloc.h \
 	include/calloca.h \
+	include/cmath.h \
+	include/cfloat.h \
 	include/sac_helpers.h \
 	include/svp/argslot.h \
 	include/svp/assert.h \
