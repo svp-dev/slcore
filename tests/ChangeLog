@@ -1,3 +1,10 @@
+2009-09-27  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
+	Extend the unit test suite.
+	
+	* 2_lib/math/avail.c,
+	* 2_lib/math/tgamma.c: New.
+	
 2009-09-24  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
 	Extend the unit test suite.
