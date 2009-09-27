@@ -1,5 +1,12 @@
 2009-09-27  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	Small optimization in MT-alpha code generation.
+
+	* tools/bin/spp (pppalpha.addswchll): Properly recognize `sqrt' as
+	a long-latency operation.
+
+2009-09-27  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	Minor packaging fix.
 
 	* lib/Makefile.am: Install math headers.

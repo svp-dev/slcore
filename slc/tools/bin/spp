@@ -1541,10 +1541,10 @@ class pppalpha(object):
    def addswchll(self, fundata, items):
       re3way = re.compile(r'\w+\s([^,]+),([^,]+),([^,]+)$')
       re1way = re.compile(r'\w+\s([^,]+)$')
-      re2way = re.compile(r'(?:mov|cvt\S*|itof\S*|ftoi\S*)\s([^,]+),([^,]+)$')
+      re2way = re.compile(r'(?:mov|sqrt\S*|cvt\S*|itof\S*|ftoi\S*)\s([^,]+),([^,]+)$')
       rexway = re.compile(r'\w+\s([^,]+),(.*)')
       reld = re.compile(r'(ld[lqts]|ld[bw]u)')
-      re3wayll = re.compile(r'(add|sub|mul|div|sqrt)[fgts]')
+      re3wayll = re.compile(r'(add|sub|mul|div)[fgts]')
       w1way = re.compile(r'(setempty|rpcc|ldfp|f?clr)')
       jre = self.jre
 
@@ -1608,7 +1608,10 @@ class pppalpha(object):
             if m is not None and not done:
                r1, r2 = m.groups()
                reads.append(r1)
-               shortwrites.append(r2)
+               if content.startswith('sqrt'):
+                  longwrites.append(r2)
+               else:
+                  shortwrites.append(r2)
                done = 1
 
        
