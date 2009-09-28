@@ -20,11 +20,9 @@
 #include <svp/sep.h>
 #include <svp/gfx.h>
 #include <svp/assert.h>
+#include <cmath.h>
 
 // SLT_RUN: res=10,10 nprocs=4 -n 1,1,4
-
-sl_place_t par_place;
-sl_place_t excl_place;
 
 slr_decl(slr_var(unsigned, res, "resolution (W,H)"),
 	 slr_var(double, box, "bounding box (xmin,xmax,ymin,ymax)"),
@@ -82,7 +80,6 @@ sl_def(displayAfter, void,
 }
 sl_enddef
 
-
 sl_def(mandel, void,
        sl_glfparm(double, xstart),
        sl_glfparm(double, ystart),
@@ -93,6 +90,7 @@ sl_def(mandel, void,
        sl_glparm(unsigned, xres),
        sl_glparm(unsigned, yres),
        sl_glparm(unsigned long, icount),
+       sl_glparm(unsigned long*restrict, colors),
        sl_glfparm(double, pscale)
 #ifndef SKIP_MEM
        , sl_glparm(uint3*restrict, mem)
@@ -120,10 +118,7 @@ sl_def(mandel, void,
       zx = t;
     }
 
-  v *= sl_getp(pscale);
-  v = (v > 255) ? 255 : v;
-  v &= 0xff;
-  v = (v << 16) | (v << 8) | v;
+  v = sl_getp(colors)[v];
 #ifndef SKIP_MEM
   sl_getp(mem)[i][0] = dx;
   sl_getp(mem)[i][1] = dy;
@@ -144,13 +139,17 @@ sl_def(mandel, void,
 }
 sl_enddef
 
-sl_def(t_main, void)
+unsigned xN = 100, yN = 100;
+double xmin = -2., xmax = 2., ymin=-2., ymax=2.;
+int verbose = 0;
+double pscale;
+unsigned long icount = 32;
+unsigned long threads_per_core = 0; // MAX
+sl_place_t par_place;
+sl_place_t excl_place;
+
+sl_def(configure, void)
 {
-  unsigned xN = 100, yN = 100;
-  double xmin = -2., xmax = 2., ymin=-2., ymax=2.;
-  unsigned long i, icount = 32;
-  double pscale;
-  int verbose = 0;
   unsigned nprocs_wanted = 1;
 
   if (slr_len(verbose) && slr_get(verbose)[0])
@@ -197,24 +196,54 @@ sl_def(t_main, void)
     ymax = slr_get(box)[3];
   }
 
-  unsigned B = 0;
   if (slr_len(blocksize))
-    B = slr_get(blocksize)[0];
+    threads_per_core = slr_get(blocksize)[0];
+}
+sl_enddef
 
+sl_def(prepare_colors, void,
+       sl_glparm(unsigned long*restrict, colors),
+       sl_glfparm(double, licount))
+{
+  sl_index(i);
+
+#define RGB(G) ((G << 16) | (G << 8) | 128+(G/2))
+  unsigned long v = 255*log(1+i)/sl_getp(licount);
+  sl_getp(colors)[i] = RGB(v);
+}
+sl_enddef
+
+sl_def(t_main, void)
+{
+  /* get configuration from environment */
+  sl_proccall(configure);
+
+  /* initialize colors */
+  unsigned long colors[icount+1];
+  double licount = log(icount+1);
+  sl_create(,par_place,,icount+2,,,, prepare_colors,
+	    sl_glarg(unsigned long*restrict, _pc0, colors),
+	    sl_glfarg(double, _pc1, licount));
+  sl_sync();
+
+
+  /* compute problem size */
   unsigned N = xN * yN;
 
 #ifndef SKIP_MEM
   uint3 values[N];
 #endif
 
+  /* initialize graphics output */
   gfx_init();
   gfx_resize(xN, yN);
 
+  /* do computation */
   if (verbose)
     printf("# Computing... (icount=%d)\n", icount);
 
   uint64_t c1 = get_cycles();
-  sl_create(,par_place,,N,,B,,
+  sl_create(,par_place,,N,,threads_per_core,,
 	    mandel,
 	    sl_glfarg(double, _0, xmin),
 	    sl_glfarg(double, _1, ymin),
@@ -225,6 +254,7 @@ sl_def(t_main, void)
 	    sl_glarg(unsigned, _6, xN),
 	    sl_glarg(unsigned, _7, yN),
 	    sl_glarg(unsigned long, _7a, icount),
+	    sl_glarg(unsigned long*restrict, _7c, colors),
 	    sl_glfarg(double, _7b, pscale)
 #ifndef SKIP_MEM
 	    , sl_glarg(uint3*restrict, _8, values)
@@ -253,16 +283,10 @@ sl_def(t_main, void)
     printf("# Done. (%d cycles = %f s @ 1Ghz)\n",
 	   c2-c1, ((float)(c2-c1))/1e9);
 
+  /* dump screenshot and terminate */
+
   gfx_dump(0, 1, 0, 0);
   gfx_close();
 
-#if SVP_HAS_SEP
-  sl_create(,sep_place->pid,,,,,, sep_free,
-	    sl_glarg(struct placeinfo*, _sf0, sl_geta(p1)));
-  sl_sync();
-  sl_create(,sep_place->pid,,,,,, sep_free,
-	    sl_glarg(struct placeinfo*, _sf1, sl_geta(p2)));
-  sl_sync();
-#endif
 }
 sl_enddef
