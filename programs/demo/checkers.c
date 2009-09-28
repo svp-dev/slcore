@@ -19,10 +19,9 @@ sl_def(t_main, void)
   gfx_init();
   gfx_resize(8, 8);
 
-  unsigned x, y;
-  for (y = 0; y < 8; ++y)
-    for (x = 0; x < 8; ++x)
-      if ((x + y) & 1) gfx_putpixel(x, y, 0xffffff);
+  unsigned long x;
+  for (x = 0; x < 64; ++x) 
+    gfx_fb_set(x, ((x + x/2)%2) ? 0xffffff : 0);
 
   gfx_dump(0, 1, 0, 0);
   gfx_close();

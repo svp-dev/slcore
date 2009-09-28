@@ -1,5 +1,12 @@
 2009-09-28  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	Update `checkers' demo.
+	
+	* demo/checkers.c: Demonstrate `gfx_fb_set' since `gfx_putpixel'
+	is already demoed in the `mandel' demo
+
+2009-09-28  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	Enhance the `mandel' demo.
 	
 	* demo/mandel.c: Refactor code to clarify steps. Change the color
