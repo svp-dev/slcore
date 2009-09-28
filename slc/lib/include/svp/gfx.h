@@ -30,6 +30,10 @@
   __asm__ __volatile__("print %1, %0" : : "rI"((1<<5)|(0<<6)),		\
 		       "r"((((unsigned long)(X)) << 48) | ((((unsigned long)(Y)) & 0xffff) << 32) | ((Data) & 0xffffffff)))
 
+#define gfx_fb_set(Offset, Data)					\
+  __asm__ __volatile__("print %1, %0" : : "rI"((1<<5)|(0<<6)|(1<<4)),	\
+		       "r"((((unsigned long)(Offset)) << 32) | ((Data) & 0xffffffff)))
+
 #define gfx_dump(Key, Stream, EmbedTimeStamp, EmbedThreadInfo)		\
   __asm__ __volatile__("print %1, %0" : : "rI"((1<<5)|(2<<6)|((EmbedTimeStamp)<<4)|((EmbedThreadInfo)<<3)|(Stream)), "r"((long)(Key)))
 
@@ -54,6 +58,12 @@ void gfx_dump(unsigned key, int stream, int embed_ts, int embed_tinfo);
     size_t __w = __gfx_w;						\
     if (likely(likely((size_t)__x < __gfx_w) && likely((size_t)__y < __gfx_h))) \
       __gfx_framebuffer[__y * __w + __x] = (Data);			\
+  } while(0)
+
+#define gfx_fb_set(Offset, Data) do {					\
+    size_t __o = (Offset);						\
+    if (likely(__o < (__gfx_w*__gfx_h)))				\
+      __gfx_framebuffer[__o] = (Data);					\
   } while(0)
 
 #endif
