@@ -26,38 +26,44 @@ struct placeinfo {
   sl_place_t  pid;
   // number of cores in the place
   size_t ncores;
-  // set if the place is shared by multiple requesters
-  int shared;
 };
 
 // place where all the sep_alloc calls should
 // be delegated to.
-extern struct placeinfo * sep_place;
+extern sl_place_t sep_place;
 
 // allocation policies
 enum sep_alloc_policy {
   /* flags that select the number of cores */
   SAL_DONTCARE = 0,   // any #cores will do
-  SAL_MIN = 1,        // at least specified #cores avail
-  SAL_MAX = 2,        // at most specified #cores avail
+  SAL_MIN = 1UL << 62,        // at least specified #cores avail
+  SAL_MAX = 2UL << 62,        // at most specified #cores avail
   SAL_EXACT = SAL_MIN | SAL_MAX,   // exactly specified #cores
-
-  /* other policy flags */
-  SAL_CANSHARE = 4
 };
 
-// allocation routine
-sl_decl(sep_alloc,
-	void,
-	sl_glparm(enum sep_alloc_policy, policy),
-	sl_glparm(int, policy_arg),
-	sl_shparm(struct placeinfo*, result));
+struct SEP {
+  sl_place_t sep_place;
 
-// deallocation routine
-sl_decl(sep_free, void, sl_glparm(struct placeinfo*, p));
+  // allocation routine
+  sl_decl((*sep_alloc),
+	  void,
+	  sl_glparm(struct SEP*, sep),
+	  sl_glparm(unsigned long, policy),
+	  sl_shparm(struct placeinfo*, result));
 
-// status routine
-sl_decl(sep_dump_info, void);
+  // deallocation routine
+  sl_decl((*sep_free), 
+	  void, 
+	  sl_glparm(struct SEP*, sep),
+	  sl_glparm(struct placeinfo*, p));
+
+  // status routine
+  sl_decl((*sep_dump_info),
+	  void,
+	  sl_glparm(struct SEP*, sep));
+};
+
+extern struct SEP* root_sep;
 
 // to be called once (in the init routine)
 void sep_init(void* init_parameters);

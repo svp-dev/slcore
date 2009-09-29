@@ -16,6 +16,7 @@
 #include <svp/sep.h>
 #include <svp/assert.h>
 #include <svp/iomacros.h>
+#include <svp/compiler.h>
 
 #define MAX_NCORES 1024
 
@@ -25,14 +26,86 @@ struct listnode {
   int allocated;
 };
 
-struct listnode  allplaces[MAX_NCORES] = { { 0 }, 0, 0, 0} ;
-struct listnode* pools[MAX_NCORES] = { 0 };
+struct sep_data_t {
+  struct SEP sep_info;  
+  struct listnode  allplaces[MAX_NCORES];
+  struct listnode* pools[MAX_NCORES];
+};
 
-struct placeinfo * sep_place = 0;
 
-// initialization has been completed?
-static int init_done = 0;
+sl_def(sep_alloc,
+       void,
+       sl_glparm(struct SEP*, sep),
+       sl_glparm(enum sep_alloc_policy, policy),
+       sl_shparm(struct placeinfo*, result))
+{
+  struct sep_data_t* sd = (struct sep_data_t*)(void*)sl_getp(sep);
+  int i;
+  struct listnode *p = 0;
+  unsigned long policy = sl_getp(policy) & SAL_EXACT;
+  unsigned long policy_arg = sl_getp(policy) & 0x3ff;
+  if (policy == SAL_DONTCARE) {
+    for (i = 0; i < MAX_NCORES; ++i)
+      for (p = sd->pools[i]; p; p = p->next)
+	if (!p->allocated) goto done;
+  } else {
+    if (likely(policy_arg <= MAX_NCORES)) {
+      if (policy == SAL_MIN) {
+	for (i = policy_arg; i < MAX_NCORES; ++i)
+	  for (p = sd->pools[i]; p; p = p->next)
+	    if (!p->allocated) goto done;
+      } else if (policy == SAL_MAX) {
+	for (i = policy_arg; i > 0; --i)
+	  for (p = sd->pools[i]; p; p = p->next)
+	    if (!p->allocated) goto done;
+      } else if (policy == SAL_EXACT) {
+	for (p = sd->pools[policy_arg]; p; p = p->next)
+	  if (!p->allocated) goto done;
+      }
+    }
+  }
 
+ done:
+  if (p) 
+    p->allocated = 1;
+  sl_setp(result, &p->pi);
+}
+sl_enddef
+
+sl_def(sep_free, void, 
+       sl_glparm(struct SEP*, sep),
+       sl_glparm(struct placeinfo*, p));
+{
+  struct listnode* n = (struct listnode*)(void*)sl_getp(p);
+  n->allocated = 0;
+}
+sl_enddef
+
+sl_def(sep_dump_info, void,
+       sl_glparm(struct SEP*, sep))
+{
+  int i;
+  struct sep_data_t* sd = (struct sep_data_t*)(void*)sl_getp(sep);
+  puts("PID\t#cores\tallocated\tshared\n");
+  for (i = 0; i < MAX_NCORES; ++i)
+    if (sd->allplaces[i].pi.pid)
+      printf("0x%x\t%u\t%d\n",
+	     sd->allplaces[i].pi.pid,
+	     sd->allplaces[i].pi.ncores,
+	     sd->allplaces[i].allocated);
+}
+sl_enddef
+
+static struct sep_data_t root_sep_data = { 
+  { 0, 
+    &sep_alloc,
+    &sep_free,
+    &sep_dump_info, },
+  { 0 },
+  { 0 }
+};
+
+struct SEP *root_sep = &root_sep_data.sep_info;
 
 void sep_init(void* init_parameters)
 {
@@ -54,110 +127,36 @@ void sep_init(void* init_parameters)
       /* first check if we were looking at a ring before */
       if (current_ring_id > 0) {
 	/* yes, add it to its pool */
-	struct listnode* n = &allplaces[current_ring_id];
+	struct listnode* n = &root_sep_data.allplaces[current_ring_id];
 	size_t ncores = n->pi.ncores;
-	n->next = pools[ncores];
-	pools[ncores] = n;
+	n->next = root_sep_data.pools[ncores];
+	root_sep_data.pools[ncores] = n;
       }
 
       /* restart a new ring */
       current_ring_id = pc->core_info[i][1];
 
       /* start configuring the place */
-      allplaces[current_ring_id].pi.pid =
+      root_sep_data.allplaces[current_ring_id].pi.pid =
 	(pc->core_info[i][0] << 3) /* core id */
 	| 4 /* delegate, non-exclusive */;
-      allplaces[current_ring_id].pi.ncores = 1;
-      allplaces[current_ring_id].pi.shared = 0;
+      root_sep_data.allplaces[current_ring_id].pi.ncores = 1;
 
-      if (!sep_place) {
-	allplaces[current_ring_id].pi.shared = 0;
-	allplaces[current_ring_id].allocated = 1;
-	sep_place = &allplaces[current_ring_id].pi;
+      if (!root_sep_data.sep_info.sep_place) {
+	root_sep_data.allplaces[current_ring_id].allocated = 1;
+	root_sep_data.sep_info.sep_place = root_sep_data.allplaces[current_ring_id].pi.pid;
       }
     }
 
     else {
       /* already started the ring, increase the number of cores */
-      allplaces[current_ring_id].pi.ncores += 1;
+      root_sep_data.allplaces[current_ring_id].pi.ncores += 1;
     }
   }
   /* add the last item to its pool */
-  struct listnode* n = &allplaces[current_ring_id];
+  struct listnode* n = &root_sep_data.allplaces[current_ring_id];
   size_t ncores = n->pi.ncores;
-  n->next = pools[ncores];
-  pools[ncores] = n;
+  n->next = root_sep_data.pools[ncores];
+  root_sep_data.pools[ncores] = n;
 
-  init_done = 1;
 }
-
-sl_def(sep_alloc,
-       void,
-       sl_glparm(enum sep_alloc_policy, policy),
-       sl_glparm(int, policy_arg),
-       sl_shparm(struct placeinfo*, result))
-{
-  int canshare = !!(sl_getp(policy) & SAL_CANSHARE);
-  int i;
-  struct listnode *p = 0;
-
-  switch(sl_getp(policy) & 0x3) {
-  case SAL_DONTCARE:
-    for (i = 0; i < MAX_NCORES; ++i)
-      for (p = pools[i]; p; p = p->next)
-	if (!p->allocated || (canshare && p->pi.shared)) goto done;
-
-    break;
-  case SAL_MIN:
-    if (sl_getp(policy_arg) < 0 || sl_getp(policy_arg) > MAX_NCORES) break;
-    for (i = sl_getp(policy_arg); i < MAX_NCORES; ++i)
-      for (p = pools[i]; p; p = p->next)
-	if (!p->allocated || (canshare && p->pi.shared)) goto done;
-
-    break;
-  case SAL_MAX:
-    if (sl_getp(policy_arg) < 0 || sl_getp(policy_arg) > MAX_NCORES) break;
-    for (i = sl_getp(policy_arg); i > 0; --i)
-      for (p = pools[i]; p; p = p->next)
-	if (!p->allocated || (canshare && p->pi.shared)) goto done;
-
-    break;
-  case SAL_EXACT:
-    if (sl_getp(policy_arg) < 0 || sl_getp(policy_arg) > MAX_NCORES) break;
-    for (p = pools[sl_getp(policy_arg)]; p; p = p->next)
-      if (!p->allocated || (canshare && p->pi.shared)) goto done;
-
-    break;
-  }
- done:
-  if (p) {
-    p->allocated = 1;
-    p->pi.shared = canshare;
-  }
-  sl_setp(result, &p->pi);
-}
-sl_enddef
-
-sl_def(sep_free, void, sl_glparm(struct placeinfo*, p));
-{
-  struct listnode* n = (struct listnode*)(void*)sl_getp(p);
-  n->allocated = 0;
-}
-sl_enddef
-
-sl_def(sep_dump_info, void)
-{
-  int i;
-  puts("PID\t#cores\tallocated\tshared\n");
-  for (i = 0; i < MAX_NCORES; ++i)
-    if (allplaces[i].pi.pid)
-      printf("0x%x\t%u\t%d\t%d\n",
-	     allplaces[i].pi.pid,
-	     allplaces[i].pi.ncores,
-	     allplaces[i].allocated,
-	     allplaces[i].pi.shared);
-}
-sl_enddef
-
-// global variable definition
-struct placeinfo* sep_place;
