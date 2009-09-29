@@ -1,3 +1,7 @@
+2009-09-29  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
+	* deploy/versions.mk.defaults: Bump version numbers. 
+
 2009-09-24  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
 	Modify the stock GCC to better support C99's VLA's.
