@@ -12,8 +12,10 @@
 // `COPYING' file in the root directory.
 //
 
+#include <svp/testoutput.h>
 #include <svp/assert.h>
 #include <svp/fibre.h>
+#include <svp/perf.h>
 
 #define TABLE_SIZE 16
 #include "fft.h"
@@ -30,18 +32,21 @@ sl_def(t_main, void)
 
   unsigned L = *(unsigned long*)fibre_data(0);
   unsigned M = *(unsigned long*)fibre_data(1);
-  svp_assert(M < TABLE_SIZE);
+  svp_assert(M <= TABLE_SIZE);
 
   unsigned N = 1 << M;
   unsigned i;
 
   for (i = 0; i < L; ++i) {
+    uint64_t before = get_cycles();
     sl_create(,PLACE_LOCAL,1,M+1,1,,, FFT_1,
 	      sl_glarg(cpx_t*restrict, gX, X),
 	      sl_glarg(unsigned long, gN, N/2),
 	      sl_sharg(long, token, 0),
 	      sl_glarg(const void*, gt, sc_table_ptr));
     sl_sync();
+    output_uint(get_cycles() - before, 1); 
+    output_char('\n', 1);
   }
 }
 sl_enddef

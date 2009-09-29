@@ -1,5 +1,12 @@
 2009-09-29  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	Enhance the `fft' benchmark program.
+	
+	* benchmarks/fft/fft_bench.c: Print cycle counts at each outer
+	iteration.
+
+2009-09-29  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	Enhance the `mandel' demo.
 	
 	* demo/mandel.c: Update to use the new API definition from
