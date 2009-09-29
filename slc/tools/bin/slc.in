@@ -440,7 +440,7 @@ Compiler debugging options:
 
   -fcm4-dump=file    Dump the M4 input code to file "file".
 
-  -fm4-trace=file    Dump the M4 macro expansion trace to file "file".
+  -ftrace-m4=file    Dump the M4 macro expansion trace to file "file".
 
 Other options:
   -h, --help         Print this help; do not process anything.
@@ -556,7 +556,7 @@ else
 fi
 
 if test -n "$m4trace"; then
-  cm4flags+=(-Wm4,-dV -Wm4,-o "-Wm4,$m4trace")
+  cm4flags+=(-Wm4,-dV "-Wm4,--debugfile=$m4trace")
 fi
 for fl in "${slc_tflags[@]}"; do
     cm4flags+=("-Wm4,$fl")

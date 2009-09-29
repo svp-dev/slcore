@@ -1,5 +1,16 @@
 2009-09-29  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	Improve command-line argument handling in `slc'.
+
+	The script supports `-ftrace-m4' but documents `-fm4-trace'. Also
+	the underlying M4 implementation has changed the parameter for the
+	output file from `-o' to `--debugfile'.
+	
+	* tools/bin/slc.in: Align documentation with
+	implementation. Update to new M4 interface.
+
+2009-09-29  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	Align API for place allocation with documentation.
 
 	Note [sl7] was authored to document the API and introduces the
