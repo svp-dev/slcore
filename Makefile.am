@@ -13,14 +13,22 @@
 
 # 
 
-EXTRA_DIST = deploy/Makefile-reqs.orig \
-	deploy/reqs.mk \
+EXTRA_DIST = deploy/Makefile \
+	deploy/layout.mk.defaults \
+	deploy/versions.mk.defaults \
+	deploy/tools.mk.defaults \
 	deploy/README \
-	deploy/alpha.h.patch \
-	deploy/alpha.md.patch \
-	deploy/constraints.md.patch \
-	deploy/reqs.mk \
-	deploy/reqs.mk \
+	deploy/patches/alpha.h.patch \
+	deploy/patches/alpha.c.patch \
+	deploy/patches/alpha.md.patch \
+	deploy/patches/constraints.md.patch \
+	deploy/patches/m4.patch \
+	deploy/rules/binutils.mk \
+	deploy/rules/mggcc.mk \
+	deploy/rules/gcc.mk \
+	deploy/rules/mgsim.mk \
+	deploy/rules/m4.mk \
+	deploy/rules/sl.mk \
 	deploy/slenv
 
 SUBDIRS = . slc tests programs
