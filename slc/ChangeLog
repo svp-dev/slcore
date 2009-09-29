@@ -1,5 +1,9 @@
 2009-09-29  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	* doc/NEWS.txt: Document latest big changes.
+
+2009-09-29  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	Improve command-line argument handling in `slc'.
 
 	The script supports `-ftrace-m4' but documents `-fm4-trace'. Also

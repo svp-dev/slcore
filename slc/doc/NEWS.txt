@@ -23,6 +23,8 @@ SLC 2.1.0a, 2009
 
 - The C divide operator is reinstated.
 
+- The C math library is supported.
+
 - The ``slr``, ``slt`` and ``timeout`` scripts now react better to
   signals and terminal hangups.
 
@@ -36,6 +38,10 @@ SLC 2.1.0a, 2009
   provide a test results summary.
 
 Known limitations:
+
+- C's ``long double`` type is not supported.
+
+- the C ``tgamma`` function may be incorrectly implemented.
 
 - it is not (yet) possible to create a family of threads from a
   regular C function.
