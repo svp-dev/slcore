@@ -1,3 +1,18 @@
+2009-09-30  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
+	Improve `deploy'.
+	
+	* deploy/rules/binutils.mk,
+	* deploy/rules/gcc.mk,
+	* deploy/rules/mggcc.mk,
+	* deploy/rules/m4.mk,
+	* deploy/rules/mgsim.mk,	
+	* deploy/rules/sl.mk: Separate "source" and "build" targets.
+
+	* deploy/Makefile: Introduce new rule `fetch' that fetches all
+	sources but does not build. Separate `reqs' rules from `all' to
+	allow building only dependencies.
+
 2009-09-29  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
 	Minor packaging fix.

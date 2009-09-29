@@ -1,5 +1,8 @@
 # -*- makefile -*-
 
+M4_SRC = \
+  $(SOURCES)/m4-dev/bootstrap_done
+
 M4_TARGETS = \
      $(REQDIR)/bin/m4
 

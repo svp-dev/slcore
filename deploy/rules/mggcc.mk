@@ -1,5 +1,8 @@
 # -*- makefile -*-
 
+MGGCC_SRC = \
+  $(SOURCES)/utc-gcc-$(UTC_GCC_REV)/download_done
+
 MGGCC_TARGETS = \
      $(REQDIR)/bin/mtalpha-linux-gnu-gcc
 

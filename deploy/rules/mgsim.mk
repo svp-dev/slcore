@@ -1,5 +1,8 @@
 # -*- makefile -*-
 
+MGSIM_SRC = \
+   $(SOURCES)/mgsim-$(MGSIM_REV)/configure
+
 MGSIM_TARGETS = \
      $(SLDIR)/bin/mgsim-alpha \
      $(SLDIR)/bin/mgsim-sparc

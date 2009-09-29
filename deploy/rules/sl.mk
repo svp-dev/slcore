@@ -1,5 +1,8 @@
 # -*- makefile -*-
 
+SL_SRC = \
+  $(SOURCES)/slc-$(SLC_REV)/configure
+
 SL_TARGETS = \
      $(SLDIR)/bin/slc
 

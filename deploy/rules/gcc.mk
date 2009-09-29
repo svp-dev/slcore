@@ -1,5 +1,8 @@
 # -*- makefile -*-
 
+GCC_SRC = \
+   $(SOURCES)/gcc-$(GCC_VERSION)/patch_done
+
 GCC_TARGETS = \
      $(REQDIR)/bin/alpha-linux-gnu-gcc
 

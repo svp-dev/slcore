@@ -1,5 +1,8 @@
 # -*- makefile -*-
 
+BINUTILS_SRC = \
+   $(SOURCES)/binutils-$(BINUTILS_REV)/download_done
+
 BINUTILS_TARGETS = \
      $(REQDIR)/bin/alpha-linux-gnu-as \
      $(REQDIR)/bin/mtalpha-linux-gnu-as \

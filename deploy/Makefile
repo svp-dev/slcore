@@ -15,15 +15,31 @@ SLDIR = $(PREFIX)/sl-$(MGSIM_REV)-$(SLC_REV)
 BUILD = $(LOCAL_BUILD)
 SOURCES = $(LOCAL_SOURCES)
 
+.PHONY: all reqs-src sl-src fetch reqs
+
 all:
 
 include rules/*.mk
 
-all: \
+reqs-src: \
+	$(BINUTILS_SRC) \
+	$(GCC_SRC) \
+	$(M4_SRC) \
+	$(MGGCC_SRC)
+
+sl-src: \
+	$(MGSIM_SRC) \
+	$(SL_SRC)
+
+fetch: reqs-src sl-src
+
+reqs: \
 	$(BINUTILS_TARGETS) \
 	$(MGGCC_TARGETS) \
 	$(GCC_TARGETS) \
-	$(M4_TARGETS) \
+	$(M4_TARGETS)
+
+all: reqs \
 	$(MGSIM_TARGETS) \
 	$(SL_TARGETS) \
 	$(PREFIX)/slenv
