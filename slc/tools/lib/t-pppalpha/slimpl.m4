@@ -27,12 +27,14 @@ m4_define([[sl_glparm]],[[gl:i:[[$1]]:[[$2]]]])
 m4_define([[sl_shfparm]],[[sh:f:[[$1]]:[[$2]]]])
 m4_define([[sl_glfparm]],[[gl:f:[[$1]]:[[$2]]]])
 
+m4_define([[m4_sh_escape]],[['m4_bpatsubst([[$1]],[[[']]],[['"'"']])']])
+
 m4_define([[sl_def]],[[
 m4_define([[__sl_funcname]], [[$1]])
 m4_define([[__sl_breaktype]], [[$2]])
 m4_step([[__sl_dispcount]])
 m4_define([[__sl_thparms]],"m4_join([[" "]],m4_shiftn(2,$@))")
-m4_esyscmd(m4_quote(PYTHON SPP_PY pppalpha fundef __sl_funcname __sl_dispcount __sl_thparms))
+m4_esyscmd(m4_quote(PYTHON SPP_PY pppalpha fundef m4_sh_escape(__sl_funcname) __sl_dispcount __sl_thparms))
 m4_assert(m4_sysval == 0)
 ]])
 m4_define([[sl_enddef]],[[
@@ -59,8 +61,6 @@ m4_define([[sl_glfarg]],[[gl:f:[[$1]]:[[$2]]:[[$3]]]])
 m4_define([[sl_geta]],[[__sl_geta_$1]])
 m4_define([[sl_seta]],[[__sl_seta_$1([[$2]])]])
 
-m4_define([[m4_sh_escape]],[['m4_bpatsubst([[$1]],[[[']]],[['"'"']])']])
-
 m4_define([[sl_initarg]],[[ m4_dnl
 [[$3]] __sl_after_[[$4]]; m4_dnl
 m4_define([[__sl_geta_$4]],__sl_after_$4) m4_dnl
@@ -83,7 +83,7 @@ m4_define([[__sl_crfuncname]],[[$8]])m4_dnl
 m4_define([[_sl_thargs]],m4_dquote(m4_shiftn(8,$@)))m4_dnl
 m4_foreach([[_sl_arg]],m4_quote(_sl_thargs),[[m4_apply([[sl_initarg]],m4_split(_sl_arg,:))]]) m4_dnl
 m4_define([[__sl_thargs2]], m4_mapall_sep([[m4_sh_escape]],[[ ]], m4_dquote(m4_shiftn(8, $@))))
-m4_esyscmd(m4_quote(PYTHON SPP_PY pppalpha create __sl_crfuncname __sl_tag __sl_crbrktype __sl_thargs2))
+m4_esyscmd(m4_quote(PYTHON SPP_PY pppalpha create m4_sh_escape(__sl_crfuncname) __sl_tag __sl_crbrktype __sl_thargs2))
 m4_assert(m4_sysval == 0)
 m4_if([[$1]],,,[[([[$1]]) = __sl_fid_[[]]__sl_tag;]])
 ]])

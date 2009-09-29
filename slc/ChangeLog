@@ -1,3 +1,11 @@
+2009-09-29  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
+	Fix bug in SL macro expansion.
+	
+	* tools/lib/t-pppalpha/slimpl.m4: Shell-quote the thread function
+	name when calling Python, so as to avoid strangeness with names of
+	the form "foo->bar" etc.
+
 2009-09-28  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
 	Extend the graphics output library.
