@@ -1,5 +1,12 @@
 2009-09-29  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	Fix support for C99's float.h.
+
+	* lib/include/bits/float.h: New. 
+	* lib/Makefile.am: Update accordingly.
+
+2009-09-29  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	Fix build of demos that require the math library.
 	
 	* build-aux/sl.mk: Compile to MT alpha with `-lm' always, so that
