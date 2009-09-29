@@ -1,3 +1,10 @@
+2009-09-29  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
+	Enhance the `mandel' demo.
+	
+	* demo/mandel.c: Update to use the new API definition from
+	note [sl7].
+
 2009-09-28  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
 	Update `checkers' demo.

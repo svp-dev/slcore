@@ -159,14 +159,14 @@ sl_def(configure, void)
     nprocs_wanted = slr_get(nprocs)[0];
 
 #if SVP_HAS_SEP
-  sl_create(,sep_place->pid,,,,,, sep_alloc,
-	    sl_glarg(enum sep_alloc_policy, _s0, SAL_MIN),
-	    sl_glarg(int, _s1, nprocs_wanted),
+  sl_create(,root_sep->sep_place|1,,,,,, root_sep->sep_alloc,
+	    sl_glarg(struct SEP*, _s0, root_sep),
+	    sl_glarg(unsigned long, _s1, SAL_MIN|nprocs_wanted),
 	    sl_sharg(struct placeinfo*, p1, 0));
   sl_sync();
-  sl_create(,sep_place->pid,,,,,, sep_alloc,
-	    sl_glarg(enum sep_alloc_policy, _s2, SAL_DONTCARE),
-	    sl_glarg(int, _s3, 0),
+  sl_create(,root_sep->sep_place|1,,,,,, root_sep->sep_alloc,
+	    sl_glarg(struct SEP*, _s2, root_sep),
+	    sl_glarg(unsigned long, _s3, SAL_DONTCARE),
 	    sl_sharg(struct placeinfo*, p2, 0));
   sl_sync();
   svp_assert(sl_geta(p1) != 0 && sl_geta(p2) != 0);
@@ -264,12 +264,12 @@ sl_def(t_main, void)
 #ifndef DISPLAY_DURING_COMPUTE
 
 #ifdef PARALLEL_DISPLAY
-  sl_create(,par_place,,N,,B,,
+  sl_create(,par_place,,N,,threads_per_core,,
 	    displayAfter,
 	    sl_glarg(uint3*restrict, _9, values));
   sl_sync();
 #else
-  sl_create(,par_place,,N,,B,,
+  sl_create(,par_place,,N,,threads_per_core,,
 	    displayAfter,
 	    sl_glarg(uint3*restrict, _9, values),
 	    sl_sharg(int, tok, 0));
