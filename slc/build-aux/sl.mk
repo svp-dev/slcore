@@ -46,7 +46,7 @@ SLC_BEFORE = function slc_compile() { \
 	      $(AM_CXXFLAGS) $(CXXFLAGS) && \
 	$(slc_ifmtalpha) echo "  SLC    $$SLC_OUT".mtalpha && \
         $(slc_ifmtalpha) $(SLC_LOCAL) $${SLC_OUT:+-o "$$SLC_OUT".mtalpha} -b ppp "$$@" \
-	      -I$(srcdir) -I$(builddir) && \
+	      -I$(srcdir) -I$(builddir) -lm && \
 	if test -n "$$SLC_OUT"; then \
 	  printf '\#! /bin/sh\n' >"$@" && \
 	  printf 'echo "This script is only a stub. Run the actual program with:"\n' >>"$@" && \

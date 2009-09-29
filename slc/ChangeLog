@@ -1,5 +1,12 @@
 2009-09-29  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	Fix build of demos that require the math library.
+	
+	* build-aux/sl.mk: Compile to MT alpha with `-lm' always, so that
+	demo code does not need to sort out when it is needed and not.
+
+2009-09-29  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	* doc/NEWS.txt: Document latest big changes.
 
 2009-09-29  Raphael 'kena' Poss  <r.c.poss@uva.nl>
