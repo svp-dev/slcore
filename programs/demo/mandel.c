@@ -22,7 +22,7 @@
 #include <svp/assert.h>
 #include <cmath.h>
 
-// SLT_RUN: res=10,10 nprocs=4 -n 1,1,4
+// SLT_RUN: res=10,10 nprocs=4
 
 slr_decl(slr_var(unsigned, res, "resolution (W,H)"),
 	 slr_var(double, box, "bounding box (xmin,xmax,ymin,ymax)"),

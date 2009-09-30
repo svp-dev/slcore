@@ -1,3 +1,11 @@
+2009-09-30  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
+	Avoid `-n' in test code.
+	
+	* demo/mandel.c,
+	* benchmarks/fft/fft_test1.c,	
+	* benchmarks/fft/fft_test2.c: Do not use `-n' in SLT_RUN any more.
+
 2009-09-29  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
 	Enhance the `fft' benchmark program.
