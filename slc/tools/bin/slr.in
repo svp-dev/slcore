@@ -70,15 +70,15 @@ Program input options:
 
 Execution selection:
 
-  -n N                 Try to run with N SVP cores. To specify multiple places, 
-                       use a comma-separated list of numbers.
-
   -c                   Show configuration string embedded in program, if any.
 
   -x RUNNER            Use the specified RUNNER (use when autodetect fails).
 
   -Ws,arg              Pass "arg" as extra command line parameter to the 
                        simulator, when the simulator is used.
+
+  -n PLACES            Use the specified place configuration instead of
+                       the default.
 
 Debugging options:
   -t                   Trace: print commands before running them.
@@ -120,12 +120,6 @@ Examples:
 
   Runs fibo.x, possibly using the MT simulator, and set program input
   variable N to an array of 1 element with value "15".
-
-  \$ slr fibo.x N=10 -n 7,12
-
-  Runs fibo.x, possibly using the MT simulator, and set program input
-  variable N to an array of 1 element with value "10". Try to run
-  with two SVP places of 7 and 12 cores each.
 
 Report bugs and patches to $bugreports.
 EOF
@@ -209,6 +203,11 @@ for arg in "$@"; do
 done
 if test -n "${prev_arg:-}"; then die 1 "argument to \`$arg' is missing"; fi
 
+if test -n "$NCORES"; then
+   echo "$basename: warning: \$NCORES and -n are deprecated in favor of dynamic place allocation." >&2  
+else
+   NCORES="1,1,1,1,1,1,1,1,2,2,4,4,8,8,16,16,32,32,64,64"
+fi
 
 # does the program exist?
 if test -z "$program"; then

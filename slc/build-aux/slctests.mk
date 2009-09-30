@@ -20,7 +20,7 @@ EXTRA_TEST_IMPL += ptl
 endif
 
 if ENABLE_CHECK_PPP
-EXTRA_TEST_IMPL += ppp::-n~1 ppp
+EXTRA_TEST_IMPL += ppp
 endif
 
 if ENABLE_CHECK_UTC
