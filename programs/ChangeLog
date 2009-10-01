@@ -1,3 +1,12 @@
+2009-10-01  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
+	Reinstate numeric checking for the FFT code.
+	
+	* benchmarks/fft/fft_test1.c,	
+	* benchmarks/fft/fft_test2.c: Do not ignore numeric output anymore
+	since the diverging results on MT-Alpha were due to a simulation
+	bug that is now fixed.
+	
 2009-09-30  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
 	Avoid `-n' in test code.
