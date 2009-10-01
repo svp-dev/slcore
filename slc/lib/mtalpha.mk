@@ -28,7 +28,9 @@ mtalpha_sim_libsl_a_CONTENTS = \
 	mtalpha-sim/mtdiv.o \
 	mtalpha-sim/mtinit.o \
 	mtalpha-sim/mtsep.o \
+	mtalpha-sim/mtclock.o \
 	mtalpha-sim/roman.o \
+	mtalpha-sim/perf.o \
 	mtalpha-sim/io.o \
 	mtalpha-sim/divl.o \
 	mtalpha-sim/divq.o \

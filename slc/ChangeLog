@@ -1,3 +1,21 @@
+2009-10-01  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
+	Introduce performance counters and C99's clock().
+
+	* lib/include/ctime.h,
+	* lib/src/mtclock.c: New.
+
+	* lib/include/svp/perf.h: Deprecate `get_cycles()' in favor of
+	`clock()'.
+
+	* lib/include/svp/perf.h,
+	* lib/src/perf.c: Implement the API described in note [sl8].
+
+	* lib/Makefile.am,
+	* lib/seqc.mk,
+	* lib/ptl.mk,
+	* lib/mtalpha.mk: List the new files.
+	
 2009-09-30  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
 	Introduce a default architecture configuration with many places.

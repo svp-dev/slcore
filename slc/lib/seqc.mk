@@ -9,6 +9,7 @@ host_host_seqc_libsl_a_SOURCES =
 host_host_seqc_libsl_a_LIBADD = \
 	host-host-seqc/div.o \
 	host-host-seqc/roman.o \
+	host-host-seqc/perf.o \
 	host-host-seqc/gfx.o \
 	host-host-seqc/io.o
 

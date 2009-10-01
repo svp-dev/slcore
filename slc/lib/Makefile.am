@@ -15,8 +15,10 @@
 EXTRA_DIST = \
 	src/io.c \
 	src/gfx.c \
+	src/perf.c \
 	src/roman.c \
 	src/mtinit.c \
+	src/mtclock.c \
 	src/mtsep.c \
 	src/div.c
 
@@ -29,6 +31,7 @@ nobase_dist_pkgdata_DATA = \
 	include/calloca.h \
 	include/cmath.h \
 	include/cfloat.h \
+	include/ctime.h \
 	include/bits/float.h \
 	include/sac_helpers.h \
 	include/svp/argslot.h \
