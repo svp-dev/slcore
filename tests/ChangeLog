@@ -1,3 +1,10 @@
+2009-10-01  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
+	Extend the unit test suite.
+	
+	* 2_lib/perf.c,
+	* 2_lib/clock.c: Test the new APIs.
+
 2009-09-27  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
 	Check C99 math more.
