@@ -1,3 +1,11 @@
+2009-10-07  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
+	Optimize the root SEP allocator.
+	
+	* lib/src/mtsep.c: Bucket places by power of 2 sizes; remove
+	allocated places from their allocation pools during `alloc' and
+	put them back during `free'.
+
 2009-10-06  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
 	Increase C99 compatibility.
