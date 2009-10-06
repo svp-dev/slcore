@@ -1,3 +1,19 @@
+2009-10-06  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
+	Enhance `slr', most notably to set up gfx output.
+
+	The following options are introduced: `-X' enable graphics, `-Xr'
+	set refresh rate, `-Xs' set scaling factors, `-Xd' set output
+	dimensions.
+	
+	* tools/bin/slr.in: Add support for the new options. Document
+	them.
+
+	* tools/lib/r-mtalpha-sim.sh.in,	
+	* tools/lib/r-mtsparc-sim.sh.in: Use the `gfx' version of the	
+	simulator where needed. Also enhance to use the `dbg' version when
+	-g is given to `slr'.
+	
 2009-10-01  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
 	Introduce performance counters and C99's clock().

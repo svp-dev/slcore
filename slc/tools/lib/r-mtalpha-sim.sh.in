@@ -7,6 +7,12 @@ program=${1:?}
 datafile=${2:?}
 fdatafile=${3:?}
 DEBUGGER=${DEBUGGER:-gdb --args}
+if test -n "${DEBUG:-}"; then
+   MGSIM_ALPHA="$MGSIM_ALPHA.dbg.gfx"
+fi
+if test -n "${SIMGFX:-}"; then
+   MGSIM_ALPHA="$MGSIM_ALPHA.gfx"
+fi
 shift
 shift
 shift

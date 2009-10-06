@@ -86,6 +86,14 @@ Debugging options:
   -g                   Debug: try to run debugger around program. Implies -x.
 
 Other options:
+  -X                   Enable graphical output.
+
+  -Xd W,H              Set initial gfx resolution to W(idth)xH(eight).
+
+  -Xs HS,VS            Set initial gfx scaling factors to HSxVS.
+  
+  -Xr RATE             Set gfx refresh rate to RATE.
+
   -h, --help           Print this help, then exit.
 
   -v, --version        Print version number, then exit.
@@ -159,6 +167,10 @@ wdatafile=
 wfdatafile=
 preponly=
 fibre_in=
+SIMGFX=
+gfx_scale=
+gfx_refresh=
+gfx_geometry=
 NCORES=${NCORES:-}
 SIMARGS=${SIMARGS:-}
 VERBOSE=${VERBOSE:-}
@@ -193,6 +205,10 @@ for arg in "$@"; do
       -rf)  prev_arg=rfdatafile; shift;;
       -wf)  prev_arg=wfdatafile; shift;;
       -wo)  preponly=1; shift;;
+      -X)   SIMGFX=1; shift;;
+      -Xs)  prev_arg=gfx_scale; shift;;
+      -Xr)  prev_arg=gfx_refresh; shift;;
+      -Xd)  prev_arg=gfx_geometry; shift;;
       --)  break;;
       -*)  die 1 "unrecognized command-line argument: $arg (try -h)";;
       *=*) vars+=("$arg"); shift ;;
@@ -203,7 +219,25 @@ for arg in "$@"; do
 done
 if test -n "${prev_arg:-}"; then die 1 "argument to \`$arg' is missing"; fi
 
-if test -n "$NCORES"; then
+if test -n "${SIMGFX:-}"; then
+  SIMARGS+=" -o GfxEnableOutput=true"
+  if test -n "${gfx_scale:-}"; then
+    SIMARGS+=" -o GfxHorizScale=${gfx_scale%,*} -o GfxVertScale=${gfx_scale#*,}"
+  fi
+  if test -n "${gfx_geometry:-}"; then
+    SIMARGS+=" -o GfxDisplayWidth=${gfx_geometry%,*} -o GfxDisplayHeight=${gfx_geometry#*,}"
+  fi
+  if test -n "${gfx_refresh:-}"; then
+    SIMARGS+=" -o GfxRefreshRate=$gfx_refresh"
+  fi
+fi
+
+if test -n "${SLR_RECURSIVE:-}"; then
+  NCORES=1
+  SIMARGS+=" -q -o NumProcessorsPerFPU=1"
+fi 
+
+if test -n "$NCORES" -a -z "${SLR_RECURSIVE:-}"; then
    echo "$basename: warning: \$NCORES and -n are deprecated in favor of dynamic place allocation." >&2  
 else
    NCORES="1,1,1,1,1,1,1,1,2,2,4,4,8,8,16,16,32,32,64,64"
@@ -365,7 +399,7 @@ if test -n "$dodata"; then
 	if test -n "$VERBOSE"; then
 	    echo "$basename: running: TMPDIR=$tmpdir/slr-rec @BASH@ $0 $tmpdir/gen.x >$datafile" >&2
 	fi
-	TMPDIR="$tmpdir"/slr-rec @BASH@ "$0" "$tmpdir"/gen.x -Ws,-q,-o,NumProcessorsPerFPU=1 -n 1 >"$datafile"
+	SLR_RECURSIVE=1 TMPDIR="$tmpdir"/slr-rec @BASH@ "$0" "$tmpdir"/gen.x >"$datafile"
     else
 	# just ensure the cache file exists 
         true >"$datafile"
@@ -423,7 +457,7 @@ fi
 # cache only?
 if test -n "$preponly"; then exit 0; fi
 
-export SIMARGS VERBOSE DEBUG NCORES
+export SIMARGS VERBOSE DEBUG NCORES SIMGFX
 if test -n "$VERBOSE"; then
     echo "$basename: running: @BASH@ $runner_script $program $datafile $fdatafile" >&2
 fi
