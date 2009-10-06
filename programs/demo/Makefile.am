@@ -21,7 +21,8 @@ DEMOS = \
 	fibre.c \
 	bitblt.c keyblit.c \
 	checkers.c \
-	mandel.c
+	mandel.c \
+	sep.c
 
 TESTS = $(DEMOS)
 

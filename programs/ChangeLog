@@ -1,3 +1,10 @@
+2009-10-07  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
+	Create new demo `sep' to show off SEP allocation.
+	
+	* demo/sep.c: New.
+	* demo/Makefile.am: Update accordingly.
+
 2009-10-01  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
 	Reinstate numeric checking for the FFT code.
