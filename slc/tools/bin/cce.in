@@ -250,7 +250,7 @@ case $slc_dialect-$slc_arch in
     *-host)
 	case $slc_complang in
 	    cpp) slc_compiler=($CXX_HOST) ;;
-	    c)   slc_compiler=($CC_HOST) ;;
+	    c)   slc_compiler=($CC_HOST -std=gnu99) ;;
 	    utc) echo "$basename: warning: no compiler for $dialect-$arch" >&2 ;;
 	esac
 	slc_filter1=(cp)
