@@ -22,7 +22,7 @@
 /* The following code is inspired from <linux/compiler.h> */
 
 /* Definition for a memory barrier primitive */
-#define barrier() __asm__ __volatile__("" : : : "memory")
+#define barrier() __asm__ __volatile__("#MB" : : : "memory")
 
 #ifdef __INTEL_COMPILER
 # undef barrier
@@ -42,7 +42,14 @@
 # define nop() __asm__ __volatile__("nop");
 #endif
 
-/* noinline */
+/* inlining words */
+
 #define noinline __attribute__((__noinline__))
+#define alwaysinline __atribute__((__alwaysinline__))
+
+/* force sequence/reordering */
+
+#define use(X) __asm__ __volatile__("#USE" : "=rf"(X) : "0"(X))
+
 
 #endif // ! SLC_SVP_COMPILER_H
