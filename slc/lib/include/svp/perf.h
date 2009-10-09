@@ -49,6 +49,6 @@ extern void mtperf_report_diffs(const counter_t *before, const counter_t* after,
 #define REPORT_CSV 0
 #define REPORT_FIBRE (2<<8)
 #define REPORT_RAW (1<<8)
-
+#define REPORT_STREAM(N) ((N)<<24)
 
 #endif // ! SLC_SVP_PERF_H

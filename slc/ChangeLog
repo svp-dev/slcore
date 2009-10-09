@@ -1,5 +1,13 @@
 2009-10-08  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	Enhance the performance counters library.
+
+	* lib/include/svp/perf.h: Introduce new macro `REPORT_STREAM'.
+	
+	* lib/src/perf.c: Use the specified stream for output.
+
+2009-10-08  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	Fix bug with special characters in string constants.
 
 	* tools/bin/cm4.in: Insert string delimiters after inserted hex

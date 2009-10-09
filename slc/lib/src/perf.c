@@ -30,6 +30,8 @@ void mtperf_report_diffs(const counter_t* before, const counter_t* after, int fl
 {
   int i;
 
+  int stream = (flags >> 24) & 0xff;
+  if (!stream) stream = 1;
   int format = (flags >> 8) & 0xff;
   int fflags = flags & 0xff;
   switch (format) {
@@ -42,38 +44,38 @@ void mtperf_report_diffs(const counter_t* before, const counter_t* after, int fl
       if (print_headers) {
 	// print column headers
 	for (i = 0; i < MTPERF_NCOUNTERS; ++i) {
-	  if (i != 0) output_char(spec_sep ? sep : ',', 1);
-	  output_string(cnames[i], 1);
+	  if (i != 0) output_char(spec_sep ? sep : ',', stream);
+	  output_string(cnames[i], stream);
 	}
-	output_char('\n', 1);
+	output_char('\n', stream);
       }
       for (i = 0; i < MTPERF_NCOUNTERS; ++i) {
-	if (i != 0) output_char(spec_sep ? sep : ',', 1);
-	output_int(after[i]-before[i], 1);
+	if (i != 0) output_char(spec_sep ? sep : ',', stream);
+	output_int(after[i]-before[i], stream);
       }
-      output_char('\n', 1);
+      output_char('\n', stream);
     }
     break;
   case 1:
     // output raw
     for (i = 0; i < MTPERF_NCOUNTERS; ++i) {
-      output_int(after[i]-before[i], 1);
-      output_char('\n', 1);
+      output_int(after[i]-before[i], stream);
+      output_char('\n', stream);
     }
     break;
   case 2:
     // output Fibre
-    output_char('[', 1);
-    output_char('0', 1);
-    output_char(',', 1);
-    output_int(MTPERF_NCOUNTERS, 1);
-    output_char(':', 1);
+    output_char('[', stream);
+    output_char('0', stream);
+    output_char(',', stream);
+    output_int(MTPERF_NCOUNTERS, stream);
+    output_char(':', stream);
     for (i = 0; i < MTPERF_NCOUNTERS; ++i) {
-      output_char(' ', 1);
-      output_int(after[i]-before[i], 1);
+      output_char(' ', stream);
+      output_int(after[i]-before[i], stream);
     }
-    output_char(']', 1);
-    output_char('\n', 1);
+    output_char(']', stream);
+    output_char('\n', stream);
     break;
   }
 }
