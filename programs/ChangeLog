@@ -1,5 +1,12 @@
 2009-10-09  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	Minor packaging fix.
+	
+	* build-aux/benchmarks.mk (clean-local-bench): Use `if' to avoid
+	error when `bench.mk' doesn't exist.
+
+2009-10-09  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	Convert the `mandel' demo to the new benchmark framework.
 
 	* demo/mandel.c: Rename to...	

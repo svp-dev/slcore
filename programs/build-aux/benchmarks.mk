@@ -27,7 +27,7 @@ bench: $(BENCHMARKS:.c=.x) bench.mk
 	$(AM_V_at)$(MAKE) $(AM_MAKEFLAGS) -f bench.mk results
 
 clean-local-bench:
-	test -r bench.mk && $(MAKE) $(AM_MAKEFLAGS) -f bench.mk clean
+	if test -r bench.mk; then $(MAKE) $(AM_MAKEFLAGS) -f bench.mk clean; fi
 
 distclean-local-bench:
 	rm -rf bench.mk benchdata
