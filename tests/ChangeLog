@@ -1,6 +1,13 @@
 2009-10-10  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
 	Extend the unit test suite.
+
+	* 0_slc/1_createargs/args2.c: Exercise anonymous thread
+	argument/parameter names.
+
+2009-10-10  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
+	Extend the unit test suite.
 	
 	* 0_slc/1_createargs/args1.c: Use whitespace in argument
 	definitions to strain whitespace handling.
