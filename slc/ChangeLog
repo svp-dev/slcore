@@ -1,5 +1,12 @@
 2009-10-08  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	Enhance the build framework.
+	
+	* build-aux/sl.mk: Allow Makefiles to add flags to the `slc'
+	command lines.
+
+2009-10-08  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	Enhance the performance counters library.
 
 	* lib/include/svp/perf.h: Introduce new macro `REPORT_STREAM'.

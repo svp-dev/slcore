@@ -40,13 +40,13 @@ SLC_BEFORE = function slc_compile() { \
 	if test -n "$$SLC_OUT"; then rm -f "$$SLC_OUT" "$$SLC_OUT".{mtalpha,ptl,seqc}; fi && \
 	echo "  SLC    $$SLC_OUT".seqc && \
 	$(SLC_LOCAL) $${SLC_OUT:+-o "$$SLC_OUT".seqc} -b seqc "$$@" -I$(srcdir) -I$(builddir) \
-	      $(AM_CFLAGS) $(CFLAGS) && \
+	      $(AM_CFLAGS) $(CFLAGS) $(SLFLAGS) $(SLFLAGS_SEQC) && \
 	$(slc_ifptl) echo "  SLC    $$SLC_OUT".ptl && \
         $(slc_ifptl) $(SLC_LOCAL) $${SLC_OUT:+-o "$$SLC_OUT".ptl} -b ptl "$$@" -I$(srcdir) -I$(builddir) \
-	      $(AM_CXXFLAGS) $(CXXFLAGS) && \
+	      $(AM_CXXFLAGS) $(CXXFLAGS) $(SLFLAGS) $(SLFLAGS_PTL) && \
 	$(slc_ifmtalpha) echo "  SLC    $$SLC_OUT".mtalpha && \
         $(slc_ifmtalpha) $(SLC_LOCAL) $${SLC_OUT:+-o "$$SLC_OUT".mtalpha} -b ppp "$$@" \
-	      -I$(srcdir) -I$(builddir) -lm && \
+	      -I$(srcdir) -I$(builddir) -lm $(SLFLAGS) $(SLFLAGS_MTALPHA) && \
 	if test -n "$$SLC_OUT"; then \
 	  printf '\#! /bin/sh\n' >"$@" && \
 	  printf 'echo "This script is only a stub. Run the actual program with:"\n' >>"$@" && \
