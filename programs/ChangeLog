@@ -1,3 +1,13 @@
+2009-10-09  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
+	Implement some automation to run benchmarks.
+	
+	* build-aux/genbench.sh,
+	* build-aux/benchmarks.mk: New.
+
+	* Makefile.am: Update accordingly.
+	* configure.ac: Require bash.
+
 2009-10-08  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
 	Convert `blas' benchmarks code to new framework.
