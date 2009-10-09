@@ -333,7 +333,7 @@ class pppalpha(object):
          la = a.split(':')
          cat, species, ctype, name = la[:4]
          name = name.strip()
-         init = ':'.join(la[4:])
+         init = ':'.join(la[4:]).strip()
          if init == "":
             init = None
          dic[species][cat].append({'ctype':ctype, 'name':name, 'init':init})
@@ -425,7 +425,7 @@ class pppalpha(object):
 
    def create(self, funcname, tag, br, *args):
       # DEBUG:
-      #print >>sys.stderr, args
+      # print >>sys.stderr, args
       if len(args) == 1 and args[0] == "":
          args = ()
 

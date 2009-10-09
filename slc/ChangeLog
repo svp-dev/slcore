@@ -1,3 +1,19 @@
+2009-10-10  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
+	Fix some issues with whitespace handling.
+	
+	* tools/include/m4sugar_regexp.patch: New.
+	
+	* tools/Makefile.am: Patch regexps after translating the quotes in
+	m4sugar, since some regexps can contain valid single pairs of [
+	and ].
+
+	* tools/lib/t-seqc/slimpl.m4: Do not initialize thread arguments
+	when the initializer is whitespace.
+
+	* tools/bin/spp: Strip whitespace from initializer before testing
+	for emptyness.
+
 2009-10-09  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
 	Make testsuite more resilient to long tests.

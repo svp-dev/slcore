@@ -61,7 +61,7 @@ m4_popdef([[__sl_seta_$2]]) m4_dnl
 
 m4_define([[sl_initarg]],[[ m4_dnl
 m4_pushdef([[_sl_initializer]],m4_joinall([[:]],m4_shiftn(2,$@))) m4_dnl
-m4_if(m4_quote(_sl_initializer),,,[[_sl_lbl[[]]_args.[[$2]] = (_sl_initializer);]]) m4_dnl
+m4_if(m4_normalize(m4_quote(_sl_initializer)),,,[[_sl_lbl[[]]_args.[[$2]] = (_sl_initializer);]]) m4_dnl
 [[$1]] __after_[[$2]]; m4_dnl
 m4_define([[__sl_geta_$2]],__after_$2) m4_dnl
 m4_define([[__sl_seta_$2]],__after_$2 = $[[]]1) m4_dnl
