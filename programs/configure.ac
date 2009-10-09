@@ -37,6 +37,7 @@ AC_CONFIG_FILES([
 	Makefile
 	demo/Makefile
 	benchmarks/Makefile
+	benchmarks/lib/Makefile
 	benchmarks/fft/Makefile
 	benchmarks/quicksort/Makefile
 	benchmarks/blas/Makefile

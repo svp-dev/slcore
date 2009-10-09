@@ -1,1 +1,1 @@
-SUBDIRS = fft blas quicksort nas sha livermore
+SUBDIRS = lib fft blas quicksort nas sha livermore 

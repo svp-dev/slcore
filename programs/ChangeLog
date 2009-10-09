@@ -1,3 +1,12 @@
+2009-10-08  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
+	Introduce `benchmark/lib' for benchmarking framework.
+	
+	* benchmarks/lib/Makefile.am: New.
+	* benchmarks/Makefile.am: Recurse into `lib'.
+
+	* configure.ac: Generate Makefile for `lib'.
+
 2009-10-07  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
 	Create new demo `sep' to show off SEP allocation.
