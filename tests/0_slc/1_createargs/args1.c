@@ -22,12 +22,13 @@ sl_enddef
 
 sl_def(t_main, void)
 {
-  sl_create(,,,,,,, foo, sl_sharg(int, a));
+  sl_create(,,,,,,, foo, sl_sharg(int, a) );
   sl_seta(a, 10);
   sl_sync();
   if (sl_geta(a) != 11) svp_abort();
   {
-    sl_create(,,,,,,, foo, sl_sharg(int, a));
+    sl_create(,,,,,,, foo, sl_sharg(int, a)
+	      /* whitespace */);
     sl_seta(a, 20);
     sl_sync();
     if (sl_geta(a) != 21) svp_abort();
