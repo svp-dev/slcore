@@ -1,5 +1,18 @@
 2009-10-08  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	Start to implement the top-level benchmark program.
+	
+	* benchmarks/lib/benchmark.c,
+	* benchmarks/lib/benchmark.h: New.
+	
+	* benchmarks/lib/Makefile.am: Compile library for multiple
+	targets.
+
+	* configure.ac: Check for `ranlib' since it is required for making
+	libraries.
+
+2009-10-08  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	Introduce `benchmark/lib' for benchmarking framework.
 	
 	* benchmarks/lib/Makefile.am: New.
