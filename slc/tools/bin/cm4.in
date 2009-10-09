@@ -157,13 +157,17 @@ def wrepl(matchobj):
 def makeqesc(specialchars):
     specials = ''.join(specialchars)
     def escaper(str):
+        if str[0] == '"':
+            d = '""'
+        else: 
+            d = ''
         newstr = ''
         for c in str:
-            # log("HELLO %r" % c)
             if c in specials:
-                newstr += r'\x%2x' % ord(c)
+                newstr += r'\x%2x%s' % (ord(c),d)
             else:
                 newstr += c;
+        # print >>sys.stderr, "HELLO", newstr
         return newstr
     return escaper
 

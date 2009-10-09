@@ -1,5 +1,13 @@
 2009-10-08  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	Fix bug with special characters in string constants.
+
+	* tools/bin/cm4.in: Insert string delimiters after inserted hex
+	escapes, to prevent adjacent digits from taking part in the
+	character code.
+
+2009-10-08  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	Enhance `slr'.
 	
 	* tools/bin/slr.in: Also use `SLR_RECURSIVE' when processing the
