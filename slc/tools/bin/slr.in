@@ -447,7 +447,7 @@ s/,$//g' | $python "$sag_helper" f >"$tmpdir"/fdata.c
 	if test -n "$VERBOSE"; then
 	    echo "$basename: running: TMPDIR=$tmpdir/slr-rec @BASH@ $0 $tmpdir/gen.x >$fdatafile" >&2
 	fi
-	TMPDIR="$tmpdir"/slr-rec @BASH@ "$0" "$tmpdir"/gen.x -Ws,-q,-o,NumProcessorsPerFPU=1 -n 1 >"$fdatafile"
+	SLR_RECURSIVE=1 TMPDIR="$tmpdir"/slr-rec @BASH@ "$0" "$tmpdir"/gen.x >"$fdatafile"
     else
 	# Ensure a tag = -1 for the first Fibre item
         printf '\xff\xff\xff\xff\xff\xff\xff\xff' >"$fdatafile"

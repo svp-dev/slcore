@@ -77,7 +77,7 @@ sl_family_t _sl_lbl; m4_dnl
 m4_if(sl_breakable([[$7]]),1,[[[[$7]] _sl_brk;]],) m4_dnl
 m4_foreach([[_sl_arg]],m4_quote(_sl_thargs),[[m4_apply([[sl_declarg]],m4_split(_sl_arg,:))]]) m4_dnl
 uTC::create(_sl_lbl,_sl_place,false,false,_sl_start,_sl_limit,_sl_step,_sl_block,_sl_brkref 0,m4_dnl
-&([[$8]]) m4_dnl
+([[$8]]) m4_dnl
 m4_foreach([[_sl_arg]],m4_quote(_sl_thargs),[[m4_apply([[sl_pullarg]],m4_split(_sl_arg,:))]]) m4_dnl
 ); m4_dnl
 m4_if([[$1]],,,[[([[$1]]) = _sl_lbl]]) m4_dnl

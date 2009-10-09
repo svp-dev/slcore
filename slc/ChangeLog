@@ -1,5 +1,12 @@
 2009-10-08  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	Allow to use thread function pointers with muTC-ptl.
+	
+	* tools/lib/t-ptl/simpl.m4: Do not take the address of the thread
+	function when invoking uTC::create.
+
+2009-10-08  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	* tools/include/svp/compiler.h (alwaysinline): Fix typo.
 
 2009-10-08  Raphael 'kena' Poss  <r.c.poss@uva.nl>
