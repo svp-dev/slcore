@@ -1,3 +1,9 @@
+2009-10-09  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
+	Extend the unit test suite.
+	
+	* 0_slc/0_trivial/c99loop.c: New.
+
 2009-10-01  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
 	Extend the unit test suite.
