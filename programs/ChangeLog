@@ -1,5 +1,14 @@
 2009-10-09  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	Enhance the `blas' benchmarks with the new build tools.
+
+	* benchmarks/blas/bench-daxpy.inputs,
+	* benchmarks/blas/bench-saxpy.inputs: New.
+	
+	* benchmarks/blas/Makefile.am: Update to use the new framework.
+
+2009-10-09  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	Implement some automation to run benchmarks.
 	
 	* build-aux/genbench.sh,

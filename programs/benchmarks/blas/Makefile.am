@@ -12,11 +12,13 @@
 ##
 
 # 
-DEMOS = \
+BENCHMARKS = \
 	bench-daxpy.c \
 	bench-saxpy.c
 
-DATA_FILES = \
+BENCHMARK_INPUTS = \
+	bench-daxpy.inputs \
+	bench-saxpy.inputs \
 	axy.d1 \
 	axy.d2 \
 	axy.d3 
@@ -37,18 +39,8 @@ EXTRA_DIST = \
 	zaxpy.c \
 	zdotc.c \
 	zdotu.c \
-	$(DEMOS) \
-	$(DATA_FILES)
+	$(BENCHMARKS) \
+	$(BENCHMARKS_INPUTS)
 
 
-if ENABLE_DEMOS
-include $(top_srcdir)/build-aux/sl.mk
-SLFLAGS = -I$(srcdir)/../lib -lbench
-SLFLAGS_PTL = -L../lib/host-host-ptl
-SLFLAGS_SEQC = -L../lib/host-host-seqc
-SLFLAGS_MTALPHA = -L../lib/mtalpha-sim
-
-noinst_DATA = $(DEMOS:.c=.x)
-CLEANFILES = $(DEMOS:.c=.x) $(DEMOS:.c=.bin.*)
-endif
-
+include $(top_srcdir)/build-aux/benchmarks.mk
