@@ -18,13 +18,13 @@ expires before the command terminates.
 If the command does not respond to SIGTERM, it is sent SIGKILL (exit
 code 137) after 2 seconds.
 
-The default timeout is 5 seconds, unless overloaded with the environment
+The default timeout is 60 seconds, unless overloaded with the environment
 variable TIMEOUT.
 EOF
     exit 1
 fi
 
-TIMEOUT=${TIMEOUT:-5}
+TIMEOUT=${TIMEOUT:-60}
 
 set -m
 

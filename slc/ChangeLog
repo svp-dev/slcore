@@ -1,5 +1,12 @@
 2009-10-09  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	Make testsuite more resilient to long tests.
+
+	* tools/bin/timeout.in: Increase the default timeout to 60
+	seconds.
+
+2009-10-09  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	Increase support for C99.
 	
 	* tools/bin/cce.in: Use `-std=gnu99' when compiling for MT.
