@@ -1,5 +1,21 @@
 2009-10-09  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	Convert the `mandel' demo to the new benchmark framework.
+
+	* demo/mandel.c: Rename to...	
+	* benchmarks/mandel/mandel.c: ...here. Change to become a
+	benchmark.
+
+	* benchmarks/mandel/mandel.d1,
+	* benchmarks/mandel/mandel.d2,
+	* benchmarks/mandel/Makefile.am: New.
+
+	* benchmarks/Makefile.am,
+	* demo/Makefile.am,
+	* configure.ac: Update accordingly.
+
+2009-10-09  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	Enhance the `blas' benchmarks with the new build tools.
 
 	* benchmarks/blas/bench-daxpy.inputs,

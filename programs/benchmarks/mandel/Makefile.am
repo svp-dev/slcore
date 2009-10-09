@@ -12,26 +12,15 @@
 ##
 
 # 
-DEMOS = \
-	helloworld.c \
-	answer.c \
-	roman.c \
-	10threads.c \
-	fibonacci.c \
-	fibre.c \
-	bitblt.c keyblit.c \
-	checkers.c \
-	sep.c
+BENCHMARKS = \
+	mandel.c
 
-TESTS = $(DEMOS)
+BENCHMARK_INPUTS = \
+	mandel.d1 \
+	mandel.d2
 
-include $(top_srcdir)/build-aux/slctests.mk
+EXTRA_DIST = \
+	$(BENCHMARKS) \
+	$(BENCHMARK_INPUTS)
 
-EXTRA_DIST = $(DEMOS)
-EXTRA_DIST += fibre.c.d1 fibre.c.d2 fibre.c.d3 bitblt.c.d keyblit.c.d
-
-if ENABLE_DEMOS
-noinst_DATA = $(DEMOS:.c=.x)
-CLEANFILES = $(DEMOS:.c=.x) $(DEMOS:.c=.bin.*)
-endif
-
+include $(top_srcdir)/build-aux/benchmarks.mk

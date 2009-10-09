@@ -40,9 +40,10 @@ AC_CONFIG_FILES([
 	demo/Makefile
 	benchmarks/Makefile
 	benchmarks/lib/Makefile
+	benchmarks/blas/Makefile
+	benchmarks/mandel/Makefile
 	benchmarks/fft/Makefile
 	benchmarks/quicksort/Makefile
-	benchmarks/blas/Makefile
 	benchmarks/nas/Makefile
 	benchmarks/nas/is/Makefile
 	benchmarks/sha/Makefile
