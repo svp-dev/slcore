@@ -54,6 +54,6 @@ SLC_BEFORE = function slc_compile() { \
 	fi; }
 
 .c.x:
-	@$(SLC_BEFORE); $(SLC_VARS) SLC_OUT="${@:.x=.bin}" slc_compile $<
+	@$(SLC_BEFORE); $(SLC_VARS) SLC_OUT="$(@:.x=.bin)" slc_compile $<
 
 

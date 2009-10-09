@@ -1,3 +1,9 @@
+2009-10-09  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
+	Minor fix.
+	
+	* build-aux/sl.mk (.c.x): Fix typo in variable expansion.
+
 2009-10-08  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
 	Enhance the build framework.
