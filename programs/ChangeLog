@@ -1,5 +1,21 @@
 2009-10-08  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	Convert `blas' benchmarks code to new framework.
+	
+	* benchmarks/blas/blas-test-saxpy.c: Delete.
+	
+	* benchmarks/blas/bench-saxpy.c,
+	* benchmarks/blas/bench-daxpy.c: New.
+
+	* benchmarks/blas/axy.d1,
+	* benchmarks/blas/axy.d2,	
+	* benchmarks/blas/axy.d3: Example data for both `saxpy' and
+	`daxpy'.
+
+	* benchmarks/blas/Makefile.am: Update accordingly.
+	
+2009-10-08  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	Start to implement the top-level benchmark program.
 	
 	* benchmarks/lib/benchmark.c,
