@@ -1,5 +1,9 @@
 2009-10-08  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	* tools/include/svp/compiler.h (alwaysinline): Fix typo.
+
+2009-10-08  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	Extend the library.
 	
 	* tools/include/svp/compiler.h: Introduce new macro

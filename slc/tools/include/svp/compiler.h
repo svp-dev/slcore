@@ -45,7 +45,7 @@
 /* inlining words */
 
 #define noinline __attribute__((__noinline__))
-#define alwaysinline __atribute__((__alwaysinline__))
+#define alwaysinline __attribute__((__always_inline__))
 
 /* force sequence/reordering */
 
