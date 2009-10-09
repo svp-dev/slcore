@@ -1,5 +1,17 @@
 2009-10-10  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	Provide support for anonymous thread arguments/parameters.
+	
+	* tools/include/slc.m4: Define new macro `sl_anonymous'.
+	
+	* tools/lib/t-ptl/slimpl.m4,
+	* tools/lib/t-seqc/slimpl.m4,
+	* tools/lib/t-utc0/slimpl.m4	
+	* tools/lib/t-pppalpha/slimpl.m4: Use `sl_anonymous' when no
+	thread parameter/argument name is provided.
+
+2009-10-10  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	Fix some issues with whitespace handling.
 	
 	* tools/include/m4sugar_regexp.patch: New.

@@ -17,6 +17,10 @@ m4_init()
 # m4_step: increment variable by 1
 m4_define([[m4_step]],[[m4_define([[$1]], m4_incr($1))]])
 
+# sl_anon: anonymous identifier generator
+m4_define([[_sl_anonct]],0)
+m4_define([[sl_anonymous]], [[m4_step([[_sl_anonct]])[[__slanon]]_sl_anonct]])
+
 # sl_breakable() - helper macro, returns 1 if type is non-void or
 # non-empty
 m4_define([[sl_breakable]],[[m4_case([[$1]],[[void]],0,[[]],0,1)]])

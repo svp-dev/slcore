@@ -41,8 +41,8 @@ thread [[$2]] [[$1]]m4_if((sl_thparms),(),(void),(sl_thparms))m4_dnl
 ]])
 
 # Pass transparently parameter declarations.
-m4_define([[sl_shparm]], [[shared [[$1]] __p_[[$2]]]])
-m4_define([[sl_glparm]], [[/*global*/ [[$1]] __p_[[$2]]]])
+m4_define([[sl_shparm]], [[shared [[$1]] __p_[[]]m4_if([[$2]],,sl_anonymous,[[$2]])]])
+m4_define([[sl_glparm]], [[/*global*/ [[$1]] __p_[[]]m4_if([[$2]],,sl_anonymous,[[$2]])]])
 m4_copy([[sl_shparm]],[[sl_shfparm]])
 m4_copy([[sl_glparm]],[[sl_glfparm]])
 
@@ -52,8 +52,8 @@ m4_define([[sl_index]], [[index long [[$1]];m4_dnl
 __asm__ __volatile__("#MTREG_SET: $l0")]])
 
 # Pull shared and global argument declarations.
-m4_define([[sl_sharg]],[[[[$1]]:__a_[[$2]]:m4_if([[$3]],,[[= *([[$1]]*)(void*)-sizeof([[$1]])]],[[= [[$3]]]])]])
-m4_define([[sl_glarg]],[[[[$1]] const:__a_[[$2]]:m4_if([[$3]],,[[= *([[$1]]*)(void*)-sizeof([[$1]])]],[[= [[$3]]]])]])
+m4_define([[sl_sharg]],[[[[$1]]:__a_[[]]m4_if([[$2]],,sl_anonymous,[[$2]]):m4_if([[$3]],,[[= *([[$1]]*)(void*)-sizeof([[$1]])]],[[= [[$3]]]])]])
+m4_define([[sl_glarg]],[[[[$1]] const:__a_[[]]m4_if([[$2]],,sl_anonymous,[[$2]]):m4_if([[$3]],,[[= *([[$1]]*)(void*)-sizeof([[$1]])]],[[= [[$3]]]])]])
 m4_copy([[sl_sharg]],[[sl_shfarg]])
 m4_copy([[sl_glarg]],[[sl_glfarg]])
 

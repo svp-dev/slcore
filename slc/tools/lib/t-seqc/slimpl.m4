@@ -21,8 +21,8 @@ m4_define([[_sl_crcnt]],0)
 
 # Thread definitions
 
-m4_define([[sl_shparm]], [[[[$1]] [[$2]]]])
-m4_define([[sl_glparm]], [[[[$1]] const [[$2]]]])
+m4_define([[sl_shparm]], [[[[$1]] m4_if([[$2]],,sl_anonymous,[[$2]])]])
+m4_define([[sl_glparm]], [[[[$1]] const m4_if([[$2]],,sl_anonymous,[[$2]])]])
 m4_copy([[sl_shparm]],[[sl_shfparm]])
 m4_copy([[sl_glparm]],[[sl_glfparm]])
 
@@ -52,7 +52,6 @@ m4_define([[sl_setp]],[[(__sl_args->[[$1]]) = [[$2]]]])
 m4_define([[sl_declarg]],[[m4_dnl
 [[$1]] [[$2]]; m4_dnl
 ]])
-
 m4_define([[sl_copyarg]],[[m4_dnl
 __after_[[$2]] = _sl_lbl[[]]_args.[[$2]]; m4_dnl
 m4_popdef([[__sl_geta_$2]]) m4_dnl
@@ -99,7 +98,7 @@ __sl_child.a = &_sl_lbl[[]]_args m4_dnl
 
 
 # Pass transparently shared and global argument declarations.
-m4_define([[sl_sharg]],[[$1:$2:$3]])
+m4_define([[sl_sharg]],[[[[$1]]:m4_if([[$2]],,sl_anonymous,[[$2]]):[[$3]]]])
 m4_copy([[sl_sharg]],[[sl_glarg]])
 m4_copy([[sl_sharg]],[[sl_shfarg]])
 m4_copy([[sl_sharg]],[[sl_glfarg]])
