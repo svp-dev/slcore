@@ -816,6 +816,18 @@ class pppalpha(object):
             yield (type, content, comment)
       return completeload
 
+   def makeprotectspecial(self, keyname, regname):
+      # this transorm appears very late in the chain,
+      # and here there is no more split with the prologue.
+      # so we have to detect explicitly the prologue boundary again.
+      def protectspecial(fundata, items):
+         hasload = fundata[keyname]
+         regnr = fundata['specials'][regname]
+         for (type, content, comment) in items:
+            if content.startswith('.prologue') and hasload:
+               yield ('other','clr $l%d' % regnr, 'init maybe used')
+            yield (type, content, comment)
+      return protectspecial
 
    def munchret(self, fundata, items):
       """
@@ -1821,6 +1833,7 @@ class pppalpha(object):
          groups = self.funfilter(self.munchret, groups)
          groups = self.funfilter(self.makedetectload('hasraload','ra'), groups)
          groups = self.funfilter(self.makecompleteload('hasraload','ra'), groups)
+         groups = self.funfilter(self.makeprotectspecial('hasraload', 'ra'), groups)
          groups = self.funfilter(self.makedetectload('hasfpload','fp'), groups)
          groups = self.funfilter(self.makecompleteload('hasfpload','fp'), groups)
          items = self.flattener(groups)

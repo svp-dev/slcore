@@ -1,3 +1,21 @@
+2009-10-12  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
+	Fix bug in MT-alpha code generation.
+
+	When the legacy RA register is used as a temporary, a special
+	"complete memory load" register access is emitted before the point
+	a thread terminates, to ensure pending memory loads are flushed
+	before the thread resources are used. This is a "required
+	optimization" (to avoid pipeline stalls in the next thread that
+	reuses the register). Unfortunately it is possible that the
+	control flow reaches that point without using the RA register (it
+	could be used only in some branches in the function body). The
+	solution implemented is to conservatively initialize RA always
+	when it may be used as a temporary.
+	
+	* tools/bin/spp (pppalpha.makeprotectspecial): New transform.
+	(pppalpha.filter): Use it.
+
 2009-10-10  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
 	Provide support for anonymous thread arguments/parameters.
