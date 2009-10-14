@@ -1,5 +1,17 @@
 2009-10-13  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	ABI change: special memory now at the start of the address space.
+	
+	* lib/include/svp/perf.h: Counters now start at address +4 from
+	the start of the address space, instead of -256 from the end.
+	
+	* tools/lib/t-utc0/slimpl.m4: The `setempty' instruction now
+	expands to a load from address +4 from the start of the address
+	space, instead of a load from the end of the address
+	space. Transform the flush of a shared accordingly.
+	
+2009-10-13  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	Prepare for ABI change.
 	
 	* tools/bin/cce.in: Change the base offset for MT linking to 16Mb,

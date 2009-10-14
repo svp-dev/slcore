@@ -28,10 +28,10 @@ typedef long counter_t;
 #define MTPERF_NCOUNTERS 3
 typedef struct { counter_t ct[MTPERF_NCOUNTERS]; } __counters_t;
 #define mtperf_sample(Array) do { \
-  *(__counters_t*restrict)(void*)(Array) = *(volatile __counters_t*restrict)(void*)-256; \
+  *(__counters_t*restrict)(void*)(Array) = *(volatile __counters_t*restrict)(void*)8; \
   } while(0)
 
-#define mtperf_sample1(Counter) (((volatile __counters_t*restrict)(void*)-256)->ct[Counter])
+#define mtperf_sample1(Counter) (((volatile __counters_t*restrict)(void*)8)->ct[Counter])
 
 #else
 
