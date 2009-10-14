@@ -1,3 +1,10 @@
+2009-10-13  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
+	Enhance the benchmark outer thread.
+	
+	* benchmarks/lib/benchmark.c: Enclose the measurements in a Fibre
+	array when the Fibre format is specified.
+
 2009-10-09  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
 	Minor packaging fix.

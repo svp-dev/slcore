@@ -170,9 +170,12 @@ sl_def(run_benchmark, void, sl_glparm(struct benchmark*, b))
   puts("# done.\n\n");
 
   output_string("## measurements:\n", 2);
+  if (!format)
+    printf("[0,%u:\n", is);
   for (i = 0; i < is; ++i) 
     mtperf_report_diffs(ct[i][0].vals, ct[i][1].vals, 
 			(format ? (REPORT_CSV|CSV_SEP(' ')) : REPORT_FIBRE) | REPORT_STREAM(2));
-
+  if (!format)
+    puts("]\n");
 }
 sl_enddef
