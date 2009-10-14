@@ -308,7 +308,7 @@ case $slc_arch-$slc_os in
         slc_ppflags+=(-D__mt_freestanding__ -D__WORDSIZE=64)
         # slc_cflags="$slc_cflags -D__mt_freestanding__ -D__WORDSIZE=64"
         # slc_cflags="$slc_cflags -nostdinc"
-	slc_ldflags+=(-Wl,-Ttext -Wl,0 -nostdlib)
+	slc_ldflags+=(-Wl,-Ttext -Wl,0x1000000 -nostdlib)
 	if test -n "$slc_debug_flags"; then
 	    echo "$basename: warning: flags unsupported by $slc_arch-$slc_os: $slc_debug_flags" >&2
 	fi

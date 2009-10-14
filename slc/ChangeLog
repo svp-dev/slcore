@@ -1,5 +1,12 @@
 2009-10-13  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	Prepare for ABI change.
+	
+	* tools/bin/cce.in: Change the base offset for MT linking to 16Mb,
+	to allow for some reserved memory with special behavior before.
+
+2009-10-13  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	Ease post-processing of the output of `slr'.
 	
 	* tools/bin/sag (SlrVarGenerator.dogen): Prefix `#' to warning
