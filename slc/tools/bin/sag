@@ -209,7 +209,7 @@ class SlrVarGenerator(object):
         data = []
         for r in required:
             if r not in spec:
-                print >>sys.stderr, "warning: %s not specified, assuming empty array" % r
+                print >>sys.stderr, "#warning: %s not specified, assuming empty array" % r
                 spec[r] = ""
 
             init = spec[r]

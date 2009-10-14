@@ -1,3 +1,11 @@
+2009-10-13  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
+	Ease post-processing of the output of `slr'.
+	
+	* tools/bin/sag (SlrVarGenerator.dogen): Prefix `#' to warning
+	messages so they can be treated as comments in text-processing
+	tools.
+
 2009-10-12  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
 	Fix bug in MT-alpha code generation.
