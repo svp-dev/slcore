@@ -1,3 +1,10 @@
+2009-10-14  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
+	Enhance the `mandel' demo.
+
+	* benchmarks/mandel/mandel.c: Demonstrate measure intervals by
+	defining two of them in the "work" part.
+
 2009-10-13  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
 	Enhance the benchmark framework.

@@ -251,7 +251,10 @@ sl_enddef
 
 sl_def(work, void, sl_glparm(struct benchmark_state*, st))
 {
+  struct work_lapses * wl = sl_getp(st)->wl;
   struct bdata *bdata = (struct bdata*)sl_getp(st)->data;  
+
+  start_interval(wl);
   sl_create(,bdata->par_place,,bdata->N,,bdata->blocksize,,
 	    mandel,
 	    sl_glfarg(double, _0, bdata->xmin),
@@ -267,15 +270,10 @@ sl_def(work, void, sl_glparm(struct benchmark_state*, st))
 #endif
 	    );
   sl_sync();
-}
-sl_enddef
+  finish_interval(wl);
 
-sl_def(output, void,
-       sl_glparm(struct benchmark_state*, st))
-{
 #ifndef DISPLAY_DURING_COMPUTE
-  struct bdata *bdata = (struct bdata*)sl_getp(st)->data;  
-
+  start_interval(wl);
 #ifdef PARALLEL_DISPLAY
   sl_create(,bdata->par_place,,bdata->N,,bdata->blocksize,,
 	    displayAfter,
@@ -288,9 +286,16 @@ sl_def(output, void,
 	    sl_sharg(int, tok, 0));
   sl_sync();
 #endif
+  finish_interval(wl);
 
 #endif
-  /* dump screenshot and terminate */
+}
+sl_enddef
+
+sl_def(output, void,
+       sl_glparm(struct benchmark_state*, st))
+{
+  /* dump screenshot */
   gfx_dump(0, 1, 0, 0);
 }
 sl_enddef
