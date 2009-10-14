@@ -1,5 +1,13 @@
 2009-10-13  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	Enhance the benchmark framework.
+	
+	* benchmarks/lib/benchmark.h,	
+	* benchmarks/lib/benchmark.c: Allow the `work' part of a benchmark
+	to define sub-intervals for measurements.
+
+2009-10-13  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	Enhance the benchmark outer thread.
 	
 	* benchmarks/lib/benchmark.c: Enclose the measurements in a Fibre

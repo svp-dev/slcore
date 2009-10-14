@@ -18,6 +18,7 @@
 #include <svp/abort.h>
 #include <svp/testoutput.h>
 #include <svp/iomacros.h>
+#include <cmalloc.h>
 
 #ifdef puts
 #undef puts
@@ -70,10 +71,15 @@ sl_def(run_benchmark, void, sl_glparm(struct benchmark*, b))
     printf("## %s\n", b->description);
   putc('\n');
 
-  unsigned nsamples = 5+2*L;
-  struct ct_t { counter_t vals[MTPERF_NCOUNTERS]; } ct[nsamples][2];
-  struct ct_t ct_zero = { { 0 } };
-  int is = 0;
+  /* prepare intervals and lapses */
+  struct benchmark_interval ct_fixed[4];
+  struct work_measures {
+    struct benchmark_interval prepare;
+    struct benchmark_interval overall;
+    struct work_lapses wl;
+  };
+  struct work_measures *wm = 
+    (struct work_measures*)fast_malloc(sizeof(struct work_measures)*L);
 
   /* prepare benchmark state and place */
 
@@ -85,13 +91,13 @@ sl_def(run_benchmark, void, sl_glparm(struct benchmark*, b))
   printf("# 1. initial place allocation (ncores=%u)...", ncores);
 #if SVP_HAS_SEP
   {
-    mtperf_sample(ct[is][0].vals);
+    mtperf_sample(ct_fixed[0].before);
     sl_create(,root_sep->sep_place|1,,,,,, root_sep->sep_alloc,
 	      sl_glarg(struct SEP*, _0, root_sep),
 	      sl_glarg(unsigned long, _1, SAL_EXACT|ncores),
 	      sl_sharg(struct placeinfo*, p, 0));
     sl_sync();
-    mtperf_sample(ct[is++][1].vals);
+    mtperf_sample(ct_fixed[0].after);
     if (!sl_geta(p)) {
       output_string("Place allocation failed!\n", 2);
       svp_abort();
@@ -110,72 +116,121 @@ sl_def(run_benchmark, void, sl_glparm(struct benchmark*, b))
 #else
   puts("no SEP, using default place\n");
   pid = PLACE_DEFAULT;
-  ct[is][0] = ct[is][1] = ct_zero; ++is;
+  ct_fixed[0] = ct_zero;
 #endif
 
   puts("# 2. initialize...");
   if (initialize) {
-    mtperf_sample(ct[is][0].vals);
+    mtperf_sample(ct_fixed[1].before);
     sl_proccall(initialize, sl_glarg(struct benchmark_state*, _0, &bs));
-    mtperf_sample(ct[is++][1].vals);
+    mtperf_sample(ct_fixed[1].after);
     puts("ok\n");
   } else {
     puts("(nothing to do)\n");
-    ct[is][0] = ct[is][1] = ct_zero; ++is;
+    ct_fixed[1] = ct_zero;
   }
 
   int i;
   for (i = 0; i < L; ++i) {
     printf("# 3.%u prepare...", i+1);
     if (prepare) {
-      mtperf_sample(ct[is][0].vals);
+      mtperf_sample(wm[i].prepare.before);
       sl_proccall(prepare, sl_glarg(struct benchmark_state*, _0, &bs));
-      mtperf_sample(ct[is++][1].vals);
+      mtperf_sample(wm[i].prepare.after);
       puts("ok\n");
     } else {
       puts("(nothing to do)\n");
-      ct[is][0] = ct[is][1] = ct_zero; ++is;
+      wm[i].prepare = ct_zero;
     }
 
     printf("# 3.%u work...", i+1);
-    mtperf_sample(ct[is][0].vals);
+    wm[i].wl.current_interval = 0;
+    bs.wl = &wm[i].wl;
+    mtperf_sample(wm[i].overall.before);
     sl_create(, pid,,,,,, work, sl_glarg(struct benchmark_state*, _0, &bs));
     sl_sync();
-    mtperf_sample(ct[is++][1].vals);
+    mtperf_sample(wm[i].overall.after);
     puts("ok\n");
   }
 
   puts("# 4. results...");
   if (results && output) {
     putc('\n');
-    mtperf_sample(ct[is][0].vals);
+    mtperf_sample(ct_fixed[2].before);
     sl_proccall(output, sl_glarg(struct benchmark_state*, _0, &bs));
-    mtperf_sample(ct[is++][1].vals);
+    mtperf_sample(ct_fixed[2].after);
     putc('\n');
   } else {
     puts("(nothing to do)\n");
-    ct[is][0] = ct[is][1] = ct_zero; ++is;
+    ct_fixed[2] = ct_zero;
   }
 
   puts("# 5. teardown...");
   if (teardown) {
-    mtperf_sample(ct[is][0].vals);
+    mtperf_sample(ct_fixed[3].before);
     sl_proccall(teardown, sl_glarg(struct benchmark_state*, _0, &bs));
-    mtperf_sample(ct[is++][1].vals);
+    mtperf_sample(ct_fixed[3].after);
     puts("ok\n");
   } else {
     puts("(nothing to do)\n");
-    ct[is][0] = ct[is][1] = ct_zero; ++is;
+    ct_fixed[3] = ct_zero;
   }
   puts("# done.\n\n");
 
   output_string("## measurements:\n", 2);
+  long report_flags = (format ? (REPORT_CSV|CSV_SEP(' ')) : REPORT_FIBRE) | REPORT_STREAM(2);
+
+  size_t nsamples = 4 + 2 * L;
+  for (i = 0; i < L; ++i) nsamples += wm[i].wl.current_interval;
+  
+  if (!format) {
+    output_string("[0,", 2);
+    output_uint(nsamples, 2);
+    output_string(":\n", 2);
+  }
+  if (!format) output_string("# place allocation\n",2);
+  mtperf_report_diffs(ct_fixed[0].before, ct_fixed[0].after, report_flags);
+  if (!format) output_string("# initialization\n",2);
+  mtperf_report_diffs(ct_fixed[1].before, ct_fixed[1].after, report_flags);
+  if (!format) output_string("# data output\n",2);
+  mtperf_report_diffs(ct_fixed[2].before, ct_fixed[2].after, report_flags);
+  if (!format) output_string("# tear down\n",2);
+  mtperf_report_diffs(ct_fixed[3].before, ct_fixed[3].after, report_flags);
+
+  if (!format) output_string("# prepare\n", 2);
+  for (i = 0; i < L; ++i) {
+    if (!format) { 
+      output_string("#   iteration ", 2); 
+      output_uint(i+1, 2); 
+      output_char('\n', 2);
+    }
+    mtperf_report_diffs(wm[i].prepare.before, wm[i].prepare.after, report_flags);
+  }
+  
+  if (!format) {
+    output_string("# work (", 2);
+    output_uint(L > 0 ? wm[0].wl.current_interval : 0, 2);
+    output_string(" sub-intervals defined)\n", 2);
+  }
+  for (i = 0; i < L; ++i) {
+    if (!format) { 
+      output_string("#   iteration ", 2); 
+      output_uint(i+1, 2); 
+      output_string(", overall\n", 2);
+    }
+    mtperf_report_diffs(wm[i].overall.before, wm[i].overall.after, report_flags);
+    for (int j = 0; j < wm[i].wl.current_interval; ++j) {
+      if (!format) { 
+	output_string("#   iteration ", 2); 
+	output_uint(i+1, 2); 
+	output_string(", interval ", 2);
+	output_uint(j+1, 2); 
+	output_char('\n', 2);
+      }
+      mtperf_report_diffs(wm[i].wl.intervals[j].before, wm[i].wl.intervals[j].after, report_flags);      
+    }
+  }
   if (!format)
-    printf("[0,%u:\n", is);
-  for (i = 0; i < is; ++i) 
-    mtperf_report_diffs(ct[i][0].vals, ct[i][1].vals, 
-			(format ? (REPORT_CSV|CSV_SEP(' ')) : REPORT_FIBRE) | REPORT_STREAM(2));
-  if (!format)
-    puts("]\n");
+    output_string("]\n", 2);
 }
 sl_enddef

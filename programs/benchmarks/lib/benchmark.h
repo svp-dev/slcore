@@ -16,13 +16,29 @@
 # define SLC_LIB_BENCHMARK_H
 
 #include <svp/sep.h>
+#include <svp/perf.h>
+
+struct benchmark_interval {
+  counter_t before[MTPERF_NCOUNTERS];
+  counter_t after[MTPERF_NCOUNTERS];
+};
+
+#define MAX_LAPSES_PER_WORK 100
+
+struct work_lapses {
+  size_t current_interval;
+  struct benchmark_interval intervals[MAX_LAPSES_PER_WORK];
+};
 
 struct benchmark_state {
   void* data;
 #if SVP_HAS_SEP
   struct placeinfo *place;
 #endif
+  struct work_lapses * wl;
 };
+
+static const struct benchmark_interval ct_zero = { { 0 }, { 0 } };
 
 struct benchmark {
   const char *title;
@@ -36,5 +52,13 @@ struct benchmark {
 };
 
 sl_decl(run_benchmark, void, sl_glparm(struct benchmark*, b));
+
+#define start_interval(wl) mtperf_sample(wl->intervals[wl->current_interval].before)
+#define finish_interval(wl) mtperf_sample(wl->intervals[wl->current_interval++].after)
+
+#define start_finish_empty_interval(wl) do {	\
+    wl->intervals[wl->current_interval++] = ct_zero;	\
+  } while(0)
+
 
 #endif // ! SLC_LIB_BENCHMARK_H
