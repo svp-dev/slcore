@@ -113,6 +113,10 @@ AC_DEFUN([AC_WITH_SLC],
   AC_REQUIRE([SLC_PATH_LOCAL])
   AC_REQUIRE([SLC_PATH_USER])
 
+  # C/C++ dependencies
+  AC_SEARCH_LIBS([log], [m])
+  AC_SEARCH_LIBS([cos], [m])
+
   # user-specified directory overrides any other definition
   if test "x$slc_cv_user_hint" != xno; then
     if test "x$SLC_BASE" != x; then

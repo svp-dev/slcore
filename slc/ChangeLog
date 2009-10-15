@@ -1,3 +1,15 @@
+2009-10-15  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
+	Increase portability of the `seqc' and `ptl' targets.
+
+	On some systems, it is needed to link with `-lm' to get access to
+	math functions.
+	
+	* build-aux/slc.m4: Check whether `-lm' is needed to use math on
+	the host C/C++.
+	
+	* build-aux/sl.mk: Use $(LIBS) for the host system.
+
 2009-10-14  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
 	Allow multiple uses of `slr_decl' in the same translation unit.
