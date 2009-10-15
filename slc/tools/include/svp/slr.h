@@ -25,19 +25,21 @@ m4_define([[__slr_dataptr]], [[((void*)(__slr_baseptr + __slr_offset([[$1]])))]]
 m4_define([[__slr_len]],     [[__slr_base[ [[$1]] ].nitems]])
 
 m4_define([[__slr_acnt]],0)
+m4_define([[__slr_dcnt]],0)
 m4_define([[__slr_vars]],[[]])
 
 m4_define([[slr_var]],[[
   m4_define([[__slr_len_$2]],[[__slr_len(]]__slr_acnt[[)]])
   m4_define([[__slr_get_$2]],[[(([[$1]]*)__slr_dataptr(]]__slr_acnt[[))]])
-  m4_define([[__slr_vars]],m4_quote(__slr_vars)[[\0slr_arg:[[$2]]:[[$1]]:]]m4_dnl
+  m4_define([[__slr_vars]],m4_quote(__slr_vars)[[\0slr_arg:]]__slr_acnt[[:[[$2]]:[[$1]]:]]m4_dnl
 m4_if([[$3]],,[[(no description)]],[[sl_cdquote $3 sl_cdquote]]))
   m4_step([[__slr_acnt]])
 ]])
 
-m4_define([[slr_decl]],[[
-  m4_do($@)
-  const char *__slr_argdef = sl_cdquote[[]]__slr_vars[[]]sl_cdquote
+m4_define([[slr_decl]],[[m4_dnl
+  m4_do($@) m4_dnl
+  const char *__slr_decl_[[]]__slr_dcnt = sl_cdquote[[]]__slr_vars[[]]sl_cdquote m4_dnl
+m4_define([[__slr_vars]],[[]]) m4_step([[__slr_dcnt]]) m4_dnl
 ]])
 
 m4_define([[slr_get]],[[__slr_get_$1]])

@@ -182,15 +182,19 @@ class SlrVarGenerator(object):
         self.proto(sys.stderr, parm)
 
     def dogen(self):
-        required = []
+        reqdict = {}
         parm = {}
         spec = {}
         for l in sys.stdin:
-            _, label, type, desc = l.rstrip().split(':',3)
-            if label in required:
+            _, idx, label, type, desc = l.rstrip().split(':',4)
+            if label in reqdict:
                 die("%s: already declared" % label)
-            required.append(label)
+            reqdict[idx] = label
             parm[label] = {'type':type,'desc':desc}
+        required = []
+        for k,v in reqdict.items():
+            if v not in required:
+                required.append(v)
 
         for a in sys.argv[2:]:
                 if a == "list":

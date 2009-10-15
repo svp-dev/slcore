@@ -1,3 +1,12 @@
+2009-10-14  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
+	Allow multiple uses of `slr_decl' in the same translation unit.
+
+	* tools/include/svp/slr.h: Support multiple uses of `slr_decl'.
+	
+	* tools/bin/sag: Sort variables according to the order specified
+	in the source.
+
 2009-10-13  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
 	ABI change: special memory now at the start of the address space.
