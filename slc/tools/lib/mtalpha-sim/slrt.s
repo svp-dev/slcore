@@ -14,9 +14,9 @@
 	.text
 	.ent _start
 	.globl _start
+	.registers 0 0 31 0 0 31
 _start:
 	#MTREG_SET: $l2,$l16,$l17,$l27
-	.registers 0 0 31 0 0 31
 	ldgp $l29, 0($l27)
 	ldfp $l30
 

@@ -4,8 +4,8 @@
 	.align 4
 	.globl __sl_callgate
 	.ent __sl_callgate
-__sl_callgate:
 	.registers 0 0 31 0 0 31
+__sl_callgate:
 	mov $0, $30   # SP(parent)
 	ldfp $1       # TLSP
 

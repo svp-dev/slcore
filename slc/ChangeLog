@@ -1,5 +1,13 @@
 2009-10-15  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	Reflect latest binutils changes. (cont.)
+	
+	* tools/lib/mtalpha-sim/slrt.s (_start),	
+	* tools/lib/mtalpha-sim/callgate.s (__sl_callgate): Move
+	`.registers' to before the label.
+
+2009-10-15  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	Reflect latest binutils changes.
 
 	* tools/bin/spp (pppalpha.xjoin2): Emit the `.registers' directive
