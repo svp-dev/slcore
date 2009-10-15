@@ -1,5 +1,14 @@
 2009-10-15  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	Reflect latest binutils changes.
+
+	* tools/bin/spp (pppalpha.xjoin2): Emit the `.registers' directive
+	before the function label. This is required because the register
+	word should happen before the first instruction in the output and
+	assembler does not reorder them anymore.
+
+2009-10-15  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	Increase portability of the `seqc' and `ptl' targets.
 
 	On some systems, it is needed to link with `-lm' to get access to

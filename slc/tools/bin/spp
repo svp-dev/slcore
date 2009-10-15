@@ -918,8 +918,8 @@ class pppalpha(object):
       regs = fundata['regs']
       yield ('directive', '.globl %s' % name, '')
       yield ('directive', '.ent %s' % name, '')
-      yield ('label', '%s:' % name, '')
       yield ('directive', '.registers %d %d %d %d %d %d' % tuple(regs), '')
+      yield ('label', '%s:' % name, '')
       if fundata['use_gp']:
          yield ('directive', '.base $l%d' % fundata['specials']['gp'], '')
 
