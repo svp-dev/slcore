@@ -1,5 +1,13 @@
 2009-10-15  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	Fix `slr -g' with simulator.
+	
+	* tools/lib/r-mtalpha-sim.sh.in (DEBUGGER),
+	* tools/lib/r-mtsparc-sim.sh.in (DEBUGGER): Fix typo (do not use
+	`.gfx' by default when debugging).
+
+2009-10-15  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	Reflect latest binutils changes. (cont.)
 	
 	* tools/lib/mtalpha-sim/slrt.s (_start),	
