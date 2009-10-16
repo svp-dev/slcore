@@ -192,7 +192,10 @@ class SlrVarGenerator(object):
             reqdict[idx] = label
             parm[label] = {'type':type,'desc':desc}
         required = []
-        for k,v in reqdict.items():
+        order = [int(x) for x in reqdict.keys()]
+        order.sort()
+        for k in order:
+            v = reqdict[str(k)]
             if v not in required:
                 required.append(v)
 

@@ -1,3 +1,10 @@
+2009-10-16  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
+	Fix `slr' breakage.
+	
+	* tools/bin/sag: Fix order in which `slr' variables from program
+	are considered.
+
 2009-10-15  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
 	Fix `slr -g' with simulator.
