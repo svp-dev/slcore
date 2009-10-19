@@ -1,5 +1,9 @@
 2009-10-19  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	* deploy/versions.mk.defaults: Bump version numbers.
+
+2009-10-19  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	Fix `deploy' rules.
 
 	The `deploy' directory did not allow to customize the source and
