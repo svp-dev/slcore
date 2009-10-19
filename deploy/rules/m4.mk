@@ -22,12 +22,21 @@ $(SOURCES)/m4-dev/patch_done: $(SOURCES)/m4-dev/download_done
 
 $(SOURCES)/m4-dev/bootstrap_done: $(SOURCES)/m4-dev/patch_done
 	rm -f $@
-	(cd $(SOURCES)/m4-dev && ./bootstrap && touch bootstrap_done)
+	(cd $(SOURCES)/m4-dev && bash -e ./bootstrap && touch bootstrap_done)
 
 $(REQDIR)/bin/m4: $(SOURCES)/m4-dev/bootstrap_done
 	mkdir -p $(BUILD)/m4-dev
-	(SRC=$$PWD/$(SOURCES)/m4-dev; \
+	(SRC=$$(cd $(SOURCES)/m4-dev; pwd); \
 	  cd $(BUILD)/m4-dev && \
-	  $$SRC/configure --prefix=$(REQDIR) && \
-	  $(MAKE) && \
+	  $$SRC/configure --prefix=$(REQDIR) \
+			  CFLAGS="$$CFLAGS $(EXTRA_CFLAGS)" \
+	                  LDFLAGS="$$LDFLAGS $(EXTRA_LDFLAGS)" \
+	     && \
+	  if ! $(MAKE) $(MAKE_FLAGS); then \
+	     rm -rf * && POSIXLY_CORRECT=1 $$SRC/configure --prefix=$(REQDIR) \
+			  CFLAGS="$$CFLAGS $(EXTRA_CFLAGS)" \
+	                  LDFLAGS="$$LDFLAGS $(EXTRA_LDFLAGS)" \
+	      && \
+	     $(MAKE) $(MAKE_FLAGS); \
+	  fi && \
 	  $(MAKE) install)

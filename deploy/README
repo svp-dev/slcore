@@ -38,6 +38,7 @@ The following tools are required:
 - svn client (v1.4 or later)
 - git client (v1.6 or later)
 - wget / fetch
+- GNU getopt
 - GNU tar (v1.14 or later)
 - GNU GMP (v4.1 or later)
 - GNU MPFR (v2.3.2 or later)

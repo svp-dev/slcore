@@ -15,7 +15,10 @@ $(SOURCES)/slc-$(SLC_REV)/configure:
 
 $(SLDIR)/bin/slc: $(SOURCES)/slc-$(SLC_REV)/configure $(SLDIR)/bin/mgsim-alpha
 	mkdir -p $(BUILD)/slc-$(SLC_REV)
-	(SRC=$$PWD/$(SOURCES)/slc-$(SLC_REV); cd $(BUILD)/slc-$(SLC_REV) && \
-	 PATH=$(PREFIX)/slreqs-current/bin:$$PATH $$SRC/configure --prefix=$(SLDIR) && \
+	(SRC=$$(cd $(SOURCES)/slc-$(SLC_REV); pwd); cd $(BUILD)/slc-$(SLC_REV) && \
+	 PATH=$(PREFIX)/slreqs-current/bin:$$PATH $$SRC/configure --prefix=$(SLDIR) \
+			  CFLAGS="$$CFLAGS $(EXTRA_CFLAGS)" \
+	                  LDFLAGS="$$LDFLAGS $(EXTRA_LDFLAGS)" \
+	      && \
 	 ($(MAKE) $(MAKE_FLAGS) || true) && \
 	 ($(MAKE) install || $(MAKE) -C tools/bin install-man1 || true))

@@ -20,30 +20,17 @@ SVN = svn
 TAR = tar
 
 ####
-#### Where can GMP be found? 
+#### Extra compiler and library flags
 ####
 
-## Default: no special flag required to GCC's configure;
-## libgmp is installed in the system-wide default location.
-GMP_CONF =
+## Default: no special flag required.
+EXTRA_CFLAGS =
+EXTRA_LDFLAGS =
 
-## libgmp is installed in the home directory:
-## GMP_CONF = --with-gmp=$(HOME)/opt
+## MacPorts: additional stuff in /opt/local
+#EXTRA_CFLAGS = -I/opt/local/include
+#EXTRA_LDFLAGS = -L/opt/local/lib
 
-## libgmp is available via MacPorts:
-## GMP_CONF = --with-gmp=/opt/local
-
-####
-#### Where can MPFR be found? 
-####
-
-## Default: no special flag required to GCC's configure;
-## libmpfr is installed in the system-wide default location.
-MPFR_CONF =
-
-## libmpfr is installed in the home directory:
-## MPFR_CONF = --with-mpfr=$(HOME)/opt
-
-## libmpfr is available via MacPorts:
-## MPFR_CONF = --with-mpfr=/opt/local
-
+## MacPorts / MacOS 10.5+: GNU getopt is required
+#EXTRA_CFLAGS += -I/opt/local/include/libgnugetopt
+#EXTRA_LDFLAGS += -lgnugetopt

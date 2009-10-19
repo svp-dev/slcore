@@ -18,9 +18,11 @@ $(SOURCES)/binutils-$(BINUTILS_REV)/download_done:
 
 $(REQDIR)/bin/alpha-linux-gnu-as: $(SOURCES)/binutils-$(BINUTILS_REV)/download_done
 	mkdir -p $(BUILD)/binutils-alpha-$(BINUTILS_REV)
-	(SRC=$$PWD/$(SOURCES)/binutils-$(BINUTILS_REV); \
+	(SRC=$$(cd $(SOURCES)/binutils-$(BINUTILS_REV); pwd); \
            cd $(BUILD)/binutils-alpha-$(BINUTILS_REV) && \
 	   $$SRC/configure --target=alpha-linux-gnu \
+			  CFLAGS="$$CFLAGS $(EXTRA_CFLAGS)" \
+	                  LDFLAGS="$$LDFLAGS $(EXTRA_LDFLAGS)" \
 			   --disable-werror \
 	                   --prefix=$(REQDIR) && \
 	   $(MAKE) $(MAKE_FLAGS) && \
@@ -28,9 +30,11 @@ $(REQDIR)/bin/alpha-linux-gnu-as: $(SOURCES)/binutils-$(BINUTILS_REV)/download_d
 
 $(REQDIR)/bin/sparc-leon-linux-as: $(SOURCES)/binutils-$(BINUTILS_REV)/download_done
 	mkdir -p $(BUILD)/binutils-sparc-$(BINUTILS_REV)
-	(SRC=$$PWD/$(SOURCES)/binutils-$(BINUTILS_REV); \
+	(SRC=$$(cd $(SOURCES)/binutils-$(BINUTILS_REV); pwd); \
            cd $(BUILD)/binutils-sparc-$(BINUTILS_REV) && \
 	   $$SRC/configure --target=sparc-leon-linux \
+			  CFLAGS="$$CFLAGS $(EXTRA_CFLAGS)" \
+	                  LDFLAGS="$$LDFLAGS $(EXTRA_LDFLAGS)" \
 			   --disable-werror \
 	                   --prefix=$(REQDIR) && \
 	   $(MAKE) $(MAKE_FLAGS) && \
@@ -38,9 +42,11 @@ $(REQDIR)/bin/sparc-leon-linux-as: $(SOURCES)/binutils-$(BINUTILS_REV)/download_
 
 $(REQDIR)/bin/mtalpha-linux-gnu-as: $(SOURCES)/binutils-$(BINUTILS_REV)/download_done
 	mkdir -p $(BUILD)/binutils-mtalpha-$(BINUTILS_REV)
-	(SRC=$$PWD/$(SOURCES)/binutils-$(BINUTILS_REV); \
+	(SRC=$$(cd $(SOURCES)/binutils-$(BINUTILS_REV); pwd); \
            cd $(BUILD)/binutils-mtalpha-$(BINUTILS_REV) && \
 	   $$SRC/configure --target=mtalpha-linux-gnu \
+			  CFLAGS="$$CFLAGS $(EXTRA_CFLAGS)" \
+	                  LDFLAGS="$$LDFLAGS $(EXTRA_LDFLAGS)" \
 			   --disable-werror \
 	                   --prefix=$(REQDIR) && \
 	   $(MAKE) $(MAKE_FLAGS) && \
@@ -48,9 +54,11 @@ $(REQDIR)/bin/mtalpha-linux-gnu-as: $(SOURCES)/binutils-$(BINUTILS_REV)/download
 
 $(REQDIR)/bin/mtsparc-leon-linux-as: $(SOURCES)/binutils-$(BINUTILS_REV)/download_done
 	mkdir -p $(BUILD)/binutils-mtsparc-$(BINUTILS_REV)
-	(SRC=$$PWD/$(SOURCES)/binutils-$(BINUTILS_REV); \
+	(SRC=$$(cd $(SOURCES)/binutils-$(BINUTILS_REV); pwd); \
            cd $(BUILD)/binutils-mtsparc-$(BINUTILS_REV) && \
 	   $$SRC/configure --target=mtsparc-leon-linux \
+			  CFLAGS="$$CFLAGS $(EXTRA_CFLAGS)" \
+	                  LDFLAGS="$$LDFLAGS $(EXTRA_LDFLAGS)" \
 			   --disable-werror \
 	                   --prefix=$(REQDIR) && \
 	   $(MAKE) $(MAKE_FLAGS) && \

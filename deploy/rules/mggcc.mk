@@ -22,8 +22,10 @@ $(REQDIR)/bin/mtalpha-linux-gnu-gcc: \
 	$(REQDIR)/bin/mtalpha-linux-gnu-as \
 	$(SOURCES)/utc-gcc-$(UTC_GCC_REV)/download_done
 	mkdir -p $(BUILD)/gcc-mtalpha-$(UTC_GCC_REV)
-	(SRC=$$PWD/$(SOURCES)/utc-gcc-$(UTC_GCC_REV); \
+	(SRC=$$(cd $(SOURCES)/utc-gcc-$(UTC_GCC_REV); pwd); \
            cd $(BUILD)/gcc-mtalpha-$(UTC_GCC_REV) && \
+			  CFLAGS="$$CFLAGS $(EXTRA_CFLAGS)" \
+	                  LDFLAGS="$$LDFLAGS $(EXTRA_LDFLAGS)" \
 	   $$SRC/configure --target=mtalpha-linux-gnu \
 			       --prefix=$(REQDIR) \
 	                       $(GCC_CONFIG_FLAGS) && \

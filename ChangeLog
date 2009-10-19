@@ -1,3 +1,29 @@
+2009-10-19  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
+	Fix `deploy' rules.
+
+	The `deploy' directory did not allow to customize the source and
+	build trees with absolute directory names. This changeset removes
+	this limitation. (reported by M. Irfan Uddin)
+
+	Also, the upstream changes in GNUlib cause issues with getopt on
+	MacOS X when compiling M4. To work around the GNU implementation
+	of getopt is now required on OS X. (reported by M. Irfan Uddin)
+
+	* README: Require GNU getopt.
+	
+	* deploy/tools.mk.defaults: Merge customizations for MPFR and GMP
+	into a single set of CFLAGS/LDFLAGS customizations. Suggest
+	defaults for MacPorts and libgnugetopt.
+	
+	* deploy/rules/gcc.mk,
+	* deploy/rules/binutils.mk,
+	* deploy/rules/m4.mk,
+	* deploy/rules/mggcc.mk,
+	* deploy/rules/mgsim.mk,	
+	* deploy/rules/sl.mk: Properly set `$SRC' to an absolute path name
+	where needed. Use CFLAGS/LDFLAGS customizations where appropriate.
+
 2009-10-15  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
 	* deploy/versions.mk.defaults: Bump version numbers.

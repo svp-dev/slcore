@@ -36,11 +36,12 @@ $(REQDIR)/bin/alpha-linux-gnu-gcc: \
 	$(REQDIR)/bin/alpha-linux-gnu-as \
 	$(SOURCES)/gcc-$(GCC_VERSION)/patch_done
 	mkdir -p $(BUILD)/gcc-alpha-$(GCC_VERSION)
-	(SRC=$$PWD/$(SOURCES)/gcc-$(GCC_VERSION); \
+	(SRC=$$(cd $(SOURCES)/gcc-$(GCC_VERSION); pwd); \
           cd $(BUILD)/gcc-alpha-$(GCC_VERSION) && \
 	  $$SRC/configure --target=alpha-linux-gnu \
 	                  --prefix=$(REQDIR) \
-			  $(GMP_CONF) $(MPFR_CONF) \
+			  CFLAGS="$$CFLAGS $(EXTRA_CFLAGS)" \
+	                  LDFLAGS="$$LDFLAGS $(EXTRA_LDFLAGS)" \
 	                  $(GCC_CONFIG_FLAGS) && \
 	  grep -v 'maybe-[a-z]*-target-\(libgcc\|libiberty\|libgomp\)' <Makefile >Makefile.tmp && \
 	  mv -f Makefile.tmp Makefile && \
