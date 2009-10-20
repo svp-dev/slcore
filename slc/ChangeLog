@@ -1,5 +1,17 @@
 2009-10-20  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	Fix support for shareds in `ppp' target.
+
+	Constructs of the form `sl_setp(x, (foo == 0) ? bar : 0)' would
+	cause code generation to write to a shared register twice, which
+	is incorrect. (reported by M. Lankamp)
+	
+	* tools/lib/t-pppalpha/include/sl_support.h: Use a temporary in
+	the expansion of `sl_setp' and `sl_seta' to prevent computations
+	and control flow between the "guard" asm statemetns.
+
+2009-10-20  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	Minor packaging fix.
 	
 	* lib/seqc.mk (CLEANFILES), 
