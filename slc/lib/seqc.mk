@@ -22,5 +22,6 @@ host-host-seqc/%.o: $(srcdir)/src/%.c
 CLEANFILES += \
 	host-host-seqc/io.o \
 	host-host-seqc/gfx.o \
+	host-host-seqc/perf.o \
 	host-host-seqc/div.o \
 	host-host-seqc/roman.o 

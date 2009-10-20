@@ -1,3 +1,10 @@
+2009-10-20  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
+	Minor packaging fix.
+	
+	* lib/seqc.mk (CLEANFILES), 
+	* lib/ptl.mk (CLEANFILES): Mention `perf.o'.
+
 2009-10-16  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
 	Fix `slr' breakage.

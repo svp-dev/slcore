@@ -26,6 +26,7 @@ endif
 CLEANFILES += \
 	host-host-ptl/io.o \
 	host-host-ptl/gfx.o \
+	host-host-ptl/perf.o \
 	host-host-ptl/div.o \
 	host-host-ptl/roman.o
 
