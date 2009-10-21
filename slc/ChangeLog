@@ -1,3 +1,17 @@
+2009-10-21  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
+	Re-optimize accesses to shareds in `ppp' target.
+
+	The previous changeset was required to prevent incorrect code, but
+	would also require a temporary register in all cases, including
+	the simple `sl_setp(x, sl_getp(x) + 1)' which should instead be
+	optimized to a single instruction. This changeset reintroduces
+	this optimization opportunity.
+	
+	* tools/lib/t-pppalpha/include/sl_support.h: Remove superfluous
+	clobber of the incoming shared just before a write to the
+	outgoing. (but still clobber it afterwards)
+
 2009-10-20  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
 	Fix support for shareds in `ppp' target.

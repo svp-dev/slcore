@@ -27,16 +27,20 @@
   })
 
 [[#]]define __sl_setshp(Name, Value)					\
-({ __typeof__(Value) __tmp_set_ ## Name = (Value);			\
-  __asm__ __volatile__("# MT: start write shared " # Name " (%1) <- (and clobber incoming %0)" \
-		       : /* ensure incoming shared is marked clobbered */ \
-		       "=rf" (__sl_shparm_in_ ## Name), "=rf"(__sl_shparm_out_ ## Name) \
-		       : "0"(__sl_shparm_in_ ## Name), "1"(__sl_shparm_out_ ## Name)); \
+({									\
+  __typeof__(Value) __tmp_set_ ## Name = (Value);			\
+  __asm__ __volatile__("# MT: start write shared " # Name " (%0)"	\
+		       : "=rf"(__sl_shparm_out_ ## Name)		\
+		       : "0"(__sl_shparm_out_ ## Name));		\
   __sl_shparm_out_ ## Name = __tmp_set_ ## Name;			\
   __asm__ __volatile__("# MT: end write shared " # Name " (%0)"		\
-		       : "=rf" (__sl_shparm_out_ ## Name), "=rf" (__sl_shparm_in_ ## Name) \
-		       : "0"(__sl_shparm_out_ ## Name), "1" (__sl_shparm_in_ ## Name)); \
+		       : "=rf" (__sl_shparm_out_ ## Name),		\
+			 "=rf" (__sl_shparm_in_ ## Name)		\
+		       : "0"(__sl_shparm_out_ ## Name),			\
+			 "1" (__sl_shparm_in_ ## Name));		\
  })
+
+// __asm__ __volatile__("# MT: clobber temp (%0)" : "=rf"(__tmp_set_ ## Name) : "0"(__tmp_set_ ## Name)); 
 
 // [[#]]define __sl_setshp(Name, Value)					\
 //   ({									\
