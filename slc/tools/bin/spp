@@ -1487,7 +1487,7 @@ class pppalpha(object):
             continue
          elif type == 'other':
             #pprint.pprint((type, content, comment, queue))
-            if content in ['nop', 'fnop', 'swch'] and comment != 'MT: branch':
+            if content in ['nop', 'fnop', 'swch']: # and comment != 'MT: branch':
                queue.append((type, content, comment))
                continue
             elif content == 'end':
@@ -1542,7 +1542,7 @@ class pppalpha(object):
    def protectend(self, fundata, items):
       atlabel = True
       for (type, content, comment) in items:
-         if type == 'label' or (type == 'other' and content == 'swch' and comment == 'MT: branch'):
+         if type == 'label': # or (type == 'other' and content == 'swch' and comment == 'MT: branch'):
             atlabel = True
          elif type == 'other':
             if content == 'end' and atlabel:

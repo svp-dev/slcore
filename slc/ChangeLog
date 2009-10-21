@@ -1,5 +1,11 @@
 2009-10-21  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	Slight optimization MT-Alpha code generation.
+	
+	* tools/bin/spp (pppalpha): Allow `end' immediately after a branch.
+
+2009-10-21  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	Re-optimize accesses to shareds in `ppp' target.
 
 	The previous changeset was required to prevent incorrect code, but
