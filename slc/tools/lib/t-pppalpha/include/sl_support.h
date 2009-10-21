@@ -28,6 +28,9 @@
 
 [[#]]define __sl_setshp(Name, Value)					\
 ({									\
+  __asm__ __volatile__("# MT: clobber incoming " # Name " (%0)"		\
+		       : "=rf"(__sl_shparm_in_ ## Name)			\
+		       : "0"(__sl_shparm_in_ ## Name));			\
   __typeof__(Value) __tmp_set_ ## Name = (Value);			\
   __asm__ __volatile__("# MT: start write shared " # Name " (%0)"	\
 		       : "=rf"(__sl_shparm_out_ ## Name)		\

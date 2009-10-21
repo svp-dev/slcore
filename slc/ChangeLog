@@ -1,5 +1,18 @@
 2009-10-21  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	Fix bug in shared handling in `ppp' target.
+
+	The latest changesets allowed the `fibonacci' demo program to fail
+	by letting an alias to the incoming dependent leak to the outgoing
+	write, causing no dependent read to actually occur in the location
+	defined by the source program. Synchronization was thus not
+	achieved properly.
+	
+	* tools/lib/t-pppalpha/include/sl_support.h: Clobber the dependent
+	in `sl_setp', albeit at a different place than initially.
+
+2009-10-21  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	Slight optimization MT-Alpha code generation.
 	
 	* tools/bin/spp (pppalpha): Allow `end' immediately after a branch.
