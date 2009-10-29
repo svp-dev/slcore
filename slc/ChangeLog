@@ -1,5 +1,11 @@
 2009-10-29  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	Cosmetic fixes for `slt'.
+	
+	* tools/bin/slt.in: Improve readability of test log. 
+
+2009-10-29  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	Cosmetic fixes for `slr'.
 	
 	* tools/bin/slr.in: Do not complain about `-n' being used if it
