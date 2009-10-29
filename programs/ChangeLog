@@ -1,3 +1,9 @@
+2009-10-21  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
+	Fix algorithm bug in `checkers' demo.
+	
+	* demo/checkers.c: Change check for position. 
+
 2009-10-14  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
 	Enhance the `mandel' demo.

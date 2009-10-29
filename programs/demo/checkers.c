@@ -21,7 +21,7 @@ sl_def(t_main, void)
 
   unsigned long x;
   for (x = 0; x < 64; ++x) 
-    gfx_fb_set(x, ((x + x/2)%2) ? 0xffffff : 0);
+    gfx_fb_set(x, ((x + x/8)%2) ? 0xffffff : 0);
 
   gfx_dump(0, 1, 0, 0);
   gfx_close();
