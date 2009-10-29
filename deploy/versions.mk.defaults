@@ -17,7 +17,7 @@ UTC_GCC_REPO = $(BASE_REPO)/sw/svp/mg/gcc/branches/mt-ra-shared-branch
 MGSIM_REV = 2981
 MGSIM_REPO = $(BASE_REPO)/sw/svp/mg/mgsim/trunk
 
-SLC_REV = 2980
+SLC_REV = 3007
 SLC_REPO = $(BASE_REPO)/sw/svp/sys/trunk/slc
 
 GCC_VERSION = 4.4.1
