@@ -1,3 +1,14 @@
+2009-10-29  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
+	Cosmetic fixes for `slr'.
+	
+	* tools/bin/slr.in: Do not complain about `-n' being used if it
+	specifies multiple places. (requested by M. Hicks)
+
+	* tools/lib/r-mtsparc-sim.sh.in, 	
+	* tools/lib/r-mtsparc-sim.sh.in: Allow `SIMARGS' to override
+	`-n'. (requested by M. Hicks)	
+
 2009-10-21  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
 	Fix bug in shared handling in `ppp' target.

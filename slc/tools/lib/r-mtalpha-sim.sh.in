@@ -36,12 +36,12 @@ if ! "$MGSIM_ALPHA" --help >/dev/null 2>&1; then
 fi
 
 if test -n "${NCORES:-}"; then
-   SIMARGS="${SIMARGS:-} -o NumProcessors=$NCORES"
+   SIMARGS="-o NumProcessors=$NCORES ${SIMARGS:-}"
 fi
 
 do_debug=
 if test -n "${DEBUG:-}"; then
-   SIMARGS="${SIMARGS:-} -i"
+   SIMARGS="-i ${SIMARGS:-}"
    do_debug=$DEBUGGER
 fi
 

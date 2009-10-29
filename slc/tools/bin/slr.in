@@ -238,7 +238,9 @@ if test -n "${SLR_RECURSIVE:-}"; then
 fi 
 
 if test -n "$NCORES" -a -z "${SLR_RECURSIVE:-}"; then
-   echo "$basename: warning: \$NCORES and -n are deprecated in favor of dynamic place allocation." >&2  
+   if ! expr "$NCORES" : '.*,' >/dev/null 2>&1; then
+      echo "$basename: warning: \$NCORES and -n are deprecated in favor of dynamic place allocation." >&2  
+   fi
 else
    NCORES="1,1,1,1,1,1,1,1,2,2,4,4,8,8,16,16,32,32,64,64"
 fi
