@@ -17,11 +17,13 @@ BENCHMARKS = \
 	bench-ddot.c 	bench-sdot.c \
 	bench-dasum.c	bench-sasum.c \
 	bench-dnrm2.c	bench-snrm2.c \
+	bench-dscal.c	bench-sscal.c \
 	bench-daxpy.c 	bench-saxpy.c
 
 BENCHMARK_INPUTS = \
 	bench-daxpy.inputs bench-saxpy.inputs \
 	bench-dasum.inputs bench-sasum.inputs \
+	bench-dscal.inputs bench-sscal.inputs \
 	bench-ddot.inputs bench-sdot.inputs \
 	bench-drot.inputs bench-srot.inputs \
 	bench-dnrm2.inputs bench-snrm2.inputs \
@@ -38,12 +40,13 @@ EXTRA_DIST = \
 	templates/xdotc.c \
 	templates/xrot.c \
 	templates/xasum.c \
+	templates/xscal.c \
 	templates/xnrm2.c \
 	blas_complex.h \
 	caxpy.c cdotc.c cdotu.c \
 	zaxpy.c zdotc.c zdotu.c \
-	dasum.c daxpy.c ddot.c drot.c dnrm2.c \
-	sasum.c saxpy.c sdot.c srot.c snrm2.c \
+	dasum.c daxpy.c ddot.c drot.c dnrm2.c dscal.c \
+	sasum.c saxpy.c sdot.c srot.c snrm2.c sscal.c \
 	$(BENCHMARKS) \
 	$(BENCHMARK_INPUTS)
 

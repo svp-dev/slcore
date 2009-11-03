@@ -2,6 +2,20 @@
 
 	Extend the BLAS benchmark suite.
 	
+	* benchmarks/blas/templates/xscal.c,
+	* benchmarks/blas/sscal.c,
+	* benchmarks/blas/dscal.c,
+	* benchmarks/blas/bench-sscal.c,
+	* benchmarks/blas/bench-dscal.c,
+	* benchmarks/blas/bench-sscal.inputs,
+	* benchmarks/blas/bench-dscal.inputs: New.
+
+	* benchmarks/blas/Makefile.am: Update accordingly.
+	
+2009-11-03  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
+	Extend the BLAS benchmark suite.
+	
 	* benchmarks/blas/templates/xnrm2.c,
 	* benchmarks/blas/snrm2.c,
 	* benchmarks/blas/dnrm2.c,
@@ -9,6 +23,8 @@
 	* benchmarks/blas/bench-dnrm2.c,
 	* benchmarks/blas/bench-snrm2.inputs,
 	* benchmarks/blas/bench-dnrm2.inputs: New.
+
+	* benchmarks/blas/Makefile.am: Update accordingly.
 
 2009-11-03  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
