@@ -2,6 +2,18 @@
 
 	Extend the BLAS benchmark suite.
 	
+	* benchmarks/blas/templates/xnrm2.c,
+	* benchmarks/blas/snrm2.c,
+	* benchmarks/blas/dnrm2.c,
+	* benchmarks/blas/bench-snrm2.c,
+	* benchmarks/blas/bench-dnrm2.c,
+	* benchmarks/blas/bench-snrm2.inputs,
+	* benchmarks/blas/bench-dnrm2.inputs: New.
+
+2009-11-03  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
+	Extend the BLAS benchmark suite.
+	
 	* benchmarks/blas/templates/xdot.c: Simplify.
 	
 	* benchmarks/blas/bench-daxpy.c: Check array size differently.

@@ -13,24 +13,18 @@
 
 # 
 BENCHMARKS = \
-	bench-drot.c \
-	bench-srot.c \
-	bench-ddot.c \
-	bench-sdot.c \
-	bench-dasum.c \
-	bench-sasum.c \
-	bench-daxpy.c \
-	bench-saxpy.c
+	bench-drot.c 	bench-srot.c \
+	bench-ddot.c 	bench-sdot.c \
+	bench-dasum.c	bench-sasum.c \
+	bench-dnrm2.c	bench-snrm2.c \
+	bench-daxpy.c 	bench-saxpy.c
 
 BENCHMARK_INPUTS = \
-	bench-daxpy.inputs \
-	bench-saxpy.inputs \
-	bench-dasum.inputs \
-	bench-sasum.inputs \
-	bench-ddot.inputs \
-	bench-sdot.inputs \
-	bench-drot.inputs \
-	bench-srot.inputs \
+	bench-daxpy.inputs bench-saxpy.inputs \
+	bench-dasum.inputs bench-sasum.inputs \
+	bench-ddot.inputs bench-sdot.inputs \
+	bench-drot.inputs bench-srot.inputs \
+	bench-dnrm2.inputs bench-snrm2.inputs \
 	asum.d1 asum.d2 asum.d3 \
 	rot.d1 rot.d2 rot.d3 \
 	dot.d1 dot.d2 dot.d3 \
@@ -44,21 +38,12 @@ EXTRA_DIST = \
 	templates/xdotc.c \
 	templates/xrot.c \
 	templates/xasum.c \
+	templates/xnrm2.c \
 	blas_complex.h \
-	caxpy.c \
-	cdotc.c \
-	cdotu.c \
-	dasum.c \
-	daxpy.c \
-	ddot.c \
-	drot.c \
-	sasum.c \
-	saxpy.c \
-	sdot.c \
-	srot.c \
-	zaxpy.c \
-	zdotc.c \
-	zdotu.c \
+	caxpy.c cdotc.c cdotu.c \
+	zaxpy.c zdotc.c zdotu.c \
+	dasum.c daxpy.c ddot.c drot.c dnrm2.c \
+	sasum.c saxpy.c sdot.c srot.c snrm2.c \
 	$(BENCHMARKS) \
 	$(BENCHMARK_INPUTS)
 
