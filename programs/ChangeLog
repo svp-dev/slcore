@@ -2,6 +2,20 @@
 
 	Extend the BLAS benchmark suite.
 	
+	* benchmarks/blas/templates/xiamax.c,
+	* benchmarks/blas/isamax.c,
+	* benchmarks/blas/idamax.c,
+	* benchmarks/blas/bench-isamax.c,
+	* benchmarks/blas/bench-idamax.c,
+	* benchmarks/blas/bench-isamax.inputs,
+	* benchmarks/blas/bench-idamax.inputs: New.
+
+	* benchmarks/blas/Makefile.am: Update accordingly.
+
+2009-11-03  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
+	Extend the BLAS benchmark suite.
+	
 	* benchmarks/blas/templates/xscal.c,
 	* benchmarks/blas/sscal.c,
 	* benchmarks/blas/dscal.c,
