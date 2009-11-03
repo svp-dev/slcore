@@ -12,7 +12,7 @@ endif
 PLIST ?= 1 2 4 8 16 32 64
 BENCH_BINFORMATS ?= seqc ptl mtalpha
 
-bench.mk: $(top_srcdir)/build-aux/genbench.sh $(BENCHMARK_INPUTS)
+bench.mk: $(top_srcdir)/build-aux/genbench.sh Makefile.am $(BENCHMARK_INPUTS)
 	$(AM_V_at)rm -f $@ $@.tmp
 	$(AM_V_GEN)PLIST="$(PLIST)" BENCH_BINFORMATS="$(BENCH_BINFORMATS)" \
 	   $(BASH) $(top_srcdir)/build-aux/genbench.sh $(srcdir) $(top_builddir) $(BENCHMARKS) >$@.tmp

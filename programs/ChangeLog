@@ -1,5 +1,12 @@
 2009-11-03  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	Minor packaging fix.
+	
+	* build-aux/benchmarks.mk: Make `bench.mk' dependent upon
+	`Makefile.am' to catch file list updates.
+
+2009-11-03  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	Extend the BLAS benchmark suite.
 	
 	* benchmarks/blas/templates/xiamax.c,
