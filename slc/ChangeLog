@@ -1,3 +1,10 @@
+2009-11-03  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
+	Fix minor portability issue.
+	
+	* tools/include/svp/compiler.h: Rewrite definition of `use()' to
+	make it portable.
+
 2009-10-29  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
 	Cosmetic fixes for `slt'.

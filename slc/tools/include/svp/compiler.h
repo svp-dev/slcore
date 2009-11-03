@@ -49,7 +49,10 @@
 
 /* force sequence/reordering */
 
-#define use(X) __asm__ __volatile__("#USE" : "=rf"(X) : "0"(X))
-
+#ifdef __mt_freestanding__
+#define use(X) __asm__ __volatile__("#USE %0" : "=rf"(X) : "0"(X))
+#else
+#define use(X) do { (X) = (X); } while(0)
+#endif
 
 #endif // ! SLC_SVP_COMPILER_H
