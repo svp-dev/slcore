@@ -1,5 +1,5 @@
 //
-// ddot.c: this file is part of the SL toolchain.
+// sasum.c: this file is part of the SL toolchain.
 //
 // Copyright (C) 2009 The SL project.
 //
@@ -12,6 +12,8 @@
 // `COPYING' file in the root directory.
 //
 
-#define FLOAT double
-#define FUNCTION ddot
-#include "templates/xdot.c"
+#define FLOAT float
+#define FUNCTION sasum
+#define ABS fabsf
+#include "templates/xasum.c"
+

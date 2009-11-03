@@ -1,5 +1,5 @@
 //
-// ddot.c: this file is part of the SL toolchain.
+// srot.c: this file is part of the SL toolchain.
 //
 // Copyright (C) 2009 The SL project.
 //
@@ -12,6 +12,6 @@
 // `COPYING' file in the root directory.
 //
 
-#define FLOAT double
-#define FUNCTION ddot
-#include "templates/xdot.c"
+#define FLOAT float
+#define FUNCTION srot
+#include "templates/xrot.c"

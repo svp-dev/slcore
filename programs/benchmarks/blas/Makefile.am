@@ -13,34 +13,54 @@
 
 # 
 BENCHMARKS = \
+	bench-drot.c \
+	bench-srot.c \
+	bench-ddot.c \
+	bench-sdot.c \
+	bench-dasum.c \
+	bench-sasum.c \
 	bench-daxpy.c \
 	bench-saxpy.c
 
 BENCHMARK_INPUTS = \
 	bench-daxpy.inputs \
 	bench-saxpy.inputs \
-	axy.d1 \
-	axy.d2 \
-	axy.d3 
+	bench-dasum.inputs \
+	bench-sasum.inputs \
+	bench-ddot.inputs \
+	bench-sdot.inputs \
+	bench-drot.inputs \
+	bench-srot.inputs \
+	asum.d1 asum.d2 asum.d3 \
+	rot.d1 rot.d2 rot.d3 \
+	dot.d1 dot.d2 dot.d3 \
+	axy.d1 axy.d2 axy.d3 
+
 
 EXTRA_DIST = \
 	templates/xaxpy.c \
 	templates/xaxpyc.c \
 	templates/xdot.c \
 	templates/xdotc.c \
+	templates/xrot.c \
+	templates/xasum.c \
 	blas_complex.h \
 	caxpy.c \
 	cdotc.c \
 	cdotu.c \
+	dasum.c \
 	daxpy.c \
 	ddot.c \
+	drot.c \
+	sasum.c \
 	saxpy.c \
 	sdot.c \
+	srot.c \
 	zaxpy.c \
 	zdotc.c \
 	zdotu.c \
 	$(BENCHMARKS) \
-	$(BENCHMARKS_INPUTS)
+	$(BENCHMARK_INPUTS)
 
 
 include $(top_srcdir)/build-aux/benchmarks.mk

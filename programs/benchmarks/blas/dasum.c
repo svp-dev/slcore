@@ -1,5 +1,5 @@
 //
-// ddot.c: this file is part of the SL toolchain.
+// dasum.c: this file is part of the SL toolchain.
 //
 // Copyright (C) 2009 The SL project.
 //
@@ -13,5 +13,7 @@
 //
 
 #define FLOAT double
-#define FUNCTION ddot
-#include "templates/xdot.c"
+#define FUNCTION dasum
+#define ABS fabs
+#include "templates/xasum.c"
+

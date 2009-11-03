@@ -1,3 +1,32 @@
+2009-11-03  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
+	Extend the BLAS benchmark suite.
+	
+	* benchmarks/blas/templates/xdot.c: Simplify.
+	
+	* benchmarks/blas/bench-daxpy.c: Check array size differently.
+
+	* benchmarks/blas/templates/xasum.c,
+	* benchmarks/blas/sasum.c,
+	* benchmarks/blas/dasum.c,
+	* benchmarks/blas/bench-sasum.c,
+	* benchmarks/blas/bench-dasum.c,
+	* benchmarks/blas/bench-sasum.inputs,
+	* benchmarks/blas/bench-dasum.inputs,
+	* benchmarks/blas/asum.d1,
+	* benchmarks/blas/asum.d2,
+	* benchmarks/blas/asum.d3,
+	* benchmarks/blas/templates/xrot.c,
+	* benchmarks/blas/srot.c,
+	* benchmarks/blas/drot.c,
+	* benchmarks/blas/bench-srot.c,
+	* benchmarks/blas/bench-drot.c,
+	* benchmarks/blas/bench-srot.inputs,
+	* benchmarks/blas/bench-drot.inputs,
+	* benchmarks/blas/rot.d1,
+	* benchmarks/blas/rot.d2,
+	* benchmarks/blas/rot.d3: New.
+
 2009-10-21  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
 	Fix algorithm bug in `checkers' demo.

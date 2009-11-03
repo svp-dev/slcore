@@ -1,5 +1,5 @@
 //
-// ddot.c: this file is part of the SL toolchain.
+// drot.c: this file is part of the SL toolchain.
 //
 // Copyright (C) 2009 The SL project.
 //
@@ -13,5 +13,5 @@
 //
 
 #define FLOAT double
-#define FUNCTION ddot
-#include "templates/xdot.c"
+#define FUNCTION drot
+#include "templates/xrot.c"
