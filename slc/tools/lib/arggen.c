@@ -21,8 +21,21 @@
 #include "data.c"
 #endif
 
+sl_def(do_print, void, sl_shparm(long, tok))
+{
+  sl_index(i);
+  const char *ptr = (const char*)(void*)i;
+  char c = *ptr;
+  long t = sl_getp(tok);
+  output_char(c, 1);
+  sl_setp(tok, t);
+}
+sl_enddef
+
 sl_def(t_main, void)
 {
-  output_bytes(&__slr_data, sizeof(__slr_data), 1);
+  sl_create(,, (long)&__slr_data, ((long)&__slr_data)+sizeof(__slr_data),,,,
+	    do_print, sl_sharg(long, , 0));
+  sl_sync();
 }
 sl_enddef

@@ -1,5 +1,15 @@
 2009-11-04  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	Minor improvements to data input via `slr' and `sag'.
+	
+	* tools/lib/arggen.c: Optimize by using a parallel loop (suggested
+	by M. Lankamp)
+
+	* tools/bin/sag: Define functions `v', `vu' and `vl' for uses in
+	Fibre data files.
+
+2009-11-04  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	Simplify handling of C99's `restrict'.
 
 	* tools/include/slc.m4: Move definition of `restrict' to...	

@@ -92,6 +92,13 @@ class FibreGenerator(object):
     def dogen(self):
         d = sys.stdin.read()
 
+        def vu(n):
+            return [x for x in xrange(0,n)]
+        def vl(n):
+            return [((x % 2 == 0) and -x or x) for x in xrange(1,n+1)]
+        def v(n):
+            return [0.5*((x % 2 == 0) and -x or x) for x in xrange(0,n)]
+
         data = eval(d)
 
 
