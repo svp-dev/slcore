@@ -1,3 +1,9 @@
+2009-11-06  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
+	Improve `slr' to allow more debugging.
+	
+	* tools/bin/slr.in: New option `-gd' to debug data generation.
+
 2009-11-04  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
 	Minor improvements to data input via `slr' and `sag'.

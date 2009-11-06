@@ -83,7 +83,10 @@ Execution selection:
 Debugging options:
   -t                   Trace: print commands before running them.
 
-  -g                   Debug: try to run debugger around program. Implies -x.
+  -g                   Debug: try to run debugger around program. Implies -t.
+
+  -gd                  Debug: use debugging when generating data, do not actually
+                       run the program. Implies -t.
 
 Other options:
   -X                   Enable graphical output.
@@ -171,6 +174,7 @@ SIMGFX=
 gfx_scale=
 gfx_refresh=
 gfx_geometry=
+debug_rec=
 NCORES=${NCORES:-}
 SIMARGS=${SIMARGS:-}
 VERBOSE=${VERBOSE:-}
@@ -188,6 +192,7 @@ for arg in "$@"; do
       -c)	show_embedded=1; shift;;
       -t)       VERBOSE=1; shift;;
       -g)	VERBOSE=1; DEBUG=1; shift;;
+      -gd)      VERBOSE=1; debug_rec=1; shift;;
       -v|--version)	do_version;;
       -h|--help)	do_usage;;
       -l)  query=1; shift;;
@@ -401,7 +406,11 @@ if test -n "$dodata"; then
 	if test -n "$VERBOSE"; then
 	    echo "$basename: running: TMPDIR=$tmpdir/slr-rec @BASH@ $0 $tmpdir/gen.x >$datafile" >&2
 	fi
-	SLR_RECURSIVE=1 TMPDIR="$tmpdir"/slr-rec @BASH@ "$0" "$tmpdir"/gen.x >"$datafile"
+	if test -n "$debug_rec"; then
+	    SLR_RECURSIVE=1 TMPDIR="$tmpdir"/slr-rec @BASH@ "$0" -g -t "$tmpdir"/gen.x
+	else
+	    SLR_RECURSIVE=1 TMPDIR="$tmpdir"/slr-rec @BASH@ "$0" "$tmpdir"/gen.x >"$datafile"
+	fi
     else
 	# just ensure the cache file exists 
         true >"$datafile"
@@ -449,15 +458,19 @@ s/,$//g' | $python "$sag_helper" f >"$tmpdir"/fdata.c
 	if test -n "$VERBOSE"; then
 	    echo "$basename: running: TMPDIR=$tmpdir/slr-rec @BASH@ $0 $tmpdir/gen.x >$fdatafile" >&2
 	fi
-	SLR_RECURSIVE=1 TMPDIR="$tmpdir"/slr-rec @BASH@ "$0" "$tmpdir"/gen.x >"$fdatafile"
+	if test -n "$debug_rec"; then
+	    SLR_RECURSIVE=1 TMPDIR="$tmpdir"/slr-rec @BASH@ "$0" -g -t "$tmpdir"/gen.x
+	else
+	    SLR_RECURSIVE=1 TMPDIR="$tmpdir"/slr-rec @BASH@ "$0" "$tmpdir"/gen.x >"$fdatafile"
+	fi
     else
 	# Ensure a tag = -1 for the first Fibre item
         printf '\xff\xff\xff\xff\xff\xff\xff\xff' >"$fdatafile"
     fi
 fi
 
-# cache only?
-if test -n "$preponly"; then exit 0; fi
+# debug cache only?
+if test -n "$preponly" -o -n "$debug_rec"; then exit 0; fi
 
 export SIMARGS VERBOSE DEBUG NCORES SIMGFX
 if test -n "$VERBOSE"; then
