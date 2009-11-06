@@ -37,7 +37,7 @@ sl_def(FUNCTION[[]]_mt, void,
 sl_enddef
 
 sl_def(FUNCTION, void,
-       sl_shfparm(INT, res),
+       sl_shparm(INT, res),
        sl_glparm(INT, n),
        sl_glparm(FLOAT*, sx),
        sl_glparm(INT, incx))

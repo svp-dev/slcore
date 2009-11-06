@@ -1,3 +1,10 @@
+2009-11-05  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
+	Fix bug in BLAS `isamax' and `idamax' benchmarks.
+
+	* benchmarks/blas/templates/xiamax.c: Accept parameter through
+	`sl_shparm', not `sl_shfparm'.
+
 2009-11-04  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
 	Small bug in benchmark list generation.
