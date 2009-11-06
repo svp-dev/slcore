@@ -1,3 +1,17 @@
+2009-11-04  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
+	Optimize the BLAS benchmark suite.
+	
+	* benchmarks/blas/templates/xasum.c,
+	* benchmarks/blas/templates/xaxpy.c,
+	* benchmarks/blas/templates/xaxpyc.c,
+	* benchmarks/blas/templates/xrot.c,
+	* benchmarks/blas/templates/xnrm2.c,
+	* benchmarks/blas/templates/xscal.c,
+	* benchmarks/blas/templates/xdot.c,	
+	* benchmarks/blas/templates/xdotc.c: Optimize some. Use anonymous
+	thread arguments where appropriate.
+
 2009-11-03  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
 	Minor packaging fix.

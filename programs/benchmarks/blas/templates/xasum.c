@@ -21,8 +21,7 @@ sl_def(FUNCTION[[]]_mt, void,
        sl_shfparm(FLOAT, res))
 {
   sl_index(i);
-  FLOAT *restrict lsx = sl_getp(sx) + i;
-  sl_setp(res, ABS(*lsx) + sl_getp(res));
+  sl_setp(res, ABS(sl_getp(sx)[i]) + sl_getp(res));
 }
 sl_enddef
 
@@ -37,7 +36,7 @@ sl_def(FUNCTION, void,
 
   sl_create(,, sx, lx, sl_getp(incx),,,
 	    FUNCTION[[]]_mt,
-	    sl_glarg(FLOAT*, _1, sl_getp(sx)),
+	    sl_glarg(FLOAT*, , sl_getp(sx)),
 	    sl_shfarg(FLOAT, sres, sl_getp(res)));
   sl_sync();
   sl_setp(res, sl_geta(sres));

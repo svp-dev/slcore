@@ -14,13 +14,17 @@
 
 #define INT long
 
+/*
+// The following is the "straightforward" implementation
+// and just works. 
+
 sl_def(FUNCTION[[]]_mt, void,
        sl_glfparm(FLOAT, a),
        sl_glparm(FLOAT*restrict, sx))
 {
   sl_index(i);
   FLOAT *restrict lsx = sl_getp(sx) + i;
-  *lsx = *lsx * sl_getp(a);
+  *lsx = (*lsx) * sl_getp(a);
 }
 sl_enddef
 
@@ -30,13 +34,42 @@ sl_def(FUNCTION, void,
        sl_glparm(FLOAT*, sx),
        sl_glparm(INT, incx))
 {
-  INT sx = (sl_getp(incx) < 0) ? ((-sl_getp(n) + 1) * sl_getp(incx)) : 0;
-  INT lx = (sl_getp(incx) < 0) ? -1 : sl_getp(n);
+  INT start = (sl_getp(incx) < 0) ? ((-sl_getp(n) + 1) * sl_getp(incx)) : 0;
+  INT limit = (sl_getp(incx) < 0) ? -1 : sl_getp(n);
 
-  sl_create(,, sx, lx, sl_getp(incx),,,
+  sl_create(,, start, limit, sl_getp(incx),,,
 	    FUNCTION[[]]_mt,
-	    sl_glfarg(FLOAT, _0, sl_getp(a)),
-	    sl_glarg(FLOAT*, _1, sl_getp(sx)));
+	    sl_glfarg(FLOAT, , sl_getp(a)),
+	    sl_glarg(FLOAT*, , sl_getp(sx)));
+  sl_sync();
+}
+sl_enddef
+
+*/
+
+// Here we try to be smart.
+
+sl_def(FUNCTION[[]]_mt, void,
+       sl_glfparm(FLOAT, a))
+{
+  sl_index(i);
+  FLOAT *restrict lsx = (FLOAT*)(void*)(long)i;
+  *lsx = (*lsx) * sl_getp(a);
+}
+sl_enddef
+
+sl_def(FUNCTION, void,
+       sl_glparm(INT, n),
+       sl_glfparm(FLOAT, a),
+       sl_glparm(FLOAT*, sx),
+       sl_glparm(INT, incx))
+{
+  INT start = (sl_getp(incx) < 0) ? ((-sl_getp(n) + 1) * sl_getp(incx)) : 0;
+  INT limit = (sl_getp(incx) < 0) ? -1 : sl_getp(n);
+
+  sl_create(,, (long)(sl_getp(sx) + start), (long)(sl_getp(sx) + limit), sizeof(FLOAT)*sl_getp(incx),,,
+	    FUNCTION[[]]_mt,
+	    sl_glfarg(FLOAT, , sl_getp(a)));
   sl_sync();
 }
 sl_enddef

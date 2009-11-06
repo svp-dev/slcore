@@ -21,16 +21,10 @@ sl_def(FUNCTION[[]]_mt, void,
        sl_glparm(COMPLEX*restrict, sx),
        sl_glparm(COMPLEX*restrict, sy),
        sl_glparm(INT, incx),
-       sl_glparm(INT, incy),
-       sl_shparm(INT, ix),
-       sl_shparm(INT, iy))
+       sl_glparm(INT, incy))
 {
-  INT lix = sl_getp(ix);
-  INT liy = sl_getp(iy);
-  sl_setp(ix, lix + sl_getp(incx));
-  sl_setp(iy, liy + sl_getp(incy));
-  COMPLEX * restrict x = sl_getp(sx) + lix;
-  COMPLEX * restrict y = sl_getp(sy) + liy;
+  COMPLEX * restrict x = sl_getp(sx) + i * sl_getp(incx);
+  COMPLEX * restrict y = sl_getp(sy) + i * sl_getp(incy);
 
   FLOAT treal = sl_getp(areal) * x->real - sl_getp(aimag) * x->imag + y->real;
   FLOAT timag = sl_getp(areal) * x->imag + sl_getp(aimag) * x->real + y->imag;
@@ -48,19 +42,17 @@ sl_def(FUNCTION, void,
        sl_glparm(COMPLEX*, sy),
        sl_glparm(INT, incy))
 {
-  INT ix = (sl_getp(incx) < 0) ? ((-sl_getp(n) + 1) * sl_getp(incx)) : 1;
-  INT iy = (sl_getp(incy) < 0) ? ((-sl_getp(n) + 1) * sl_getp(incy)) : 1;
+  INT ix = (sl_getp(incx) < 0) ? ((-sl_getp(n) + 1) * sl_getp(incx)) : 0;
+  INT iy = (sl_getp(incy) < 0) ? ((-sl_getp(n) + 1) * sl_getp(incy)) : 0;
 
   sl_create(,, 0, sl_getp(n),,,,
 	    FUNCTION[[]]_mt,
-	    sl_glfarg(FLOAT, _1, sl_getp(areal)),
-	    sl_glfarg(FLOAT, _2, sl_getp(aimag)),
-	    sl_glarg(COMPLEX*, _3, sl_getp(sx)),
-	    sl_glarg(COMPLEX*, _4, sl_getp(sy)),
-	    sl_glarg(INT, _5, sl_getp(incx)),
-	    sl_glarg(INT, _6, sl_getp(incy)),
-	    sl_sharg(INT, _7, ix),
-	    sl_sharg(INT, _8, iy));
+	    sl_glfarg(FLOAT, , sl_getp(areal)),
+	    sl_glfarg(FLOAT, , sl_getp(aimag)),
+	    sl_glarg(COMPLEX*, , sl_getp(sx) + ix),
+	    sl_glarg(COMPLEX*, , sl_getp(sy) + iy),
+	    sl_glarg(INT, , sl_getp(incx)),
+	    sl_glarg(INT, , sl_getp(incy)));
   sl_sync();
 }
 sl_enddef

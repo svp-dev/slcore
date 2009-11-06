@@ -19,14 +19,12 @@ sl_def(FUNCTION[[]]_mt, void,
        sl_glparm(FLOAT*restrict, sx),
        sl_glparm(FLOAT*restrict, sy),
        sl_glparm(INT, incx),
-       sl_glparm(INT, incy),
-       sl_glparm(INT, ix),
-       sl_glparm(INT, iy))
+       sl_glparm(INT, incy))
 {
   sl_index(i);
-  FLOAT *restrict lsx = sl_getp(sx) + sl_getp(ix) + i * sl_getp(incx);
-  FLOAT *restrict lsy = sl_getp(sy) + sl_getp(iy) + i * sl_getp(incy);
-  *lsy = sl_getp(a) * *lsx + *lsy;
+  FLOAT *restrict lsx = sl_getp(sx) + i * sl_getp(incx);
+  FLOAT *restrict lsy = sl_getp(sy) + i * sl_getp(incy);
+  *lsy = sl_getp(a) * (*lsx) + (*lsy);
 }
 sl_enddef
 
@@ -43,13 +41,11 @@ sl_def(FUNCTION, void,
 
   sl_create(,, 0, sl_getp(n),,,,
 	    FUNCTION[[]]_mt,
-	    sl_glfarg(FLOAT, _0, sl_getp(a)),
-	    sl_glarg(FLOAT*, _1, sl_getp(sx)),
-	    sl_glarg(FLOAT*, _2, sl_getp(sy)),
-	    sl_glarg(INT, _3, sl_getp(incx)),
-	    sl_glarg(INT, _4, sl_getp(incy)),
-	    sl_glarg(INT, _5, ix),
-	    sl_glarg(INT, _6, iy));
+	    sl_glfarg(FLOAT, , sl_getp(a)),
+	    sl_glarg(FLOAT*, , sl_getp(sx) + ix),
+	    sl_glarg(FLOAT*, , sl_getp(sy) + iy),
+	    sl_glarg(INT, , sl_getp(incx)),
+	    sl_glarg(INT, , sl_getp(incy)));
   sl_sync();
 }
 sl_enddef
