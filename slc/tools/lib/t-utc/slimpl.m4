@@ -30,8 +30,8 @@ m4_define([[sl_enddef]],[[]])
 m4_define([[sl_decl]], m4_defn([[sl_def]]))
 
 # Pass transparently parameter declarations.
-m4_define([[sl_shparm]], [[shared [[$1]] [[$2]]]])
-m4_define([[sl_glparm]], [[/*global*/ [[$1]] [[$2]]]])
+m4_define([[sl_shparm]], [[ shared [[$1]] [[$2]]]])
+m4_define([[sl_glparm]], [[ [[$1]] [[$2]]]])
 m4_copy([[sl_shparm]],[[sl_shfparm]])
 m4_copy([[sl_glparm]],[[sl_glfparm]])
 
@@ -43,14 +43,14 @@ m4_define([[sl_index]], [[index [[$1]]]])
 # break variable names.
 m4_define([[sl_create]], [[m4_dnl
 m4_define([[_sl_brk]],m4_if(sl_breakable([[$7]]),1,[[[[$1]]_brk]],))m4_dnl
-create([[$1]];[[$2]];[[$3]];[[$4]];[[$5]];[[$6]];_sl_brk)m4_dnl
- [[$8]](m4_shiftn(8,$@)) m4_dnl
+create([[$1]]; [[$2]]; [[$3]]; [[$4]]; [[$5]]; [[$6]]; _sl_brk)m4_dnl
+ [[$8]](m4_shiftn(8,$@))m4_dnl
 ]])
 
 
 # Pass transparently shared and global argument declarations.
 m4_define([[sl_sharg]],[[m4_dnl
-[[$2]]m4_if([[$3]],,,[[ = $3]]) m4_dnl
+ [[$2]]m4_if([[$3]],,,[[ = $3]]) m4_dnl
 ]])
 m4_define([[sl_glarg]],m4_defn([[sl_sharg]]))
 m4_copy([[sl_sharg]],[[sl_shfarg]])

@@ -1,5 +1,18 @@
 2009-11-04  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	Fix code generation for `-b utcx -EE'.
+
+	* tools/bin/cce.in: Provide compiler for `-b utcx', so that `slc
+	-EE' can pass preprocessing.
+
+	* tools/lib/t-utc/include/sl_support.h: Provide (empty) since it
+	is required by `-EE'.
+	
+	* tools/lib/t-utc/slimpl.m4: Add more whitespace to make output
+	more palatable.
+
+2009-11-04  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	Optimize the `seqc' target.
 	
 	* tools/lib/t-seqc/slimpl.m4: Use `long' for index values.

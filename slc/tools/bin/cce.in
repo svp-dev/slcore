@@ -246,6 +246,7 @@ slc_tflags+=("-DPYTHON=$python" "-DSPP_PY=$spp_helper")
 
 # Compiler selection
 case $slc_dialect-$slc_arch in
+    utc-x) slc_compiler=($CC_HOST -E) ;;
     *-x) slc_compiler=("$scu_helper" compile) ;;
     *-host)
 	case $slc_complang in
