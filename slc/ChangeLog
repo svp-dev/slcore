@@ -1,5 +1,12 @@
 2009-11-04  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	Simplify handling of C99's `restrict'.
+
+	* tools/include/slc.m4: Move definition of `restrict' to...	
+	* tools/lib/t-ptl/include/sl_support.h: ...here.
+
+2009-11-04  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	Eliminate some warnings in library code.
 
 	* lib/src/io.c: Use the primitives from `cmath.h' to test for

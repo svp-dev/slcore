@@ -44,6 +44,10 @@ typedef uTC::place sl_place_t;
 [[#]]define SVP_EBROKEN uTC::EXIT_BREAK
 [[#]]define SVP_EKILLED uTC::EXIT_KILL
 
+#ifndef restrict
+#define restrict __restrict__
+#endif
+
 [[#]]endif
 
 #endif // ! SLC_SL_SUPPORT_H
