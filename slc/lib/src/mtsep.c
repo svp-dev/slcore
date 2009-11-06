@@ -127,7 +127,7 @@ sl_def(sep_alloc,
   }
 
  done_no:
-  sl_setp(result, 0);  
+  sl_setp(result, (void*)0);  
   sl_end_thread;
  done_yes:
   p->allocated = 1;

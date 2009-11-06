@@ -1,5 +1,14 @@
 2009-11-04  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	Eliminate some warnings in library code.
+
+	* lib/src/io.c: Use the primitives from `cmath.h' to test for
+	infinity.
+
+	* lib/src/mtsep.c: Cast 0 properly to make a pointer.
+	
+2009-11-04  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	Do not warn about `ctime.h' when including `svp/perf.h'.
 
 	* lib/include/ctime.h: Subject warning to conditional.

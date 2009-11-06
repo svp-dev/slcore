@@ -16,6 +16,7 @@
 #include <svp/div.h>
 #include <svp/io.h>
 #include <svp/testoutput.h>
+#include <cmath.h>
 
 static const char *digits = "0123456789abcdef";
 
@@ -50,9 +51,8 @@ sl_def(svp_io_putf, void,
   unsigned prec = sl_getp(gprec);
   const unsigned long base = sl_getp(gbase);
 
-  if (unlikely(x != x)) output_string("nan", 1);
-  else if (unlikely(x == 1e5000)) output_string("+inf", 1);
-  else if (unlikely(x == -1e5000)) output_string("-inf", 1);
+  if (unlikely(isnan(x))) output_string("nan", 1);
+  else if (unlikely(isinf(x))) output_string(signbit(x) ? "-inf" : "+inf", 1);
   else {
       /* -- print the mantissa -- */
     if (x < 0.) { output_char('-', 1); x = -x; } else output_char('+', 1);
