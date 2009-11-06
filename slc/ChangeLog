@@ -1,5 +1,11 @@
 2009-11-06  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	Fix minor portability issue.
+
+	* tools/lib/arggen.c: Only use threads when running MT. 
+
+2009-11-06  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	Fix minor bug in `slc'.
 
 	When running with `slc -g -g' the underlying compiler would be
