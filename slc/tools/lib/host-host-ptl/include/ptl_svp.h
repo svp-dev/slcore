@@ -101,7 +101,7 @@ namespace uTC
 
     struct ThreadCreateInfo
     {
-        int         index;
+        long         index;
         bool        first;
         bool        last;
         FamilyBase* f;
@@ -148,8 +148,8 @@ namespace uTC
         unsigned long   m_nextChildId;
 
         // Family parameters
-        int             m_start, m_end, m_step, m_index;
-        unsigned int    m_blockSize;
+        long             m_start, m_end, m_step, m_index;
+        unsigned long    m_blockSize;
 
         // Family tree
         FamilyBase     *m_parent;
@@ -175,7 +175,7 @@ namespace uTC
         static void* thread_func(void* param);
         static void* thread_creation_func(void* param);
 
-        void create_iteration(int index, bool first, bool last);
+        void create_iteration(long index, bool first, bool last);
         void set_last_created(ThreadInfo* ti);
         void create_loop();
         void destroy(bool lock = true);
@@ -196,15 +196,13 @@ namespace uTC
         inline bool is_continuation();
 
         void     kill(ExitCode code);
-        int      squeeze();
         ExitCode sync();
         void     unlink();
         void     start_creating();
         place           m_place;
-        int*    m_pSqueezeValue;
 
     public:
-        FamilyBase(int start, int end, int step, unsigned int blockSize, place place_id, bool root, bool nosync, int* pSqueezeVal);
+        FamilyBase(long start, long end, long step, unsigned long blockSize, place place_id, bool root, bool nosync);
     };
 
     template <typename T>
@@ -329,11 +327,11 @@ namespace uTC
         ThreadInfo* m_info;
 
         // Make the assignment operators private so they can't be used
-        index& operator=(const int i)    { return *this; }
+        index& operator=(const long i)    { return *this; }
         index& operator=(const index& i) { return *this; }
         public:
 
-        operator int() const
+        operator long() const
         {
             // Simply return the index of this thread
             return m_info->index;

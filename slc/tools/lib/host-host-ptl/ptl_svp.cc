@@ -274,21 +274,6 @@ namespace uTC
         return res;
     }
 
-    void squeeze(family f)
-    {
-        // Check if family is valid and if
-        if (f == NULL || f->m_pSqueezeValue == NULL)
-        {
-            fputs("Thread attempted to squeeze an invalid family\n", stderr);
-            abort();
-        }
-        else
-        {
-            *(f->m_pSqueezeValue) = f->squeeze();
-        }
-        return;
-    }
-
     void kill(family f)
     {
         if (f == NULL)
@@ -571,7 +556,7 @@ namespace uTC
         UNLOCK(&ti->f->m_data_mutex);
     }
 
-    void FamilyBase::create_iteration(int index, bool first, bool last)
+    void FamilyBase::create_iteration(long index, bool first, bool last)
     {
         ThreadCreateInfo tci;
         tci.index = index;
@@ -755,19 +740,6 @@ namespace uTC
         return code;
     }
 
-    // Squeezes the family
-    int FamilyBase::squeeze()
-    {
-        // Only squeeze if the family hasn't been broken or killed yet
-        LOCK(&m_data_mutex);
-        if (m_exitCode == EXIT_NORMAL)
-        {
-            m_exitCode = EXIT_SQUEEZE;
-            m_end      = min(m_end, m_index + 1);
-        }
-        UNLOCK(&m_data_mutex);
-        return m_end + 1;
-    }
 
     // Kills the family.
     // The family should be cleaned up (with destroy()) by whatever calls this function.
@@ -891,8 +863,8 @@ namespace uTC
         return m_continuation;
     }
 
-    FamilyBase::FamilyBase(int start, int end, int step, unsigned int blockSize, place place_id, bool root, bool nosync, int* pSqueezeVal)
-        : m_start(start), m_end(end), m_step(step), m_index(start), m_root(root), m_continuation(nosync), m_place(place_id), m_pSqueezeValue(pSqueezeVal)
+    FamilyBase::FamilyBase(long start, long end, long step, unsigned long blockSize, place place_id, bool root, bool nosync)
+        : m_start(start), m_end(end), m_step(step), m_index(start), m_root(root), m_continuation(nosync), m_place(place_id)
     {
         m_lastCreated     = NULL;
         m_firstChild      = NULL;
@@ -912,7 +884,7 @@ namespace uTC
 
         // blockSize of 1 won't work with shareds, so we do
         // two threads at the same time.
-        m_blockSize = max(2U, blockSize);
+        m_blockSize = max(2UL, blockSize);
 
         DPRINT("Creating family");
 
@@ -1074,7 +1046,7 @@ namespace uTC
         // Create the root family
         family f;
 
-        create(f, PLACE_LOCAL, true, false, 0, 1, 1, 0, NULL, t_main);
+        create(f, PLACE_LOCAL, true, false, 0, 1, 1, 0, t_main);
 
         sync(f);
 
