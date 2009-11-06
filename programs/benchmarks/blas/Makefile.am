@@ -18,6 +18,8 @@ BENCHMARKS = \
 	bench-dasum.c	bench-sasum.c \
 	bench-dnrm2.c	bench-snrm2.c \
 	bench-dscal.c	bench-sscal.c \
+	bench-dswap.c	bench-sswap.c \
+	bench-dcopy.c	bench-scopy.c \
 	bench-idamax.c	bench-isamax.c \
 	bench-daxpy.c 	bench-saxpy.c
 
@@ -26,6 +28,8 @@ BENCHMARK_INPUTS = \
 	bench-dasum.inputs bench-sasum.inputs \
 	bench-dscal.inputs bench-sscal.inputs \
 	bench-ddot.inputs bench-sdot.inputs \
+	bench-dswap.inputs bench-sswap.inputs \
+	bench-dcopy.inputs bench-scopy.inputs \
 	bench-drot.inputs bench-srot.inputs \
 	bench-idamax.inputs bench-isamax.inputs \
 	bench-dnrm2.inputs bench-snrm2.inputs \
@@ -44,12 +48,14 @@ EXTRA_DIST = \
 	templates/xasum.c \
 	templates/xscal.c \
 	templates/xnrm2.c \
+	templates/xswap.c \
+	templates/xcopy.c \
 	templates/xiamax.c \
 	blas_complex.h \
 	caxpy.c cdotc.c cdotu.c \
 	zaxpy.c zdotc.c zdotu.c \
-	dasum.c daxpy.c ddot.c drot.c dnrm2.c dscal.c idamax.c \
-	sasum.c saxpy.c sdot.c srot.c snrm2.c sscal.c isamax.c \
+	dasum.c daxpy.c ddot.c drot.c dnrm2.c dscal.c idamax.c sswap.c scopy.c \
+	sasum.c saxpy.c sdot.c srot.c snrm2.c sscal.c isamax.c dswap.c dcopy.c \
 	$(BENCHMARKS) \
 	$(BENCHMARK_INPUTS)
 

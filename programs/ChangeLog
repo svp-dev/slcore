@@ -1,3 +1,24 @@
+2009-11-03  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
+	Extend the BLAS benchmark suite.
+	
+	* benchmarks/blas/templates/xcopy.c,
+	* benchmarks/blas/templates/xswap.c,
+	* benchmarks/blas/sswap.c,
+	* benchmarks/blas/scopy.c,
+	* benchmarks/blas/dswap.c,
+	* benchmarks/blas/dcopy.c,
+	* benchmarks/blas/bench-sswap.c,
+	* benchmarks/blas/bench-scopy.c,
+	* benchmarks/blas/bench-dswap.c,
+	* benchmarks/blas/bench-dcopy.c,
+	* benchmarks/blas/bench-sswap.inputs,
+	* benchmarks/blas/bench-scopy.inputs,
+	* benchmarks/blas/bench-dswap.inputs,
+	* benchmarks/blas/bench-dcopy.inputs: New.
+
+	* benchmarks/blas/Makefile.am: Update accordingly.
+
 2009-11-04  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
 	Minor portability fix.
