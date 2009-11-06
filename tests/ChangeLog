@@ -1,7 +1,10 @@
 2009-11-06 Simon Polstra <s.polstra@uva.nl>
+
 	Extend the unit test suite.
 
-	* 0_slc/1_createargs/1_shared_empty.c: test empty thread.
+	* 0_slc/1_createargs/1_shared_empty.c: Test empty thread.
+	* 0_slc/1_createargs/simple_sync.c: Test assignment of a shared
+	variable via a temporary variable.
 
 2009-10-14  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
