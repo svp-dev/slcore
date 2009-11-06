@@ -26,10 +26,10 @@ for bench_src in "$@"; do
 		   if test -r "$f"; then echo "$f"; fi
 	       done; done) <"$ispec_src"
        else 
-	   for f in "$srcdir/$bench_base".d*[0-9] ./"$bench_bas".d*[0-9]; do
+	   for f in "$srcdir/$bench_base".d*[0-9] ./"$bench_base".d*[0-9]; do
 	       if test -r "$f"; then echo "$f"; fi
 	   done
-       fi))
+       fi | sort | uniq))
    if test 0 = ${#bench_inputs[*]}; then
        echo "$bench_base: no inputs defined" >&2
        continue

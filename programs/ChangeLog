@@ -1,5 +1,11 @@
 2009-11-04  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	Small bug in benchmark list generation.
+	
+	* build-aux/genbench.sh: Fix typo and remove duplicates. 
+
+2009-11-04  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	Fix bug in BLAS `isamax' and `idamax' benchmarks.
 	
 	* benchmarks/blas/bench-isamax.c (work),	
