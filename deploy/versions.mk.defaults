@@ -11,16 +11,16 @@ BASE_REPO = https://svn.svp-home.org
 BINUTILS_REV = 2971
 BINUTILS_REPO = $(BASE_REPO)/sw/svp/mg/binutils/trunk
 
-UTC_GCC_REV = 2842
+UTC_GCC_REV = 3023
 UTC_GCC_REPO = $(BASE_REPO)/sw/svp/mg/gcc/branches/mt-ra-shared-branch
 
 MGSIM_REV = 2981
 MGSIM_REPO = $(BASE_REPO)/sw/svp/mg/mgsim/trunk
 
-SLC_REV = 3007
+SLC_REV = 3043
 SLC_REPO = $(BASE_REPO)/sw/svp/sys/trunk/slc
 
-GCC_VERSION = 4.4.1
+GCC_VERSION = 4.4.2
 GCC_ARCHIVE = gcc-core-$(GCC_VERSION).tar.bz2
 GCC_MIRROR = ftp://ftp.nluug.nl/mirror/languages/gcc/releases/gcc-$(GCC_VERSION)
 

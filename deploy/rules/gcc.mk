@@ -43,7 +43,7 @@ $(REQDIR)/bin/alpha-linux-gnu-gcc: \
 			  CFLAGS="$$CFLAGS $(EXTRA_CFLAGS)" \
 	                  LDFLAGS="$$LDFLAGS $(EXTRA_LDFLAGS)" \
 	                  $(GCC_CONFIG_FLAGS) && \
-	  grep -v 'maybe-[a-z]*-target-\(libgcc\|libiberty\|libgomp\)' <Makefile >Makefile.tmp && \
+	  grep -v 'maybe-[a-z]*-target-\(libgcc\|libiberty\|libgomp\|zlib\)' <Makefile >Makefile.tmp && \
 	  mv -f Makefile.tmp Makefile && \
 	  if ! $(MAKE) $(MAKE_FLAGS); then \
 	    perl -pi.bak -n -e \

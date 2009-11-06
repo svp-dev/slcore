@@ -1,3 +1,12 @@
+2009-11-06  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
+	Upgrade tool versions, including gcc -> 4.4.2.
+	
+	* deploy/versions.mk.defaults: Bump version numbers.
+	
+	* deploy/rules/gcc.mk: Also exclude `zlib' from build (needed in
+	gcc 4.4.2).
+
 2009-10-29  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
 	* deploy/versions.mk.defaults: Bump version numbers. 
