@@ -32,11 +32,7 @@ BENCHMARK_INPUTS = \
 	bench-dcopy.inputs bench-scopy.inputs \
 	bench-drot.inputs bench-srot.inputs \
 	bench-idamax.inputs bench-isamax.inputs \
-	bench-dnrm2.inputs bench-snrm2.inputs \
-	asum.d1 asum.d2 asum.d3 \
-	rot.d1 rot.d2 rot.d3 \
-	dot.d1 dot.d2 dot.d3 \
-	axy.d1 axy.d2 axy.d3 
+	bench-dnrm2.inputs bench-snrm2.inputs 
 
 
 EXTRA_DIST = \
