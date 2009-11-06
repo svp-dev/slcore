@@ -1,5 +1,15 @@
 2009-11-06  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	Fix minor bug in `slc'.
+
+	When running with `slc -g -g' the underlying compiler would be
+	confused. (reported by A. Matei)
+	
+	* tools/bin/cce.in: Properly split `slc_debug_flags' into an
+	array.
+
+2009-11-06  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	Improve `slr' to allow more debugging.
 	
 	* tools/bin/slr.in: New option `-gd' to debug data generation.
