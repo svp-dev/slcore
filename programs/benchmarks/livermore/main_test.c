@@ -13,7 +13,7 @@
 //
 
 #include <svp/iomacros.h>
-#include <svp/perf.h>
+#include <ctime.h>
 #include <svp/slr.h>
 
 slr_decl(slr_var(unsigned, L, "number of iterations (default 1)"),
@@ -21,15 +21,15 @@ slr_decl(slr_var(unsigned, L, "number of iterations (default 1)"),
 	 slr_var(int, B, "inner create block size (leave empty or -1 for default)"));
 
 #define MAX_LOOPS 10000
-int64_t cycle_counts[MAX_LOOPS];
+clock_t cycle_counts[MAX_LOOPS];
 
 sl_def(t_main, void)
 {
   //outer loop counter
   unsigned i, loops = 1;
-  //cycle counter
-  uint64_t cycles;
-  uint64_t totalcycles = 0;
+  //perf counter
+  clock_t time;
+  clock_t totaltime = 0;
 
   //set the required problem size
   // if the value is <=0 then use default PSIZE
@@ -68,12 +68,12 @@ sl_def(t_main, void)
   for (i = 0; i < loops; ++i)
     {
       // get current cycle counter
-      cycles = get_cycles();
+      cycles = clock();
       //create the singleton family -- call the kernel
       sl_create(,,,,,,,ACTUALKERNEL);
       sl_sync();
       //now calculate the cycles used just for the kernel
-      cycle_counts[i] = get_cycles() - cycles;
+      cycle_counts[i] = clock() - cycles;
       totalcycles += cycle_counts[i];
     }
 

@@ -14,7 +14,7 @@
 
 #include <svp/iomacros.h>
 #include <svp/assert.h>
-#include <svp/perf.h>
+#include <ctime.h>
 #include <svp/slr.h>
 
 #define TABLE_SIZE 8
@@ -91,16 +91,16 @@ sl_def(t_main, void)
   sl_create(,,,N,,,, fft_init);
   sl_sync();
 
-  int64_t p1, p2;
+  clock_t p1, p2;
   int br = (slr_len(BR) > 0);
 
-  p1 = get_cycles();
+  p1 = clock();
   sl_create(,,,,,,, FFT,
 	    sl_glarg(cpx_t*restrict, gX, Y),
 	    sl_glarg(unsigned long, gM, M),
 	    sl_glarg(long, gBR, br));
   sl_sync();
-  p2 = get_cycles();
+  p2 = clock();
   if (slr_len(Pc) > 0)
     printf("%d %d\n", p1, (p2 - p1));
   else {

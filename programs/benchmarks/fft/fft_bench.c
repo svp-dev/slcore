@@ -15,7 +15,7 @@
 #include <svp/testoutput.h>
 #include <svp/assert.h>
 #include <svp/fibre.h>
-#include <svp/perf.h>
+#include <ctime.h>
 
 #define TABLE_SIZE 16
 #include "fft.h"
@@ -38,14 +38,14 @@ sl_def(t_main, void)
   unsigned i;
 
   for (i = 0; i < L; ++i) {
-    uint64_t before = get_cycles();
+    clock_t before = clock();
     sl_create(,PLACE_LOCAL,1,M+1,1,,, FFT_1,
 	      sl_glarg(cpx_t*restrict, gX, X),
 	      sl_glarg(unsigned long, gN, N/2),
 	      sl_sharg(long, token, 0),
 	      sl_glarg(const void*, gt, sc_table_ptr));
     sl_sync();
-    output_uint(get_cycles() - before, 1); 
+    output_uint(clock() - before, 1); 
     output_char('\n', 1);
   }
 }

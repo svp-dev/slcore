@@ -1,5 +1,14 @@
 2009-11-04  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	Minor portability fix.
+
+	* benchmarks/fft/fft_bench.c,
+	* benchmarks/fft/fft_test.c,	
+	* benchmarks/livermore/main_test.c: Use `clock()' instead of
+	`get_cycles()' which is obsolete.
+
+2009-11-04  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	Optimize the BLAS benchmark suite.
 	
 	* benchmarks/blas/templates/xasum.c,
