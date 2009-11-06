@@ -1,3 +1,8 @@
+2009-11-06 Simon Polstra <s.polstra@uva.nl>
+	Extend the unit test suite.
+
+	* 0_slc/1_createargs/1_shared_empty.c: test empty thread.
+
 2009-10-14  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
 	Extend the unit test suite.
