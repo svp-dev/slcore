@@ -36,7 +36,9 @@ extern clock_t clock(void);
 
 #define clock() __inline_clock()
 
+#ifndef shutup_ctime_h
 #warning this implementation of time.h is incomplete.
+#endif
 
 #else
 #ifdef __cplusplus

@@ -15,7 +15,11 @@
 #ifndef SLC_SVP_PERF_H
 # define SLC_SVP_PERF_H
 
+#ifndef shutup_ctime_h
+#define shutup_ctime_h
+#endif
 #include <ctime.h>
+#undef shutup_ctime_h
 
 #define get_cycles() m4_warning("get_cycles() is deprecated. use clock() and CLOCKS_PER_SEC instead.") clock()
 
