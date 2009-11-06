@@ -44,7 +44,7 @@ m4_define([[sl_end_thread]], [[return]])
 
 m4_define([[sl_decl]], [[void [[$1]](struct sl_famdata * __sl_fam)]])
 
-m4_define([[sl_index]], [[register const int [[$1]] = (__sl_fam->ix)]])
+m4_define([[sl_index]], [[register const long [[$1]] = (__sl_fam->ix)]])
 m4_define([[sl_getp]],[[(__sl_args->[[$1]])]])
 m4_define([[sl_setp]],[[(__sl_args->[[$1]]) = [[$2]]]])
 

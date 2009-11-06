@@ -1,5 +1,11 @@
 2009-11-04  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	Optimize the `seqc' target.
+	
+	* tools/lib/t-seqc/slimpl.m4: Use `long' for index values.
+
+2009-11-04  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	Optimize the `ptl' target.
 	
 	* tools/lib/host-host-ptl/include/create.tpl,
