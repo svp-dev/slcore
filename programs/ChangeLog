@@ -1,5 +1,13 @@
 2009-11-04  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	Fix bug in BLAS `isamax' and `idamax' benchmarks.
+	
+	* benchmarks/blas/bench-isamax.c (work),	
+	* benchmarks/blas/bench-idamax.c (work): Use `sl_sharg' instead of
+	`sl_shfarg'.
+
+2009-11-04  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	New inputs for BLAS benchmarks.
 
 	* benchmarks/blas/asum.d1,

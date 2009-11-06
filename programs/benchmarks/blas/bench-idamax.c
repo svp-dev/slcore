@@ -72,7 +72,7 @@ sl_def(work, void,
 {
   struct bdata *bdata = (struct bdata*)sl_getp(st)->data;
   sl_create(,,,,,,, idamax,
-	    sl_shfarg(long, result, 0.),
+	    sl_sharg(long, result, 0),
 	    sl_glarg(long, n, bdata->n),
 	    sl_glarg(double*, sx, bdata->sx),
 	    sl_glarg(long, incx, 1));
