@@ -86,7 +86,7 @@ m4_mapall_sep([[sl_givearg]],[[,]],m4_quote(_sl_thargs)) m4_dnl
 # Pass transparently the sync construct.
 m4_define([[sl_sync]],[[m4_dnl
 m4_ifndef([[_sl_increate]],[[m4_fatal(sync without create)]])m4_dnl
-m4_if([[$2]],,,[[$2 = ]])__builtin_ut_sync(m4_if([[$1]],,_sl_fid,[[$1]]))m4_dnl
+m4_if([[$2]],,,[[$2 = ]])sync(m4_if([[$1]],,_sl_fid,[[$1]]))m4_dnl
 m4_undefine([[_sl_increate]])m4_dnl
 ]])
 

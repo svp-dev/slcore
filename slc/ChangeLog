@@ -1,5 +1,12 @@
 2009-11-06  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	Update `utc0' code generation.
+	
+	* tools/lib/t-utc0/slimpl.m4: Expand to `sync()' instead of
+	`__builtin_ut_sync()' (requested by S. Polstra).
+
+2009-11-06  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	Fix minor portability issue.
 
 	* tools/lib/arggen.c: Only use threads when running MT. 
