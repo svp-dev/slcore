@@ -1,0 +1,45 @@
+We provide a modified version of SystemC 2.1-v1 for use with the SL
+toolchain.
+
+The archive "systemc-2.1.v1.tgz" is unchanged from the official
+distribution by OSCI (www.systemc.org). The changes are captured by a
+patch file in "patches" (sysc.patch). Below is a summary.
+
+Optimization-related changes
+----------------------------
+
+- header sysc/communication/sc_fifo.h: a non-virtual accessor
+   num_available_fast() is added, for uses where the type sc_fifo is
+   known by the client class statically.
+
+- header sysc/communication/sc_port.h: a non-virtual accessor
+  get_interface_fast() is added.
+
+Portability-related changes
+---------------------------
+
+- src/sysc/datatypes/fx/sc_context.h: eliminate warning.
+
+- src/sysc/utils/sc_report_handler.cpp,
+- src/sysc/utils/sc_hash.cpp,
+- src/sysc/qt/qtmd.h,
+- src/sysc/kernel/sc_process_int.cpp,
+- src/sysc/datatypes/int/sc_unsigned.cpp,
+- src/sysc/datatypes/int/sc_signed.cpp,
+- src/sysc/datatypes/int/sc_nbutils.h,
+- src/sysc/datatypes/fx/scfx_rep.h,
+- src/sysc/datatypes/fx/scfx_rep.cpp,
+- src/sysc/datatypes/fx/scfx_ieee.h, 
+- src/sysc/datatypes/fx/sc_fxval.h: Increase compatibility with 64-bit
+  systems and GNU C++ 4.x.
+
+- configure.in: Use pthreads instead of QTthreads for MacOSX and Linux
+  64-bit.
+
+Misc changes
+------------
+
+- src/sysc/kernel/sc_simcontext.cpp: Report termination to std::clog.
+
+- Makefile.am, src/Makefile.am: Simplify install.
+

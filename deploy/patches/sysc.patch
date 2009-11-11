@@ -1,0 +1,751 @@
+diff -ur -x Makefile.in -x configure -x INSTALL -x aclocal.m4 -x config.sub -x config.guess -x depcomp -x install-sh -x missing -x mkinstalldirs systemc-2.1.v1.orig/Makefile.am systemc-2.1.v1-work/Makefile.am
+--- systemc-2.1.v1.orig/Makefile.am	2005-04-13 15:50:40.000000000 +0200
++++ systemc-2.1.v1-work/Makefile.am	2009-11-10 22:32:01.000000000 +0100
+@@ -32,20 +32,8 @@
+ 
+ SUBDIRS = \
+ 	src \
+-	examples \
+ 	.
+ 
+-INST_FILES = \
+-	AUTHORS \
+-	COPYING \
+-	ChangeLog \
+-	INSTALL \
+-	LICENSE \
+-	NEWS \
+-	README \
+-	RELEASENOTES \
+-	docs
+-
+ debug:
+ 	$(MAKE) all CXXFLAGS="$(EXTRA_CXXFLAGS) $(DEBUG_CXXFLAGS)"
+ 
+@@ -61,33 +49,3 @@
+ pthreads_check:
+ 	$(MAKE) check CXXFLAGS="$(EXTRA_CXXFLAGS) -DSC_USE_PTHREADS" LDFLAGS="-lpthread"
+ 
+-install-data-local:
+-	@$(NORMAL_INSTALL)
+-	for file in $(INST_FILES); do \
+-	  d=$(srcdir); \
+-	  if test -d $$d/$$file; then \
+-	    test -d $(prefix)/$$file \
+-	    || cp -pr $$d/$$file $(prefix) || :; \
+-	  else \
+-	    test -f $(prefix)/$$file \
+-	    || cp -p $$d/$$file $(prefix)/$$file || :; \
+-	  fi; \
+-	done
+-#@(cd ./examples; $(MAKE) install;)
+-
+-uninstall-local:
+-	@$(NORMAL_UNINSTALL)
+-	w=`pwd`; cd $(srcdir); s=`pwd`; cd $$w; \
+-	if test $(prefix) != $$s; then \
+-	  for file in $(INST_FILES); do \
+-	    d=$(srcdir); \
+-	    if test -d $$d/$$file; then \
+-	      rm -rf $(prefix)/$$file; \
+-	    else \
+-	      rm -f $(prefix)/$$file; \
+-	    fi; \
+-	  done; \
+-	fi
+-	@(cd ./examples; $(MAKE) uninstall;)
+-
+-## Taf!
+Only in systemc-2.1.v1-work: autom4te.cache
+Only in systemc-2.1.v1-work: b
+diff -ur -x Makefile.in -x configure -x INSTALL -x aclocal.m4 -x config.sub -x config.guess -x depcomp -x install-sh -x missing -x mkinstalldirs systemc-2.1.v1.orig/configure.in systemc-2.1.v1-work/configure.in
+--- systemc-2.1.v1.orig/configure.in	2005-04-11 23:49:25.000000000 +0200
++++ systemc-2.1.v1-work/configure.in	2009-11-11 00:00:52.000000000 +0100
+@@ -42,7 +42,7 @@
+ dnl
+ 
+ AC_CANONICAL_SYSTEM
+-AM_INIT_AUTOMAKE(package,version,do-no-define)
++AM_INIT_AUTOMAKE([systemc],[2.1.v1],[no-define foreign])
+ 
+ AC_PROG_CC
+ AC_PROG_CXX
+@@ -77,14 +77,29 @@
+         	CFLAGS="$EXTRA_CXXFLAGS $OPT_CXXFLAGS"
+                 ;;
+             *)
+-                { { echo "$as_me:2730: error: \"sorry...compiler not supported\"" >&5
+-echo "$as_me: error: \"sorry...compiler not supported\"" >&2;}
+-   { (exit 1); exit 1; }; }
++                AC_MSG_ERROR("sorry...compiler not supported")
+ 		;;
+         esac
+ 	AS=as
+         QT_ARCH="powerpc-apple-macosx"
+         ;;
++    i386-apple-darwin*)
++        case "$CXX_COMP" in
++            c++ | g++)
++                EXTRA_CXXFLAGS="-Wall"
++                DEBUG_CXXFLAGS="-g"
++                OPT_CXXFLAGS="-O3"
++                TARGET_ARCH="macosx"
++        	CC="$CXX"
++        	CFLAGS="$EXTRA_CXXFLAGS $OPT_CXXFLAGS"
++                ;;
++            *)
++                AC_MSG_ERROR("sorry...compiler not supported")
++		;;
++        esac
++	AS=as
++        QT_ARCH="pthreads-osx"
++        ;;
+     sparc-sun-solaris*) 
+         case "$CXX_COMP" in
+             CC)
+@@ -126,7 +141,14 @@
+ 		;;
+         esac
+ 	AS=as
+-        QT_ARCH="iX86"
++	case "$target" in
++	  x86_64*)
++	    QT_ARCH="pthreads-linux"
++	    ;;
++	  *)	
++            QT_ARCH="iX86"
++	    ;;
++	esac
+         ;;
+     *cygwin*)
+         case "$CXX_COMP" in
+Only in systemc-2.1.v1-work: configure.in~
+diff -ur -x Makefile.in -x configure -x INSTALL -x aclocal.m4 -x config.sub -x config.guess -x depcomp -x install-sh -x missing -x mkinstalldirs systemc-2.1.v1.orig/src/Makefile.am systemc-2.1.v1-work/src/Makefile.am
+--- systemc-2.1.v1.orig/src/Makefile.am	2005-03-31 23:51:18.000000000 +0200
++++ systemc-2.1.v1-work/src/Makefile.am	2009-11-10 23:09:01.000000000 +0100
+@@ -36,7 +36,7 @@
+     systemc \
+ 	systemc.h
+ 
+-noinst_HEADERS = $(H_FILES)
++include_HEADERS = $(H_FILES)
+ 
+ CXX_FILES =
+ 
+@@ -50,22 +50,11 @@
+ 
+ install-data-local:
+ 	@$(NORMAL_INSTALL)
+-	$(mkinstalldirs) $(INCLUDE_DIR)
+-	for file in $(noinst_HEADERS); do \
+-	  $(INSTALL_DATA) $(srcdir)/$$file $(INCLUDE_DIR)/$$file; \
+-	done
+-	$(mkinstalldirs) $(prefix)/lib-$(TARGET_ARCH)
+-	$(INSTALL_DATA) $(MAIN_LIBRARY) \
+-	  $(prefix)/lib-$(TARGET_ARCH)/$(MAIN_LIBRARY)
+-	$(RANLIB) $(prefix)/lib-$(TARGET_ARCH)/$(MAIN_LIBRARY)
++	$(mkinstalldirs) $(libdir)
++	$(INSTALL_DATA) $(MAIN_LIBRARY) $(libdir)/$(MAIN_LIBRARY)
++	$(RANLIB) $(libdir)/$(MAIN_LIBRARY)
+ 
+ uninstall-local:
+ 	@$(NORMAL_UNINSTALL)
+-	for file in $(noinst_HEADERS); do \
+-	  rm -f $(INCLUDE_DIR)/$$file; \
+-	done
+-	-rmdir $(INCLUDE_DIR)
+-	rm -f $(prefix)/lib-$(TARGET_ARCH)/$(MAIN_LIBRARY)
+-	-rmdir $(prefix)/lib-$(TARGET_ARCH)
+-
+-## Taf!
++	rm -f $(libdir)/$(MAIN_LIBRARY)
++	-rmdir $(libdir)
+Only in systemc-2.1.v1-work/src: Makefile.am~
+Only in systemc-2.1.v1-work/src: sources.mk
+diff -ur -x Makefile.in -x configure -x INSTALL -x aclocal.m4 -x config.sub -x config.guess -x depcomp -x install-sh -x missing -x mkinstalldirs systemc-2.1.v1.orig/src/sysc/communication/sc_fifo.h systemc-2.1.v1-work/src/sysc/communication/sc_fifo.h
+--- systemc-2.1.v1.orig/src/sysc/communication/sc_fifo.h	2005-05-24 23:41:33.000000000 +0200
++++ systemc-2.1.v1-work/src/sysc/communication/sc_fifo.h	2009-11-10 22:04:04.000000000 +0100
+@@ -97,6 +97,9 @@
+     virtual int num_available() const
+ 	{ return ( m_num_readable - m_num_read ); }
+ 
++    int num_available_fast() const
++	{ return ( m_num_readable - m_num_read ); }
++
+ 
+     // get the data written event
+ 
+diff -ur -x Makefile.in -x configure -x INSTALL -x aclocal.m4 -x config.sub -x config.guess -x depcomp -x install-sh -x missing -x mkinstalldirs systemc-2.1.v1.orig/src/sysc/communication/sc_port.h systemc-2.1.v1-work/src/sysc/communication/sc_port.h
+--- systemc-2.1.v1.orig/src/sysc/communication/sc_port.h	2005-04-04 02:05:45.000000000 +0200
++++ systemc-2.1.v1-work/src/sysc/communication/sc_port.h	2009-11-10 22:04:04.000000000 +0100
+@@ -292,6 +292,8 @@
+     IF* operator -> ();
+     const IF* operator -> () const;
+ 
++    IF* get_interface_fast(void) { return m_interface; }
++    const IF* get_interface_fast(void) const { return m_interface; }
+ 
+     // allow to call methods provided by interface at index
+     inline const IF* get_interface( int iface_i ) const;
+diff -ur -x Makefile.in -x configure -x INSTALL -x aclocal.m4 -x config.sub -x config.guess -x depcomp -x install-sh -x missing -x mkinstalldirs systemc-2.1.v1.orig/src/sysc/datatypes/fx/sc_context.h systemc-2.1.v1-work/src/sysc/datatypes/fx/sc_context.h
+--- systemc-2.1.v1.orig/src/sysc/datatypes/fx/sc_context.h	2005-03-31 23:22:07.000000000 +0200
++++ systemc-2.1.v1-work/src/sysc/datatypes/fx/sc_context.h	2009-11-10 22:17:29.000000000 +0100
+@@ -227,6 +227,7 @@
+ {
+     // this method should never be called
+     SC_REPORT_FATAL( sc_core::SC_ID_INTERNAL_ERROR_, "should never be called" );
++    return NULL;
+ }
+ 
+ 
+Only in systemc-2.1.v1-work/src/sysc/datatypes/fx: sc_context.h~
+diff -ur -x Makefile.in -x configure -x INSTALL -x aclocal.m4 -x config.sub -x config.guess -x depcomp -x install-sh -x missing -x mkinstalldirs systemc-2.1.v1.orig/src/sysc/datatypes/fx/sc_fxval.h systemc-2.1.v1-work/src/sysc/datatypes/fx/sc_fxval.h
+--- systemc-2.1.v1.orig/src/sysc/datatypes/fx/sc_fxval.h	2005-05-24 23:56:11.000000000 +0200
++++ systemc-2.1.v1-work/src/sysc/datatypes/fx/sc_fxval.h	2009-11-10 22:04:04.000000000 +0100
+@@ -58,6 +58,17 @@
+ class sc_fxnum;
+ class sc_fxnum_fast;
+ 
++scfx_rep*  add_scfx_rep( const scfx_rep&, const scfx_rep&, int);
++int        cmp_scfx_rep( const scfx_rep&, const scfx_rep& );
++scfx_rep*  neg_scfx_rep( const scfx_rep& );
++scfx_rep* mult_scfx_rep( const scfx_rep&, const scfx_rep&, int);
++scfx_rep*  div_scfx_rep( const scfx_rep&, const scfx_rep&, int);
++scfx_rep*  add_scfx_rep( const scfx_rep&, const scfx_rep&, int);
++scfx_rep*  sub_scfx_rep( const scfx_rep&, const scfx_rep&, int);
++scfx_rep*  sub_scfx_rep( const scfx_rep&, const scfx_rep&, int);
++scfx_rep*  lsh_scfx_rep( const scfx_rep&, int );
++scfx_rep*  rsh_scfx_rep( const scfx_rep&, int );
++
+ 
+ // ----------------------------------------------------------------------------
+ //  CLASS : sc_fxval
+diff -ur -x Makefile.in -x configure -x INSTALL -x aclocal.m4 -x config.sub -x config.guess -x depcomp -x install-sh -x missing -x mkinstalldirs systemc-2.1.v1.orig/src/sysc/datatypes/fx/scfx_ieee.h systemc-2.1.v1-work/src/sysc/datatypes/fx/scfx_ieee.h
+--- systemc-2.1.v1.orig/src/sysc/datatypes/fx/scfx_ieee.h	2005-03-31 23:22:23.000000000 +0200
++++ systemc-2.1.v1-work/src/sysc/datatypes/fx/scfx_ieee.h	2009-11-10 22:04:04.000000000 +0100
+@@ -54,7 +54,8 @@
+ //  Little or big endian machine?
+ // ----------------------------------------------------------------------------
+ 
+-#if defined( i386 ) || defined(WIN32)
++//#if defined( i386 ) || defined(WIN32)
++#if defined( __x86_64__ ) || defined( i386 ) || defined(WIN32)
+ # define SCFX_LITTLE_ENDIAN
+ #elif defined( __ppc__ ) || defined( sparc ) || defined( __hppa )
+ # define SCFX_BIG_ENDIAN
+diff -ur -x Makefile.in -x configure -x INSTALL -x aclocal.m4 -x config.sub -x config.guess -x depcomp -x install-sh -x missing -x mkinstalldirs systemc-2.1.v1.orig/src/sysc/datatypes/fx/scfx_rep.cpp systemc-2.1.v1-work/src/sysc/datatypes/fx/scfx_rep.cpp
+--- systemc-2.1.v1.orig/src/sysc/datatypes/fx/scfx_rep.cpp	2005-04-04 19:29:56.000000000 +0200
++++ systemc-2.1.v1-work/src/sysc/datatypes/fx/scfx_rep.cpp	2009-11-10 22:04:04.000000000 +0100
+@@ -849,6 +849,112 @@
+ 
+ 
+ // ----------------------------------------------------------------------------
++//  MUL
++// ----------------------------------------------------------------------------
++
++union long_short
++{
++    word l;
++    struct
++    {
++#if defined( SCFX_BIG_ENDIAN )
++        half_word u;
++        half_word l;
++#elif defined( SCFX_LITTLE_ENDIAN )
++        half_word l;
++        half_word u;
++#endif
++    } s;
++};
++
++
++
++#if defined( SCFX_BIG_ENDIAN )
++static const int half_word_incr = -1;
++#elif defined( SCFX_LITTLE_ENDIAN )
++static const int half_word_incr = 1;
++#endif
++
++
++void
++multiply( scfx_rep& result, const scfx_rep& lhs, const scfx_rep& rhs,
++	  int max_wl )
++{
++    //
++    // check for special cases
++    //
++
++    if( lhs.is_nan() || rhs.is_nan()
++    ||  lhs.is_inf() && rhs.is_zero()
++    ||  lhs.is_zero() && rhs.is_inf() )
++    {
++	result.set_nan();
++	return;
++    }
++
++    if( lhs.is_inf() || rhs.is_inf() )
++    {
++	result.set_inf( lhs.m_sign * rhs.m_sign );
++	return;
++    }
++    
++    if( lhs.is_zero() || rhs.is_zero() ) {
++	result.set_zero( lhs.m_sign * rhs.m_sign );
++	return;
++    }
++
++    //
++    // do it
++    //
++
++    int len_lhs = lhs.m_msw - lhs.m_lsw + 1;
++    int len_rhs = rhs.m_msw - rhs.m_lsw + 1;
++
++    int new_size = sc_max( min_mant, len_lhs + len_rhs );
++    int new_wp   = ( lhs.m_wp - lhs.m_lsw ) + ( rhs.m_wp - rhs.m_lsw );
++    int new_sign = lhs.m_sign * rhs.m_sign;
++
++    result.resize_to( new_size );
++    result.m_mant.clear();
++    result.m_wp    = new_wp;
++    result.m_sign  = new_sign;
++    result.m_state = scfx_rep::normal;
++
++    half_word *s1 = lhs.m_mant.half_addr( lhs.m_lsw );
++    half_word *s2 = rhs.m_mant.half_addr( rhs.m_lsw );
++
++    half_word *t = result.m_mant.half_addr();
++
++    len_lhs <<= 1;
++    len_rhs <<= 1;
++
++    int i1, i2;
++
++    for( i1 = 0; i1 * half_word_incr < len_lhs; i1 += half_word_incr )
++    {
++	register long_short ls;
++	ls.l = 0;
++
++	half_word v1 = s1[i1];
++
++	for( i2  = 0; i2 * half_word_incr < len_rhs; i2 += half_word_incr )
++	{
++	    ls.l  += v1 * s2[i2];
++	    ls.s.l = ls.s.u + ( ( t[i2] += ls.s.l ) < ls.s.l );
++	    ls.s.u = 0;
++	}
++
++	t[i2] = ls.s.l;
++	t += half_word_incr;
++    }
++
++    result.find_sw();
++    result.round( max_wl );
++}
++
++
++
++// ----------------------------------------------------------------------------
+ //  METHOD : to_string
+ //
+ //  Convert from scfx_rep to character string.
+@@ -1457,110 +1563,6 @@
+ 
+ 
+ // ----------------------------------------------------------------------------
+-//  MUL
+-// ----------------------------------------------------------------------------
+-
+-union long_short
+-{
+-    word l;
+-    struct
+-    {
+-#if defined( SCFX_BIG_ENDIAN )
+-        half_word u;
+-        half_word l;
+-#elif defined( SCFX_LITTLE_ENDIAN )
+-        half_word l;
+-        half_word u;
+-#endif
+-    } s;
+-};
+-
+-
+-#if defined( SCFX_BIG_ENDIAN )
+-static const int half_word_incr = -1;
+-#elif defined( SCFX_LITTLE_ENDIAN )
+-static const int half_word_incr = 1;
+-#endif
+-
+-
+-void
+-multiply( scfx_rep& result, const scfx_rep& lhs, const scfx_rep& rhs,
+-	  int max_wl )
+-{
+-    //
+-    // check for special cases
+-    //
+-
+-    if( lhs.is_nan() || rhs.is_nan()
+-    ||  lhs.is_inf() && rhs.is_zero()
+-    ||  lhs.is_zero() && rhs.is_inf() )
+-    {
+-	result.set_nan();
+-	return;
+-    }
+-
+-    if( lhs.is_inf() || rhs.is_inf() )
+-    {
+-	result.set_inf( lhs.m_sign * rhs.m_sign );
+-	return;
+-    }
+-    
+-    if( lhs.is_zero() || rhs.is_zero() ) {
+-	result.set_zero( lhs.m_sign * rhs.m_sign );
+-	return;
+-    }
+-
+-    //
+-    // do it
+-    //
+-
+-    int len_lhs = lhs.m_msw - lhs.m_lsw + 1;
+-    int len_rhs = rhs.m_msw - rhs.m_lsw + 1;
+-
+-    int new_size = sc_max( min_mant, len_lhs + len_rhs );
+-    int new_wp   = ( lhs.m_wp - lhs.m_lsw ) + ( rhs.m_wp - rhs.m_lsw );
+-    int new_sign = lhs.m_sign * rhs.m_sign;
+-
+-    result.resize_to( new_size );
+-    result.m_mant.clear();
+-    result.m_wp    = new_wp;
+-    result.m_sign  = new_sign;
+-    result.m_state = scfx_rep::normal;
+-
+-    half_word *s1 = lhs.m_mant.half_addr( lhs.m_lsw );
+-    half_word *s2 = rhs.m_mant.half_addr( rhs.m_lsw );
+-
+-    half_word *t = result.m_mant.half_addr();
+-
+-    len_lhs <<= 1;
+-    len_rhs <<= 1;
+-
+-    int i1, i2;
+-
+-    for( i1 = 0; i1 * half_word_incr < len_lhs; i1 += half_word_incr )
+-    {
+-	register long_short ls;
+-	ls.l = 0;
+-
+-	half_word v1 = s1[i1];
+-
+-	for( i2  = 0; i2 * half_word_incr < len_rhs; i2 += half_word_incr )
+-	{
+-	    ls.l  += v1 * s2[i2];
+-	    ls.s.l = ls.s.u + ( ( t[i2] += ls.s.l ) < ls.s.l );
+-	    ls.s.u = 0;
+-	}
+-
+-	t[i2] = ls.s.l;
+-	t += half_word_incr;
+-    }
+-
+-    result.find_sw();
+-    result.round( max_wl );
+-}
+-
+-
+-// ----------------------------------------------------------------------------
+ //  DIV
+ // ----------------------------------------------------------------------------
+ 
+diff -ur -x Makefile.in -x configure -x INSTALL -x aclocal.m4 -x config.sub -x config.guess -x depcomp -x install-sh -x missing -x mkinstalldirs systemc-2.1.v1.orig/src/sysc/datatypes/fx/scfx_rep.h systemc-2.1.v1-work/src/sysc/datatypes/fx/scfx_rep.h
+--- systemc-2.1.v1.orig/src/sysc/datatypes/fx/scfx_rep.h	2005-03-31 23:22:30.000000000 +0200
++++ systemc-2.1.v1-work/src/sysc/datatypes/fx/scfx_rep.h	2009-11-10 22:04:04.000000000 +0100
+@@ -344,7 +344,8 @@
+ mult_scfx_rep( const scfx_rep& a, const scfx_rep& b, int max_wl )
+ {
+     scfx_rep& c = *new scfx_rep;
+-    sc_dt::multiply( c, a, b, max_wl );
++    //sc_dt::multiply( c, a, b, max_wl );
++    multiply( c, a, b, max_wl );
+     return &c;
+ }
+ 
+diff -ur -x Makefile.in -x configure -x INSTALL -x aclocal.m4 -x config.sub -x config.guess -x depcomp -x install-sh -x missing -x mkinstalldirs systemc-2.1.v1.orig/src/sysc/datatypes/int/sc_nbutils.h systemc-2.1.v1-work/src/sysc/datatypes/int/sc_nbutils.h
+--- systemc-2.1.v1.orig/src/sysc/datatypes/int/sc_nbutils.h	2005-04-21 17:06:27.000000000 +0200
++++ systemc-2.1.v1-work/src/sysc/datatypes/int/sc_nbutils.h	2009-11-10 22:04:04.000000000 +0100
+@@ -38,7 +38,8 @@
+ #define SC_NBUTILS_H
+ 
+ 
+-#if !defined(__ppc__) && !defined(_MSC_VER) && !defined(i386) && !defined(__hpux) && !defined( __BORLANDC__ )
++//#if !defined(__ppc__) && !defined(_MSC_VER) && !defined(i386) && !defined(__hpux) && !defined( __BORLANDC__ )
++#if !defined(__ppc__) && !defined(_MSC_VER) && !defined(__x86_64__) && !defined(i386) && !defined(__hpux) && !defined( __BORLANDC__ )
+ #include <ieeefp.h>
+ #else
+ #include <cmath>
+diff -ur -x Makefile.in -x configure -x INSTALL -x aclocal.m4 -x config.sub -x config.guess -x depcomp -x install-sh -x missing -x mkinstalldirs systemc-2.1.v1.orig/src/sysc/datatypes/int/sc_signed.cpp systemc-2.1.v1-work/src/sysc/datatypes/int/sc_signed.cpp
+--- systemc-2.1.v1.orig/src/sysc/datatypes/int/sc_signed.cpp	2005-05-24 23:56:47.000000000 +0200
++++ systemc-2.1.v1-work/src/sysc/datatypes/int/sc_signed.cpp	2009-11-10 22:04:04.000000000 +0100
+@@ -60,6 +60,75 @@
+ 
+ namespace sc_dt
+ {
++sc_signed add_signed_friend(small_type us,
++                                     int unb,
++                                     int und,
++                                     const unsigned long *ud,
++                                     small_type vs,
++                                     int vnb,
++                                     int vnd,
++                                     const unsigned long *vd);
++
++sc_signed sub_signed_friend(small_type us,
++                                     int unb,
++                                     int und,
++                                     const unsigned long *ud,
++                                     small_type vs,
++                                     int vnb,
++                                     int vnd,
++                                     const unsigned long *vd);
++
++sc_signed mul_signed_friend(small_type s,
++                                     int unb,
++                                     int und,
++                                     const unsigned long *ud,
++                                     int vnb,
++                                     int vnd,
++                                     const unsigned long *vd);
++
++sc_signed div_signed_friend(small_type s,
++                                     int unb,
++                                     int und,
++                                     const unsigned long *ud,
++                                     int vnb,
++                                     int vnd,
++                                     const unsigned long *vd);
++
++sc_signed mod_signed_friend(small_type us,
++                                     int unb,
++                                     int und,
++                                     const unsigned long *ud,
++                                     int vnb,
++                                     int vnd,
++                                     const unsigned long *vd);
++
++sc_signed and_signed_friend(small_type us,
++                                     int unb,
++                                     int und,
++                                     const unsigned long *ud,
++                                     small_type vs,
++                                     int vnb,
++                                     int vnd,
++                                     const unsigned long *vd);
++
++sc_signed or_signed_friend(small_type us,
++                                    int unb,
++                                    int und,
++                                    const unsigned long *ud,
++                                    small_type vs,
++                                    int vnb,
++                                    int vnd,
++                                    const unsigned long *vd);
++
++sc_signed xor_signed_friend(small_type us,
++                                     int unb,
++                                     int und,
++                                     const unsigned long *ud,
++                                     small_type vs,
++                                     int vnb,
++                                     int vnd,
++                                     const unsigned long *vd);
++
+ 
+ // Pool of temporary instances:
+ 
+diff -ur -x Makefile.in -x configure -x INSTALL -x aclocal.m4 -x config.sub -x config.guess -x depcomp -x install-sh -x missing -x mkinstalldirs systemc-2.1.v1.orig/src/sysc/datatypes/int/sc_unsigned.cpp systemc-2.1.v1-work/src/sysc/datatypes/int/sc_unsigned.cpp
+--- systemc-2.1.v1.orig/src/sysc/datatypes/int/sc_unsigned.cpp	2005-05-24 23:57:04.000000000 +0200
++++ systemc-2.1.v1-work/src/sysc/datatypes/int/sc_unsigned.cpp	2009-11-10 22:04:04.000000000 +0100
+@@ -59,6 +59,86 @@
+ 
+ namespace sc_dt
+ {
++int compare_unsigned(small_type us,
++                              int unb,
++                              int und,
++                              const unsigned long *ud,
++                              small_type vs,
++                              int vnb,
++                              int vnd,
++                              const unsigned long *vd,
++                              small_type if_u_signed,
++                              small_type if_v_signed);
++
++sc_unsigned add_unsigned_friend(small_type us,
++                                         int unb,
++                                         int und,
++                                         const unsigned long *ud,
++                                         small_type vs,
++                                         int vnb,
++                                         int vnd,
++                                         const unsigned long *vd);
++
++sc_unsigned sub_unsigned_friend(small_type us,
++                                         int unb,
++                                         int und,
++                                         const unsigned long *ud,
++                                         small_type vs,
++                                         int vnb,
++                                         int vnd,
++                                         const unsigned long *vd);
++
++sc_unsigned mul_unsigned_friend(small_type s,
++                                         int unb,
++                                         int und,
++                                         const unsigned long *ud,
++                                         int vnb,
++                                         int vnd,
++                                         const unsigned long *vd);
++
++sc_unsigned div_unsigned_friend(small_type s,
++                                         int unb,
++                                         int und,
++                                         const unsigned long *ud,
++                                         int vnb,
++                                         int vnd,
++                                         const unsigned long *vd);
++
++sc_unsigned mod_unsigned_friend(small_type us,
++                                         int unb,
++                                         int und,
++                                         const unsigned long *ud,
++                                         int vnb,
++                                         int vnd,
++                                         const unsigned long *vd);
++
++sc_unsigned and_unsigned_friend(small_type us,
++                                         int unb,
++                                         int und,
++                                         const unsigned long *ud,
++                                         small_type vs,
++                                         int vnb,
++                                         int vnd,
++                                         const unsigned long *vd);
++
++sc_unsigned or_unsigned_friend(small_type us,
++                                        int unb,
++                                        int und,
++                                        const unsigned long *ud,
++                                        small_type vs,
++                                        int vnb,
++                                        int vnd,
++                                        const unsigned long *vd);
++
++sc_unsigned xor_unsigned_friend(small_type us,
++                                         int unb,
++                                         int und,
++                                         const unsigned long *ud,
++                                         small_type vs,
++                                         int vnb,
++                                         int vnd,
++                                         const unsigned long *vd);
++
+ 
+ // Pool of temporary instances:
+ //   The sc_unsigned pool is used by the concatenation support.
+diff -ur -x Makefile.in -x configure -x INSTALL -x aclocal.m4 -x config.sub -x config.guess -x depcomp -x install-sh -x missing -x mkinstalldirs systemc-2.1.v1.orig/src/sysc/kernel/sc_process_int.cpp systemc-2.1.v1-work/src/sysc/kernel/sc_process_int.cpp
+--- systemc-2.1.v1.orig/src/sysc/kernel/sc_process_int.cpp	2005-04-05 01:14:27.000000000 +0200
++++ systemc-2.1.v1-work/src/sysc/kernel/sc_process_int.cpp	2009-11-10 22:04:04.000000000 +0100
+@@ -433,6 +433,7 @@
+     m_stack_size = size;
+ }
+ 
++void sc_thread_cor_fn( void* arg );
+ 
+ void
+ sc_thread_process::prepare_for_simulation()
+@@ -622,6 +623,7 @@
+     return true;
+ }
+ 
++void sc_cthread_cor_fn( void* arg );
+ 
+ void
+ sc_cthread_process::prepare_for_simulation()
+diff -ur -x Makefile.in -x configure -x INSTALL -x aclocal.m4 -x config.sub -x config.guess -x depcomp -x install-sh -x missing -x mkinstalldirs systemc-2.1.v1.orig/src/sysc/kernel/sc_simcontext.cpp systemc-2.1.v1-work/src/sysc/kernel/sc_simcontext.cpp
+--- systemc-2.1.v1.orig/src/sysc/kernel/sc_simcontext.cpp	2005-04-21 19:41:16.000000000 +0200
++++ systemc-2.1.v1-work/src/sysc/kernel/sc_simcontext.cpp	2009-11-10 22:04:04.000000000 +0100
+@@ -778,7 +778,8 @@
+ void
+ sc_simcontext::do_sc_stop_action()
+ {
+-    ::std::cout << "SystemC: simulation stopped by user." << ::std::endl;
++    //::std::cout << "SystemC: simulation stopped by user." << ::std::endl;
++    ::std::clog << "SystemC: simulation stopped by user." << ::std::endl;
+     if (m_start_of_simulation_called) {
+ 	end();
+ 	m_in_simulator_control = false;
+diff -ur -x Makefile.in -x configure -x INSTALL -x aclocal.m4 -x config.sub -x config.guess -x depcomp -x install-sh -x missing -x mkinstalldirs systemc-2.1.v1.orig/src/sysc/qt/qtmd.h systemc-2.1.v1-work/src/sysc/qt/qtmd.h
+--- systemc-2.1.v1.orig/src/sysc/qt/qtmd.h	2005-03-31 23:21:40.000000000 +0200
++++ systemc-2.1.v1-work/src/sysc/qt/qtmd.h	2009-11-10 22:06:34.000000000 +0100
+@@ -2,7 +2,7 @@
+ #include "sysc/qt/md/sparc.h"
+ #elif defined( __hppa )
+ #include "sysc/qt/md/hppa.h"
+-#elif defined( __i386 )
++#elif defined( __i386 ) || defined( __x86_64__ )
+ #include "sysc/qt/md/i386.h"
+ #elif defined( __ppc__ )
+ #include "sysc/qt/md/powerpc_mach.h"
+Only in systemc-2.1.v1-work/src/sysc/qt: qtmd.h~
+diff -ur -x Makefile.in -x configure -x INSTALL -x aclocal.m4 -x config.sub -x config.guess -x depcomp -x install-sh -x missing -x mkinstalldirs systemc-2.1.v1.orig/src/sysc/utils/sc_hash.cpp systemc-2.1.v1-work/src/sysc/utils/sc_hash.cpp
+--- systemc-2.1.v1.orig/src/sysc/utils/sc_hash.cpp	2005-03-31 23:13:14.000000000 +0200
++++ systemc-2.1.v1-work/src/sysc/utils/sc_hash.cpp	2009-11-10 22:04:04.000000000 +0100
+@@ -37,6 +37,7 @@
+ 
+ #include <assert.h>
+ #include <cstdlib>
++#include <stdint.h>
+ 
+ #include "sysc/kernel/sc_cmnhdr.h"
+ #include "sysc/utils/sc_hash.h"
+@@ -599,14 +600,16 @@
+ unsigned 
+ default_ptr_hash_fn(const void* p)
+ {
+-    return ((unsigned)(p) >> 2) * 2654435789U;
++    //return ((unsigned)(p) >> 2) * 2654435789U;
++    return ((unsigned)(uint64_t)(p) >> 2) * 2654435789U;
+ 
+ }
+ 
+ unsigned
+ default_int_hash_fn(const void* p)
+ {
+-    return (unsigned)(p) * 3141592661U;
++    //return (unsigned)(p) * 3141592661U;
++    return (unsigned)(uint64_t)(p) * 3141592661U;
+ }
+ 
+ 
+diff -ur -x Makefile.in -x configure -x INSTALL -x aclocal.m4 -x config.sub -x config.guess -x depcomp -x install-sh -x missing -x mkinstalldirs systemc-2.1.v1.orig/src/sysc/utils/sc_report_handler.cpp systemc-2.1.v1-work/src/sysc/utils/sc_report_handler.cpp
+--- systemc-2.1.v1.orig/src/sysc/utils/sc_report_handler.cpp	2005-05-24 23:42:39.000000000 +0200
++++ systemc-2.1.v1-work/src/sysc/utils/sc_report_handler.cpp	2009-11-10 22:04:04.000000000 +0100
+@@ -135,11 +135,13 @@
+     }
+     if ( actions & SC_STOP )
+     {
+-	sc_stop_here((int)rep.get_msg_type(), rep.get_severity());
++	//sc_stop_here((int)rep.get_msg_type(), rep.get_severity());
++	sc_stop_here((int)(int64_t)rep.get_msg_type(), rep.get_severity());
+ 	sc_stop();
+     }
+     if ( actions & SC_INTERRUPT )
+-	sc_interrupt_here((int)rep.get_msg_type(), rep.get_severity());
++	sc_interrupt_here((int)(int64_t)rep.get_msg_type(), rep.get_severity());
++	//sc_interrupt_here((int)rep.get_msg_type(), rep.get_severity());
+ 
+     if ( actions & SC_ABORT )
+ 	abort();

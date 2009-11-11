@@ -9,7 +9,7 @@ include layout.mk.defaults
 include versions.mk.defaults
 -include versions.mk
 
-REQDIR = $(PREFIX)/slreqs-$(BINUTILS_REV)-$(UTC_GCC_REV)-$(GCC_VERSION)p-m$(M4_VERSION)p-tx$(TX_VERSION)
+REQDIR = $(PREFIX)/slreqs-$(BINUTILS_REV)-$(UTC_GCC_REV)-$(GCC_VERSION)p-m$(M4_VERSION)p-tx$(TX_VERSION)-sc$(SC_VERSION)
 SLDIR = $(PREFIX)/sl-$(MGSIM_REV)-$(SLC_REV)
 
 BUILD = $(LOCAL_BUILD)
@@ -26,6 +26,7 @@ reqs-src: \
 	$(GCC_SRC) \
 	$(M4_SRC) \
 	$(TX_SRC) \
+	$(SC_SRC) \
 	$(MGGCC_SRC)
 
 sl-src: \
@@ -39,6 +40,7 @@ reqs: \
 	$(MGGCC_TARGETS) \
 	$(GCC_TARGETS) \
 	$(M4_TARGETS) \
+	$(SC_TARGETS) \
 	$(TX_TARGETS)
 
 all: reqs \

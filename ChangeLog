@@ -1,5 +1,21 @@
 2009-11-10  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	Embed `SystemC' in the requirements tree.
+	
+	* deploy/versions.mk.defaults,	
+	* deploy/Makefile: Also install a modified SystemC to the requirement
+	tree.
+	
+	* deploy/sysc/systemc-2.1.v1.tgz,
+	* deploy/sysc/do_diff.sh,
+	* deploy/sysc/bootstrap,
+	* deploy/rules/sc.mk,
+	* deploy/patches/sysc.patch: New.
+	
+	* deploy/sysc/README: Document changes to SystemC.
+
+2009-11-10  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	Embed `tinyxml' in the requirements tree.
 	
 	* deploy/versions.mk.defaults,
