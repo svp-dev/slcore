@@ -26,3 +26,7 @@ GCC_MIRROR = ftp://ftp.nluug.nl/mirror/languages/gcc/releases/gcc-$(GCC_VERSION)
 
 M4_VERSION = 1.6
 M4_REPO = git://git.sv.gnu.org/m4
+
+TX_VERSION = 2.5.3
+TX_ARCHIVE = tinyxml_$(subst .,_,$(TX_VERSION)).zip
+TX_MIRROR = http://downloads.sourceforge.net/project/tinyxml/tinyxml/$(TX_VERSION)

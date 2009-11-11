@@ -19,6 +19,9 @@ SVN = svn
 ## GNU tar:
 TAR = tar
 
+## Unzip:
+UNZIP = unzip
+
 ####
 #### Extra compiler and library flags
 ####

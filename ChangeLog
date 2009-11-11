@@ -1,3 +1,18 @@
+2009-11-10  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
+	Embed `tinyxml' in the requirements tree.
+	
+	* deploy/versions.mk.defaults,
+	* deploy/rules/tx.mk,
+	* deploy/tinyxml/configure.ac,
+	* deploy/tinyxml/Makefile.am,
+	* deploy/tinyxml/bootstrap,	
+	* deploy/Makefile: Also install `tinyxml' to the requirements
+	tree.
+
+	* deploy/tools.mk.defaults: Allow to configure location for
+	`unzip'.
+	
 2009-11-06  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
 	Upgrade tool versions, including gcc -> 4.4.2.
