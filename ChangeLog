@@ -1,3 +1,11 @@
+2009-11-11  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
+	Increase portability.
+	
+	* deploy/rules/m4.mk: Replace "inline" with "attribute(weak)"
+	using CPP during compilation of m4 to work around recent breakage
+	of gnulib/glibc on RedHat linux.
+
 2009-11-10  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
 	Embed `SystemC' in the requirements tree.
