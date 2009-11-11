@@ -1,3 +1,7 @@
+2009-10-29  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
+	* deploy/versions.mk.defaults: Bump version numbers. 
+
 2009-11-11  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
 	Increase portability.
