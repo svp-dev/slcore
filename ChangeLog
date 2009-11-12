@@ -1,3 +1,9 @@
+2009-11-12  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
+	Fix deployment of `tinyxml'.
+	
+	* deploy/tinyxml/Makefile.am: Also include `tinyxml.cpp' in build.
+
 2009-11-11  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
 	Revert previous (unneeded) changes.

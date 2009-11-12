@@ -2,6 +2,7 @@ dist_pkginclude_DATA = \
 	tinyxml/tinyxml.h
 
 SOURCES = $(INCLUDES) \
+	tinyxml/tinyxml.cpp \
 	tinyxml/tinyxmlerror.cpp \
 	tinyxml/tinyxmlparser.cpp
 
