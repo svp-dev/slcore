@@ -60,7 +60,7 @@ Only in systemc-2.1.v1-work: autom4te.cache
 Only in systemc-2.1.v1-work: b
 diff -ur -x Makefile.in -x configure -x INSTALL -x aclocal.m4 -x config.sub -x config.guess -x depcomp -x install-sh -x missing -x mkinstalldirs systemc-2.1.v1.orig/configure.in systemc-2.1.v1-work/configure.in
 --- systemc-2.1.v1.orig/configure.in	2005-04-11 23:49:25.000000000 +0200
-+++ systemc-2.1.v1-work/configure.in	2009-11-11 00:00:52.000000000 +0100
++++ systemc-2.1.v1-work/configure.in	2009-11-12 01:18:31.000000000 +0100
 @@ -42,7 +42,7 @@
  dnl
  
@@ -103,16 +103,26 @@ diff -ur -x Makefile.in -x configure -x INSTALL -x aclocal.m4 -x config.sub -x c
      sparc-sun-solaris*) 
          case "$CXX_COMP" in
              CC)
-@@ -126,7 +141,14 @@
+@@ -117,7 +132,6 @@
+                 EXTRA_CXXFLAGS="-Wall"
+                 DEBUG_CXXFLAGS="-g"
+                 OPT_CXXFLAGS="-O3"
+-                TARGET_ARCH="linux"
+         	CC="$CXX"
+         	CFLAGS="$EXTRA_CXXFLAGS $OPT_CXXFLAGS"
+                 ;;
+@@ -126,7 +140,16 @@
  		;;
          esac
  	AS=as
 -        QT_ARCH="iX86"
 +	case "$target" in
 +	  x86_64*)
-+	    QT_ARCH="pthreads-linux"
++            TARGET_ARCH="linux64"
++	    QT_ARCH="pthreads"
 +	    ;;
 +	  *)	
++            TARGET_ARCH="linux"
 +            QT_ARCH="iX86"
 +	    ;;
 +	esac
@@ -122,17 +132,18 @@ diff -ur -x Makefile.in -x configure -x INSTALL -x aclocal.m4 -x config.sub -x c
 Only in systemc-2.1.v1-work: configure.in~
 diff -ur -x Makefile.in -x configure -x INSTALL -x aclocal.m4 -x config.sub -x config.guess -x depcomp -x install-sh -x missing -x mkinstalldirs systemc-2.1.v1.orig/src/Makefile.am systemc-2.1.v1-work/src/Makefile.am
 --- systemc-2.1.v1.orig/src/Makefile.am	2005-03-31 23:51:18.000000000 +0200
-+++ systemc-2.1.v1-work/src/Makefile.am	2009-11-10 23:09:01.000000000 +0100
-@@ -36,7 +36,7 @@
++++ systemc-2.1.v1-work/src/Makefile.am	2009-11-12 01:31:25.000000000 +0100
+@@ -36,7 +36,8 @@
      systemc \
  	systemc.h
  
 -noinst_HEADERS = $(H_FILES)
 +include_HEADERS = $(H_FILES)
++CLEANFILES = $(MAIN_LIBRARY)
  
  CXX_FILES =
  
-@@ -50,22 +50,11 @@
+@@ -50,22 +51,11 @@
  
  install-data-local:
  	@$(NORMAL_INSTALL)
