@@ -37,8 +37,6 @@ $(REQDIR)/bin/m4: $(SOURCES)/m4-dev/bootstrap_done
 			  CFLAGS="$$CFLAGS $(EXTRA_CFLAGS)" \
 	                  LDFLAGS="$$LDFLAGS $(EXTRA_LDFLAGS)" \
 	      && \
-	     if ! $(MAKE) $(MAKE_FLAGS); then \
-	        $(MAKE) clean all $(MAKE_FLAGS) CPPFLAGS="-U__GNUC__ -D__inline__=__attribute__((__weak__)) -D__inline=__inline__ -Dinline=__inline__"; \
-	     fi; \
+	     $(MAKE) $(MAKE_FLAGS); \
 	  fi && \
 	  $(MAKE) install)

@@ -1,3 +1,10 @@
+2009-11-11  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
+	Revert previous (unneeded) changes.
+
+	* deploy/rules/m4.mk: Revert "portability" fix since the
+	gnulib/glibc breakage was merely due to a faulty gcc compiler.
+
 2009-10-29  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
 	* deploy/versions.mk.defaults: Bump version numbers. 
