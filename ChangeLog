@@ -1,5 +1,12 @@
 2009-11-12  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	Allow build of MG Simulator with COMA.
+
+	* deploy/rules/mgsim.mk: Point `configure' to the location of
+	SystemC and tinyxml.
+
+2009-11-12  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	Fix deployment of `SystemC'.
 	
 	* deploy/patches/sysc.patch: Ensure that `libsystemc.a' is erased
