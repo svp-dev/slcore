@@ -1,5 +1,9 @@
 2009-11-12  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	* deploy/versions.mk.defaults: Bump version numbers.
+
+2009-11-12  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	Allow build of MG Simulator with COMA.
 
 	* deploy/rules/mgsim.mk: Point `configure' to the location of
