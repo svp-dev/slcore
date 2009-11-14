@@ -23,12 +23,20 @@ EXTRA_DIST = deploy/Makefile \
 	deploy/patches/alpha.md.patch \
 	deploy/patches/constraints.md.patch \
 	deploy/patches/m4.patch \
+	deploy/patches/sysc.patch \
+	deploy/tinyxml/Makefile.am \
+	deploy/tinyxml/configure.ac \
+	deploy/tinyxml/bootstrap \
+	deploy/sysc/do_diff.sh \
+	deploy/sysc/bootstrap \
+	deploy/sysc/README \
 	deploy/rules/binutils.mk \
 	deploy/rules/mggcc.mk \
 	deploy/rules/gcc.mk \
 	deploy/rules/mgsim.mk \
 	deploy/rules/m4.mk \
 	deploy/rules/sl.mk \
+	deploy/rules/sc.mk \
 	deploy/slenv
 
 SUBDIRS = . slc tests programs

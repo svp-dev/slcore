@@ -1,3 +1,9 @@
+2009-11-14  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
+	Minor packaging fix.
+	
+	* Makefile.am: Distribute the new files in `deploy'.
+
 2009-11-13  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
 	Fix `SystemC' some more.
