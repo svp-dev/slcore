@@ -1,3 +1,10 @@
+2009-11-13  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
+	Fix `SystemC' some more.
+	
+	* deploy/patches/sysc.patch: Also include patches to remove
+	compiler warnings.
+
 2009-11-12  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
 	* deploy/versions.mk.defaults: Bump version numbers.

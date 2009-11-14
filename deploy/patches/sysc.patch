@@ -198,6 +198,59 @@ diff -ur -x Makefile.in -x configure -x INSTALL -x aclocal.m4 -x config.sub -x c
  
      // allow to call methods provided by interface at index
      inline const IF* get_interface( int iface_i ) const;
+diff -ur -x Makefile.in -x configure -x INSTALL -x aclocal.m4 -x config.sub -x config.guess -x depcomp -x install-sh -x missing -x mkinstalldirs systemc-2.1.v1.orig/src/sysc/datatypes/bit/sc_lv_base.h systemc-2.1.v1-work/src/sysc/datatypes/bit/sc_lv_base.h
+--- systemc-2.1.v1.orig/src/sysc/datatypes/bit/sc_lv_base.h	2005-05-24 23:54:46.000000000 +0200
++++ systemc-2.1.v1-work/src/sysc/datatypes/bit/sc_lv_base.h	2009-11-13 14:34:50.000000000 +0100
+@@ -290,8 +290,8 @@
+ {
+     int wi = i / UL_SIZE;
+     int bi = i % UL_SIZE;
+-    return sc_logic_value_t( m_data[wi] >> bi & UL_ONE |
+-			     m_ctrl[wi] >> bi << 1 & UL_TWO );
++    return sc_logic_value_t( ((m_data[wi] >> bi) & UL_ONE) |
++			     (((m_ctrl[wi] >> bi) << 1) & UL_TWO) );
+ }
+ 
+ inline
+@@ -304,7 +304,7 @@
+     m_data[wi] |= mask; // set bit to 1
+     m_ctrl[wi] |= mask; // set bit to 1
+     m_data[wi] &= value << bi | ~mask;
+-    m_ctrl[wi] &= value >> 1 << bi | ~mask;
++    m_ctrl[wi] &= ((value >> 1) << bi) | ~mask;
+ }
+ 
+ 
+diff -ur -x Makefile.in -x configure -x INSTALL -x aclocal.m4 -x config.sub -x config.guess -x depcomp -x install-sh -x missing -x mkinstalldirs systemc-2.1.v1.orig/src/sysc/datatypes/bit/sc_proxy.h systemc-2.1.v1-work/src/sysc/datatypes/bit/sc_proxy.h
+--- systemc-2.1.v1.orig/src/sysc/datatypes/bit/sc_proxy.h	2005-06-07 19:44:00.000000000 +0200
++++ systemc-2.1.v1-work/src/sysc/datatypes/bit/sc_proxy.h	2009-11-13 14:34:46.000000000 +0100
+@@ -785,7 +785,7 @@
+     set_words_( x, 0, ((unsigned long) a & ~UL_ZERO), UL_ZERO );
+     if( x.size() > 1 ) {
+ 	set_words_( x, 1,
+-		    ((unsigned long) (a >> UL_SIZE) & ~UL_ZERO),
++		    ((unsigned long) ((a >> (UL_SIZE/2)) >> (UL_SIZE/2) ) & ~UL_ZERO),
+ 		    UL_ZERO );
+ 	// extend with zeros
+ 	extend_sign_w_( x, 2, false );
+@@ -803,7 +803,7 @@
+     set_words_( x, 0, ((unsigned long) a & ~UL_ZERO), UL_ZERO );
+     if( x.size() > 1 ) {
+ 	set_words_( x, 1,
+-		    ((unsigned long) ((uint64) a >> UL_SIZE) & ~UL_ZERO),
++		    ((unsigned long) (((uint64) a >> (UL_SIZE/2)) >> (UL_SIZE/2)) & ~UL_ZERO),
+ 		    UL_ZERO );
+ 	// extend with sign(a)
+ 	extend_sign_w_( x, 2, (a < 0) );
+@@ -1260,7 +1260,7 @@
+ 	    SC_REPORT_WARNING( sc_core::SC_ID_VECTOR_CONTAINS_LOGIC_VALUE_, 0 );
+ 	}
+ 	uint64 w1 = x.get_word( 1 );
+-        w = w | (w1 << UL_SIZE);	
++        w = w | ((w1 << (UL_SIZE/2)) << (UL_SIZE/2));	
+ 	return w;
+     }
+     else if( len == UL_SIZE ) 
 diff -ur -x Makefile.in -x configure -x INSTALL -x aclocal.m4 -x config.sub -x config.guess -x depcomp -x install-sh -x missing -x mkinstalldirs systemc-2.1.v1.orig/src/sysc/datatypes/fx/sc_context.h systemc-2.1.v1-work/src/sysc/datatypes/fx/sc_context.h
 --- systemc-2.1.v1.orig/src/sysc/datatypes/fx/sc_context.h	2005-03-31 23:22:07.000000000 +0200
 +++ systemc-2.1.v1-work/src/sysc/datatypes/fx/sc_context.h	2009-11-10 22:17:29.000000000 +0100
