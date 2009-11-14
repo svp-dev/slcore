@@ -1,5 +1,9 @@
 2009-11-14  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	* deploy/versions.mk.defaults: Bump version numbers.
+
+2009-11-14  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	Minor packaging fix.
 	
 	* Makefile.am: Distribute the new files in `deploy'.
