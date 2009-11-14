@@ -1,5 +1,13 @@
 2009-11-14  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	Fix `SystemC' some more.
+	
+	* deploy/patches/sysc.patch: Minor build fix.
+	
+	* deploy/rules/sc.mk: Try building with pthreads first.
+
+2009-11-14  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	* deploy/versions.mk.defaults: Bump version numbers.
 
 2009-11-14  Raphael 'kena' Poss  <r.c.poss@uva.nl>

@@ -29,7 +29,7 @@ $(REQDIR)/include/systemc: $(SOURCES)/systemc-$(SC_VERSION)/bootstrap_done
 	  $$SRC/configure --prefix=$(REQDIR) \
 	                  CFLAGS="$$CFLAGS $(EXTRA_CFLAGS)" \
 	                  LDFLAGS="$$LDFLAGS $(EXTRA_LDFLAGS)" \
-	    && if ! $(MAKE) $(MAKE_FLAGS); then \
-                 $(MAKE) clean; $(MAKE) $(MAKE_FLAGS) pthreads; \
+	    && if ! $(MAKE) $(MAKE_FLAGS) pthreads; then \
+                 $(MAKE) clean; $(MAKE) $(MAKE_FLAGS); \
                fi && $(MAKE) install)
 
