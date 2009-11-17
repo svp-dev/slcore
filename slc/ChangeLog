@@ -1,5 +1,13 @@
 2009-11-17  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	Also test using COMA during `make check'.
+
+	* build-aux/slctests.m4: New AM conditional `ENABLE_CHECK_COMA'.
+
+	* build-aux/slctests.mk: Use it.
+	
+2009-11-17  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	Add support for COMA in `slr'.
 	
 	* build-aux/mgsim.m4: Search for `simx-alpha'.
