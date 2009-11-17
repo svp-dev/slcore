@@ -1,0 +1,8 @@
+#! @BASH@
+# slar: This file is part of the SL toolchain.
+set -eu
+cce_helper=${CCE:-@cce_helper@}
+impl=${1:?}
+eval $("$cce_helper" -s "$impl")
+shift
+exec "${slc_ar[@]}" ${1:+"$@"}

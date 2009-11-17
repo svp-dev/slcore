@@ -1,5 +1,23 @@
 2009-11-17  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	Expose the `ar' and `ranlib' utilities.
+
+	Two scripts are introduced: `slar' and `slranlib'. These take the
+	SL implementation as first parameter, and then run the
+	corresponding `ar' or `ranlib' utility with the remainder of the
+	argument list.
+	
+	* tools/bin/cce.in: Generate definitions for `slc_ar' and
+	`slc_ranlib'.
+
+	* tools/bin/slar.in,
+	* tools/bin/slranlib.in: New.
+
+	* tools/bin/Makefile.am: Generate the new scripts `slar' and
+	`slranlib'.
+	
+2009-11-17  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	Allow to configure #caches and #directories with COMA.
 	
 	* tools/lib/r-mt-sim.sh.in: Set configuration when flags are

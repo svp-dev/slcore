@@ -26,13 +26,21 @@ scu_helper=${SCU:-@scu_helper@}
 
 CC_HOST=${CC_HOST_OVERRIDE:-@CC_HOST@}
 CXX_HOST=${CXX_HOST_OVERRIDE:-@CXX_HOST@}
+AR_HOST=${AR_HOST_OVERRIDE:-@AR_HOST@}
+RANLIB_HOST=${RANLIB_HOST_OVERRIDE:-@RANLIB_HOST@}
+
 CC_ALPHA=${CC_ALPHA_OVERRIDE:-@CC_ALPHA@}
 UTCC_MTALPHA=${UTCC_ALPHA_OVERRIDE:-@UTCC_MTALPHA@}
 CC_MTALPHA=$UTCC_MTALPHA
+AR_MTALPHA=${AR_MTALPHA_OVERRIDE:-@AR_MTALPHA@}
+RANLIB_MTALPHA=${RANLIB_MTALPHA_OVERRIDE:-@RANLIB_MTALPHA@}
 
 CC_SPARC=${CC_SPARC_OVERRIDE:-@CC_SPARC@}
 UTCC_MTSPARC=${UTCC_SPARC_OVERRIDE:-@UTCC_MTSPARC@}
 CC_MTSPARC=$UTCC_MTSPARC
+AR_MTSPARC=${AR_MTSPARC_OVERRIDE:-@AR_MTSPARC@}
+RANLIB_MTSPARC=${RANLIB_MTSPARC_OVERRIDE:-@RANLIB_MTSPARC@}
+
 
 version=@slc_version@
 slrev=@slc_revision@
@@ -286,11 +294,31 @@ esac
 
 # Assembler and linker selection
 case $slc_complang-$slc_arch in
-    *-x)      slc_aslink=("$scu_helper" assemble/link) ;;
+    *-x)      slc_aslink=("$scu_helper" assemble/link);;
     cpp-host) slc_aslink=(${CXX_HOST:-g++}) ;;
     *-host)   slc_aslink=(${CC_HOST:-gcc}) ;;
     cpp-*)    slc_aslink=($(eval "echo \${CXX_$archvar:-\"\$scu_helper\"}")) ;;
     *-*)      slc_aslink=($(eval "echo \${CC_$archvar:-\"\$scu_helper\"}")) ;;
+esac
+
+# Ar and ranlib selection
+case $slc_arch in
+    host)
+              slc_ar=($AR_HOST)
+              slc_ranlib=($RANLIB_HOST)
+	      ;;
+    mtalpha)
+              slc_ar=($AR_MTALPHA)
+              slc_ranlib=($RANLIB_MTALPHA)
+	      ;;
+    mtsparc)
+              slc_ar=($AR_MTSPARC)
+              slc_ranlib=($RANLIB_MTSPARC)
+	      ;;
+    *)
+              slc_ar=("$scu_helper" archive)
+              slc_ranlib=("$scu_helper" ranlib)
+	      ;;
 esac
 
 # Extra defines
