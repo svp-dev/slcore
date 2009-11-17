@@ -22,10 +22,12 @@ m4_define([[__sl_crcnt]],0)
 
 m4_define([[sl_decl]], [[void [[$1]](void)]])
 
-m4_define([[sl_shparm]],[[sh:i:[[$1]]:m4_if([[$2]],,sl_anonymous,[[$2]])]])
-m4_define([[sl_glparm]],[[gl:i:[[$1]]:m4_if([[$2]],,sl_anonymous,[[$2]])]])
-m4_define([[sl_shfparm]],[[sh:f:[[$1]]:m4_if([[$2]],,sl_anonymous,[[$2]])]])
-m4_define([[sl_glfparm]],[[gl:f:[[$1]]:m4_if([[$2]],,sl_anonymous,[[$2]])]])
+m4_define([[sl_shparm]],[[sh:i:r:[[$1]]:m4_if([[$2]],,sl_anonymous,[[$2]])]])
+m4_define([[sl_glparm]],[[gl:i:r:[[$1]]:m4_if([[$2]],,sl_anonymous,[[$2]])]])
+m4_define([[sl_glparm_mutable]],[[gl:i:w:[[$1]]:m4_if([[$2]],,sl_anonymous,[[$2]])]])
+m4_define([[sl_shfparm]],[[sh:f:r:[[$1]]:m4_if([[$2]],,sl_anonymous,[[$2]])]])
+m4_define([[sl_glfparm]],[[gl:f:r:[[$1]]:m4_if([[$2]],,sl_anonymous,[[$2]])]])
+m4_define([[sl_glfparm_mutable]],[[gl:f:w:[[$1]]:m4_if([[$2]],,sl_anonymous,[[$2]])]])
 
 m4_define([[m4_sh_escape]],[['m4_bpatsubst([[$1]],[[[']]],[['"'"']])']])
 
@@ -53,18 +55,18 @@ m4_define([[sl_end_thread]], [[goto __sl_end_thread]])
 m4_define([[sl_getp]],[[__sl_getp_$1]])
 m4_define([[sl_setp]],[[__sl_setp_$1([[$2]])]])
 
-m4_define([[sl_sharg]],[[sh:i:[[$1]]:m4_if([[$2]],,sl_anonymous,[[$2]]):[[$3]]]])
-m4_define([[sl_glarg]],[[gl:i:[[$1]]:m4_if([[$2]],,sl_anonymous,[[$2]]):[[$3]]]])
-m4_define([[sl_shfarg]],[[sh:f:[[$1]]:m4_if([[$2]],,sl_anonymous,[[$2]]):[[$3]]]])
-m4_define([[sl_glfarg]],[[gl:f:[[$1]]:m4_if([[$2]],,sl_anonymous,[[$2]]):[[$3]]]])
+m4_define([[sl_sharg]],[[sh:i:r:[[$1]]:m4_if([[$2]],,sl_anonymous,[[$2]]):[[$3]]]])
+m4_define([[sl_glarg]],[[gl:i:r:[[$1]]:m4_if([[$2]],,sl_anonymous,[[$2]]):[[$3]]]])
+m4_define([[sl_shfarg]],[[sh:f:r:[[$1]]:m4_if([[$2]],,sl_anonymous,[[$2]]):[[$3]]]])
+m4_define([[sl_glfarg]],[[gl:f:r:[[$1]]:m4_if([[$2]],,sl_anonymous,[[$2]]):[[$3]]]])
 
 m4_define([[sl_geta]],[[__sl_geta_$1]])
 m4_define([[sl_seta]],[[__sl_seta_$1([[$2]])]])
 
 m4_define([[sl_initarg]],[[ m4_dnl
-[[$3]] __sl_after_[[$4]]; m4_dnl
-m4_define([[__sl_geta_$4]],__sl_after_$4) m4_dnl
-m4_define([[__sl_seta_$4]],__sl_after_$4 = $[[]]1) m4_dnl
+[[$4]] __sl_after_[[$5]]; m4_dnl
+m4_define([[__sl_geta_$5]],__sl_after_$5) m4_dnl
+m4_define([[__sl_seta_$5]],__sl_after_$5 = $[[]]1) m4_dnl
 ]])
 
 
@@ -92,9 +94,9 @@ m4_define([[__sl_makewreg]],[["=rf"([[$1]])]])
 m4_define([[__sl_makerreg]],[["rf"([[$1]])]])
 
 m4_define([[sl_copyarg]],[[m4_dnl
-__sl_after_[[$4]] = __sl_arg_[[$4]]; m4_dnl
-m4_popdef([[__sl_geta_$4]]) m4_dnl
-m4_popdef([[__sl_seta_$4]]) m4_dnl
+__sl_after_[[$5]] = __sl_arg_[[$5]]; m4_dnl
+m4_popdef([[__sl_geta_$5]]) m4_dnl
+m4_popdef([[__sl_seta_$5]]) m4_dnl
 ]])
 
 m4_define([[sl_sync]],[[ m4_dnl

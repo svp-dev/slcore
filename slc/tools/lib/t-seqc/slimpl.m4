@@ -23,8 +23,10 @@ m4_define([[_sl_crcnt]],0)
 
 m4_define([[sl_shparm]], [[[[$1]] m4_if([[$2]],,sl_anonymous,[[$2]])]])
 m4_define([[sl_glparm]], [[[[$1]] const m4_if([[$2]],,sl_anonymous,[[$2]])]])
+m4_define([[sl_glparm_mutable]], [[[[$1]] m4_if([[$2]],,sl_anonymous,[[$2]])]])
 m4_copy([[sl_shparm]],[[sl_shfparm]])
 m4_copy([[sl_glparm]],[[sl_glfparm]])
+m4_copy([[sl_glparm_mutable]],[[sl_glfparm_mutable]])
 
 m4_define([[sl_def]],[[m4_dnl
 m4_define([[sl_thparms]],m4_dquote(m4_shift2($@)))m4_dnl

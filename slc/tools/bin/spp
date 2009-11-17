@@ -331,12 +331,12 @@ class pppalpha(object):
       #print args
       for a in args:
          la = a.split(':')
-         cat, species, ctype, name = la[:4]
+         cat, species, mode, ctype, name = la[:5]
          name = name.strip()
-         init = ':'.join(la[4:]).strip()
+         init = ':'.join(la[5:]).strip()
          if init == "":
             init = None
-         dic[species][cat].append({'ctype':ctype, 'name':name, 'init':init})
+         dic[species][cat].append({'ctype':ctype, 'name':name, 'init':init, 'glmode':mode})
 
       # Check if some parameters will use memory passing
       escape = 0      
@@ -627,7 +627,7 @@ class pppalpha(object):
                         leg = "%d" % legnr
                      mapping.append("%d:%s" % (legnr, reg))
 
-                     print '__sl_declglp(%s, %s, "$%s");' % (ctype, name, leg)
+                     print '__sl_declglp_%s(%s, %s, "$%s");' % (a['glmode'], ctype, name, leg)
                      print 'm4_define([[__sl_getp_%s]],[[__sl_glparm_%s]])m4_dnl' % (name, name)
                      print "m4_define([[__sl_setp_%s]],[[\n#error cannot set global %s\n]])m4_dnl" % (name, name)
       print "m4_define([[__sl_parmnames]],[[%s]])m4_dnl" % ','.join(names)

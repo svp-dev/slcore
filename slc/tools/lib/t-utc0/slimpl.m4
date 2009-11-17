@@ -43,8 +43,11 @@ thread [[$2]] [[$1]]m4_if((sl_thparms),(),(void),(sl_thparms))m4_dnl
 # Pass transparently parameter declarations.
 m4_define([[sl_shparm]], [[shared [[$1]] __p_[[]]m4_if([[$2]],,sl_anonymous,[[$2]])]])
 m4_define([[sl_glparm]], [[/*global*/ [[$1]] __p_[[]]m4_if([[$2]],,sl_anonymous,[[$2]])]])
+m4_define([[sl_glparm_mutable]], [[m4_error([[sl_glparm_mutable not implemented yet for this target]])]])
+
 m4_copy([[sl_shparm]],[[sl_shfparm]])
 m4_copy([[sl_glparm]],[[sl_glfparm]])
+m4_copy([[sl_glparm_mutable]],[[sl_glfparm_mutable]])
 
 # Pass transparently the index declaration. Work around bug #34 where core compiler
 # does not have a type for "index".

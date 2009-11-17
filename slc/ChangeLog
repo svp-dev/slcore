@@ -1,5 +1,20 @@
 2009-11-17  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	Implement a non-documented SL extension for the SAC compiler.
+	
+	* tools/lib/t-seqc/slimpl.m4,
+	* tools/lib/t-pppalpha/slimpl.m4,	
+	* tools/lib/t-pppalpha/include/sl_support.h,
+	* tools/bin/spp: Implement a new macro `sl_glparm_mutable' which
+	aliases the global thread parameter with a local (writable) thread
+	function variable.
+
+	* tools/lib/t-utc/slimpl.m4,
+	* tools/lib/t-utc0/slimpl.m4,
+	* tools/lib/t-ptl/slimpl.m4: Implement stubs that generate an error.
+
+2009-11-17  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	Expose the `ar' and `ranlib' utilities.
 
 	Two scripts are introduced: `slar' and `slranlib'. These take the

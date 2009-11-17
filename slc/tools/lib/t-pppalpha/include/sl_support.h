@@ -126,8 +126,12 @@
   register Type __sl_shparm_in_ ## Name __asm__(Reg1); \
   register Type __sl_shparm_out_ ## Name __asm__(Reg2)
 
-[[#]]define __sl_declglp(Type, Name, Reg) \
+[[#]]define __sl_declglp_r(Type, Name, Reg) \
   register Type const __sl_glparm_ ## Name __asm__(Reg)
+
+[[#]]define __sl_declglp_w(Type, Name, Reg) \
+  register Type const __sl_glparmr_ ## Name __asm__(Reg);	\
+  register Type __sl_glparm_ ## Name = __sl_glparmr_ ## Name \
 
 [[#]]define __sl_declgla_noreg(Type, Name, Init)		\
   register Type const __sl_arg_ ## Name = (Init)

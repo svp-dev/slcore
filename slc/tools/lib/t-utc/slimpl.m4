@@ -32,8 +32,11 @@ m4_define([[sl_decl]], m4_defn([[sl_def]]))
 # Pass transparently parameter declarations.
 m4_define([[sl_shparm]], [[ shared [[$1]] [[$2]]]])
 m4_define([[sl_glparm]], [[ [[$1]] [[$2]]]])
+m4_define([[sl_glparm_mutable]], [[m4_dnl
+m4_error([[sl_glparm_mutable not implemented yet for this target]])]])
 m4_copy([[sl_shparm]],[[sl_shfparm]])
 m4_copy([[sl_glparm]],[[sl_glfparm]])
+m4_copy([[sl_glparm_mutable]],[[sl_glfparm_mutable]])
 
 
 # Pass transparently the index declaration.
