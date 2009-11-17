@@ -81,8 +81,6 @@ AC_CONFIG_FILES([
         tools/Makefile
 	tools/bin/Makefile
 	tools/lib/Makefile
-        tools/lib/r-mtalpha-sim.sh
-        tools/lib/r-mtsparc-sim.sh
 	lib/Makefile
 	doc/Makefile
 ])
