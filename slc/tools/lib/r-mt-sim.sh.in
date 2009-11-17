@@ -41,6 +41,12 @@ fi
 
 if test -n "${COMA:-}"; then
     thesim=$simx
+    if test -n "${coma_ncaches:-}"; then
+	simargs_base+=(-o NumCaches=$coma_ncaches)
+    fi
+    if test -n "${coma_ndirs:-}"; then
+	simargs_base+=(-o NumDirectories=$coma_ndirs)
+    fi
 else
     thesim=$mgsim
 fi

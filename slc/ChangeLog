@@ -1,5 +1,12 @@
 2009-11-17  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	Allow to configure #caches and #directories with COMA.
+	
+	* tools/lib/r-mt-sim.sh.in: Set configuration when flags are
+	specified.
+
+2009-11-17  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	Also test using COMA during `make check'.
 
 	* build-aux/slctests.m4: New AM conditional `ENABLE_CHECK_COMA'.
