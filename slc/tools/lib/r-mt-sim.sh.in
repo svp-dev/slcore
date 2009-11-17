@@ -1,51 +1,92 @@
 #! /bin/sh
-# $Id$
 set -eu
-MGSIM_@ARCH@=${MGSIM_@ARCH@:-@MGSIM_ARCH@}
 basename=${0##*/}
 program=${1:?}
 datafile=${2:?}
 fdatafile=${3:?}
+shift
+shift
+shift
+
 DEBUGGER=${DEBUGGER:-gdb --args}
-if test -n "${DEBUG:-}"; then
-   MGSIM_@ARCH@="$MGSIM_@ARCH@.dbg"
-fi
-if test -n "${SIMGFX:-}"; then
-   MGSIM_@ARCH@="$MGSIM_@ARCH@.gfx"
-fi
-shift
-shift
-shift
-if ! test -x "$program"; then
-    echo "$basename: $program: not an executable" >&2
-    exit 1
-fi
-if ! test -r "$datafile"; then
-    echo "$basename: $datafile: file not found or not readable" >&2
-    exit 1
-fi
+SIMARGS=${SIMARGS:-}
+mgsim=(${MGSIM_@ARCH@:-@MGSIM_ARCH@})
+simx=(${SIMX_@ARCH@:-@SIMX_ARCH@})
+simargs_base=()
 
-if ! test -r "$fdatafile"; then
-    echo "$basename: $fdatafile: file not found or not readable" >&2
-    exit 1
-fi
+##
+## Selection of the number of cores
+##
 
-if ! "$MGSIM_@ARCH@" --help >/dev/null 2>&1; then
-  echo "$basename: cannot find simulator (MGSIM_@ARCH@=$MGSIM_@ARCH@)." >&2
-  exit 1
+if test -n "${SLR_RECURSIVE:-}"; then
+  NCORES=1
+  simargs_base+=(-q -o NumProcessorsPerFPU=1)
+fi 
+
+if test -n "$NCORES" -a -z "${SLR_RECURSIVE:-}"; then
+   if ! expr "$NCORES" : '.*,' >/dev/null 2>&1; then
+      echo "$basename: warning: \$NCORES and -n are deprecated in favor of dynamic place allocation." >&2  
+   fi
+else
+   NCORES="1,1,1,1,2,2,4,4,8,8,16,16,32,32,64,64"
 fi
 
 if test -n "${NCORES:-}"; then
-   SIMARGS="-o NumProcessors=$NCORES ${SIMARGS:-}"
+   simargs_base+=(-o NumProcessors=$NCORES)
 fi
+
+##
+## Selection of the memory system
+##
+
+if test -n "${COMA:-}"; then
+    thesim=$simx
+else
+    thesim=$mgsim
+fi
+if ! "${thesim[@]}" --help >/dev/null 2>&1; then
+  echo "$basename: cannot find simulator (${thesim[*]})." >&2
+  exit 1
+fi
+
+##
+## Selection of debugging 
+##
 
 do_debug=
 if test -n "${DEBUG:-}"; then
-   SIMARGS="-i ${SIMARGS:-}"
-   do_debug=$DEBUGGER
+    simargs_base+=(-i)
+    do_debug=$DEBUGGER
+    if ! test -x "${thesim[0]}.dbg"; then
+	echo "$basename: warning: ${thesim[0]}.dbg not found, using ${thesim[0]} instead." >&2
+    else
+	thesim[0]=${thesim[0]}.dbg
+    fi
+fi
+
+##
+## Selection of graphical output
+##
+
+if test -n "${SIMGFX:-}"; then
+    if ! test -x "${thesim[0]}.gfx"; then
+	echo "$basename: warning: ${thesim[0]}.gfx not found, disabling graphical output." >&2
+    else    
+	thesim[0]=${thesim[0]}.gfx
+	simargs_base+=(-o GfxEnableOutput=true)
+	if test -n "${gfx_scale:-}"; then
+	    simargs_base+=(-o GfxHorizScale=${gfx_scale%,*} -o GfxVertScale=${gfx_scale#*,})
+	fi
+	if test -n "${gfx_geometry:-}"; then
+	    simargs_base+=(-o GfxDisplayWidth=${gfx_geometry%,*} -o GfxDisplayHeight=${gfx_geometry#*,})
+	fi
+	if test -n "${gfx_refresh:-}"; then
+	    simargs_base+=(-o GfxRefreshRate=$gfx_refresh)
+	fi
+    fi
 fi
 
 if test -n "${VERBOSE:-}"; then
-    echo "$basename: running: ${RUNNER_PREFIX:-} $do_debug $MGSIM_@ARCH@ ${SIMARGS:-} -t ${*:-} -L16 $datafile -L17 $fdatafile $program" >&2
+    echo "$basename: running: ${RUNNER_PREFIX:-} $do_debug ${thesim[*]} ${simargs_base[*]} ${SIMARGS:-} -t -L16 $datafile -L17 $fdatafile ${*:-} $program" >&2
 fi  
-exec ${RUNNER_PREFIX:-} $do_debug $MGSIM_@ARCH@ ${SIMARGS:-} -t ${1:+"$@"} -L16 "$datafile" -L17 "$fdatafile" "$program"
+exec ${RUNNER_PREFIX:-} $do_debug "${thesim[@]}" "${simargs_base[@]}" ${SIMARGS:-} -t -L16 "$datafile" -L17 "$fdatafile" ${1:+"$@"} "$program"

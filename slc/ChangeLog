@@ -1,5 +1,17 @@
 2009-11-17  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	Add support for COMA in `slr'.
+	
+	* build-aux/mgsim.m4: Search for `simx-alpha'.
+	
+	* tools/bin/slr.in: Add flags for COMA memory configuration. Move
+	simulator-specific tests to...
+	
+	* tools/bin/r-mt-sim.sh.in: ...here. Select simulator executable
+	depending on memory configuration.
+
+2009-11-17  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	Share runner script code between MT-Alpha/MT-Sparc.
 
 	* tools/lib/r-mtsparc-sim.sh.in: Remove.

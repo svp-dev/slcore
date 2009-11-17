@@ -80,6 +80,12 @@ Execution selection:
   -n PLACES            Use the specified place configuration instead of
                        the default.
 
+  -C                   Use the COMA simulator.
+
+  -Cc N                Configure N L2 caches in the COMA network. Implies -C.
+
+  -Cd N                Configure N directories in the COMA network. Implies -C.
+
 Debugging options:
   -t                   Trace: print commands before running them.
 
@@ -91,11 +97,11 @@ Debugging options:
 Other options:
   -X                   Enable graphical output.
 
-  -Xd W,H              Set initial gfx resolution to W(idth)xH(eight).
+  -Xd W,H              Set initial gfx resolution to W(idth)xH(eight). Implies -X.
 
-  -Xs HS,VS            Set initial gfx scaling factors to HSxVS.
+  -Xs HS,VS            Set initial gfx scaling factors to HSxVS. Implies -X.
   
-  -Xr RATE             Set gfx refresh rate to RATE.
+  -Xr RATE             Set gfx refresh rate to RATE. Implies -X.
 
   -h, --help           Print this help, then exit.
 
@@ -174,6 +180,8 @@ SIMGFX=
 gfx_scale=
 gfx_refresh=
 gfx_geometry=
+coma_ncaches=
+coma_ndirs=
 debug_rec=
 NCORES=${NCORES:-}
 SIMARGS=${SIMARGS:-}
@@ -210,10 +218,13 @@ for arg in "$@"; do
       -rf)  prev_arg=rfdatafile; shift;;
       -wf)  prev_arg=wfdatafile; shift;;
       -wo)  preponly=1; shift;;
+      -C)   COMA=1; shift;;
+      -Cc)  COMA=1; prev_arg=coma_ncaches; shift;;
+      -Cd)  COMA=1; prev_arg=coma_ndirs; shift;;
       -X)   SIMGFX=1; shift;;
-      -Xs)  prev_arg=gfx_scale; shift;;
-      -Xr)  prev_arg=gfx_refresh; shift;;
-      -Xd)  prev_arg=gfx_geometry; shift;;
+      -Xs)  SIMGFX=1; prev_arg=gfx_scale; shift;;
+      -Xr)  SIMGFX=1; prev_arg=gfx_refresh; shift;;
+      -Xd)  SIMGFX=1; prev_arg=gfx_geometry; shift;;
       --)  break;;
       -*)  die 1 "unrecognized command-line argument: $arg (try -h)";;
       *=*) vars+=("$arg"); shift ;;
@@ -224,31 +235,6 @@ for arg in "$@"; do
 done
 if test -n "${prev_arg:-}"; then die 1 "argument to \`$arg' is missing"; fi
 
-if test -n "${SIMGFX:-}"; then
-  SIMARGS+=" -o GfxEnableOutput=true"
-  if test -n "${gfx_scale:-}"; then
-    SIMARGS+=" -o GfxHorizScale=${gfx_scale%,*} -o GfxVertScale=${gfx_scale#*,}"
-  fi
-  if test -n "${gfx_geometry:-}"; then
-    SIMARGS+=" -o GfxDisplayWidth=${gfx_geometry%,*} -o GfxDisplayHeight=${gfx_geometry#*,}"
-  fi
-  if test -n "${gfx_refresh:-}"; then
-    SIMARGS+=" -o GfxRefreshRate=$gfx_refresh"
-  fi
-fi
-
-if test -n "${SLR_RECURSIVE:-}"; then
-  NCORES=1
-  SIMARGS+=" -q -o NumProcessorsPerFPU=1"
-fi 
-
-if test -n "$NCORES" -a -z "${SLR_RECURSIVE:-}"; then
-   if ! expr "$NCORES" : '.*,' >/dev/null 2>&1; then
-      echo "$basename: warning: \$NCORES and -n are deprecated in favor of dynamic place allocation." >&2  
-   fi
-else
-   NCORES="1,1,1,1,1,1,1,1,2,2,4,4,8,8,16,16,32,32,64,64"
-fi
 
 # does the program exist?
 if test -z "$program"; then
@@ -472,7 +458,10 @@ fi
 # debug cache only?
 if test -n "$preponly" -o -n "$debug_rec"; then exit 0; fi
 
-export SIMARGS VERBOSE DEBUG NCORES SIMGFX
+export SIMARGS VERBOSE DEBUG NCORES SIMGFX COMA
+export gfx_scale gfx_geometry gfx_refresh
+export coma_ncaches coma_ndirs
+
 if test -n "$VERBOSE"; then
     echo "$basename: running: @BASH@ $runner_script $program $datafile $fdatafile" >&2
 fi
