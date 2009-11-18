@@ -31,6 +31,9 @@ typedef long counter_t;
 #define MTPERF_ISSUED_FP_INSNS 2
 #define MTPERF_NCOUNTERS 3
 typedef struct { counter_t ct[MTPERF_NCOUNTERS]; } __counters_t;
+
+extern const char *mtpef_counter_names[];
+
 #define mtperf_sample(Array) do {					\
     __asm__ __volatile__("# sample begins");				\
     *(__counters_t*restrict)(void*)(Array) = *(volatile __counters_t*restrict)(void*)8; \
@@ -57,6 +60,7 @@ extern void mtperf_report_diffs(const counter_t *before, const counter_t* after,
 #define REPORT_FIBRE (2<<8)
 #define REPORT_RAW (1<<8)
 #define REPORT_STREAM(N) ((N)<<24)
+#define FIBRE_PAD(N) (((int)(N))<<16)
 
 struct s_interval {
   counter_t before[MTPERF_NCOUNTERS];

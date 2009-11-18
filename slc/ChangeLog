@@ -1,5 +1,13 @@
 2009-11-18  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	Tweak the output format of the reporting of performance counters.
+	
+	* lib/include/svp/perf.h,	
+	* lib/src/perf.c: Change output format as per discussions with
+	Dan. Example are given in note [sl8].
+
+2009-11-18  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	Extend the performance counters API in the library.
 	
 	* lib/include/svp/perf.h,

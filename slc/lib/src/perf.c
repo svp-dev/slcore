@@ -19,13 +19,35 @@
 // the ordering in the following
 // table should match the counter
 // indices in perf.h.
-static const char* cnames[] = {
+const char* mtperf_counter_names[] = {
   "clocks",
 #ifdef __mt_freestanding__
-  "exec_insns",
-  "issued_flops",
+  "n_exec_insns",
+  "n_issued_flops",
 #endif
 };
+
+#define pc(Ch) output_char((Ch), stream)
+#define ps(Str) output_string((Str), stream)
+#define pn(Num) output_int((Num), stream)
+#define pnl  output_char('\n', stream);
+
+#define bfibre(N) do { \
+    output_char('[', stream); \
+    output_char('1', stream); \
+    output_char(',', stream); \
+    output_int((N), stream);  \
+    output_char(':', stream); \
+} while(0)
+#define efibre output_char(']', stream)
+
+#define pnlsep pc((fflags & REPORT_NOLF) ? ' ' : '\n');
+
+#ifdef max
+#undef max
+#endif
+#define max(a,b) ((a) > (b) ? (a) : (b))
+
 
 void mtperf_report_diffs(const counter_t* before, const counter_t* after, int flags)
 {
@@ -41,42 +63,42 @@ void mtperf_report_diffs(const counter_t* before, const counter_t* after, int fl
       // output CSV
       int print_headers = fflags & 1;
       int spec_sep = fflags & 2;
-      char sep = (flags >> 16) & 0xff;
+      char sep = spec_sep ? ((flags >> 16) & 0xff) : ',';
       if (print_headers) {
 	// print column headers
 	for (i = 0; i < MTPERF_NCOUNTERS; ++i) {
-	  if (i != 0) output_char(spec_sep ? sep : ',', stream);
-	  output_string(cnames[i], stream);
+	  if (i) pc(sep);
+	  ps(mtperf_counter_names[i]);
 	}
-	output_char('\n', stream);
+	pnl;
       }
       for (i = 0; i < MTPERF_NCOUNTERS; ++i) {
-	if (i != 0) output_char(spec_sep ? sep : ',', stream);
-	output_int(after[i]-before[i], stream);
+	if (i) pc(sep);
+	pn(after[i]-before[i]);
       }
-      output_char((fflags & REPORT_NOLF) ? ' ' : '\n', stream);
+      pnlsep;
     }
     break;
   case 1:
     // output raw
     for (i = 0; i < MTPERF_NCOUNTERS; ++i) {
-      output_int(after[i]-before[i], stream);
-      output_char((fflags & REPORT_NOLF) ? ' ' : '\n', stream);
+      pn(after[i]-before[i]);
+      pnlsep;
     }
     break;
   case 2:
     // output Fibre
-    output_char('[', stream);
-    output_char('0', stream);
-    output_char(',', stream);
-    output_int(MTPERF_NCOUNTERS-1, stream);
-    output_char(':', stream);
-    for (i = 0; i < MTPERF_NCOUNTERS; ++i) {
-      output_char(' ', stream);
-      output_int(after[i]-before[i], stream);
+    {
+      int pad = (flags >> 16) & 0xff;
+      bfibre(max(MTPERF_NCOUNTERS, pad));
+      for (i = 0; i < MTPERF_NCOUNTERS; ++i) {
+	pc(' ');
+	pn(after[i]-before[i]);
+      }
+      for ( ; i < pad; ++i) ps(" 0");
+      efibre;
+      pnlsep;
     }
-    output_char(']', stream);
-    output_char((fflags & REPORT_NOLF) ? ' ' : '\n', stream);
     break;
   }
 }
@@ -85,34 +107,111 @@ void mtperf_report_intervals(const struct s_interval* ivs,
 			     size_t n,
 			     int flags)
 {
-  size_t i;
+  int i, j;
 
-  int format = (flags >> 8) & 0xff;
   int stream = (flags >> 24) & 0xff;
   if (!stream) stream = 1;
+  int format = (flags >> 8) & 0xff;
+  int fflags = flags & 0xff;
 
-  if (format != 0)
-    output_string("### begin intervals\n", stream);
-
-  for (i = 0; i < n; ++i)
+  switch (format) {
+  case 0:
     {
-      mtperf_report_diffs(ivs[i].before, ivs[i].after, flags | REPORT_NOLF);
-      output_string(" #", stream);
-      if (ivs[i].num >= 0) {
-	output_char(' ', stream);
-	output_uint(ivs[i].num, stream);
+      // output CSV
+      int print_headers = fflags & 1;
+      int spec_sep = fflags & 2;
+      char sep = spec_sep ? ((flags >> 16) & 0xff) : ',';
+      if (print_headers) {
+	// print column headers
+	ps("\"intervals\"");
+	for (i = 0; i < MTPERF_NCOUNTERS; ++i) {
+	  pc(sep);
+	  pc('"');
+	  ps(mtperf_counter_names[i]);
+	  pc('"');
+	}
+	pnl;
       }
-      if (ivs[i].tag) {
-	output_char(' ', stream);
-	output_string(ivs[i].tag, stream);
+      for (j = 0; j < n; ++j) {
+	if (print_headers) {
+	  pc('"');
+	  if (ivs[j].num >= 0) { pn(ivs[j].num); pc(' '); }
+	  ps(ivs[j].tag ? ivs[j].tag : "(anon)");
+	  pc('"');
+	}
+	for (i = 0; i < MTPERF_NCOUNTERS; ++i) {
+	  if (i || print_headers) pc(sep);
+	  pn(ivs[j].after[i]-ivs[j].before[i]);
+	}
+	pnlsep;
       }
-      if (!(flags & REPORT_NOLF))
-	output_char('\n', stream);
-      flags &= ~CSV_INCLUDE_HEADER;
     }
+    break;
+  case 1:
+    // output raw
+    ps("# metrics\n");
+    for (i = 0; i < MTPERF_NCOUNTERS; ++i) {
+      ps(mtperf_counter_names[i]);
+      pnlsep;
+    }
+    for (j = 0; j < n; ++j) {
+      ps("# ");
+      if (ivs[j].num >= 0) { pn(ivs[j].num); pc(' '); }
+      ps(ivs[j].tag ? ivs[j].tag : "(anon)");
+      pnl;
+      for (i = 0; i < MTPERF_NCOUNTERS; ++i) {
+	pn(ivs[j].after[i]-ivs[j].before[i]);
+	pnlsep;
+      }
+    }
+    break;
+  case 2:
+    // output Fibre
+    {
+      int pad = ((flags >> 16) & 0xff);
+      int dmax = max(pad, max(n, MTPERF_NCOUNTERS));
 
-  if (format != 0)
-    output_string("### end intervals\n", stream);
+      ps("### begin intervals\n");
+      for (j = 0; j < n; ++j) {
+	bfibre(MTPERF_NCOUNTERS);
+	for (i = 0; i < MTPERF_NCOUNTERS; ++i) {
+	  pc(' '); 
+	  pn(ivs[j].after[i]-ivs[j].before[i]);
+	}
+	efibre;
+	pnlsep;
+      }
+      if (flags & REPORT_NOLF) pnl;
+      ps("### end intervals\n### begin descriptions\n");
+
+      bfibre(dmax);
+      for (i = 0; i < n; ++i) {
+	pc(' ');
+	pc('"');
+	if (ivs[i].num >= 0) { pn(ivs[i].num); pc(' '); }
+	ps(ivs[i].tag ? ivs[i].tag : "(anon)");
+	pc('"');
+      }
+      for ( ; i < dmax; ++i) ps(" \"\"");
+      efibre;
+      
+      pnlsep;
+      
+      bfibre(dmax);
+      for (i = 0; i < MTPERF_NCOUNTERS; ++i) {
+	pc(' ');
+	pc('"');
+	ps(mtperf_counter_names[i]);
+	pc('"');
+      }
+      for ( ; i < dmax; ++i) ps(" \"\"");
+      efibre;
+      
+      ps("\n### end descriptions\n");
+    }
+    break;
+  }
+  
 }
 
 struct s_interval* mtperf_alloc_intervals(size_t n) 
