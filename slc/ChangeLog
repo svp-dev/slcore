@@ -1,3 +1,10 @@
+2009-11-18  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
+	Extend the performance counters API in the library.
+	
+	* lib/include/svp/perf.h,
+	* lib/src/perf.c: Add the features described in note [sl8].
+
 2009-11-17  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
 	Implement a non-documented SL extension for the SAC compiler.
