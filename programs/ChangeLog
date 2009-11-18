@@ -1,3 +1,15 @@
+2009-11-18  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
+	Adapt the benchmarking framework to latest library updates.
+	
+	* benchmarks/lib/benchmark.h,	
+	* benchmarks/lib/benchmark.c: Use the new API for intervals and
+	reporting from `<svp/perf.h>'. Simplify. Add tags to
+	`start_interval' and `finish_interval'.
+	
+	* benchmarks/mandel/mandel.c: Use the new interface for
+	`start_interval()' and `finish_interval()'.
+
 2009-11-05  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
 	Fix bug in BLAS `isamax' and `idamax' benchmarks.

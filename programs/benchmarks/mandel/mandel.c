@@ -254,7 +254,7 @@ sl_def(work, void, sl_glparm(struct benchmark_state*, st))
   struct work_lapses * wl = sl_getp(st)->wl;
   struct bdata *bdata = (struct bdata*)sl_getp(st)->data;  
 
-  start_interval(wl);
+  start_interval(wl, "compute");
   sl_create(,bdata->par_place,,bdata->N,,bdata->blocksize,,
 	    mandel,
 	    sl_glfarg(double, _0, bdata->xmin),
@@ -273,7 +273,7 @@ sl_def(work, void, sl_glparm(struct benchmark_state*, st))
   finish_interval(wl);
 
 #ifndef DISPLAY_DURING_COMPUTE
-  start_interval(wl);
+  start_interval(wl, "display");
 #ifdef PARALLEL_DISPLAY
   sl_create(,bdata->par_place,,bdata->N,,bdata->blocksize,,
 	    displayAfter,
