@@ -1,5 +1,12 @@
 2009-11-19  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	Extend Fibre syntax recognized by `slr'.
+	
+	* tools/bin/sag: New syntax `vc(N)' for Fibre which expands to an
+	array of complex numbers. (Used by FFT)
+
+2009-11-19  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	Tweak simulation architecture defaults.
 	
 	* tools/lib/r-mt-sim.sh.in: Change default place layout to better

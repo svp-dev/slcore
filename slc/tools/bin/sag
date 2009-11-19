@@ -98,6 +98,8 @@ class FibreGenerator(object):
             return [((x % 2 == 0) and -x or x) for x in xrange(1,n+1)]
         def v(n):
             return [0.5*((x % 2 == 0) and -x or x) for x in xrange(0,n)]
+        def vc(n):
+            return [[x + 0.,0.] for x in xrange(1,n+1)]
 
         data = eval(d)
 
