@@ -61,4 +61,7 @@ done
 echo ".PHONY: fdata results"
 echo "fdata: ${fdatas[*]}"
 echo "results: ${results[*]}"
-echo "clean: ; rm -f ${fdatas[*]} ${pdatas[*]} ${results[*]}"
+echo "clean:"
+for f in "${fdatas[@]}" "${pdatas[@]}" "${results[@]}"; do
+    printf '\t@rm -f %s\n' "$f"
+done

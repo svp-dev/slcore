@@ -1,5 +1,12 @@
 2009-11-18  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	Minor fix for benchmarking.
+	
+	* build-aux/genbench.sh: Split the `clean' rule to avoid "argument
+	list too long".
+
+2009-11-18  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	Adapt the benchmarking framework to latest library updates.
 	
 	* benchmarks/lib/benchmark.h,	
