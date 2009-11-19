@@ -1,5 +1,12 @@
 2009-11-19  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	Minor benchmarking fix.
+	
+	* build-aux/genbench.sh: Reduce the number of data files (reuse
+	wherever appropriate).
+
+2009-11-19  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	Fix the `mandel' demo.
 	
 	* benchmarks/mandel/mandel.c: Read the bounding box coordinates in

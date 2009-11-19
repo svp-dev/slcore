@@ -38,11 +38,17 @@ for bench_src in "$@"; do
        pdatas_here=()
        for i in "${bench_inputs[@]}"; do
 	   ibase=${i##*/}
-	   fdata="benchdata/$b-$bench_base-$ibase.fdata"
-	   echo "$fdata: $bench_base.x $i ;" \
-	       "\$(AM_V_GEN)mkdir -p benchdata && " \
-	       "\$(SLR) $bench_base.bin.$b -f $i -wf \$@ -wo 2>/dev/null"
-	   fdatas+=("$fdata")
+	   fdata="benchdata/$b-$ibase.fdata"
+	   
+	   # is it already there?
+	   found=
+	   for search in "${fdatas[@]}"; do [ "$fdata" = "$search" ] && found=1; done
+	   if test -z "$found"; then
+	       echo "$fdata: $bench_base.x $i ;" \
+		   "\$(AM_V_GEN)mkdir -p benchdata && " \
+		   "\$(SLR) $bench_base.bin.$b -f $i -wf \$@ -wo 2>/dev/null"
+	       fdatas+=("$fdata")
+	   fi
 	   for p in "${plist[@]}"; do
 	       pdata="benchdata/$b-$bench_base-$ibase.p$p.out"
 	       echo "$pdata: $bench_base.x $fdata $i ;" \
