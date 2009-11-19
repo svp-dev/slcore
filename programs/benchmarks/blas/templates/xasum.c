@@ -17,7 +17,7 @@
 #define INT long
 
 sl_def(FUNCTION[[]]_mt, void,
-       sl_glparm(FLOAT*restrict, sx),
+       sl_glparm(const FLOAT*restrict, sx),
        sl_shfparm(FLOAT, res))
 {
   sl_index(i);
@@ -28,7 +28,7 @@ sl_enddef
 sl_def(FUNCTION, void,
        sl_shfparm(FLOAT, res),
        sl_glparm(INT, n),
-       sl_glparm(FLOAT*, sx),
+       sl_glparm(const FLOAT*, sx),
        sl_glparm(INT, incx))
 {
   INT sx = (sl_getp(incx) < 0) ? ((-sl_getp(n) + 1) * sl_getp(incx)) : 0;
@@ -36,7 +36,7 @@ sl_def(FUNCTION, void,
 
   sl_create(,, sx, lx, sl_getp(incx),,,
 	    FUNCTION[[]]_mt,
-	    sl_glarg(FLOAT*, , sl_getp(sx)),
+	    sl_glarg(const FLOAT*, , sl_getp(sx)),
 	    sl_shfarg(FLOAT, sres, sl_getp(res)));
   sl_sync();
   sl_setp(res, sl_geta(sres));

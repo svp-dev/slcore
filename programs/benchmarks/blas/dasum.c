@@ -16,4 +16,3 @@
 #define FUNCTION dasum
 #define ABS fabs
 #include "templates/xasum.c"
-

@@ -1,5 +1,5 @@
 //
-// bench-saxpy.c: this file is part of the SL toolchain.
+// bench-sdot.c: this file is part of the SL toolchain.
 //
 // Copyright (C) 2009 The SL project.
 //
@@ -12,97 +12,6 @@
 // `COPYING' file in the root directory.
 //
 
-#include <svp/testoutput.h>
-#include <svp/perf.h>
-#include <svp/fibre.h>
-#include <svp/assert.h>
-#include <cmalloc.h>
-
-#include "benchmark.h"
-
-struct bdata {
-  long n;
-  float *sx;
-  float *sy;
-  float result;
-};
-
-sl_def(initialize, void,
-       sl_glparm(struct benchmark_state*, st))
-{
-  int i;
-  struct bdata *bdata = (struct bdata*) malloc(sizeof(struct bdata));
-  svp_assert(bdata != NULL);
-
-  /* benchmark input:
-     1 x ulong
-     1 x double array (X)
-     1 x double array (Y) */
-  svp_assert(fibre_tag(0) == 0);
-  svp_assert(fibre_rank(0) == 0);
-  bdata->n = *(long*)fibre_data(0);
-
-  svp_assert(fibre_tag(1) == 2);
-  svp_assert(fibre_rank(1) == 1);
-  bdata->sx = (float*)malloc(fibre_shape(1)[0] * sizeof(float));
-  svp_assert(bdata->sx != NULL);
-  for (i = 0; i < fibre_shape(1)[0]; ++i) bdata->sx[i] = ((double*)fibre_data(1))[i];
-
-  svp_assert(fibre_tag(2) == 2);
-  svp_assert(fibre_rank(2) == 1);
-  bdata->sy = (float*)malloc(fibre_shape(2)[0] * sizeof(float));
-  svp_assert(bdata->sy != NULL);
-  for (i = 0; i < fibre_shape(2)[0]; ++i) bdata->sy[i] = ((double*)fibre_data(2))[i];
-
-  sl_getp(st)->data = (void*) bdata;
-}
-sl_enddef
-
-sl_def(output, void,
-       sl_glparm(struct benchmark_state*, st))
-{
-  struct bdata *bdata = (struct bdata*)sl_getp(st)->data;
-  output_float(bdata->result, 1, 4);
-  output_char('\n', 1);
-}
-sl_enddef
-
-sl_def(teardown, void,
-       sl_glparm(struct benchmark_state*, st))
-{
-  struct bdata *bdata = (struct bdata*)sl_getp(st)->data;
-  free(bdata->sy);
-  free(bdata->sx);
-  free(bdata);
-}
-sl_enddef
-
+#include "blasbench.h"
 #include "sdot.c"
-
-sl_def(work, void,
-       sl_glparm(struct benchmark_state*, st))
-{
-  struct bdata *bdata = (struct bdata*)sl_getp(st)->data;
-  sl_create(,,,,,,, sdot,
-	      sl_shfarg(float, result, 0.),
-	      sl_glarg(long, n, bdata->n),
-	      sl_glarg(float*, sx, bdata->sx),
-	      sl_glarg(long, incx, 1),
-	      sl_glarg(float*, sy, bdata->sy),
-	      sl_glarg(long, incy, 1));
-  sl_sync();
-  bdata->result = sl_geta(result);
-}
-sl_enddef
-
-sl_def(t_main, void)
-{
-  struct benchmark b = {
-    "BLAS: SDOT",
-    "kena",
-    "Compute D = D + X[i] * Y[i] with single precision",
-    &initialize, 0, &work, &output, &teardown
-  };
-  sl_proccall(run_benchmark, sl_glarg(struct benchmark*, b, &b));
-}
-sl_enddef
+#include "templates/bench-xdot.c"

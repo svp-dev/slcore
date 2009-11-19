@@ -15,4 +15,3 @@
 #define FLOAT float
 #define FUNCTION sscal
 #include "templates/xscal.c"
-

@@ -1,5 +1,92 @@
 2009-11-18  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	Update the BLAS benchmarks to comply to Unibench specifications.
+	
+	* benchmarks/blas/blasbench.h,
+	* benchmarks/blas/templates/bench-xasum.c,
+	* benchmarks/blas/templates/bench-xaxpy.c,
+	* benchmarks/blas/templates/bench-xcopy.c,
+	* benchmarks/blas/templates/bench-xdot.c,
+	* benchmarks/blas/templates/bench-xiamax.c,
+	* benchmarks/blas/templates/bench-xnrm2.c,
+	* benchmarks/blas/templates/bench-xrot.c,
+	* benchmarks/blas/templates/bench-xscal.c,
+	* benchmarks/blas/templates/bench-xswap.c: New.
+
+	* benchmarks/blas/bench-dasum.c, benchmarks/blas/bench-daxpy.c,
+	benchmarks/blas/bench-dcopy.c, benchmarks/blas/bench-ddot.c,
+	benchmarks/blas/bench-dnrm2.c, benchmarks/blas/bench-drot.c,
+	benchmarks/blas/bench-dscal.c, benchmarks/blas/bench-dswap.c,
+	benchmarks/blas/bench-idamax.c, benchmarks/blas/bench-isamax.c,
+	benchmarks/blas/bench-sasum.c, benchmarks/blas/bench-saxpy.c,
+	benchmarks/blas/bench-scopy.c, benchmarks/blas/bench-sdot.c,
+	benchmarks/blas/bench-snrm2.c, benchmarks/blas/bench-srot.c,
+	benchmarks/blas/bench-sscal.c, benchmarks/blas/bench-sswap.c: Use
+	the new templates.
+	
+	* programs/benchmarks/bench-dasum.inputs,
+	* programs/benchmarks/bench-dcopy.inputs,
+	* programs/benchmarks/bench-ddot.inputs,
+	* programs/benchmarks/bench-dnrm2.inputs,
+	* programs/benchmarks/bench-dswap.inputs,
+	* programs/benchmarks/bench-idamax.inputs,
+	* programs/benchmarks/bench-isamax.inputs,
+	* programs/benchmarks/bench-sasum.inputs,
+	* programs/benchmarks/bench-scopy.inputs,
+	* programs/benchmarks/bench-sdot.inputs,
+	* programs/benchmarks/bench-snrm2.inputs,	
+	* programs/benchmarks/bench-sswap.inputs: Reuse `cvv' and `vvcc'
+	where appropriate.
+	
+	* benchmarks/blas/data/cvv.d1, benchmarks/blas/data/cvv.d10,
+	benchmarks/blas/data/cvv.d100, benchmarks/blas/data/cvv.d1000,
+	benchmarks/blas/data/cvv.d10000, benchmarks/blas/data/cvv.d100000,
+	benchmarks/blas/data/cvv.d2, benchmarks/blas/data/cvv.d20,
+	benchmarks/blas/data/cvv.d200, benchmarks/blas/data/cvv.d2000,
+	benchmarks/blas/data/cvv.d20000, benchmarks/blas/data/cvv.d5,
+	benchmarks/blas/data/cvv.d50, benchmarks/blas/data/cvv.d500,
+	benchmarks/blas/data/cvv.d5000, benchmarks/blas/data/cvv.d50000,
+	benchmarks/blas/data/vvcc.d1, benchmarks/blas/data/vvcc.d10,
+	benchmarks/blas/data/vvcc.d100, benchmarks/blas/data/vvcc.d1000,
+	benchmarks/blas/data/vvcc.d10000,
+	benchmarks/blas/data/vvcc.d100000, benchmarks/blas/data/vvcc.d2,
+	benchmarks/blas/data/vvcc.d20, benchmarks/blas/data/vvcc.d200,
+	benchmarks/blas/data/vvcc.d2000, benchmarks/blas/data/vvcc.d20000,
+	benchmarks/blas/data/vvcc.d5, benchmarks/blas/data/vvcc.d50,
+	benchmarks/blas/data/vvcc.d500, benchmarks/blas/data/vvcc.d5000,
+	benchmarks/blas/data/vvcc.d50000: Add increments.
+
+	* benchmarks/blas/data/v.d1, benchmarks/blas/data/v.d100,
+	benchmarks/blas/data/v.d1000, benchmarks/blas/data/v.d10000,
+	benchmarks/blas/data/v.d100000, benchmarks/blas/data/v.d200,
+	benchmarks/blas/data/v.d2000, benchmarks/blas/data/v.d20000,
+	benchmarks/blas/data/v.d500, benchmarks/blas/data/v.d5000,
+	benchmarks/blas/data/v.d50000, benchmarks/blas/data/vv.d1,
+	benchmarks/blas/data/vv.d10, benchmarks/blas/data/vv.d100,
+	benchmarks/blas/data/vv.d1000, benchmarks/blas/data/vv.d10000,
+	benchmarks/blas/data/vv.d100000, benchmarks/blas/data/vv.d2,
+	benchmarks/blas/data/vv.d20, benchmarks/blas/data/vv.d200,
+	benchmarks/blas/data/vv.d2000, benchmarks/blas/data/vv.d20000,
+	benchmarks/blas/data/vv.d5, benchmarks/blas/data/vv.d50,
+	benchmarks/blas/data/vv.d500, benchmarks/blas/data/vv.d5000,
+	benchmarks/blas/data/vv.d50000: Remove (redundant).
+
+	* benchmarks/blas/templates/xasum.c,
+	* benchmarks/blas/templates/xaxpy.c,
+	* benchmarks/blas/templates/xcopy.c,
+	* benchmarks/blas/templates/xdot.c,
+	* benchmarks/blas/templates/xiamax.c,	
+	* benchmarks/blas/templates/xnrm2.c: Use `const' where
+	appropriate.
+
+	* benchmarks/blas/dasum.c, benchmarks/blas/dnrm2.c,
+	benchmarks/blas/dscal.c, benchmarks/blas/idamax.c,
+	benchmarks/blas/isamax.c, benchmarks/blas/sasum.c,
+	benchmarks/blas/snrm2.c, benchmarks/blas/sscal.c: Cleanup
+	whitespace.
+
+2009-11-18  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	Minor fix for benchmarking.
 	
 	* build-aux/genbench.sh: Split the `clean' rule to avoid "argument

@@ -15,4 +15,3 @@
 #define FLOAT double
 #define FUNCTION dscal
 #include "templates/xscal.c"
-

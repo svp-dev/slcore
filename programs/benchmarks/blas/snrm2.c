@@ -16,4 +16,3 @@
 #define FUNCTION snrm2
 #define SQRT sqrtf
 #include "templates/xnrm2.c"
-

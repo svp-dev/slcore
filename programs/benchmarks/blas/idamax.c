@@ -16,4 +16,3 @@
 #define FUNCTION idamax
 #define ABS fabs
 #include "templates/xiamax.c"
-

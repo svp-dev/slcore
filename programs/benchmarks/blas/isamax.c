@@ -16,4 +16,3 @@
 #define FUNCTION isamax
 #define ABS fabsf
 #include "templates/xiamax.c"
-
