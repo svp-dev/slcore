@@ -1,5 +1,15 @@
 2009-11-19  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	Fix the `mandel' demo.
+	
+	* benchmarks/mandel/mandel.c: Read the bounding box coordinates in
+	the correct order.
+	
+	* benchmarks/mandel/mandel.d1,
+	* benchmarks/mandel/mandel.d2: Fix Fibre array bounds.
+
+2009-11-19  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	Minor benchmarking fix.
 
 	* benchmarks/lib/benchmark.c: Also print headers when using

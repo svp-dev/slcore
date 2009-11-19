@@ -89,10 +89,10 @@ sl_def(initialize, void,
   svp_assert(fibre_tag(4) == 2);
   svp_assert(fibre_rank(4) == 1);
   svp_assert(fibre_shape(4)[0] == 4);
-  double *box = (double*)fibre_data(3);
+  double *box = (double*)fibre_data(4);
   bdata->xmin = box[0];
-  bdata->ymin = box[1];
-  bdata->xmax = box[2];
+  bdata->xmax = box[1];
+  bdata->ymin = box[2];
   bdata->ymax = box[3];
 
   bdata->xstep = (bdata->xmax - bdata->xmin) / bdata->xN;
@@ -111,21 +111,21 @@ sl_def(initialize, void,
   bdata->colors = (uint32_t*)malloc(sizeof(uint32_t) * (bdata->icount + 1));
   double licount = log(bdata->icount+1);
   sl_create(,,,bdata->icount+2,,,, prepare_colors,
-	    sl_glarg(uint32_t*, _pc0, bdata->colors),
-	    sl_glfarg(double, _pc1, licount));
+	    sl_glarg(uint32_t*, , bdata->colors),
+	    sl_glfarg(double, , licount));
   sl_sync();
 
 
 #if SVP_HAS_SEP
   unsigned ncores_wanted = sl_getp(st)->place->ncores;
   sl_create(,root_sep->sep_place|1,,,,,, root_sep->sep_alloc,
-	    sl_glarg(struct SEP*, _s0, root_sep),
-	    sl_glarg(unsigned long, _s1, SAL_EXACT|ncores_wanted),
+	    sl_glarg(struct SEP*, , root_sep),
+	    sl_glarg(unsigned long, , SAL_EXACT|ncores_wanted),
 	    sl_sharg(struct placeinfo*, p1, 0));
   sl_sync();
   sl_create(,root_sep->sep_place|1,,,,,, root_sep->sep_alloc,
-	    sl_glarg(struct SEP*, _s2, root_sep),
-	    sl_glarg(unsigned long, _s3, SAL_DONTCARE),
+	    sl_glarg(struct SEP*, , root_sep),
+	    sl_glarg(unsigned long, , SAL_DONTCARE),
 	    sl_sharg(struct placeinfo*, p2, 0));
   sl_sync();
   svp_assert(sl_geta(p1) != 0 && sl_geta(p2) != 0);
@@ -257,16 +257,16 @@ sl_def(work, void, sl_glparm(struct benchmark_state*, st))
   start_interval(wl, "compute");
   sl_create(,bdata->par_place,,bdata->N,,bdata->blocksize,,
 	    mandel,
-	    sl_glfarg(double, _0, bdata->xmin),
-	    sl_glfarg(double, _1, bdata->ymin),
-	    sl_glfarg(double, _2, bdata->xstep),
-	    sl_glfarg(double, _3, bdata->ystep),
-	    sl_glarg(uint16_t, _4, bdata->xN),
-	    sl_glarg(size_t, _5, bdata->icount),
-	    sl_glarg(uint32_t*restrict, _6, bdata->colors),
-	    sl_glfarg(double, _7, bdata->pscale)
+	    sl_glfarg(double, , bdata->xmin),
+	    sl_glfarg(double, , bdata->ymin),
+	    sl_glfarg(double, , bdata->xstep),
+	    sl_glfarg(double, , bdata->ystep),
+	    sl_glarg(uint16_t, , bdata->xN),
+	    sl_glarg(size_t, , bdata->icount),
+	    sl_glarg(uint32_t*restrict, , bdata->colors),
+	    sl_glfarg(double, , bdata->pscale)
 #ifndef SKIP_MEM
-	    , sl_glarg(struct point*restrict, _8, bdata->pixeldata)
+	    , sl_glarg(struct point*restrict, , bdata->pixeldata)
 #endif
 	    );
   sl_sync();
@@ -277,12 +277,12 @@ sl_def(work, void, sl_glparm(struct benchmark_state*, st))
 #ifdef PARALLEL_DISPLAY
   sl_create(,bdata->par_place,,bdata->N,,bdata->blocksize,,
 	    displayAfter,
-	    sl_glarg(struct point*restrict, _9, bdata->pixeldata));
+	    sl_glarg(struct point*restrict, , bdata->pixeldata));
   sl_sync();
 #else
   sl_create(,bdata->par_place,,bdata->N,,bdata->blocksize,,
 	    displayAfter,
-	    sl_glarg(struct point*restrict, _9, bdata->pixeldata),
+	    sl_glarg(struct point*restrict, , bdata->pixeldata),
 	    sl_sharg(int, tok, 0));
   sl_sync();
 #endif
