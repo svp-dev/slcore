@@ -20,6 +20,7 @@ $(SLDIR)/bin/mgsim-alpha $(SLDIR)/bin/mgsim-sparc: $(SOURCES)/mgsim-$(MGSIM_REV)
 	rm -f $(PREFIX)/slreqs-current
 	ln -s $(REQDIR) $(PREFIX)/slreqs-current
 	(SRC=$$(cd $(SOURCES)/mgsim-$(MGSIM_REV); pwd); cd $(BUILD)/mgsim-$(MGSIM_REV) && \
+	 rm -f src/*main.o && \
 	 PATH=$(PREFIX)/slreqs-current/bin:$$PATH $$SRC/configure --prefix=$(SLDIR) \
 	                  CPPFLAGS="$$CPPFLAGS -I$(PREFIX)/slreqs-current/include" \
 			  CFLAGS="$$CFLAGS $(EXTRA_CFLAGS)" \

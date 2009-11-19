@@ -1,3 +1,10 @@
+2009-11-19  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
+	Fix deployment of MGSim.
+	
+	* deploy/rules/mgsim.mk: Remove objects for "main.o" before
+	compiling, to force reconfiguration of the config file location.
+
 2009-11-14  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
 	Fix `SystemC' some more.
