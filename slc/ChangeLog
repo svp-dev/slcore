@@ -1,5 +1,12 @@
 2009-11-19  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	Minor fix in the reporting of performance counters.
+
+	* lib/src/perf.c: Do not pad the Fibre array if the pad flag is
+	set to 0.
+
+2009-11-19  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	Fix bug in `slr'.
 	
 	* tools/lib/r-mt-sim.sh.in: Restore proper default setting of the

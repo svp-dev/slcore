@@ -169,7 +169,9 @@ void mtperf_report_intervals(const struct s_interval* ivs,
     // output Fibre
     {
       int pad = ((flags >> 16) & 0xff);
-      int dmax = max(pad, max(n, MTPERF_NCOUNTERS));
+      int dmax = 0;
+      if (pad)
+	dmax = max(pad, max(n, MTPERF_NCOUNTERS));
 
       ps("### begin intervals\n");
       for (j = 0; j < n; ++j) {
@@ -184,7 +186,7 @@ void mtperf_report_intervals(const struct s_interval* ivs,
       if (flags & REPORT_NOLF) pnl;
       ps("### end intervals\n### begin descriptions\n");
 
-      bfibre(dmax);
+      bfibre(dmax ? dmax : n);
       for (i = 0; i < n; ++i) {
 	pc(' ');
 	pc('"');
@@ -197,7 +199,7 @@ void mtperf_report_intervals(const struct s_interval* ivs,
       
       pnlsep;
       
-      bfibre(dmax);
+      bfibre(dmax ? dmax : MTPERF_NCOUNTERS);
       for (i = 0; i < MTPERF_NCOUNTERS; ++i) {
 	pc(' ');
 	pc('"');
