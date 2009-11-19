@@ -1,5 +1,15 @@
 2009-11-19  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	Minor benchmarking fixes.
+
+	* build-aux/benchmarks.mk: Also ship $(BUILT_SOURCES) with
+	Unibench archives.
+
+	* benchmarks/lib/benchmark.c: Change label for stub of SEP place
+	allocation on targets which don't use SEP.
+	
+2009-11-19  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	Update FFT benchmark for use with Unibench.
 	
 	* benchmarks/fft/fft_bench.c,

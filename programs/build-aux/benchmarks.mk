@@ -33,13 +33,13 @@ BENCHLIB = $(abs_top_srcdir)/benchmarks/lib/benchmark.c \
            $(abs_top_srcdir)/benchmarks/lib/benchmark.h
 
 
-.c.tar: $(EXTRA_DIST) $(BENCHLIB)
+.c.tar: $(EXTRA_DIST) $(BUILT_SOURCES) $(BENCHLIB)
 	$(AM_V_at)rm -rf $@ $@.tmp
 	$(AM_V_GEN)b="$<" && \
 	  bn=$$(basename $$b .c) && \
 	  rm -rf "$$bn" && \
 	  mkdir "$$bn" && \
-	  for f in $(EXTRA_DIST) $(BENCHLIB); do \
+	  for f in $(EXTRA_DIST) $(BUILT_SOURCES) $(BENCHLIB); do \
 	    dn=$$(dirname $$(echo $$f|$(SED) -e 's|^'$(abs_top_srcdir).*/'||g')) && \
 	    mkdir -p $$bn/$$dn && \
 	    cp `test -r $$f || echo $(srcdir)/`$$f $$bn/$$dn/; \

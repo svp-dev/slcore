@@ -114,7 +114,7 @@ sl_def(run_benchmark, void, sl_glparm(struct benchmark*, b))
 #else
   puts("no SEP, using default place\n");
   pid = PLACE_DEFAULT;
-  mtperf_empty_interval(intervals, p++, -1, "initialize");
+  mtperf_empty_interval(intervals, p++, -1, "sep_alloc");
 #endif
 
   puts("# 2. initialize...");
