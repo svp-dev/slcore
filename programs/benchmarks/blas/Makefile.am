@@ -47,6 +47,16 @@ EXTRA_DIST = \
 	templates/xswap.c \
 	templates/xcopy.c \
 	templates/xiamax.c \
+	templates/bench-xaxpy.c \
+	templates/bench-xdot.c \
+	templates/bench-xrot.c \
+	templates/bench-xasum.c \
+	templates/bench-xscal.c \
+	templates/bench-xnrm2.c \
+	templates/bench-xswap.c \
+	templates/bench-xcopy.c \
+	templates/bench-xiamax.c \
+	blasbench.h \
 	blas_complex.h \
 	caxpy.c cdotc.c cdotu.c \
 	zaxpy.c zdotc.c zdotu.c \
