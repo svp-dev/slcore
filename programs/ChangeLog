@@ -1,3 +1,10 @@
+2009-11-19  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
+	Minor benchmarking fix.
+	
+	* benchmarks/lib/benchmark.c: Do not pad Fibre arrays in the
+	output.
+
 2009-11-18  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
 	Update the BLAS benchmarks to comply to Unibench specifications.

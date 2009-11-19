@@ -177,7 +177,7 @@ sl_def(run_benchmark, void, sl_glparm(struct benchmark*, b))
   puts("# done.\n\n");
 
   output_string("## measurements:\n", 2);
-  long report_flags = (format ? (REPORT_CSV|CSV_SEP(' ')) : (REPORT_FIBRE | FIBRE_PAD(7))) | REPORT_STREAM(2);
+  long report_flags = (format ? (REPORT_CSV|CSV_SEP(' ')) : REPORT_FIBRE) | REPORT_STREAM(2);
 
   mtperf_report_intervals(intervals, p, report_flags);
 }
