@@ -123,25 +123,27 @@ void mtperf_report_intervals(const struct s_interval* ivs,
       char sep = spec_sep ? ((flags >> 16) & 0xff) : ',';
       if (print_headers) {
 	// print column headers
-	ps("\"intervals\"");
 	for (i = 0; i < MTPERF_NCOUNTERS; ++i) {
-	  pc(sep);
+	  if (i) pc(sep);
 	  pc('"');
 	  ps(mtperf_counter_names[i]);
 	  pc('"');
 	}
+	if (i) pc(sep);
+	ps("\"intervals\"");
 	pnl;
       }
       for (j = 0; j < n; ++j) {
+	for (i = 0; i < MTPERF_NCOUNTERS; ++i) {
+	  if (i) pc(sep);
+	  pn(ivs[j].after[i]-ivs[j].before[i]);
+	}
 	if (print_headers) {
+	  if (i) pc(sep);
 	  pc('"');
 	  if (ivs[j].num >= 0) { pn(ivs[j].num); pc(' '); }
 	  ps(ivs[j].tag ? ivs[j].tag : "(anon)");
 	  pc('"');
-	}
-	for (i = 0; i < MTPERF_NCOUNTERS; ++i) {
-	  if (i || print_headers) pc(sep);
-	  pn(ivs[j].after[i]-ivs[j].before[i]);
 	}
 	pnlsep;
       }

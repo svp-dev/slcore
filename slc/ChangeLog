@@ -2,6 +2,15 @@
 
 	Minor fix in the reporting of performance counters.
 
+	* lib/src/perf.c (mtperf_report_intervals): Place interval labels
+	at the end of each row when printing CSV with headers, so that
+	parsing with simpler tools need not understand double quotes and
+	spaces inside strings.
+
+2009-11-19  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
+	Minor fix in the reporting of performance counters.
+
 	* lib/src/perf.c: Do not pad the Fibre array if the pad flag is
 	set to 0.
 
