@@ -19,12 +19,37 @@ bench.mk: $(top_srcdir)/build-aux/genbench.sh Makefile.am $(BENCHMARK_INPUTS)
 	$(AM_V_at)chmod -w $@.tmp
 	$(AM_V_at)mv $@.tmp $@
 
-.PHONY: bench clean-local-bench distclean-local-bench
+.PHONY: bench clean-local-bench distclean-local-bench ub-archives
 
 export AM_DEFAULT_VERBOSITY
 
 bench: $(BENCHMARKS:.c=.x) bench.mk
 	$(AM_V_at)$(MAKE) $(AM_MAKEFLAGS) -f bench.mk results
+
+ub-archives: $(BENCHMARKS:.c=.tar)
+
+SUFFIXES += .tar
+BENCHLIB = $(abs_top_srcdir)/benchmarks/lib/benchmark.c \
+           $(abs_top_srcdir)/benchmarks/lib/benchmark.h
+
+
+.c.tar: $(EXTRA_DIST) $(BENCHLIB)
+	$(AM_V_at)rm -rf $@ $@.tmp
+	$(AM_V_GEN)b="$<" && \
+	  bn=$$(basename $$b .c) && \
+	  rm -rf "$$bn" && \
+	  mkdir "$$bn" && \
+	  for f in $(EXTRA_DIST) $(BENCHLIB); do \
+	    dn=$$(dirname $$(echo $$f|$(SED) -e 's|^'$(abs_top_srcdir).*/'||g')) && \
+	    mkdir -p $$bn/$$dn && \
+	    cp `test -r $$f || echo $(srcdir)/`$$f $$bn/$$dn/; \
+	  done && \
+	  echo "a.out: $$bn.c benchmark.c; "'$$'"(COMPILER) "'$$'"(FLAGS) -I. -o "'$$'"@ "'$$'"^" \
+	     >$$bn/Makefile && \
+	  tardir=$$bn && $(am__tar) >$@.tmp && \
+	  rm -rf $$bn
+	$(AM_V_at)chmod -w $@.tmp
+	$(AM_V_at)mv -f $@.tmp $@
 
 clean-local-bench:
 	if test -r bench.mk; then $(MAKE) $(AM_MAKEFLAGS) -f bench.mk clean; fi

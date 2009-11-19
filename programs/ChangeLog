@@ -1,5 +1,12 @@
 2009-11-19  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	Generation source archives suitable for Unibench automatically.
+	
+	* build-aux/benchmarks.mk: Add new target `ub-archives'. This
+	generates one tar file per benchmark set in `$(BENCHMARKS)'.
+
+2009-11-19  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	Minor packaging fix.
 
 	* benchmarks/blas/Makefile.am: Also distribute the benchmarking
