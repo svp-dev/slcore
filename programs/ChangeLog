@@ -1,5 +1,12 @@
 2009-11-19  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	Fix bug in BLAS benchmarks.
+
+	* benchmarks/blas/templates/bench-xrot.c: Properly read array
+	`sx'.
+
+2009-11-19  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	Minor benchmarking fix.
 	
 	* benchmarks/lib/benchmark.c: Do not pad Fibre arrays in the
