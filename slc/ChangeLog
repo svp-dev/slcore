@@ -1,3 +1,10 @@
+2009-11-19  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
+	Fix bug in `slr'.
+	
+	* tools/lib/r-mt-sim.sh.in: Restore proper default setting of the
+	number of cores when not specified on the command line.
+
 2009-11-18  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
 	Tweak the output format of the reporting of performance counters.
