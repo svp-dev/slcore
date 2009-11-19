@@ -1,5 +1,13 @@
 2009-11-19  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	Minor benchmarking fix.
+
+	* benchmarks/lib/benchmark.c: Also print headers when using
+	CSV. Delimit benchmarking output with "### begin" and "### end"
+	markers.
+
+2009-11-19  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	Generation source archives suitable for Unibench automatically.
 	
 	* build-aux/benchmarks.mk: Add new target `ub-archives'. This
