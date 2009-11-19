@@ -12,17 +12,19 @@
 ##
 
 # 
-DEMOS = fft_bench1.c fft_bench2.c fft_test1.c fft_test2.c
-TESTS = fft_test1.c fft_test2.c
+BENCHMARKS = \
+	fft-bench1.c \
+	fft-bench2.c
 
-include $(top_srcdir)/build-aux/slctests.mk
+BENCHMARK_INPUTS = \
+	fft.d1 fft.d2 fft.d8 fft.d256 fft.d1024 fft.d4096 fft.d16384 fft.d65536
 
-EXTRA_DIST = $(DEMOS) fft_bench.c fft_test.c fft_impl1.c fft_impl2.c fft.h fft_extra.c
+EXTRA_DIST = \
+	$(BENCHMARKS) \
+	$(BENCHMARK_INPUTS) \
+	fft-bench.c fft_impl1.c fft_impl2.c fft.h fft_extra.c
 
-if ENABLE_DEMOS
-noinst_DATA = $(DEMOS:.c=.x)
-CLEANFILES = $(DEMOS:.c=.x) $(DEMOS:.c=.bin.*)
-endif
+include $(top_srcdir)/build-aux/benchmarks.mk
 
 #####  Special targets for the FFT demo #####
 
@@ -31,10 +33,8 @@ dist_noinst_SCRIPTS = testfft.sh gen_table_2.sh
 BUILT_SOURCES = fft_table1_16_data.h fft_table1_8_data.h fft_table2_16_data.h fft_table2_8_data.h
 DISTCLEANFILES = $(BUILT_SOURCES)
 
-fft_bench1.x: fft_bench.c fft_impl1.c fft.h fft_table1_16_data.h
-fft_bench2.x: fft_bench.c fft_impl2.c fft.h fft_table2_16_data.h
-fft_test1.x: fft_test.c fft_impl1.c fft_extra.c fft.h fft_table1_8_data.h
-fft_test2.x: fft_test.c fft_impl2.c fft_extra.c fft.h fft_table2_8_data.h
+fft-bench1.x: fft-bench.c fft_impl1.c fft.h fft_table1_16_data.h
+fft-bench2.x: fft-bench.c fft_impl2.c fft.h fft_table2_16_data.h
 
 noinst_PROGRAMS = gen_table_1_16 gen_table_1_8
 gen_table_1_16_SOURCES = gen_table_1.c

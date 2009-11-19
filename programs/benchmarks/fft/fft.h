@@ -15,6 +15,8 @@
 #ifndef SLC_PROGRAMS_BENCHMARKS_FFT_FFT_H
 # define SLC_PROGRAMS_BENCHMARKS_FFT_FFT_H
 
+#include "benchmark.h"
+
 #define FT double
 
 typedef struct { FT re; FT im; } cpx_t;
@@ -27,16 +29,16 @@ sl_decl(FFT_1, void,
        sl_shparm(long, token),
        sl_glparm(const void*, t));
 
-/* FFT */
-sl_decl(FFT, void,
-	sl_glparm(cpx_t*restrict, X),
-	sl_glparm(unsigned long, M),
-	sl_glparm(long, do_bitreversal));
-
-/* inverse FFT */
 sl_decl(FFT_Inv, void,
 	sl_glparm(cpx_t*restrict, X),
-	sl_glparm(unsigned long, M));
+	sl_glparm(unsigned long, M),
+	sl_glparm(struct work_lapses*, wl));
+
+sl_decl(FFT, void,
+       sl_glparm(cpx_t*restrict, X),
+       sl_glparm(unsigned long, M),
+       sl_glparm(struct work_lapses*, wl),
+       sl_glparm(const char*, wname));
 
 #define STRINGIFY_(N) # N
 #define STRINGIFY(N) STRINGIFY_(N)

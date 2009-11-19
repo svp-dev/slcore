@@ -1,5 +1,36 @@
 2009-11-19  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	Update FFT benchmark for use with Unibench.
+	
+	* benchmarks/fft/fft_bench.c,
+	* benchmarks/fft/fft_bench1.c,
+	* benchmarks/fft/fft_bench2.c,
+	* benchmarks/fft/fft_test.c,
+	* benchmarks/fft/fft_test1.c,
+	* benchmarks/fft/fft_test2.c: Remove.
+
+	* benchmarks/fft/fft-bench.c,
+	* benchmarks/fft/fft-bench1.c,	
+	* benchmarks/fft/fft-bench2.c: New. Use benchmarking framework.
+
+	* benchmarks/fft/Makefile.am,
+	* benchmarks/fft/fft.h,
+	* benchmarks/fft/fft_extra.c: Update accordingly.
+	
+	* benchmarks/fft/fft-bench1.inputs,
+	* benchmarks/fft/fft-bench2.inputs,
+	* benchmarks/fft/fft.d1,
+	* benchmarks/fft/fft.d8,
+	* benchmarks/fft/fft.d256,
+	* benchmarks/fft/fft.d1024,
+	* benchmarks/fft/fft.d4096,
+	* benchmarks/fft/fft.d16384,
+	* benchmarks/fft/fft.d65536: New data inputs.
+	
+	* benchmarks/fft/README: Update documentation accordingly.
+
+2009-11-19  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	Minor benchmarking fix.
 	
 	* build-aux/genbench.sh: Reduce the number of data files (reuse

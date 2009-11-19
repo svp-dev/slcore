@@ -56,24 +56,28 @@ sl_enddef
 sl_def(FFT, void,
        sl_glparm(cpx_t*restrict, X),
        sl_glparm(unsigned long, M),
-       sl_glparm(long, do_bitreversal))
+       sl_glparm(struct work_lapses*, wl),
+       sl_glparm(const char*, wname))
 {
   unsigned long N = 1 << sl_getp(M);
+  struct work_lapses *wl = sl_getp(wl);
 
-  if (sl_getp(do_bitreversal)) {
-    sl_create(,,,N-1,,,, FFT_Reverse,
-	      sl_glarg(cpx_t*restrict, gX, sl_getp(X)),
-	      sl_glarg(unsigned long, gN, N/2),
-	      sl_sharg(unsigned long, j, 0));
-    sl_sync();
-  }
-
-  sl_create(,PLACE_LOCAL,1,sl_getp(M)+1,1,,, FFT_1,
-	    sl_glarg(cpx_t*restrict, gX, sl_getp(X)),
-	    sl_glarg(unsigned long, gN, N/2),
-	    sl_sharg(long, token, 0),
-	    sl_glarg(const void*, gt, sc_table));
+  start_interval(wl, "reversal");
+  sl_create(,,,N-1,,2,, FFT_Reverse,
+	    sl_glarg(cpx_t*restrict, , sl_getp(X)),
+	    sl_glarg(unsigned long, , N/2),
+	    sl_sharg(unsigned long, , 0));
   sl_sync();
+  finish_interval(wl);
+
+  start_interval(wl, sl_getp(wname));
+  sl_create(,PLACE_LOCAL,1,sl_getp(M)+1,1,,, FFT_1,
+	    sl_glarg(cpx_t*restrict, , sl_getp(X)),
+	    sl_glarg(unsigned long, , N/2),
+	    sl_sharg(long, , 0),
+	    sl_glarg(const void*, , sc_table));
+  sl_sync();
+  finish_interval(wl);
 }
 sl_enddef
 
@@ -100,25 +104,32 @@ sl_enddef
 
 sl_def(FFT_Inv, void,
        sl_glparm(cpx_t*restrict, X),
-       sl_glparm(unsigned long, M))
+       sl_glparm(unsigned long, M),
+       sl_glparm(struct work_lapses*, wl))
 {
   unsigned long N = 1 << sl_getp(M);
+  struct work_lapses *wl = sl_getp(wl);
 
+  start_interval(wl, "conj");
   sl_create(,,,N,,,, Conjugate,
 	    sl_glarg(cpx_t*restrict, gX, sl_getp(X)));
   sl_sync();
+  finish_interval(wl);
 
-
+  
   sl_create(,,,,,,, FFT,
 	    sl_glarg(cpx_t*restrict, gX2, sl_geta(gX)),
-	    sl_glarg(unsigned long, gM, sl_getp(M)),
-	    sl_glarg(long, gDBR, 1));
+	    sl_glarg(unsigned long, , sl_getp(M)),
+	    sl_glarg(struct work_lapses*, , wl),
+	    sl_glarg(const char*, , "work2"));
   sl_sync();
 
+  start_interval(wl, "scale");
   sl_create(,,,N,,,, Scale,
-	    sl_glarg(cpx_t*restrict, gX3, sl_geta(gX2)),
+	    sl_glarg(cpx_t*restrict, , sl_geta(gX2)),
 	    sl_glarg(unsigned long, gN, N));
   sl_sync();
+  finish_interval(wl);
 
 }
 sl_enddef
