@@ -1,5 +1,31 @@
 2009-12-06  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	Build and run LL suite using new framework.
+
+	* benchmarks/livermore/Makefile.am: Use the new files.
+
+	* benchmarks/livermore/ll.h,
+	* benchmarks/livermore/arrays.h,
+	* benchmarks/livermore/main_bench.c,
+	* benchmarks/livermore/main_test.c,
+	* benchmarks/livermore/main_simple.c,
+	* benchmarks/livermore/bench1.bin.mtalpha.psize,
+	* benchmarks/livermore/bench2.bin.mtalpha.psize,
+	* benchmarks/livermore/bench3.bin.mtalpha.psize,
+	* benchmarks/livermore/bench4.bin.mtalpha.psize,
+	* benchmarks/livermore/bench5.bin.mtalpha.psize,
+	* benchmarks/livermore/bench6.bin.mtalpha.psize,
+	* benchmarks/livermore/bench7.bin.mtalpha.psize,
+	* benchmarks/livermore/bench8.bin.mtalpha.psize,
+	* benchmarks/livermore/bench9.bin.mtalpha.psize,
+	* benchmarks/livermore/bench10.bin.mtalpha.psize,
+	* benchmarks/livermore/bench11.bin.mtalpha.psize,
+	* benchmarks/livermore/bench12.bin.mtalpha.psize,
+	* benchmarks/livermore/bench13.bin.mtalpha.psize,
+	* benchmarks/livermore/bench14.bin.mtalpha.psize: Remove (obsolete).
+
+2009-12-06  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	More kernels in LL suite.
 	
 	* benchmarks/livermore/kernel21.c: 

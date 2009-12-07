@@ -11,60 +11,15 @@
 ## `COPYING' file in the root directory.
 ##
 
-STATIC_DEMOS = k2-alt.c k4-alt.c
-DEMOS = $(STATIC_DEMOS)
-EXTRA_DIST = \
-	benchmarker.sh bench.exp \
-	main_bench.c main_simple.c main_test.c \
-	arrays.h ll.h \
-	$(STATIC_DEMOS)
-DISTCLEANFILES = 
-check_DATA = 
+BENCHMARKS = bench1.c bench2.c bench3.c bench4.c bench5.c bench6.c	\
+	bench7.c bench8.c bench9.c bench10.c bench11.c bench12.c	\
+	bench15.c bench19.c bench21.c bench22.c bench23.c
 
-define gen-ll-program
-	$(AM_V_at)rm -f $@ $@.tmp
-	$(AM_V_GEN)(echo "/* This file was auto-generated. Do not edit! */" && \
-	echo "// XIGNORE: *:D" && \
-	echo "#define ACTUALKERNEL kernel$*" && \
-	echo "#define KERNEL $*" && \
-	echo '#include "ll.h"' && \
-	for u in `$(GREP) "LL_USE:" <"$<"|$(SED) -e 's/^.*:\([^:]*\)$$/\1/g;s/,/ /g'`; do \
-	  $(SED) -e 's,//.*$$,,g' <"$(srcdir)/arrays.h" | $(GREP) " $$u[^a-zA-Z0-9_]" && \
-	  echo "const long donttouch$$RANDOM[4096] = {0};"; \
-	done && \
-	echo '#include "k$*.c"' && \
-	echo '#include "main_$(subst $*,,$@)"') >$@.tmp
-	$(AM_V_at)chmod a-w $@.tmp
-	$(AM_V_at)mv $@.tmp $@
-endef
+BENCHMARK_INPUTS = bench1.inputs bench2.inputs bench3.inputs bench4.inputs bench5.inputs bench6.inputs	\
+	bench7.inputs bench8.inputs bench9.inputs bench10.inputs bench11.inputs bench12.inputs	\
+	bench15.inputs bench19.inputs bench21.inputs bench22.inputs bench23.inputs
 
-simple%.c: k%.c arrays.h Makefile.am
-	$(gen-ll-program)
+EXTRA_DIST = $(BENCHMARKS) $(BENCHMARK_INPUTS)
 
-bench%.c: k%.c arrays.h Makefile.am
-	$(gen-ll-program)
-	$(AM_V_at)chmod +w $@
-	$(AM_V_at)echo "// SLT_RUN: -f TEST.in" >>$@
-	$(AM_V_at)chmod -w $@
-
-test%.c: k%.c arrays.h Makefile.am
-	$(gen-ll-program)
-
-bench%.c.in: bench%.bin.mtalpha.psize
-	$(AM_V_at)rm -f $@ $@.tmp
-	$(AM_V_GEN)(echo 1; cat $<) >$@.tmp
-	$(AM_V_at)chmod a-w $@.tmp
-	$(AM_V_at)mv -f $@.tmp $@
-
-include $(srcdir)/ll.mk
-
-TESTS = $(DEMOS)
-
-include $(top_srcdir)/build-aux/slctests.mk
-
-if ENABLE_DEMOS
-noinst_DATA = $(DEMOS:.c=.x)
-CLEANFILES = $(DEMOS:.c=.x) $(DEMOS:.c=.bin.*)
-endif
-
+include $(top_srcdir)/build-aux/benchmarks.mk
 
