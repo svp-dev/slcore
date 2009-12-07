@@ -18,7 +18,7 @@
 #include <svp/testoutput.h>
 #include <cmath.h>
 
-static const char *digits = "0123456789abcdef";
+static const char digits[] = "0123456789abcdef";
 
 sl_def(svp_io_putc, void,
        sl_glparm(char, c))
