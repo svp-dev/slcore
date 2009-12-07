@@ -1,5 +1,15 @@
 2009-12-02  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	Extend the SL library with C's character type predicates.
+
+	* lib/include/cctype.h,
+	* lib/src/ctype.c: New.
+
+	* lib/Makefile.am,
+	* lib/mtalpha.mk: Update accordingly.
+
+2009-12-02  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	Minor optimization.
 
 	* lib/src/io.c: Expose staticness of `digits' to the compiler.

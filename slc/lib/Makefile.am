@@ -32,6 +32,7 @@ nobase_dist_pkgdata_DATA = \
 	include/cmath.h \
 	include/cfloat.h \
 	include/ctime.h \
+	include/cctype.h \
 	include/bits/float.h \
 	include/sac_helpers.h \
 	include/svp/argslot.h \

@@ -12,7 +12,8 @@ EXTRA_DIST += \
 	src/malloc.c \
 	src/mtinit.c \
 	src/mtsep.c \
-	src/strlib.c
+	src/strlib.c \
+	src/ctype.c
 
 nobase_dist_pkgdata_DATA += \
 	mtalpha-sim/include/svp_os.h \
@@ -41,7 +42,8 @@ mtalpha_sim_libsl_a_CONTENTS = \
 	mtalpha-sim/malloc_wrappers.o \
 	mtalpha-sim/malloc_intrinsics.o \
 	mtalpha-sim/malloc.o \
-	mtalpha-sim/strlib.o
+	mtalpha-sim/strlib.o \
+	mtalpha-sim/ctype.o
 
 include $(srcdir)/src/mtamathobjs.mk
 EXTRA_DIST += $(MTAMATHOBJS)
@@ -131,6 +133,7 @@ CLEANFILES += \
 	mtalpha-sim/mtinit.o \
 	mtalpha-sim/mtsep.o \
 	mtalpha-sim/strlib.o \
+	mtalpha-sim/ctype.o \
 	mtalpha-sim/missing_uclibc_math.o \
 	mtalpha-sim/libm.a \
 	mtalpha-sim/libsl.a
