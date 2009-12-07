@@ -1,5 +1,32 @@
 2009-12-03  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	Improve LL benchmark suite, start merging changes from M. Hicks.
+
+	* benchmarks/livermore/kernel1.c,
+	* benchmarks/livermore/kernel2.c,
+	* benchmarks/livermore/kernel3.c,
+	* benchmarks/livermore/kernel4.c,
+	* benchmarks/livermore/kernel5.c,
+	* benchmarks/livermore/kernel6.c,
+	* benchmarks/livermore/kernel7.c,
+	* benchmarks/livermore/kernel8.c,
+	* benchmarks/livermore/kernel9.c,
+	* benchmarks/livermore/kernel10.c,
+	* benchmarks/livermore/kernel11.c,
+	* benchmarks/livermore/kernel12.c,
+	* benchmarks/livermore/kernel15.c,
+	* benchmarks/livermore/kernel18.c,
+	* benchmarks/livermore/kernel19.c: New.
+
+	* benchmarks/livermore/ll-bounds.ods,
+	* benchmarks/livermore/ll-bounds.csv: Fix some interfaces.
+
+	* benchmarks/livermore/ll-generate.py: Properly sort parameters
+	for initialization. Generate a prototype for the `kernel'
+	function. Pass number of cores if known from SEP.
+
+2009-12-03  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	Start automating the LL benchmark suite.
 	
 	* benchmarks/livermore/ll-bounds.ods,

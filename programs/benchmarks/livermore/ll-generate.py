@@ -42,7 +42,9 @@ sl_def(initialize, void,
    bdata->n = *(unsigned long*)fibre_data(f); ++f;
 """
 
-    for (name, spec) in k['args'].items():
+    l = k['args'].keys()
+    l.sort()
+    for (name, spec) in ((v, k['args'][v]) for v in l):
         print >>f, '   output_string("#  reading data for %s...\\n", 1);' % name
         print >>f, "   svp_assert(fibre_tag(f) == 2);"
         if spec['type'] == 'scalar':
@@ -136,14 +138,42 @@ sl_enddef
 """
 
 def genwork(f, k):
-    print >>f, """
+
+    print >>f, """sl_decl(kernel%d, void,
+   sl_glparm(size_t, ncores),
+   sl_glparm(size_t, n)""" % k['idx']
+
+    l = k['args'].keys()
+    l.sort()
+    for (name, spec) in ((v, k['args'][v]) for v in l):
+        if spec['type'] == 'scalar':
+            if 'w' in spec['mode']:
+                print >>f, "     , sl_shfparm(double, %s)" % name
+            else:
+                print >>f, "     , sl_glfparm(double, %s)" % name
+        else:
+            if 'w' in spec['mode']:
+                print >>f, "     , sl_glparm(double*restrict, %s)" % name
+            else:
+                print >>f, "     , sl_glparm(const double*restrict, %s)" % name
+            for (i,_) in enumerate(spec['size']):
+                print >>f, "     , sl_glparm(size_t, %s_dim%d)" % (name, i)
+   
+    print >>f, """);
+
 #include "kernel%d.c"
 
 sl_def(work, void,
     sl_glparm(struct benchmark_state*, st))
 {
    struct bdata *bdata = (struct bdata*)sl_getp(st)->data;
-   sl_create(,,,,,,, kernel%d, sl_glarg(size_t, , bdata->n) 
+   sl_create(,,,,,,, kernel%d, 
+#if SVP_HAS_SEP
+             sl_glarg(size_t, , sl_getp(st)->place->ncores),
+#else
+             sl_glarg(size_t, , 0),
+#endif
+             sl_glarg(size_t, , bdata->n)
 """ % (k['idx'], k['idx'])
     
     l = k['args'].keys()
