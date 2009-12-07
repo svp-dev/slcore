@@ -23,7 +23,7 @@ m4_define([[sl_anonymous]], [[m4_step([[_sl_anonct]])[[__slanon]]_sl_anonct]])
 
 # sl_breakable() - helper macro, returns 1 if type is non-void or
 # non-empty
-m4_define([[sl_breakable]],[[m4_case([[$1]],[[void]],0,[[]],0,1)]])
+m4_define([[sl_breakable]],[[m4_case(m4_normalize([[$1]]),[[void]],0,[[]],0,1)]])
 
 # load implementation-specific definitions
 m4_include([[slimpl.m4]])

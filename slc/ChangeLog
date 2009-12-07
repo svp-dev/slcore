@@ -1,3 +1,10 @@
+2009-12-06  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
+	Minor fix in SL macro expansion.
+	
+	* tools/include/slc.m4: Strip whitespace to determine the break
+	type.
+
 2009-12-02  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
 	Extend the SL library with C's character type predicates.
