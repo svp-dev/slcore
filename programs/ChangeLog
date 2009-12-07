@@ -1,5 +1,31 @@
 2009-12-07  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	Generate BLAS data automatically.
+
+	* benchmarks/blas/gendata.sh: New.
+	
+	* benchmarks/blas/data/cvv.d1, benchmarks/blas/data/cvv.d10,
+	benchmarks/blas/data/cvv.d100, benchmarks/blas/data/cvv.d1000,
+	benchmarks/blas/data/cvv.d10000, benchmarks/blas/data/cvv.d100000,
+	benchmarks/blas/data/cvv.d2, benchmarks/blas/data/cvv.d20,
+	benchmarks/blas/data/cvv.d200, benchmarks/blas/data/cvv.d2000,
+	benchmarks/blas/data/cvv.d20000, benchmarks/blas/data/cvv.d5,
+	benchmarks/blas/data/cvv.d50, benchmarks/blas/data/cvv.d500,
+	benchmarks/blas/data/cvv.d5000, benchmarks/blas/data/cvv.d50000,
+	benchmarks/blas/data/vvcc.d1, benchmarks/blas/data/vvcc.d10,
+	benchmarks/blas/data/vvcc.d100, benchmarks/blas/data/vvcc.d1000,
+	benchmarks/blas/data/vvcc.d10000,
+	benchmarks/blas/data/vvcc.d100000, benchmarks/blas/data/vvcc.d2,
+	benchmarks/blas/data/vvcc.d20, benchmarks/blas/data/vvcc.d200,
+	benchmarks/blas/data/vvcc.d2000, benchmarks/blas/data/vvcc.d20000,
+	benchmarks/blas/data/vvcc.d5, benchmarks/blas/data/vvcc.d50,
+	benchmarks/blas/data/vvcc.d500, benchmarks/blas/data/vvcc.d5000,
+	benchmarks/blas/data/vvcc.d50000: Remove, as it is now
+	automatically generated.
+
+
+2009-12-07  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	Test benchmarks during `make check'.
 	
 	* build-aux/genbench.sh: Also generate targets suitable for `make
