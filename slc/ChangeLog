@@ -1,3 +1,12 @@
+2009-11-24  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
+	Minor `slr' fix.
+	
+	* tools/bin/slr.in,	
+	* tools/lib/r-mt-sim.sh.in: Talk about "graphic update delay"
+	instead of "rate", to reflect the features available in the MG
+	simulator.
+
 2009-11-19  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
 	Extend Fibre syntax recognized by `slr'.

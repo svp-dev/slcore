@@ -87,7 +87,7 @@ if test -n "${SIMGFX:-}"; then
 	    simargs_base+=(-o GfxDisplayWidth=${gfx_geometry%,*} -o GfxDisplayHeight=${gfx_geometry#*,})
 	fi
 	if test -n "${gfx_refresh:-}"; then
-	    simargs_base+=(-o GfxRefreshRate=$gfx_refresh)
+	    simargs_base+=(-o GfxRefreshDelay=$gfx_refresh)
 	fi
     fi
 fi

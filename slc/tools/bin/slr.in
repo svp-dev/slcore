@@ -101,7 +101,7 @@ Other options:
 
   -Xs HS,VS            Set initial gfx scaling factors to HSxVS. Implies -X.
   
-  -Xr RATE             Set gfx refresh rate to RATE. Implies -X.
+  -Xr RATE             Set gfx update rate to RATE (cycles/frame). Implies -X.
 
   -h, --help           Print this help, then exit.
 
