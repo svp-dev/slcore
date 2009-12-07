@@ -1,3 +1,11 @@
+2009-12-03  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
+	Start automating the LL benchmark suite.
+	
+	* benchmarks/livermore/ll-bounds.ods,
+	* benchmarks/livermore/ll-bounds.csv,
+	* benchmarks/livermore/ll-generate.py: New.
+
 2009-11-19  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
 	Minor benchmarking fixes.
