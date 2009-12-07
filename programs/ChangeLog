@@ -1,3 +1,11 @@
+2009-12-06  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
+	More kernels in LL suite.
+	
+	* benchmarks/livermore/kernel21.c: 
+	* benchmarks/livermore/kernel22.c: 
+	* benchmarks/livermore/kernel23.c: New.
+
 2009-12-03  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
 	Improve LL benchmark suite, start merging changes from M. Hicks.
