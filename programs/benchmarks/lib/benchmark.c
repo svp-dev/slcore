@@ -104,7 +104,7 @@ sl_def(run_benchmark, void, sl_glparm(struct benchmark*, b))
     pid = bs.place->pid;
 
     if (sep_dump) {
-      puts("# SEP status dump after initial allocation:\n");
+      puts("done\n# SEP status dump after initial allocation:\n");
       sl_create(,root_sep->sep_place|1,,,,,, root_sep->sep_dump_info,
 		sl_glarg(struct SEP*, , root_sep));
       sl_sync();

@@ -1,5 +1,11 @@
 2009-12-07  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	Minor fix in benchmarking output.
+
+	* benchmarks/lib/benchmark.c: Insert line break before SEP dump.
+
+2009-12-07  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	Convert more benchmark input for use with `make check'.
 
 	* benchmarks/fft/fft.d8,
