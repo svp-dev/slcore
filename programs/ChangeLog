@@ -1,3 +1,14 @@
+2009-12-07  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
+	Test benchmarks during `make check'.
+	
+	* build-aux/genbench.sh: Also generate targets suitable for `make
+	check', based on input data files containing the text "USE IN MAKE
+	CHECK". Capture all output to log file since the measurements are
+	now extracted using delimiters.
+
+	* build-aux/benchmarks.mk: Use them.
+
 2009-12-06  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
 	Fix LL benchmark code generation.

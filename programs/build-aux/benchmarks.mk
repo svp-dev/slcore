@@ -26,6 +26,13 @@ export AM_DEFAULT_VERBOSITY
 bench: $(BENCHMARKS:.c=.x) bench.mk
 	$(AM_V_at)$(MAKE) $(AM_MAKEFLAGS) -f bench.mk results
 
+check-local: $(BENCHMARKS:.c=.x) bench.mk
+	$(AM_V_at)$(MAKE) $(AM_MAKEFLAGS) -f bench.mk check
+
+recheck: $(BENCHMARKS:.c=.x) bench.mk
+	$(AM_V_at)$(MAKE) $(AM_MAKEFLAGS) -f bench.mk recheck
+	
+
 ub-archives: $(BENCHMARKS:.c=.tar)
 
 SUFFIXES += .tar
