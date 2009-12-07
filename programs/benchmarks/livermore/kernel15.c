@@ -111,11 +111,11 @@ sl_def(innerk15, void,
     long j = iter / NG + 1;
     long k = iter % NG + 1;
 
-    const double (*restrict VF)[][sl_getp(VF_dim0)] = (const double (*)[][sl_getp(VF_dim0)])sl_getp(VF);
-    const double (*restrict VG)[][sl_getp(VG_dim0)] = (const double (*)[][sl_getp(VG_dim0)])sl_getp(VG);
-    const double (*restrict VH)[][sl_getp(VH_dim0)] = (const double (*)[][sl_getp(VH_dim0)])sl_getp(VH);
-    double (*restrict VS)[][sl_getp(VS_dim0)] = (double (*)[][sl_getp(VS_dim0)])sl_getp(VS);
-    double (*restrict VY)[][sl_getp(VY_dim0)] = (double (*)[][sl_getp(VY_dim0)])sl_getp(VY);
+    const double (*restrict VF)[][(size_t)sl_getp(VF_dim0)] = (const double (*)[][(size_t)sl_getp(VF_dim0)])(const double*)sl_getp(VF);
+    const double (*restrict VG)[][(size_t)sl_getp(VG_dim0)] = (const double (*)[][(size_t)sl_getp(VG_dim0)])(const double*)sl_getp(VG);
+    const double (*restrict VH)[][(size_t)sl_getp(VH_dim0)] = (const double (*)[][(size_t)sl_getp(VH_dim0)])(const double*)sl_getp(VH);
+    double (*restrict VS)[][(size_t)sl_getp(VS_dim0)] = (double (*)[][(size_t)sl_getp(VS_dim0)])(double*)sl_getp(VS);
+    double (*restrict VY)[][(size_t)sl_getp(VY_dim0)] = (double (*)[][(size_t)sl_getp(VY_dim0)])(double*)sl_getp(VY);
 
     double AR = sl_getp(AR);
     double BR = sl_getp(BR);

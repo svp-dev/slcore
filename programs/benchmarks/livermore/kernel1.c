@@ -49,7 +49,7 @@ sl_def(kernel1, void,
        sl_glparm(const double*restrict, Y),
        sl_glparm(size_t, Y_dim),
        sl_glparm(const double*restrict, ZX),
-       sl_glparm(size_t, ZX))
+       sl_glparm(size_t, ZX_dim))
 {
     // calculate array base pointers and values here
     // to avoid calculatoin in each subordinate

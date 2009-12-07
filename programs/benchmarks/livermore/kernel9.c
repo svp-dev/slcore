@@ -54,7 +54,7 @@ sl_def(innerk9, void
 }
 sl_enddef
 
-sl_def(kernel9, void
+sl_def(kernel9, void,
        sl_glparm(size_t, ncores),
        sl_glparm(size_t, n)
        , sl_glfparm(double, C0)

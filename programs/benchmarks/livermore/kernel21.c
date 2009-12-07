@@ -37,9 +37,9 @@ sl_def(cell, void,
 {
     sl_index(jk);
     
-    double (*restrict PX)[sl_getp(n)][25] = (double (*)[sl_getp(n)][25])sl_getp(PX);
-    const double (*restrict CX)[sl_getp(n)][25] = (const double (*)[sl_getp(n)][25])sl_getp(CX);
-    const double (*restrict VY)[25][sl_getp(n)] = (const double (*)[25][sl_getp(n)])sl_getp(VY);
+    double (*restrict PX)[(size_t)sl_getp(n)][25] = (double (*)[(size_t)sl_getp(n)][25])(double*)sl_getp(PX);
+    const double (*restrict CX)[(size_t)sl_getp(n)][25] = (const double (*)[(size_t)sl_getp(n)][25])(const double*)sl_getp(CX);
+    const double (*restrict VY)[25][(size_t)sl_getp(n)] = (const double (*)[25][(size_t)sl_getp(n)])(const double*)sl_getp(VY);
 
     long k = jk / 25;
     long j = jk % 25;

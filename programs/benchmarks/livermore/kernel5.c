@@ -37,7 +37,7 @@ sl_enddef
 
 sl_def(kernel5,void,
        sl_glparm(size_t, ncores),
-       sl_glparm(size_t, n),       
+       sl_glparm(size_t, n)
        , sl_glparm(double*restrict, X)
        , sl_glparm(size_t, X_dim0)
        , sl_glparm(const double*restrict, Y)

@@ -40,7 +40,7 @@ sl_def(innerk7, void,
 }
 sl_enddef
 
-sl_def(kernel,void
+sl_def(kernel7, void,
        sl_glparm(size_t, ncores),
        sl_glparm(size_t, n)
        , sl_glfparm(double, Q)

@@ -29,13 +29,13 @@
 
 sl_def(innerk4, void,
        sl_shfparm(double, total),
-       sl_glparm(const double*restrict, X),
+       sl_glparm(const double*restrict, XZ),
        sl_glparm(const double*restrict, Y),
        sl_glparm(long, lw))
 {
     sl_index(i);
     //j -> 5step with a starting value of 4
-    sl_setp(total, -(sl_getp(X)[sl_getp(lw)+i] * sl_getp(Y)[(i*5) + 4]) + sl_getp(total));
+    sl_setp(total, -(sl_getp(XZ)[sl_getp(lw)+i] * sl_getp(Y)[(i*5) + 4]) + sl_getp(total));
 }
 sl_enddef
 
@@ -43,7 +43,7 @@ sl_enddef
 //method to perform a graph reduction of the above dependent kernel over CORES
 sl_def(reductionk4, void,
        sl_shfparm(double, total),
-       sl_glparm(double*, X),
+       sl_glparm(double*, XZ),
        sl_glparm(double*, Y),
        sl_glparm(long, lw),
        sl_glparm(long, iternum))
@@ -56,8 +56,8 @@ sl_def(reductionk4, void,
     if (redindex == 0) lower=4;
 
     sl_create(,, lower, upper, 1,,, innerk4,
-              sl_shfarg(double, totalr, sl_getp(X)[sl_getp(lw)+5]),
-              sl_glarg(const double*, , sl_getp(X)),
+              sl_shfarg(double, totalr, sl_getp(XZ)[sl_getp(lw)+5]),
+              sl_glarg(const double*, , sl_getp(XZ)),
               sl_glarg(const double*, , sl_getp(Y)),
               sl_glarg(long, , sl_getp(lwr)));
     sl_sync();
@@ -75,7 +75,7 @@ sl_def(outerk4, void,
        sl_glparm(long, span),
 #endif
        sl_glparm(long, range),
-       sl_glparm(double*restrict, X),
+       sl_glparm(double*restrict, XZ),
        sl_glparm(const double*restrict, Y))
 {
     sl_index(k);
@@ -114,7 +114,7 @@ sl_def(outerk4, void,
 }
 sl_enddef
 
-sl_def(kernel, void,
+sl_def(kernel4, void,
        sl_glparm(size_t, ncores),
        sl_glparm(size_t, n),
        sl_glparm(double*restrict, XZ),
@@ -141,23 +141,3 @@ sl_def(kernel, void,
 }
 sl_enddef
 
-/*
-  sl_def(kernel4, void)
-  {
-  // outer loop as sequential loop
-  unsigned int counter;
-	
-  for(counter=6; counter<inner[KERNEL];counter+=MSTEP){
-		
-  sl_create(,, 0,inner[KERNEL],1,blocksize[KERNEL],,innerk4,
-  sl_shfarg(double, ttotal, x[counter-1]),
-  sl_glarg(double*,xxl,x),
-  sl_glarg(double*, yyl, y),
-  sl_glarg(unsigned int, llw,(counter-6)));
-  sl_sync();
-		
-  x[counter-1] = y[4] * sl_geta(ttotal);
-  }
-  }
-  sl_enddef
-*/

@@ -1,5 +1,22 @@
 2009-12-06  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	Minor fixes in LL kernels.
+
+	* benchmarks/livermore/kernel10.c,
+	* benchmarks/livermore/kernel15.c,
+	* benchmarks/livermore/kernel21.c,	
+	* benchmarks/livermore/kernel23.c: Sanitize types in C99 VLA
+	declarations to please C++ compiler.
+	
+	* benchmarks/livermore/kernel1.c,
+	* benchmarks/livermore/kernel4.c,
+	* benchmarks/livermore/kernel5.c,
+	* benchmarks/livermore/kernel7.c,
+	* benchmarks/livermore/kernel9.c,
+	* benchmarks/livermore/kernel12.c: Fix typos.
+
+2009-12-06  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	Build and run LL suite using new framework.
 
 	* benchmarks/livermore/Makefile.am: Use the new files.

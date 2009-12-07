@@ -28,7 +28,7 @@ sl_def(innerk12,void,
 }
 sl_enddef
 
-sl_def(kernel,void,
+sl_def(kernel12,void,
        sl_glparm(size_t, ncores),
        sl_glparm(size_t, n)
        , sl_glparm(double*restrict, X)

@@ -42,13 +42,13 @@ sl_def(innerk23, void,
     sl_index(k);
     long j = sl_getp(j);
 
-#define access(A, a, b) (*(double (*restrict)[7][sl_getp(n)])sl_getp(A))[b][a]
-#define ZA(a, b) access(ZA, a, b)
-#define ZB(a, b) access(ZB, a, b)
-#define ZR(a, b) access(ZR, a, b)
-#define ZU(a, b) access(ZU, a, b)
-#define ZZ(a, b) access(ZZ, a, b)
-#define ZV(a, b) access(ZV, a, b)
+#define access(C, A, a, b) (*(C double (*restrict)[7][(size_t)sl_getp(n)])(C double*)sl_getp(A))[b][a]
+#define ZA(a, b) access( , ZA, a, b)
+#define ZB(a, b) access(const, ZB, a, b)
+#define ZR(a, b) access(const ,ZR, a, b)
+#define ZU(a, b) access(const, ZU, a, b)
+#define ZZ(a, b) access(const, ZZ, a, b)
+#define ZV(a, b) access(const, ZV, a, b)
 
     double fw = sl_getp(fw);
 
