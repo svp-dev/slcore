@@ -4,7 +4,9 @@ import csv
 import sys
 
 codepat = "bench%d.c"
+inpat = "bench%d.inputs"
 sizes = [100,200,500,1000,2000,5000,10000,20000,50000,100000]
+dataprefpat = "data/data%d"
 datapat = "data/data%d.d%d"
 authors = "mhicks & kena"
 
@@ -45,6 +47,8 @@ sl_def(initialize, void,
     l = k['args'].keys()
     l.sort()
     for (name, spec) in ((v, k['args'][v]) for v in l):
+        if 'r' not in spec['mode']:
+            continue
         print >>f, '   output_string("#  reading data for %s...\\n", 1);' % name
         print >>f, "   svp_assert(fibre_tag(f) == 2);"
         if spec['type'] == 'scalar':
@@ -246,6 +250,11 @@ sl_enddef
 
 def geninputs(k):
     idx = k['idx']
+    inf = inpat % idx
+    print "Generating %s..." % inf
+    f = file(inf,'w')
+    print >>f, dataprefpat % idx
+    f.close()
     for sz in sizes:
         n = int(sz * k['ratio'])
         if n < 10:

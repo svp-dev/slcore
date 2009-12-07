@@ -1,5 +1,13 @@
 2009-12-06  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	Fix LL benchmark code generation.
+
+	* benchmarks/livermore/ll-generate.py: Do not generate Fibre read
+	block for write-only kernel parameters. Also generate the
+	`benchX.inputs' file.
+
+2009-12-06  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	Minor fixes in LL kernels.
 
 	* benchmarks/livermore/kernel10.c,
