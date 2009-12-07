@@ -255,6 +255,7 @@ def geninputs(k):
     f = file(inf,'w')
     print >>f, dataprefpat % idx
     f.close()
+    hascheck = False
     for sz in sizes:
         n = int(sz * k['ratio'])
         if n < 10:
@@ -316,6 +317,9 @@ def geninputs(k):
                         print >>f, "[1,1: [1,1: [1,1: 1.0 ] ] ] # size unknown"
                 else:
                     print >>f, "[] # unknown rank"
+        if not hascheck:
+            print >>f, "# USE IN MAKE CHECK"
+            hascheck = True
         f.close()
 
 def D(name, props):

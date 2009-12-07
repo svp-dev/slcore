@@ -1,5 +1,14 @@
 2009-12-07  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	Convert more benchmark input for use with `make check'.
+
+	* benchmarks/fft/fft.d8,
+	* benchmarks/mandel/mandel.d1,
+	* benchmarks/livermore/ll-generate.py: Annotate some inputs for
+	`make check'.
+
+2009-12-07  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	Generate BLAS data automatically.
 
 	* benchmarks/blas/gendata.sh: New.
