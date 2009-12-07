@@ -53,22 +53,53 @@
 #  define output_float(F, Stream, Precision) ((((Stream) == 2)? std::cerr : std::cout) \
 					      << std::setprecision(Precision) \
 					      << std::scientific \
-					      << (double)F)
-#  define output_char(N, Stream) ((((Stream) == 2)? std::cerr : std::cout) << (char)(N))
-#  define output_hex(N, Stream) ((((Stream) == 2)? std::cerr : std::cout) << std::hex << (unsigned long)(N))
-#  define output_int(N, Stream) ((((Stream) == 2)? std::cerr : std::cout) << std::dec << (long)(N))
-#  define output_uint(N, Stream) ((((Stream) == 2)? std::cerr : std::cout) << std::dec << (unsigned long)(N))
-#  define output_string(S, Stream) ((((Stream) == 2)? std::cerr : std::cout) << (const char*)(S))
-#  define output_bytes(S, L, Stream) ((((Stream) == 2)? std::cerr : std::cout).write((const char*)(void*)(S), (L)))
+					      << (double)F << std::flush)
+#  define output_char(N, Stream) ((((Stream) == 2)? std::cerr : std::cout) << (char)(N) << std::flush)
+#  define output_hex(N, Stream) ((((Stream) == 2)? std::cerr : std::cout) << std::hex << (unsigned long)(N) << std::flush)
+#  define output_int(N, Stream) ((((Stream) == 2)? std::cerr : std::cout) << std::dec << (long)(N) << std::flush)
+#  define output_uint(N, Stream) ((((Stream) == 2)? std::cerr : std::cout) << std::dec << (unsigned long)(N) << std::flush)
+#  define output_string(S, Stream) ((((Stream) == 2)? std::cerr : std::cout) << (const char*)(S) << std::flush)
+#  define output_bytes(S, L, Stream) do { \
+        (((Stream) == 2)? std::cerr : std::cout).write((const char*)(void*)(S), (L)); \
+        (((Stream) == 2)? std::cerr : std::cout) << std::flush; \
+    } while(0)
 # else
 #  include <stdio.h>
-#  define output_float(F, Stream, Precision) fprintf((Stream) == 2 ? stderr : stdout, "%.*le", (Precision), (double)(F))
-#  define output_char(N, Stream) fprintf((Stream) == 2 ? stderr : stdout, "%c", (char)(N))
-#  define output_hex(N, Stream) fprintf((Stream) == 2 ? stderr : stdout, "%lx", (unsigned long)(N))
-#  define output_int(N, Stream) fprintf((Stream) == 2 ? stderr : stdout, "%ld", (long)(N))
-#  define output_uint(N, Stream) fprintf((Stream) == 2 ? stderr : stdout, "%lu", (unsigned long)(N))
-#  define output_string(S, Stream) fprintf((Stream) == 2 ? stderr : stdout, "%s", (const char*)(S))
-#  define output_bytes(S, L, Stream) fwrite((const char*)(S), (L), 1, (Stream) == 2 ? stderr : stdout)
+#  define output_float(F, Stream, Precision) do { \
+        FILE * __s = (Stream) == 2 ? stderr : stdout; \
+        fprintf(__s, "%.*le", (Precision), (double)(F)); \
+        fflush(__s); \
+    } while(0)
+#  define output_char(N, Stream) do { \
+        FILE * __s = (Stream) == 2 ? stderr : stdout; \
+        fprintf(__s, "%c", (char)(N)); \
+        fflush(__s); \
+    } while(0)
+#  define output_hex(N, Stream) do { \
+        FILE * __s = (Stream) == 2 ? stderr : stdout; \
+        fprintf(__s, "%lx", (unsigned long)(N)); \
+        fflush(__s); \
+    } while(0)
+#  define output_int(N, Stream) do { \
+        FILE * __s = (Stream) == 2 ? stderr : stdout; \
+        fprintf(__s, "%ld", (long)(N)); \
+        fflush(__s); \
+    } while(0)
+#  define output_uint(N, Stream) do { \
+        FILE * __s = (Stream) == 2 ? stderr : stdout; \
+        fprintf(__s, "%lu", (unsigned long)(N)); \
+        fflush(__s); \
+    } while(0)
+#  define output_string(S, Stream) do { \
+        FILE * __s = (Stream) == 2 ? stderr : stdout; \
+        fprintf(__s, "%s", (const char*)(S)); \
+        fflush(__s); \
+    } while(0)
+#  define output_bytes(S, L, Stream) do { \
+        FILE * __s = (Stream) == 2 ? stderr : stdout; \
+        fwrite((const char*)(S), (L), 1, __s); \
+        fflush(__s); \
+    } while(0)
 # endif
 
 #endif
