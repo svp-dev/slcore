@@ -1,5 +1,12 @@
 2009-12-07  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	Fix support for large thread indices in target `seqc'.
+
+	* tools/lib/t-seqc/include/sl_support.h: Use type `long' for index
+	values.
+
+2009-12-07  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	Fix output primitives to support merging stderr and stdout.
 	
 	* tools/include/svp/testoutput.h: Flush output streams after

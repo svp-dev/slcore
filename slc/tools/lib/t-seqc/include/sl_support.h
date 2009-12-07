@@ -19,10 +19,10 @@
 [[#]]define SL_SUPPORT_DEFINED
 
 struct sl_famdata {
-  int ix;
-  int be;
-  int li;
-  int st;
+  long ix;
+  long be;
+  long li;
+  long st;
   struct sl_famdata *ch;
   int ex;
   void (*f)(struct sl_famdata*);
