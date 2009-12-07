@@ -377,10 +377,10 @@ case $slc_os in
 	for d in $slc_libdir; do
 	    slc_ldflags+=("-L$d/$slc_arch-$slc_os")
         done
-	slc_ldflags+=("-lslc")
 	if test "$slc_use_libsl" != "no"; then
             slc_ldflags+=("-lsl")
 	fi
+	slc_ldflags+=("-lslc")
 
         IFS=$save_IFS
 	;;

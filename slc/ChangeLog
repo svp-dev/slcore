@@ -1,3 +1,10 @@
+2009-12-02  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
+	Minor portability fix.
+	
+	* tools/bin/cce.in: Place `-lslc' last on the command line to cope
+	with single-pass linkers.
+
 2009-11-24  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
 	Minor `slr' fix.
