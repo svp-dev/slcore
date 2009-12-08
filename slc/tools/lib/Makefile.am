@@ -22,6 +22,7 @@ pkglib_SCRIPTS = \
 r-mtalpha-sim.sh: r-mt-sim.sh.in Makefile
 	$(AM_V_at)rm -f $@ $@.out
 	$(AM_V_GEN)$(SED) <$< >$@.out \
+	 -e 's|@slc_datadir[@]|$(pkgdatadir)|g' \
 	 -e 's|@MGSIM_ARCH[@]|$(MGSIM_ALPHA)|g' \
 	 -e 's|@SIMX_ARCH[@]|$(SIMX_ALPHA)|g' \
 	 -e 's|@ARCH[@]|ALPHA|g' \
@@ -32,6 +33,7 @@ r-mtalpha-sim.sh: r-mt-sim.sh.in Makefile
 r-mtsparc-sim.sh: r-mt-sim.sh.in Makefile
 	$(AM_V_at)rm -f $@ $@.out
 	$(AM_V_GEN)$(SED) <$< >$@.out \
+	 -e 's|@slc_datadir[@]|$(pkgdatadir)|g' \
 	 -e 's|@MGSIM_ARCH[@]|$(MGSIM_SPARC)|g' \
 	 -e 's|@SIMX_ARCH[@]|$(SIMX_SPARC)|g' \
 	 -e 's|@ARCH[@]|SPARC|g' \
@@ -43,7 +45,19 @@ nobase_dist_pkgdata_DATA = \
 	arggen.c \
 	t-utc/slimpl.m4 \
 	t-utc0/slimpl.m4 \
-	t-utc0/include/sl_support.h 
+	t-utc0/include/sl_support.h \
+        mt-profiles/default \
+        mt-profiles/sifir \
+        mt-profiles/bir \
+        mt-profiles/uc \
+        mt-profiles/dort \
+        mt-profiles/bes \
+        mt-profiles/alti \
+	mt-profiles/coma128 \
+	mt-profiles/coma256 \
+	mt-profiles/rmb128 \
+	mt-profiles/rmb256 \
+	mt-profiles/simple
 
 include $(top_srcdir)/build-aux/sl.mk
 nobase_pkglib_DATA =

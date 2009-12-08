@@ -69,22 +69,28 @@ Program input options:
                        before many runs).
 
 Execution selection:
-
   -c                   Show configuration string embedded in program, if any.
 
   -x RUNNER            Use the specified RUNNER (use when autodetect fails).
 
+  -m PROFILE           Use the specified simulator PROFILE.
+
+  -m list              List available profiles.
+
   -Ws,arg              Pass "arg" as extra command line parameter to the 
                        simulator, when the simulator is used.
 
-  -n PLACES            Use the specified place configuration instead of
-                       the default.
+Tuning of simulator profile:
+  -n PLACES            Override the place configuration from the simulator
+                       profile.
 
-  -C                   Use the COMA simulator.
+  -C                   Force COMA memory regardless of the simulator profile.
 
   -Cc N                Configure N L2 caches in the COMA network. Implies -C.
+                       Overrides profile settings.
 
   -Cd N                Configure N directories in the COMA network. Implies -C.
+                       Overrides profile settings.
 
 Debugging options:
   -t                   Trace: print commands before running them.
@@ -94,7 +100,7 @@ Debugging options:
   -gd                  Debug: use debugging when generating data, do not actually
                        run the program. Implies -t.
 
-Other options:
+Graphics:
   -X                   Enable graphical output.
 
   -Xd W,H              Set initial gfx resolution to W(idth)xH(eight). Implies -X.
@@ -103,6 +109,7 @@ Other options:
   
   -Xr RATE             Set gfx update rate to RATE (cycles/frame). Implies -X.
 
+Other options:
   -h, --help           Print this help, then exit.
 
   -v, --version        Print version number, then exit.
@@ -120,6 +127,9 @@ Environment variables:
 
   SIMARGS              Combines with the occurrences of option -Ws on
                        the command line when running the simulator.
+
+  SIMPROFILE           If set and not empty, use as simulation profile
+                       unless overridden by -m.
 
   TMPDIR               If set and not empty, overrides /tmp as the
                        base directory for temporary files.
@@ -183,10 +193,11 @@ gfx_geometry=
 coma_ncaches=
 coma_ndirs=
 debug_rec=
-NCORES=${NCORES:-}
+ncores_override=
 SIMARGS=${SIMARGS:-}
 VERBOSE=${VERBOSE:-}
 DEBUG=${DEBUG:-}
+SIMPROFILE=${SIMPROFILE:-default}
 for arg in "$@"; do
   # if the previous option needs an argument, assign it
   if test -n "$prev_arg"; then
@@ -204,7 +215,7 @@ for arg in "$@"; do
       -v|--version)	do_version;;
       -h|--help)	do_usage;;
       -l)  query=1; shift;;
-      -n)  prev_arg=NCORES; shift;;
+      -n)  prev_arg=ncores_override; shift;;
       -Ws,*)   
 	  lowarg=${arg#*,}; 
 	  lowarg=${lowarg//,/ } ;
@@ -218,6 +229,7 @@ for arg in "$@"; do
       -rf)  prev_arg=rfdatafile; shift;;
       -wf)  prev_arg=wfdatafile; shift;;
       -wo)  preponly=1; shift;;
+      -m)   prev_arg=SIMPROFILE; shift;;
       -C)   COMA=1; shift;;
       -Cc)  COMA=1; prev_arg=coma_ncaches; shift;;
       -Cd)  COMA=1; prev_arg=coma_ndirs; shift;;
@@ -458,9 +470,9 @@ fi
 # debug cache only?
 if test -n "$preponly" -o -n "$debug_rec"; then exit 0; fi
 
-export SIMARGS VERBOSE DEBUG NCORES SIMGFX COMA
+export SIMARGS VERBOSE DEBUG SIMGFX COMA SIMPROFILE
 export gfx_scale gfx_geometry gfx_refresh
-export coma_ncaches coma_ndirs
+export coma_ncaches coma_ndirs ncores_override
 
 if test -n "$VERBOSE"; then
     echo "$basename: running: @BASH@ $runner_script $program $datafile $fdatafile" >&2

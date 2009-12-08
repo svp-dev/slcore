@@ -8,6 +8,7 @@ shift
 shift
 shift
 
+slc_datadir=${SLC_DATADIR:-@slc_datadir@}
 DEBUGGER=${DEBUGGER:-gdb --args}
 SIMARGS=${SIMARGS:-}
 mgsim=(${MGSIM_@ARCH@:-@MGSIM_ARCH@})
@@ -18,18 +19,66 @@ simargs_base=()
 ## Selection of the number of cores
 ##
 
-if test -n "$NCORES" -a -z "${SLR_RECURSIVE:-}"; then
-   if ! expr "$NCORES" : '.*,' >/dev/null 2>&1; then
-      echo "$basename: warning: \$NCORES and -n are deprecated in favor of dynamic place allocation." >&2  
-   fi
-else
-   NCORES="1,1,2,4,8,16,32,64,1,1,2,4,8,16,32,64"
+if test -n "${SLR_RECURSIVE:-}"; then
+  SIMPROFILE=simple
+  simargs_base+=(-q)
 fi
 
-if test -n "${SLR_RECURSIVE:-}"; then
-  NCORES=1
-  simargs_base+=(-q -o NumProcessorsPerFPU=1)
-fi 
+saveIFS=$IFS
+IFS=:
+found=
+if test "x$SIMPROFILE" = "xlist"; then
+  echo "$basename: available profiles:" >&2
+  echo "(in $HOME/.mt-profiles)" >&2
+  for f in "$HOME/.mt-profiles/"*; do
+      if test -r "$f"; then
+          b=$(basename "$f")
+          if test -L "$f"; then
+              printf '\t%s\t' "$b"; file -h "$f"|cut -d: -f2
+          else
+              . "$f"
+              printf '\t%s\t %s\n' "$b" "$DESCRIPTION" >&2
+          fi
+      fi
+  done
+  for d in $slc_datadir; do
+    echo "(in $d)" >&2
+    for f in "$d/mt-profiles/"*; do
+        if test -r "$f"; then
+            b=$(basename "$f")
+            if test -L "$f"; then
+                printf '\t%s\t' "$b"; file -h "$f"|cut -d: -f2
+            else
+                . "$f"
+                printf '\t%s\t %s\n' "$b" "$DESCRIPTION" >&2
+            fi
+        fi
+    done     
+  done
+  exit 0
+fi
+
+for d in "$HOME/.mt-profiles" $slc_datadir; do
+   pf="$d/mt-profiles/$SIMPROFILE"
+   if test -r "$pf"; then
+      . "$d/mt-profiles/$SIMPROFILE"
+      if test -n "$VERBOSE"; then
+         echo "$basename: using profile: $pf" >&2
+         echo "$basename: profile description: $DESCRIPTION" >&2
+      fi
+      found=1
+      break
+   fi
+done
+IFS=$saveIFS
+if test -z "$found"; then
+   echo "$basename: profile '$SIMPROFILE' not found." >&2
+   exit 1
+fi
+
+if test -n "${ncores_override:-}"; then
+   NCORES=$ncores_override
+fi
 
 if test -n "${NCORES:-}"; then
    simargs_base+=(-o NumProcessors=$NCORES)

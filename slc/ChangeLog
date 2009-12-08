@@ -1,3 +1,33 @@
+2009-12-08  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
+	Introduce the concept of "simulator profiles" in `slr'.
+
+	A new option `slr -m' is added to specify a simulator profile for
+	execution. A profile captures in a simple name all the
+	architectural settings of a microgrid: nr of cores, memory
+	configuration, etc.
+
+	Profiles are searched first in `~/.mt-profiles', then in the
+	`mt-profile' directory of the build or installation tree.
+	
+	* tools/bin/slr.in,
+	* tools/lib/r-mt-sim.sh.in: Allow use of simulator profiles. 
+
+	* tools/lib/mt-profiles/sifir,
+	* tools/lib/mt-profiles/bir,
+	* tools/lib/mt-profiles/uc,
+	* tools/lib/mt-profiles/dort,
+	* tools/lib/mt-profiles/bes,
+	* tools/lib/mt-profiles/alti,
+	* tools/lib/mt-profiles/default,
+	* tools/lib/mt-profiles/simple,
+	* tools/lib/mt-profiles/rmb128,
+	* tools/lib/mt-profiles/rmb256,
+	* tools/lib/mt-profiles/coma128,
+	* tools/lib/mt-profiles/coma256: Provide some reference profiles.
+
+	* tools/lib/Makefile.am: Update accordingly.
+	
 2009-12-07  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
 	Fix support for large thread indices in target `seqc'.

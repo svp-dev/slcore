@@ -1,0 +1,4 @@
+DESCRIPTION="1-core, RB memory for tests, quick runs etc."
+COMA=
+NCORES=1
+simargs_base+=(-o NumProcessorsPerFPU=1)

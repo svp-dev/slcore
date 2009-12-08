@@ -1,0 +1,4 @@
+DESCRIPTION="256-core (4x1,2x2,4x2,8x2,16x2,32x2,64x2), RB memory"
+COMA=
+NCORES=1,1,2,4,8,16,32,64,1,1,2,4,8,16,32,64
+

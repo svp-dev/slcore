@@ -1,0 +1,5 @@
+DESCRIPTION="256-core (4x1,2x2,4x2,8x2,16x2,32x2,64x2), COMA, 1.5GHz cores, 4xDDR3-2400"
+COMA=1
+NCORES=1,1,2,4,8,16,32,64,1,1,2,4,8,16,32,64
+simargs_base+=(-o NumCaches=64 -o NumDirectories=8 -o NumSplitRootDirectories=4)
+simargs_base+=(-o DDRConfiguration=4 -o DDRMemoryFreq=1200 -o CoreFreq=1500)
