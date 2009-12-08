@@ -198,6 +198,7 @@ SIMARGS=${SIMARGS:-}
 VERBOSE=${VERBOSE:-}
 DEBUG=${DEBUG:-}
 SIMPROFILE=${SIMPROFILE:-default}
+arglist="$*"
 for arg in "$@"; do
   # if the previous option needs an argument, assign it
   if test -n "$prev_arg"; then
@@ -247,6 +248,42 @@ for arg in "$@"; do
 done
 if test -n "${prev_arg:-}"; then die 1 "argument to \`$arg' is missing"; fi
 
+# if listing profiles, do only that and nothing else
+if test "x$SIMPROFILE" = "xlist"; then
+  echo "$basename: available profiles:" >&2
+  echo "(in $HOME/.mt-profiles)" >&2
+  for f in "$HOME/.mt-profiles/"*; do
+      if test -r "$f"; then
+          b=$(basename "$f")
+          if test -L "$f"; then
+              (printf '\t%s\t' "$b"; file -h "$f"|cut -d: -f2) >&2
+          else
+              . "$f"
+              printf '\t%s\t %s\n' "$b" "$DESCRIPTION" >&2
+          fi
+      fi
+  done
+  IFS=:
+  for d in $slc_datadir; do
+    echo "(in $d)" >&2
+    for f in "$d/mt-profiles/"*; do
+        if test -r "$f"; then
+            b=$(basename "$f")
+            if test -L "$f"; then
+                (printf '\t%s\t' "$b"; file -h "$f"|cut -d: -f2) >&2
+            else
+                . "$f"
+                printf '\t%s\t %s\n' "$b" "$DESCRIPTION" >&2
+            fi
+        fi
+    done     
+  done
+  exit 0
+fi
+
+if test -n "$VERBOSE"; then
+    echo "command line: $0 $arglist" >&2
+fi
 
 # does the program exist?
 if test -z "$program"; then
@@ -411,6 +448,9 @@ if test -n "$dodata"; then
 	fi
     else
 	# just ensure the cache file exists 
+	if test -n "$VERBOSE"; then
+	    echo "$basename: creating empty data file $datafile" >&2
+	fi
         true >"$datafile"
     fi
 fi
@@ -463,6 +503,9 @@ s/,$//g' | $python "$sag_helper" f >"$tmpdir"/fdata.c
 	fi
     else
 	# Ensure a tag = -1 for the first Fibre item
+	if test -n "$VERBOSE"; then
+	    echo "$basename: creating dummy Fibre data file $fdatafile" >&2
+	fi
         printf '\xff\xff\xff\xff\xff\xff\xff\xff' >"$fdatafile"
     fi
 fi

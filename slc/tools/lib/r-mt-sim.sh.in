@@ -27,37 +27,6 @@ fi
 saveIFS=$IFS
 IFS=:
 found=
-if test "x$SIMPROFILE" = "xlist"; then
-  echo "$basename: available profiles:" >&2
-  echo "(in $HOME/.mt-profiles)" >&2
-  for f in "$HOME/.mt-profiles/"*; do
-      if test -r "$f"; then
-          b=$(basename "$f")
-          if test -L "$f"; then
-              printf '\t%s\t' "$b"; file -h "$f"|cut -d: -f2
-          else
-              . "$f"
-              printf '\t%s\t %s\n' "$b" "$DESCRIPTION" >&2
-          fi
-      fi
-  done
-  for d in $slc_datadir; do
-    echo "(in $d)" >&2
-    for f in "$d/mt-profiles/"*; do
-        if test -r "$f"; then
-            b=$(basename "$f")
-            if test -L "$f"; then
-                printf '\t%s\t' "$b"; file -h "$f"|cut -d: -f2
-            else
-                . "$f"
-                printf '\t%s\t %s\n' "$b" "$DESCRIPTION" >&2
-            fi
-        fi
-    done     
-  done
-  exit 0
-fi
-
 for d in "$HOME/.mt-profiles" $slc_datadir; do
    pf="$d/mt-profiles/$SIMPROFILE"
    if test -r "$pf"; then
@@ -65,6 +34,7 @@ for d in "$HOME/.mt-profiles" $slc_datadir; do
       if test -n "$VERBOSE"; then
          echo "$basename: using profile: $pf" >&2
          echo "$basename: profile description: $DESCRIPTION" >&2
+         simargs_base+=(-d)
       fi
       found=1
       break
