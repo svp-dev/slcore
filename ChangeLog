@@ -1,3 +1,7 @@
+2009-12-08  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
+	* deploy/versions.mk.defaults: Bump version numbers. 
+
 2009-11-19  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
 	Fix deployment of MGSim.
