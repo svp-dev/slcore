@@ -1,6 +1,0 @@
-DESCRIPTION="128-core (1x2,2x1,4x1,8x1,16x1,32x1,64x1), COMA, 1GHz cores, 2xDDR3-1600"
-COMA=1
-NCORES=1,1,2,4,8,16,32,64
-simargs_base+=(-o NumCaches=32 -o NumDirectories=4 -o NumSplitRootDirectories=2)
-simargs_base+=(-o DDRConfiguration=0 -o DDRMemoryFreq=800 -o CoreFreq=1000)
-

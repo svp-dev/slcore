@@ -1,5 +1,24 @@
 2009-12-08  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	More MT profiles.
+
+	* tools/lib/mt-profiles/coma128,
+	* tools/lib/mt-profiles/coma256,
+	* tools/lib/mt-profiles/default,
+	* tools/lib/mt-profiles/simple,
+	* tools/lib/mt-profiles/rmb128,
+	* tools/lib/mt-profiles/rmb256,
+	* tools/lib/mt-profiles/rmb4,
+	* tools/lib/mt-profiles/rmb1: Use simple names always. Cleanup
+	descriptions.
+
+	* tools/lib/mt-profiles/ml-npcrypt-p1,
+	* tools/lib/mt-profiles/ml-npcrypt-p2,
+	* tools/lib/mt-profiles/ml-npcrypt-p4,
+	* tools/lib/mt-profiles/ml-npcrypt-p8: New.
+
+2009-12-08  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	Introduce the concept of "simulator profiles" in `slr'.
 
 	A new option `slr -m' is added to specify a simulator profile for
