@@ -33,26 +33,43 @@
 sl_def(innerk2,void,
        sl_glparm(double*restrict, X),
        sl_glparm(const double*restrict, V),
-       sl_glparm(long, gi), 
-       sl_glparm(long, gk))
+       sl_glparm(unsigned long, ipnt),
+       sl_glparm(unsigned long, ipntp))
 {
     sl_index(i);
-	
-    // the following two variables have to
-    // step from a fixed base value specified
-    // as a global thread parameter.	
-    // local k needs to step by 2, but index
-    // only steps by one -- hence multiply
-    // iteration by two
-    long k = sl_getp(gk) + 2*i;
-    long li = sl_getp(gi) + i;
-
-    //now the actual calculation
-    sl_getp(X)[li] = sl_getp(X)[k] 
-        - sl_getp(V)[k]   * sl_getp(X)[k-1] 
-        - sl_getp(V)[k+1] * sl_getp(X)[k+1];
+    unsigned long ipnt = sl_getp(ipnt);
+    unsigned long ipntp = sl_getp(ipntp);
+    unsigned long k = ipnt + i;
+    double*restrict X = sl_getp(X);
+    const double*restrict V = sl_getp(V);
+    // output_uint(k,2); output_char('\n',2);
+    // output_int(ipntp + i / 2, 2); output_char('\n',2);
+    X[ipntp + i / 2] = X[k] - V[k] * X[k-1] - V[k+1] * X[k+1];
 }
 sl_enddef
+
+sl_def(outerk2, void,
+       sl_glparm(double*restrict, X),
+       sl_glparm(const double*restrict, V),
+       sl_shparm(unsigned long, ii),
+       sl_shparm(unsigned long, ipntp))
+{
+  sl_index(m);
+
+  unsigned long ipnt, ii;
+  unsigned long ipntp = (ii = sl_getp(ii)) + (ipnt = sl_getp(ipntp));
+  sl_setp(ii, ii/2);
+  sl_create(,,1,ii,2,,, innerk2,
+	    sl_glarg(double*restrict, , sl_getp(X)),
+	    sl_glarg(const double*restrict, , sl_getp(V)),
+	    sl_glarg(unsigned long, , ipnt),
+	    sl_glarg(unsigned long, , ipntp));
+  sl_sync();
+  sl_setp(ipntp, ipntp);
+}
+sl_enddef
+
+#include <cmath.h>
 
 sl_def(kernel2, void,
        sl_glparm(size_t, ncores),
@@ -62,37 +79,14 @@ sl_def(kernel2, void,
        sl_glparm(double*restrict, X),
        sl_glparm(size_t, X_dim))
 {
-    long  loopcount = sl_getp(n); //initialise loop counter
-    long  lower, upper; //counters
-	
-    // upper must first be initialised to zero
-    upper = 0;
-	
-    // N.B. Additional concurrency could be created by converting the
-    // below do-while loop into a breaking family.
-    // BUT there is no break yet (as of 05/09).
+    // output_int(sl_getp(n), 2); output_char('\n', 2);
+    unsigned long upper = log2(sl_getp(n));
 
-    // The code here is implemented in a standard sequential loop.
-    // This is because the inner for loop is dependent on calculations
-    // performed in  each epoch initiated by the precedent outer loop.
-    do
-    {
-        lower = upper;
-        upper += loopcount;
-        loopcount /= 2;
-					  
-        //innerk2 simulates 1 and 2 stride by using inc of 1 
-        // and multiplying by 2 where required. We must make
-        // sure therefore that the range is halved:
-		
-        long range = (upper - lower) / 2;
-					    
-        sl_create(,, , range, , ,, innerk2,
-                  sl_glarg(double*, , sl_getp(X)),
-                  sl_glarg(const double*, , sl_getp(V)),
-                  sl_glarg(long, , upper),
-                  sl_glarg(long, , (lower+1)));
-        sl_sync();
-    } while (loopcount > 0);
+    sl_create(,,upper,-1,-1,2,, outerk2,
+	      sl_glarg(double*restrict, , sl_getp(X)),
+	      sl_glarg(const double*restrict, , sl_getp(V)),
+              sl_sharg(unsigned long, ii, sl_getp(n)), 
+	      sl_sharg(unsigned long, ipntp, 0));
+    sl_sync();
 }
 sl_enddef

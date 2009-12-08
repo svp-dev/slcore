@@ -53,13 +53,10 @@ sl_def(innerk8,void,
        , sl_glfparm(double, A33)
        , sl_glfparm(double, SIG)
        , sl_glparm(double*restrict, U1)
-       , sl_glparm(size_t, U1_dim0)
        , sl_glparm(size_t, U1_dim1)
        , sl_glparm(double*restrict, U2)
-       , sl_glparm(size_t, U2_dim0)
        , sl_glparm(size_t, U2_dim1)
        , sl_glparm(double*restrict, U3)
-       , sl_glparm(size_t, U3_dim0)
        , sl_glparm(size_t, U3_dim1))
 {
     sl_index(i);
@@ -71,7 +68,7 @@ sl_def(innerk8,void,
     const long nl2 = 1;
 
 #define accessU(N, a, b, c)                                             \
-    sl_getp(U##N)[(c)*sl_getp(U##N##_dim0)+(b)*sl_getp(U##N##_dim1)+(a)]
+    sl_getp(U##N)[ ((c)*sl_getp(U##N##_dim1)+(b))*4 + (a)]
 
 #define U1(a, b, c) accessU(1, a, b, c)
 #define U2(a, b, c) accessU(2, a, b, c)
@@ -130,7 +127,12 @@ sl_def(kernel8,void,
        , sl_glparm(size_t, U3_dim1)
        , sl_glparm(size_t, U3_dim2))
 {
-
+    svp_assert(sl_getp(U1_dim0) == 2);
+    svp_assert(sl_getp(U2_dim0) == 2);
+    svp_assert(sl_getp(U3_dim0) == 2);
+    svp_assert(sl_getp(U1_dim2) == 4);
+    svp_assert(sl_getp(U2_dim2) == 4);
+    svp_assert(sl_getp(U3_dim2) == 4);
     sl_create(,, , sl_getp(n)*2, , ,, innerk8
               , sl_glfarg(double, , 2.0)
               , sl_glfarg(double, , sl_getp(A11))
@@ -144,13 +146,10 @@ sl_def(kernel8,void,
               , sl_glfarg(double, , sl_getp(A33))
               , sl_glfarg(double, , sl_getp(SIG))
               , sl_glarg(double*restrict, , sl_getp(U1))
-              , sl_glarg(size_t, , sl_getp(U1_dim0))
               , sl_glarg(size_t, , sl_getp(U1_dim1))
               , sl_glarg(double*restrict, , sl_getp(U2))
-              , sl_glarg(size_t, , sl_getp(U2_dim0))
               , sl_glarg(size_t, , sl_getp(U2_dim1))
               , sl_glarg(double*restrict, , sl_getp(U3))
-              , sl_glarg(size_t, , sl_getp(U3_dim0))
               , sl_glarg(size_t, , sl_getp(U3_dim1))
         );
     sl_sync();

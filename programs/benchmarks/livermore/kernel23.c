@@ -42,7 +42,7 @@ sl_def(innerk23, void,
     sl_index(k);
     long j = sl_getp(j);
 
-#define access(C, A, a, b) (*(C double (*restrict)[7][(size_t)sl_getp(n)])(C double*)sl_getp(A))[b][a]
+#define access(C, A, a, b) (*(C double (*restrict)[7][(size_t)sl_getp(n)+1])(C double*)sl_getp(A))[b][a]
 #define ZA(a, b) access( , ZA, a, b)
 #define ZB(a, b) access(const, ZB, a, b)
 #define ZR(a, b) access(const ,ZR, a, b)
@@ -116,18 +116,18 @@ sl_def(kernel23, void,
        , sl_glparm(size_t, ZZ_dim1)
     )
 {
-    svp_assert(sl_getp(ZA_dim0) == sl_getp(n)+1);
-    svp_assert(sl_getp(ZB_dim0) == sl_getp(n)+1);
-    svp_assert(sl_getp(ZR_dim0) == sl_getp(n)+1);
-    svp_assert(sl_getp(ZU_dim0) == sl_getp(n)+1);
-    svp_assert(sl_getp(ZV_dim0) == sl_getp(n)+1);
-    svp_assert(sl_getp(ZZ_dim0) == sl_getp(n)+1);
-    svp_assert(sl_getp(ZA_dim1) == 7);
-    svp_assert(sl_getp(ZB_dim1) == 7);
-    svp_assert(sl_getp(ZR_dim1) == 7);
-    svp_assert(sl_getp(ZU_dim1) == 7);
-    svp_assert(sl_getp(ZV_dim1) == 7);
-    svp_assert(sl_getp(ZZ_dim1) == 7);
+    svp_assert(sl_getp(ZA_dim1) == sl_getp(n)+1);
+    svp_assert(sl_getp(ZB_dim1) == sl_getp(n)+1);
+    svp_assert(sl_getp(ZR_dim1) == sl_getp(n)+1);
+    svp_assert(sl_getp(ZU_dim1) == sl_getp(n)+1);
+    svp_assert(sl_getp(ZV_dim1) == sl_getp(n)+1);
+    svp_assert(sl_getp(ZZ_dim1) == sl_getp(n)+1);
+    svp_assert(sl_getp(ZA_dim0) == 7);
+    svp_assert(sl_getp(ZB_dim0) == 7);
+    svp_assert(sl_getp(ZR_dim0) == 7);
+    svp_assert(sl_getp(ZU_dim0) == 7);
+    svp_assert(sl_getp(ZV_dim0) == 7);
+    svp_assert(sl_getp(ZZ_dim0) == 7);
 
     sl_create(,, 1,6,,2,,outerk23,
               sl_sharg(long, , 0),

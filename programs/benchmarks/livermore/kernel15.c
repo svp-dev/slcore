@@ -90,32 +90,43 @@
 #define AR_init 0.053
 #define BR_init 0.073
 
-sl_def(innerk15, void,
+sl_def(innerk15, void, 
        sl_glparm(size_t, n),
        sl_glfparm(double, AR),
        sl_glfparm(double, BR) 
        , sl_glparm(const double*restrict, VF)
-       , sl_glparm(size_t, VF_dim0)
        , sl_glparm(const double*restrict, VG)
-       , sl_glparm(size_t, VG_dim0)
        , sl_glparm(const double*restrict, VH)
-       , sl_glparm(size_t, VH_dim0)
        , sl_glparm(double*restrict, VS)
-       , sl_glparm(size_t, VS_dim0)
        , sl_glparm(double*restrict, VY)
-       , sl_glparm(size_t, VY_dim0)
     )
 {
     sl_index(iter);
 
-    long j = iter / NG + 1;
-    long k = iter % NG + 1;
+    long j = iter % (NG-1) + 1;
+    long k = iter / (NG-1);
+    const size_t n = sl_getp(n);
+    // output_int(n, 2); output_char(' ', 2);
+    // output_int(j, 2); output_char(' ', 2); output_int(k, 2); output_char('\n', 2);
 
-    const double (*restrict VF)[][(size_t)sl_getp(VF_dim0)] = (const double (*)[][(size_t)sl_getp(VF_dim0)])(const double*)sl_getp(VF);
-    const double (*restrict VG)[][(size_t)sl_getp(VG_dim0)] = (const double (*)[][(size_t)sl_getp(VG_dim0)])(const double*)sl_getp(VG);
-    const double (*restrict VH)[][(size_t)sl_getp(VH_dim0)] = (const double (*)[][(size_t)sl_getp(VH_dim0)])(const double*)sl_getp(VH);
-    double (*restrict VS)[][(size_t)sl_getp(VS_dim0)] = (double (*)[][(size_t)sl_getp(VS_dim0)])(double*)sl_getp(VS);
-    double (*restrict VY)[][(size_t)sl_getp(VY_dim0)] = (double (*)[][(size_t)sl_getp(VY_dim0)])(double*)sl_getp(VY);
+    const double (*restrict VF)[NG][n+1] = \
+        (const double (*)[NG][n+1])(const double*)sl_getp(VF);
+    const double (*restrict VG)[NG][n+1] = \
+        (const double (*)[NG][n+1])(const double*)sl_getp(VG);
+    const double (*restrict VH)[NG][n+1] = \
+        (const double (*)[NG][n+1])(const double*)sl_getp(VH);
+    double (*restrict VS)[NG][n+1] = \
+        (double (*)[NG][n+1])(double*)sl_getp(VS);
+    double (*restrict VY)[NG][n+1] = \
+        (double (*)[NG][n+1])(double*)sl_getp(VY);
+
+    // output_int(sl_getp(n), 2); output_char('\n', 2);
+    /*
+      output_hex((void*)sl_getp(VS), 2); output_char('\n',2);
+    output_int(sizeof(*VS)/sizeof((*VS)[0][0]), 2); output_char('\n', 2);
+    output_hex((void*)sl_getp(VY), 2); output_char('\n',2);
+    output_int(sizeof(*VY)/sizeof((*VY)[0][0]), 2); output_char('\n', 2);
+    */
 
     double AR = sl_getp(AR);
     double BR = sl_getp(BR);
@@ -124,6 +135,8 @@ sl_def(innerk15, void,
 
     if ( (j+1) >= NG )
     {
+        // output_string("j+1 too big\n", 2);
+        // output_hex(&(*VY)[j][k], 2); output_char('\n', 2);
         (*VY)[j][k] = 0.0;
         sl_end_thread;
     }
@@ -144,10 +157,17 @@ sl_def(innerk15, void,
         S = (*VF)[j][k];
     }
 
+    /*
+    output_hex(VY, 2); output_char(' ', 2);
+    output_hex(&(*VY)[j][k], 2); output_char('\n', 2);
+    output_hex(VG, 2); output_char(' ', 2);
+    output_hex(&(*VG)[j][k], 2); output_char('\n', 2);
+    */
     (*VY)[j][k] = SQRT( (*VG)[j][k] * (*VG)[j][k] + R*R )* T / S;
 
-    if ( (k+1) >= sl_getp(n) )
+    if ( (k+1) >= n )
     {
+        // output_string("k+1 too big\n", 2);
         (*VS)[j][k] = 0.0;
         sl_end_thread;
     }
@@ -165,8 +185,15 @@ sl_def(innerk15, void,
         T = AR;
     }
 
+    /*
+    output_hex(VS, 2); output_char(' ', 2);
+    output_hex(&(*VS)[j][k], 2); output_char('\n', 2);
+    output_hex(VH, 2); output_char(' ', 2);
+    output_hex(&(*VH)[j][k], 2); output_char('\n', 2);
+    */
     (*VS)[j][k] = SQRT( (*VH)[j][k]*(*VH)[j][k] + R*R )* T / S;
-
+    /* output_string("--\n", 2);
+       sl_setp(tok, t); */
 }
 sl_enddef
 
@@ -190,20 +217,34 @@ sl_def(kernel15, void,
        , sl_glparm(size_t, VY_dim1)
     )
 {
-    sl_create(,,, sl_getp(n)*NG, , ,, innerk15
+    /*
+    output_int(sl_getp(n), 2); output_char('\n', 2);
+    output_hex((void*)sl_getp(VS), 2); output_char('\n',2);
+    output_int(sl_getp(VS_dim0), 2); output_char('\n', 2);
+    output_int(sl_getp(VS_dim1), 2); output_char('\n', 2);
+    output_int(sl_getp(VS_dim0)*sl_getp(VS_dim1), 2); output_char('\n', 2);
+    output_hex(sl_getp(VS)+sl_getp(VS_dim0)*sl_getp(VS_dim0), 2); output_char('\n',2);
+    output_hex((void*)sl_getp(VY), 2); output_char('\n',2);
+    output_int(sl_getp(VY_dim0), 2); output_char('\n', 2);
+    output_int(sl_getp(VY_dim1), 2); output_char('\n', 2);
+    output_int(sl_getp(VY_dim0)*sl_getp(VY_dim1), 2); output_char('\n', 2);
+    output_hex(sl_getp(VY)+sl_getp(VY_dim0)*sl_getp(VY_dim0), 2); output_char('\n',2);
+    */
+
+    svp_assert(sl_getp(VF_dim0) == NG && sl_getp(VF_dim1) == sl_getp(n)+1);
+    svp_assert(sl_getp(VG_dim0) == NG && sl_getp(VG_dim1) == sl_getp(n)+1);
+    svp_assert(sl_getp(VH_dim0) == NG && sl_getp(VH_dim1) == sl_getp(n)+1);
+    svp_assert(sl_getp(VS_dim0) == NG && sl_getp(VS_dim1) == sl_getp(n)+1);
+    svp_assert(sl_getp(VY_dim0) == NG && sl_getp(VY_dim1) == sl_getp(n)+1);
+    sl_create(,, 1*(NG-1), sl_getp(n)*(NG-1),, ,, innerk15
               , sl_glarg(size_t, , sl_getp(n))
               , sl_glfarg(double, , AR_init)
               , sl_glfarg(double, , BR_init)
               , sl_glarg(const double*, , sl_getp(VF))
-              , sl_glarg(size_t, , sl_getp(VF_dim0))
               , sl_glarg(const double*, , sl_getp(VG))
-              , sl_glarg(size_t, , sl_getp(VG_dim0))
               , sl_glarg(const double*, , sl_getp(VH))
-              , sl_glarg(size_t, , sl_getp(VH_dim0))
               , sl_glarg(double*, , sl_getp(VS))
-              , sl_glarg(size_t, , sl_getp(VS_dim0))
               , sl_glarg(double*, , sl_getp(VY))
-              , sl_glarg(size_t, , sl_getp(VY_dim0))
         );
     sl_sync();
 }

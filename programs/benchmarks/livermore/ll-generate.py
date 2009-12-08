@@ -244,7 +244,7 @@ sl_def(t_main, void)
   sl_proccall(run_benchmark, sl_glarg(struct benchmark*, , &b));
 }
 sl_enddef
-""" % ("LK%d (%s)" % (idx, k['key']), k['desc'], authors)
+""" % ("LK%d (%s)" % (idx, k['key']), authors, k['desc'])
     f.close()
 
 

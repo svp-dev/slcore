@@ -1,3 +1,24 @@
+2009-12-08  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
+	Various fixes to the LL suite.
+	
+	* benchmarks/livermore/kernel2.c: Use alternate implementation.	
+
+	* benchmarks/livermore/kernel8.c: Fix array offseting. Use fixed
+	array bounds. Check array dimensions on entry.
+	
+	* benchmarks/livermore/kernel15.c: Use fixed array bounds.  Check
+	array dimensions on entry.
+	
+	* benchmarks/livermore/kernel23.c: Fix off-by-one on array
+	bounds. Check array dimensions on entry.
+
+	* benchmarks/livermore/ll-bounds.ods,
+	* benchmarks/livermore/ll-bounds.csv: Fix array bounds.
+
+	* benchmarks/livermore/ll-generate.py: Populate "description" and
+	"author" fields in the right order.
+	
 2009-12-07  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
 	Minor fix in benchmarking output.
