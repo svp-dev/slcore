@@ -1,5 +1,11 @@
 2009-12-08  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	Minor packaging fix.
+	
+	* tools/lib/Makefile.am: Update profile list. 
+
+2009-12-08  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	More MT profiles.
 
 	* tools/lib/mt-profiles/coma128,
