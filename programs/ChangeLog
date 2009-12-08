@@ -1,5 +1,17 @@
 2009-12-08  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	Minor fixes to LL suite.
+	
+	* build-aux/genbench.sh: Fix typo. 
+
+	* benchmarks/livermore/ll-bounds.ods,
+	* benchmarks/livermore/ll-bounds.csv: Fix bounds for LK6.
+	
+	* benchmarks/livermore/kernel6.c, 
+	* benchmarks/livermore/kernel21.c: Simplify array declarations.
+
+2009-12-08  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	Various fixes to the LL suite.
 	
 	* benchmarks/livermore/kernel2.c: Use alternate implementation.	

@@ -67,10 +67,10 @@ for bench_src in "$@"; do
                if test "$p" = "${plist[0]}" -a -n "$easy"; then
                    edata="benchdata/$b-$bench_base-$ibase.check.out"
                    echo "$edata: $bench_base.x $fdata $i ;" \
-                       "\$(AM_V_GEN)echo \"## CHECK: program=$bench_base input=$ibase, with output, csv format\" >\@.err && " \
-                       "\$(SLR) $bench_base.bin.$b -rf $fdata L=1 sep_dump=1 ncores=1 format=0 results=1 >>\$@.err 2>&1 && " \
-                       "echo \"## CHECK: program=$bench_base input=$ibase, fibre format\" >>\@.err && " \
-                       "\$(SLR) $bench_base.bin.$b -rf $fdata L=1 ncores=1 format=1 results= >>\$@.err 2>&1 && " \
+                       "\$(AM_V_GEN)echo \"## CHECK: program=$bench_base input=$ibase, with output, csv format\" >\$@.err && " \
+                       "\$(SLR) $bench_base.bin.$b -rf $fdata L=1 sep_dump=1 ncores=1 format=1 results=1 >>\$@.err 2>&1 && " \
+                       "echo \"## CHECK: program=$bench_base input=$ibase, fibre format\" >>\$@.err && " \
+                       "\$(SLR) $bench_base.bin.$b -rf $fdata L=1 ncores=1 format= results= >>\$@.err 2>&1 && " \
                        "mv -f \$@.err \$@"
                    easydatas+=("$edata")
                fi
