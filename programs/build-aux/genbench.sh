@@ -60,7 +60,7 @@ for bench_src in "$@"; do
 	       pdata="benchdata/$b-$bench_base-$ibase.p$p.out"
 	       echo "$pdata: $bench_base.x $fdata $i ;" \
 		   "\$(AM_V_GEN)echo \"## program=$bench_base ncores=$p input=$ibase\" >\$@.err && " \
-		   "\$(SLR) $bench_base.bin.$b -rf $fdata L= sep_dump= results= format=1 ncores=$p >>\$@.err 2>&1 && " \
+		   "\$(SLR) -t $bench_base.bin.$b -rf $fdata L= sep_dump= results= format=1 ncores=$p >>\$@.err 2>&1 && " \
 		   "mv -f \$@.err \$@"
 	       pdatas_here+=("$pdata")
 	       pdatas+=("$pdata")
@@ -68,9 +68,9 @@ for bench_src in "$@"; do
                    edata="benchdata/$b-$bench_base-$ibase.check.out"
                    echo "$edata: $bench_base.x $fdata $i ;" \
                        "\$(AM_V_GEN)echo \"## CHECK: program=$bench_base input=$ibase, with output, csv format\" >\$@.err && " \
-                       "\$(SLR) $bench_base.bin.$b -rf $fdata L=1 sep_dump=1 ncores=1 format=1 results=1 >>\$@.err 2>&1 && " \
+                       "\$(SLR) -t $bench_base.bin.$b -rf $fdata L=1 sep_dump=1 ncores=1 format=1 results=1 >>\$@.err 2>&1 && " \
                        "echo \"## CHECK: program=$bench_base input=$ibase, fibre format\" >>\$@.err && " \
-                       "\$(SLR) $bench_base.bin.$b -rf $fdata L=1 ncores=1 format= results= >>\$@.err 2>&1 && " \
+                       "\$(SLR) -t $bench_base.bin.$b -rf $fdata L=1 ncores=1 format= results= >>\$@.err 2>&1 && " \
                        "mv -f \$@.err \$@"
                    easydatas+=("$edata")
                fi

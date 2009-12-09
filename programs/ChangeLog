@@ -1,3 +1,10 @@
+2009-12-09  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
+	Embed more information in benchmark results.
+	
+	* build-aux/genbench.sh: Use `-t' with `slr' when running
+	benchmarks.
+
 2009-12-08  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
 	Minor fixes to LL suite.
