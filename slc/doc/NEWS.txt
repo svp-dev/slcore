@@ -12,6 +12,9 @@ SLC 2.1.0a, 2009
 
 - Development version only.
 
+Language features
+-----------------
+
 - Now using the C preprocessor before M4: the ``.sl`` and ``.slh``
   extensions disappear in favor of ``.c`` and ``.h``; ``#include`` and
   ``#define`` can now be used freely and can contain SL macros.
@@ -25,6 +28,27 @@ SLC 2.1.0a, 2009
 
 - The C math library is supported.
 
+- New pixel-oritented graphics output API. Actual visual output
+  enabled in MG simulator with ``slr -X``.
+
+Benchmarking
+------------
+
+- Microgrid configurations can be specified as "profiles" which
+  encapsulate the entire set of architectural settings. Profiles are
+  specified with ``slr -m``.
+
+- When running with ``slr -t``, detailed information about how the
+  program is run is printed on the standard error output. This can
+  serve to reproduce the execution later.
+
+- New performance metrics framework in the SL library.
+
+- More benchmarks embedded with toolchain.
+
+Scripts and testing environment
+-------------------------------
+
 - The ``slr``, ``slt`` and ``timeout`` scripts now react better to
   signals and terminal hangups.
 
@@ -37,7 +61,8 @@ SLC 2.1.0a, 2009
   list of test files / directories provided on the command line and
   provide a test results summary.
 
-Known limitations:
+Known limitations
+-----------------
 
 - C's ``long double`` type is not supported.
 

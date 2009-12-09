@@ -1,5 +1,9 @@
 2009-12-09  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	* doc/NEWS.txt: Update list of recent changes.
+
+2009-12-09  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	Minor `slr' improvements.
 
 	* tools/lib/r-mt-sim.sh.in: Pass -d to simulator when `slr -t' is
