@@ -1,3 +1,11 @@
+2009-12-14  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
+	New `perf' demo for performance metrics.
+
+	* demo/perf.c: New.
+
+	* demo/Makefile.am: Update accordingly.
+
 2009-12-09  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
 	Enable reduction code in LL suite.

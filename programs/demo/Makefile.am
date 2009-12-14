@@ -13,14 +13,15 @@
 
 # 
 DEMOS = \
-	helloworld.c \
-	answer.c \
-	roman.c \
 	10threads.c \
-	fibonacci.c \
-	fibre.c \
+	answer.c \
 	bitblt.c keyblit.c \
 	checkers.c \
+	fibonacci.c \
+	fibre.c \
+	helloworld.c \
+	perf.c
+	roman.c \
 	sep.c
 
 TESTS = $(DEMOS)
