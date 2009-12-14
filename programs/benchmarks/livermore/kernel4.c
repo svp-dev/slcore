@@ -27,6 +27,10 @@
 //      }
 //---------------------------------
 
+#ifndef NAIVE_CODE
+#define REDUCTIONS
+#endif
+
 sl_def(innerk4, void,
        sl_shfparm(double, total),
        sl_glparm(const double*restrict, XZ),
@@ -43,8 +47,8 @@ sl_enddef
 //method to perform a graph reduction of the above dependent kernel over CORES
 sl_def(reductionk4, void,
        sl_shfparm(double, total),
-       sl_glparm(double*, XZ),
-       sl_glparm(double*, Y),
+       sl_glparm(const double*, XZ),
+       sl_glparm(const double*, Y),
        sl_glparm(long, lw),
        sl_glparm(long, iternum))
 {
@@ -59,7 +63,7 @@ sl_def(reductionk4, void,
               sl_shfarg(double, totalr, sl_getp(XZ)[sl_getp(lw)+5]),
               sl_glarg(const double*, , sl_getp(XZ)),
               sl_glarg(const double*, , sl_getp(Y)),
-              sl_glarg(long, , sl_getp(lwr)));
+              sl_glarg(long, , sl_getp(lw)));
     sl_sync();
 
     //now accumulate the results
@@ -103,7 +107,7 @@ sl_def(outerk4, void,
               sl_glarg(const double*, ,sl_getp(XZ)),
               sl_glarg(const double*, , sl_getp(Y)),
               sl_glarg(unsigned int, ,lw),
-              sl_glarg(long, ,span));
+              sl_glarg(long, , sl_getp(span)));
     sl_sync();
 #endif
 
@@ -126,6 +130,10 @@ sl_def(kernel4, void,
 
 #ifdef REDUCTIONS
     long ncores4 = sl_getp(ncores) * 4;
+    ncores4 = ncores4 ? ncores4 : 4;
+    //loop uses an internal stride of 5 by multiplying a 1 stride counter
+    //this means the range of the loop must be divided by 5
+    long range = sl_getp(n) / 5;
     long span = range / ncores4;
 #endif
 
@@ -134,7 +142,7 @@ sl_def(kernel4, void,
               sl_glarg(size_t, , ncores4),
               sl_glarg(long, , span),
 #endif
-              sl_glarg(long, , sl_getp(n)/5),
+              sl_glarg(long, , range),
               sl_glarg(double*, , sl_getp(XZ)),
               sl_glarg(const double*, , sl_getp(Y)));
     sl_sync();

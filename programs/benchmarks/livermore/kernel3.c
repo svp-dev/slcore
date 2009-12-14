@@ -20,6 +20,9 @@
 // 	   }
 //---------------------------------
 
+#ifndef NAIVE
+#define REDUCTIONS
+#endif
 
 sl_def(innerk3, void,
        sl_shfparm(double, Q),
