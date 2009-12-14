@@ -63,6 +63,19 @@ sl_def(work, void,
        sl_glparm(struct benchmark_state*, st))
 {
   struct bdata *bdata = (struct bdata*)sl_getp(st)->data;  
+
+#ifdef FFT_BENCH_SMALL
+  extern const void *sc_table_ptr;
+
+  sl_create(,PLACE_LOCAL,1,bdata->M+1,1,,, FFT_1,
+	    sl_glarg(cpx_t*restrict, , bdata->y_fft),
+	    sl_glarg(unsigned long, , bdata->N/2),
+	    sl_sharg(long, , 0),
+	    sl_glarg(const void*, , sc_table_ptr));
+  sl_sync();
+
+#else
+
   struct work_lapses *wl = sl_getp(st)->wl;
   int i;
   sl_create(,,,,,,, FFT,
@@ -83,6 +96,7 @@ sl_def(work, void,
 	    sl_glarg(struct work_lapses*, , wl));
   sl_sync();
 
+#endif
 }
 sl_enddef
 

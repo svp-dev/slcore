@@ -1,5 +1,20 @@
 2009-12-14  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	Provide a faster FFT benchmark.
+
+	* benchmarks/fft/fft-bench.c: When `FFT_SMALL_BENCH' is defined,
+	only perform the forward FFT with no bit reversal.
+
+	* benchmarks/fft/fft-bench1-small.c,
+	* benchmarks/fft/fft-bench2-small.c,
+	* benchmarks/fft/fft-bench1-small.inputs,
+	* benchmarks/fft/fft-bench2-small.inputs: New. Use the new "small"
+	mode of `fft-bench.c'.
+
+	* benchmarks/fft/Makefile.am: Update accordingly.
+
+2009-12-14  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	Simplify the LMK3 benchmark.
 
 	* benchmarks/livermore/kernel3.c: Use a simple N/P reduction.

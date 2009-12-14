@@ -13,6 +13,8 @@
 
 # 
 BENCHMARKS = \
+	fft-bench1-small.c \
+	fft-bench2-small.c \
 	fft-bench1.c \
 	fft-bench2.c
 
