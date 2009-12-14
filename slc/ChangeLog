@@ -1,3 +1,10 @@
+2009-12-14  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
+	Add support for more performance metrics from simulator.
+	
+	* lib/include/svp/perf.h, 
+	* lib/src/perf.c: Add support for memory counters.
+
 2009-12-09  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
 	* doc/NEWS.txt: Update list of recent changes.

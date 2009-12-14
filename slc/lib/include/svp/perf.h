@@ -29,15 +29,37 @@ typedef long counter_t;
 #define MTPERF_CLOCKS 0
 #define MTPERF_EXECUTED_INSNS 1
 #define MTPERF_ISSUED_FP_INSNS 2
-#define MTPERF_NCOUNTERS 3
+#define MTPERF_COMPLETED_LOAD_INSNS 3
+#define MTPERF_COMPLETED_STORE_INSNS 4
+#define MTPERF_CORE_LOADED_BYTES 5
+#define MTPERF_CORE_STORED_BYTES 6
+#define MTPERF_EXTMEM_COMPLETED_LOADS 7
+#define MTPERF_EXTMEM_COMPLETED_STORES 8
+#define MTPERF_NCOUNTERS 9
 typedef struct { counter_t ct[MTPERF_NCOUNTERS]; } __counters_t;
 
 extern const char *mtpef_counter_names[];
 
+#define __read_cnt(i)                                                   \
+    counter_t __ct ## i;                                                \
+    __asm__("# touch counter %0" : "=r"(__ct ## i) : "0"(__src->ct[i])); \
+    __dst->ct[i] = __ct ## i;                                                    
+
+
 #define mtperf_sample(Array) do {					\
-    __asm__ __volatile__("# sample begins");				\
-    *(__counters_t*restrict)(void*)(Array) = *(volatile __counters_t*restrict)(void*)8; \
-    __asm__ __volatile__("# sample ends");				\
+        __asm__ __volatile__("# sample begins");                        \
+        __counters_t* restrict __dst = (__counters_t*)(void*)(Array);   \
+        volatile __counters_t* restrict __src = (volatile __counters_t*)(void*)8; \
+        __read_cnt(0);                                                  \
+        __read_cnt(1);                                                  \
+        __read_cnt(2);                                                  \
+        __read_cnt(3);                                                  \
+        __read_cnt(4);                                                  \
+        __read_cnt(5);                                                  \
+        __read_cnt(6);                                                  \
+        __read_cnt(7);                                                  \
+        __read_cnt(8);                                                  \
+        __asm__ __volatile__("# sample ends");                          \
   } while(0)
 
 #define mtperf_sample1(Counter) (((volatile __counters_t*restrict)(void*)8)->ct[Counter])

@@ -24,6 +24,12 @@ const char* mtperf_counter_names[] = {
 #ifdef __mt_freestanding__
   "n_exec_insns",
   "n_issued_flops",
+  "n_compl_loads",
+  "n_compl_stores",
+  "n_bytesin_core",
+  "n_bytesout_core",
+  "n_extmem_cl_in",
+  "n_extmem_cl_out"
 #endif
 };
 
@@ -176,6 +182,7 @@ void mtperf_report_intervals(const struct s_interval* ivs,
 	dmax = max(pad, max(n, MTPERF_NCOUNTERS));
 
       ps("### begin intervals\n");
+      bfibre(n);
       for (j = 0; j < n; ++j) {
 	bfibre(MTPERF_NCOUNTERS);
 	for (i = 0; i < MTPERF_NCOUNTERS; ++i) {
@@ -185,6 +192,7 @@ void mtperf_report_intervals(const struct s_interval* ivs,
 	efibre;
 	pnlsep;
       }
+      efibre;
       if (flags & REPORT_NOLF) pnl;
       ps("### end intervals\n### begin descriptions\n");
 
