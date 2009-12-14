@@ -1,3 +1,21 @@
+2009-12-15  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
+	New MT-Alpha optimization.
+
+	The following was observed during Apple-CORE benchmarking: in many
+	"small" threads the operation that use the result of a memory load
+	directly follow the load. They will arrive at the pipeline read
+	stage without their dependency in most case, and then be
+	rescheduled. This wastes one execution cycle per thread. It can be
+	avoided in most cases by forcing a thread switch immediately
+	before such instructions, so that other threads get a chance to
+	execute and the dependency be satisfied by the time the
+	instruction goes around the active thread queue.
+	
+	* tools/bin/spp (pppalpha.addswchll): Also add `swch' *before*
+	operations that use the result of a long latency operation (not
+	only after).
+
 2009-12-14  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
 	Add support for more performance metrics from simulator.

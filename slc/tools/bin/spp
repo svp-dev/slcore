@@ -1570,12 +1570,13 @@ class pppalpha(object):
       maybell = allregs.copy()
       for (type, content, comment) in items:
          #print (type,content[:3],comment)
-         yield (type, content, comment)
          if type == 'label' or (type == 'other' and jre.match(content)):
             #print "FOO"
+            yield (type, content, comment)
             maybell = allregs.copy()
 
          elif type == 'empty':
+            yield (type, content, comment)
             if comment.startswith('MTREG_SET:'):
                hint = set(comment.split(':',1)[1].strip().split(','))
                maybell = maybell - hint
@@ -1663,7 +1664,10 @@ class pppalpha(object):
                      test = 1
                      q.add(rx)
             if test == 1:
-               yield ('other','swch','MT: long latency: %s' % ','.join(q))
+               yield ('other','swch','MT: (before) long latency: %s' % ','.join(q))
+            yield (type, content, comment)
+            if test == 1:
+               yield ('other','swch','MT: (after) long latency: %s' % ','.join(q))
 
             # all the registers that are "short written"
             # will not cause long latency during next use
@@ -1680,6 +1684,9 @@ class pppalpha(object):
                for r in longwrites:
                   if self.seereg(rx, r):
                      maybell.add(rx)
+         else:
+            yield (type, content, comment)
+            
             
 
    def addswchbr(self, fundata, items):
