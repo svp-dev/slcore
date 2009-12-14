@@ -1,5 +1,11 @@
 2009-12-14  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	Simplify the LMK3 benchmark.
+
+	* benchmarks/livermore/kernel3.c: Use a simple N/P reduction.
+
+2009-12-14  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	New `perf' demo for performance metrics.
 
 	* demo/perf.c: New.

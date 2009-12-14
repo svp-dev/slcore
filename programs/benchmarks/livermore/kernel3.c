@@ -49,7 +49,7 @@ sl_def(reductionk3, void,
     long lower = sl_getp(iternum) * redindex;
     long upper = lower + sl_getp(iternum);
 
-    sl_create(,, lower, upper, 1,,, innerk3,
+    sl_create(,PLACE_LOCAL, lower, upper, 1,,, innerk3,
               sl_shfarg(double, Qr, 0.0),
               sl_glarg(const double*, , sl_getp(Z)),
               sl_glarg(const double*, , sl_getp(X)));	
@@ -72,14 +72,14 @@ sl_def(kernel3, void,
        sl_glparm(size_t, Z_dim))
 {
 #ifndef REDUCTIONS
-    sl_create(,, 0, sl_getp(n), 1, , , innerk3,
+    sl_create(,, 0, sl_getp(n), 1, 1, , innerk3,
               sl_shfarg(double, Qr, sl_getp(Q)),
               sl_glarg(const double*, , sl_getp(Z)),
               sl_glarg(const double*, , sl_getp(X)));	
     sl_sync();
 #else
     //reduction execution
-    long blocking = 4; // some arbitrary blocking factor
+    long blocking = 1; // some arbitrary blocking factor
     long usecores = sl_getp(ncores) * blocking; 
     long span = sl_getp(n) / usecores;
 
