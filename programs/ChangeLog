@@ -1,3 +1,15 @@
+2009-12-17  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
+	Enhance benchmarking framework.
+	
+	* build-aux/genbench.sh: Remove. Functionality moved to...
+	* build-aux/benchmarks.mk: ... here. Enhance to support Automake's
+	test engine in `make check'. Also keep as much rules as possible
+	within one level of `make'.
+
+	* benchmarks/fft/Makefile.am: Append to `DISTCLEANFILES' as it is
+	now defined in `benchmarks.mk'.
+
 2009-12-14  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
 	Provide a faster FFT benchmark.

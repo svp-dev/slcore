@@ -33,7 +33,7 @@ include $(top_srcdir)/build-aux/benchmarks.mk
 dist_noinst_SCRIPTS = testfft.sh gen_table_2.sh
 
 BUILT_SOURCES = fft_table1_16_data.h fft_table1_8_data.h fft_table2_16_data.h fft_table2_8_data.h
-DISTCLEANFILES = $(BUILT_SOURCES)
+DISTCLEANFILES += $(BUILT_SOURCES)
 
 fft-bench1.x: fft-bench.c fft_impl1.c fft.h fft_table1_16_data.h
 fft-bench2.x: fft-bench.c fft_impl2.c fft.h fft_table2_16_data.h
