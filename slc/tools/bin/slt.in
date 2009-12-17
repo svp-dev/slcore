@@ -19,7 +19,7 @@ if test -n "$TRACE"; then set -x; fi
 set -e
 
 basename=${0##*/}
-root=$(cd $(dirname "$0"); pwd)
+root=$(cd $(dirname "$0"); pwd -P)
 
 version=@slc_version@
 slrev=@slc_revision@

@@ -282,18 +282,22 @@ if test "x$SIMPROFILE" = "xlist"; then
 fi
 
 if test -n "$VERBOSE"; then
-    echo "command line: $0 $arglist" >&2
+    n=$0
+    d=${0%/*}
+    if test -n "$d"; then 
+        bn=${0##*/}
+        d=$(cd "$d"; pwd -P)
+        n=$d/$bn
+    fi
+    echo "command line: $n $arglist" >&2
 fi
 
-# does the program exist?
+# sanity check on program
 if test -z "$program"; then
   die 1 "no program specified"
 elif ! test -f "$program"; then
   die 127 "no such file or directory: $program"
-fi
-
-# is it executable?
-if ! test -x "$program"; then
+elif ! test -x "$program"; then
   die 126 "permission denied: $program"
 fi
 

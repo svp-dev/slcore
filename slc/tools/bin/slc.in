@@ -17,7 +17,7 @@ copyright="Copyright (C) 2009 The SL project."
 PS4='+ slc($$): '
 if test -n "$TRACE"; then set -x; fi
 set -e
-root=$(cd $(dirname "$0"); pwd)
+root=$(cd $(dirname "$0"); pwd -P)
 timeout=$root/timeout
 TIMEOUT=${TIMEOUT:-10000}; export TIMEOUT
 cce_helper=${CCE:-@cce_helper@}

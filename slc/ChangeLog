@@ -1,5 +1,15 @@
 2009-12-16  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	Make debugging output more informative.
+
+	* tools/bin/slc.in,
+	* tools/bin/slr.in,
+	* tools/bin/slt.in,
+	* tools/lib/r-mt-sim.sh.in: Use absolute pathnames when printing
+	out program names.
+
+2009-12-16  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	Fix bug introduced with latest MT-Alpha optimization.
 
 	When adding a `swch' before an potentially dependent instruction,

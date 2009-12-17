@@ -69,9 +69,17 @@ if test -n "${COMA:-}"; then
 else
     thesim=$mgsim
 fi
-if ! "${thesim[@]}" --help >/dev/null 2>&1; then
-  echo "$basename: cannot find simulator (${thesim[*]})." >&2
-  exit 1
+
+if ! test -x "${thesim[0]}"; then
+  echo "$basename: ${thesim[0]} not found or not executable." >&2
+  exit 127
+else
+  d=${thesim[0]%/*}
+  if test -n "$d"; then 
+      bn=${thesim[0]##*/}
+      d=$(cd "$"; pwd -P)
+      thesim[0]=$d/$bn
+  fi
 fi
 
 ##
