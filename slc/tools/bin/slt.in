@@ -601,7 +601,7 @@ do_run() {
 	  { echo; echo "===== RUNNING PROGRAM: ${vars[*]} ====="; } >>"$baseout.log"
 	  varstuff=("${vars[@]}" ${RUN_ARGS:+"${RUN_ARGS[@]}"} "${extra_run_args[@]}")
 	  varstuff=("${varstuff[@]//TEST/$testsrc}")
-	  command=("$timeout" "$runner" -t "$baseout.x" "${varstuff[@]}")
+	  command=("$timeout" "$runner" -p "$baseout.work" -t "$baseout.x" "${varstuff[@]}")
 	  echo "${command[*]} >>$baseout.out" >>"$baseout.log"
 	  set +e
 	  KEEP=1 "${command[@]}" >>"$baseout.out" 2>>"$baseout.log"

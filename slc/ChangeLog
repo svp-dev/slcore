@@ -1,5 +1,11 @@
 2009-12-16  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	Also use the new `slr -p' feature with `slt'.
+	
+	* tools/bin/slt.in: Invoke `slr' with `-p'. 
+
+2009-12-16  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	Minor fixes in scripts.
 
 	* tools/bin/timeout.in,
