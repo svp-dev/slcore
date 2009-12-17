@@ -10,16 +10,15 @@ if test $# -lt 1; then
     cat >&2 <<EOF
 usage: $0 <commandline ...>
 
-Execute a program and force terminate its execution if it does not 
+Execute a program and force terminate its execution if it does not
 terminate normally before a timeout.
 
 The program is terminated with SIGTERM (exit code 143) if the timeout
-expires before the command terminates. 
-If the command does not respond to SIGTERM, it is sent SIGKILL (exit
-code 137) after 2 seconds.
+expires before the command terminates. If the command does not respond
+to SIGTERM, it is sent SIGKILL (exit code 137) after 2 seconds.
 
-The default timeout is 60 seconds, unless overloaded with the environment
-variable TIMEOUT.
+The default timeout is 60 seconds, unless overloaded with the
+environment variable TIMEOUT.
 EOF
     exit 1
 fi

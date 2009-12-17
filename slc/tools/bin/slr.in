@@ -73,14 +73,14 @@ Execution selection:
 
   -x RUNNER            Use the specified RUNNER (use when autodetect fails).
 
-  -m PROFILE           Use the specified simulator PROFILE.
-
+Microgrid simulation options:
   -m list              List available profiles.
+
+  -m PROFILE           Use the specified simulator PROFILE.
 
   -Ws,arg              Pass "arg" as extra command line parameter to the 
                        simulator, when the simulator is used.
 
-Tuning of simulator profile:
   -n PLACES            Override the place configuration from the simulator
                        profile.
 
@@ -91,6 +91,14 @@ Tuning of simulator profile:
 
   -Cd N                Configure N directories in the COMA network. Implies -C.
                        Overrides profile settings.
+
+  -X                   Enable graphical output.
+
+  -Xd W,H              Set initial gfx resolution to W(idth)xH(eight). Implies -X.
+
+  -Xs HS,VS            Set initial gfx scaling factors to HSxVS. Implies -X.
+  
+  -Xr RATE             Set gfx update rate to RATE (cycles/frame). Implies -X.
 
 Debugging options:
   -t                   Trace: print commands before running them.
@@ -103,15 +111,6 @@ Debugging options:
   -p DIR               Package: keep all the information and files needed to 
                        re-run the program later. This is stored in a sub-
                        directory of DIR.
-
-Graphics:
-  -X                   Enable graphical output.
-
-  -Xd W,H              Set initial gfx resolution to W(idth)xH(eight). Implies -X.
-
-  -Xs HS,VS            Set initial gfx scaling factors to HSxVS. Implies -X.
-  
-  -Xr RATE             Set gfx update rate to RATE (cycles/frame). Implies -X.
 
 Other options:
   -h, --help           Print this help, then exit.

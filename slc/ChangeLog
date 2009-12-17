@@ -1,5 +1,14 @@
 2009-12-16  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	Minor fixes in scripts.
+
+	* tools/bin/timeout.in,
+	* tools/bin/slr.in: Re-organize documentation.
+
+	* tools/bin/slt.in: Use quotes properly.
+
+2009-12-16  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	Support packaging the execution process for later re-play.
 
 	A new parameter `-p' is added to `slr'. It causes all the files
