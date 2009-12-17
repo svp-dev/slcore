@@ -142,6 +142,7 @@ case $alias in
     ptlx)  alias=ptlx-x-x ;;
     utcx)  alias=utc-x-x ;;
     *-*)   ;; # more than one word: pass to next stage
+    mt*)   alias=ppp-$alias-sim ;;
     *)     # remaining single-word aliases
 	die "$alias: unknown alias" ;;
 esac

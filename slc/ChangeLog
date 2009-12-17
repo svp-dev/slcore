@@ -1,3 +1,15 @@
+2009-12-17  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
+	Enhance `slr' and `cce' for more flexibility.
+	
+	* tools/bin/slr.in: New parameter `-b' to specify the `cce' tag to
+	use when compiling input data. Re-order stages to allow compiling
+	Fibre data without a valid program executable when `-b' is
+	specified.
+
+	* tools/bin/cce.in: Recognize `mtalpha' and `mtsparc' as
+	single-word aliases.
+
 2009-12-16  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
 	Also use the new `slr -p' feature with `slt'.

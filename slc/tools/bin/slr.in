@@ -73,6 +73,9 @@ Execution selection:
 
   -x RUNNER            Use the specified RUNNER (use when autodetect fails).
 
+  -b SPEC              Use \`-b SPEC' when invoking the compiler to generate
+                       data files.
+
 Microgrid simulation options:
   -m list              List available profiles.
 
@@ -180,6 +183,7 @@ die() {
 runner=
 prev_arg=
 show_embedded=
+datatag=
 vars=()
 program=
 query=
@@ -212,6 +216,7 @@ for arg in "$@"; do
   fi
   case $arg in
       -x)	prev_arg=runner; shift;;
+      -b)       prev_arg=datatag; shift;;
       -c)	show_embedded=1; shift;;
       -t)       VERBOSE=1; shift;;
       -g)	VERBOSE=1; DEBUG=1; shift;;
@@ -293,60 +298,19 @@ if test -n "$VERBOSE"; then
     echo "$basename: timestamp:" $(TZ=UTC date '+%Y-%m-%d %H:%M:%S (UTC)') >&2
 fi
 
-# sanity check on program
-if test -z "$program"; then
-  die 1 "no program specified"
-elif ! test -f "$program"; then
-  die 127 "no such file or directory: $program"
-elif ! test -x "$program"; then
-  die 126 "permission denied: $program"
-fi
-
-# detect runner & print string if requested
-if test -n "$show_embedded" -o -z "$runner"; then
-  tag=$(strings "$program"|grep '^slr_runner:.*:'|tail -n1|cut -d: -f2)
-  if test "x$tag" = "x"; then
-    if test -n "$show_embedded"; then
-       echo "(none found)"
-       exit 0    
-    fi
-  else
-    if test -n "$show_embedded"; then
-       echo "$tag"
-       exit 0    
-    fi
-  fi
-fi
-
-datatag=$(strings "$program"|grep '^slr_datatag:.*:'|tail -n1|cut -d: -f2)
-if test "x$datatag" = "x"; then
+if test -z "$datatag"; then
+  # Not specified, find from program
+  test -r "$program" || die 1 "file not found or not readable: $program"
+  datatag=$(strings "$program"|grep '^slr_datatag:.*:'|tail -n1|cut -d: -f2)
+  if test "x$datatag" = "x"; then
     die 1 "can't determine cce tag to recompile"
-fi
-
-if test -z "$runner"; then
-  # Not specified, use tag if found
-  if test -n "$tag"; then
-     runner=$tag
-  else
-     die 1 "can't determine runner (try -r)"
   fi
 fi
 
-# search the runner in the libdirs
-runner_script=
-saveIFS=$IFS
-IFS=:
-for l in $slc_libdir; do
-  if test -r "$l/r-$runner.sh"; then
-     runner_script=$l/r-$runner.sh
-     break
-  fi
-done
-if test -z "$runner_script"; then
-    die 1 "$runner: cannot find runner script"
-fi
 
 # search arggen.sl in the datadirs
+saveIFS=$IFS
+IFS=:
 arggen=
 for d in $slc_datadir; do
     if test -r "$d/arggen.c"; then
@@ -411,6 +375,8 @@ if test -n "$dodata"; then
     else    
 	datafile="$SLR_RDIR"/input/data
     fi
+
+    test -r "$program" || die 1 "file not found or not readable: $program"
     
     # check program parameters
     strings "$program" | (grep '^slr_arg:'||true) >"$SLR_RDIR"/input/args.spec
@@ -510,8 +476,57 @@ s/,$//g' | $python "$sag_helper" f >"$SLR_RDIR"/input/fdata.c
     fi
 fi
 
-# debug cache only?
+# debug or cache only?
 if test -n "$preponly" -o -n "$debug_rec"; then exit 0; fi
+
+# sanity check on program
+if test -z "$program"; then
+  die 1 "no program specified"
+elif ! test -f "$program"; then
+  die 127 "no such file or directory: $program"
+elif ! test -x "$program"; then
+  die 126 "permission denied: $program"
+fi
+
+# detect runner & print string if requested
+if test -n "$show_embedded" -o -z "$runner"; then
+  tag=$(strings "$program"|grep '^slr_runner:.*:'|tail -n1|cut -d: -f2)
+  if test "x$tag" = "x"; then
+    if test -n "$show_embedded"; then
+       echo "(none found)"
+       exit 0    
+    fi
+  else
+    if test -n "$show_embedded"; then
+       echo "$tag"
+       exit 0    
+    fi
+  fi
+fi
+
+if test -z "$runner"; then
+  # Not specified, use tag if found
+  if test -n "$tag"; then
+     runner=$tag
+  else
+     die 1 "can't determine runner (try -r)"
+  fi
+fi
+
+# search the runner in the libdirs
+runner_script=
+saveIFS=$IFS
+IFS=:
+for l in $slc_libdir; do
+  if test -r "$l/r-$runner.sh"; then
+     runner_script=$l/r-$runner.sh
+     break
+  fi
+done
+IFS=$saveIFS
+if test -z "$runner_script"; then
+    die 1 "$runner: cannot find runner script"
+fi
 
 # Package program and data files
 if test -n "$KEEP"; then
@@ -536,7 +551,7 @@ export gfx_scale gfx_geometry gfx_refresh
 export coma_ncaches coma_ndirs ncores_override
 
 if test -n "$VERBOSE"; then
-    echo "$basename: cwd=$PWD" >&2
+    echo "$basename: cwd: $PWD" >&2
     echo "$basename: running: @BASH@ $runner_script $program $datafile $fdatafile" >&2
 fi
 exec @BASH@ "$runner_script" "$program" "$datafile" "$fdatafile"
