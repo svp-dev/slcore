@@ -1,4 +1,6 @@
-#! /bin/sh
+#! @BASH@
+PS4='+ r-mt-sim($$): '
+if test -n "${TRACE:-}"; then set -x; fi
 set -eu
 basename=${0##*/}
 program=${1:?}
@@ -71,15 +73,14 @@ else
 fi
 
 if ! test -x "${thesim[0]}"; then
-  echo "$basename: ${thesim[0]} not found or not executable." >&2
-  exit 127
+    echo "$basename: ${thesim[0]} not found or not executable." >&2
+    exit 127
 else
-  d=${thesim[0]%/*}
-  if test -n "$d"; then 
-      bn=${thesim[0]##*/}
-      d=$(cd "$"; pwd -P)
-      thesim[0]=$d/$bn
-  fi
+    bn=${thesim[0]}
+    bn=${bn##*/}
+    d=$(dirname "${thesim[0]}")
+    d=$(cd "$d" && pwd -P)
+    thesim[0]=$d/$bn
 fi
 
 ##
@@ -119,7 +120,27 @@ if test -n "${SIMGFX:-}"; then
     fi
 fi
 
+b=${program##*/}
+d=$(dirname "$program")
+if test -z "${SLR_RDIR:-}"; then d=$(cd "$d" && pwd -P); fi
+
+runner_cmdline=(${RUNNER_PREFIX:-} $do_debug "${thesim[@]}" \
+    "${simargs_base[@]}" ${SIMARGS:-} \
+    -t -L16 "$datafile" -L17 "$fdatafile" ${1+"$@"} "$d/$b")
+
+if test -n "${SLR_RDIR:-}"; then
+  cat >"$SLR_RDIR"/run.sh <<EOF
+#! @BASH@
+d=\$(dirname "\$0")
+cd "\$d"
+EOF
+  set | grep '^runner_cmdline=' >>"$SLR_RDIR"/run.sh
+  echo "exec \"\${runner_cmdline[@]}\"" >>"$SLR_RDIR"/run.sh
+  chmod +x run.sh
+fi
+
 if test -n "${VERBOSE:-}"; then
-    echo "$basename: running: ${RUNNER_PREFIX:-} $do_debug ${thesim[*]} ${simargs_base[*]} ${SIMARGS:-} -t -L16 $datafile -L17 $fdatafile ${*:-} $program" >&2
+    echo "$basename: cwd=$PWD" >&2
+    echo "$basename: running: ${runner_cmdline[*]}" >&2
 fi  
-exec ${RUNNER_PREFIX:-} $do_debug "${thesim[@]}" "${simargs_base[@]}" ${SIMARGS:-} -t -L16 "$datafile" -L17 "$fdatafile" ${1:+"$@"} "$program"
+exec "${runner_cmdline[@]}"

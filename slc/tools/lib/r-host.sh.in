@@ -1,0 +1,53 @@
+#! @BASH@
+# Run script for native executables.
+PS4='+ r-host($$): '
+if test -n "${TRACE:-}"; then set -x; fi
+set -eu
+basename=${0##*/}
+program=${1:?}
+datafile=${2:?}
+fdatafile=${3:?}
+DEBUGGER=${DEBUGGER:-gdb --args}
+shift
+shift
+shift
+if ! test -x "$program"; then
+    echo "$basename: $program: not an executable" >&2
+    exit 127
+fi
+if ! test -r "$datafile"; then
+    echo "$basename: $datafile: file not found or not readable" >&2
+    exit 1
+fi
+if ! test -r "$fdatafile"; then
+    echo "$basename: $fdatafile: file not found or not readable" >&2
+    exit 1
+fi
+
+do_debug=
+if test -n "${DEBUG:-}"; then
+  do_debug=$DEBUGGER
+fi
+
+b=${program##*/}
+d=$(dirname "$program")
+if test -z "${SLR_RDIR:-}"; then d=$(cd "$d" && pwd -P); fi
+
+runner_cmdline=(${RUNNER_PREFIX:-} $do_debug "$d/$b" "$datafile" "$fdatafile" ${1:+"$@"})
+
+if test -n "${SLR_RDIR:-}"; then
+  cat >"$SLR_RDIR"/run.sh <<EOF
+#! @BASH@
+d=\$(dirname "\$0")
+cd "\$d"
+EOF
+  set | grep '^runner_cmdline=' >>"$SLR_RDIR"/run.sh
+  echo "exec \"\${runner_cmdline[@]}\"" >>"$SLR_RDIR"/run.sh
+  chmod +x run.sh
+fi
+
+if test -n "${VERBOSE:-}"; then
+  echo "$basename: cwd=$PWD" >&2
+  echo "$basename: running: ${runner_cmdline[*]}" >&2
+fi
+exec "${runner_cmdline[@]}" 

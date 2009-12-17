@@ -1,5 +1,28 @@
 2009-12-16  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	Support packaging the execution process for later re-play.
+
+	A new parameter `-p' is added to `slr'. It causes all the files
+	required to run a program, minus the SL tool chain, to be saved to
+	a directory. A copy of this directory is then sufficient to
+	"re-play" the execution even without access to the SL tool chain.
+
+	* tools/bin/slr.in: Support new option `-p'. Use timestamped
+	`package directory' for temporary files. Link data input files and
+	program executable in the package directory. Also print the
+	timestamp when `-t' is used.
+
+	* tools/lib/r-host.sh: Rename to...
+	* tools/lib/r-host.sh.in: ...here. Save the program command line
+	to the package directory.
+
+	* tools/lib/r-mt-sim.sh.in: Save the program command line to the
+	package directory.
+
+	* tools/lib/Makefile.am: Also generate `r-host.sh'.
+
+2009-12-16  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	Make debugging output more informative.
 
 	* tools/bin/slc.in,

@@ -12,12 +12,17 @@
 ##
 
 # 
-dist_pkglib_SCRIPTS = \
-	r-host.sh
-
 pkglib_SCRIPTS = \
+	r-host.sh \
 	r-mtalpha-sim.sh \
 	r-mtsparc-sim.sh
+
+r-host.sh: r-host.sh.in Makefile
+	$(AM_V_at)rm -f $@ $@.out
+	$(AM_V_GEN)$(SED) <$< >$@.out \
+	   -e 's|@BASH[@]|$(BASH)|g'
+	$(AM_V_at)chmod +x,a-w $@.out
+	$(AM_V_at)mv -f $@.out $@
 
 r-mtalpha-sim.sh: r-mt-sim.sh.in Makefile
 	$(AM_V_at)rm -f $@ $@.out
@@ -26,7 +31,8 @@ r-mtalpha-sim.sh: r-mt-sim.sh.in Makefile
 	 -e 's|@MGSIM_ARCH[@]|$(MGSIM_ALPHA)|g' \
 	 -e 's|@SIMX_ARCH[@]|$(SIMX_ALPHA)|g' \
 	 -e 's|@ARCH[@]|ALPHA|g' \
-	 -e 's|@arch[@]|alpha|g'
+	 -e 's|@arch[@]|alpha|g' \
+	 -e 's|@BASH[@]|$(BASH)|g'
 	$(AM_V_at)chmod +x,a-w $@.out
 	$(AM_V_at)mv -f $@.out $@
 
@@ -37,7 +43,8 @@ r-mtsparc-sim.sh: r-mt-sim.sh.in Makefile
 	 -e 's|@MGSIM_ARCH[@]|$(MGSIM_SPARC)|g' \
 	 -e 's|@SIMX_ARCH[@]|$(SIMX_SPARC)|g' \
 	 -e 's|@ARCH[@]|SPARC|g' \
-	 -e 's|@arch[@]|sparc|g'
+	 -e 's|@arch[@]|sparc|g' \
+	 -e 's|@BASH[@]|$(BASH)|g'
 	$(AM_V_at)chmod +x,a-w $@.out
 	$(AM_V_at)mv -f $@.out $@
 
@@ -62,7 +69,7 @@ nobase_dist_pkgdata_DATA = \
 include $(top_srcdir)/build-aux/sl.mk
 nobase_pkglib_DATA =
 nobase_pkglib_LIBRARIES = 
-EXTRA_DIST = r-mt-sim.sh.in
+EXTRA_DIST = r-mt-sim.sh.in r-host.sh.in
 CLEANFILES =
 MAINTAINERCLEANFILES = 
 BUILT_SOURCES = 
