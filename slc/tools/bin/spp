@@ -1110,6 +1110,15 @@ class pppalpha(object):
          justignored = False
          yield (type, content, comment)
 
+   def rmswchbegin(self, fundata, items):
+      seeother = False
+      for (type, content, comment) in items:
+         if type == 'other':
+            if content.startswith('swch') and seeother == False:
+               continue
+            seeother = True
+         yield (type, content, comment)
+
    def rmdupswch(self, fundata, items):
       seeswch = 0
       for (type, content, comment) in items:
@@ -1857,7 +1866,7 @@ class pppalpha(object):
       """
 
       stages = ['remdefaults', 'findlabels', 'killunusedlabels',
-                'addswchll', 'addswchbr', 'rmdupswch',
+                'addswchll', 'addswchbr', 'rmdupswch', 'rmswchbegin',
                 'prunenopend', 'protectend', 'fixemptyf']
       # parse flags
       opts = dict(((s,1) for s in stages))

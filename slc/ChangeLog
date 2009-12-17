@@ -1,3 +1,15 @@
+2009-12-16  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
+	Fix bug introduced with latest MT-Alpha optimization.
+
+	When adding a `swch' before an potentially dependent instruction,
+	the `swch' could become the very first non-directive in the
+	assembly output. This is not valid, as it must always be preceded
+	by an instruction. Hence, remove any `swch' not preceded by an
+	instruction.
+	
+	* tools/bin/spp (pppalpha.filter2): New stage `rmswchbegin'.
+
 2009-12-15  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
 	New MT-Alpha optimization.
