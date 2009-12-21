@@ -1,3 +1,11 @@
+2009-12-20  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
+	Avoid a false positive in the test suite.
+	
+	* 0_slc/1_createargs/1_shared_empty.c: Ignore results, as the
+	behavior of reading a shared after a family that does not write to
+	it is undefined.
+
 2009-11-06 Simon Polstra <s.polstra@uva.nl>
 
 	Extend the unit test suite.

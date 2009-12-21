@@ -1,5 +1,5 @@
 //
-// simple_synch.c: this file is part of the SL toolchain.
+// 1_shared_empty.c: this file is part of the SL toolchain.
 //
 // Copyright (C) 2009 The SL project.
 //
@@ -19,6 +19,7 @@ sl_def(foo, void, sl_shparm(int, sarg))
 }
 sl_enddef
 
+// XIGNORE: *:*
 sl_def(t_main, void)
 {
   sl_create(,,0,9,1,,, foo, sl_sharg(int, s_in, 7));
