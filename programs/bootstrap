@@ -25,7 +25,8 @@ else
    sl-init-autoconf
 fi
 
-(cd benchmarks/livermore && ./genmk.sh)
+(cd benchmarks/livermore && python ./ll-generate.py <ll-bounds.csv)
+(cd benchmarks/blas && ./gendata.sh)
 $AUTORECONF -v -f -i
 
 echo "Reconfiguration done."

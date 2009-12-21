@@ -6,8 +6,9 @@ SLFLAGS = -I$(top_srcdir)/benchmarks/lib -lbench
 SLFLAGS_PTL = -L$(top_builddir)/benchmarks/lib/host-host-ptl
 SLFLAGS_SEQC = -L$(top_builddir)/benchmarks/lib/host-host-seqc
 SLFLAGS_MTALPHA = -L$(top_builddir)/benchmarks/lib/mtalpha-sim
-CLEANFILES =
+CLEANFILES = $(BENCHMARKS:.c=.x) $(BENCHMARKS:.c=.bin.*)
 DISTCLEANFILES = 
+BUILT_SOURCES =
 
 ###
 ### Generating dependency makefiles
@@ -59,6 +60,8 @@ GENDATA_DEF = gen_fdata() { \
 	  mv -f "$$target".tmp "$$target"; \
 	}
 
+BUILT_SOURCES += fdatas.mk
+
 fdatas.mk: Makefile $(BENCHMARKS:.c=.ilist)
 	$(AM_V_at)rm -f $@ $@.tmp
 	$(AM_V_GEN)set -e; \
@@ -78,13 +81,14 @@ FDATA_FILES =
 -include fdatas.mk
 
 .PRECIOUS: $(FDATA_FILES)
-.PHONY: fdata clean-fdata
-fdata: $(FDATA_FILES)
+.PHONY: fdata fdata-am clean-fdata
+fdata: $(BUILT_SOURCES)
+	$(MAKE) $(AM_MAKEFLAGS) fdata-am
+fdata-am: $(FDATA_FILES)
 clean-fdata:
-	-test -z "$(FDATA_FILES)" || rm -f $(FDATA_FILES)
+	-rm -f benchdata/*.fdata
 
-CLEANFILES += $(FDATA_FILES)
-DISTCLEANFILES += fdata.mk
+DISTCLEANFILES += fdatas.mk
 
 ##
 ## Benchmarks
@@ -122,6 +126,7 @@ DOBENCH_DEF = do_bench() { \
 	  mv -f "$$target".err "$$target" && rm -rf "$$target".work; \
 	}
 
+BUILT_SOURCES += $(BMK_FILES)
 %.bmk: %.ilist Makefile $(top_srcdir)/build-aux/benchmarks.mk
 	$(AM_V_at)rm -f $@ $@.tmp
 	$(AM_V_GEN)set -e; \
@@ -152,7 +157,7 @@ DOBENCH_DEF = do_bench() { \
 	   done >$@.tmp && \
 	   { echo ".PHONY: $*.check"; \
 	     echo "$*.check: $$elist ; " \
-	          "cat \$$^ && rm -f \$$^"; \
+	          "-if test -n \"x\$$^\" = x; then cat \$$^ && rm -f \$$^; fi"; \
 	   } >>$@.tmp
 	$(AM_V_at)chmod -w $@.tmp && mv -f $@.tmp $@
 
@@ -160,19 +165,22 @@ PDATA_FILES =
 -include $(BMK_FILES)
 
 .PRECIOUS: $(PDATA_FILES)
-.PHONY: bench clean-bench
-bench: $(PDATA_FILES)
+.PHONY: bench bench-am clean-bench
+bench: $(BUILT_SOURCES)
+	$(MAKE) $(AM_MAKEFLAGS) bench-am
+bench-am: $(PDATA_FILES)
 clean-bench:
-	-test -z "$(PDATA_FILES)" || rm -f $(PDATA_FILES)
+	-rm -f benchdata/*.out
+	-rm -f benchdata/*.err
+	-rm -rf benchdata/*.work
 
-CLEANFILES += $(PDATA_FILES)
 DISTCLEANFILES += $(BMK_FILES)
 
-
-clean-local:
+###
+### Global clean rule
+###
+clean-local: clean-fdata clean-bench
 	-rm -rf benchdata
-
-
 
 ##
 ## Unit testing
@@ -217,7 +225,6 @@ BENCHLIB = $(abs_top_srcdir)/benchmarks/lib/benchmark.c \
 ##
 if ENABLE_DEMOS
 noinst_DATA = $(BENCHMARKS:.c=.x)
-CLEANFILES += $(BENCHMARKS:.c=.x) $(BENCHMARKS:.c=.bin.*)
 endif
 
 

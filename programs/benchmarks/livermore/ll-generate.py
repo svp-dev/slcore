@@ -262,6 +262,9 @@ def geninputs(k):
             print "Size to small for kernel: %d" % n
             continue
         df = datapat % (idx, n)
+        lf = file('extradist.mk','a')
+        lf.write('EXTRA_DIST += %s\n' % df)
+        lf.close()
         print "Generating %s..." % df
         f = file(df,'w')
         print >>f, "# n (problem size)"
@@ -359,7 +362,7 @@ def read(rows):
 if __name__ == "__main__":
     csvread = csv.reader(sys.stdin, delimiter=',', quotechar='"')
     bread = read(csvread)        
-
+    file('extradist.mk','w').close()
     for kernel in bread:
         print kernel
         print "Generating code for kernel %d ('%s', %d args)..." % (kernel['idx'], kernel['key'], len(kernel['args']))

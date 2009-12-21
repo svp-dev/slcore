@@ -22,7 +22,9 @@ CLEANFILES =
 noinst_DATA =
 noinst_LIBRARIES =
 
-
+##
+## Targets for `seqc'
+##
 noinst_LIBRARIES += host-host-seqc/libbench.a
 
 host_host_seqc_libbench_a_SOURCES =
@@ -35,7 +37,9 @@ host-host-seqc/%.o: $(srcdir)/%.c
 
 CLEANFILES += host-host-seqc/benchmark.o
 
-
+###
+### Targets for `ptl'
+###
 if ENABLE_SLC_PTL
 noinst_LIBRARIES += host-host-ptl/libbench.a
 
@@ -50,8 +54,12 @@ host-host-ptl/%.o: $(srcdir)/%.c
 CLEANFILES += host-host-ptl/benchmark.o
 endif
 
+###
+### Targets for `mtalpha'
+###
 if ENABLE_SLC_MTALPHA
 noinst_DATA += mtalpha-sim/libbench.a
+CLEANFILES += mtalpha-sim/libbench.a
 
 mtalpha_sim_libbench_a_CONTENTS = \
     mtalpha-sim/benchmark.o

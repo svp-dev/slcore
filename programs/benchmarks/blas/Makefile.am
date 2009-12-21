@@ -65,5 +65,5 @@ EXTRA_DIST = \
 	$(BENCHMARKS) \
 	$(BENCHMARK_INPUTS)
 
-
+include extradist.mk
 include $(top_srcdir)/build-aux/benchmarks.mk

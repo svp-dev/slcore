@@ -21,5 +21,6 @@ BENCHMARK_INPUTS = bench1.inputs bench2.inputs bench3.inputs bench4.inputs bench
 
 EXTRA_DIST = $(BENCHMARKS) $(BENCHMARK_INPUTS)
 
+include extradist.mk
 include $(top_srcdir)/build-aux/benchmarks.mk
 

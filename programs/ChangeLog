@@ -1,5 +1,38 @@
 2009-12-20  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	Packaging fixes (allow `make distcheck').
+
+	* benchmarks/lib/Makefile.am (CLEANFILES): Clean
+	`mtalpha-sim/libbench.a' too.
+	
+	* benchmarks/livermore/ll-generate.py,
+	* benchmarks/blas/gendata.sh: Also generate list of input files in
+	`extradist.mk'.
+
+	* benchmarks/livermore/Makefile.am,
+	* benchmarks/blas/Makefile.am: Use the generated `extradist.mk'.
+
+	* bootstrap: Invoke `benchmarks/blas/gendata.sh' and
+	`benchmarks/livermore/ll-generate.py'.
+
+	* benchmarks/fft/testfft.sh: Remove, because superseded by `make
+	bench'.
+
+	* benchmarks/fft/Makefile.am: Update accordingly. Express
+	dependencies for `fft-bench1-small' and `fft-bench2-small' too. Do
+	not use `BUILT_SOURCES' any more since the dependencies are
+	sufficient to ensure the correct build order.
+
+	* build-aux/benchmarks.mk: Clean benchmark executables even when
+	`ENABLE_DEMOS' is not set, as they are built for checking
+	too. Simplify clean rules with glob patterns to avoid "argument
+	list too long" errors.
+
+	* Makefile.am (EXTRA_DIST): Do not distribute `genbench.sh' as
+	this does not exist any more.
+
+2009-12-20  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	Avoid false positive during `make check'.
 	
 	* demo/perf.c: Do not compare output between `slt' checks since
