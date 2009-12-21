@@ -1,3 +1,10 @@
+2009-12-20  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
+	Minor packaging fix.
+	
+	* bootstrap: Use the new generation scripts in
+	`programs/benchmarks'.
+
 2009-12-08  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
 	* deploy/versions.mk.defaults: Bump version numbers. 
