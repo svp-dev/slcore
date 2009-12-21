@@ -1,5 +1,15 @@
 2009-12-20  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	Increase portability of the run script in execution packages.
+
+	* tools/lib/r-mt-sim.sh.in: The script `run.sh' requires Bash, so
+	mention that explicitely so that the script can be copied to a
+	different system where `/bin/sh' is not bash. Also allow to
+	override the MT simulator with an environment variable during
+	re-play.
+
+2009-12-20  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	Minor packaging fix.
 	
 	* build-aux/slc.m4: Also set `TMO' to the location of the

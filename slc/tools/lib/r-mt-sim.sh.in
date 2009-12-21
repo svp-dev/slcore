@@ -61,6 +61,7 @@ fi
 ##
 
 if test -n "${COMA:-}"; then
+    thevar=SIMX_@ARCH@
     thesim=$simx
     if test -n "${coma_ncaches:-}"; then
 	simargs_base+=(-o NumCaches=$coma_ncaches)
@@ -69,6 +70,7 @@ if test -n "${COMA:-}"; then
 	simargs_base+=(-o NumDirectories=$coma_ndirs)
     fi
 else
+    thevar=MGSIM_@ARCH@
     thesim=$mgsim
 fi
 
@@ -124,23 +126,26 @@ b=${program##*/}
 d=$(dirname "$program")
 if test -z "${SLR_RDIR:-}"; then d=$(cd "$d" && pwd -P); fi
 
-runner_cmdline=(${RUNNER_PREFIX:-} $do_debug "${thesim[@]}" \
+runner_cmdline=("${thesim[@]}" \
     "${simargs_base[@]}" ${SIMARGS:-} \
     -t -L16 "$datafile" -L17 "$fdatafile" ${1+"$@"} "$d/$b")
 
+first=${runner_cmdline[0]}
+unset runner_cmdline[0]
 if test -n "${SLR_RDIR:-}"; then
   cat >"$SLR_RDIR"/run.sh <<EOF
-#! @BASH@
+#! /bin/bash
 d=\$(dirname "\$0")
 cd "\$d"
+$thevar=\${$thevar:-$first}
 EOF
   set | grep '^runner_cmdline=' >>"$SLR_RDIR"/run.sh
-  echo "exec \"\${runner_cmdline[@]}\"" >>"$SLR_RDIR"/run.sh
+  echo "exec ${RUNNER_PREFIX:-} $do_debug \"\$$thevar\" \"\${runner_cmdline[@]}\"" >>"$SLR_RDIR"/run.sh
   chmod +x run.sh
 fi
 
 if test -n "${VERBOSE:-}"; then
     echo "$basename: cwd=$PWD" >&2
-    echo "$basename: running: ${runner_cmdline[*]}" >&2
+    echo "$basename: running: ${RUNNER_PREFIX:-} $do_debug $first ${runner_cmdline[*]}" >&2
 fi  
-exec "${runner_cmdline[@]}"
+exec ${RUNNER_PREFIX:-} $do_debug "$first" "${runner_cmdline[@]}"
