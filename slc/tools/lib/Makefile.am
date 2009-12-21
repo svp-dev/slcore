@@ -60,6 +60,7 @@ nobase_dist_pkgdata_DATA = \
 	mt-profiles/rmb256 \
 	mt-profiles/rmb1 \
 	mt-profiles/rmb4 \
+	mt-profiles/rmb8 \
 	mt-profiles/ml-npcrypt-p1 \
 	mt-profiles/ml-npcrypt-p2 \
 	mt-profiles/ml-npcrypt-p4 \

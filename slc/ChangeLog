@@ -1,5 +1,17 @@
 2009-12-20  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	New default MT profile that provides multiple places.
+
+	This is required by `make check' in the `programs' package since
+	the `mandel' benchmark requires at least two 1-core places.
+	
+	* tools/lib/mt-profiles/rmb8: New.
+	* tools/lib/mt-profiles/default: Alias `rmb8'.
+
+	* tools/lib/Makefile.am: Update accordingly.
+	
+2009-12-20  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	Increase portability of the run script in execution packages.
 
 	* tools/lib/r-mt-sim.sh.in: The script `run.sh' requires Bash, so
@@ -1370,4 +1382,3 @@
 	* ChangeLog: initialize.
 
 See `ChangeLog.1' for earlier changes.
-

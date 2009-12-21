@@ -1,0 +1,4 @@
+DESCRIPTION="8-core, RB memory for tests, quick runs etc."
+COMA=
+NCORES=4,1,1,1,1
+
