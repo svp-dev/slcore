@@ -12,10 +12,13 @@
 ##
 
 # 
-pkglib_SCRIPTS = \
+
+RUNSCRIPTS = \
 	r-host.sh \
 	r-mtalpha-sim.sh \
 	r-mtsparc-sim.sh
+pkglib_SCRIPTS = $(RUNSCRIPTS)
+CLEANFILES = $(RUNSCRIPTS)
 
 r-host.sh: r-host.sh.in Makefile
 	$(AM_V_at)rm -f $@ $@.out
@@ -71,7 +74,6 @@ include $(top_srcdir)/build-aux/sl.mk
 nobase_pkglib_DATA =
 nobase_pkglib_LIBRARIES = 
 EXTRA_DIST = r-mt-sim.sh.in r-host.sh.in
-CLEANFILES =
 MAINTAINERCLEANFILES = 
 BUILT_SOURCES = 
 

@@ -1,5 +1,13 @@
 2009-12-20  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	Minor packaging fixes (allow `make distcheck').
+	
+	* lib/mtalpha.mk (CLEANFILES): Clean all built objects.
+	
+	* tools/lib/Makefile.am (CLEANFILES): Clean generated scripts.
+
+2009-12-20  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	Minor fixes to quiet compiler warnings.
 	
 	* tools/lib/t-pppalpha/include/sl_support.h: Avoid multi-line

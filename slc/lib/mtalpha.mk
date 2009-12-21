@@ -117,24 +117,26 @@ mtalpha-sim/libm.a: $(mtalpha_sim_libm_a_CONTENTS)
 endif
 
 CLEANFILES += \
-	mtalpha-sim/io.o \
-	mtalpha-sim/roman.o \
+	mtalpha-sim/ctype.o \
 	mtalpha-sim/div.o \
-	mtalpha-sim/mtdiv.o \
 	mtalpha-sim/divl.o \
-	mtalpha-sim/reml.o \
 	mtalpha-sim/divq.o \
-	mtalpha-sim/remq.o \
+	mtalpha-sim/io.o \
+	mtalpha-sim/malloc.o \
+	mtalpha-sim/malloc_intrinsics.o \
+	mtalpha-sim/malloc_wrappers.o \
 	mtalpha-sim/memcpy.o \
 	mtalpha-sim/memset.o \
-	mtalpha-sim/malloc_wrappers.o \
-	mtalpha-sim/malloc_intrinsics.o \
-	mtalpha-sim/malloc.o \
+	mtalpha-sim/missing_uclibc_math.o \
+	mtalpha-sim/mtclock.o \
+	mtalpha-sim/mtdiv.o \
 	mtalpha-sim/mtinit.o \
 	mtalpha-sim/mtsep.o \
+	mtalpha-sim/perf.o \
+	mtalpha-sim/reml.o \
+	mtalpha-sim/remq.o \
+	mtalpha-sim/roman.o \
 	mtalpha-sim/strlib.o \
-	mtalpha-sim/ctype.o \
-	mtalpha-sim/missing_uclibc_math.o \
 	mtalpha-sim/libm.a \
 	mtalpha-sim/libsl.a
 
