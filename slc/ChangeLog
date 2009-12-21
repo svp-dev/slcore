@@ -1,5 +1,20 @@
 2009-12-20  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	Minor fixes to quiet compiler warnings.
+	
+	* tools/lib/t-pppalpha/include/sl_support.h: Avoid multi-line
+	`//'-style comments. (reported by C. Joslin)
+
+	* lib/include/cstddef.h: Do not define `NULL' if it is already
+	defined (requested by C. Joslin).
+
+	* lib/src/gfx.c: Use proper `printf' format modifiers.
+
+	* lib/src/mtclock.c: Define `shutup_ctime_h' to avoid warnings in
+	`ctime.h'.
+
+2009-12-20  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	New default MT profile that provides multiple places.
 
 	This is required by `make check' in the `programs' package since

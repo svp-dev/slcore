@@ -32,7 +32,9 @@ typedef int wchar_t;
 
 /* 7.17.3 macros */
 
+#ifndef NULL
 #define NULL ((void *)0)
+#endif
 
 #define offsetof(TYPE, MEMBER) __builtin_offsetof (TYPE, MEMBER)
 

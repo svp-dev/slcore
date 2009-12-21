@@ -59,7 +59,7 @@ void gfx_dump(unsigned key, int stream, int embed_ts, int embed_tinfo /* unused 
     if (embed_ts) {
       struct rusage r;
       getrusage(RUSAGE_SELF, &r);
-      snprintf(buffer, 128, "gfx.%u.%ull%06u.ppm", key, (unsigned long long)r.ru_utime.tv_sec, (unsigned)r.ru_utime.tv_usec);
+      snprintf(buffer, 128, "gfx.%u.%llu%06u.ppm", key, (unsigned long long)r.ru_utime.tv_sec, (unsigned)r.ru_utime.tv_usec);
     } else
       snprintf(buffer, 128, "gfx.%u.ppm", key);
     f = fopen(buffer, "w");
@@ -75,7 +75,7 @@ void gfx_dump(unsigned key, int stream, int embed_ts, int embed_tinfo /* unused 
   size_t w = __gfx_w, h = __gfx_h;
   size_t x, y;
   uint32_t * __restrict__ pixels = __gfx_framebuffer;
-  fprintf(f, "P3\n#key: %u\n#\n%u %u 255\n", key, w, h);
+  fprintf(f, "P3\n#key: %u\n#\n%u %u 255\n", key, (unsigned)w, (unsigned)h);
   for (y = 0; y < h; ++y) {
     for (x = 0; x < w; ++x) {
       uint32_t d = pixels[y * w + x];
