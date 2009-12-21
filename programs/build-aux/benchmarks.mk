@@ -134,6 +134,7 @@ BUILT_SOURCES += $(BMK_FILES)
 	   elist=""; \
 	   for b in $(BENCH_BINFORMATS); do \
 	      plist=""; \
+	      eilist=""; \
 	      for ibase1 in $$ilist; do \
 	         ibase=`basename "$$ibase1" .check`; \
 	         docheck=`if test "x$$ibase" != "x$$ibase1"; then echo 1; fi`; \
@@ -147,20 +148,23 @@ BUILT_SOURCES += $(BMK_FILES)
 	         if test -n "$$docheck"; then \
 	            edata=benchdata/$$b-$*-$$ibase.check.out; \
 		    elist+=" $$edata"; \
+	            eilist+=" $$idata"; \
 	            echo "$$edata: $*.x $$idata ; " \
 	                 "\$$(AM_V_GEN)\$$(DOBENCH_DEF); do_bench \$$@ $$b 1 \$$^ 1"; \
 	         fi; \
 	      done; \
+	      echo "CHECK_FDATA_FILES += $$eilist"; \
 	      echo "PDATA_FILES += $$plist"; \
 	      echo ".PHONY: $$b-$*.gen"; \
 	      echo "$$b-$*.gen: $$plist"; \
 	   done >$@.tmp && \
 	   { echo ".PHONY: $*.check"; \
 	     echo "$*.check: $$elist ; " \
-	          "-if test -n \"x\$$^\" = x; then cat \$$^ && rm -f \$$^; fi"; \
+	          "-if ! test \"x\$$^\" = x; then cat \$$^ && rm -f \$$^; fi"; \
 	   } >>$@.tmp
 	$(AM_V_at)chmod -w $@.tmp && mv -f $@.tmp $@
 
+CHECK_FDATA_FILES =
 PDATA_FILES =
 -include $(BMK_FILES)
 
@@ -190,6 +194,7 @@ TEST_EXTENSIONS = .bmk
 BMK_LOG_COMPILER = \
 	docheck() { t=`basename "$$1" .bmk`.check; $(MAKE) $(AM_MAKEFLAGS) "$$t" V=1; }; $(SLC_VARS) docheck
 TESTS = $(BENCHMARKS:.c=.bmk)
+check_DATA = $(BENCHMARKS:.c=.x) $(CHECK_FDATA_FILES)
 
 ##
 ## Unibench archive generation

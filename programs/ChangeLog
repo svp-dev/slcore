@@ -1,5 +1,20 @@
 2009-12-21  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	Packaging fixes (`make distcheck' succeeds).
+
+	* benchmarks/fft/Makefile.am: Distribute `.inputs' files. Also
+	clean generated headers during `make distclean'.
+
+	* benchmarks/livermore/Makefile.am: Also distribute the kernel
+	source files.
+
+	* build-aux/benchmarks.mk: Set `check_DATA' to build the program
+	executables and required .fdata files early during `make check',
+	to avoid race conditions with parallel builds. Fix the `.check'
+	rules.
+
+2009-12-21  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	Facilitate debugging.
 	
 	* benchmarks/lib/Makefile.am,

@@ -19,6 +19,10 @@ BENCHMARKS = \
 	fft-bench2.c
 
 BENCHMARK_INPUTS = \
+	fft-bench1-small.inputs \
+	fft-bench2-small.inputs \
+	fft-bench1.inputs \
+	fft-bench2.inputs \
 	fft.d1 fft.d2 fft.d8 fft.d256 fft.d1024 fft.d4096 fft.d16384 fft.d65536
 
 EXTRA_DIST = \
@@ -68,4 +72,5 @@ fft_table1_16_data.h: gen_table_1_16$(EXEEXT)
 	$(AM_V_GEN) ./gen_table_1_16$(EXEEXT) >"$@"
 	$(AM_V_at) chmod -w "$@"
 
+DISTCLEANFILES += fft_table*_data.h
 

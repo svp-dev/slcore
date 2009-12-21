@@ -12,14 +12,16 @@
 ##
 
 BENCHMARKS = bench1.c bench2.c bench3.c bench4.c bench5.c bench6.c	\
-	bench7.c bench8.c bench9.c bench10.c bench11.c bench12.c	\
-	bench15.c bench19.c bench21.c bench22.c bench23.c
+  bench7.c bench8.c bench9.c bench10.c bench11.c bench12.c bench15.c	\
+  bench19.c bench21.c bench22.c bench23.c
+BENCHMARK_INPUTS = $(BENCHMARKS:.c=.inputs)
 
-BENCHMARK_INPUTS = bench1.inputs bench2.inputs bench3.inputs bench4.inputs bench5.inputs bench6.inputs	\
-	bench7.inputs bench8.inputs bench9.inputs bench10.inputs bench11.inputs bench12.inputs	\
-	bench15.inputs bench19.inputs bench21.inputs bench22.inputs bench23.inputs
+KERNELS = kernel1.c kernel2.c kernel3.c kernel4.c kernel5.c kernel6.c	\
+  kernel7.c kernel8.c kernel9.c kernel10.c kernel11.c kernel12.c	\
+  kernel15.c kernel19.c kernel21.c kernel22.c kernel23.c
 
-EXTRA_DIST = $(BENCHMARKS) $(BENCHMARK_INPUTS)
+
+EXTRA_DIST = $(KERNELS) $(BENCHMARKS) $(BENCHMARK_INPUTS)
 
 include extradist.mk
 include $(top_srcdir)/build-aux/benchmarks.mk
