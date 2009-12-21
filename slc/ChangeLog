@@ -1,3 +1,10 @@
+2009-12-20  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
+	Minor packaging fix.
+	
+	* build-aux/slc.m4: Also set `TMO' to the location of the
+	`timeout' script.
+
 2009-12-17  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
 	Enhance `slr' and `cce' for more flexibility.

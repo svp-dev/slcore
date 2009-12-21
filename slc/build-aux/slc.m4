@@ -143,6 +143,7 @@ AC_DEFUN([AC_WITH_SLC],
     SLT=$base_build/tools/bin/slt
     SLT_MANY=$base_build/tools/bin/slt-many
     CM4=$base_build/tools/bin/cm4
+    TMO=$base_build/tools/bin/timeout
     SLC_LOCAL=$base_build/tools/bin/slc
     SLC_BASE=
   elif test "x$SLC_BASE" = x; then
@@ -171,6 +172,7 @@ AC_DEFUN([AC_WITH_SLC],
     SLT=$SLC_BASE/bin/slt
     SLT_MANY=$SLC_BASE/bin/slt-many
     CM4=$SLC_BASE/bin/cm4
+    TMO=$SLC_BASE/bin/timeout
     SLC_LOCAL=$SLC_BASE/bin/slc
   fi
   AC_SUBST([SLC_LIBDIR])
@@ -185,4 +187,5 @@ AC_DEFUN([AC_WITH_SLC],
   AC_SUBST([SLT])
   AC_SUBST([SLT_MANY])
   AC_SUBST([CM4])
+  AC_SUBST([TMO])
 ])
