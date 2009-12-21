@@ -1,2 +1,3 @@
+extradist.mk
 bench[0-9]*.c
 bench[0-9]*.inputs
