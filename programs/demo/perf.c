@@ -1,5 +1,6 @@
 #include <svp/perf.h>
 
+// XIGNORE: *:D
 sl_def(t_main, void)
 {
     counter_t a[MTPERF_NCOUNTERS];

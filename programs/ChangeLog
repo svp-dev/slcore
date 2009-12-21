@@ -1,5 +1,12 @@
 2009-12-20  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	Avoid false positive during `make check'.
+	
+	* demo/perf.c: Do not compare output between `slt' checks since
+	performance metrics differ between each run.
+
+2009-12-20  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	Enhance benchmarking framework.
 	
 	* build-aux/benchmarks.mk: Use the `timeout' script where
@@ -893,4 +900,3 @@
 	* ChangeLog: initialize.
 
 See `slc/ChangeLog.1' for earlier changes.
-
