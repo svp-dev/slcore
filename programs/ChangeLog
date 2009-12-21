@@ -1,3 +1,13 @@
+2009-12-20  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
+	Enhance benchmarking framework.
+	
+	* build-aux/benchmarks.mk: Use the `timeout' script where
+	appropriate to force eventual termination of all runs. Copy logs
+	and execution packages of failures not resulting from interrupted
+	builds to a global `failures' directory at the top level build
+	directory.
+
 2009-12-17  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
 	Enhance benchmarking framework.

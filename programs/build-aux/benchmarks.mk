@@ -55,7 +55,7 @@ GENDATA_DEF = gen_fdata() { \
 	  binfmt=$$2; \
 	  data=`test -r "$$3" || echo "$(srcdir)/"`$$3; \
 	  rm -f "$$target"; mkdir -p benchdata; \
-	  $(SLR) -b $$binfmt -f "$$data" -wf "$$target".tmp -rd /dev/null -wo && \
+	  TIMEOUT=$${TIMEOUT:-7200} $(TMO) $(SLR) -b $$binfmt -f "$$data" -wf "$$target".tmp -rd /dev/null -wo && \
 	  mv -f "$$target".tmp "$$target"; \
 	}
 
@@ -93,6 +93,8 @@ DISTCLEANFILES += fdata.mk
 SUFFIXES += .bmk .out
 BMK_FILES = $(BENCHMARKS:.c=.bmk)
 
+FAIL_DIR = $(top_builddir)/failures
+
 DOBENCH_DEF = do_bench() { \
 	  set -e; \
 	  target=$$1; \
@@ -102,14 +104,21 @@ DOBENCH_DEF = do_bench() { \
 	  fdata=$$5; \
 	  dores=`if test $$6 = 1; then echo 1; fi`; \
 	  rm -f "$$target" "$$target".err; \
-	  set +e; $(SLR) "$$prog" -rf "$$fdata" \
+	  set +e; TIMEOUT=$${TIMEOUT:-10800} $(TMO) $(SLR) "$$prog" -rf "$$fdata" \
 	    L= sep_dump= results=$$dores format=1 ncores=$$ncores \
 	    -b "$$binfmt" -t -p "$$target".work >>"$$target".err 2>&1; \
-          ecode=$$?; set -e; if test $$ecode != 0; then \
+	  ecode=$$?; set -e; if test $$ecode != 0; then \
 	    if test -n "$$dores"; then \
-	      { echo; echo "Error log::"; echo; sed -e 's/^/  /g' <"$$target".err; } >&2; \
-	    fi; exit $$ecode; \
-          fi; \
+	      { echo "Exit status: $$ecode"; echo; echo "Error log::"; echo; sed -e 's/^/  /g' <"$$target".err; } >&2; \
+	    fi; \
+	    scode=`expr $$ecode - 128`; \
+	    if ! test x$$scode = x1 \
+	       -o x$$scode = x2 \
+	       -o x$$scode = x15; then \
+	         $(MKDIR_P) $(FAIL_DIR); cp -r "$$target".err "$$target".work $(FAIL_DIR); \
+	    fi; \
+	    exit $$ecode; \
+	  fi; \
 	  mv -f "$$target".err "$$target" && rm -rf "$$target".work; \
 	}
 
@@ -190,10 +199,10 @@ BENCHLIB = $(abs_top_srcdir)/benchmarks/lib/benchmark.c \
 	$(AM_V_GEN)b="$<" && \
 	  bn=$$(basename $$b .c) && \
 	  rm -rf "$$bn" && \
-	  mkdir "$$bn" && \
+	  $(MKDIR_P) "$$bn" && \
 	  for f in $(EXTRA_DIST) $(BUILT_SOURCES) $(BENCHLIB); do \
 	    dn=$$(dirname $$(echo $$f|$(SED) -e 's|^'$(abs_top_srcdir).*/'||g')) && \
-	    mkdir -p $$bn/$$dn && \
+	    $(MKDIR_P) $$bn/$$dn && \
 	    cp `test -r $$f || echo $(srcdir)/`$$f $$bn/$$dn/; \
 	  done && \
 	  echo "a.out: $$bn.c benchmark.c; "'$$'"(COMPILER) "'$$'"(FLAGS) -I. -o "'$$'"@ "'$$'"^" \
