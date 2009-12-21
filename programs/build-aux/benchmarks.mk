@@ -3,8 +3,8 @@
 ###
 include $(top_srcdir)/build-aux/sl.mk
 SLFLAGS = -I$(top_srcdir)/benchmarks/lib -lbench
-SLFLAGS_PTL = -L$(top_builddir)/benchmarks/lib/host-host-ptl
-SLFLAGS_SEQC = -L$(top_builddir)/benchmarks/lib/host-host-seqc
+SLFLAGS_PTL = -g -L$(top_builddir)/benchmarks/lib/host-host-ptl
+SLFLAGS_SEQC = -g -L$(top_builddir)/benchmarks/lib/host-host-seqc
 SLFLAGS_MTALPHA = -L$(top_builddir)/benchmarks/lib/mtalpha-sim
 CLEANFILES = $(BENCHMARKS:.c=.x) $(BENCHMARKS:.c=.bin.*)
 DISTCLEANFILES = 

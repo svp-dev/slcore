@@ -33,7 +33,7 @@ host_host_seqc_libbench_a_LIBADD = \
 
 host-host-seqc/%.o: $(srcdir)/%.c
 	$(AM_V_at)$(MKDIR_P) host-host-seqc
-	$(slc_verbose)$(SLC_RUN) -b seqc -c -o $@ $<
+	$(slc_verbose)$(SLC_RUN) -g -b seqc -c -o $@ $<
 
 CLEANFILES += host-host-seqc/benchmark.o
 
@@ -49,7 +49,7 @@ host_host_ptl_libbench_a_LIBADD = \
 
 host-host-ptl/%.o: $(srcdir)/%.c
 	$(AM_V_at)$(MKDIR_P) host-host-ptl
-	$(slc_verbose)$(SLC_RUN) -b ptl -c -o $@ $<
+	$(slc_verbose)$(SLC_RUN) -g -b ptl -c -o $@ $<
 
 CLEANFILES += host-host-ptl/benchmark.o
 endif

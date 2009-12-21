@@ -1,3 +1,11 @@
+2009-12-21  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
+	Facilitate debugging.
+	
+	* benchmarks/lib/Makefile.am,
+	* build-aux/benchmarks.mk: Compile host binaries with `-g' to ease
+	debugging on failed `make check'.
+
 2009-12-20  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
 	Fix bugs in LL benchmark suite.
