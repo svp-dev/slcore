@@ -1,5 +1,21 @@
 2009-12-20  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	Fix bugs in LL benchmark suite.
+	
+	* benchmarks/livermore/ll-generate.py: Pass ncores=1 when no SEP
+	is available. This quiets LMK3. Also optimize slightly by using
+	the `fast_' version of the memory functions. Ensure that array
+	sizes in generated input files are integers.
+
+	* benchmarks/livermore/ll-bounds.ods,
+	* benchmarks/livermore/ll-bounds.csv: Enlarge bounds of array `XZ'
+	for LMK4.
+
+	* benchmarks/livermore/kernel4.c: Revert to non-parallel
+	implementation to avoid invalid index uses.
+
+2009-12-20  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	Packaging fixes (allow `make distcheck').
 
 	* benchmarks/lib/Makefile.am (CLEANFILES): Clean

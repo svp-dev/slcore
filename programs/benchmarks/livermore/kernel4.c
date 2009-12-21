@@ -27,94 +27,37 @@
 //      }
 //---------------------------------
 
-#ifndef NAIVE_CODE
-#define REDUCTIONS
-#endif
-
 sl_def(innerk4, void,
        sl_shfparm(double, total),
        sl_glparm(const double*restrict, XZ),
        sl_glparm(const double*restrict, Y),
-       sl_glparm(long, lw))
+       sl_glparm(long, i))
 {
-    sl_index(i);
-    //j -> 5step with a starting value of 4
-    sl_setp(total, -(sl_getp(XZ)[sl_getp(lw)+i] * sl_getp(Y)[(i*5) + 4]) + sl_getp(total));
+    sl_index(j);
+//    output_char('R',2); output_int(sl_getp(i)+j-6, 2); output_char('\n', 2);
+//    output_char('Y',2); output_int(j*5+4, 2); output_char('\n', 2);
+
+    sl_setp(total, sl_getp(XZ)[sl_getp(i) + j - 6] * sl_getp(Y)[j * 5  + 4] + sl_getp(total));
 }
 sl_enddef
-
-#ifdef REDUCTIONS
-//method to perform a graph reduction of the above dependent kernel over CORES
-sl_def(reductionk4, void,
-       sl_shfparm(double, total),
-       sl_glparm(const double*, XZ),
-       sl_glparm(const double*, Y),
-       sl_glparm(long, lw),
-       sl_glparm(long, iternum))
-{
-    sl_index(redindex);
-  
-    long lower = sl_getp(iternum) * redindex;
-    long upper = lower + sl_getp(iternum);
-	
-    if (redindex == 0) lower=4;
-
-    sl_create(,, lower, upper, 1,,, innerk4,
-              sl_shfarg(double, totalr, sl_getp(XZ)[sl_getp(lw)+5]),
-              sl_glarg(const double*, , sl_getp(XZ)),
-              sl_glarg(const double*, , sl_getp(Y)),
-              sl_glarg(long, , sl_getp(lw)));
-    sl_sync();
-
-    //now accumulate the results
-    sl_setp(total, -sl_geta(totalr) + sl_getp(total));
-
-}
-sl_enddef
-#endif
 
 sl_def(outerk4, void,
-#ifdef REDUCTIONS
-       sl_glparm(size_t, ncores4),
-       sl_glparm(long, span),
-#endif
-       sl_glparm(long, range),
+       sl_glparm(long, ndiv5),
        sl_glparm(double*restrict, XZ),
        sl_glparm(const double*restrict, Y))
 {
-    sl_index(k);
-    unsigned int lw = k - 6;
-	
-	
-    //check that previous loop iteration has finished
-    //because innerk4 reads previous result from xl[]
-//	int temp = sl_getp(writelock);
+    sl_index(i);
 
-    //loop uses an internal stride of 5 by multiplying a 1 stride counter
-    //this means the range of the loop must be divided by 5
-	
-
-#ifndef REDUCTIONS	
-    sl_create(,, 0, sl_getp(range),1,,,innerk4,
-              sl_shfarg(double, totalr, sl_getp(XZ)[k-1]),
-              sl_glarg(const double*, ,sl_getp(XZ)),
+    sl_create(,, 0, sl_getp(ndiv5), 1,,,innerk4,
+              sl_shfarg(double, totalr, 0.0),
+              sl_glarg(const double*, , sl_getp(XZ)),
               sl_glarg(const double*, , sl_getp(Y)),
-              sl_glarg(long, , lw));
+              sl_glarg(long, , i));
     sl_sync();
-#else
-    sl_create(,, 0, sl_getp(ncores4), 1, 4,, reductionk4,
-              sl_shfarg(double, totalr, sl_getp(XZ)[k-1]),
-              sl_glarg(const double*, ,sl_getp(XZ)),
-              sl_glarg(const double*, , sl_getp(Y)),
-              sl_glarg(unsigned int, ,lw),
-              sl_glarg(long, , sl_getp(span)));
-    sl_sync();
-#endif
 
-    sl_getp(XZ)[k-1] = sl_getp(Y)[4] * sl_geta(totalr);
-    //now set this lock as free by writing to shared, since xl[]
-    // has been written safely.
-//	sl_setp(writelock, temp + 1);
+//    output_char('W',2); output_int(i-1, 2); output_char('\n', 2);
+
+    sl_getp(XZ)[i-1] = sl_getp(Y)[4] * (sl_getp(XZ)[i-1] - sl_geta(totalr));
 }
 sl_enddef
 
@@ -126,23 +69,15 @@ sl_def(kernel4, void,
        sl_glparm(const double*restrict, Y),
        sl_glparm(size_t, Y_dim))
 {
-    long m = (1001-7) / 2;
+//    output_int(sl_getp(XZ_dim), 2); output_char('\n', 2);
 
-#ifdef REDUCTIONS
-    long ncores4 = sl_getp(ncores) * 4;
-    ncores4 = ncores4 ? ncores4 : 4;
+    long m = (sl_getp(n)-7) / 2;
     //loop uses an internal stride of 5 by multiplying a 1 stride counter
     //this means the range of the loop must be divided by 5
-    long range = sl_getp(n) / 5;
-    long span = range / ncores4;
-#endif
+    long ndiv5 = sl_getp(n) / 5;
 
-    sl_create(,, 6, 1001, m, 2,, outerk4,
-#ifdef REDUCTIONS
-              sl_glarg(size_t, , ncores4),
-              sl_glarg(long, , span),
-#endif
-              sl_glarg(long, , range),
+    sl_create(,, 6, sl_getp(XZ_dim), m,,, outerk4,
+              sl_glarg(long, , ndiv5),
               sl_glarg(double*, , sl_getp(XZ)),
               sl_glarg(const double*, , sl_getp(Y)));
     sl_sync();

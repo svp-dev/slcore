@@ -35,7 +35,7 @@ sl_def(initialize, void,
     sl_glparm(struct benchmark_state*, st))
 {
    size_t i, f = 0;
-   struct bdata *bdata = (struct bdata*) malloc(sizeof (struct bdata));
+   struct bdata *bdata = (struct bdata*) fast_malloc(sizeof (struct bdata));
    svp_assert(bdata != NULL);
 
    output_char('\\n', 1);
@@ -67,7 +67,7 @@ sl_def(initialize, void,
                 print >>f, "   bdata->%s = (const double*)fibre_data(f);" % name
             else:
                 print >>f, "   bdata->%s_orig = (const double*)fibre_data(f);" % name
-                print >>f, "   bdata->%s = (double*)malloc(sizeof(double) * %s);" % (name, sspec)
+                print >>f, "   bdata->%s = (double*)fast_malloc(sizeof(double) * %s);" % (name, sspec)
             print >>f, "   bdata->%s_size = %s; ++f;\n" % (name, sspec)
 
     print >>f, """
@@ -134,9 +134,9 @@ sl_def(teardown, void,
    
     for (name, spec) in k['args'].items():
         if spec['type'] == 'array' and 'w' in spec['mode']:
-            print >>f, "   free(bdata->%s);" % name
+            print >>f, "   fast_free(bdata->%s);" % name
     print >>f, """
-   free(bdata);
+   fast_free(bdata);
 }
 sl_enddef
 """
@@ -175,7 +175,7 @@ sl_def(work, void,
 #if SVP_HAS_SEP
              sl_glarg(size_t, , sl_getp(st)->place->ncores),
 #else
-             sl_glarg(size_t, , 0),
+             sl_glarg(size_t, , 1),
 #endif
              sl_glarg(size_t, , bdata->n)
 """ % (k['idx'], k['idx'])
@@ -209,6 +209,9 @@ sl_enddef
 def gencode(k):
     idx = k['idx']
     df = codepat % idx
+    lf = file('extradist.mk','a')
+    lf.write('EXTRA_DIST += %s\n' % df)
+    lf.close()
     print "Generating %s..." % df
     f = file(df,'w')
     print >>f, """
@@ -283,7 +286,7 @@ def geninputs(k):
                     sz = aspec['size'][0]
                     if aspec['good']:
                         try:
-                            sz = str(eval(sz))
+                            sz = str(int(eval(sz)))
                         except: pass
                     print >>f, "v(%s)" % sz
                 elif len(aspec['size']) == 2:
@@ -293,8 +296,8 @@ def geninputs(k):
                     sz2 = aspec['size'][1]
                     if aspec['good']:
                         try:
-                            sz1 = eval(sz1)
-                            sz2 = eval(sz2)
+                            sz1 = int(eval(sz1))
+                            sz2 = int(eval(sz2))
                             good = True
                         except: pass
                     if good:
@@ -309,9 +312,9 @@ def geninputs(k):
                     sz3 = aspec['size'][2]
                     if aspec['good']:
                         try:
-                            sz1 = eval(sz1)
-                            sz2 = eval(sz2)
-                            sz3 = eval(sz3)
+                            sz1 = int(eval(sz1))
+                            sz2 = int(eval(sz2))
+                            sz3 = int(eval(sz3))
                             good = True
                         except: pass
                     if good:
