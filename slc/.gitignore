@@ -2,3 +2,4 @@
 build-aux/depcomp
 build-aux/missing
 build-aux/install-sh
+.version
