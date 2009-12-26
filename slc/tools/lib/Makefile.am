@@ -20,14 +20,14 @@ RUNSCRIPTS = \
 pkglib_SCRIPTS = $(RUNSCRIPTS)
 CLEANFILES = $(RUNSCRIPTS)
 
-r-host.sh: r-host.sh.in Makefile
+r-host.sh: r-host.sh.in Makefile.am
 	$(AM_V_at)rm -f $@ $@.out
 	$(AM_V_GEN)$(SED) <$< >$@.out \
 	   -e 's|@BASH[@]|$(BASH)|g'
 	$(AM_V_at)chmod +x,a-w $@.out
 	$(AM_V_at)mv -f $@.out $@
 
-r-mtalpha-sim.sh: r-mt-sim.sh.in Makefile
+r-mtalpha-sim.sh: r-mt-sim.sh.in Makefile.am
 	$(AM_V_at)rm -f $@ $@.out
 	$(AM_V_GEN)$(SED) <$< >$@.out \
 	 -e 's|@slc_datadir[@]|$(pkgdatadir)|g' \
@@ -39,7 +39,7 @@ r-mtalpha-sim.sh: r-mt-sim.sh.in Makefile
 	$(AM_V_at)chmod +x,a-w $@.out
 	$(AM_V_at)mv -f $@.out $@
 
-r-mtsparc-sim.sh: r-mt-sim.sh.in Makefile
+r-mtsparc-sim.sh: r-mt-sim.sh.in Makefile.am
 	$(AM_V_at)rm -f $@ $@.out
 	$(AM_V_GEN)$(SED) <$< >$@.out \
 	 -e 's|@slc_datadir[@]|$(pkgdatadir)|g' \
