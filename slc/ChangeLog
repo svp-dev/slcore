@@ -1,5 +1,16 @@
 2009-12-26  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	Drop remaining `slh' files from library.
+
+	* tools/include/fibre.slh,
+	* tools/include/slr.slh,
+	* tools/include/svp/lib.slh: Remove.
+
+	* tools/Makefile.am (nobase_dist_pkgdata_DATA): Update
+	accordingly.
+
+2009-12-26  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	Cleanup sources.
 
 	* tools/bin/cce.in,
