@@ -42,8 +42,8 @@ dist-hook: check-version
 
 install-recursive install-exec-recursive install-data-recursive installcheck-recursive: check-version
 
-VERSION_GEN = (cd $(top_srcdir); build-aux/version-gen \
-	build-aux/tarball-version build-aux/package-version)
+VERSION_GEN = (cd $(top_srcdir); pre=; if test -d ../.git -a ! -d .git; then cd ..; pre=slc/; fi; \
+	$${pre}build-aux/version-gen $${pre}build-aux/tarball-version $${pre}build-aux/package-version)
 
 .PHONY: check-version _version
 check-version:

@@ -1,5 +1,12 @@
 2009-12-26  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	Packaging fix.
+
+	* Makefile.am (VERSION_GEN): Check for `.git' in parent directory,
+	as done by `configure.ac'.
+
+2009-12-26  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	Minor packaging fix.
 
 	* tools/lib/Makefile.am: Depend on `Makefile.am' not `Makefile'.
