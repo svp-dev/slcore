@@ -43,7 +43,6 @@ RANLIB_MTSPARC=${RANLIB_MTSPARC_OVERRIDE:-@RANLIB_MTSPARC@}
 
 
 version=@slc_version@
-slrev=@slc_revision@
 bugreports=@bugreports@
 basename=${0##*/}
 
@@ -91,10 +90,8 @@ EOF
 }
 
 do_version() {
-    rev='$Rev$'
-    rev=${rev#* }
     cat <<EOF
-cce $version (rev $slrev/$rev)
+$basename $version
 
 $copyright
 This is free software; see the source for copying conditions.  There is NO

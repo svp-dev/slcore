@@ -19,7 +19,6 @@ if test -n "$TRACE"; then set -x; fi
 set -eu
 
 version=@slc_version@
-slrev=@slc_revision@
 root=$(dirname "$0")
 basename=$(basename "$0")
 bugreports=@bugreports@
@@ -84,10 +83,8 @@ Report bugs and suggestions to $bugreports.
 EOF
    exit 0
 elif test "$1" = "-v" -o "$1" = "--version"; then
-    rev='$Rev$'
-    rev=$(echo "$rev"|cut -d' ' -f2)
    cat <<EOF   
-$basename $version (rev $slrev/$rev)
+$basename $version
 
 $copyright
 This is free software; see the source for copying conditions.  There is NO

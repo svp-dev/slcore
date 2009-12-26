@@ -1,5 +1,19 @@
 2009-12-26  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	Use the new version numbering mechanism for scripts.
+
+	* tools/bin/cce.in,
+	* tools/bin/slc.in,
+	* tools/bin/slr.in,
+	* tools/bin/slt-many.in,
+	* tools/bin/slt.in: Use `$slc_version' only, remove references to
+	`$slrev' and `$rev' since this is now embedded in `$slc_version'.
+
+	* tools/bin/Makefile.am: Make scripts and man pages depend on
+	`$(top_srcdir)/.version' so they are regenerated on version bumps.
+
+2009-12-26  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	Introduce automatic version numbering.
 
 	* build-aux/version-gen: New. Inspired from `git-version-gen', but
