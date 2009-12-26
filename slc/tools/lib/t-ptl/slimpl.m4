@@ -11,8 +11,6 @@
 # `COPYING' file in the root directory.
 #
 #
-# $Id$
-#
 # ###############################################
 #  Macro definitions for the muTC-ptl syntax
 # ###############################################

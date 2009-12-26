@@ -11,8 +11,6 @@ m4_init()
 # The complete GNU General Public Licence Notice can be found as the
 # `COPYING' file in the root directory.
 #
-#
-# $Id$
 
 # m4_step: increment variable by 1
 m4_define([[m4_step]],[[m4_define([[$1]], m4_incr($1))]])

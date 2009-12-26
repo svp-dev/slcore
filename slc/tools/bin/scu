@@ -1,5 +1,4 @@
 #! /bin/sh
-# $Id$
 
 say=
 if test -n "$1"; then

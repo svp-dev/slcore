@@ -1,4 +1,5 @@
 #! @BASH@
+# Run script for MT binaries.
 PS4='+ r-mt-sim($$): '
 if test -n "${TRACE:-}"; then set -x; fi
 set -eu

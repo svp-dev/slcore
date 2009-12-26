@@ -1,10 +1,15 @@
 #! /usr/bin/sed -f
-# m4sugar_transform.sed: this file is part of the slc project.
+# m4sugar_transform.sed: this file is part of the SL toolchain.
 #
 # Copyright (C) 2008,2009 The SL project.
-# All rights reserved.
 #
-# $Id$
+# This program is free software; you can redistribute it and/or
+# modify it under the terms of the GNU General Public License
+# as published by the Free Software Foundation; either version 3
+# of the License, or (at your option) any later version.
+#
+# The complete GNU General Public Licence Notice can be found as the
+# `COPYING' file in the root directory.
 #
 
 # Change m4sugar's quote system; [ and ]
