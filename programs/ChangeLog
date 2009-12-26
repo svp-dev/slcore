@@ -1,3 +1,10 @@
+2009-12-27  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
+	Minor packaging fix.
+	
+	* bootstrap: Ensure that the `data' subdirectory exists in
+	`benchmarks/livermore' before generating the data files.
+
 2009-12-21  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
 	Packaging fixes (`make distcheck' succeeds).
