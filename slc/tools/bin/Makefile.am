@@ -52,10 +52,9 @@ edit_scripts = $(SED) \
 	       -e 's|@spp_helper[@]|$(bindir)/spp|g' \
 	       -e 's|@cm4_helper[@]|$(bindir)/cm4|g' \
 	       -e 's|@slc_version[@]|$(PACKAGE_VERSION)|g' \
-	       -e 's|@slc_revision[@]|$(SVN_REVISION)|g' \
 	       -e 's|@bugreports[@]|$(PACKAGE_BUGREPORT)|g'
 
-cce slr slc slt timeout slt-many cm4 slar slranlib: Makefile
+cce slr slc slt timeout slt-many cm4 slar slranlib: Makefile.am $(top_srcdir)/.version
 	$(AM_V_GEN)(D=$$$$.tmp; mkdir $$D && \
 	    $(edit_scripts) $(srcdir)/$@.in >$$D/sed_out && \
             chmod +x,a-w $$D/sed_out && \
@@ -77,7 +76,7 @@ slranlib: slranlib.in
 #
 dist_man1_MANS = cce.1 slc.1 slr.1 slt.1 slt-many.1
 
-cce.1 slc.1 slr.1 slt.1 slt-many.1: $(top_srcdir)/configure.ac
+cce.1 slc.1 slr.1 slt.1 slt-many.1: $(top_srcdir)/.version
 	$(AM_V_at)$(MAKE) $(AM_MAKEFLAGS) $(@:.1=)
 	$(AM_V_GEN)$(HELP2MAN) -N --output=$@ \
 	    `test -r $(srcdir)/$(@:.1=) && echo $(srcdir) || echo .`/$(@:.1=)

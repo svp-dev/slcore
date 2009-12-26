@@ -26,7 +26,6 @@ TMPDIR=${TMPDIR:-/tmp}
 KEEP=${KEEP:-}
 basename=${0##*/}
 version=@slc_version@
-slrev=@slc_revision@
 bugreports="@bugreports@"
 
 do_usage() {
@@ -160,10 +159,8 @@ EOF
 }
 
 do_version() {
-  rev='$Rev$'
-  rev=${rev#* }
   cat <<EOF
-slr $version (rev $slrev/$rev)
+$basename $version
 
 $copyright
 This is free software; see the source for copying conditions.  There is NO

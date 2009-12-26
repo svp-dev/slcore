@@ -23,7 +23,6 @@ rootdir=$(dirname "$0")
 root=$(cd "$rootdir" && pwd)
 
 version=@slc_version@
-slrev=@slc_revision@
 bugreports=@bugreports@
 
 
@@ -343,10 +342,8 @@ for arg in "$@"; do
             exit 0
             ;;
 	--version|-v)
-	    rev='$Rev$'
-	    rev=${rev#* }
 	    cat <<EOF
-$basename $version (rev $slrev/$rev)
+$basename $version
 
 $copyright
 This is free software; see the source for copying conditions.  There is NO
