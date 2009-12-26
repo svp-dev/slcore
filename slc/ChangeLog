@@ -1,3 +1,10 @@
+2009-12-27  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
+	Minor packaging fix.
+	
+	* configure.ac: use `$PWD' instead of `slc/' as name for the
+	source tree when invoking `version-gen'.
+
 2009-12-26  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
 	Allow reusing the automated version numbering by other trees.

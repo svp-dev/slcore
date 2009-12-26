@@ -13,7 +13,7 @@
 
 AC_PREREQ([2.61])
 AC_INIT([sl-core], 
-        m4_esyscmd([(pre=; if test -d ../.git -a ! -d .git; then cd ..; pre=slc/; fi; \
+        m4_esyscmd([(pre=; if test -d ../.git -a ! -d .git; then pre=$PWD/; cd ..; fi; \
                     ${pre}build-aux/version-gen ${pre}build-aux/tarball-version ${pre}build-aux/package-version)]), 
         [sl-users@nic.surfnet.nl])
 AC_CONFIG_AUX_DIR([build-aux])
