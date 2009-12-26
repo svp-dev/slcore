@@ -26,7 +26,6 @@ basename=${0##*/}
 TMPDIR=${TMPDIR:-/tmp}
 
 version=@slc_version@
-slrev=@slc_revision@
 bugreports=@bugreports@
 
 # Load defaults
@@ -742,7 +741,7 @@ fi
 # Print configuration if requested
 if test -n "$verbose"; then (
   echo "---- $basename: options and settings ----" 
-  for i in version slrev root keep impl \
+  for i in version root keep impl \
            finalstage \
            combine outfile tmpdir; do
     eval "echo \"   $i -> \$$i\"" 

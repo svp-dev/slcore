@@ -1,5 +1,16 @@
 2009-12-26  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	Timestamp and version output of scripts.
+
+	* tools/bin/slc.in: Do not inform about `slrev' since it does not
+	exist any more.
+
+	* tools/bin/slr.in,
+	* tools/bin/slt.in: Produce timestamp and script version number in
+	output log.
+
+2009-12-26  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	Packaging fix.
 
 	* Makefile.am (VERSION_GEN): Check for `.git' in parent directory,

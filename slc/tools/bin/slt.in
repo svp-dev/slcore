@@ -570,7 +570,7 @@ report_run() {
 do_compile() {
   local offset command x
   offset=$1
-  echo "===== TEST: ${fixture[*]}, COMPILE ======" >$baseout.log
+  echo "===== TEST: ${fixture[*]}, COMPILE ======" >>$baseout.log
   mkdir -p "$baseout.build"
   command=("$slc" -v -t "$baseout.build" -b "$impl" -o "$baseout.x" "${fixture[@]}" -I. ${COMPILE_ARGS:+"${COMPILE_ARGS[@]}"} -lm)
   echo "${command[*]}" >>$baseout.log
@@ -638,6 +638,11 @@ do_check() {
   impl=$1
   offset=$2
   refout=$3
+
+  { 
+      echo "$basename: version: $version";
+      echo "$basename: timestamp:" $(TZ=UTC date '+%Y-%m-%d %H:%M:%S (UTC)');
+  } >"$baseout.log"
 
   do_compile $offset
   offset=$(($offset + 2))

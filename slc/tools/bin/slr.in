@@ -292,6 +292,7 @@ if test -n "$VERBOSE"; then
     d=$(dirname "$0")
     d=$(cd "$d" && pwd -P)
     echo "command line: $d/$bn $arglist" >&2
+    echo "$basename: version: $version" >&2
     echo "$basename: timestamp:" $(TZ=UTC date '+%Y-%m-%d %H:%M:%S (UTC)') >&2
 fi
 
