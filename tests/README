@@ -1,0 +1,41 @@
+====================
+ SL unit test suite
+====================
+
+Configuration
+=============
+
+To configure the unit test suite, use the following commands::
+
+   ./configure
+   make
+
+Running the test suite
+======================
+
+The test suite is run with the following command::
+
+   make check -jN
+
+where N is the number of cores on the system (parallel checks).
+
+If ``make check`` reports that a test fails, then after a fix is
+installed it is possible to re-check only the failed test(s) with the
+following command::
+
+   make recheck -jN
+
+Alternatively, a more verbose output can be obtained with the
+following commands::
+
+   make slt-check
+
+However this does not support ``-jN``.
+
+
+
+.. Local Variables:
+.. mode: rst
+.. End:
+
+

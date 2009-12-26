@@ -1,0 +1,77 @@
+==========================================
+ Release notes for the SL unit test suite
+==========================================
+
+This document describes major updates to the SL unit test suite.
+
+Version 2.2, December 2009
+==========================
+
+- Some new tests.
+
+- The test suite is detached from the SL tool chain. 
+
+Version 2.1.0a, August 2009
+===========================
+
+- Some new tests.
+
+- The test suite layout is reorganized to make it more intuitive.
+
+- The tests cases now have extension ``.c`` and use CPP syntax instead
+  of M4 where appropriate.
+
+- Using the new feature ``parallel-tests`` from Automake 1.11.
+
+- New rule ``make check`` using Automake parallel tests, also supports
+  ``-j`` and ``make recheck``. Previous strategy using sequential
+  calls to ``slt`` with ``slt``'s ASCII art output is moved to a new
+  rule ``make check-slt``.
+
+Version 2.0.3a, June 2009
+=========================
+
+- Some new tests.
+
+Version 2.0.2a, June 2009
+=========================
+
+- Some new tests.
+
+Version 2.0.1a, June 2009
+=========================
+
+- New license (GPL v3).
+
+Version 2.0.0a, May 2009
+========================
+
+- Some new tests.
+
+- Use ``long`` instead of ``long long`` as word-sized data type in
+  tests.
+
+- Start using ``slt`` to automate checking.
+
+- The list of unit tests is automatically generated from the source
+  tree.
+
+- The output of test programs is now suitable for compariso against
+  the reference implementation (new feature from ``slt``).
+
+- Some unit tests for thread argument passing are generated
+  automatically (3_args).
+
+- Expected failures are properly handled.
+
+- Allow optional testing using the muTC core compiler.
+
+Version 2.x, February 2009
+==========================
+
+- Some new tests.
+
+Version 1.x (utcc), December 2008
+=================================
+
+- Import unit tests from "utcc" distribution.

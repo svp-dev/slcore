@@ -11,8 +11,10 @@
 ## `COPYING' file in the root directory.
 ##
 
+include $(srcdir)/build-aux/version.mk
+
 include $(srcdir)/build-aux/alltests.mk
-EXTRA_DIST = $(TESTSUITE) $(XTESTSUITE)
+EXTRA_DIST += $(TESTSUITE) $(XTESTSUITE)
 
 if ENABLE_TESTSUITE
 TESTS = $(TESTSUITE)
@@ -28,3 +30,4 @@ EXTRA_DIST += \
 	1_slr/bigdata.c.d
 
 ACLOCAL_AMFLAGS = -I build-aux
+

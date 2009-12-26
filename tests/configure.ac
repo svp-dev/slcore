@@ -1,4 +1,4 @@
-## configure.ac: this file is part of the SL demo suite.
+## configure.ac: this file is part of the SL test suite.
 ## 
 ## Copyright (C) 2009 The SL project
 ##
@@ -12,7 +12,10 @@
 ##
 
 AC_PREREQ([2.61])
-AC_INIT([sl-tests], [2.1.0a], [sl-users@nic.surfnet.nl])
+AC_INIT([sl-tests], 
+        m4_esyscmd([(pre=; if test -d ../.git -a ! -d .git; then pre=$PWD/; cd ..; fi; \
+                    ${pre}build-aux/version-gen ${pre}build-aux/tarball-version ${pre}build-aux/package-version)]), 
+        [sl-users@nic.surfnet.nl])
 AC_CONFIG_AUX_DIR([build-aux])
 
 AM_INIT_AUTOMAKE([1.11 tar-ustar no-define foreign dist-bzip2
