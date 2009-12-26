@@ -1,5 +1,9 @@
 2009-12-26  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	* NEWS: Initialize for 2.2.x.
+
+2009-12-26  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	Release version 2.2.
 
 	* configure.ac,
