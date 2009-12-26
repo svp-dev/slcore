@@ -1,5 +1,16 @@
 2009-12-26  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	Release version 2.2.
+	
+	* build-aux/package_version: Update to 2.2.
+	
+	* doc/NOTES.txt: Document recent changes. Split change
+	documentation for 2.1.0a from 2.2. Cleanup text and fix typos.
+
+	* doc/HACKING.txt: Fix typos. Require Autoconf 2.61, not 2.63.
+
+2009-12-26  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	Merge the following changes.
 
 	2009-12-26  Raphael 'kena' Poss  <r.c.poss@uva.nl>

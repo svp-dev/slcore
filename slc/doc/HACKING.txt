@@ -22,7 +22,7 @@ Getting started
 
 4. Run::
 
-     ./boostrap
+     ./bootstrap
      mkdir build
      cd build
      ../configure 
@@ -34,9 +34,10 @@ Getting started
 Special requirements
 --------------------
 
-When working from SVN, the following *additional* requirements apply:
+When working from the SCM repository, the following *additional*
+requirements apply:
 
-- Autoconf 2.63 or later
+- Autoconf 2.61 or later
 
 - Automake 1.11 or later
 
@@ -53,17 +54,17 @@ The ``slc`` and ``slr`` scripts are generated during
 installation directory. This means they cannot be used "as-is" before
 ``make install`` is run.
 
-This may be a hassle during development (would require to re-run
-``make install`` after each change). To balance this, it is possible
-to set environment variables to indicate that the scripts should find
-the data in the source directory. Use ``make show-vars`` at the
-top-level source directory to set environment variables::
+It would be a hassle during development to re-run ``make install``
+after each change. Instead, it is possible to set environment
+variables to indicate that the scripts should find the data in the
+source directory. Use ``make show-vars`` at the top-level source
+directory to set environment variables::
 
    $ eval `make show-vars`
 
 Note: this will update ``PATH`` as well. Once the variables are set,
-the command-line utilities can be used directly even before ``make
-install`` has been run, e.g.::
+the command-line utilities can be used directly without running ``make
+install``, e.g.::
 
    $ cd programs/demo && slc 10threads.c && slr a.out
 
