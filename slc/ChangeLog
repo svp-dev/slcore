@@ -1,3 +1,15 @@
+2009-12-26  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
+	Introduce automatic version numbering.
+
+	* build-aux/version-gen: New. Inspired from `git-version-gen', but
+	privileging SVN revision numbers over git commit hashes.
+	
+	* build-aux/package-version: Set to 2.1.
+
+	* configure.ac,
+	* Makefile.am: Update to use `build-aux/version-gen'.
+
 2009-12-20  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
 	Minor packaging fixes (allow `make distcheck').
