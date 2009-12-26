@@ -7,7 +7,7 @@ dist_m4data_DATA = \
 	slc.m4 \
 	slctests.m4
 
-dist_pkgdata_DATA = sl.mk slctests.mk slcvars.mk
+dist_pkgdata_DATA = sl.mk slctests.mk slcvars.mk version.mk version-gen
 dist_bin_SCRIPTS = sl-init-autoconf
 
 

@@ -3,7 +3,7 @@
 set -e
 
 SLC_ACLOCAL_FILES="mgbinutils.m4 mggcc.m4 mgsim.m4 slc.m4 slctests.m4"
-SLC_MK_FILES="sl.mk slctests.mk slcvars.mk"
+SLC_MK_FILES="sl.mk slctests.mk slcvars.mk version.mk version-gen"
 
 target=build-aux
 if test $# -gt 0; then
@@ -53,6 +53,7 @@ do_copy() {
 
 EOF
   cat "$1" >>"$2"
+  if test -x "$1"; then chmod +x "$2"; fi
 }
 
 echo "Copying files to $target..."

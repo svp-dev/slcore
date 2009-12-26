@@ -1,5 +1,18 @@
 2009-12-26  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	Allow reusing the automated version numbering by other trees.
+
+	* Makefile.am: Move Automake rules to manage `.version' to...
+	* build-aux/version.mk: ...here.
+	
+	* build-aux/Makefile.am: Install `version-gen' and `version.mk' so
+	they can be picked up by `sl-init-autoconf'.
+	
+	* build-aux/sl-init-autoconf: Copy `version-gen' and `version.mk'
+	where appropriate
+
+2009-12-26  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	* doc/NEWS.txt: Initialize for 2.2.x.
 
 2009-12-26  Raphael 'kena' Poss  <r.c.poss@uva.nl>
