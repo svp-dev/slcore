@@ -12,8 +12,6 @@ copyright="Copyright (C) 2009 The SL project."
 # The complete GNU General Public Licence Notice can be found as the
 # `COPYING' file in the root directory.
 #
-# $Id$
-#
 set -e
 
 python=${PYTHON:-@python@}

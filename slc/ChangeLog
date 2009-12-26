@@ -1,5 +1,42 @@
 2009-12-26  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	Merge the following changes.
+
+	2009-12-26  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
+	Drop remaining `slh' files from library.
+
+	* tools/include/fibre.slh,
+	* tools/include/slr.slh,
+	* tools/include/svp/lib.slh: Remove.
+
+	* tools/Makefile.am (nobase_dist_pkgdata_DATA): Update
+	accordingly.
+
+	2009-12-26  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
+	Cleanup sources.
+
+	* tools/bin/cce.in,
+	* tools/bin/sag,
+	* tools/bin/scu,
+	* tools/bin/slr.in,
+	* tools/bin/slt-many.in,
+	* tools/bin/slt.in,
+	* tools/bin/spp,
+	* tools/bin/timeout.in,
+	* tools/include/m4sugar_transform.sed,
+	* tools/include/slc.m4,
+	* tools/lib/host-host-ptl/include/template.pl,
+	* tools/lib/r-mt-sim.sh.in,
+	* tools/lib/t-pppalpha/slimpl.m4,
+	* tools/lib/t-ptl/slimpl.m4,
+	* tools/lib/t-seqc/slimpl.m4,
+	* tools/lib/t-utc/slimpl.m4,
+	* tools/lib/t-utc0/slimpl.m4: Remove references to `$Id$'.
+
+2009-12-26  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	Fix support for `slc -g3'.
 
 	* tools/bin/slc.in: Do not use debug flags during initial
