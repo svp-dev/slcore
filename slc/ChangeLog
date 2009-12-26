@@ -1,5 +1,12 @@
 2009-12-26  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	Fix support for `slc -g3'.
+
+	* tools/bin/slc.in: Do not use debug flags during initial
+	preprocessing. Warn when `-g3' is specified.
+
+2009-12-26  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	Timestamp and version output of scripts.
 
 	* tools/bin/slc.in: Do not inform about `slrev' since it does not

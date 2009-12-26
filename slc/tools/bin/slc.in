@@ -185,6 +185,9 @@ for arg in "$@"; do
       -nodefaultlibs) slc_use_libsl=no ;;
       -nostdlib) slc_use_slrt=no; slc_use_libsl=no ;;
 
+      -g3) 
+          echo "$basename: warning: support for $arg is incomplete" >&2
+          slc_debug_flags+=("$arg");;
       -g*|-p|-pg) slc_debug_flags+=("$arg");;
 
       -fasmopt)      do_filt2=yes ;;
@@ -529,7 +532,7 @@ fi
 # Command line additions
 ###################################
 # Gathering flags per tool category
-slc_ppflags+=("${extra_inc[@]}" "${extra_ppflags[@]}" "${extra_cflags[@]}" "${slc_debug_flags[@]}")
+slc_ppflags+=("${extra_inc[@]}" "${extra_ppflags[@]}" "${extra_cflags[@]}")
 slc_cflags+=("${extra_cflags[@]}" "${slc_debug_flags[@]}")
 slc_asflags+=("${slc_cflags[@]}" "${extra_asflags[@]}")
 slc_ldflags+=("${slc_cflags[@]}" "${extra_ldflags[@]}")
