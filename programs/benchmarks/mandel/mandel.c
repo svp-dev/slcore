@@ -1,5 +1,5 @@
 //
-// mandel.c: this file is part of the SL toolchain.
+// mandel.c: this file is part of the SL program suite.
 //
 // Copyright (C) 2009 The SL project.
 //
@@ -129,7 +129,7 @@ sl_def(initialize, void,
 	    sl_sharg(struct placeinfo*, p2, 0));
   sl_sync();
   svp_assert(sl_geta(p1) != 0 && sl_geta(p2) != 0);
-  
+
   bdata->p1 = sl_geta(p1);
   bdata->p2 = sl_geta(p2);
   bdata->par_place = sl_geta(p1)->pid;
@@ -252,7 +252,7 @@ sl_enddef
 sl_def(work, void, sl_glparm(struct benchmark_state*, st))
 {
   struct work_lapses * wl = sl_getp(st)->wl;
-  struct bdata *bdata = (struct bdata*)sl_getp(st)->data;  
+  struct bdata *bdata = (struct bdata*)sl_getp(st)->data;
 
   start_interval(wl, "compute");
   sl_create(,bdata->par_place,,bdata->N,,bdata->blocksize,,
@@ -304,8 +304,8 @@ sl_def(teardown, void,
        sl_glparm(struct benchmark_state*, st))
 {
   gfx_close();
-  
-  struct bdata *bdata = (struct bdata*)sl_getp(st)->data;  
+
+  struct bdata *bdata = (struct bdata*)sl_getp(st)->data;
 #ifndef SKIP_MEM
   free(bdata->pixeldata);
 #endif

@@ -1,3 +1,17 @@
+//
+// kernel1.c: this file is part of the SL program suite.
+//
+// Copyright (C) 2009 The SL project.
+//
+// This program is free software; you can redistribute it and/or
+// modify it under the terms of the GNU General Public License
+// as published by the Free Software Foundation; either version 3
+// of the License, or (at your option) any later version.
+//
+// The complete GNU General Public Licence Notice can be found as the
+// `COPYING' file in the root directory.
+//
+
 [[]]
 //---------------------------------
 // Livemore Loops -- SLC (uTC)
@@ -30,10 +44,10 @@ sl_def(innerk1, void,
        sl_glfparm(double, T) )
 {
     sl_index(i);
-	
+
     //now the actual calculation
-    sl_getp(X)[i] = sl_getp(Q) + sl_getp(Y)[i] * 
-        ( sl_getp(R) * sl_getp(ZX)[i+10] 
+    sl_getp(X)[i] = sl_getp(Q) + sl_getp(Y)[i] *
+        ( sl_getp(R) * sl_getp(ZX)[i+10]
           + sl_getp(T) * sl_getp(ZX)[i+11] );
 }
 sl_enddef
@@ -55,7 +69,7 @@ sl_def(kernel1, void,
     // to avoid calculatoin in each subordinate
     // thread, by passing them as global
     // parameters
-	
+
     //create the family of the appropriate size
     //specified in the 'inner' array
     sl_create(,, , sl_getp(n), , , , innerk1,

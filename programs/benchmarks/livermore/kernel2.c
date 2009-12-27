@@ -1,3 +1,17 @@
+//
+// kernel2.c: this file is part of the SL program suite.
+//
+// Copyright (C) 2009 The SL project.
+//
+// This program is free software; you can redistribute it and/or
+// modify it under the terms of the GNU General Public License
+// as published by the Free Software Foundation; either version 3
+// of the License, or (at your option) any later version.
+//
+// The complete GNU General Public Licence Notice can be found as the
+// `COPYING' file in the root directory.
+//
+
 [[]]
 //---------------------------------
 // Livemore Loops -- SLC (uTC)
@@ -85,7 +99,7 @@ sl_def(kernel2, void,
     sl_create(,,upper,-1,-1,2,, outerk2,
 	      sl_glarg(double*restrict, , sl_getp(X)),
 	      sl_glarg(const double*restrict, , sl_getp(V)),
-              sl_sharg(unsigned long, ii, sl_getp(n)), 
+              sl_sharg(unsigned long, ii, sl_getp(n)),
 	      sl_sharg(unsigned long, ipntp, 0));
     sl_sync();
 }

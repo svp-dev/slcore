@@ -1,5 +1,5 @@
 //
-// sha1.c: this file is part of the SL toolchain.
+// sha1_alt.c: this file is part of the SL program suite.
 //
 // Copyright (C) 2009 The SL project.
 //
@@ -81,7 +81,7 @@ sl_def(sha_main_outer, void,
   sl_create(,PLACE_LOCAL,,16,,,, buf_copy,
 	    sl_glarg(const uint32_t*restrict, src, input),
 	    sl_glarg(uint32_t*restrict, dst, w));
-  sl_sync();  
+  sl_sync();
   //  for (i = 0; i < 16; ++i) w[i] = input[i];
   for (i = 16; i < 80; ++i) {
     uint32_t x = w[i-3] ^ w[i-8] ^ w[i-14] ^ w[i-16];

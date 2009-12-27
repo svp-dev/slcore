@@ -1,3 +1,17 @@
+//
+// kernel8.c: this file is part of the SL program suite.
+//
+// Copyright (C) 2009 The SL project.
+//
+// This program is free software; you can redistribute it and/or
+// modify it under the terms of the GNU General Public License
+// as published by the Free Software Foundation; either version 3
+// of the License, or (at your option) any later version.
+//
+// The complete GNU General Public Licence Notice can be found as the
+// `COPYING' file in the root directory.
+//
+
 [[]]
 //---------------------------------
 // Livemore Loops -- SLC (uTC)
@@ -20,19 +34,19 @@
 //  for ( ky=1 ; ky<n ; ky++ )
 //  {
 //    du1[ky] = u1[nl1][ky+1][kx] - u1[nl1][ky-1][kx];
-//    
+//
 //    du2[ky] = u2[nl1][ky+1][kx] - u2[nl1][ky-1][kx];
-//    
+//
 //    du3[ky] = u3[nl1][ky+1][kx] - u3[nl1][ky-1][kx];
-//    
+//
 //    u1[nl2][ky][kx]=
 //     u1[nl1][ky][kx]+a11*du1[ky]+a12*du2[ky]+a13*du3[ky] + sig*
 //     (u1[nl1][ky][kx+1]-2.0*u1[nl1][ky][kx]+u1[nl1][ky][kx-1]);
-//               
+//
 //    u2[nl2][ky][kx]=
 //     u2[nl1][ky][kx]+a21*du1[ky]+a22*du2[ky]+a23*du3[ky] + sig*
 //     (u2[nl1][ky][kx+1]-2.0*u2[nl1][ky][kx]+u2[nl1][ky][kx-1]);
-//               
+//
 //     u3[nl2][ky][kx]=
 //      u3[nl1][ky][kx]+a31*du1[ky]+a32*du2[ky]+a33*du3[ky] + sig*
 //     (u3[nl1][ky][kx+1]-2.0*u3[nl1][ky][kx]+u3[nl1][ky][kx-1]);
@@ -83,8 +97,8 @@ sl_def(innerk8,void,
     double A31 = sl_getp(A31);
     double A32 = sl_getp(A32);
     double A33 = sl_getp(A33);
-        
-        
+
+
     /* copy-paste from fortran */
     double du1 = U1(kx,ky+1,nl1)  -  U1(kx,ky-1,nl1);
     double du2 = U2(kx,ky+1,nl1)  -  U2(kx,ky-1,nl1);

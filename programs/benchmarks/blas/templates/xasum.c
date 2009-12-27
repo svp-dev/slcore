@@ -1,5 +1,5 @@
 //
-// xdot.c: this file is part of the SL toolchain.
+// xasum.c: this file is part of the SL program suite.
 //
 // Copyright (C) 2009 The SL project.
 //

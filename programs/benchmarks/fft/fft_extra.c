@@ -1,5 +1,5 @@
 //
-// fft_extra.c: this file is part of the SL toolchain.
+// fft_extra.c: this file is part of the SL program suite.
 //
 // Copyright (C) 2009 The SL project.
 //
@@ -116,7 +116,7 @@ sl_def(FFT_Inv, void,
   sl_sync();
   finish_interval(wl);
 
-  
+
   sl_create(,,,,,,, FFT,
 	    sl_glarg(cpx_t*restrict, gX2, sl_geta(gX)),
 	    sl_glarg(unsigned long, , sl_getp(M)),

@@ -1,5 +1,5 @@
 //
-// benchmark.h: this file is part of the SL toolchain.
+// benchmark.h: this file is part of the SL program suite.
 //
 // Copyright (C) 2009 The SL project.
 //
@@ -12,8 +12,8 @@
 // `COPYING' file in the root directory.
 //
 
-#ifndef SLC_LIB_BENCHMARK_H
-# define SLC_LIB_BENCHMARK_H
+#ifndef SL_BENCHMARKS_LIB_BENCHMARK_H
+# define SL_BENCHMARKS_LIB_BENCHMARK_H
 
 #include <svp/sep.h>
 #include <svp/perf.h>
@@ -54,4 +54,4 @@ sl_decl(run_benchmark, void, sl_glparm(struct benchmark*, b));
   mtperf_empty_interval(wl->intervals, wl->current_interval++, wl->current_iter, (Tag))
 
 
-#endif // ! SLC_LIB_BENCHMARK_H
+#endif // ! SL_BENCHMARKS_LIB_BENCHMARK_H

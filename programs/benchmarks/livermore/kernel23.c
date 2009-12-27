@@ -1,3 +1,17 @@
+//
+// kernel23.c: this file is part of the SL program suite.
+//
+// Copyright (C) 2009 The SL project.
+//
+// This program is free software; you can redistribute it and/or
+// modify it under the terms of the GNU General Public License
+// as published by the Free Software Foundation; either version 3
+// of the License, or (at your option) any later version.
+//
+// The complete GNU General Public Licence Notice can be found as the
+// `COPYING' file in the root directory.
+//
+
 [[]]
 //---------------------------------
 // Livemore Loops -- SLC (uTC)
@@ -61,9 +75,9 @@ sl_def(innerk23, void,
 }
 sl_enddef
 
-sl_def(outerk23, void, 
+sl_def(outerk23, void,
        sl_shparm(long, token),
-       sl_glparm(size_t, n), 
+       sl_glparm(size_t, n),
        sl_glparm(double*restrict, ZA),
        sl_glparm(const double*restrict, ZB),
        sl_glparm(const double*restrict, ZR),

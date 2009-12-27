@@ -1,5 +1,5 @@
 //
-// xscal.c: this file is part of the SL toolchain.
+// xscal.c: this file is part of the SL program suite.
 //
 // Copyright (C) 2009 The SL project.
 //
@@ -16,7 +16,7 @@
 
 /*
 // The following is the "straightforward" implementation
-// and just works. 
+// and just works.
 
 sl_def(FUNCTION[[]]_mt, void,
        sl_glfparm(FLOAT, a),

@@ -1,5 +1,5 @@
 //
-// cdotu.c: this file is part of the SL toolchain.
+// cdotu.c: this file is part of the SL program suite.
 //
 // Copyright (C) 2009 The SL project.
 //

@@ -1,3 +1,17 @@
+//
+// kernel10.c: this file is part of the SL program suite.
+//
+// Copyright (C) 2009 The SL project.
+//
+// This program is free software; you can redistribute it and/or
+// modify it under the terms of the GNU General Public License
+// as published by the Free Software Foundation; either version 3
+// of the License, or (at your option) any later version.
+//
+// The complete GNU General Public Licence Notice can be found as the
+// `COPYING' file in the root directory.
+//
+
 [[]]
 //---------------------------------
 // Livemore Loops -- SLC (uTC)
@@ -55,7 +69,7 @@ sl_def(innerk10, void,
 #define PX(a, b) (*px)[b][a]
 
     double AR, AR2, AR3, AR4, BR, BR2, BR3, CR, CR2, CR3;
-	
+
       AR      =      CX(4,k);
     BR      = AR - PX(4,k);
     CR      = BR - PX(5,k);
@@ -95,6 +109,6 @@ sl_def(kernel10,void,
               sl_glarg(size_t, , sl_getp(CX_dim0)),
               sl_glarg(double*, , sl_getp(PX)),
               sl_glarg(size_t, , sl_getp(PX_dim0)));
-    sl_sync();	
+    sl_sync();
 }
 sl_enddef

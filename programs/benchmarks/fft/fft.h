@@ -1,5 +1,5 @@
 //
-// fft.h: this file is part of the SL toolchain.
+// fft.h: this file is part of the SL program suite.
 //
 // Copyright (C) 2009 The SL project.
 //
@@ -12,8 +12,8 @@
 // `COPYING' file in the root directory.
 //
 
-#ifndef SLC_PROGRAMS_BENCHMARKS_FFT_FFT_H
-# define SLC_PROGRAMS_BENCHMARKS_FFT_FFT_H
+#ifndef SL_BENCHMARKS_FFT_FFT_H
+# define SL_BENCHMARKS_FFT_FFT_H
 
 #include "benchmark.h"
 
@@ -46,4 +46,4 @@ sl_decl(FFT, void,
 #define MAKENAME(N, SZ) MAKENAME_(N, SZ)
 
 
-#endif // ! SLC_PROGRAMS_BENCHMARKS_FFT_FFT_H
+#endif // ! SL_BENCHMARKS_FFT_FFT_H

@@ -1,5 +1,5 @@
 //
-// checkers.c: this file is part of the SL toolchain.
+// checkers.c: this file is part of the SL program suite.
 //
 // Copyright (C) 2009 The SL project.
 //
@@ -20,7 +20,7 @@ sl_def(t_main, void)
   gfx_resize(8, 8);
 
   unsigned long x;
-  for (x = 0; x < 64; ++x) 
+  for (x = 0; x < 64; ++x)
     gfx_fb_set(x, ((x + x/8)%2) ? 0xffffff : 0);
 
   gfx_dump(0, 1, 0, 0);

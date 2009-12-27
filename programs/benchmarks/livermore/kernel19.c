@@ -1,3 +1,17 @@
+//
+// kernel19.c: this file is part of the SL program suite.
+//
+// Copyright (C) 2009 The SL project.
+//
+// This program is free software; you can redistribute it and/or
+// modify it under the terms of the GNU General Public License
+// as published by the Free Software Foundation; either version 3
+// of the License, or (at your option) any later version.
+//
+// The complete GNU General Public Licence Notice can be found as the
+// `COPYING' file in the root directory.
+//
+
 [[]]
 //---------------------------------
 // Livemore Loops -- SLC (uTC)
@@ -9,7 +23,7 @@
 // Roy Longbottom, 1996.
 //---------------------------------
 //      LIVERMORE KERNEL 19
-//  general linear recurrence 
+//  general linear recurrence
 //          equations
 //---------------------------------
 
@@ -54,7 +68,7 @@ sl_def(backwardpass19, void,
 {
     sl_index(i);
     long k = sl_getp(n) - i;
-	
+
     double temp = sl_getp(SA)[k] + sl_getp(SB)[k]*sl_getp(STB5);
     sl_setp(STB5, temp - sl_getp(STB5));
     sl_getp(B5)[k+KB5I] = temp;
@@ -86,7 +100,7 @@ sl_def(kernel19,void,
               sl_glarg(const double*, ,sl_getp(SB)),
               sl_shfarg(double, STB5_1, sl_getp(STB5)));
     sl_sync();
-	
+
     sl_create(,, 1,sl_getp(n)+1,,,,backwardpass19,
               sl_glarg(size_t, , sl_getp(n)),
               sl_glarg(double*, , sl_getp(B5)),

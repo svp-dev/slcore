@@ -1,3 +1,16 @@
+//
+// fft-bench.c: this file is part of the SL program suite.
+//
+// Copyright (C) 2009 The SL project.
+//
+// This program is free software; you can redistribute it and/or
+// modify it under the terms of the GNU General Public License
+// as published by the Free Software Foundation; either version 3
+// of the License, or (at your option) any later version.
+//
+// The complete GNU General Public Licence Notice can be found as the
+// `COPYING' file in the root directory.
+//
 
 #include <svp/testoutput.h>
 #include <svp/fibre.h>
@@ -41,7 +54,7 @@ sl_def(initialize, void,
 
   bdata->y_fft = (cpx_t*)malloc(sizeof(cpx_t) * bdata->N);
   svp_assert(bdata->y_fft != 0);
-  
+
   bdata->z_inv = (cpx_t*)malloc(sizeof(cpx_t) * bdata->N);
   svp_assert(bdata->z_inv != 0);
 
@@ -52,7 +65,7 @@ sl_enddef
 sl_def(prepare, void,
        sl_glparm(struct benchmark_state*, st))
 {
-  struct bdata *bdata = (struct bdata*)sl_getp(st)->data;  
+  struct bdata *bdata = (struct bdata*)sl_getp(st)->data;
   int i;
   for (i = 0; i < bdata->N; ++i)
     bdata->y_fft[i] = bdata->x_orig[i];
@@ -62,7 +75,7 @@ sl_enddef
 sl_def(work, void,
        sl_glparm(struct benchmark_state*, st))
 {
-  struct bdata *bdata = (struct bdata*)sl_getp(st)->data;  
+  struct bdata *bdata = (struct bdata*)sl_getp(st)->data;
 
 #ifdef FFT_BENCH_SMALL
   extern const void *sc_table_ptr;
@@ -101,8 +114,8 @@ sl_def(work, void,
 sl_enddef
 
 
-sl_def(print_fl, void, 
-       sl_shparm(long, guard), 
+sl_def(print_fl, void,
+       sl_shparm(long, guard),
        sl_glparm(cpx_t*restrict, array))
 {
   sl_index(i);
@@ -122,7 +135,7 @@ sl_enddef
 sl_def(output, void,
        sl_glparm(struct benchmark_state*, st))
 {
-  struct bdata *bdata = (struct bdata*)sl_getp(st)->data;  
+  struct bdata *bdata = (struct bdata*)sl_getp(st)->data;
   output_string("# Forward FFT:\n", 1);
   sl_create(,,, bdata->N,,,, print_fl,
 	    sl_sharg(long, , 0), sl_glarg(cpx_t*restrict, , bdata->y_fft));
@@ -137,7 +150,7 @@ sl_enddef
 sl_def(teardown, void,
        sl_glparm(struct benchmark_state*, st))
 {
-  struct bdata *bdata = (struct bdata*)sl_getp(st)->data;  
+  struct bdata *bdata = (struct bdata*)sl_getp(st)->data;
   free(bdata->y_fft);
   free(bdata->z_inv);
   free(bdata);

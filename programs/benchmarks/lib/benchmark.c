@@ -1,5 +1,5 @@
 //
-// benchmark.c: this file is part of the SL toolchain.
+// benchmark.c: this file is part of the SL program suite.
 //
 // Copyright (C) 2009 The SL project.
 //
@@ -74,7 +74,7 @@ sl_def(run_benchmark, void, sl_glparm(struct benchmark*, b))
   /* prepare intervals and lapses */
   struct s_interval *intervals;
   intervals = (struct s_interval*)fast_calloc(4 + L + 10 * L, sizeof (struct s_interval));
-  
+
   struct work_lapses wl = { 0, 0, intervals };
 
   /* prepare benchmark state and place */

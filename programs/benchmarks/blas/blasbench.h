@@ -1,5 +1,19 @@
-#ifndef BLASBENCH_H
-#define BLASBENCH_H
+//
+// blasbench.h: this file is part of the SL program suite.
+//
+// Copyright (C) 2009 The SL project.
+//
+// This program is free software; you can redistribute it and/or
+// modify it under the terms of the GNU General Public License
+// as published by the Free Software Foundation; either version 3
+// of the License, or (at your option) any later version.
+//
+// The complete GNU General Public Licence Notice can be found as the
+// `COPYING' file in the root directory.
+//
+
+#ifndef SL_BENCHMARKS_BLAS_BLASBENCH_H
+# define SL_BENCHMARKS_BLAS_BLASBENCH_H
 
 #include <cmalloc.h>
 #include <svp/testoutput.h>
@@ -22,7 +36,7 @@
   { \
     int i, f = 0;							\
     struct bdata *bdata = (struct bdata*) malloc(sizeof(struct bdata)); \
-    svp_assert(bdata != NULL);						
+    svp_assert(bdata != NULL);
 
 #define READ_COUNTER(Var)				\
   svp_assert(fibre_tag(f) == 0 || fibre_tag(f) == 1);	\
@@ -63,7 +77,7 @@
 #define BEGIN_PREPARE \
   sl_def(prepare, void, sl_glparm(struct benchmark_state*, st)) { \
     struct bdata *bdata = (struct bdata*)sl_getp(st)->data; \
-    long i; 
+    long i;
 
 #define RESET_ARRAY_INOUT(Var, N)		\
   for (i = 0; i < bdata->N; ++i)		\
@@ -73,7 +87,7 @@
 
 #define BEGIN_WORK \
   sl_def(work, void, sl_glparm(struct benchmark_state*, st)) { \
-    struct bdata *bdata = (struct bdata*)sl_getp(st)->data; 
+    struct bdata *bdata = (struct bdata*)sl_getp(st)->data;
 
 #define USE_VAR(Var) bdata->Var
 
@@ -83,7 +97,7 @@
 #define BEGIN_OUTPUT \
   sl_def(output, void, sl_glparm(struct benchmark_state*, st)) { \
     struct bdata *bdata = (struct bdata*)sl_getp(st)->data; \
-    long i; 
+    long i;
 
 #define PRINT_ARRAY(Var, N)					\
   for (i = 0; i < bdata->N; ++i)	{			\
@@ -103,7 +117,7 @@
 
 #define BEGIN_TEARDOWN \
   sl_def(teardown, void, sl_glparm(struct benchmark_state*, st)) { \
-    struct bdata *bdata = (struct bdata*)sl_getp(st)->data; 
+    struct bdata *bdata = (struct bdata*)sl_getp(st)->data;
 
 #define FREE_ARRAY_INOUT(Var)			\
   free((void*)bdata->Var ## _orig);		\
@@ -118,7 +132,7 @@
 
 #define BEGIN_DESC \
   sl_def(t_main, void) { 					\
-    struct benchmark b = { 
+    struct benchmark b = {
 
 #define BENCH_TITLE(Title) Title,
 #define BENCH_AUTHOR(Author) Author,
@@ -132,6 +146,4 @@
     sl_proccall(run_benchmark, sl_glarg(struct benchmark*, b, &b)); \
     } \
   sl_enddef
-#endif
-
-
+#endif // ! SL_BENCHMARKS_BLAS_BLASBENCH_H

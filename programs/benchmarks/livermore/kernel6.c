@@ -1,3 +1,17 @@
+//
+// kernel6.c: this file is part of the SL program suite.
+//
+// Copyright (C) 2009 The SL project.
+//
+// This program is free software; you can redistribute it and/or
+// modify it under the terms of the GNU General Public License
+// as published by the Free Software Foundation; either version 3
+// of the License, or (at your option) any later version.
+//
+// The complete GNU General Public Licence Notice can be found as the
+// `COPYING' file in the root directory.
+//
+
 [[]]
 //---------------------------------
 // Livemore Loops -- SLC (uTC)
@@ -69,7 +83,7 @@ sl_def(outerk6,void,
 
     // FIXME: we assume here that the write to W[i] by the last
     // thread innerk6 is completed and made visible to the next thread
-    // of the outerk6 after this sync... 
+    // of the outerk6 after this sync...
 
     sl_setp(token, temp);
 }

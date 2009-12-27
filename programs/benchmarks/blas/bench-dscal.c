@@ -1,5 +1,5 @@
 //
-// bench-dscal.c: this file is part of the SL toolchain.
+// bench-dscal.c: this file is part of the SL program suite.
 //
 // Copyright (C) 2009 The SL project.
 //
