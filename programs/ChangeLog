@@ -1,5 +1,18 @@
 2009-12-27  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	Release version 2.2
+	
+	* configure.ac,
+	* Makefile.am: Use the new automated version numbering from the SL
+	toolchain.
+
+	* build-aux/package-version: Initialize to 2.2.
+
+	* NEWS,
+	* README: New.
+
+2009-12-27  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	Cleanup source tree.
 	
 	* benchmarks/livermore/k1.c,

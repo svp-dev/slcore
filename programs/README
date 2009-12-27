@@ -1,0 +1,32 @@
+====================
+ SL unit test suite
+====================
+
+Configuration
+=============
+
+To configure the program suite, use the following commands::
+
+   ./configure
+   make
+
+Additionally, the programs can be checked using::
+
+   make check
+
+You can use the additional flag ``-jN`` with ``make`` for parallel
+builds.
+
+Running benchmarks
+==================
+
+In benchmark directories after ``make`` has succeeded the benchmarking
+experiments can be run using::
+
+   make bench
+
+.. Local Variables:
+.. mode: rst
+.. End:
+
+

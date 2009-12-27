@@ -1,0 +1,122 @@
+===================================================
+ Release notes for the SL demo and benchmark suite
+===================================================
+
+This document describes major updates to the package of SL demo
+programs and benchmarks.
+
+Version 2.2, December 2009
+==========================
+
+- The demo and benchmark suite is detached from the SL tool chain.
+
+- New demo ``sep`` to demonstrate dynamic place allocation (CSA note
+  [sl7]).
+
+- New demo ``perf`` to demonstrate the new performance counter API
+  (CSA note [sl8]).
+
+- New demos ``keyblit`` and ``checkers`` to demonstrate the new gfx
+  output API (CSA note [sl9]).
+
+Benchmarking framework
+----------------------
+
+A common benchmarking framework is used by benchmark programs,
+documented in CSA note [sl11]. This uses dynamic place allocation for
+testing on varying number of cores and the new performance counter
+API; it also reports results in the commonly agreed format suitable
+for Unibench in the Apple-CORE project.
+
+Additionally, new Automake rules in benchmark directories are provided
+to run the benchmarks across a range of customizable inputs and
+simulation parameters automatically. This can be used to reproduce
+measurements using the standard ``make`` utility. 
+
+"Simple" benchmark inputs (defining only a small amount of work) are
+also used during ``make check`` as part of the unit testing. This can
+be used to ensure that the benchmark code runs and produces results,
+prior to running many and/or large experiments.
+
+Livermore loop benchmarks
+-------------------------
+
+- Additional LMK implementations were provided by M. Hicks (loops 15,
+  18-19, 21-23). 
+
+- All LMK implementations were extended to support dynamic allocation
+  of the input/output arrays.
+
+- The code was optimized to use C99's ``restrict`` and VLA
+  declarations where appropriate.
+
+- Some LMK implementations were corrected or redesigned (loops 2-4,
+  8, 11, 15, 19, 21, 23).
+
+- The input data and wrapper code for for BLAS and LMK benchmarks is
+  automatically generated.
+
+Other benchmarks
+----------------
+
+- The FFT code was adapted to use the new benchmarking framework.
+
+- New benchmark ``mandel`` (Mandelbrot set approximation), also uses
+  the gfx API.
+
+Version 2.1.0a, August 2009
+===========================
+
+- ``.sl`` files are converted to ``.c``.
+
+- Demo programs now separated from benchmarks. The BLAS and FFT code
+  are now benchmarks.
+
+- New demo ``fibre`` for Fibre data input.
+
+- Some LMK implementations were provided by M. Hicks (loops 1-14).
+
+- New prototype implementations of the SHA-1, NAS IS and Quicksort
+  algorithms.
+
+Version 2.0.3a, June 2009
+=========================
+
+(No significant changes)
+
+Version 2.0.2a, June 2009
+=========================
+
+(No changes)
+
+Version 2.0.1a, June 2009
+=========================
+
+- New license (GPL v3).
+
+- First version of BLAS code as demo programs.
+
+- Provide 2nd implementation of FFT code using a smaller lookup table,
+  courtesy of M. Lankamp.
+
+Version 2.0.0a, May 2009
+========================
+
+- New demo `roman' for printing roman numerals.
+
+- First version of FFT code as demo program.
+
+- Rename demo ``fibo`` to ``fibonacci``.
+
+- Compile each demo for multiple targets during ``make all``.
+
+Version 2.x, February 2009
+==========================
+
+(No changes)
+
+Version 1.x (utcc), December 2008
+=================================
+
+- Import demos from the "utcc" distribution: ``10threads``,
+  ``helloworld``, ``test``, ``answer``, ``fibo``.
