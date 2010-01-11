@@ -1,5 +1,15 @@
 2010-01-11  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	Upgrade to latest version of M4Sugar.
+
+	* tools/include/m4sugar.m4,
+	* tools/include/m4sugar_foreach.m4,
+	* tools/include/m4sugar_version.m4: Import from Autoconf 2.64.
+
+	* tools/include/m4sugar_regexp.patch: More regex quoting fixes.
+
+2010-01-11  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	Improve documentation.
 
 	* tools/bin/slr.in (Examples): Explain how to use `valgrind' and
