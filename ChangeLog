@@ -1,5 +1,9 @@
 2010-01-11  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	* deploy/versions.mk.defaults: Bump version numbers. 
+ 
+2010-01-11  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	Deploy MGSim and SLC with meaningful version numbers.
 
 	* deploy/rules/mgsim.mk,
