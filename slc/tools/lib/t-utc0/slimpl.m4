@@ -39,8 +39,8 @@ thread [[$2]] [[$1]]m4_if((sl_thparms),(),(void),(sl_thparms))m4_dnl
 ]])
 
 # Pass transparently parameter declarations.
-m4_define([[sl_shparm]], [[shared [[$1]] __p_[[]]m4_if([[$2]],,sl_anonymous,[[$2]])]])
-m4_define([[sl_glparm]], [[/*global*/ [[$1]] __p_[[]]m4_if([[$2]],,sl_anonymous,[[$2]])]])
+m4_define([[sl_shparm]], [[shared [[$1]] __p_[[]]m4_ifblank([[$2]],sl_anonymous,[[$2]])]])
+m4_define([[sl_glparm]], [[/*global*/ [[$1]] __p_[[]]m4_ifblank([[$2]],sl_anonymous,[[$2]])]])
 m4_define([[sl_glparm_mutable]], [[m4_error([[sl_glparm_mutable not implemented yet for this target]])]])
 
 m4_copy([[sl_shparm]],[[sl_shfparm]])
@@ -53,8 +53,8 @@ m4_define([[sl_index]], [[index long [[$1]];m4_dnl
 __asm__ __volatile__("#MTREG_SET: $l0")]])
 
 # Pull shared and global argument declarations.
-m4_define([[sl_sharg]],[[[[$1]]:__a_[[]]m4_if([[$2]],,sl_anonymous,[[$2]]):m4_if([[$3]],,[[= *([[$1]]*)(void*)4]],[[= [[$3]]]])]])
-m4_define([[sl_glarg]],[[[[$1]] const:__a_[[]]m4_if([[$2]],,sl_anonymous,[[$2]]):m4_if([[$3]],,[[= *([[$1]]*)(void*)4]],[[= [[$3]]]])]])
+m4_define([[sl_sharg]],[[[[$1]]:__a_[[]]m4_ifblank([[$2]],sl_anonymous,[[$2]]):m4_ifblank([[$3]],[[= *([[$1]]*)(void*)4]],[[= [[$3]]]])]])
+m4_define([[sl_glarg]],[[[[$1]] const:__a_[[]]m4_ifblank([[$2]],sl_anonymous,[[$2]]):m4_ifblank([[$3]],[[= *([[$1]]*)(void*)4]],[[= [[$3]]]])]])
 m4_copy([[sl_sharg]],[[sl_shfarg]])
 m4_copy([[sl_glarg]],[[sl_glfarg]])
 
@@ -72,8 +72,8 @@ m4_ifdef([[_sl_increate]],[[m4_fatal(cannot nest create)]])m4_dnl
 m4_define([[_sl_increate]],1)m4_dnl
 m4_define([[_sl_crcnt]],m4_incr(_sl_crcnt))m4_dnl
 m4_define([[_sl_lbl]],__child[[]]_sl_crcnt)m4_dnl
-m4_define([[_sl_fid]],m4_if([[$1]],,_sl_lbl,[[$1]]))m4_dnl
-m4_if([[$1]],,[[register sl_family_t _sl_fid;]]) m4_dnl
+m4_define([[_sl_fid]],m4_ifblank([[$1]],_sl_lbl,[[$1]]))m4_dnl
+m4_ifblank([[$1]],[[register sl_family_t _sl_fid;]]) m4_dnl
 m4_define([[_sl_brk]],m4_if(sl_breakable([[$7]]),1,[[_sl_fid[[]]_brk]],))m4_dnl
 m4_if(sl_breakable([[$7]]),1,[[register [[$7]] _sl_brk;]],) m4_dnl
 m4_define([[_sl_thargs]],m4_dquote(m4_shiftn(8,$@)))m4_dnl
@@ -87,7 +87,7 @@ m4_mapall_sep([[sl_givearg]],[[,]],m4_quote(_sl_thargs)) m4_dnl
 # Pass transparently the sync construct.
 m4_define([[sl_sync]],[[m4_dnl
 m4_ifndef([[_sl_increate]],[[m4_fatal(sync without create)]])m4_dnl
-m4_if([[$2]],,,[[$2 = ]])sync(m4_if([[$1]],,_sl_fid,[[$1]]))m4_dnl
+m4_ifblank([[$2]],,[[$2 = ]])sync(m4_ifblank([[$1]],_sl_fid,[[$1]]))m4_dnl
 m4_undefine([[_sl_increate]])m4_dnl
 ]])
 

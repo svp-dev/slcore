@@ -35,8 +35,8 @@ m4_ifdef([[_sl_increate]],[[m4_fatal(missing sync after create)]])m4_dnl
 m4_define([[sl_decl]], m4_defn([[sl_def]]))
 
 # Pass transparently parameter declarations.
-m4_define([[sl_shparm]], [[uTC::shared<[[$1]]>& __p_[[]]m4_if([[$2]],,sl_anonymous,[[$2]])]])
-m4_define([[sl_glparm]], [[uTC::global<[[$1]]>& __p_[[]]m4_if([[$2]],,sl_anonymous,[[$2]])]])
+m4_define([[sl_shparm]], [[uTC::shared<[[$1]]>& __p_[[]]m4_ifblank([[$2]],sl_anonymous,[[$2]])]])
+m4_define([[sl_glparm]], [[uTC::global<[[$1]]>& __p_[[]]m4_ifblank([[$2]],sl_anonymous,[[$2]])]])
 m4_define([[sl_glparm_mutable]], [[m4_dnl
 m4_error([[sl_glparm_mutable not implemented yet for this target]])]])
 m4_copy([[sl_shparm]],[[sl_shfparm]])
@@ -47,8 +47,8 @@ m4_copy([[sl_glparm_mutable]],[[sl_glfparm_mutable]])
 m4_define([[sl_index]], [[uTC::index [[$1]]]])
 
 # Pull shared and global argument declarations.
-m4_define([[sl_sharg]],[[&::[[$1]]:m4_if([[$2]],,sl_anonymous,[[$2]]):m4_if([[$3]],,,[[= [[$3]]]])]])
-m4_define([[sl_glarg]],[[:const:[[$1]]:m4_if([[$2]],,sl_anonymous,[[$2]]):m4_if([[$3]],,,[[= [[$3]]]])]])
+m4_define([[sl_sharg]],[[&::[[$1]]:m4_ifblank([[$2]],sl_anonymous,[[$2]]):m4_ifblank([[$3]],,[[= [[$3]]]])]])
+m4_define([[sl_glarg]],[[:const:[[$1]]:m4_ifblank([[$2]],sl_anonymous,[[$2]]):m4_ifblank([[$3]],,[[= [[$3]]]])]])
 m4_copy([[sl_sharg]],[[sl_shfarg]])
 m4_copy([[sl_glarg]],[[sl_glfarg]])
 
@@ -67,11 +67,11 @@ m4_define([[_sl_increate]],1)m4_dnl
 m4_step([[_sl_crcnt]])m4_dnl
 m4_define([[_sl_lbl]],__child[[]]_sl_crcnt)m4_dnl
 m4_define([[_sl_brk]],_sl_lbl[[]]_brk)m4_dnl
-m4_define([[_sl_place]],m4_if([[$2]],,[[PLACE_DEFAULT]],[[$2]]))m4_dnl
-m4_define([[_sl_start]],m4_if([[$3]],,0,[[$3]]))m4_dnl
-m4_define([[_sl_limit]],m4_if([[$4]],,1,[[$4]]))m4_dnl
-m4_define([[_sl_step]],m4_if([[$5]],,1,[[$5]]))m4_dnl
-m4_define([[_sl_block]],m4_if([[$6]],,0,[[$6]]))m4_dnl
+m4_define([[_sl_place]],m4_ifblank([[$2]],[[PLACE_DEFAULT]],[[$2]]))m4_dnl
+m4_define([[_sl_start]],m4_ifblank([[$3]],0,[[$3]]))m4_dnl
+m4_define([[_sl_limit]],m4_ifblank([[$4]],1,[[$4]]))m4_dnl
+m4_define([[_sl_step]],m4_ifblank([[$5]],1,[[$5]]))m4_dnl
+m4_define([[_sl_block]],m4_ifblank([[$6]],0,[[$6]]))m4_dnl
 m4_define([[_sl_brkref]],m4_if(sl_breakable([[$7]]),1,[[_sl_brk[[,]]]],[[]]))m4_dnl
 m4_define([[_sl_thargs]],m4_dquote(m4_shiftn(8,$@)))m4_dnl
 sl_family_t _sl_lbl; m4_dnl
@@ -81,14 +81,14 @@ uTC::create(_sl_lbl,_sl_place,false,false,_sl_start,_sl_limit,_sl_step,_sl_block
 ([[$8]]) m4_dnl
 m4_foreach([[_sl_arg]],m4_quote(_sl_thargs),[[m4_apply([[sl_pullarg]],m4_split(_sl_arg,:))]]) m4_dnl
 ); m4_dnl
-m4_if([[$1]],,,[[([[$1]]) = _sl_lbl]]) m4_dnl
+m4_ifblank([[$1]],,[[([[$1]]) = _sl_lbl]]) m4_dnl
 ]])
 
 
 # Pass transparently the sync construct.
 m4_define([[sl_sync]],[[m4_dnl
 m4_ifndef([[_sl_increate]],[[m4_fatal(sync without create)]])m4_dnl
-m4_if([[$1]],,,[[$1 = ]])uTC::sync(_sl_lbl)m4_dnl
+m4_ifblank([[$1]],,[[$1 = ]])uTC::sync(_sl_lbl)m4_dnl
 m4_undefine([[_sl_increate]])m4_dnl
 ]])
 

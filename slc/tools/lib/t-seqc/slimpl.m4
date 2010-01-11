@@ -19,9 +19,9 @@ m4_define([[_sl_crcnt]],0)
 
 # Thread definitions
 
-m4_define([[sl_shparm]], [[[[$1]] m4_if([[$2]],,sl_anonymous,[[$2]])]])
-m4_define([[sl_glparm]], [[[[$1]] const m4_if([[$2]],,sl_anonymous,[[$2]])]])
-m4_define([[sl_glparm_mutable]], [[[[$1]] m4_if([[$2]],,sl_anonymous,[[$2]])]])
+m4_define([[sl_shparm]], [[[[$1]] m4_ifblank([[$2]],sl_anonymous,[[$2]])]])
+m4_define([[sl_glparm]], [[[[$1]] const m4_ifblank([[$2]],sl_anonymous,[[$2]])]])
+m4_define([[sl_glparm_mutable]], [[[[$1]] m4_ifblank([[$2]],sl_anonymous,[[$2]])]])
 m4_copy([[sl_shparm]],[[sl_shfparm]])
 m4_copy([[sl_glparm]],[[sl_glfparm]])
 m4_copy([[sl_glparm_mutable]],[[sl_glfparm_mutable]])
@@ -60,7 +60,7 @@ m4_popdef([[__sl_seta_$2]]) m4_dnl
 
 m4_define([[sl_initarg]],[[ m4_dnl
 m4_pushdef([[_sl_initializer]],m4_joinall([[:]],m4_shiftn(2,$@))) m4_dnl
-m4_if(m4_normalize(m4_quote(_sl_initializer)),,,[[_sl_lbl[[]]_args.[[$2]] = (_sl_initializer);]]) m4_dnl
+m4_ifblank(m4_normalize(m4_quote(_sl_initializer)),,[[_sl_lbl[[]]_args.[[$2]] = (_sl_initializer);]]) m4_dnl
 [[$1]] __after_[[$2]]; m4_dnl
 m4_define([[__sl_geta_$2]],__after_$2) m4_dnl
 m4_define([[__sl_seta_$2]],__after_$2 = $[[]]1) m4_dnl
@@ -75,9 +75,9 @@ m4_ifdef([[_sl_increate]],[[m4_fatal(cannot nest create)]])m4_dnl
 m4_define([[_sl_increate]],1)m4_dnl
 m4_step([[_sl_crcnt]])m4_dnl
 m4_define([[_sl_lbl]],__child[[]]_sl_crcnt)m4_dnl
-m4_define([[_sl_start]],m4_if([[$3]],,0,[[$3]]))m4_dnl
-m4_define([[_sl_limit]],m4_if([[$4]],,1,[[$4]]))m4_dnl
-m4_define([[_sl_step]],m4_if([[$5]],,1,[[$5]]))m4_dnl
+m4_define([[_sl_start]],m4_ifblank([[$3]],0,[[$3]]))m4_dnl
+m4_define([[_sl_limit]],m4_ifblank([[$4]],1,[[$4]]))m4_dnl
+m4_define([[_sl_step]],m4_ifblank([[$5]],1,[[$5]]))m4_dnl
 m4_define([[_sl_thargs]],m4_dquote(m4_shiftn(8,$@)))m4_dnl
 struct { m4_dnl
 m4_if(sl_breakable([[$7]]),1,[[[[$7]] __breakv; ]])m4_dnl
@@ -86,7 +86,7 @@ m4_foreach([[_sl_arg]],m4_quote(_sl_thargs),[[m4_apply([[sl_declarg]],m4_split(_
 m4_if(sl_breakable([[$7]]),1,[[[[$7]] *_sl_fid[[]]_brk = &_sl_lbl[[]]_args.__breakv; ]])m4_dnl
 m4_foreach([[_sl_arg]],m4_quote(_sl_thargs),[[m4_apply([[sl_initarg]],m4_split(_sl_arg,:))]]) m4_dnl
 __sl_fam->ch = &__sl_child; m4_dnl
-m4_if([[$1]],,,[[([[$1]]) = &__sl_child;]]) m4_dnl
+m4_ifblank([[$1]],,[[([[$1]]) = &__sl_child;]]) m4_dnl
 __sl_child.be = _sl_start; m4_dnl
 __sl_child.li = _sl_limit; m4_dnl
 __sl_child.st = _sl_step; m4_dnl
@@ -98,7 +98,7 @@ __sl_child.a = &_sl_lbl[[]]_args m4_dnl
 
 
 # Pass transparently shared and global argument declarations.
-m4_define([[sl_sharg]],[[[[$1]]:m4_if([[$2]],,sl_anonymous,[[$2]]):[[$3]]]])
+m4_define([[sl_sharg]],[[[[$1]]:m4_ifblank([[$2]],sl_anonymous,[[$2]]):[[$3]]]])
 m4_copy([[sl_sharg]],[[sl_glarg]])
 m4_copy([[sl_sharg]],[[sl_shfarg]])
 m4_copy([[sl_sharg]],[[sl_glfarg]])
@@ -124,7 +124,7 @@ for (__sl_child.ix = __sl_child.be; m4_dnl
      __sl_child.ix > __sl_child.li; m4_dnl
      __sl_child.ix += __sl_child.st) _sl_body m4_dnl
 __sl_fam->ch = 0; m4_dnl
-m4_if([[$1]],,,[[[[$1]] = __sl_child.ex;]]) m4_dnl
+m4_ifblank([[$1]],,[[[[$1]] = __sl_child.ex;]]) m4_dnl
 m4_foreach([[_sl_arg]],m4_quote(_sl_thargs),[[m4_apply([[sl_copyarg]],m4_split(_sl_arg,:))]]) m4_dnl
 m4_undefine([[_sl_increate]]) m4_dnl
 ]])

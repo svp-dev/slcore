@@ -51,7 +51,7 @@ create([[$1]]; [[$2]]; [[$3]]; [[$4]]; [[$5]]; [[$6]]; _sl_brk)m4_dnl
 
 # Pass transparently shared and global argument declarations.
 m4_define([[sl_sharg]],[[m4_dnl
- [[$2]]m4_if([[$3]],,,[[ = $3]]) m4_dnl
+ [[$2]]m4_ifblank([[$3]],,[[ = $3]]) m4_dnl
 ]])
 m4_define([[sl_glarg]],m4_defn([[sl_sharg]]))
 m4_copy([[sl_sharg]],[[sl_shfarg]])
@@ -59,7 +59,7 @@ m4_copy([[sl_glarg]],[[sl_glfarg]])
 
 # Pass transparently the sync construct.
 m4_define([[sl_sync]],[[m4_dnl
-m4_if([[$2]],,,[[$2 = ]])sync([[$1]])m4_dnl
+m4_ifblank([[$2]],,[[$2 = ]])sync([[$1]])m4_dnl
 ]])
 
 # Pass transparently all references to argument/parameter
