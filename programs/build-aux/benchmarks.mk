@@ -214,6 +214,7 @@ BENCHLIB = $(abs_top_srcdir)/benchmarks/lib/benchmark.c \
 	  rm -rf "$$bn" && \
 	  $(MKDIR_P) "$$bn" && \
 	  for f in $(EXTRA_DIST) $(BUILT_SOURCES) $(BENCHLIB); do \
+	    case $$f in *.d*[0-9]|*.inputs|*.bmk|*fdatas.mk) continue ;; esac && \
 	    dn=$$(dirname $$(echo $$f|$(SED) -e 's|^'$(abs_top_srcdir).*/'||g')) && \
 	    $(MKDIR_P) $$bn/$$dn && \
 	    cp `test -r $$f || echo $(srcdir)/`$$f $$bn/$$dn/; \

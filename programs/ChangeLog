@@ -1,3 +1,10 @@
+2010-01-11  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
+	Minor packaging fix.
+	
+	* build-aux/benchmarks.mk (.c.tar): Avoid bundling files only
+	useful for "make bench" to Unibench.
+
 2009-12-27  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
 	* NEWS: Initialize for 2.2.x.
