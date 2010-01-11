@@ -1,3 +1,10 @@
+2010-01-11  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
+	Improve documentation.
+
+	* tools/bin/slr.in (Examples): Explain how to use `valgrind' and
+	`time'.
+
 2009-12-27  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
 	Fix line numbering during `slc -EE' and later stages.

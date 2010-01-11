@@ -2,7 +2,7 @@
 # -*- mode: shell-script -*-
 # slr: This file is part of the SL toolchain.
 #
-copyright="Copyright (C) 2009 The SL project."
+copyright="Copyright (C) 2009,2010 The SL project."
 #
 # This program is free software; you can redistribute it and/or
 # modify it under the terms of the GNU General Public License
@@ -103,7 +103,7 @@ Microgrid simulation options:
 Debugging options:
   -t                   Trace: print commands before running them.
 
-  -g                   Debug: try to run debugger around program. Implies -t.
+  -g                   Debug: try to run debugger around the program. Implies -t.
 
   -gd                  Debug: use debugging when generating data, do not 
                        actually run the program. Implies -t.
@@ -144,12 +144,23 @@ Examples:
 
   \$ slr -c a.out 
 
-  Shows runner string stored in \`a.out'.
+  Shows the runner string stored in \`a.out'.
 
   \$ slr fibo.x -dN=15
 
-  Runs fibo.x, possibly using the MT simulator, and set program input
-  variable N to an array of 1 element with value "15".
+  Runs \`fibo.x', possibly using the MT simulator, and set program
+  input variable N to an array of 1 element with value "15".
+
+  \$ DEBUGGER=valgrind   slr -g  a.out
+ 
+  Runs \`a.out' and wrap the execution with the tool \`valgrind' to
+  detect memory corruption issues.
+
+  \$ RUNNER_PREFIX=time  slr a.out
+
+  Runs \`a.out', and report the time to execute the program. This
+  yields a finer measurement than \`time slr ...' because the latter
+  also includes the time to process the input data.
 
 Report bugs and patches to $bugreports.
 EOF
