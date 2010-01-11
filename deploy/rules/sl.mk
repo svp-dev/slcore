@@ -9,7 +9,7 @@ SL_TARGETS = \
 $(SOURCES)/slc-$(SLC_REV)/configure:
 	mkdir -p $(SOURCES)
 	(cd $(SOURCES) && \
-	    $(SVN) export -r$(SLC_REV) $(SLC_REPO) slc-$(SLC_REV) && \
+	    $(SVN) co -r$(SLC_REV) $(SLC_REPO) slc-$(SLC_REV) && \
 	    cd slc-$(SLC_REV) && \
 	    ./bootstrap)
 

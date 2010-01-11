@@ -10,7 +10,7 @@ MGSIM_TARGETS = \
 $(SOURCES)/mgsim-$(MGSIM_REV)/configure:
 	mkdir -p $(SOURCES)
 	(cd $(SOURCES) && \
-	    $(SVN) export -r$(MGSIM_REV) $(MGSIM_REPO) mgsim-$(MGSIM_REV) && \
+	    $(SVN) co -r$(MGSIM_REV) $(MGSIM_REPO) mgsim-$(MGSIM_REV) && \
 	    cd mgsim-$(MGSIM_REV) && \
 	    ./bootstrap)
 
