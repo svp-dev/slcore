@@ -1,3 +1,12 @@
+2010-01-11  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
+	Extend the unit test suite.
+
+	* 0_slc/0_trival/ws.c,
+	* 0_slc/1_createargs/ws2.c,
+	* 0_slc/1_createargs/ws3.c: Check handling of whitespace in
+	thread function declarations, `sl_setp' and `sl_getp'.
+
 2009-12-26  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
 	* NEWS: Initialize for 2.2.x.
