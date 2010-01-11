@@ -120,7 +120,9 @@ def wrepl(matchobj):
 
     if matchobj.group('line') is not None:
         # log("LINE")
-        acc_ws += '\n' * matchobj.group(0).count('\n') + matchobj.expand(repl_line)
+        lineno = matchobj.group('line')
+        filename = matchobj.group('file')
+        acc_ws += '\n' * matchobj.group(0).count('\n') + repl_line % (filename, int(lineno)-1)
         return ""
 
     ws = matchobj.group('ws')
@@ -176,7 +178,7 @@ def m4_massage_input(data):
     # replacement for quote chars in strings
     quotes_escaper = makeqesc(list(set(m4_lquote + m4_rquote)))
     # replacement for line
-    repl_line = r'%s(%s\g<file>%s)%s(\g<line>)' % (m4_file, m4_lquote, m4_rquote, m4_line)
+    repl_line = r'%s(%s%%s%s)%s(%%d)' % (m4_file, m4_lquote, m4_rquote, m4_line)
 
     rec = re.compile(re_all, re.S|re.M)
     acc_ws = ''

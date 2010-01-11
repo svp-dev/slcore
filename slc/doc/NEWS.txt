@@ -9,6 +9,12 @@ Version 2.2.x
 
 - Development version only.
 
+Changes since 2.2
+=================
+
+- A long-standing bug with line numbering has been fixed. This allows
+  proper error reporting and debugging information.
+
 Version 2.2, December 2009
 ==========================
 

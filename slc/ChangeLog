@@ -1,5 +1,19 @@
 2009-12-27  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	Fix line numbering during `slc -EE' and later stages.
+
+	A long standing bug would cause the compiler sync lines to become
+	offset by 1 during the M4 processing. This would cause subsequent
+	compiler / assembler error messages to designate wrong line
+	numbers, and to produce invalid debugging information. This has
+	been fixed.
+
+	* tools/bin/cm4.in (wrepl): Shift line number by 1 before output.
+
+	* doc/NEWS.txt: Announce the fix.
+
+2009-12-27  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	Minor packaging fix.
 	
 	* configure.ac: use `$PWD' instead of `slc/' as name for the
