@@ -1,3 +1,9 @@
+2010-01-12  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
+	Improve the `perf' demo.
+
+	* demo/perf.c: Also show the intervals API.
+
 2010-01-11  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
 	Minor packaging fix.

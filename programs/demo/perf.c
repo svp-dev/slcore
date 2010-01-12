@@ -22,5 +22,11 @@ sl_def(t_main, void)
     mtperf_sample(b);
     mtperf_sample(a);
     mtperf_report_diffs(b, a, REPORT_CSV | CSV_INCLUDE_HEADER | CSV_SEP(' '));
+
+    struct s_interval iv[2];
+    mtperf_empty_interval(iv, 0, 0, "empty");
+    mtperf_start_interval(iv, 1, 1, "no code");
+    mtperf_finish_interval(iv, 1);
+    mtperf_report_intervals(iv, 2, REPORT_FIBRE); 
 }
 sl_enddef
