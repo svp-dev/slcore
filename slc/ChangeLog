@@ -1,3 +1,10 @@
+2010-01-12  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
+	Add missing whitespace in `mtperf_report_intervals'.
+
+	* lib/src/perf.c (mtperf_report_intervals): Print newlines around
+	the outer Fibre array boundaries.
+
 2010-01-11  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
 	Fix some whitespace handling with `sl_set' / `sl_get'.

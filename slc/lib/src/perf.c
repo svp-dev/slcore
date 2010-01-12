@@ -182,7 +182,8 @@ void mtperf_report_intervals(const struct s_interval* ivs,
 	dmax = max(pad, max(n, MTPERF_NCOUNTERS));
 
       ps("### begin intervals\n");
-      bfibre(n);
+      bfibre(n); 
+      pnlsep;
       for (j = 0; j < n; ++j) {
 	bfibre(MTPERF_NCOUNTERS);
 	for (i = 0; i < MTPERF_NCOUNTERS; ++i) {
@@ -193,6 +194,7 @@ void mtperf_report_intervals(const struct s_interval* ivs,
 	pnlsep;
       }
       efibre;
+      pnlsep;
       if (flags & REPORT_NOLF) pnl;
       ps("### end intervals\n### begin descriptions\n");
 
