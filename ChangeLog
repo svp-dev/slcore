@@ -1,3 +1,13 @@
+2010-01-20  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
+	Update patches for SystemC.
+
+	* deploy/patches/sysc.patch: More tweaks to quiet compiler
+	warnings with gcc 4.4.
+
+	* deploy/sysc/do_diff.sh: Also exclude autom4te's cache and
+	temporary files.
+
 2010-01-11  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
 	* deploy/versions.mk.defaults: Bump version numbers. 

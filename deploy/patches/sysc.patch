@@ -1,4 +1,4 @@
-diff -ur -x Makefile.in -x configure -x INSTALL -x aclocal.m4 -x config.sub -x config.guess -x depcomp -x install-sh -x missing -x mkinstalldirs systemc-2.1.v1.orig/Makefile.am systemc-2.1.v1-work/Makefile.am
+diff -ur -x Makefile.in -x configure -x INSTALL -x aclocal.m4 -x config.sub -x config.guess -x depcomp -x install-sh -x missing -x mkinstalldirs -x '*autom4te*' -x '*~' systemc-2.1.v1.orig/Makefile.am systemc-2.1.v1-work/Makefile.am
 --- systemc-2.1.v1.orig/Makefile.am	2005-04-13 15:50:40.000000000 +0200
 +++ systemc-2.1.v1-work/Makefile.am	2009-11-13 15:54:24.000000000 +0100
 @@ -32,20 +32,8 @@
@@ -62,12 +62,10 @@ diff -ur -x Makefile.in -x configure -x INSTALL -x aclocal.m4 -x config.sub -x c
 -	@(cd ./examples; $(MAKE) uninstall;)
 -
 -## Taf!
-Only in systemc-2.1.v1-work: Makefile.am~
-Only in systemc-2.1.v1-work: autom4te.cache
 Only in systemc-2.1.v1-work: b
-diff -ur -x Makefile.in -x configure -x INSTALL -x aclocal.m4 -x config.sub -x config.guess -x depcomp -x install-sh -x missing -x mkinstalldirs systemc-2.1.v1.orig/configure.in systemc-2.1.v1-work/configure.in
+diff -ur -x Makefile.in -x configure -x INSTALL -x aclocal.m4 -x config.sub -x config.guess -x depcomp -x install-sh -x missing -x mkinstalldirs -x '*autom4te*' -x '*~' systemc-2.1.v1.orig/configure.in systemc-2.1.v1-work/configure.in
 --- systemc-2.1.v1.orig/configure.in	2005-04-11 23:49:25.000000000 +0200
-+++ systemc-2.1.v1-work/configure.in	2009-11-12 01:18:31.000000000 +0100
++++ systemc-2.1.v1-work/configure.in	2010-01-20 22:11:06.000000000 +0100
 @@ -42,7 +42,7 @@
  dnl
  
@@ -90,7 +88,7 @@ diff -ur -x Makefile.in -x configure -x INSTALL -x aclocal.m4 -x config.sub -x c
  	AS=as
          QT_ARCH="powerpc-apple-macosx"
          ;;
-+    i386-apple-darwin*)
++    i386-apple-darwin*|x86_64-apple-darwin*)
 +        case "$CXX_COMP" in
 +            c++ | g++)
 +                EXTRA_CXXFLAGS="-Wall"
@@ -136,8 +134,7 @@ diff -ur -x Makefile.in -x configure -x INSTALL -x aclocal.m4 -x config.sub -x c
          ;;
      *cygwin*)
          case "$CXX_COMP" in
-Only in systemc-2.1.v1-work: configure.in~
-diff -ur -x Makefile.in -x configure -x INSTALL -x aclocal.m4 -x config.sub -x config.guess -x depcomp -x install-sh -x missing -x mkinstalldirs systemc-2.1.v1.orig/src/Makefile.am systemc-2.1.v1-work/src/Makefile.am
+diff -ur -x Makefile.in -x configure -x INSTALL -x aclocal.m4 -x config.sub -x config.guess -x depcomp -x install-sh -x missing -x mkinstalldirs -x '*autom4te*' -x '*~' systemc-2.1.v1.orig/src/Makefile.am systemc-2.1.v1-work/src/Makefile.am
 --- systemc-2.1.v1.orig/src/Makefile.am	2005-03-31 23:51:18.000000000 +0200
 +++ systemc-2.1.v1-work/src/Makefile.am	2009-11-12 01:31:25.000000000 +0100
 @@ -36,7 +36,8 @@
@@ -178,9 +175,8 @@ diff -ur -x Makefile.in -x configure -x INSTALL -x aclocal.m4 -x config.sub -x c
 -## Taf!
 +	rm -f $(libdir)/$(MAIN_LIBRARY)
 +	-rmdir $(libdir)
-Only in systemc-2.1.v1-work/src: Makefile.am~
 Only in systemc-2.1.v1-work/src: sources.mk
-diff -ur -x Makefile.in -x configure -x INSTALL -x aclocal.m4 -x config.sub -x config.guess -x depcomp -x install-sh -x missing -x mkinstalldirs systemc-2.1.v1.orig/src/sysc/communication/sc_fifo.h systemc-2.1.v1-work/src/sysc/communication/sc_fifo.h
+diff -ur -x Makefile.in -x configure -x INSTALL -x aclocal.m4 -x config.sub -x config.guess -x depcomp -x install-sh -x missing -x mkinstalldirs -x '*autom4te*' -x '*~' systemc-2.1.v1.orig/src/sysc/communication/sc_fifo.h systemc-2.1.v1-work/src/sysc/communication/sc_fifo.h
 --- systemc-2.1.v1.orig/src/sysc/communication/sc_fifo.h	2005-05-24 23:41:33.000000000 +0200
 +++ systemc-2.1.v1-work/src/sysc/communication/sc_fifo.h	2009-11-10 22:04:04.000000000 +0100
 @@ -97,6 +97,9 @@
@@ -193,7 +189,7 @@ diff -ur -x Makefile.in -x configure -x INSTALL -x aclocal.m4 -x config.sub -x c
  
      // get the data written event
  
-diff -ur -x Makefile.in -x configure -x INSTALL -x aclocal.m4 -x config.sub -x config.guess -x depcomp -x install-sh -x missing -x mkinstalldirs systemc-2.1.v1.orig/src/sysc/communication/sc_port.h systemc-2.1.v1-work/src/sysc/communication/sc_port.h
+diff -ur -x Makefile.in -x configure -x INSTALL -x aclocal.m4 -x config.sub -x config.guess -x depcomp -x install-sh -x missing -x mkinstalldirs -x '*autom4te*' -x '*~' systemc-2.1.v1.orig/src/sysc/communication/sc_port.h systemc-2.1.v1-work/src/sysc/communication/sc_port.h
 --- systemc-2.1.v1.orig/src/sysc/communication/sc_port.h	2005-04-04 02:05:45.000000000 +0200
 +++ systemc-2.1.v1-work/src/sysc/communication/sc_port.h	2009-11-10 22:04:04.000000000 +0100
 @@ -292,6 +292,8 @@
@@ -205,7 +201,7 @@ diff -ur -x Makefile.in -x configure -x INSTALL -x aclocal.m4 -x config.sub -x c
  
      // allow to call methods provided by interface at index
      inline const IF* get_interface( int iface_i ) const;
-diff -ur -x Makefile.in -x configure -x INSTALL -x aclocal.m4 -x config.sub -x config.guess -x depcomp -x install-sh -x missing -x mkinstalldirs systemc-2.1.v1.orig/src/sysc/datatypes/bit/sc_lv_base.h systemc-2.1.v1-work/src/sysc/datatypes/bit/sc_lv_base.h
+diff -ur -x Makefile.in -x configure -x INSTALL -x aclocal.m4 -x config.sub -x config.guess -x depcomp -x install-sh -x missing -x mkinstalldirs -x '*autom4te*' -x '*~' systemc-2.1.v1.orig/src/sysc/datatypes/bit/sc_lv_base.h systemc-2.1.v1-work/src/sysc/datatypes/bit/sc_lv_base.h
 --- systemc-2.1.v1.orig/src/sysc/datatypes/bit/sc_lv_base.h	2005-05-24 23:54:46.000000000 +0200
 +++ systemc-2.1.v1-work/src/sysc/datatypes/bit/sc_lv_base.h	2009-11-13 14:34:50.000000000 +0100
 @@ -290,8 +290,8 @@
@@ -228,9 +224,9 @@ diff -ur -x Makefile.in -x configure -x INSTALL -x aclocal.m4 -x config.sub -x c
  }
  
  
-diff -ur -x Makefile.in -x configure -x INSTALL -x aclocal.m4 -x config.sub -x config.guess -x depcomp -x install-sh -x missing -x mkinstalldirs systemc-2.1.v1.orig/src/sysc/datatypes/bit/sc_proxy.h systemc-2.1.v1-work/src/sysc/datatypes/bit/sc_proxy.h
+diff -ur -x Makefile.in -x configure -x INSTALL -x aclocal.m4 -x config.sub -x config.guess -x depcomp -x install-sh -x missing -x mkinstalldirs -x '*autom4te*' -x '*~' systemc-2.1.v1.orig/src/sysc/datatypes/bit/sc_proxy.h systemc-2.1.v1-work/src/sysc/datatypes/bit/sc_proxy.h
 --- systemc-2.1.v1.orig/src/sysc/datatypes/bit/sc_proxy.h	2005-06-07 19:44:00.000000000 +0200
-+++ systemc-2.1.v1-work/src/sysc/datatypes/bit/sc_proxy.h	2009-11-13 14:34:46.000000000 +0100
++++ systemc-2.1.v1-work/src/sysc/datatypes/bit/sc_proxy.h	2010-01-20 22:26:47.000000000 +0100
 @@ -785,7 +785,7 @@
      set_words_( x, 0, ((unsigned long) a & ~UL_ZERO), UL_ZERO );
      if( x.size() > 1 ) {
@@ -249,6 +245,35 @@ diff -ur -x Makefile.in -x configure -x INSTALL -x aclocal.m4 -x config.sub -x c
  		    UL_ZERO );
  	// extend with sign(a)
  	extend_sign_w_( x, 2, (a < 0) );
+@@ -849,8 +849,8 @@
+ 	unsigned long x_dw, x_cw, y_dw, y_cw;
+ 	get_words_( x, i, x_dw, x_cw );
+ 	get_words_( y, i, y_dw, y_cw );
+-	unsigned long cw = x_dw & y_cw | x_cw & y_dw | x_cw & y_cw;
+-	unsigned long dw = cw | x_dw & y_dw;
++	unsigned long cw = (x_dw & y_cw) | (x_cw & y_dw) | (x_cw & y_cw);
++	unsigned long dw = cw | (x_dw & y_dw);
+ 	set_words_( x, i, dw, cw );
+     }
+     // tail cleaning not needed
+@@ -873,7 +873,7 @@
+ 	unsigned long x_dw, x_cw, y_dw, y_cw;
+ 	get_words_( x, i, x_dw, x_cw );
+ 	get_words_( y, i, y_dw, y_cw );
+-	unsigned long cw = x_cw & y_cw | x_cw & ~y_dw | ~x_dw & y_cw;
++	unsigned long cw = (x_cw & y_cw) | (x_cw & ~y_dw) | (~x_dw & y_cw);
+ 	unsigned long dw = cw | x_dw | y_dw;
+ 	set_words_( x, i, dw, cw );
+     }
+@@ -898,7 +898,7 @@
+ 	get_words_( x, i, x_dw, x_cw );
+ 	get_words_( y, i, y_dw, y_cw );
+ 	unsigned long cw = x_cw | y_cw;
+-	unsigned long dw = cw | x_dw ^ y_dw;
++	unsigned long dw = cw | (x_dw ^ y_dw);
+ 	set_words_( x, i, dw, cw );
+     }
+     // tail cleaning not needed
 @@ -1260,7 +1260,7 @@
  	    SC_REPORT_WARNING( sc_core::SC_ID_VECTOR_CONTAINS_LOGIC_VALUE_, 0 );
  	}
@@ -258,7 +283,7 @@ diff -ur -x Makefile.in -x configure -x INSTALL -x aclocal.m4 -x config.sub -x c
  	return w;
      }
      else if( len == UL_SIZE ) 
-diff -ur -x Makefile.in -x configure -x INSTALL -x aclocal.m4 -x config.sub -x config.guess -x depcomp -x install-sh -x missing -x mkinstalldirs systemc-2.1.v1.orig/src/sysc/datatypes/fx/sc_context.h systemc-2.1.v1-work/src/sysc/datatypes/fx/sc_context.h
+diff -ur -x Makefile.in -x configure -x INSTALL -x aclocal.m4 -x config.sub -x config.guess -x depcomp -x install-sh -x missing -x mkinstalldirs -x '*autom4te*' -x '*~' systemc-2.1.v1.orig/src/sysc/datatypes/fx/sc_context.h systemc-2.1.v1-work/src/sysc/datatypes/fx/sc_context.h
 --- systemc-2.1.v1.orig/src/sysc/datatypes/fx/sc_context.h	2005-03-31 23:22:07.000000000 +0200
 +++ systemc-2.1.v1-work/src/sysc/datatypes/fx/sc_context.h	2009-11-10 22:17:29.000000000 +0100
 @@ -227,6 +227,7 @@
@@ -269,8 +294,23 @@ diff -ur -x Makefile.in -x configure -x INSTALL -x aclocal.m4 -x config.sub -x c
  }
  
  
-Only in systemc-2.1.v1-work/src/sysc/datatypes/fx: sc_context.h~
-diff -ur -x Makefile.in -x configure -x INSTALL -x aclocal.m4 -x config.sub -x config.guess -x depcomp -x install-sh -x missing -x mkinstalldirs systemc-2.1.v1.orig/src/sysc/datatypes/fx/sc_fxval.h systemc-2.1.v1-work/src/sysc/datatypes/fx/sc_fxval.h
+diff -ur -x Makefile.in -x configure -x INSTALL -x aclocal.m4 -x config.sub -x config.guess -x depcomp -x install-sh -x missing -x mkinstalldirs -x '*autom4te*' -x '*~' systemc-2.1.v1.orig/src/sysc/datatypes/fx/sc_fxnum.cpp systemc-2.1.v1-work/src/sysc/datatypes/fx/sc_fxnum.cpp
+--- systemc-2.1.v1.orig/src/sysc/datatypes/fx/sc_fxnum.cpp	2005-05-24 23:55:47.000000000 +0200
++++ systemc-2.1.v1-work/src/sysc/datatypes/fx/sc_fxnum.cpp	2010-01-20 22:27:48.000000000 +0100
+@@ -413,10 +413,10 @@
+             case SC_RND_CONV:			// convergent rounding
+ 	    {
+ 		if( frac_part > 0.5 ||
+-		    frac_part == 0.5 && fmod( int_part, 2.0 ) != 0.0 )
++		    (frac_part == 0.5 && fmod( int_part, 2.0 ) != 0.0) )
+ 		    val += 1.0;
+ 		else if( frac_part < -0.5 ||
+-			 frac_part == -0.5 && fmod( int_part, 2.0 ) != 0.0 )
++			 (frac_part == -0.5 && fmod( int_part, 2.0 ) != 0.0) )
+ 		    val -= 1.0;
+ 		break;
+ 	    }
+diff -ur -x Makefile.in -x configure -x INSTALL -x aclocal.m4 -x config.sub -x config.guess -x depcomp -x install-sh -x missing -x mkinstalldirs -x '*autom4te*' -x '*~' systemc-2.1.v1.orig/src/sysc/datatypes/fx/sc_fxval.h systemc-2.1.v1-work/src/sysc/datatypes/fx/sc_fxval.h
 --- systemc-2.1.v1.orig/src/sysc/datatypes/fx/sc_fxval.h	2005-05-24 23:56:11.000000000 +0200
 +++ systemc-2.1.v1-work/src/sysc/datatypes/fx/sc_fxval.h	2009-11-10 22:04:04.000000000 +0100
 @@ -58,6 +58,17 @@
@@ -291,7 +331,7 @@ diff -ur -x Makefile.in -x configure -x INSTALL -x aclocal.m4 -x config.sub -x c
  
  // ----------------------------------------------------------------------------
  //  CLASS : sc_fxval
-diff -ur -x Makefile.in -x configure -x INSTALL -x aclocal.m4 -x config.sub -x config.guess -x depcomp -x install-sh -x missing -x mkinstalldirs systemc-2.1.v1.orig/src/sysc/datatypes/fx/scfx_ieee.h systemc-2.1.v1-work/src/sysc/datatypes/fx/scfx_ieee.h
+diff -ur -x Makefile.in -x configure -x INSTALL -x aclocal.m4 -x config.sub -x config.guess -x depcomp -x install-sh -x missing -x mkinstalldirs -x '*autom4te*' -x '*~' systemc-2.1.v1.orig/src/sysc/datatypes/fx/scfx_ieee.h systemc-2.1.v1-work/src/sysc/datatypes/fx/scfx_ieee.h
 --- systemc-2.1.v1.orig/src/sysc/datatypes/fx/scfx_ieee.h	2005-03-31 23:22:23.000000000 +0200
 +++ systemc-2.1.v1-work/src/sysc/datatypes/fx/scfx_ieee.h	2009-11-10 22:04:04.000000000 +0100
 @@ -54,7 +54,8 @@
@@ -304,9 +344,34 @@ diff -ur -x Makefile.in -x configure -x INSTALL -x aclocal.m4 -x config.sub -x c
  # define SCFX_LITTLE_ENDIAN
  #elif defined( __ppc__ ) || defined( sparc ) || defined( __hppa )
  # define SCFX_BIG_ENDIAN
-diff -ur -x Makefile.in -x configure -x INSTALL -x aclocal.m4 -x config.sub -x config.guess -x depcomp -x install-sh -x missing -x mkinstalldirs systemc-2.1.v1.orig/src/sysc/datatypes/fx/scfx_rep.cpp systemc-2.1.v1-work/src/sysc/datatypes/fx/scfx_rep.cpp
+diff -ur -x Makefile.in -x configure -x INSTALL -x aclocal.m4 -x config.sub -x config.guess -x depcomp -x install-sh -x missing -x mkinstalldirs -x '*autom4te*' -x '*~' systemc-2.1.v1.orig/src/sysc/datatypes/fx/scfx_rep.cpp systemc-2.1.v1-work/src/sysc/datatypes/fx/scfx_rep.cpp
 --- systemc-2.1.v1.orig/src/sysc/datatypes/fx/scfx_rep.cpp	2005-04-04 19:29:56.000000000 +0200
-+++ systemc-2.1.v1-work/src/sysc/datatypes/fx/scfx_rep.cpp	2009-11-10 22:04:04.000000000 +0100
++++ systemc-2.1.v1-work/src/sysc/datatypes/fx/scfx_rep.cpp	2010-01-20 22:29:42.000000000 +0100
+@@ -191,13 +191,13 @@
+ 	if( a > 0 )
+ 	{
+ 	    m_mant[1] = static_cast<word>( a );
+-	    m_mant[2] = static_cast<word>( a >> bits_in_word );
++	    m_mant[2] = static_cast<word>( (a >> (bits_in_word/2)) >> (bits_in_word/2) );
+ 	    m_sign = 1;
+ 	}
+ 	else
+ 	{
+ 	    m_mant[1] = static_cast<word>( -a );
+-	    m_mant[2] = static_cast<word>( (-a) >> bits_in_word );
++	    m_mant[2] = static_cast<word>( ((-a) >> (bits_in_word/2)) >> (bits_in_word/2) );
+ 	    m_sign = -1;
+ 	}
+ 	find_sw();
+@@ -215,7 +215,7 @@
+ 	m_wp = 1;
+ 	m_state = normal;
+ 	m_mant[1] = static_cast<word>( a );
+-	m_mant[2] = static_cast<word>( a >> bits_in_word );
++	m_mant[2] = static_cast<word>( (a >> (bits_in_word/2)) >> (bits_in_word/2) );
+ 	m_sign = 1;
+ 	find_sw();
+     }
 @@ -849,6 +849,112 @@
  
  
@@ -347,8 +412,8 @@ diff -ur -x Makefile.in -x configure -x INSTALL -x aclocal.m4 -x config.sub -x c
 +    //
 +
 +    if( lhs.is_nan() || rhs.is_nan()
-+    ||  lhs.is_inf() && rhs.is_zero()
-+    ||  lhs.is_zero() && rhs.is_inf() )
++        || (lhs.is_inf() && rhs.is_zero())
++        || (lhs.is_zero() && rhs.is_inf()) )
 +    {
 +	result.set_nan();
 +	return;
@@ -531,9 +596,49 @@ diff -ur -x Makefile.in -x configure -x INSTALL -x aclocal.m4 -x config.sub -x c
  //  DIV
  // ----------------------------------------------------------------------------
  
-diff -ur -x Makefile.in -x configure -x INSTALL -x aclocal.m4 -x config.sub -x config.guess -x depcomp -x install-sh -x missing -x mkinstalldirs systemc-2.1.v1.orig/src/sysc/datatypes/fx/scfx_rep.h systemc-2.1.v1-work/src/sysc/datatypes/fx/scfx_rep.h
+@@ -1573,8 +1575,8 @@
+     // check for special cases
+     //
+ 
+-    if( lhs.is_nan() || rhs.is_nan() || lhs.is_inf() && rhs.is_inf() ||
+-	lhs.is_zero() && rhs.is_zero() )
++    if( lhs.is_nan() || rhs.is_nan() || (lhs.is_inf() && rhs.is_inf()) ||
++	(lhs.is_zero() && rhs.is_zero()) )
+     {
+ 	result.set_nan();
+ 	return &result;
+@@ -1946,7 +1948,7 @@
+ 	    }
+             case SC_RND_CONV:			// convergent rounding
+ 	    {
+-		if( qb && ! qz || qb && qz && q_odd( x ) )
++		if( (qb && ! qz) || (qb && qz && q_odd( x )) )
+ 		    q_incr( x );
+ 		break;
+ 	    }
+@@ -2016,7 +2018,7 @@
+ 	    if( params.o_mode() == SC_SAT_SYM )
+ 		under = ( ! zero_left || bit_at );
+ 	    else
+-		under = ( ! zero_left || zero_left && bit_at && ! zero_right );
++		under = ( ! zero_left || (zero_left && bit_at && ! zero_right) );
+ 	}
+ 	else
+ 	    over = ( ! zero_left || bit_at );
+@@ -2855,8 +2857,8 @@
+ 
+     scfx_index x( wi, bi );
+ 
+-    if( q_bit( x ) && ! q_zero( x ) ||
+-	q_bit( x ) && q_zero( x ) && q_odd( x ) )
++    if( (q_bit( x ) && ! q_zero( x )) ||
++	(q_bit( x ) && q_zero( x ) && q_odd( x )) )
+ 	q_incr( x );
+     q_clear( x );
+ 
+diff -ur -x Makefile.in -x configure -x INSTALL -x aclocal.m4 -x config.sub -x config.guess -x depcomp -x install-sh -x missing -x mkinstalldirs -x '*autom4te*' -x '*~' systemc-2.1.v1.orig/src/sysc/datatypes/fx/scfx_rep.h systemc-2.1.v1-work/src/sysc/datatypes/fx/scfx_rep.h
 --- systemc-2.1.v1.orig/src/sysc/datatypes/fx/scfx_rep.h	2005-03-31 23:22:30.000000000 +0200
-+++ systemc-2.1.v1-work/src/sysc/datatypes/fx/scfx_rep.h	2009-11-10 22:04:04.000000000 +0100
++++ systemc-2.1.v1-work/src/sysc/datatypes/fx/scfx_rep.h	2010-01-20 22:17:11.000000000 +0100
 @@ -344,7 +344,8 @@
  mult_scfx_rep( const scfx_rep& a, const scfx_rep& b, int max_wl )
  {
@@ -544,7 +649,79 @@ diff -ur -x Makefile.in -x configure -x INSTALL -x aclocal.m4 -x config.sub -x c
      return &c;
  }
  
-diff -ur -x Makefile.in -x configure -x INSTALL -x aclocal.m4 -x config.sub -x config.guess -x depcomp -x install-sh -x missing -x mkinstalldirs systemc-2.1.v1.orig/src/sysc/datatypes/int/sc_nbutils.h systemc-2.1.v1-work/src/sysc/datatypes/int/sc_nbutils.h
+@@ -665,7 +666,7 @@
+     if( bi != 0 )
+         return ( m_mant[wi] & ( 1 << ( bi - 1 ) ) ) != 0;
+     else if( wi != 0 )
+-        return ( m_mant[wi - 1] & ( 1 << ( bits_in_word - 1 ) ) ) != 0;
++        return ( m_mant[wi - 1] & ( 1L << ( bits_in_word - 1 )  ) ) != 0;
+     else
+         return false;
+ }
+@@ -739,7 +740,7 @@
+     }
+     else if( wi != 0 )
+     {
+-        zero = ( m_mant[wi - 1] & ~( -1 << (bits_in_word - 1) ) ) == 0;
++        zero = ( m_mant[wi - 1] & ~( -1L << (bits_in_word - 1) ) ) == 0;
+ 	for( int i = wi - 2; i >= 0; -- i )
+ 	    zero = zero && m_mant[i] == 0;
+     }
+diff -ur -x Makefile.in -x configure -x INSTALL -x aclocal.m4 -x config.sub -x config.guess -x depcomp -x install-sh -x missing -x mkinstalldirs -x '*autom4te*' -x '*~' systemc-2.1.v1.orig/src/sysc/datatypes/fx/scfx_utils.h systemc-2.1.v1-work/src/sysc/datatypes/fx/scfx_utils.h
+--- systemc-2.1.v1.orig/src/sysc/datatypes/fx/scfx_utils.h	2005-03-31 23:22:53.000000000 +0200
++++ systemc-2.1.v1-work/src/sysc/datatypes/fx/scfx_utils.h	2010-01-20 22:24:48.000000000 +0100
+@@ -120,11 +120,11 @@
+ 	case 'b':
+ 	case 'B':
+ 	{
+-	    if( s[2] == 'u' || s[2] == 'U' && s[3] == 's' || s[3] == 'S' ) {
++	    if( (s[2] == 'u' || s[2] == 'U') && (s[3] == 's' || s[3] == 'S') ) {
+ 		s += 4;
+ 		return SC_BIN_US;
+ 	    }
+-	    if( s[2] == 's' || s[2] == 'S' && s[3] == 'm' || s[3] == 'M' ) {
++	    if( (s[2] == 's' || s[2] == 'S') && (s[3] == 'm' || s[3] == 'M') ) {
+ 		s += 4;
+ 		return SC_BIN_SM;
+ 	    }
+@@ -134,11 +134,11 @@
+ 	case 'o':
+ 	case 'O':
+ 	{
+-	    if( s[2] == 'u' || s[2] == 'U' && s[3] == 's' || s[3] == 'S' ) {
++	    if( (s[2] == 'u' || s[2] == 'U') && (s[3] == 's' || s[3] == 'S') ) {
+ 		s += 4;
+ 		return SC_OCT_US;
+ 	    }
+-	    if( s[2] == 's' || s[2] == 'S' && s[3] == 'm' || s[3] == 'M' ) {
++	    if( (s[2] == 's' || s[2] == 'S') && (s[3] == 'm' || s[3] == 'M') ) {
+ 		s += 4;
+ 		return SC_OCT_SM;
+ 	    }
+@@ -148,11 +148,11 @@
+ 	case 'x':
+ 	case 'X':
+ 	{
+-	    if( s[2] == 'u' || s[2] == 'U' && s[3] == 's' || s[3] == 'S' ) {
++	    if( (s[2] == 'u' || s[2] == 'U') && (s[3] == 's' || s[3] == 'S') ) {
+ 		s += 4;
+ 		return SC_HEX_US;
+ 	    }
+-	    if( s[2] == 's' || s[2] == 'S' && s[3] == 'm' || s[3] == 'M' ) {
++	    if( (s[2] == 's' || s[2] == 'S') && (s[3] == 'm' || s[3] == 'M') ) {
+ 		s += 4;
+ 		return SC_HEX_SM;
+ 	    }
+@@ -168,7 +168,7 @@
+ 	case 'c':
+ 	case 'C':
+ 	{
+-	    if( s[2] == 's' || s[2] == 'S' && s[3] == 'd' || s[3] == 'D' ) {
++	    if( (s[2] == 's' || s[2] == 'S') && (s[3] == 'd' || s[3] == 'D') ) {
+ 		s += 4;
+ 		return SC_CSD;
+ 	    }
+diff -ur -x Makefile.in -x configure -x INSTALL -x aclocal.m4 -x config.sub -x config.guess -x depcomp -x install-sh -x missing -x mkinstalldirs -x '*autom4te*' -x '*~' systemc-2.1.v1.orig/src/sysc/datatypes/int/sc_nbutils.h systemc-2.1.v1-work/src/sysc/datatypes/int/sc_nbutils.h
 --- systemc-2.1.v1.orig/src/sysc/datatypes/int/sc_nbutils.h	2005-04-21 17:06:27.000000000 +0200
 +++ systemc-2.1.v1-work/src/sysc/datatypes/int/sc_nbutils.h	2009-11-10 22:04:04.000000000 +0100
 @@ -38,7 +38,8 @@
@@ -557,7 +734,7 @@ diff -ur -x Makefile.in -x configure -x INSTALL -x aclocal.m4 -x config.sub -x c
  #include <ieeefp.h>
  #else
  #include <cmath>
-diff -ur -x Makefile.in -x configure -x INSTALL -x aclocal.m4 -x config.sub -x config.guess -x depcomp -x install-sh -x missing -x mkinstalldirs systemc-2.1.v1.orig/src/sysc/datatypes/int/sc_signed.cpp systemc-2.1.v1-work/src/sysc/datatypes/int/sc_signed.cpp
+diff -ur -x Makefile.in -x configure -x INSTALL -x aclocal.m4 -x config.sub -x config.guess -x depcomp -x install-sh -x missing -x mkinstalldirs -x '*autom4te*' -x '*~' systemc-2.1.v1.orig/src/sysc/datatypes/int/sc_signed.cpp systemc-2.1.v1-work/src/sysc/datatypes/int/sc_signed.cpp
 --- systemc-2.1.v1.orig/src/sysc/datatypes/int/sc_signed.cpp	2005-05-24 23:56:47.000000000 +0200
 +++ systemc-2.1.v1-work/src/sysc/datatypes/int/sc_signed.cpp	2009-11-10 22:04:04.000000000 +0100
 @@ -60,6 +60,75 @@
@@ -636,7 +813,7 @@ diff -ur -x Makefile.in -x configure -x INSTALL -x aclocal.m4 -x config.sub -x c
  
  // Pool of temporary instances:
  
-diff -ur -x Makefile.in -x configure -x INSTALL -x aclocal.m4 -x config.sub -x config.guess -x depcomp -x install-sh -x missing -x mkinstalldirs systemc-2.1.v1.orig/src/sysc/datatypes/int/sc_unsigned.cpp systemc-2.1.v1-work/src/sysc/datatypes/int/sc_unsigned.cpp
+diff -ur -x Makefile.in -x configure -x INSTALL -x aclocal.m4 -x config.sub -x config.guess -x depcomp -x install-sh -x missing -x mkinstalldirs -x '*autom4te*' -x '*~' systemc-2.1.v1.orig/src/sysc/datatypes/int/sc_unsigned.cpp systemc-2.1.v1-work/src/sysc/datatypes/int/sc_unsigned.cpp
 --- systemc-2.1.v1.orig/src/sysc/datatypes/int/sc_unsigned.cpp	2005-05-24 23:57:04.000000000 +0200
 +++ systemc-2.1.v1-work/src/sysc/datatypes/int/sc_unsigned.cpp	2009-11-10 22:04:04.000000000 +0100
 @@ -59,6 +59,86 @@
@@ -726,7 +903,28 @@ diff -ur -x Makefile.in -x configure -x INSTALL -x aclocal.m4 -x config.sub -x c
  
  // Pool of temporary instances:
  //   The sc_unsigned pool is used by the concatenation support.
-diff -ur -x Makefile.in -x configure -x INSTALL -x aclocal.m4 -x config.sub -x config.guess -x depcomp -x install-sh -x missing -x mkinstalldirs systemc-2.1.v1.orig/src/sysc/kernel/sc_process_int.cpp systemc-2.1.v1-work/src/sysc/kernel/sc_process_int.cpp
+diff -ur -x Makefile.in -x configure -x INSTALL -x aclocal.m4 -x config.sub -x config.guess -x depcomp -x install-sh -x missing -x mkinstalldirs -x '*autom4te*' -x '*~' systemc-2.1.v1.orig/src/sysc/datatypes/int/sc_unsigned.h systemc-2.1.v1-work/src/sysc/datatypes/int/sc_unsigned.h
+--- systemc-2.1.v1.orig/src/sysc/datatypes/int/sc_unsigned.h	2005-05-24 23:57:07.000000000 +0200
++++ systemc-2.1.v1-work/src/sysc/datatypes/int/sc_unsigned.h	2010-01-20 22:13:48.000000000 +0100
+@@ -142,7 +142,7 @@
+     // copy constructor
+ 
+     sc_unsigned_bitref_r( const sc_unsigned_bitref_r& a )
+-	: m_index( a.m_index ), m_obj_p( a.m_obj_p )
++	: sc_value_base(), m_index( a.m_index ), m_obj_p( a.m_obj_p )
+ 	{}
+ 
+     // capacity
+@@ -318,7 +318,7 @@
+     // copy constructor
+ 
+     sc_unsigned_subref_r( const sc_unsigned_subref_r& a )
+-	: m_left( a.m_left ), m_obj_p( a.m_obj_p ), m_right( a.m_right )
++	: sc_value_base(), m_left( a.m_left ), m_obj_p( a.m_obj_p ), m_right( a.m_right )
+ 	{}
+ 
+ 
+diff -ur -x Makefile.in -x configure -x INSTALL -x aclocal.m4 -x config.sub -x config.guess -x depcomp -x install-sh -x missing -x mkinstalldirs -x '*autom4te*' -x '*~' systemc-2.1.v1.orig/src/sysc/kernel/sc_process_int.cpp systemc-2.1.v1-work/src/sysc/kernel/sc_process_int.cpp
 --- systemc-2.1.v1.orig/src/sysc/kernel/sc_process_int.cpp	2005-04-05 01:14:27.000000000 +0200
 +++ systemc-2.1.v1-work/src/sysc/kernel/sc_process_int.cpp	2009-11-10 22:04:04.000000000 +0100
 @@ -433,6 +433,7 @@
@@ -745,7 +943,7 @@ diff -ur -x Makefile.in -x configure -x INSTALL -x aclocal.m4 -x config.sub -x c
  
  void
  sc_cthread_process::prepare_for_simulation()
-diff -ur -x Makefile.in -x configure -x INSTALL -x aclocal.m4 -x config.sub -x config.guess -x depcomp -x install-sh -x missing -x mkinstalldirs systemc-2.1.v1.orig/src/sysc/kernel/sc_simcontext.cpp systemc-2.1.v1-work/src/sysc/kernel/sc_simcontext.cpp
+diff -ur -x Makefile.in -x configure -x INSTALL -x aclocal.m4 -x config.sub -x config.guess -x depcomp -x install-sh -x missing -x mkinstalldirs -x '*autom4te*' -x '*~' systemc-2.1.v1.orig/src/sysc/kernel/sc_simcontext.cpp systemc-2.1.v1-work/src/sysc/kernel/sc_simcontext.cpp
 --- systemc-2.1.v1.orig/src/sysc/kernel/sc_simcontext.cpp	2005-04-21 19:41:16.000000000 +0200
 +++ systemc-2.1.v1-work/src/sysc/kernel/sc_simcontext.cpp	2009-11-10 22:04:04.000000000 +0100
 @@ -778,7 +778,8 @@
@@ -758,7 +956,7 @@ diff -ur -x Makefile.in -x configure -x INSTALL -x aclocal.m4 -x config.sub -x c
      if (m_start_of_simulation_called) {
  	end();
  	m_in_simulator_control = false;
-diff -ur -x Makefile.in -x configure -x INSTALL -x aclocal.m4 -x config.sub -x config.guess -x depcomp -x install-sh -x missing -x mkinstalldirs systemc-2.1.v1.orig/src/sysc/qt/qtmd.h systemc-2.1.v1-work/src/sysc/qt/qtmd.h
+diff -ur -x Makefile.in -x configure -x INSTALL -x aclocal.m4 -x config.sub -x config.guess -x depcomp -x install-sh -x missing -x mkinstalldirs -x '*autom4te*' -x '*~' systemc-2.1.v1.orig/src/sysc/qt/qtmd.h systemc-2.1.v1-work/src/sysc/qt/qtmd.h
 --- systemc-2.1.v1.orig/src/sysc/qt/qtmd.h	2005-03-31 23:21:40.000000000 +0200
 +++ systemc-2.1.v1-work/src/sysc/qt/qtmd.h	2009-11-10 22:06:34.000000000 +0100
 @@ -2,7 +2,7 @@
@@ -770,8 +968,30 @@ diff -ur -x Makefile.in -x configure -x INSTALL -x aclocal.m4 -x config.sub -x c
  #include "sysc/qt/md/i386.h"
  #elif defined( __ppc__ )
  #include "sysc/qt/md/powerpc_mach.h"
-Only in systemc-2.1.v1-work/src/sysc/qt: qtmd.h~
-diff -ur -x Makefile.in -x configure -x INSTALL -x aclocal.m4 -x config.sub -x config.guess -x depcomp -x install-sh -x missing -x mkinstalldirs systemc-2.1.v1.orig/src/sysc/utils/sc_hash.cpp systemc-2.1.v1-work/src/sysc/utils/sc_hash.cpp
+diff -ur -x Makefile.in -x configure -x INSTALL -x aclocal.m4 -x config.sub -x config.guess -x depcomp -x install-sh -x missing -x mkinstalldirs -x '*autom4te*' -x '*~' systemc-2.1.v1.orig/src/sysc/tracing/sc_vcd_trace.cpp systemc-2.1.v1-work/src/sysc/tracing/sc_vcd_trace.cpp
+--- systemc-2.1.v1.orig/src/sysc/tracing/sc_vcd_trace.cpp	2005-05-24 23:42:31.000000000 +0200
++++ systemc-2.1.v1-work/src/sysc/tracing/sc_vcd_trace.cpp	2010-01-20 22:25:24.000000000 +0100
+@@ -1748,7 +1748,7 @@
+     //timescale:
+     static struct SC_TIMESCALE_TO_TEXT {
+         double unit;
+-        char*  text;
++        const char*  text;
+     } timescale_to_text [] = {
+         { sc_time(1, SC_FS).to_seconds(), "1 fs" },
+         { sc_time(10, SC_FS).to_seconds(), "10 fs" },
+@@ -2060,8 +2060,8 @@
+     double_to_special_int64(now_units, &now_units_high, &now_units_low );
+ 
+     bool now_later_than_previous_time = false;
+-    if( now_units_low > previous_time_units_low 
+-        && now_units_high == previous_time_units_high
++    if( (now_units_low > previous_time_units_low 
++         && now_units_high == previous_time_units_high)
+         || now_units_high > previous_time_units_high){
+         now_later_than_previous_time = true;
+     }
+diff -ur -x Makefile.in -x configure -x INSTALL -x aclocal.m4 -x config.sub -x config.guess -x depcomp -x install-sh -x missing -x mkinstalldirs -x '*autom4te*' -x '*~' systemc-2.1.v1.orig/src/sysc/utils/sc_hash.cpp systemc-2.1.v1-work/src/sysc/utils/sc_hash.cpp
 --- systemc-2.1.v1.orig/src/sysc/utils/sc_hash.cpp	2005-03-31 23:13:14.000000000 +0200
 +++ systemc-2.1.v1-work/src/sysc/utils/sc_hash.cpp	2009-11-10 22:04:04.000000000 +0100
 @@ -37,6 +37,7 @@
@@ -801,7 +1021,7 @@ diff -ur -x Makefile.in -x configure -x INSTALL -x aclocal.m4 -x config.sub -x c
  }
  
  
-diff -ur -x Makefile.in -x configure -x INSTALL -x aclocal.m4 -x config.sub -x config.guess -x depcomp -x install-sh -x missing -x mkinstalldirs systemc-2.1.v1.orig/src/sysc/utils/sc_report_handler.cpp systemc-2.1.v1-work/src/sysc/utils/sc_report_handler.cpp
+diff -ur -x Makefile.in -x configure -x INSTALL -x aclocal.m4 -x config.sub -x config.guess -x depcomp -x install-sh -x missing -x mkinstalldirs -x '*autom4te*' -x '*~' systemc-2.1.v1.orig/src/sysc/utils/sc_report_handler.cpp systemc-2.1.v1-work/src/sysc/utils/sc_report_handler.cpp
 --- systemc-2.1.v1.orig/src/sysc/utils/sc_report_handler.cpp	2005-05-24 23:42:39.000000000 +0200
 +++ systemc-2.1.v1-work/src/sysc/utils/sc_report_handler.cpp	2009-11-10 22:04:04.000000000 +0100
 @@ -135,11 +135,13 @@
