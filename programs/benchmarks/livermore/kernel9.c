@@ -46,11 +46,11 @@ sl_def(innerk9, void
        , sl_glfparm(double, DM27)
        , sl_glfparm(double, DM28)
        , sl_glparm(double*restrict, PX)
-       , sl_glparm(size_t, PX_dim0))
+       , sl_glparm(size_t, PX_dim1))
 {
     sl_index(k);
 
-#define PX(a, b) sl_getp(PX)[(b) * sl_getp(PX_dim0) + (a)]
+#define PX(a, b) sl_getp(PX)[(b) * sl_getp(PX_dim1) + (a)]
     double C0 = sl_getp(C0);
     double DM22 = sl_getp(DM22);
     double DM23 = sl_getp(DM23);
@@ -93,7 +93,7 @@ sl_def(kernel9, void,
               , sl_glfarg(double, , sl_getp(DM27))
               , sl_glfarg(double, , sl_getp(DM28))
               , sl_glarg(double*restrict, , sl_getp(PX))
-              , sl_glarg(size_t, , sl_getp(PX_dim0)));
+              , sl_glarg(size_t, , sl_getp(PX_dim1)));
     sl_sync();
 }
 sl_enddef

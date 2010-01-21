@@ -1,3 +1,10 @@
+2010-01-20  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
+	Fix bug in LKM9.
+
+	* benchmarks/livermore/kernel9.c (innerk9): Fix array offset
+	computation.
+
 2010-01-12  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
 	Improve the `perf' demo.
