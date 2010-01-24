@@ -1,3 +1,43 @@
+2010-01-24  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
+	Separate installer into independent package.
+
+	* deploy/installer/configure.ac: New.
+
+	* deploy/Makefile: Rename to...
+
+	* deploy/installer/Makefile.am: ... here. Use GNU make features
+	where appropriate. Define $(UNTAR) to allow for multiple
+	compression methods.
+
+	* deploy/versions.mk.defaults: Rename to...
+	* deploy/installer/versions.mk.defaults: ... here. Simplify.
+
+	* deploy/rules/binutils.mk,
+	* deploy/rules/m4.mk,
+	* deploy/rules/sc.mk,
+	* deploy/rules/mgsim.mk,
+	* deploy/rules/mggcc.mk,
+	* deploy/rules/slc.mk,
+	* deploy/rules/gcc.mk: Rename to...
+
+	* deploy/installer/rules/binutils.mk,
+	* deploy/installer/rules/m4.mk,
+	* deploy/installer/rules/sc.mk,
+	* deploy/installer/rules/mgsim.mk,
+	* deploy/installer/rules/mggcc.mk,
+	* deploy/installer/rules/slc.mk,
+	* deploy/installer/rules/gcc.mk: ... here. Use tools and variable
+	values provided by `configure' (MKDIR_P, CC, CFLAGS, etc).
+
+	* deploy/slenv: Rename to...
+	* deploy/installer/slenv: ...  here.
+	* deploy/installer/rules/slenv.mk: New.
+
+	* deploy/tools.mk.defaults,
+	* deploy/layout.mk.defaults: Remove, as is now superseded by
+	automatic configuration.
+
 2010-01-22  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
 	Split dist, configure, build and install for SLC.

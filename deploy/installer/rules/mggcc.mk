@@ -1,7 +1,7 @@
 # -*- makefile -*-
 
-MGGCC_SRC = $(SOURCES)/mggcc-$(MGGCC_VERSION)
-MGGCC_BUILD = $(BUILD)/mggcc-$(MGGCC_VERSION)
+MGGCC_SRC = $(SRCBASE)/mggcc-$(MGGCC_VERSION)
+MGGCC_BUILD = $(BLDBASE)/mggcc-$(MGGCC_VERSION)
 
 MGGCC_TARGETS = mtalpha-linux-gnu
 
@@ -14,26 +14,27 @@ GCC_CONFIG_FLAGS = \
    --disable-coverage --enable-gdb --disable-threads --disable-nls \
    --disable-multilib --enable-languages=c 
 
-.PRECIOUS: $(MGGCC_CFG_TARGETS) $(MGGCC_BUILD_TARGETS) $(MGGCC_INST_TARGETS)
+.PRECIOUS: $(MGGCC_ARCHIVE) $(MGGCC_CFG_TARGETS) $(MGGCC_BUILD_TARGETS) $(MGGCC_INST_TARGETS)
 
-mggcc-configure: $(MGGCC_CFG_TARGETS)
-mggcc-build: $(MGGCC_BUILD_TARGETS)
-mggcc-install: $(MGGCC_INST_TARGETS)
+mggcc-fetch: $(MGGCC_ARCHIVE) ; $(RULE_DONE)
+mggcc-configure: $(MGGCC_CFG_TARGETS) ; $(RULE_DONE)
+mggcc-build: $(MGGCC_BUILD_TARGETS) ; $(RULE_DONE)
+mggcc-install: $(MGGCC_INST_TARGETS) ; $(RULE_DONE)
 
 $(MGGCC_SRC)/configure: $(MGGCC_ARCHIVE)
 	rm -f $@
-	mkdir -p $(SOURCES)
-	tar -C $(SOURCES) -xjvf $(MGGCC_ARCHIVE)
+	$(UNTAR) $(SRCBASE) $(MGGCC_ARCHIVE)
 	touch $@
 
 $(MGGCC_BUILD)-%/configure_done: $(MGGCC_SRC)/configure $(REQDIR)/.binutils-installed-%
 	rm -f $@
-	mkdir -p $(MGGCC_BUILD)-$*
+	$(MKDIR_P) $(MGGCC_BUILD)-$*
 	SRC=$$(cd $(MGGCC_SRC) && pwd) && \
            cd $(MGGCC_BUILD)-$* && \
 	   find . -name config.cache -exec rm '{}' \; && \
-			  CFLAGS="$$CFLAGS $(EXTRA_CFLAGS)" \
-	                  LDFLAGS="$$LDFLAGS $(EXTRA_LDFLAGS)" \
+			       CC="$(CC)" \
+			       CFLAGS="$(CPPFLAGS) $(CFLAGS)" \
+	                       LDFLAGS="$(CFLAGS) $(LDFLAGS)" \
 	   $$SRC/configure --target=$* \
 			       --prefix=$(REQDIR) \
 	                       $(GCC_CONFIG_FLAGS)
@@ -41,7 +42,7 @@ $(MGGCC_BUILD)-%/configure_done: $(MGGCC_SRC)/configure $(REQDIR)/.binutils-inst
 
 $(MGGCC_BUILD)-%/build_done: $(MGGCC_BUILD)-%/configure_done
 	rm -f $@
-	cd $(MGGCC_BUILD)-$* && $(MAKE) $(MAKE_FLAGS)
+	cd $(MGGCC_BUILD)-$* && $(MAKE) 
 	touch $@
 
 $(REQDIR)/bin/%-gcc: $(MGGCC_BUILD)-%/build_done
