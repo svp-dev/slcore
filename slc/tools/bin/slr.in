@@ -86,11 +86,11 @@ Microgrid simulation options:
 
   -C                   Force COMA memory regardless of the simulator profile.
 
-  -Cc N                Configure N L2 caches in the COMA network. Implies -C.
-                       Overrides profile settings.
+  -Cc N                Configure N cores per L2 cache in the COMA network. 
+                       Implies -C. Overrides profile settings.
 
-  -Cd N                Configure N directories in the COMA network. Implies -C.
-                       Overrides profile settings.
+  -Cd N                Configure N L2 caches per directory in the COMA network. 
+                       Implies -C. Overrides profile settings.
 
   -X                   Enable graphical output.
 
@@ -203,8 +203,9 @@ SIMGFX=
 gfx_scale=
 gfx_refresh=
 gfx_geometry=
-coma_ncaches=
-coma_ndirs=
+coma_cpc=
+coma_cpd=
+coma_force=
 debug_rec=
 ncores_override=
 SIMARGS=${SIMARGS:-}
@@ -245,9 +246,9 @@ for arg in "$@"; do
       -wf)  prev_arg=wfdatafile; shift;;
       -wo)  preponly=1; shift;;
       -m)   prev_arg=SIMPROFILE; shift;;
-      -C)   COMA=1; shift;;
-      -Cc)  COMA=1; prev_arg=coma_ncaches; shift;;
-      -Cd)  COMA=1; prev_arg=coma_ndirs; shift;;
+      -C)   coma_force=1; shift;;
+      -Cc)  coma_force=1; prev_arg=coma_cpc; shift;;
+      -Cd)  coma_force=1; prev_arg=coma_cpd; shift;;
       -X)   SIMGFX=1; shift;;
       -Xs)  SIMGFX=1; prev_arg=gfx_scale; shift;;
       -Xr)  SIMGFX=1; prev_arg=gfx_refresh; shift;;
@@ -553,9 +554,9 @@ else
     unset SLR_RDIR
 fi
 
-export SIMARGS VERBOSE DEBUG SIMGFX COMA SIMPROFILE
+export SIMARGS VERBOSE DEBUG SIMGFX SIMPROFILE
 export gfx_scale gfx_geometry gfx_refresh
-export coma_ncaches coma_ndirs ncores_override
+export coma_cpc coma_cpd coma_force ncores_override
 
 if test -n "$VERBOSE"; then
     echo "$basename: cwd: $PWD" >&2

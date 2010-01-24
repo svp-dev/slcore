@@ -1,3 +1,24 @@
+2010-01-24  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
+	Upgrade COMA support to latest simulator changes (+ bug fixes).
+
+	* tools/lib/mt-profiles/coma128,
+	* tools/lib/mt-profiles/coma256,
+	* tools/lib/mt-profiles/ml-npcrypt-p1,
+	* tools/lib/mt-profiles/ml-npcrypt-p2,
+	* tools/lib/mt-profiles/ml-npcrypt-p4,
+	* tools/lib/mt-profiles/ml-npcrypt-p8: Use new COMA configuration
+	options.
+
+	* tools/lib/mt-profiles/coma128,
+	* tools/lib/mt-profiles/coma256: Use DDR3-2400 configuration
+	instead of DDR3-1600, as decided in Apple-CORE.
+
+	* tools/bin/slr.in: Fix handling of option -C. Repurpose -Cc and
+	-Cd to "cores per cache" and "caches per directory", respectively.
+
+	* tools/lib/r-mt-sim.sh.in: Update accordingly.
+
 2010-01-12  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
 	Add missing whitespace in `mtperf_report_intervals'.
