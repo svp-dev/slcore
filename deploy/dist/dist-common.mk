@@ -1,5 +1,6 @@
 SVN = svn
 FETCH = wget
+MKDIR_P = mkdir -p
 
 BASE_REPO = https://svn.svp-home.org
 MGGCC_REPO = $(BASE_REPO)/sw/svp/mg/gcc

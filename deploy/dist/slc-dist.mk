@@ -20,7 +20,7 @@ SLC_METASRC = $(META_SOURCES)/$(SLC_DISTBASE)
 
 $(SLC_METASRC)/download_done:
 	rm -f $@
-	mkdir -p $(META_SOURCES)
+	$(MKDIR_P) $(META_SOURCES)
 	cd $(META_SOURCES) && $(SVN) checkout -r$(SLC_SVN_REV) $(SLC_REPO)/$(SLC_DIST_SVNBRANCH)/slc $(SLC_DISTBASE)
 	touch $@
 
@@ -41,13 +41,13 @@ $(SLC_METASRC)/build1_done: $(SLC_METASRC)/configure_done
 
 .PHONY: slc-dist
 slc-dist: $(SLC_METASRC)/build1_done
-	mkdir -p $(DISTDIR)
+	$(MKDIR_P) $(ARCHIVEDIR)
 	rm -f $(SLC_METASRC)/*.tar.*
 	cd $(SLC_METASRC) && make dist
 	for arch in $(SLC_METASRC)/*.tar.bz2; do \
 	   bn=`basename $$arch`; \
-	   if ! test -f $(DISTDIR)/$$bn; then \
-	      mv -f $$arch $(DISTDIR)/; \
+	   if ! test -f $(ARCHIVEDIR)/$$bn; then \
+	      mv -f $$arch $(ARCHIVEDIR)/; \
 	   fi; \
 	done
 

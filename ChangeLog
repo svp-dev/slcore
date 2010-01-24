@@ -1,5 +1,31 @@
 2010-01-24  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	Capture distribution stuff into own directory.
+
+	* deploy/common.mk,
+	* deploy/dist-common.mk,
+	* deploy/binutils-dist.mk,
+	* deploy/gcc-dist.mk,
+	* deploy/m4-dist.mk,
+	* deploy/sc-dist.mk,
+	* deploy/slc-dist.mk,
+	* deploy/mgsim-dist.mk,
+	* deploy/mggcc-dist.mk: Rename to...
+
+	* deploy/dist/common.mk,
+	* deploy/dist/dist-common.mk,
+	* deploy/dist/binutils-dist.mk,
+	* deploy/dist/gcc-dist.mk,
+	* deploy/dist/m4-dist.mk,
+	* deploy/dist/sc-dist.mk,
+	* deploy/dist/slc-dist.mk,
+	* deploy/dist/mgsim-dist.mk,
+	* deploy/dist/mggcc-dist.mk: ... here.
+
+	* deploy/dist/patches: Alias ../patches.
+
+2010-01-24  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	Support more compilers in SystemC.
 
 	* deploy/patches/sysc.patch: Add support for GNU C++ installations

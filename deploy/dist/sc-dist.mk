@@ -24,7 +24,7 @@ SC_METASRC = $(META_SOURCES)/$(SC_DISTBASE)
 
 $(SC_METASRC)/extract_done:
 	rm -f $@
-	mkdir -p $(META_SOURCES)
+	$(MKDIR_P) $(META_SOURCES)
 	tar -C $(META_SOURCES) -xzf $(SC_VENDOR_ARCHIVE)
 	rm -rf $(SC_METASRC)
 	mv -f $(META_SOURCES)/systemc-$(SC_DIST_BASEVER) $(SC_METASRC)
@@ -40,11 +40,11 @@ $(SC_METASRC)/bootstrap_done: $(SC_METASRC)/patch_done $(SC_BOOTSTRAP)
 	cd $(SC_METASRC) && bash -e $$OLDPWD/$(SC_BOOTSTRAP)
 	touch $@
 
-$(DISTDIR)/$(SC_DISTBASE).tar.bz2: $(SC_METASRC)/bootstrap_done
+$(ARCHIVEDIR)/$(SC_DISTBASE).tar.bz2: $(SC_METASRC)/bootstrap_done
 	rm -f $@.tmp $@
-	mkdir -p $(DISTDIR)
+	$(MKDIR_P) $(ARCHIVEDIR)
 	tar -cjvf $@.tmp -C $(META_SOURCES) $(SC_DISTBASE)
 	mv -f $@.tmp $@
 
-sc-dist: $(DISTDIR)/$(SC_DISTBASE).tar.bz2
+sc-dist: $(ARCHIVEDIR)/$(SC_DISTBASE).tar.bz2
 

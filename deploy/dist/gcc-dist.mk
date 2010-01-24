@@ -23,7 +23,7 @@ GCC_METASRC = $(META_SOURCES)/$(GCC_DISTBASE)
 
 $(META_SOURCES)/$(GCC_VENDOR_ARCHIVE):
 	rm -f $@
-	mkdir -p $(META_SOURCES)
+	$(MKDIR_P) $(META_SOURCES)
 	cd $(META_SOURCES) && $(FETCH) $(GCC_MIRROR)/gcc-$(GCC_DIST_BASEVER)/$(GCC_VENDOR_ARCHIVE)
 
 $(GCC_METASRC)/extract_done: $(META_SOURCES)/$(GCC_VENDOR_ARCHIVE)
@@ -38,11 +38,11 @@ $(GCC_METASRC)/patch_done: $(GCC_METASRC)/extract_done $(GCC_PATCH)
 	cd $(GCC_METASRC) && patch -p1 <$$OLDPWD/$(GCC_PATCH)
 	touch $@
 
-$(DISTDIR)/$(GCC_DISTBASE).tar.bz2: $(GCC_METASRC)/patch_done
+$(ARCHIVEDIR)/$(GCC_DISTBASE).tar.bz2: $(GCC_METASRC)/patch_done
 	rm -f $@.tmp $@
-	mkdir -p $(DISTDIR)
+	$(MKDIR_P) $(ARCHIVEDIR)
 	tar -cjvf $@.tmp -C $(META_SOURCES) $(GCC_DISTBASE)
 	mv -f $@.tmp $@
 
-gcc-dist: $(DISTDIR)/$(GCC_DISTBASE).tar.bz2
+gcc-dist: $(ARCHIVEDIR)/$(GCC_DISTBASE).tar.bz2
 

@@ -20,17 +20,17 @@ BINUTILS_DISTBASE = binutils-$(BINUTILS_DIST_VERSION)
 
 $(META_SOURCES)/$(BINUTILS_DISTBASE)/download_done:
 	rm -f $@
-	mkdir -p $(META_SOURCES)
+	$(MKDIR_P) $(META_SOURCES)
 	cd $(META_SOURCES) && \
 	   $(SVN) export -r$(BU_SVN_REV) $(BINUTILS_REPO)/$(BINUTILS_DIST_SVNBRANCH) $(BINUTILS_DISTBASE)
 	touch $@
 
-$(DISTDIR)/$(BINUTILS_DISTBASE).tar.bz2: $(META_SOURCES)/$(BINUTILS_DISTBASE)/download_done
+$(ARCHIVEDIR)/$(BINUTILS_DISTBASE).tar.bz2: $(META_SOURCES)/$(BINUTILS_DISTBASE)/download_done
 	rm -f $@.tmp $@
-	mkdir -p $(DISTDIR)
+	$(MKDIR_P) $(ARCHIVEDIR)
 	echo $(BINUTILS_DIST_VERSION) > $(META_SOURCES)/$(BINUTILS_DISTBASE)/bfd/.tarball-version
 	tar -cjvf $@.tmp -C $(META_SOURCES) $(BINUTILS_DISTBASE)
 	mv -f $@.tmp $@
 
-binutils-dist: $(DISTDIR)/$(BINUTILS_DISTBASE).tar.bz2
+binutils-dist: $(ARCHIVEDIR)/$(BINUTILS_DISTBASE).tar.bz2
 

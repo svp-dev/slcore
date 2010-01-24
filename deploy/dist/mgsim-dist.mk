@@ -20,7 +20,7 @@ MGSIM_METASRC = $(META_SOURCES)/$(MGSIM_DISTBASE)
 
 $(MGSIM_METASRC)/download_done:
 	rm -f $@
-	mkdir -p $(META_SOURCES)
+	$(MKDIR_P) $(META_SOURCES)
 	cd $(META_SOURCES) && $(SVN) checkout -r$(MGSIM_SVN_REV) $(MGSIM_REPO)/$(MGSIM_DIST_SVNBRANCH) $(MGSIM_DISTBASE)
 	touch $@
 
@@ -47,13 +47,13 @@ $(MGSIM_METASRC)/build1_done: $(MGSIM_METASRC)/configure_done
 
 .PHONY: mgsim-dist
 mgsim-dist: $(MGSIM_METASRC)/build1_done
-	mkdir -p $(DISTDIR)
+	$(MKDIR_P) $(ARCHIVEDIR)
 	rm -f $(MGSIM_METASRC)/*.tar.*
 	cd $(MGSIM_METASRC) && make dist
 	for arch in $(MGSIM_METASRC)/*.tar.bz2; do \
 	   bn=`basename $$arch`; \
-	   if ! test -f $(DISTDIR)/$$bn; then \
-	      mv -f $$arch $(DISTDIR)/; \
+	   if ! test -f $(ARCHIVEDIR)/$$bn; then \
+	      mv -f $$arch $(ARCHIVEDIR)/; \
 	   fi; \
 	done
 
