@@ -1,5 +1,16 @@
 2010-01-21  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	Split dist, build and install for M4.
+
+	* deploy/dist-common.mk: Update for M4.
+
+	* deploy/rules/m4.mk: Simplify. Move fetch rules to ...
+	* deploy/m4-dist.mk: ... here. Generate archive.
+
+	* deploy/versions.mk.defaults: Use M4 dist version number for archive.
+
+2010-01-21  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	Split dist, build and install for binutils.
 
 	* deploy/common.mk,

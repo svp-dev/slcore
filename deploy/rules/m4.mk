@@ -1,33 +1,26 @@
 # -*- makefile -*-
 
 M4_SRC = \
-  $(SOURCES)/m4-dev/bootstrap_done
+  $(SOURCES)/m4-$(M4_VERSION)
 
-M4_TARGETS = \
+M4_BUILD_TARGETS = \
+     $(BUILD)/m4-$(M4_VERSION)/src/m4
+
+M4_INST_TARGETS = \
      $(REQDIR)/bin/m4
 
-$(SOURCES)/m4-dev/download_done:
-	rm -f $@
-	mkdir -p $(SOURCES)
-	(cd $(SOURCES) && \
-	  git clone $(M4_REPO) m4-dev && \
-	  cd m4-dev && git checkout -b branch-$(M4_VERSION) origin/branch-$(M4_VERSION) && \
-	  touch download_done)
+m4-build: $(M4_BUILD_TARGETS)
+m4: $(M4_INST_TARGETS)
 
-$(SOURCES)/m4-dev/patch_done: $(SOURCES)/m4-dev/download_done
+$(M4_SRC)/configure: $(M4_ARCHIVE) $(SOURCES)
 	rm -f $@
-	(cd $(SOURCES)/m4-dev && \
-	  patch -p1 <$$OLDPWD/patches/m4.patch && \
-	  touch patch_done)
+	tar -C $(SOURCES) -xjvf $(M4_ARCHIVE)
+	touch $@
 
-$(SOURCES)/m4-dev/bootstrap_done: $(SOURCES)/m4-dev/patch_done
-	rm -f $@
-	(cd $(SOURCES)/m4-dev && bash -e ./bootstrap && touch bootstrap_done)
-
-$(REQDIR)/bin/m4: $(SOURCES)/m4-dev/bootstrap_done
-	mkdir -p $(BUILD)/m4-dev
-	(SRC=$$(cd $(SOURCES)/m4-dev; pwd); \
-	  cd $(BUILD)/m4-dev && \
+$(BUILD)/m4-$(M4_VERSION)/src/m4: $(M4_SRC)/configure
+	mkdir -p $(BUILD)/m4-$(M4_VERSION)
+	SRC=$$(cd $(M4_SRC) && pwd) && \
+	  cd $(BUILD)/m4-$(M4_VERSION) && \
 	  $$SRC/configure --prefix=$(REQDIR) \
 			  CFLAGS="$$CFLAGS $(EXTRA_CFLAGS)" \
 	                  LDFLAGS="$$LDFLAGS $(EXTRA_LDFLAGS)" \
@@ -38,5 +31,8 @@ $(REQDIR)/bin/m4: $(SOURCES)/m4-dev/bootstrap_done
 	                  LDFLAGS="$$LDFLAGS $(EXTRA_LDFLAGS)" \
 	      && \
 	     $(MAKE) $(MAKE_FLAGS); \
-	  fi && \
-	  $(MAKE) install)
+	  fi
+
+$(REQDIR)/bin/m4: $(BUILD)/m4-$(M4_VERSION)/src/m4
+	cd $(BUILD)/m4-$(M4_VERSION) && $(MAKE) install
+
