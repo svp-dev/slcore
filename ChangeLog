@@ -1,5 +1,14 @@
 2010-01-21  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	Fix packaging of binutils.
+
+	* deploy/versions.mk.defaults,
+	* deploy/binutils-dist.mk: Also use branch name.
+
+	* deploy/rules/binutils.mk: Create directories later.
+
+2010-01-21  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	Split dist, configure, build and install for MG-GCC.
 
 	* deploy/rules/mggcc.mk: Simplify. New `-configure' rule. Move

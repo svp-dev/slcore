@@ -8,7 +8,7 @@ BASE_REPO = https://svn.svp-home.org
 
 ## BASE_REPO = svn+ssh://kena@mac-chris.science.uva.nl/Library/SVN/CSA
 ### Desired versions for the tools, where to find them
-BINUTILS_VERSION = 1.18-3356
+BINUTILS_VERSION = 1.18-3356-trunk
 BINUTILS_ARCHIVE = $(DISTDIR)/binutils-$(BINUTILS_VERSION).tar.bz2
 
 MGGCC_VERSION = 4.1.0-3361-mt-ra-shared-split
