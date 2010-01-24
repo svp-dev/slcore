@@ -1,5 +1,17 @@
 2010-01-21  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	Also split configure for M4 and binutils. Check directories.
+
+	* deploy/binutils-dist.mk,
+	* deploy/m4-dist.mk,
+	* deploy/common.mk: Use `mkdir -p' properly.
+	
+	* deploy/rules/sc.mk,
+	* deploy/rules/binutils.mk: New `-configure' rules. Rename
+	installation rules to `-install'.
+
+2010-01-21  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	Split dist, build and install for M4.
 
 	* deploy/dist-common.mk: Update for M4.

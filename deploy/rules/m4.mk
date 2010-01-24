@@ -9,11 +9,13 @@ M4_BUILD_TARGETS = \
 M4_INST_TARGETS = \
      $(REQDIR)/bin/m4
 
+m4-configure: 
 m4-build: $(M4_BUILD_TARGETS)
-m4: $(M4_INST_TARGETS)
+m4-install: $(M4_INST_TARGETS)
 
-$(M4_SRC)/configure: $(M4_ARCHIVE) $(SOURCES)
+$(M4_SRC)/configure: $(M4_ARCHIVE)
 	rm -f $@
+	mkdir -p $(SOURCES)
 	tar -C $(SOURCES) -xjvf $(M4_ARCHIVE)
 	touch $@
 

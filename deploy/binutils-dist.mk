@@ -16,17 +16,18 @@ BU_SVN_REV := $(strip $(if $(filter latest, $(BINUTILS_DIST_REV)), \
 BINUTILS_DIST_VERSION = $(BINUTILS_DIST_BASEVER)-$(BU_SVN_REV)
 BINUTILS_DISTBASE = binutils-$(BINUTILS_DIST_VERSION)
 
-$(META_SOURCES)/$(BINUTILS_DISTBASE)/download_done: $(META_SOURCES)
+$(META_SOURCES)/$(BINUTILS_DISTBASE)/download_done:
 	rm -f $@
-	(cd $(META_SOURCES) && \
-	  $(SVN) export -r$(BU_SVN_REV) $(BINUTILS_REPO) $(BINUTILS_DISTBASE) && \
-	  touch $(BINUTILS_DISTBASE)/download_done)
+	mkdir -p $(META_SOURCES)
+	cd $(META_SOURCES) && $(SVN) export -r$(BU_SVN_REV) $(BINUTILS_REPO) $(BINUTILS_DISTBASE)
+	touch $@
 
-$(DISTDIR)/$(BINUTILS_DISTBASE).tar.bz2: $(META_SOURCES)/$(BINUTILS_DISTBASE)/download_done $(DISTDIR)
-	(cd $(META_SOURCES) && \
-	  echo $(BINUTILS_DIST_VERSION) > $(BINUTILS_DISTBASE)/bfd/.tarball-version && \
-	  tar -cjvf $$OLDPWD/$@.tmp $(BINUTILS_DISTBASE) && \
-	  mv -f $$OLDPWD/$@.tmp $$OLDPWD/$@)
+$(DISTDIR)/$(BINUTILS_DISTBASE).tar.bz2: $(META_SOURCES)/$(BINUTILS_DISTBASE)/download_done
+	rm -f $@.tmp $@
+	mkdir -p $(DISTDIR)
+	echo $(BINUTILS_DIST_VERSION) > $(META_SOURCES)/$(BINUTILS_DISTBASE)/bfd/.tarball-version
+	tar -cjvf $@.tmp -C $(META_SOURCES) $(BINUTILS_DISTBASE)
+	mv -f $@.tmp $@
 
 binutils-dist: $(DISTDIR)/$(BINUTILS_DISTBASE).tar.bz2
 
