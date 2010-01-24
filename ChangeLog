@@ -1,5 +1,13 @@
 2010-01-24  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	Update top-level package after refactoring.
+
+	* configure.ac: Acknowledge sub-package `deploy/installer'.
+	* Makefile.am (EXTRA_DIST): Update file list.
+	* deploy/Makefile.am: New.
+
+2010-01-24  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	Update documentation for installer.
 
 	* deploy/README: Simplify.

@@ -13,33 +13,25 @@
 
 # 
 
-EXTRA_DIST = deploy/Makefile \
-	deploy/layout.mk.defaults \
-	deploy/versions.mk.defaults \
-	deploy/tools.mk.defaults \
+EXTRA_DIST = \
 	deploy/README \
-	deploy/patches/alpha.h.patch \
-	deploy/patches/alpha.c.patch \
-	deploy/patches/alpha.md.patch \
-	deploy/patches/constraints.md.patch \
+	deploy/patches/gcc.patch \
 	deploy/patches/m4.patch \
 	deploy/patches/sysc.patch \
-	deploy/tinyxml/Makefile.am \
-	deploy/tinyxml/configure.ac \
-	deploy/tinyxml/bootstrap \
 	deploy/sysc/do_diff.sh \
 	deploy/sysc/bootstrap \
 	deploy/sysc/README \
-	deploy/rules/binutils.mk \
-	deploy/rules/mggcc.mk \
-	deploy/rules/gcc.mk \
-	deploy/rules/mgsim.mk \
-	deploy/rules/m4.mk \
-	deploy/rules/sl.mk \
-	deploy/rules/sc.mk \
-	deploy/slenv
+	deploy/dist/binutils-dist.mk \
+	deploy/dist/mggcc-dist.mk \
+	deploy/dist/gcc-dist.mk \
+	deploy/dist/mgsim-dist.mk \
+	deploy/dist/m4-dist.mk \
+	deploy/dist/slc-dist.mk \
+	deploy/dist/sc-dist.mk \
+	deploy/dist/dist-common.mk \
+	deploy/dist/common.mk
 
-SUBDIRS = . slc tests programs
+SUBDIRS = . slc tests programs deploy
 
 # run `slt' on the console (eye candy, for more intensive CPU
 # usage and faster results, use `make check')
