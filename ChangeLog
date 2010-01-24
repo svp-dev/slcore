@@ -1,5 +1,18 @@
 2010-01-24  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	Remove deployment rules for TinyXML.
+
+	TinyXML is not used any more by MGSim, so it needs not be
+	installed any more either.
+
+	* deploy/tinyxml/.gitignore,
+	* deploy/tinyxml/Makefile.am,
+	* deploy/tinyxml/configure.ac,
+	* deploy/tinyxml/bootstrap,
+	* deploy/rules/tx.mk: Remove.
+
+2010-01-24  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	Separate installer into independent package.
 
 	* deploy/installer/configure.ac: New.
