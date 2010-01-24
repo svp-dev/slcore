@@ -1,5 +1,18 @@
 2010-01-21  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	Split dist, configure, build and install for SystemC.
+
+	* deploy/dist-common.mk: Update for SystemC.
+
+	* deploy/rules/sc.mk: Simplify. New `-configure' rule. Move
+	fetch/patch rules to ...
+
+	* deploy/sc-dist.mk: ... here. Generate archive.
+
+	* deploy/versions.mk.defaults: Use patch version number for SysC archive.
+
+2010-01-21  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	Also split configure for M4 and binutils. Check directories.
 
 	* deploy/binutils-dist.mk,

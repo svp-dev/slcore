@@ -31,5 +31,5 @@ TX_VERSION = 2.5.3
 TX_ARCHIVE = tinyxml_$(subst .,_,$(TX_VERSION)).zip
 TX_MIRROR = http://downloads.sourceforge.net/project/tinyxml/tinyxml/$(TX_VERSION)
 
-SC_VERSION = 2.1.v1
-SC_ARCHIVE = systemc-$(SC_VERSION).tgz
+SC_VERSION = 2.1.v1-3366
+SC_ARCHIVE = $(DISTDIR)/systemc-$(SC_VERSION).tar.bz2
