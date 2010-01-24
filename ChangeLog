@@ -1,5 +1,12 @@
 2010-01-24  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	Support more compilers in SystemC.
+
+	* deploy/patches/sysc.patch: Add support for GNU C++ installations
+	where `g++' has a suffix. (e.g. g++-mp-4.4)
+
+2010-01-24  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	Remove deployment rules for TinyXML.
 
 	TinyXML is not used any more by MGSim, so it needs not be
