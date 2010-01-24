@@ -1,54 +1,52 @@
 # -*- makefile -*-
 
 GCC_SRC = \
-   $(SOURCES)/gcc-$(GCC_VERSION)/patch_done
+   $(SOURCES)/gcc-$(GCC_VERSION)
 
-GCC_TARGETS = \
-     $(REQDIR)/bin/alpha-linux-gnu-gcc
+GCC_TARGETS = alpha-linux-gnu
+
+GCC_CFG_TARGETS = $(foreach T,$(GCC_TARGETS),$(BUILD)/gcc-$(GCC_VERSION)-$(T)/configure_done)
+GCC_BUILD_TARGETS = $(foreach T,$(GCC_TARGETS),$(BUILD)/gcc-$(GCC_VERSION)-$(T)/gcc/gcc-cross)
+GCC_INST_TARGETS = $(foreach T,$(GCC_TARGETS),$(REQDIR)/bin/$(T)-gcc)
 
 GCC_CONFIG_FLAGS = \
    --disable-bootstrap --disable-libmudflap --disable-libssp \
    --disable-coverage --enable-gdb --disable-threads --disable-nls \
    --disable-multilib --enable-languages=c 
 
-##### GCC cross-compiler #####
+gcc-configure: $(GCC_CFG_TARGETS)
+gcc-build: $(GCC_BUILD_TARGETS)
+gcc-install: $(GCC_INST_TARGETS)
 
-$(SOURCES)/$(GCC_ARCHIVE):
+$(GCC_SRC)/configure: $(GCC_ARCHIVE)
+	rm -f $@
 	mkdir -p $(SOURCES)
-	(cd $(SOURCES) && $(FETCH) $(GCC_MIRROR)/$(GCC_ARCHIVE))
+	tar -C $(SOURCES) -xjvf $(GCC_ARCHIVE)
+	touch $@
 
-$(SOURCES)/gcc-$(GCC_VERSION)/extract_done: $(SOURCES)/$(GCC_ARCHIVE)
+$(BUILD)/gcc-$(GCC_VERSION)-%/configure_done: $(GCC_SRC)/configure $(REQDIR)/bin/%-as
 	rm -f $@
-	(cd $(SOURCES) && \
-	  $(TAR) -xjf $(GCC_ARCHIVE) && \
-	  touch gcc-$(GCC_VERSION)/extract_done)
-
-$(SOURCES)/gcc-$(GCC_VERSION)/patch_done: $(SOURCES)/gcc-$(GCC_VERSION)/extract_done
-	rm -f $@
-	(cd $(SOURCES)/gcc-$(GCC_VERSION)/gcc/config/alpha && \
-	   patch -p0 <$$OLDPWD/patches/alpha.h.patch && \
-	   patch -p0 <$$OLDPWD/patches/alpha.c.patch && \
-	   patch -p0 <$$OLDPWD/patches/alpha.md.patch && \
-	   patch -p0 <$$OLDPWD/patches/constraints.md.patch && \
-	   touch ../../../patch_done)
-
-$(REQDIR)/bin/alpha-linux-gnu-gcc: \
-	$(REQDIR)/bin/alpha-linux-gnu-as \
-	$(SOURCES)/gcc-$(GCC_VERSION)/patch_done
-	mkdir -p $(BUILD)/gcc-alpha-$(GCC_VERSION)
-	(SRC=$$(cd $(SOURCES)/gcc-$(GCC_VERSION); pwd); \
-          cd $(BUILD)/gcc-alpha-$(GCC_VERSION) && \
-	  $$SRC/configure --target=alpha-linux-gnu \
-	                  --prefix=$(REQDIR) \
-			  CFLAGS="$$CFLAGS $(EXTRA_CFLAGS)" \
-	                  LDFLAGS="$$LDFLAGS $(EXTRA_LDFLAGS)" \
-	                  $(GCC_CONFIG_FLAGS) && \
+	mkdir -p $(BUILD)/gcc-$(GCC_VERSION)-$*
+	SRC=$$(cd $(SOURCES)/gcc-$(GCC_VERSION) && pwd) && \
+           cd $(BUILD)/gcc-$(GCC_VERSION)-$* && \
+	   $$SRC/configure --target=$* \
+			       --prefix=$(REQDIR) \
+			       CFLAGS="$$CFLAGS $(EXTRA_CFLAGS)" \
+	                       LDFLAGS="$$LDFLAGS $(EXTRA_LDFLAGS)" \
+	                       $(GCC_CONFIG_FLAGS) && \
 	  grep -v 'maybe-[a-z]*-target-\(libgcc\|libiberty\|libgomp\|zlib\)' <Makefile >Makefile.tmp && \
-	  mv -f Makefile.tmp Makefile && \
+	  mv -f Makefile.tmp Makefile
+	touch $@
+
+$(BUILD)/gcc-$(GCC_VERSION)-%/gcc/gcc-cross: $(BUILD)/gcc-$(GCC_VERSION)-%/configure_done
+	cd $(BUILD)/gcc-$(GCC_VERSION)-$* && \
 	  if ! $(MAKE) $(MAKE_FLAGS); then \
 	    perl -pi.bak -n -e \
 	      's|^LIBICONV .*|LIBICONV = -L/usr/lib -liconv|g' gcc/Makefile && \
                $(MAKE) $(MAKE_FLAGS); \
-          fi && \
-          $(MAKE) install)
+          fi
+
+$(REQDIR)/bin/%-gcc: $(BUILD)/gcc-$(GCC_VERSION)-%/gcc/gcc-cross
+	cd $(BUILD)/gcc-$(GCC_VERSION)-$* && $(MAKE) -j1 install
+
 

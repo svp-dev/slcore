@@ -20,14 +20,14 @@ MGSIM_REPO = $(BASE_REPO)/sw/svp/mg/mgsim/trunk
 SLC_REV = 3344
 SLC_REPO = $(BASE_REPO)/sw/svp/sys/trunk/slc
 
-GCC_VERSION = 4.4.2
-GCC_ARCHIVE = gcc-core-$(GCC_VERSION).tar.bz2
-GCC_MIRROR = ftp://ftp.nluug.nl/mirror/languages/gcc/releases/gcc-$(GCC_VERSION)
+GCC_VERSION = 4.4.3-3367
+GCC_ARCHIVE = $(DISTDIR)/gcc-$(GCC_VERSION).tar.bz2
 
 M4_VERSION = 1.5.89a.154-7dc4-dirty
 M4_ARCHIVE = $(DISTDIR)/m4-$(M4_VERSION).tar.bz2
 
 TX_VERSION = 2.5.3
+
 TX_ARCHIVE = tinyxml_$(subst .,_,$(TX_VERSION)).zip
 TX_MIRROR = http://downloads.sourceforge.net/project/tinyxml/tinyxml/$(TX_VERSION)
 

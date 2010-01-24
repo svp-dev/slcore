@@ -1,0 +1,602 @@
+diff -uNr -x '*.orig' gcc-4.4.3/gcc/config/alpha/alpha.c gcc-4.4.3-work/gcc/config/alpha/alpha.c
+--- gcc-4.4.3/gcc/config/alpha/alpha.c	2010-01-02 15:28:25.000000000 +0100
++++ gcc-4.4.3-work/gcc/config/alpha/alpha.c	2010-01-21 22:32:52.000000000 +0100
+@@ -7574,20 +7574,6 @@
+ 
+   if (frame_size <= 32768)
+     {
+-      if (frame_size > 4096)
+-	{
+-	  int probed;
+-
+-	  for (probed = 4096; probed < frame_size; probed += 8192)
+-	    emit_insn (gen_probe_stack (GEN_INT (TARGET_ABI_UNICOSMK
+-						 ? -probed + 64
+-						 : -probed)));
+-
+-	  /* We only have to do this probe if we aren't saving registers.  */
+-	  if (sa_size == 0 && frame_size > probed - 4096)
+-	    emit_insn (gen_probe_stack (GEN_INT (-frame_size)));
+-	}
+-
+       if (frame_size != 0)
+ 	FRP (emit_insn (gen_adddi3 (stack_pointer_rtx, stack_pointer_rtx,
+ 				    GEN_INT (TARGET_ABI_UNICOSMK
+@@ -7596,42 +7582,7 @@
+     }
+   else
+     {
+-      /* Here we generate code to set R22 to SP + 4096 and set R23 to the
+-	 number of 8192 byte blocks to probe.  We then probe each block
+-	 in the loop and then set SP to the proper location.  If the
+-	 amount remaining is > 4096, we have to do one more probe if we
+-	 are not saving any registers.  */
+-
+-      HOST_WIDE_INT blocks = (frame_size + 4096) / 8192;
+-      HOST_WIDE_INT leftover = frame_size + 4096 - blocks * 8192;
+-      rtx ptr = gen_rtx_REG (DImode, 22);
+-      rtx count = gen_rtx_REG (DImode, 23);
+-      rtx seq;
+-
+-      emit_move_insn (count, GEN_INT (blocks));
+-      emit_insn (gen_adddi3 (ptr, stack_pointer_rtx,
+-			     GEN_INT (TARGET_ABI_UNICOSMK ? 4096 - 64 : 4096)));
+-
+-      /* Because of the difficulty in emitting a new basic block this
+-	 late in the compilation, generate the loop as a single insn.  */
+-      emit_insn (gen_prologue_stack_probe_loop (count, ptr));
+-
+-      if (leftover > 4096 && sa_size == 0)
+-	{
+-	  rtx last = gen_rtx_MEM (DImode, plus_constant (ptr, -leftover));
+-	  MEM_VOLATILE_P (last) = 1;
+-	  emit_move_insn (last, const0_rtx);
+-	}
+-
+-      if (TARGET_ABI_WINDOWS_NT)
+-	{
+-	  /* For NT stack unwind (done by 'reverse execution'), it's
+-	     not OK to take the result of a loop, even though the value
+-	     is already in ptr, so we reload it via a single operation
+-	     and subtract it to sp.
+-
+-	     Yes, that's correct -- we have to reload the whole constant
+-	     into a temporary via ldah+lda then subtract from sp.  */
++            rtx ptr = gen_rtx_REG (DImode, 28);
+ 
+ 	  HOST_WIDE_INT lo, hi;
+ 	  lo = ((frame_size & 0xffff) ^ 0x8000) - 0x8000;
+@@ -7639,27 +7590,8 @@
+ 
+ 	  emit_move_insn (ptr, GEN_INT (hi));
+ 	  emit_insn (gen_adddi3 (ptr, ptr, GEN_INT (lo)));
+-	  seq = emit_insn (gen_subdi3 (stack_pointer_rtx, stack_pointer_rtx,
++	  emit_insn (gen_subdi3 (stack_pointer_rtx, stack_pointer_rtx,
+ 				       ptr));
+-	}
+-      else
+-	{
+-	  seq = emit_insn (gen_adddi3 (stack_pointer_rtx, ptr,
+-				       GEN_INT (-leftover)));
+-	}
+-
+-      /* This alternative is special, because the DWARF code cannot
+-         possibly intuit through the loop above.  So we invent this
+-         note it looks at instead.  */
+-      RTX_FRAME_RELATED_P (seq) = 1;
+-      REG_NOTES (seq)
+-        = gen_rtx_EXPR_LIST (REG_FRAME_RELATED_EXPR,
+-			     gen_rtx_SET (VOIDmode, stack_pointer_rtx,
+-			       gen_rtx_PLUS (Pmode, stack_pointer_rtx,
+-					     GEN_INT (TARGET_ABI_UNICOSMK
+-						      ? -frame_size + 64
+-						      : -frame_size))),
+-			     REG_NOTES (seq));
+     }
+ 
+   if (!TARGET_ABI_UNICOSMK)
+@@ -7678,7 +7610,7 @@
+ 	  else
+ 	    sa_bias = reg_offset, reg_offset = 0;
+ 
+-	  sa_reg = gen_rtx_REG (DImode, 24);
++	  sa_reg = gen_rtx_REG (DImode, 28);
+ 	  sa_bias_rtx = GEN_INT (sa_bias);
+ 
+ 	  if (add_operand (sa_bias_rtx, DImode))
+@@ -8104,7 +8036,7 @@
+ 	  else
+ 	    bias = reg_offset, reg_offset = 0;
+ 
+-	  sa_reg = gen_rtx_REG (DImode, 22);
++	  sa_reg = gen_rtx_REG (DImode, 28);
+ 	  sa_reg_exp = plus_constant (stack_pointer_rtx, bias);
+ 
+ 	  FRP (emit_move_insn (sa_reg, sa_reg_exp));
+diff -uNr -x '*.orig' gcc-4.4.3/gcc/config/alpha/alpha.h gcc-4.4.3-work/gcc/config/alpha/alpha.h
+--- gcc-4.4.3/gcc/config/alpha/alpha.h	2009-02-20 16:20:38.000000000 +0100
++++ gcc-4.4.3-work/gcc/config/alpha/alpha.h	2010-01-21 22:32:56.000000000 +0100
+@@ -526,7 +526,7 @@
+    class that represents their union.  */
+ 
+ enum reg_class {
+-  NO_REGS, R0_REG, R24_REG, R25_REG, R27_REG,
++  NO_REGS, R0_REG, R27_REG,
+   GENERAL_REGS, FLOAT_REGS, ALL_REGS,
+   LIM_REG_CLASSES
+ };
+@@ -536,7 +536,7 @@
+ /* Give names of register classes as strings for dump file.  */
+ 
+ #define REG_CLASS_NAMES					\
+- {"NO_REGS", "R0_REG", "R24_REG", "R25_REG", "R27_REG",	\
++ {"NO_REGS", "R0_REG", "R27_REG",	\
+   "GENERAL_REGS", "FLOAT_REGS", "ALL_REGS" }
+ 
+ /* Define which registers fit in which classes.
+@@ -546,8 +546,6 @@
+ #define REG_CLASS_CONTENTS				\
+ { {0x00000000, 0x00000000},	/* NO_REGS */		\
+   {0x00000001, 0x00000000},	/* R0_REG */		\
+-  {0x01000000, 0x00000000},	/* R24_REG */		\
+-  {0x02000000, 0x00000000},	/* R25_REG */		\
+   {0x08000000, 0x00000000},	/* R27_REG */		\
+   {0xffffffff, 0x80000000},	/* GENERAL_REGS */	\
+   {0x00000000, 0x7fffffff},	/* FLOAT_REGS */	\
+@@ -573,8 +571,6 @@
+ 
+ #define REGNO_REG_CLASS(REGNO)			\
+  ((REGNO) == 0 ? R0_REG				\
+-  : (REGNO) == 24 ? R24_REG			\
+-  : (REGNO) == 25 ? R25_REG			\
+   : (REGNO) == 27 ? R27_REG			\
+   : (REGNO) >= 32 && (REGNO) <= 62 ? FLOAT_REGS	\
+   : GENERAL_REGS)
+diff -uNr -x '*.orig' gcc-4.4.3/gcc/config/alpha/alpha.md gcc-4.4.3-work/gcc/config/alpha/alpha.md
+--- gcc-4.4.3/gcc/config/alpha/alpha.md	2009-11-23 22:14:32.000000000 +0100
++++ gcc-4.4.3-work/gcc/config/alpha/alpha.md	2010-01-21 22:33:12.000000000 +0100
+@@ -784,12 +784,10 @@
+   "umulh %1,%2,%0"
+   [(set_attr "type" "imul")
+    (set_attr "opsize" "udi")])
+-
+-;; The divide and remainder operations take their inputs from r24 and
+-;; r25, put their output in r27, and clobber r23 and r28 on all
+-;; systems except Unicos/Mk. On Unicos, the standard library provides
+-;; subroutines which use the standard calling convention and work on
+-;; DImode operands.
++
++;; The divide and remainder operations on Unicos, the standard library
++;; provides subroutines which use the standard calling convention and
++;; work on DImode operands.
+ 
+ ;; ??? Force sign-extension here because some versions of OSF/1 and
+ ;; Interix/NT don't do the right thing if the inputs are not properly
+@@ -797,126 +795,61 @@
+ ;; problem.  Is it worth the complication here to eliminate the sign
+ ;; extension?
+ 
+-(define_expand "divsi3"
+-  [(set (match_dup 3)
+-	(sign_extend:DI (match_operand:SI 1 "nonimmediate_operand" "")))
+-   (set (match_dup 4)
+-	(sign_extend:DI (match_operand:SI 2 "nonimmediate_operand" "")))
+-   (parallel [(set (match_dup 5)
+-		   (sign_extend:DI (div:SI (match_dup 3) (match_dup 4))))
+-	      (clobber (reg:DI 23))
+-	      (clobber (reg:DI 28))])
+-   (set (match_operand:SI 0 "nonimmediate_operand" "")
+-	(subreg:SI (match_dup 5) 0))]
+-  "! TARGET_ABI_OPEN_VMS && ! TARGET_ABI_UNICOSMK"
+-{
+-  operands[3] = gen_reg_rtx (DImode);
+-  operands[4] = gen_reg_rtx (DImode);
+-  operands[5] = gen_reg_rtx (DImode);
+-})
+-
+-(define_expand "udivsi3"
+-  [(set (match_dup 3)
+-	(sign_extend:DI (match_operand:SI 1 "nonimmediate_operand" "")))
+-   (set (match_dup 4)
+-	(sign_extend:DI (match_operand:SI 2 "nonimmediate_operand" "")))
+-   (parallel [(set (match_dup 5)
+-		   (sign_extend:DI (udiv:SI (match_dup 3) (match_dup 4))))
+-	      (clobber (reg:DI 23))
+-	      (clobber (reg:DI 28))])
+-   (set (match_operand:SI 0 "nonimmediate_operand" "")
+-	(subreg:SI (match_dup 5) 0))]
+-  "! TARGET_ABI_OPEN_VMS && ! TARGET_ABI_UNICOSMK"
+-{
+-  operands[3] = gen_reg_rtx (DImode);
+-  operands[4] = gen_reg_rtx (DImode);
+-  operands[5] = gen_reg_rtx (DImode);
+-})
+-
+-(define_expand "modsi3"
+-  [(set (match_dup 3)
+-	(sign_extend:DI (match_operand:SI 1 "nonimmediate_operand" "")))
+-   (set (match_dup 4)
+-	(sign_extend:DI (match_operand:SI 2 "nonimmediate_operand" "")))
+-   (parallel [(set (match_dup 5)
+-		   (sign_extend:DI (mod:SI (match_dup 3) (match_dup 4))))
+-	      (clobber (reg:DI 23))
+-	      (clobber (reg:DI 28))])
+-   (set (match_operand:SI 0 "nonimmediate_operand" "")
+-	(subreg:SI (match_dup 5) 0))]
+-  "! TARGET_ABI_OPEN_VMS && ! TARGET_ABI_UNICOSMK"
+-{
+-  operands[3] = gen_reg_rtx (DImode);
+-  operands[4] = gen_reg_rtx (DImode);
+-  operands[5] = gen_reg_rtx (DImode);
+-})
+-
+-(define_expand "umodsi3"
+-  [(set (match_dup 3)
+-	(sign_extend:DI (match_operand:SI 1 "nonimmediate_operand" "")))
+-   (set (match_dup 4)
+-	(sign_extend:DI (match_operand:SI 2 "nonimmediate_operand" "")))
+-   (parallel [(set (match_dup 5)
+-		   (sign_extend:DI (umod:SI (match_dup 3) (match_dup 4))))
+-	      (clobber (reg:DI 23))
+-	      (clobber (reg:DI 28))])
+-   (set (match_operand:SI 0 "nonimmediate_operand" "")
+-	(subreg:SI (match_dup 5) 0))]
+-  "! TARGET_ABI_OPEN_VMS && ! TARGET_ABI_UNICOSMK"
+-{
+-  operands[3] = gen_reg_rtx (DImode);
+-  operands[4] = gen_reg_rtx (DImode);
+-  operands[5] = gen_reg_rtx (DImode);
+-})
++(define_insn "divsi3"
++  [(set (match_operand:SI 0 "register_operand" "=r")
++	(div:SI (match_operand:SI 1 "reg_or_0_operand" "%rJ")
++		 (match_operand:SI 2 "reg_or_8bit_operand" "rI")))]
++  "!TARGET_ABI_UNICOSMK"
++  "divl %r1,%2,%0"
++  [(set_attr "opsize" "si")])
+ 
+-(define_expand "divdi3"
+-  [(parallel [(set (match_operand:DI 0 "register_operand" "")
+-		   (div:DI (match_operand:DI 1 "register_operand" "")
+-			   (match_operand:DI 2 "register_operand" "")))
+-	      (clobber (reg:DI 23))
+-	      (clobber (reg:DI 28))])]
+-  "! TARGET_ABI_OPEN_VMS && ! TARGET_ABI_UNICOSMK"
+-  "")
++(define_insn "*divsi_se"
++  [(set (match_operand:DI 0 "register_operand" "=r")
++	(sign_extend:DI
++	  (div:SI (match_operand:SI 1 "reg_or_0_operand" "%rJ")
++		   (match_operand:SI 2 "reg_or_8bit_operand" "rI"))))]
++  "!TARGET_ABI_UNICOSMK"
++  "divl %r1,%2,%0"
++  [(set_attr "opsize" "si")])
++   
++(define_insn "udivsi3"
++  [(set (match_operand:SI 0 "register_operand" "=r")
++	(udiv:SI (match_operand:SI 1 "reg_or_0_operand" "%rJ")
++		 (match_operand:SI 2 "reg_or_8bit_operand" "rI")))]
++  "!TARGET_ABI_UNICOSMK"
++  "divlu %r1,%2,%0"
++  [(set_attr "opsize" "si")])
++                                 
++(define_insn "*udivsi_se"
++  [(set (match_operand:DI 0 "register_operand" "=r")
++	(sign_extend:DI
++	  (udiv:SI (match_operand:SI 1 "reg_or_0_operand" "%rJ")
++		   (match_operand:SI 2 "reg_or_8bit_operand" "rI"))))]
++  "!TARGET_ABI_UNICOSMK"
++  "divlu %r1,%2,%0"
++  [(set_attr "opsize" "si")])
++  
++(define_insn "divdi3"
++  [(set (match_operand:DI 0 "register_operand" "=r")
++	(div:DI (match_operand:DI 1 "reg_or_0_operand" "%rJ")
++		 (match_operand:DI 2 "reg_or_8bit_operand" "rI")))]
++  ""
++  "divq %r1,%2,%0"
++  [(set_attr "opsize" "di")])
+ 
+-(define_expand "udivdi3"
+-  [(parallel [(set (match_operand:DI 0 "register_operand" "")
+-		   (udiv:DI (match_operand:DI 1 "register_operand" "")
+-			    (match_operand:DI 2 "register_operand" "")))
+-	      (clobber (reg:DI 23))
+-	      (clobber (reg:DI 28))])]
+-  "! TARGET_ABI_OPEN_VMS && ! TARGET_ABI_UNICOSMK"
+-  "")
++(define_insn "udivdi3"
++  [(set (match_operand:DI 0 "register_operand" "=r")
++	(udiv:DI (match_operand:DI 1 "reg_or_0_operand" "%rJ")
++		 (match_operand:DI 2 "reg_or_8bit_operand" "rI")))]
++  ""
++  "divqu %r1,%2,%0"
++  [(set_attr "opsize" "udi")])
+ 
+ (define_expand "moddi3"
+   [(use (match_operand:DI 0 "register_operand" ""))
+    (use (match_operand:DI 1 "register_operand" ""))
+    (use (match_operand:DI 2 "register_operand" ""))]
+-  "!TARGET_ABI_OPEN_VMS"
+-{
+-  if (TARGET_ABI_UNICOSMK)
+-    emit_insn (gen_moddi3_umk (operands[0], operands[1], operands[2]));
+-  else
+-    emit_insn (gen_moddi3_dft (operands[0], operands[1], operands[2]));
+-  DONE;
+-})
+-
+-(define_expand "moddi3_dft"
+-  [(parallel [(set (match_operand:DI 0 "register_operand" "")
+-		   (mod:DI (match_operand:DI 1 "register_operand" "")
+-			   (match_operand:DI 2 "register_operand" "")))
+-	      (clobber (reg:DI 23))
+-	      (clobber (reg:DI 28))])]
+-  "! TARGET_ABI_OPEN_VMS && ! TARGET_ABI_UNICOSMK"
+-  "")
+-
+-;; On Unicos/Mk, we do as the system's C compiler does:
+-;; compute the quotient, multiply and subtract.
+-
+-(define_expand "moddi3_umk"
+-  [(use (match_operand:DI 0 "register_operand" ""))
+-   (use (match_operand:DI 1 "register_operand" ""))
+-   (use (match_operand:DI 2 "register_operand" ""))]
+-  "TARGET_ABI_UNICOSMK"
++  ""
+ {
+   rtx div, mul = gen_reg_rtx (DImode);
+ 
+@@ -932,29 +865,7 @@
+   [(use (match_operand:DI 0 "register_operand" ""))
+    (use (match_operand:DI 1 "register_operand" ""))
+    (use (match_operand:DI 2 "register_operand" ""))]
+-  "! TARGET_ABI_OPEN_VMS"
+-{
+-  if (TARGET_ABI_UNICOSMK)
+-    emit_insn (gen_umoddi3_umk (operands[0], operands[1], operands[2]));
+-  else
+-    emit_insn (gen_umoddi3_dft (operands[0], operands[1], operands[2]));
+-  DONE;
+-})
+-
+-(define_expand "umoddi3_dft"
+-  [(parallel [(set (match_operand:DI 0 "register_operand" "")
+-		   (umod:DI (match_operand:DI 1 "register_operand" "")
+-			    (match_operand:DI 2 "register_operand" "")))
+-	      (clobber (reg:DI 23))
+-	      (clobber (reg:DI 28))])]
+-  "! TARGET_ABI_OPEN_VMS && ! TARGET_ABI_UNICOSMK"
+-  "")
+-
+-(define_expand "umoddi3_umk"
+-  [(use (match_operand:DI 0 "register_operand" ""))
+-   (use (match_operand:DI 1 "register_operand" ""))
+-   (use (match_operand:DI 2 "register_operand" ""))]
+-  "TARGET_ABI_UNICOSMK"
++  ""
+ {
+   rtx div, mul = gen_reg_rtx (DImode);
+ 
+@@ -966,146 +877,6 @@
+   DONE;
+ })
+ 
+-;; Lengths of 8 for ldq $t12,__divq($gp); jsr $t9,($t12),__divq as
+-;; expanded by the assembler.
+-
+-(define_insn_and_split "*divmodsi_internal_er"
+-  [(set (match_operand:DI 0 "register_operand" "=c")
+-	(sign_extend:DI (match_operator:SI 3 "divmod_operator"
+-			[(match_operand:DI 1 "register_operand" "a")
+-			 (match_operand:DI 2 "register_operand" "b")])))
+-   (clobber (reg:DI 23))
+-   (clobber (reg:DI 28))]
+-  "TARGET_EXPLICIT_RELOCS && ! TARGET_ABI_OPEN_VMS"
+-  "#"
+-  "&& reload_completed"
+-  [(parallel [(set (match_dup 0)
+-		   (sign_extend:DI (match_dup 3)))
+-	      (use (match_dup 0))
+-	      (use (match_dup 4))
+-	      (clobber (reg:DI 23))
+-	      (clobber (reg:DI 28))])]
+-{
+-  const char *str;
+-  switch (GET_CODE (operands[3]))
+-    {
+-    case DIV: 
+-      str = "__divl";
+-      break; 
+-    case UDIV:
+-      str = "__divlu";
+-      break;
+-    case MOD:
+-      str = "__reml";
+-      break;
+-    case UMOD:
+-      str = "__remlu";
+-      break;
+-    default:
+-      gcc_unreachable ();
+-    }
+-  operands[4] = GEN_INT (alpha_next_sequence_number++);
+-  emit_insn (gen_movdi_er_high_g (operands[0], pic_offset_table_rtx,
+-				  gen_rtx_SYMBOL_REF (DImode, str),
+-				  operands[4]));
+-}
+-  [(set_attr "type" "jsr")
+-   (set_attr "length" "8")])
+-
+-(define_insn "*divmodsi_internal_er_1"
+-  [(set (match_operand:DI 0 "register_operand" "=c")
+-	(sign_extend:DI (match_operator:SI 3 "divmod_operator"
+-                        [(match_operand:DI 1 "register_operand" "a")
+-                         (match_operand:DI 2 "register_operand" "b")])))
+-   (use (match_operand:DI 4 "register_operand" "c"))
+-   (use (match_operand 5 "const_int_operand" ""))
+-   (clobber (reg:DI 23))
+-   (clobber (reg:DI 28))]
+-  "TARGET_EXPLICIT_RELOCS && ! TARGET_ABI_OPEN_VMS"
+-  "jsr $23,($27),__%E3%j5"
+-  [(set_attr "type" "jsr")
+-   (set_attr "length" "4")])
+-
+-(define_insn "*divmodsi_internal"
+-  [(set (match_operand:DI 0 "register_operand" "=c")
+-	(sign_extend:DI (match_operator:SI 3 "divmod_operator"
+-			[(match_operand:DI 1 "register_operand" "a")
+-			 (match_operand:DI 2 "register_operand" "b")])))
+-   (clobber (reg:DI 23))
+-   (clobber (reg:DI 28))]
+-  "! TARGET_ABI_OPEN_VMS && ! TARGET_ABI_UNICOSMK"
+-  "%E3 %1,%2,%0"
+-  [(set_attr "type" "jsr")
+-   (set_attr "length" "8")])
+-
+-(define_insn_and_split "*divmoddi_internal_er"
+-  [(set (match_operand:DI 0 "register_operand" "=c")
+-	(match_operator:DI 3 "divmod_operator"
+-			[(match_operand:DI 1 "register_operand" "a")
+-			 (match_operand:DI 2 "register_operand" "b")]))
+-   (clobber (reg:DI 23))
+-   (clobber (reg:DI 28))]
+-  "TARGET_EXPLICIT_RELOCS && ! TARGET_ABI_OPEN_VMS"
+-  "#"
+-  "&& reload_completed"
+-  [(parallel [(set (match_dup 0) (match_dup 3))
+-	      (use (match_dup 0))
+-	      (use (match_dup 4))
+-	      (clobber (reg:DI 23))
+-	      (clobber (reg:DI 28))])]
+-{
+-  const char *str;
+-  switch (GET_CODE (operands[3]))
+-    {
+-    case DIV: 
+-      str = "__divq";
+-      break; 
+-    case UDIV:
+-      str = "__divqu";
+-      break;
+-    case MOD:
+-      str = "__remq";
+-      break;
+-    case UMOD:
+-      str = "__remqu";
+-      break;
+-    default:
+-      gcc_unreachable ();
+-    }
+-  operands[4] = GEN_INT (alpha_next_sequence_number++);
+-  emit_insn (gen_movdi_er_high_g (operands[0], pic_offset_table_rtx,
+-				  gen_rtx_SYMBOL_REF (DImode, str),
+-				  operands[4]));
+-}
+-  [(set_attr "type" "jsr")
+-   (set_attr "length" "8")])
+-
+-(define_insn "*divmoddi_internal_er_1"
+-  [(set (match_operand:DI 0 "register_operand" "=c")
+-	(match_operator:DI 3 "divmod_operator"
+-                        [(match_operand:DI 1 "register_operand" "a")
+-                         (match_operand:DI 2 "register_operand" "b")]))
+-   (use (match_operand:DI 4 "register_operand" "c"))
+-   (use (match_operand 5 "const_int_operand" ""))
+-   (clobber (reg:DI 23))
+-   (clobber (reg:DI 28))]
+-  "TARGET_EXPLICIT_RELOCS && ! TARGET_ABI_OPEN_VMS"
+-  "jsr $23,($27),__%E3%j5"
+-  [(set_attr "type" "jsr")
+-   (set_attr "length" "4")])
+-
+-(define_insn "*divmoddi_internal"
+-  [(set (match_operand:DI 0 "register_operand" "=c")
+-	(match_operator:DI 3 "divmod_operator"
+-			[(match_operand:DI 1 "register_operand" "a")
+-			 (match_operand:DI 2 "register_operand" "b")]))
+-   (clobber (reg:DI 23))
+-   (clobber (reg:DI 28))]
+-  "! TARGET_ABI_OPEN_VMS && ! TARGET_ABI_UNICOSMK"
+-  "%E3 %1,%2,%0"
+-  [(set_attr "type" "jsr")
+-   (set_attr "length" "8")])
+-
+ ;; Next are the basic logical operations.  We only expose the DImode operations
+ ;; to the rtl expanders, but SImode versions exist for combine as well as for
+ ;; the atomic operation splitters.
+@@ -6692,58 +6463,15 @@
+   if (GET_CODE (operands[1]) == CONST_INT
+       && INTVAL (operands[1]) < 32768)
+     {
+-      if (INTVAL (operands[1]) >= 4096)
+-	{
+-	  /* We do this the same way as in the prologue and generate explicit
+-	     probes.  Then we update the stack by the constant.  */
+-
+-	  int probed = 4096;
+-
+-	  emit_insn (gen_probe_stack (GEN_INT (- probed)));
+-	  while (probed + 8192 < INTVAL (operands[1]))
+-	    emit_insn (gen_probe_stack (GEN_INT (- (probed += 8192))));
+-
+-	  if (probed + 4096 < INTVAL (operands[1]))
+-	    emit_insn (gen_probe_stack (GEN_INT (- INTVAL(operands[1]))));
+-	}
+-
+       operands[1] = GEN_INT (- INTVAL (operands[1]));
+       operands[2] = virtual_stack_dynamic_rtx;
+     }
+   else
+     {
+-      rtx out_label = 0;
+-      rtx loop_label = gen_label_rtx ();
+       rtx want = gen_reg_rtx (Pmode);
+-      rtx tmp = gen_reg_rtx (Pmode);
+-      rtx memref;
+ 
+       emit_insn (gen_subdi3 (want, stack_pointer_rtx,
+ 			     force_reg (Pmode, operands[1])));
+-      emit_insn (gen_adddi3 (tmp, stack_pointer_rtx, GEN_INT (-4096)));
+-
+-      if (GET_CODE (operands[1]) != CONST_INT)
+-	{
+-	  out_label = gen_label_rtx ();
+-	  emit_insn (gen_cmpdi (want, tmp));
+-	  emit_jump_insn (gen_bgeu (out_label));
+-	}
+-
+-      emit_label (loop_label);
+-      memref = gen_rtx_MEM (DImode, tmp);
+-      MEM_VOLATILE_P (memref) = 1;
+-      emit_move_insn (memref, const0_rtx);
+-      emit_insn (gen_adddi3 (tmp, tmp, GEN_INT(-8192)));
+-      emit_insn (gen_cmpdi (tmp, want));
+-      emit_jump_insn (gen_bgtu (loop_label));
+-
+-      memref = gen_rtx_MEM (DImode, want);
+-      MEM_VOLATILE_P (memref) = 1;
+-      emit_move_insn (memref, const0_rtx);
+-
+-      if (out_label)
+-	emit_label (out_label);
+-
+       emit_move_insn (stack_pointer_rtx, want);
+       emit_move_insn (operands[0], virtual_stack_dynamic_rtx);
+       DONE;
+diff -uNr -x '*.orig' gcc-4.4.3/gcc/config/alpha/constraints.md gcc-4.4.3-work/gcc/config/alpha/constraints.md
+--- gcc-4.4.3/gcc/config/alpha/constraints.md	2007-08-26 21:04:09.000000000 +0200
++++ gcc-4.4.3-work/gcc/config/alpha/constraints.md	2010-01-21 22:33:04.000000000 +0100
+@@ -23,12 +23,6 @@
+ 
+ ;; Integer register constraints.
+ 
+-(define_register_constraint "a" "R24_REG"
+- "General register 24, input to division routine")
+-
+-(define_register_constraint "b" "R25_REG"
+- "General register 24, input to division routine")
+-
+ (define_register_constraint "c" "R27_REG"
+  "General register 27, function call address")
+ 

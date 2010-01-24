@@ -1,5 +1,24 @@
 2010-01-21  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	Split dist, configure, build and install for GCC.
+
+	* deploy/patches/alpha.c.patch,
+	* deploy/patches/alpha.h.patch,
+	* deploy/patches/alpha.md.patch,
+	* deploy/patches/constraints.md.patch: Delete. Merged into...
+	* deploy/patches/gcc.patch: ...this.
+
+	* deploy/dist-common.mk: Update for GCC.
+
+	* deploy/rules/gcc.mk: Simplify. New `-configure' rule. Move
+	fetch/patch rules to...
+	* deploy/gcc-dist.mk: ...here. Generate archive.
+
+	* deploy/versions.mk.defaults: Use patch version number for GCC
+	archive.
+
+2010-01-21  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	Split dist, configure, build and install for SystemC.
 
 	* deploy/dist-common.mk: Update for SystemC.
