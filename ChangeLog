@@ -1,5 +1,12 @@
 2010-01-24  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	Update documentation for installer.
+
+	* deploy/README: Simplify.
+	* deploy/installer/README: New.
+
+2010-01-24  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	Capture distribution stuff into own directory.
 
 	* deploy/common.mk,

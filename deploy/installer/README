@@ -1,0 +1,19 @@
+This directory contains the SL tool chain installer.
+
+For details about its purpose and function, refer to CSA note [sl12].
+
+Quick usage summary::
+
+   ./configure
+   make install -jN
+
+The files are installed in versioned directories so that different
+versions can be installed side-by-side. 
+
+The script "slenv" is also installed and provides an interactive menu
+to select one of the installed versions and setup environment
+variables accordingly.
+
+When new versions of the tools are available, copy
+``versions.mk.defaults`` to ``versions.mk`` and edit the values
+accordingly.
