@@ -2,6 +2,8 @@
 ######## YOU SHOULD NOT NEED TO EDIT THE FOLLOWING ########
 #        (see the file README for more information)
 
+include common.mk
+
 include tools.mk.defaults
 -include tools.mk
 include layout.mk.defaults
@@ -9,11 +11,11 @@ include layout.mk.defaults
 include versions.mk.defaults
 -include versions.mk
 
-REQDIR = $(PREFIX)/slreqs-$(BINUTILS_REV)-$(UTC_GCC_REV)-$(GCC_VERSION)p-m$(M4_VERSION)p-tx$(TX_VERSION)-sc$(SC_VERSION)
+REQDIR = $(PREFIX)/slreqs-$(BINUTILS_VERSION)-$(UTC_GCC_REV)-$(GCC_VERSION)p-m$(M4_VERSION)p-tx$(TX_VERSION)-sc$(SC_VERSION)
 SLDIR = $(PREFIX)/sl-$(MGSIM_REV)-$(SLC_REV)
 
-BUILD = $(LOCAL_BUILD)
-SOURCES = $(LOCAL_SOURCES)
+BUILD = $(INST_BUILD)
+SOURCES = $(INST_SOURCES)
 
 .PHONY: all reqs-src sl-src fetch reqs
 

@@ -5,11 +5,11 @@
 
 ### SVN repository for the tools
 BASE_REPO = https://svn.svp-home.org
-## BASE_REPO = svn+ssh://kena@mac-chris.science.uva.nl/Library/SVN/CSA
 
+## BASE_REPO = svn+ssh://kena@mac-chris.science.uva.nl/Library/SVN/CSA
 ### Desired versions for the tools, where to find them
-BINUTILS_REV = 2971
-BINUTILS_REPO = $(BASE_REPO)/sw/svp/mg/binutils/trunk
+BINUTILS_VERSION = 1.18-3356
+BINUTILS_ARCHIVE = $(DISTDIR)/binutils-$(BINUTILS_VERSION).tar.bz2
 
 UTC_GCC_REV = 3292
 UTC_GCC_REPO = $(BASE_REPO)/sw/svp/mg/gcc/branches/mt-ra-shared-split

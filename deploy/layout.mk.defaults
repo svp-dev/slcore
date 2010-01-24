@@ -20,16 +20,4 @@ PREFIX = /usr/local/svp
 ## Standard system at the UvA
 # PREFIX = /scratch/svp
 
-####
-#### Where are the sources downloaded and built?
-####
-
-# directory where sources will be downloaded, relative
-# to the current directory
-LOCAL_SOURCES = sl/src
-
-# directory where the packages will be built, relative to the current
-# directory; this MUST point to a different directory than
-# LOCAL_SOURCES!
-LOCAL_BUILD = sl/build
 

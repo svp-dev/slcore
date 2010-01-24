@@ -1,3 +1,17 @@
+2010-01-21  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
+	Split dist, build and install for binutils.
+
+	* deploy/common.mk,
+	* deploy/dist-common.mk: New.
+
+	* deploy/layout.mk.defaults: Simplify.
+	* deploy/rules/binutils.mk: Simplify. Move fetch rules to ...
+	* deploy/binutils-dist.mk: ...here. Generate archive.
+
+	* deploy/Makefile,
+	* deploy/versions.mk: Update accordingly.
+
 2010-01-20  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
 	Update patches for SystemC.
