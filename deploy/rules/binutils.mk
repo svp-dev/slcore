@@ -1,13 +1,14 @@
 # -*- makefile -*-
 
-BINUTILS_SRC = \
-   $(SOURCES)/binutils-$(BINUTILS_VERSION)
-
+BINUTILS_SRC = $(SOURCES)/binutils-$(BINUTILS_VERSION)
+BINUTILS_BUILD = $(BUILD)/binutils-$(BINUTILS_VERSION)
 BINUTILS_TARGETS = alpha-linux-gnu mtalpha-linux-gnu sparc-leon-linux mtsparc-leon-linux
 
-BINUTILS_CFG_TARGETS = $(foreach T,$(BINUTILS_TARGETS),$(BUILD)/binutils-$(BINUTILS_VERSION)-$(T)/configure_done)
-BINUTILS_BUILD_TARGETS = $(foreach T,$(BINUTILS_TARGETS),$(BUILD)/binutils-$(BINUTILS_VERSION)-$(T)/gas/as-new)
-BINUTILS_INST_TARGETS = $(foreach T,$(BINUTILS_TARGETS),$(REQDIR)/bin/$(T)-as)
+BINUTILS_CFG_TARGETS = $(foreach T,$(BINUTILS_TARGETS),$(BINUTILS_BUILD)-$(T)/configure_done)
+BINUTILS_BUILD_TARGETS = $(foreach T,$(BINUTILS_TARGETS),$(BINUTILS_BUILD)-$(T)/build_done)
+BINUTILS_INST_TARGETS = $(foreach T,$(BINUTILS_TARGETS),$(REQDIR)/.binutils-installed-$(T))
+
+.PRECIOUS: $(BINUTILS_CFG_TARGETS) $(BINUTILS_BUILD_TARGETS) $(BINUTILS_INST_TARGETS)
 
 binutils-configure: $(BINUTILS_CFG_TARGETS)
 binutils-build: $(BINUTILS_BUILD_TARGETS)
@@ -19,11 +20,12 @@ $(BINUTILS_SRC)/configure: $(BINUTILS_ARCHIVE)
 	tar -C $(SOURCES) -xjvf $(BINUTILS_ARCHIVE)
 	touch $@
 
-$(BUILD)/binutils-$(BINUTILS_VERSION)-%/configure_done: $(BINUTILS_SRC)/configure
+$(BINUTILS_BUILD)-%/configure_done: $(BINUTILS_SRC)/configure $(REQTAG)
 	rm -f $@
-	mkdir -p $(BUILD)/binutils-$(BINUTILS_VERSION)-$*
+	mkdir -p $(BINUTILS_BUILD)-$*
 	SRC=$$(cd $(BINUTILS_SRC) && pwd) && \
-           cd $(BUILD)/binutils-$(BINUTILS_VERSION)-$* && \
+           cd $(BINUTILS_BUILD)-$* && \
+	   find . -name config.cache -exec rm '{}' \; && \
 	   $$SRC/configure --target=$* \
 			  CFLAGS="$$CFLAGS $(EXTRA_CFLAGS)" \
 	                  LDFLAGS="$$LDFLAGS $(EXTRA_LDFLAGS)" \
@@ -31,9 +33,12 @@ $(BUILD)/binutils-$(BINUTILS_VERSION)-%/configure_done: $(BINUTILS_SRC)/configur
 	                   --prefix=$(REQDIR)
 	touch $@
 
-$(BUILD)/binutils-$(BINUTILS_VERSION)-%/gas/as-new: $(BUILD)/binutils-$(BINUTILS_VERSION)-%/configure_done
-	cd $(BUILD)/binutils-$(BINUTILS_VERSION)-$* && $(MAKE) $(MAKE_FLAGS)
+$(BINUTILS_BUILD)-%/build_done: $(BINUTILS_BUILD)-%/configure_done
+	rm -f $@
+	cd $(BINUTILS_BUILD)-$* && $(MAKE) $(MAKE_FLAGS)
+	touch $@
 
-$(REQDIR)/bin/%-as: $(BUILD)/binutils-$(BINUTILS_VERSION)-%/gas/as-new
-	cd $(BUILD)/binutils-$(BINUTILS_VERSION)-$* && $(MAKE) -j1 install
-
+$(REQDIR)/.binutils-installed-%: $(BINUTILS_BUILD)-%/build_done
+	rm -f $@
+	cd $(BINUTILS_BUILD)-$* && $(MAKE) -j1 install
+	touch $@

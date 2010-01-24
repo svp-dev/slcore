@@ -1,13 +1,11 @@
 # -*- makefile -*-
 
-M4_SRC = \
-  $(SOURCES)/m4-$(M4_VERSION)
+M4_SRC = $(SOURCES)/m4-$(M4_VERSION)
+M4_BUILD = $(BUILD)/m4-$(M4_VERSION)
+M4_BUILD_TARGETS = $(M4_BUILD)/build_done
+M4_INST_TARGETS = $(REQDIR)/.m4-installed
 
-M4_BUILD_TARGETS = \
-     $(BUILD)/m4-$(M4_VERSION)/src/m4
-
-M4_INST_TARGETS = \
-     $(REQDIR)/bin/m4
+.PRECIOUS: $(M4_BUILD_TARGETS) $(M4_INST_TARGETS)
 
 m4-configure: 
 m4-build: $(M4_BUILD_TARGETS)
@@ -19,10 +17,12 @@ $(M4_SRC)/configure: $(M4_ARCHIVE)
 	tar -C $(SOURCES) -xjvf $(M4_ARCHIVE)
 	touch $@
 
-$(BUILD)/m4-$(M4_VERSION)/src/m4: $(M4_SRC)/configure
-	mkdir -p $(BUILD)/m4-$(M4_VERSION)
+$(M4_BUILD)/build_done: $(M4_SRC)/configure $(REQTAG)
+	rm -f $@
+	mkdir -p $(M4_BUILD)
 	SRC=$$(cd $(M4_SRC) && pwd) && \
-	  cd $(BUILD)/m4-$(M4_VERSION) && \
+	  cd $(M4_BUILD) && \
+	  find . -name config.cache -exec rm '{}' \; && \
 	  $$SRC/configure --prefix=$(REQDIR) \
 			  CFLAGS="$$CFLAGS $(EXTRA_CFLAGS)" \
 	                  LDFLAGS="$$LDFLAGS $(EXTRA_LDFLAGS)" \
@@ -34,7 +34,9 @@ $(BUILD)/m4-$(M4_VERSION)/src/m4: $(M4_SRC)/configure
 	      && \
 	     $(MAKE) $(MAKE_FLAGS); \
 	  fi
+	touch $@
 
-$(REQDIR)/bin/m4: $(BUILD)/m4-$(M4_VERSION)/src/m4
-	cd $(BUILD)/m4-$(M4_VERSION) && $(MAKE) install
-
+$(REQDIR)/.m4-installed: $(M4_BUILD)/build_done
+	rm -f $@
+	cd $(M4_BUILD) && $(MAKE) install
+	touch $@

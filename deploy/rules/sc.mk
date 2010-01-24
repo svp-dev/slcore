@@ -1,20 +1,21 @@
 # -*- makefile -*-
 
-SC_SRC = \
-   $(SOURCES)/systemc-$(SC_VERSION)
+SC_SRC = $(SOURCES)/systemc-$(SC_VERSION)
+SC_BUILD = $(BUILD)/systemc-$(SC_VERSION)
+SC_CFG_TARGETS = $(SC_BUILD)/configure_done
+SC_BUILD_TARGETS = $(SC_BUILD)/build_done
+SC_INST_TARGETS = $(REQDIR)/.systemc-installed
 
-SC_CFG_TARGETS = \
-	$(BUILD)/systemc-$(SC_VERSION)/configure_done
-
-SC_BUILD_TARGETS = \
-	$(BUILD)/systemc-$(SC_VERSION)/src/libsystemc.a
-
-SC_INST_TARGETS = \
-   $(REQDIR)/include/systemc
+.PRECIOUS: $(SC_CFG_TARGETS) $(SC_BUILD_TARGETS) $(SC_INST_TARGETS)
 
 sc-configure: $(SC_CFG_TARGETS)
 sc-build: $(SC_BUILD_TARGETS)
 sc-install: $(SC_INST_TARGETS)
+
+# used by mggcc
+sc-flags:
+	@SRC=`cd $(SC_SRC) && pwd` && echo CPPFLAGS=\"-I$$SRC/src $(EXTRA_CFLAGS)\" CFLAGS=\"-I$$SRC/src $(EXTRA_CFLAGS)\"
+	@BLD=`cd $(BUILD)/systemc-$(SC_VERSION) && pwd` && echo LDFLAGS=\"-L$$BLD/src $(EXTRA_LDFLAGS)\"
 
 $(SC_SRC)/configure: $(SC_ARCHIVE)
 	rm -f $@
@@ -22,25 +23,29 @@ $(SC_SRC)/configure: $(SC_ARCHIVE)
 	tar -C $(SOURCES) -xjvf $(SC_ARCHIVE)
 	touch $@
 
-$(BUILD)/systemc-$(SC_VERSION)/configure_done: $(SC_SRC)/configure
-	mkdir -p $(REQDIR) # sysc configure needs $(REQDIR) to already exist
-	mkdir -p $(BUILD)/systemc-$(SC_VERSION)
+# sysc configure needs $(REQDIR) to already exist
+$(SC_BUILD)/configure_done: $(SC_SRC)/configure $(REQTAG)
 	rm -f $@
+	mkdir -p $(SC_BUILD)
 	SRC=$$(cd $(SC_SRC) && pwd) && \
-	  cd $(BUILD)/systemc-$(SC_VERSION) && \
+	  cd $(SC_BUILD) && \
+	  find . -name config.cache -exec rm '{}' \; && \
 	  $$SRC/configure --prefix=$(REQDIR) \
 	                  CFLAGS="$$CFLAGS $(EXTRA_CFLAGS)" \
 	                  LDFLAGS="$$LDFLAGS $(EXTRA_LDFLAGS)"
 	touch $@
 
-$(BUILD)/systemc-$(SC_VERSION)/src/libsystemc.a: $(BUILD)/systemc-$(SC_VERSION)/configure_done
-	cd $(BUILD)/systemc-$(SC_VERSION) && \
+$(SC_BUILD)/build_done: $(SC_BUILD)/configure_done
+	rm -f $@
+	cd $(SC_BUILD) && \
 	   if ! $(MAKE) $(MAKE_FLAGS) pthreads; then \
                 $(MAKE) clean; \
 	        $(MAKE) $(MAKE_FLAGS); \
            fi
+	touch $@
 
-$(REQDIR)/include/systemc: $(BUILD)/systemc-$(SC_VERSION)/src/libsystemc.a
-	cd $(BUILD)/systemc-$(SC_VERSION) && $(MAKE) install
-
+$(REQDIR)/.systemc-installed: $(SC_BUILD)/build_done
+	rm -f $@
+	cd $(SC_BUILD) && $(MAKE) install
+	touch $@
 

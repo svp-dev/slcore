@@ -1,3 +1,19 @@
+2010-01-22  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
+	Simplify and homogeneize packaging.
+
+	* deploy/Makefile: Simplify. Mark existence of base target
+	directory using a file to allow dependencies on
+	`configure_done'. Include rule files in the correct order (in
+	particular, `sc.mk' must appear before `mgsim.mk').
+
+	* deploy/rules/binutils.mk,
+	* deploy/rules/gcc.mk,
+	* deploy/rules/m4.mk,
+	* deploy/rules/mggcc.mk,
+	* deploy/rules/sc.mk: Simplify. Homogeneize. Mark installation
+	with an empty tag file, instead of relying on installed files.
+
 2010-01-21  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
 	Fix packaging of binutils.

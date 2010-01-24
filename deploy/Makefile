@@ -11,39 +11,30 @@ include layout.mk.defaults
 include versions.mk.defaults
 -include versions.mk
 
-REQDIR = $(PREFIX)/slreqs-$(BINUTILS_VERSION)-$(MGGCC_VERSION)-$(GCC_VERSION)p-m$(M4_VERSION)p-tx$(TX_VERSION)-sc$(SC_VERSION)
-SLDIR = $(PREFIX)/sl-$(MGSIM_REV)-$(SLC_REV)
+REQDIR = $(PREFIX)/slreqs-$(BINUTILS_VERSION)-$(MGGCC_VERSION)-$(GCC_VERSION)-m$(M4_VERSION)-sc$(SC_VERSION)
+REQTAG = $(REQDIR)/.tag
+SLDIR = $(PREFIX)/sl-$(MGSIM_VERSION)-$(SLC_REV)
+SLTAG = $(SLDIR)/.tag
+
+.PRECIOUS: $(REQTAG) $(SLTAG)
+%/.tag:
+	mkdir -p `dirname $@`
+	touch $@
 
 BUILD = $(INST_BUILD)
 SOURCES = $(INST_SOURCES)
 
-.PHONY: all reqs-src sl-src fetch reqs
+.PHONY: all
 
 all:
 
-include rules/*.mk
-
-reqs-src: \
-	$(BINUTILS_SRC) \
-	$(GCC_SRC) \
-	$(M4_SRC) \
-	$(TX_SRC) \
-	$(SC_SRC) \
-	$(MGGCC_SRC)
-
-sl-src: \
-	$(MGSIM_SRC) \
-	$(SL_SRC)
-
-fetch: reqs-src sl-src
-
-reqs: \
-	$(BINUTILS_TARGETS) \
-	$(MGGCC_TARGETS) \
-	$(GCC_TARGETS) \
-	$(M4_TARGETS) \
-	$(SC_TARGETS) \
-	$(TX_TARGETS)
+include rules/binutils.mk
+include rules/m4.mk
+include rules/mggcc.mk
+include rules/gcc.mk
+include rules/sc.mk
+include rules/mgsim.mk
+include rules/sl.mk
 
 all: reqs \
 	$(MGSIM_TARGETS) \
