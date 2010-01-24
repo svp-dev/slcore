@@ -1,34 +1,44 @@
 # -*- makefile -*-
 
 MGGCC_SRC = \
-  $(SOURCES)/utc-gcc-$(UTC_GCC_REV)/download_done
+  $(SOURCES)/mggcc-$(MGGCC_VERSION)
 
-MGGCC_TARGETS = \
-     $(REQDIR)/bin/mtalpha-linux-gnu-gcc
+MGGCC_TARGETS = mtalpha-linux-gnu
+
+MGGCC_CFG_TARGETS = $(foreach T,$(MGGCC_TARGETS),$(BUILD)/mggcc-$(MGGCC_VERSION)-$(T)/configure_done)
+MGGCC_BUILD_TARGETS = $(foreach T,$(MGGCC_TARGETS),$(BUILD)/mggcc-$(MGGCC_VERSION)-$(T)/gcc/gcc-cross)
+MGGCC_INST_TARGETS = $(foreach T,$(MGGCC_TARGETS),$(REQDIR)/bin/$(T)-gcc)
 
 GCC_CONFIG_FLAGS = \
    --disable-bootstrap --disable-libmudflap --disable-libssp \
    --disable-coverage --enable-gdb --disable-threads --disable-nls \
    --disable-multilib --enable-languages=c 
 
-$(SOURCES)/utc-gcc-$(UTC_GCC_REV)/download_done:
+mggcc-configure: $(MGGCC_CFG_TARGETS)
+mggcc-build: $(MGGCC_BUILD_TARGETS)
+mggcc-install: $(MGGCC_INST_TARGETS)
+
+$(MGGCC_SRC)/configure: $(MGGCC_ARCHIVE)
 	rm -f $@
 	mkdir -p $(SOURCES)
-	(cd $(SOURCES) && \
-         $(SVN) export -r$(UTC_GCC_REV) $(UTC_GCC_REPO) utc-gcc-$(UTC_GCC_REV) && \
-	 touch utc-gcc-$(UTC_GCC_REV)/download_done)
+	tar -C $(SOURCES) -xjvf $(MGGCC_ARCHIVE)
+	touch $@
 
-$(REQDIR)/bin/mtalpha-linux-gnu-gcc: \
-	$(REQDIR)/bin/mtalpha-linux-gnu-as \
-	$(SOURCES)/utc-gcc-$(UTC_GCC_REV)/download_done
-	mkdir -p $(BUILD)/gcc-mtalpha-$(UTC_GCC_REV)
-	(SRC=$$(cd $(SOURCES)/utc-gcc-$(UTC_GCC_REV); pwd); \
-           cd $(BUILD)/gcc-mtalpha-$(UTC_GCC_REV) && \
+$(BUILD)/mggcc-$(MGGCC_VERSION)-%/configure_done: $(MGGCC_SRC)/configure $(REQDIR)/bin/%-as
+	rm -f $@
+	mkdir -p $(BUILD)/mggcc-$(MGGCC_VERSION)-$*
+	SRC=$$(cd $(SOURCES)/mggcc-$(MGGCC_VERSION) && pwd) && \
+           cd $(BUILD)/mggcc-$(MGGCC_VERSION)-$* && \
 			  CFLAGS="$$CFLAGS $(EXTRA_CFLAGS)" \
 	                  LDFLAGS="$$LDFLAGS $(EXTRA_LDFLAGS)" \
-	   $$SRC/configure --target=mtalpha-linux-gnu \
+	   $$SRC/configure --target=$* \
 			       --prefix=$(REQDIR) \
-	                       $(GCC_CONFIG_FLAGS) && \
-	 $(MAKE) $(MAKE_FLAGS) && \
-	 $(MAKE) install)
+	                       $(GCC_CONFIG_FLAGS)
+	touch $@
+
+$(BUILD)/mggcc-$(MGGCC_VERSION)-%/gcc/gcc-cross: $(BUILD)/mggcc-$(MGGCC_VERSION)-%/configure_done
+	cd $(BUILD)/mggcc-$(MGGCC_VERSION)-$* && $(MAKE) $(MAKE_FLAGS)
+
+$(REQDIR)/bin/%-gcc: $(BUILD)/mggcc-$(MGGCC_VERSION)-%/gcc/gcc-cross
+	cd $(BUILD)/mggcc-$(MGGCC_VERSION)-$* && $(MAKE) -j1 install
 

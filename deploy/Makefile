@@ -11,7 +11,7 @@ include layout.mk.defaults
 include versions.mk.defaults
 -include versions.mk
 
-REQDIR = $(PREFIX)/slreqs-$(BINUTILS_VERSION)-$(UTC_GCC_REV)-$(GCC_VERSION)p-m$(M4_VERSION)p-tx$(TX_VERSION)-sc$(SC_VERSION)
+REQDIR = $(PREFIX)/slreqs-$(BINUTILS_VERSION)-$(MGGCC_VERSION)-$(GCC_VERSION)p-m$(M4_VERSION)p-tx$(TX_VERSION)-sc$(SC_VERSION)
 SLDIR = $(PREFIX)/sl-$(MGSIM_REV)-$(SLC_REV)
 
 BUILD = $(INST_BUILD)

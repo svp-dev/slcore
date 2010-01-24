@@ -1,5 +1,16 @@
 2010-01-21  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	Split dist, configure, build and install for MG-GCC.
+
+	* deploy/rules/mggcc.mk: Simplify. New `-configure' rule. Move
+	fetch/patch rules to...	
+	* deploy/mggcc-dist.mk: ...here. Generate archive.
+
+	* deploy/versions.mk.defaults: Use branch name for MG-GCC archive
+	too.
+
+2010-01-21  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	Split dist, configure, build and install for GCC.
 
 	* deploy/patches/alpha.c.patch,

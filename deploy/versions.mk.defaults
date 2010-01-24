@@ -11,8 +11,8 @@ BASE_REPO = https://svn.svp-home.org
 BINUTILS_VERSION = 1.18-3356
 BINUTILS_ARCHIVE = $(DISTDIR)/binutils-$(BINUTILS_VERSION).tar.bz2
 
-UTC_GCC_REV = 3292
-UTC_GCC_REPO = $(BASE_REPO)/sw/svp/mg/gcc/branches/mt-ra-shared-split
+MGGCC_VERSION = 4.1.0-3361-mt-ra-shared-split
+MGGCC_ARCHIVE = $(DISTDIR)/mggcc-$(MGGCC_VERSION).tar.bz2
 
 MGSIM_REV = 3338
 MGSIM_REPO = $(BASE_REPO)/sw/svp/mg/mgsim/trunk
