@@ -1,24 +1,47 @@
 # -*- makefile -*-
 
-SL_SRC = \
-  $(SOURCES)/slc-$(SLC_REV)/configure
+SLC_SRC = $(SOURCES)/sl-core-$(SLC_VERSION)
+SLC_BUILD = $(BUILD)/sl-core-$(SLC_VERSION)
 
-SL_TARGETS = \
-     $(SLDIR)/bin/slc
+SLC_CFG_TARGETS = $(SLC_BUILD)/configure_done
+SLC_BUILD_TARGETS = $(SLC_BUILD)/build_done
+SLC_INST_TARGETS = $(SLDIR)/.slc-installed
 
-$(SOURCES)/slc-$(SLC_REV)/configure:
+.PRECIOUS: $(SLC_CFG_TARGETS) $(SLC_BUILD_TARGETS) $(SLC_INST_TARGETS)
+
+slc-configure: $(SLC_CFG_TARGETS)
+slc-build: $(SLC_BUILD_TARGETS)
+slc-install: $(SLC_INST_TARGETS)
+
+$(SLC_SRC)/configure: $(SLC_ARCHIVE)
+	rm -f $@
 	mkdir -p $(SOURCES)
-	(cd $(SOURCES) && \
-	    $(SVN) co -r$(SLC_REV) $(SLC_REPO) slc-$(SLC_REV) && \
-	    cd slc-$(SLC_REV) && \
-	    ./bootstrap)
+	tar -C $(SOURCES) -xjvf $(SLC_ARCHIVE)
+	touch $@
 
-$(SLDIR)/bin/slc: $(SOURCES)/slc-$(SLC_REV)/configure $(SLDIR)/bin/mgsim-alpha
-	mkdir -p $(BUILD)/slc-$(SLC_REV)
-	(SRC=$$(cd $(SOURCES)/slc-$(SLC_REV); pwd); cd $(BUILD)/slc-$(SLC_REV) && \
-	 PATH=$(PREFIX)/slreqs-current/bin:$$PATH $$SRC/configure --prefix=$(SLDIR) \
+$(SLC_BUILD)/configure_done: $(SLC_SRC)/configure \
+		$(BINUTILS_INST_TARGETS) \
+		$(GCC_INST_TARGETS) \
+		$(MGGCC_INST_TARGETS) \
+		$(M4_INST_TARGETS) \
+		$(MGSIM_INST_TARGETS)
+	rm -f $@
+	mkdir -p $(SLC_BUILD)
+	SRC=$$(cd $(SLC_SRC) && pwd) && \
+	   cd $(SLC_BUILD) && \
+	   PATH=$(PREFIX)/sl-current/bin:$(PREFIX)/slreqs-current/bin:$$PATH \
+	     $$SRC/configure --prefix=$(SLDIR) \
+	                  CPPFLAGS="$$CPPFLAGS -I$(PREFIX)/slreqs-current/include $(EXTRA_CFLAGS)" \
 			  CFLAGS="$$CFLAGS $(EXTRA_CFLAGS)" \
-	                  LDFLAGS="$$LDFLAGS $(EXTRA_LDFLAGS)" \
-	      && \
-	 ($(MAKE) $(MAKE_FLAGS) || true) && \
-	 ($(MAKE) install || $(MAKE) -C tools/bin install-man1 || true))
+	                  LDFLAGS="$$LDFLAGS -L$(PREFIX)/slreqs-current/lib $(EXTRA_LDFLAGS)"
+	touch $@
+
+$(SLC_BUILD)/build_done: $(SLC_BUILD)/configure_done
+	rm -f $@
+	cd $(SLC_BUILD) && $(MAKE) all
+	touch $@
+
+$(SLDIR)/.slc-installed: $(SLC_BUILD)/build_done
+	rm -f $@
+	cd $(SLC_BUILD) && $(MAKE) install
+	touch $@

@@ -4,6 +4,7 @@ FETCH = wget
 BASE_REPO = https://svn.svp-home.org
 MGGCC_REPO = $(BASE_REPO)/sw/svp/mg/gcc
 MGSIM_REPO = $(BASE_REPO)/sw/svp/mg/mgsim
+SLC_REPO = $(BASE_REPO)/sw/svp/sys
 BINUTILS_REPO = $(BASE_REPO)/sw/svp/mg/binutils
 DEPLOY_REPO = $(BASE_REPO)/sw/svp/sys/trunk/deploy
 
