@@ -1,5 +1,25 @@
 2010-01-25  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	Misc fixes to MT-Alpha code generation.
+
+	A number of quirks were discovereed when manually inspecting
+	assembly source. While these may not be functional bugs they
+	caused potentially inefficient code to be generated.
+
+	* tools/bin/spp (pppalpha.rmswchbegin): Also disallow `swch'
+	directly after a label.
+
+	* tools/bin/spp (prunenopend): flush swch/nop/fnop sequences also
+	when encountering a directive, instead of skipping until the next
+	instruction. This prevents patterns like "br; swch; .align" from
+	being transformed into "br; .align; swch".
+
+	* tools/bin/spp (pppalpha.addswchll): shorten comments.
+
+	* tools/bin/spp (pppalpha.printer): use less whitespace.
+
+2010-01-25  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	Fix bug in support for the `fast_' allocation routines.
 
 	The call gate to C code used by the `fast_' macros in `cmalloc.h'

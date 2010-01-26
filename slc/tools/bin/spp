@@ -1111,7 +1111,9 @@ class pppalpha(object):
    def rmswchbegin(self, fundata, items):
       seeother = False
       for (type, content, comment) in items:
-         if type == 'other':
+         if type == 'label':
+            seeother = False
+         elif type == 'other':
             if content.startswith('swch') and seeother == False:
                continue
             seeother = True
@@ -1488,11 +1490,11 @@ class pppalpha(object):
    def prunenopend(self, fundata, items):
       queue = []
       for (type, content, comment) in items:
-         if type in ['empty','directive']:
+         if type == 'empty':
             #pprint.pprint((type, content, comment, queue))
             yield (type, content, comment)
             continue
-         elif type == 'other':
+         elif type in ['other','directive']:
             #pprint.pprint((type, content, comment, queue))
             if content in ['nop', 'fnop', 'swch']: # and comment != 'MT: branch':
                queue.append((type, content, comment))
@@ -1671,10 +1673,10 @@ class pppalpha(object):
                      test = 1
                      q.add(rx)
             if test == 1:
-               yield ('other','swch','MT: (before) long latency: %s' % ','.join(q))
+               yield ('other','swch','MT: before-ll: %s' % ','.join(q))
             yield (type, content, comment)
             if test == 1:
-               yield ('other','swch','MT: (after) long latency: %s' % ','.join(q))
+               yield ('other','swch','MT: after-ll: %s' % ','.join(q))
 
             # all the registers that are "short written"
             # will not cause long latency during next use
@@ -1786,12 +1788,16 @@ class pppalpha(object):
       for (type, content, comment) in items:
          if comment:
             tail = "#%s" % comment
+            fmt1 = '%-40s\t'
+            fmt2 = '\t%-32s\t'
          else:
             tail = ""
+            fmt1 = '%s'
+            fmt2 = '\t%s'
          if type == "label":
-            head = '%-40s\t' % content
+            head = fmt1 % content
          elif content:
-            head = '\t%-32s\t' % content
+            head = fmt2 % content
          else:
             head = ''
          yield '%s%s\n' % (head, tail)
