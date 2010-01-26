@@ -1,6 +1,6 @@
 DESCRIPTION="132-core (4x1,8x16), COMA, 1.4GHz cores, 2xDDR3-1600"
 COMA=1
-NCORES=4,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8
+simargs_base+=(-o NumProcessors=4,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8)
 simargs_base+=(-o NumRootDirectories=2)
 simargs_base+=(-o DDRMemoryFreq=800 -o CoreFreq=1400)
 

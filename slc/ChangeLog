@@ -1,5 +1,22 @@
 2010-01-26  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	Fix the MT profiles.
+
+	* tools/lib/mt-profiles/coma128,
+	* tools/lib/mt-profiles/coma256,
+	* tools/lib/mt-profiles/ml-npcrypt-p1,
+	* tools/lib/mt-profiles/ml-npcrypt-p2,
+	* tools/lib/mt-profiles/ml-npcrypt-p4,
+	* tools/lib/mt-profiles/ml-npcrypt-p8,
+	* tools/lib/mt-profiles/rmb1,
+	* tools/lib/mt-profiles/rmb128,
+	* tools/lib/mt-profiles/rmb256,
+	* tools/lib/mt-profiles/rmb4,
+	* tools/lib/mt-profiles/rmb8: Use $simargs_base to define the
+	number of cores since NCORES is not used any more.
+
+2010-01-26  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	Fix call gate to C functions.
 
 	* tools/lib/mtalpha-sim/callgate.s: Use $15 (FP) to carry over the

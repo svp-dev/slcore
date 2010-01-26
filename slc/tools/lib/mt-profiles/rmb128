@@ -1,4 +1,5 @@
 DESCRIPTION="128-core (1x2,2x1,4x1,8x1,16x1,32x1,64x1), RB memory"
 COMA=
-NCORES=1,1,2,4,8,16,32,64
+simargs_base+=(-o NumProcessors=1,1,2,4,8,16,32,64)
+
 

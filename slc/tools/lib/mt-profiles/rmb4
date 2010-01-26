@@ -1,4 +1,4 @@
 DESCRIPTION="4-core, RB memory for tests, quick runs etc."
 COMA=
-NCORES=4
+simargs_base+=(-o NumProcessors=4)
 
