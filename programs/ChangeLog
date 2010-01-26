@@ -1,3 +1,11 @@
+2010-01-25  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
+	New `env' demo for environment variables.
+
+	* demo/env.c: New.
+
+	* demo/Makefile.am: Update accordingly.
+
 2010-01-20  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
 	Fix bug in LKM9.

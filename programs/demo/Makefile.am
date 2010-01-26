@@ -17,6 +17,7 @@ DEMOS = \
 	answer.c \
 	bitblt.c keyblit.c \
 	checkers.c \
+	env.c \
 	fibonacci.c \
 	fibre.c \
 	helloworld.c \
