@@ -15,8 +15,8 @@
 #include <svp/sep.h>
 #include <svp/fibre.h>
 #include <svp/slr.h>
-#include <cmalloc.h>
-#include <undocumented.h>
+#include <cstdlib.h>
+#include <cstring.h>
 
 /* some global variables used by programs */
 struct fibre_base_t *__fibre_base;

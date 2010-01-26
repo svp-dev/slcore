@@ -38,7 +38,7 @@ __FBSDID("$FreeBSD: src/lib/libc/stdlib/strtol.c,v 1.20.10.1 2009/08/03 08:13:06
 #include <climits.h>
 #include <cctype.h>
 #include <cerrno.h>
-#include <undocumented.h>
+#include <cstring.h>
 
 /*
  * Convert a string to a long integer.

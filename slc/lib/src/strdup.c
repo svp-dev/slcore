@@ -36,8 +36,8 @@ static char sccsid[] = "@(#)strdup.c	8.1 (Berkeley) 6/4/93";
 __FBSDID("$FreeBSD: src/lib/libc/string/strdup.c,v 1.6.2.1 2009/08/03 08:13:06 kensmith Exp $");
 */
 
-#include <undocumented.h>
-#include <cmalloc.h>
+#include <cstring.h>
+#include <cstdlib.h>
 
 char *
 strdup(const char *str)

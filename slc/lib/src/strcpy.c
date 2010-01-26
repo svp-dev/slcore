@@ -35,7 +35,7 @@ static char sccsid[] = "@(#)strcpy.c	8.1 (Berkeley) 6/4/93";
 __FBSDID("$FreeBSD: src/lib/libc/string/strcpy.c,v 1.8.10.1 2009/08/03 08:13:06 kensmith Exp $");
 */
 
-#include <undocumented.h>
+#include <cstring.h>
 
 char *
 strcpy(char * restrict to, const char * restrict from)

@@ -23,28 +23,30 @@ EXTRA_DIST = \
 	src/div.c
 
 nobase_dist_pkgdata_DATA = \
-	include/cstdint.h \
-	include/cstddef.h \
-	include/cstdbool.h \
+	include/bits/float.h \
+	include/calloca.h \
+	include/cctype.h \
+	include/cfloat.h \
 	include/climits.h \
 	include/cmalloc.h \
-	include/calloca.h \
 	include/cmath.h \
-	include/cfloat.h \
+	include/cstdbool.h \
+	include/cstddef.h \
+	include/cstdint.h \
+	include/cstdlib.h \
+	include/cstring.h \
 	include/ctime.h \
-	include/cctype.h \
-	include/bits/float.h \
 	include/sac_helpers.h \
 	include/svp/argslot.h \
 	include/svp/assert.h \
 	include/svp/callgate.h \
 	include/svp/div.h \
-	include/svp/io.h \
 	include/svp/gfx.h \
-	include/svp/sep.h \
-	include/svp/roman.h \
+	include/svp/io.h \
 	include/svp/iomacros.h \
-	include/svp/perf.h
+	include/svp/perf.h \
+	include/svp/roman.h \
+	include/svp/sep.h
 
 include $(top_srcdir)/build-aux/sl.mk
 nobase_pkglib_DATA = 

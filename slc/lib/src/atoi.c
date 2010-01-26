@@ -35,10 +35,10 @@ static char sccsid[] = "@(#)atoi.c	8.1 (Berkeley) 6/4/93";
 __FBSDID("$FreeBSD: src/lib/libc/stdlib/atoi.c,v 1.6.10.1 2009/08/03 08:13:06 kensmith Exp $");
 */
 
-#include <undocumented.h>
+#include <cstdlib.h>
 
 int
-atoi(const char str)
+atoi(const char *str)
 {
 	return (int)strtol(str, (char **)NULL, 10);
 }

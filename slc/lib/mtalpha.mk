@@ -88,7 +88,7 @@ mtalpha_sim_libm_a_CONTENTS = \
 	$(MTAMATHOBJS) \
 	mtalpha-sim/missing_uclibc_math.o
 
-SLC_MTALPHA = $(SLC_RUN) -b ppp-mtalpha -nostdlib
+SLC_MTALPHA = $(SLC_RUN) -b ppp-mtalpha -nostdlib -Dshutup_cstring_h -Dshutup_cstdlib_h
 
 mtalpha-sim/%.o: $(srcdir)/src/%.c
 	$(AM_V_at)$(MKDIR_P) mtalpha-sim

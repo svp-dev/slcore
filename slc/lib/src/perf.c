@@ -14,7 +14,7 @@
 
 #include <svp/perf.h>
 #include <svp/testoutput.h>
-#include <cmalloc.h>
+#include <cstdlib.h>
 
 // the ordering in the following
 // table should match the counter

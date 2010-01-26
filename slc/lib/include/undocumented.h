@@ -14,39 +14,7 @@
 #ifndef SLC_UNDOCUMENTED_H
 # define SLC_UNDOCUMENTED_H
 
-#include <cstddef.h>
-#include <cmalloc.h>
-
-/* C string library */
-#ifdef __mt_freestanding__
-extern size_t strlen(const char*);
-extern char *stpcpy(char * restrict dst, const char * restrict src);
-extern char *stpncpy(char * restrict dst, const char * restrict src, size_t len);
-extern char *strcpy(char * restrict dst, const char * restrict src);
-extern char* strncpy(char * restrict dst, const char * restrict src, size_t len);
-extern int strncmp(const char *s1, const char *s2, size_t n);
-extern char *strdup(const char *s1);
-extern char *strchr(const char *s, int c);
-
-extern int atoi(const char *);
-extern long atol(const char *);
-extern long long atoll(const char *); 
-
-extern long strtol(const char *restrict, char **restrict, int);
-extern long long strtoll(const char *restrict, char **restrict, int);
-extern unsigned long strtoul(const char *restrict, char **restrict, int);
-extern unsigned long long strtoull(const char *restrict, char **restrict, int);
-
-extern void *memcpy(void *restrict s1, const void *restrict s2, size_t n);
-extern void *memmove(void *s1, const void *s2, size_t n);
-extern void *memset(void *b, int c, size_t len);
-#else
-#ifdef __cplusplus
-#include <cstring>
-#else
-#include <string.h>
-#endif
-#endif
+#include <cstdlib.h>
 
 /* TLS allocation/free */
 #ifdef __mt_freestanding__
@@ -56,21 +24,6 @@ extern void *memset(void *b, int c, size_t len);
 #else
 #warning safe_free() is not defined here.
 #define safe_free(Pointer) /* nothing: memory leak */
-#endif
-
-/* C stdlib */
-#ifdef __mt_freestanding__
-extern char **environ;
-extern char *getenv(const char *name);
-extern int putenv(char *string);
-extern int setenv(const char *name, const char *value, int overwrite);
-extern int unsetenv(const char *name);
-#else
-#ifdef __cplusplus
-#include <cstdlib>
-#else
-#include <stdlib.h>
-#endif
 #endif
 
 #endif

@@ -36,7 +36,7 @@ static char sccsid[] = "@(#)strncmp.c	8.1 (Berkeley) 6/4/93";
 __FBSDID("$FreeBSD: src/lib/libc/string/strncmp.c,v 1.7.2.1 2009/08/03 08:13:06 kensmith Exp $");
 */
 
-#include <undocumented.h>
+#include <cstring.h>
 
 int
 strncmp(const char *s1, const char *s2, size_t n)

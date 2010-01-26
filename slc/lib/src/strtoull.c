@@ -38,7 +38,7 @@ __FBSDID("$FreeBSD: src/lib/libc/stdlib/strtoull.c,v 1.21.10.1 2009/08/03 08:13:
 #include <climits.h>
 #include <cerrno.h>
 #include <cctype.h>
-#include <undocumented.h>
+#include <cstring.h>
 
 /*
  * Convert a string to an unsigned long long integer.

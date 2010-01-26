@@ -33,13 +33,8 @@ __FBSDID("$FreeBSD: src/lib/libc/stdlib/getenv.c,v 1.15.2.1 2009/08/03 08:13:06 
 #include <cerrno.h>
 #include <cstdbool.h>
 #include <cstddef.h>
-#include <cmalloc.h>
-#include <undocumented.h>
-
-//#include <cstdlib.h>
-//#include <unistd.h>
-//#include "un-namespace.h"
-
+#include <cstdlib.h>
+#include <cstring.h>
 
 static const char CorruptEnvFindMsg[] = "environment corrupt; unable to find ";
 static const char CorruptEnvValueMsg[] =

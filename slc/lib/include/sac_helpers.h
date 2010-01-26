@@ -15,7 +15,8 @@
 #ifndef SLC_SAC_HELPERS_H
 # define SLC_SAC_HELPERS_H
 
-#include <cmalloc.h>
+#include <cstdlib.h>
+#include <cstring.h>
 #include <calloca.h>
 #include <undocumented.h>
 

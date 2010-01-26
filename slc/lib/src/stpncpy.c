@@ -28,7 +28,7 @@
 /*
 __FBSDID("$FreeBSD: src/lib/libc/string/stpncpy.c,v 1.1.2.1 2009/08/03 08:13:06 kensmith Exp $");
 */
-#include <undocumented.h>
+#include <cstring.h>
 
 char *
 stpncpy(char * restrict dst, const char * restrict src, size_t n)
