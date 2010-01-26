@@ -1,3 +1,11 @@
+2010-01-26  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
+	Fix call gate to C functions.
+
+	* tools/lib/mtalpha-sim/callgate.s: Use $15 (FP) to carry over the
+	pointer to the memory location for return values, instead of $14
+	which may be overwritten by the callee
+
 2010-01-25  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
 	Update documentation.

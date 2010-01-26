@@ -29,17 +29,17 @@
 #       to pass C function arguments (e.g. with varargs)
 # 
 # Input:  
-#       $14 - base register for call parameters
-#       [$14 - 8]  number of register arguments
-#       [$14 - 16] address of function to call (PV)
-#       [$14 - 24] first integer argument (value for $16)
-#       [$14 - 32] first float argument (value for $f16)
+#       $15 - base register for call parameters
+#       [$15 - 8]  number of register arguments
+#       [$15 - 16] address of function to call (PV)
+#       [$15 - 24] first integer argument (value for $16)
+#       [$15 - 32] first float argument (value for $f16)
 #       ...
-#       [$14 - 104] last integer argument (value for $21)
-#       [$14 - 112] last float argument (value for $f21)
+#       [$15 - 104] last integer argument (value for $21)
+#       [$15 - 112] last float argument (value for $f21)
 # Output:
-#       [$14 - 8] return int value
-#       [$14 - 16] return float value
+#       [$15 - 8] return int value
+#       [$15 - 16] return float value
 # 
         
         .text
@@ -64,15 +64,15 @@ __sl_callgate:
 
 $do_callgate:   
         #MTREG_SET: $0,$30
-        mov $0, $14       # base for call parameters
-	ldq $13, -8($14)  # load call protocol
-	ldq $27, -16($14) # load PV
+        mov $0, $15       # base for call parameters
+	ldq $14, -8($15)  # load call protocol
+	ldq $27, -16($15) # load PV
 
-	mov $30, $15   # set up frame pointer
         clr $9  # flush callee-save reg
 	clr $10 # flush callee-save reg
 	clr $11 # flush callee-save reg
 	clr $12 # flush callee-save reg
+        clr $13 # flush callee-save reg
 	fclr $f2 # flush callee-save reg
 	fclr $f3 # flush callee-save reg
 	fclr $f4 # flush callee-save reg
@@ -83,34 +83,34 @@ $do_callgate:
 	fclr $f9 # flush callee-save reg
 	fclr $f0 # init FP return reg
 
-	beq $13, $docall_16
-	ldq $16, -24($14)
-	ldt $f16, -32($14)
+	beq $14, $docall_16
+	ldq $16, -24($15)
+	ldt $f16, -32($15)
 
-	subl $13, 1, $13
-	beq $13, $docall_17
-	ldq $17, -40($14)		
-	ldt $f17, -48($14)
+	subl $14, 1, $14
+	beq $14, $docall_17
+	ldq $17, -40($15)		
+	ldt $f17, -48($15)
 
-	subl $13, 1, $13
-	beq $13, $docall_18
-	ldq $18, -56($14)
-	ldt $f18, -64($14)
+	subl $14, 1, $14
+	beq $14, $docall_18
+	ldq $18, -56($15)
+	ldt $f18, -64($15)
 
-	subl $13, 1, $13
-	beq $13, $docall_19
-	ldq $19, -72($14)
-	ldt $f19, -80($14)
+	subl $14, 1, $14
+	beq $14, $docall_19
+	ldq $19, -72($15)
+	ldt $f19, -80($15)
 
-	subl $13, 1, $13
-	beq $13, $docall_20
-	ldq $20, -88($14)
-	ldt $f20, -96($14)
+	subl $14, 1, $14
+	beq $14, $docall_20
+	ldq $20, -88($15)
+	ldt $f20, -96($15)
 
-	subl $13, 1, $13
-	beq $13, $docall_21
-	ldq $21, -104($14)
-	ldt $f21, -112($14)
+	subl $14, 1, $14
+	beq $14, $docall_21
+	ldq $21, -104($15)
+	ldt $f21, -112($15)
 	br $docall
 
 $docall_16:
@@ -136,8 +136,8 @@ $docall:
 	jsr $26,($27)
 
 	# save return value(s)
-	stq $0, -8($14)
-	stt $f0, -16($14)
+	stq $0, -8($15)
+	stt $f0, -16($15)
 	end	
 
 	.end __sl_callgate
