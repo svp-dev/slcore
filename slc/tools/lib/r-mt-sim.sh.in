@@ -26,6 +26,7 @@ simargs_base=()
 if test -n "${SLR_RECURSIVE:-}"; then
   SIMPROFILE=simple
   simargs_base+=(-q)
+  unset SLR_NCORES
 fi
 
 saveIFS=$IFS
@@ -48,14 +49,6 @@ IFS=$saveIFS
 if test -z "$found"; then
    echo "$basename: profile '$SIMPROFILE' not found." >&2
    exit 1
-fi
-
-if test -n "${ncores_override:-}"; then
-   NCORES=$ncores_override
-fi
-
-if test -n "${NCORES:-}"; then
-   simargs_base+=(-o NumProcessors=$NCORES)
 fi
 
 ##
@@ -137,7 +130,7 @@ if test -n "${VERBOSE:-}"; then echo "$basename: dumping environment to: $envfil
 $python -c "import os, sys; sys.stdout.write('\0'.join(('%s=%s' % x for x in os.environ.items()))+'\0'*8)" >"$envfile"
 
 runner_cmdline=("${thesim[@]}" \
-    "${simargs_base[@]}" ${SIMARGS:-} \
+    ${simargs_base+"${simargs_base[@]}"} ${SIMARGS:-} \
     -t -L16 "$datafile" -L17 "$fdatafile" -L18 "$envfile" ${1+"$@"} "$d/$b")
 
 first=${runner_cmdline[0]}

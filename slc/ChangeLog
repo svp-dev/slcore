@@ -1,5 +1,14 @@
 2010-01-25  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	Repurpose option -n of `slr'.
+
+	* tools/bin/slr.in,
+	* tools/lib/r-mt-sim.sh.in: Change handling of option `-n' to set
+	environment variable `SLR_NCORES' instead of overriding the place
+	configuration.
+
+2010-01-25  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	New feature: automatic delegation of `t_main'.
 
 	If the environment variable `SLR_NCORES' is set and non-zero, a

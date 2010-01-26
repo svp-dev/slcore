@@ -74,15 +74,15 @@ Execution selection:
                        data files.
 
 Microgrid simulation options:
+  -n N                 Allocate a place of N cores upon program startup and 
+                       delegate the program's top-level thread t_main to it.
+
   -m list              List available profiles.
 
   -m PROFILE           Use the specified simulator PROFILE.
 
   -Ws,arg              Pass "arg" as extra command line parameter to the 
                        simulator, when the simulator is used.
-
-  -n PLACES            Override the place configuration from the simulator
-                       profile.
 
   -C                   Force COMA memory regardless of the simulator profile.
 
@@ -133,6 +133,9 @@ Environment variables:
 
   SIMPROFILE           If set and not empty, use as simulation profile
                        unless overridden by -m.
+
+  SLR_NCORES           If set and not empty, use as number of cores for
+                       the program's t_main unless overridden by -n.
 
   TMPDIR               If set and not empty, overrides /tmp as the
                        base directory for temporary files.
@@ -207,11 +210,11 @@ coma_cpc=
 coma_cpd=
 coma_force=
 debug_rec=
-ncores_override=
 SIMARGS=${SIMARGS:-}
 VERBOSE=${VERBOSE:-}
 DEBUG=${DEBUG:-}
 SIMPROFILE=${SIMPROFILE:-default}
+SLR_NCORES=${SLR_NCORES:-}
 arglist="$*"
 for arg in "$@"; do
   # if the previous option needs an argument, assign it
@@ -231,7 +234,7 @@ for arg in "$@"; do
       -v|--version)	do_version;;
       -h|--help)	do_usage;;
       -l)  query=1; shift;;
-      -n)  prev_arg=ncores_override; shift;;
+      -n)  prev_arg=SLR_NCORES; shift;;
       -Ws,*)   
 	  lowarg=${arg#*,}; 
 	  lowarg=${lowarg//,/ } ;
@@ -557,7 +560,7 @@ fi
 
 export SIMARGS VERBOSE DEBUG SIMGFX SIMPROFILE TMPDIR
 export gfx_scale gfx_geometry gfx_refresh
-export coma_cpc coma_cpd coma_force ncores_override
+export coma_cpc coma_cpd coma_force SLR_NCORES
 
 if test -n "$VERBOSE"; then
     echo "$basename: cwd: $PWD" >&2
