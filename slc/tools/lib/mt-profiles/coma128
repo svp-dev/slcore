@@ -3,5 +3,5 @@ COMA=1
 NCORES=1,1,2,4,8,16,32,64
 # 2 x DDR3-2400 channels
 simargs_base+=(-o NumRootDirectories=2)
-simargs_base+=(-o DDRMemoryFreq=1200 -o CoreFreq=1000)
+simargs_base+=(-o DDRMemoryFreq=1200 -o CoreFreq=1500)
 simargs_base+=(-o DDR_tRAS=34)

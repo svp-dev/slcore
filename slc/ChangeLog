@@ -1,5 +1,12 @@
 2010-01-24  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	Fix profiles `coma128' and `coma256'.
+
+	* tools/lib/mt-profiles/coma128,
+	* tools/lib/mt-profiles/coma256: Cores at 1.5GHz, not 1GHz.
+
+2010-01-24  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	Upgrade COMA support to latest simulator changes (+ bug fixes).
 
 	* tools/lib/mt-profiles/coma128,
