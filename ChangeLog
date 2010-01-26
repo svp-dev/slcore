@@ -1,5 +1,9 @@
 2010-01-26  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	* deploy/installer/versions.mk.defaults: Bump version numbers.
+
+2010-01-26  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	Simplify the package build process for MGSim.
 
 	* deploy/dist/mgsim-dist.mk: Require SystemC to be installed
