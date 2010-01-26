@@ -1,3 +1,27 @@
+2010-01-25  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
+	Extend the SL standard library.
+
+	* lib/include/sac_helpers.h: Move definitions into...
+	* lib/include/undocumented.h: ... here. Add more C99 declarations.
+
+	* lib/src/errno.c,
+	* lib/include/cerrno.h: New.
+
+	* lib/src/getenv.c,
+	* lib/src/stpcpy.c,
+	* lib/src/stpncpy.c,
+	* lib/src/strchr.c,
+	* lib/src/strcpy.c,
+	* lib/src/strdup.c,
+	* lib/src/strlen.c,
+	* lib/src/strncmp.c,
+	* lib/src/strncpy.c: Import from FreeBSD.
+
+	* lib/src/mtalpha/memmove.S: Import from Linux.
+
+	* lib/mtalpha.mk: Update accordingly.
+
 2010-01-24  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
 	Fix profiles `coma128' and `coma256'.

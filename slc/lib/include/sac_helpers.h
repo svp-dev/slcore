@@ -1,7 +1,7 @@
 //
 // sac_helpers.h: this file is part of the SL toolchain.
 //
-// Copyright (C) 2009 The SL project.
+// Copyright (C) 2009,2010 The SL project.
 //
 // This program is free software; you can redistribute it and/or
 // modify it under the terms of the GNU General Public License
@@ -15,25 +15,8 @@
 #ifndef SLC_SAC_HELPERS_H
 # define SLC_SAC_HELPERS_H
 
-#include <cstddef.h>
 #include <cmalloc.h>
 #include <calloca.h>
-
-#ifdef __mt_freestanding__
-
-extern size_t strlen(const char*);
-extern char* strncpy(char *, const char*, size_t);
-
-#define __tlsp_p(Pointer)  (((long)(Pointer)) < 0)
-#define safe_free(Pointer) ((void)(__tlsp_p(Pointer) ? 0 : free(Pointer)))
-#define fast_safe_free(Pointer) ((void)(__tlsp_p(Pointer) ? 0 : fast_free(Pointer)))
-
-#else
-
-#include <string.h>
-
-#warning safe_free() is not defined here.
-
-#endif
+#include <undocumented.h>
 
 #endif // ! SLC_SAC_HELPERS_H
