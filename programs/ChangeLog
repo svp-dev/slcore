@@ -1,3 +1,9 @@
+2010-01-26  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
+	Minor packaging fix.
+
+	* demo/Makefile.am: Add missing `\'.
+
 2010-01-25  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
 	Reflect latest updates to SL standard library.

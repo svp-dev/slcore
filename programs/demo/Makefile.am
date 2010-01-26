@@ -21,7 +21,7 @@ DEMOS = \
 	fibonacci.c \
 	fibre.c \
 	helloworld.c \
-	perf.c
+	perf.c \
 	roman.c \
 	sep.c
 
