@@ -1,5 +1,13 @@
 2010-01-25  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	Minor packaging fix.
+
+	* lib/Makefile.am: List `cerrno.h' and `undocumented.h'.
+
+	* lib/mtalpha.mk: Clean up more objects..
+
+2010-01-25  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	Repurpose option -n of `slr'.
 
 	* tools/bin/slr.in,

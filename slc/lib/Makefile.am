@@ -26,6 +26,7 @@ nobase_dist_pkgdata_DATA = \
 	include/bits/float.h \
 	include/calloca.h \
 	include/cctype.h \
+	include/cerrno.h \
 	include/cfloat.h \
 	include/climits.h \
 	include/cmalloc.h \
@@ -38,6 +39,7 @@ nobase_dist_pkgdata_DATA = \
 	include/cstring.h \
 	include/ctime.h \
 	include/sac_helpers.h \
+	include/undocumented.h \
 	include/svp/argslot.h \
 	include/svp/assert.h \
 	include/svp/callgate.h \

@@ -149,6 +149,9 @@ mtalpha-sim/libm.a: $(mtalpha_sim_libm_a_CONTENTS)
 endif
 
 CLEANFILES += \
+	mtalpha-sim/atoi.o \
+	mtalpha-sim/atol.o \
+	mtalpha-sim/atoll.o \
 	mtalpha-sim/ctype.o \
 	mtalpha-sim/div.o \
 	mtalpha-sim/divl.o \
