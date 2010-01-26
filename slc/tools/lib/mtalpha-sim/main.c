@@ -1,7 +1,7 @@
 //
 // main.c: this file is part of the SL toolchain.
 //
-// Copyright (C) 2009 The SL project.
+// Copyright (C) 2009,2010 The SL project.
 //
 // This program is free software; you can redistribute it and/or
 // modify it under the terms of the GNU General Public License
@@ -12,12 +12,15 @@
 // `COPYING' file in the root directory.
 //
 
+#include <svp/gomt.h>
+
 extern void t_main(void);
 
+extern sl_place_t __main_place_id;
+
 int main(void) {
-  register void *pv __asm__("$1") = &t_main;
-  long ret;
-  __asm__ ("allocate %0, 1, 0, 0, 0\n\tcrei %0, 0(%1)"
-	   : "=r"(ret), "=r"(pv) : "0"(0), "1"(pv));
-  return ret;
+// at this point __main_place_id has been set
+// by the standard library (if linked), or is
+// set to PLACE_DEFAULT.
+    return INVOKE_MT(__main_place_id, t_main);
 }

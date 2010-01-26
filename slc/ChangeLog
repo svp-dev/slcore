@@ -1,5 +1,33 @@
 2010-01-25  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	New feature: automatic delegation of `t_main'.
+
+	If the environment variable `SLR_NCORES' is set and non-zero, a
+	place of that number of cores is allocated upon program start-up
+	and used to delegate creation the program's top-level thread
+	`t_main'. This achieves transparent reconfiguration of the number
+	of cores a program is being run on without explicit use of the SEP
+	in the program.
+
+	* tools/include/svp/gomt.h: Capture the construct that allows to
+	create a family of one thread from plain C mode in a macro
+	`INVOKE_MT'.
+	* tools/Makefile.am: List the new file.
+
+	* lib/src/mtinit.c: Move definition of `environ' to ...
+	* tools/lib/mtalpha-sim/slrt.s: ...here.
+
+	* tools/lib/mtalpha-sim/slrt.s: New global objects
+	`__main_place_id' and `__main_placeinfo'.
+
+	* lib/src/mtinit.c: Use `SLR_NCORES' (if set) to initialize
+	`__main_place_id' and `__main_placeinfo' using the SEP.
+
+	* tools/lib/mtalpha-sim/main.c: Use `__main_place_id' to delegate
+	creation of `t_main'.
+
+2010-01-25  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	Extend the SL standard library.
 
 	* lib/include/cstdarg.h: New.

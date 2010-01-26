@@ -8,6 +8,7 @@ nobase_dist_pkgdata_DATA = \
 	include/svp/slr.h \
 	include/svp/fibre.h \
 	include/svp/compiler.h \
+	include/svp/gomt.h \
 	include/svp/abort.h \
 	include/svp/testoutput.h
 

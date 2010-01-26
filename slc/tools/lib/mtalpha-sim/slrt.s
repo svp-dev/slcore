@@ -1,6 +1,6 @@
 # slrt.s: this file is part of the SL toolchain.
 #
-# Copyright (C) 2009 The SL project
+# Copyright (C) 2009,2010 The SL project
 #
 # This program is free software, you can redistribute it and/or
 # modify it under the terms of the GNU General Public License
@@ -94,6 +94,27 @@ $msg:
 	.ascii "slrt: main returned \0"
 
         .section .data
+
+        .globl __main_place_id
+        .type __main_place_id, @object
+        .size __main_place_id, 8
+        .align 3
+__main_place_id:
+        .long 0
+
+        .globl __main_placeinfo
+        .type __main_placeinfo, @object
+        .size __main_placeinfo, 8
+        .align 3
+__main_placeinfo:
+        .long 0
+
+        .globl environ
+        .type environ, @object
+        .size environ, 8
+        .align 3
+environ:
+        .long 0
         
 	.globl __pseudo_argv
         .type __pseudo_argv, @object
