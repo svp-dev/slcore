@@ -31,6 +31,7 @@ nobase_dist_pkgdata_DATA = \
 	include/cmalloc.h \
 	include/cmath.h \
 	include/cstdbool.h \
+	include/cstdarg.h \
 	include/cstddef.h \
 	include/cstdint.h \
 	include/cstdlib.h \
