@@ -35,7 +35,8 @@ r-mtalpha-sim.sh: r-mt-sim.sh.in Makefile.am
 	 -e 's|@SIMX_ARCH[@]|$(SIMX_ALPHA)|g' \
 	 -e 's|@ARCH[@]|ALPHA|g' \
 	 -e 's|@arch[@]|alpha|g' \
-	 -e 's|@BASH[@]|$(BASH)|g'
+	 -e 's|@BASH[@]|$(BASH)|g' \
+	 -e 's|@python[@]|$(PYTHON)|g'
 	$(AM_V_at)chmod +x,a-w $@.out
 	$(AM_V_at)mv -f $@.out $@
 

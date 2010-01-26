@@ -16,6 +16,7 @@ DEBUGGER=${DEBUGGER:-gdb --args}
 SIMARGS=${SIMARGS:-}
 mgsim=(${MGSIM_@ARCH@:-@MGSIM_ARCH@})
 simx=(${SIMX_@ARCH@:-@SIMX_ARCH@})
+python=${PYTHON:-@python@}
 simargs_base=()
 
 ##
@@ -131,9 +132,13 @@ b=${program##*/}
 d=$(dirname "$program")
 if test -z "${SLR_RDIR:-}"; then d=$(cd "$d" && pwd -P); fi
 
+envfile=${SLR_RDIR:-${TMPDIR:-/tmp}}/$b.$$.envdata
+if test -n "${VERBOSE:-}"; then echo "$basename: dumping environment to: $envfile" >&2; fi
+$python -c "import os, sys; sys.stdout.write('\0'.join(('%s=%s' % x for x in os.environ.items()))+'\0'*8)" >"$envfile"
+
 runner_cmdline=("${thesim[@]}" \
     "${simargs_base[@]}" ${SIMARGS:-} \
-    -t -L16 "$datafile" -L17 "$fdatafile" ${1+"$@"} "$d/$b")
+    -t -L16 "$datafile" -L17 "$fdatafile" -L18 "$envfile" ${1+"$@"} "$d/$b")
 
 first=${runner_cmdline[0]}
 unset runner_cmdline[0]

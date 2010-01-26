@@ -551,10 +551,11 @@ if test -n "$KEEP"; then
     fdatafile=./input/fdata
     program=./$baseout
 else
+    TMPDIR=$SLR_RDIR
     unset SLR_RDIR
 fi
 
-export SIMARGS VERBOSE DEBUG SIMGFX SIMPROFILE
+export SIMARGS VERBOSE DEBUG SIMGFX SIMPROFILE TMPDIR
 export gfx_scale gfx_geometry gfx_refresh
 export coma_cpc coma_cpd coma_force ncores_override
 

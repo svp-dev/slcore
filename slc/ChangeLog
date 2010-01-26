@@ -1,5 +1,23 @@
 2010-01-25  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	Add support for environment variables inside emulation.
+
+	* tools/bin/slr.in,
+	* tools/lib/r-mt-sim.sh.in: Propagate the host environment
+	variables to the simulated environment. Environment data is loaded
+	into simulator memory, initial address in $l18.
+
+	* tools/lib/Makefile.am: Tell scripts where to find Python, as
+	this is now used to build the environment data.
+
+	* tools/lib/mtalpha-sim/slrt.s: Propagate environment data to
+	`_lib_init_routine'.
+
+	* lib/src/mtinit.s (_lib_init_routine): Initialize `environ' array
+	for use by `getenv.c'.
+
+2010-01-25  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	Minor bug fix.
 
 	* tools/bin/slr.in,

@@ -15,13 +15,50 @@
 #include <svp/sep.h>
 #include <svp/fibre.h>
 #include <svp/slr.h>
+#include <cmalloc.h>
+#include <undocumented.h>
 
+/* some global variables used by programs */
 struct fibre_base_t *__fibre_base;
 struct __slr_base_t *__slr_base;
 
-void _lib_init_routine(void* slrbase_init, void* fibrebase_init, void* placeconf)
+char **environ = 0;
+
+static
+void environ_init(char *initenv)
+{
+    /* 
+       the environment is provided as concatenated C strings separated
+       by an ASCII NUL (0). The last string is followed by a
+       a couple of standalone NUL bytes.
+    */
+
+    /* first: count. */
+    char *p = initenv;
+    size_t nvars = 0;
+    if (p)
+        while (p[0] != 0)
+        {
+            ++nvars;
+            p += strlen(p) + 1;
+        }
+
+    /* then: make array of pointers to each variable */
+
+    // (using dlmalloc directly since we are still single-threaded at
+    // this point, no exclusion required)
+
+    environ = dlmalloc((nvars + 1) * sizeof(char*));
+    size_t i;
+    for (i = 0, p = initenv; i < nvars; ++i, p += strlen(p) + 1)
+        environ[i] = p;
+    environ[i] = 0;
+}
+
+void _lib_init_routine(void* slrbase_init, void* fibrebase_init, char *initenv, void *placeconf)
 {
   __slr_base = (struct __slr_base_t*) slrbase_init;
   __fibre_base = (struct fibre_base_t*) fibrebase_init;
+  environ_init(initenv);
   sep_init(placeconf);
 }
