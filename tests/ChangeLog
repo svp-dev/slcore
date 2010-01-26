@@ -1,3 +1,9 @@
+2010-01-25  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
+	Extend the unit test suite.
+
+	* 2_lib/va.c: New.
+
 2010-01-11  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
 	Extend the unit test suite.
