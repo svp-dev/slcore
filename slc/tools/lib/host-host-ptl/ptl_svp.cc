@@ -1,16 +1,8 @@
 //
 // ptl_svp.cc: this file is part of the SL toolchain.
 //
-// Copyright (C) 2008, 2009 The SL project.
-//
-// This program is free software; you can redistribute it and/or
-// modify it under the terms of the GNU General Public License
-// as published by the Free Software Foundation; either version 3
-// of the License, or (at your option) any later version.
-//
-// The complete GNU General Public Licence Notice can be found as the
-// `COPYING' file in the root directory.
-//
+// Copyright (C) 2008,2009,2010 The SL project.
+// All rights reserved.
 
 #include "ptl_svp.h"
 
@@ -320,6 +312,75 @@ namespace uTC
         }
     }
 
+    // Helper function to create and setup a Place structure
+    place generate_local_place(bool exclusive_flag)
+    {
+        // Allocate the memory for the PlaceInfo structure
+        PlaceInfo* pi = (PlaceInfo*) malloc(sizeof(PlaceInfo));
+        
+        if(pi == NULL)
+            return NULL;
+        
+        // Now fill in the structure
+        pi->n_procs = 0;
+        pi->exclusive_flag = exclusive_flag;
+        pi->exclusion_lock = false;
+        pi->exclusion_f = NULL;
+        
+        pthread_mutex_init(&(pi->exclusion_mutex), NULL);
+        pthread_cond_init(&(pi->exclusion_cond),NULL);
+
+        return pi;
+    }    
+
+    // Helper funtion to clear and destroy a Place structure    
+    int   destroy_local_place(place place_id)
+    {
+        // We refuse to destroy one of the builtin places or an undefined place
+        if((place_id == NULL) || (place_id == PLACE_LOCAL) || (place_id == PLACE_GROUP))
+            return -1;
+        
+        // Destroy the pthread structures
+        pthread_mutex_destroy(&(place_id->exclusion_mutex));
+        pthread_cond_destroy(&(place_id->exclusion_cond));
+        
+        // Now free the PlaceInfo struct
+        free(place_id);
+
+        // Return success
+        return 0;
+    }
+
+    // Helper function to figure out on which place the current
+    // thread is running
+    place get_current_place()
+    {
+        // Get our thread info
+        ThreadInfo* ti = GetThreadInfo();
+        
+        // If our thread has no correct info, we don't have a place
+        if(ti == NULL)
+            return NULL;
+        
+        // Get corresponding family
+        FamilyBase* f = ti->f;
+        
+        // If we don't have a correct family, we don't have a place
+        if(f == NULL)
+            return NULL;
+        
+        // Return the place of the family
+        return f->m_place;
+    }
+    
+    // Helper function to figure out if two places are the same
+    bool compare_places(place p1, place p2)
+    {
+        // In normal utc-ptl we can just do pointer comparison
+        return (p1 == p2);
+    }
+
+   
     // ********************************************************
     // SharedBase class
     // ********************************************************
@@ -603,7 +664,11 @@ namespace uTC
                 // Check if place is unlocked, otherwise wait for unlock signal
                 while (m_place->exclusion_lock && !m_killed)
                 {
+                    // We need to unlock our datamutex here because we need
+                    // to be able to be killed during the following cond_wait
+                    UNLOCK(&m_data_mutex);
                     CONDWAIT(&m_place->exclusion_cond, &m_place->exclusion_mutex);
+                    LOCK(&m_data_mutex);
                 }
 
                 // When we're not killed in the meantime, lock the place
@@ -755,6 +820,31 @@ namespace uTC
         // Terminate the creating thread and wait for it.
         // Afterwards, no more threads will be created and all those that have been
         // created are registered.
+        
+        // First check if the create process might be waiting on an
+        // exclusive place, so check if there is a place associated 
+        // with this family and see if it has been configured for 
+        // mutual exclusion
+        if ((m_place != PLACE_LOCAL) && (m_place != PLACE_GROUP))
+        {
+            // Place is not local or group, so we have to check for
+            // mutual exclusion
+            if (m_place->exclusive_flag)
+            {
+                // It is mutually exclusive, so kick the conditional
+                // to be sure that it sees m_killed in case it is waiting
+                // on the mutex'd place. We need to unlock the family's
+                // mutex here or we would end up in a deadlock with the
+                // create_loop which tries to acquire it after it comes
+                // out of the conditional
+                UNLOCK(&m_data_mutex);
+                LOCK(&m_place->exclusion_mutex);
+                pthread_cond_broadcast(&m_place->exclusion_cond);
+                UNLOCK(&m_place->exclusion_mutex);            
+                LOCK(&m_data_mutex);
+            }
+        }
+        
         DPRINT("[KILL " << m_id << "] Waiting for creating thread");
         pthread_cond_signal(&m_thread_completed);
         while (!m_allCreated)
@@ -863,8 +953,8 @@ namespace uTC
         return m_continuation;
     }
 
-    FamilyBase::FamilyBase(long start, long end, long step, unsigned long blockSize, place place_id, bool root, bool nosync)
-        : m_start(start), m_end(end), m_step(step), m_index(start), m_root(root), m_continuation(nosync), m_place(place_id)
+    FamilyBase::FamilyBase(long start, long end, long step, unsigned long blockSize, place place_id, bool root, bool nosync, bool isDependent)
+        : m_start(start), m_end(end), m_step(step), m_index(start), m_root(root), m_continuation(nosync), m_isDependent(isDependent), m_place(place_id)
     {
         m_lastCreated     = NULL;
         m_firstChild      = NULL;
@@ -1045,10 +1135,16 @@ namespace uTC
 
         // Create the root family
         family f;
+        
+        // Generate a local place for the main family to run on
+        place mainplace = generate_local_place(false);
 
-        create(f, PLACE_LOCAL, true, false, 0, 1, 1, 0, t_main);
+        create(f, mainplace, true, false, 0, 1, 1, 0, t_main);
 
         sync(f);
+        
+        // Clean up the local place for main() again
+        destroy_local_place(mainplace);
 
         DPRINT("UTC_PTL: User program complete, cleaning up and exiting");
 

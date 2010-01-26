@@ -1,5 +1,26 @@
 2010-01-26  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	Upgrade the mutc-ptl back-end.
+
+	* tools/lib/host-host-ptl/include/create.tpl,
+	* tools/lib/host-host-ptl/include/ptl_svp.h,
+	* tools/lib/host-host-ptl/include/template.pl,
+	* tools/lib/host-host-ptl/ptl_svp.cc: Update to latest utc-ptl
+	code.
+
+	* tools/lib/host-host-ptl/include/ptl_config.h,
+	* tools/lib/host-host-ptl/include/ptl_debug.h,
+	* tools/lib/host-host-ptl/include/ptl_deps.h,
+	* tools/lib/host-host-ptl/include/ptl_svp.h,
+	* tools/lib/host-host-ptl/include/ptl_vars.h,
+	* tools/lib/host-host-ptl/include/template.pl,
+	* tools/lib/host-host-ptl/ptl_debug.cc,
+	* tools/lib/host-host-ptl/ptl_svp.cc,
+	* tools/lib/host-host-ptl/ptl_vars.cc: Strip license text as it
+	has not been decided yet.
+
+2010-01-26  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	Fix the MT profiles.
 
 	* tools/lib/mt-profiles/coma128,

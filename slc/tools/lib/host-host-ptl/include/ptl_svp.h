@@ -1,16 +1,8 @@
 //
 // ptl_svp.h: this file is part of the SL toolchain.
 //
-// Copyright (C) 2008, 2009 The SL project.
-//
-// This program is free software; you can redistribute it and/or
-// modify it under the terms of the GNU General Public License
-// as published by the Free Software Foundation; either version 3
-// of the License, or (at your option) any later version.
-//
-// The complete GNU General Public Licence Notice can be found as the
-// `COPYING' file in the root directory.
-//
+// Copyright (C) 2008,2009,2010 The SL project.
+// All rights reserved.
 
 #ifndef SLC_PTL_SVP_H
 # define SLC_PTL_SVP_H
@@ -65,6 +57,21 @@ namespace uTC
     static const place PLACE_LOCAL = NULL;
     static const place PLACE_GROUP = &__builtin_PLACE_GROUP;
 
+    // Helper function to create and setup a Place structure
+    // Returns a place on success, or NULL on failure
+    place generate_local_place(bool exclusive_flag);
+
+    // Helper funtion to clear and destroy a Place structure    
+    // Returns 0 on success, or -1 on failure
+    int   destroy_local_place(place place_id);
+
+    // Helper function to figure out on which place the current
+    // thread is running
+    place get_current_place();
+    
+    // Helper function to figure out if two places are the same
+    bool compare_places(place p1, place p2);
+    
     class SharedBase
     {
         friend class ThreadInfo;
@@ -160,6 +167,7 @@ namespace uTC
         std::map<int, ThreadInfo*> m_threads;
         bool                       m_root;
         bool                       m_continuation;
+        bool                       m_isDependent;
         bool                       m_allCreated;
         bool                       m_killed;
         bool                       m_killbusy;
@@ -202,7 +210,7 @@ namespace uTC
         place           m_place;
 
     public:
-        FamilyBase(long start, long end, long step, unsigned long blockSize, place place_id, bool root, bool nosync);
+        FamilyBase(long start, long end, long step, unsigned long blockSize, place place_id, bool root, bool nosync, bool isDependent);
     };
 
     template <typename T>

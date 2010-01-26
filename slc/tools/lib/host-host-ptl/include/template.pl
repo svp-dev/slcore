@@ -1,16 +1,8 @@
 #! /usr/bin/perl
 # template.pl: this file is part of the SL toolchain.
 #
-# Copyright (C) 2008,2009 The SL project.
-#
-# This program is free software; you can redistribute it and/or
-# modify it under the terms of the GNU General Public License
-# as published by the Free Software Foundation; either version 3
-# of the License, or (at your option) any later version.
-#
-# The complete GNU General Public Licence Notice can be found as the
-# `COPYING' file in the root directory.
-#
+# Copyright (C) 2008,2009,2010 The SL project.
+# All rights reserved.
 
 ### [ Configurable settings ] ###
 
@@ -36,6 +28,17 @@ print " * Description: Header file containing create definitions for 0 to $maxar
 print " *              arguments.                                                   * \n";
 print " *                                                                           * \n";
 print " *****************************************************************************/\n";
+print <<EOL;
+template <typename T>
+struct is_shared {
+    static const bool value = false;
+};
+
+template <typename T>
+struct is_shared< shared<T> > {
+    static const bool value = true;
+};
+EOL
 
 # Process the template file for each number of arguments
 for (my $i = 0; $i <= $maxargs; $i++)
@@ -53,6 +56,7 @@ for (my $i = 0; $i <= $maxargs; $i++)
 	my @template_passon;
 	my @template_params;
 	my @template_block;
+	my $template_isshared = "false";
 	for (my $j = 1; $j <= $i; $j++)
 	{
 		push(@template_def,     "typename TT$j");
@@ -70,6 +74,7 @@ for (my $i = 0; $i <= $maxargs; $i++)
 		push(@template_bare,    "T$j");
 		push(@template_passon,  "arg$j");
 		push(@template_block,   "m_arg$j.block()");
+		$template_isshared = $template_isshared . " || is_shared<TT$j>::value";
 	}
 	my @template_bare_nobreak = @template_bare;
 	my @template_def_break    = @template_def;
@@ -128,6 +133,7 @@ for (my $i = 0; $i <= $maxargs; $i++)
 		$l =~ s/\$template_bare/$template_bare/g;
 		$l =~ s/\$template_passon/$template_passon/g;
 		$l =~ s/\$template_block/$template_block/g;
+		$l =~ s/\$template_isshared/$template_isshared/g;
 		$l =~ s/\$n/$i/g;
 		print $l;
 	}

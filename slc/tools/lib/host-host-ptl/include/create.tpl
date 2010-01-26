@@ -45,7 +45,7 @@ private:
 	
 public:
     Family_$n(place place_id, bool root, bool nosync, long start, long end, long step, unsigned long blockSize, ThreadFunc func $template_ctor_ref)
-        : FamilyBase(start, end, step, blockSize, place_id, root, nosync), m_func(func) $template_init
+        : FamilyBase(start, end, step, blockSize, place_id, root, nosync, $template_isshared), m_func(func) $template_init
     {
     }
 };
