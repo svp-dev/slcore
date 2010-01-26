@@ -28,6 +28,15 @@ extern int strncmp(const char *s1, const char *s2, size_t n);
 extern char *strdup(const char *s1);
 extern char *strchr(const char *s, int c);
 
+extern int atoi(const char *);
+extern long atol(const char *);
+extern long long atoll(const char *); 
+
+extern long strtol(const char *restrict, char **restrict, int);
+extern long long strtoll(const char *restrict, char **restrict, int);
+extern unsigned long strtoul(const char *restrict, char **restrict, int);
+extern unsigned long long strtoull(const char *restrict, char **restrict, int);
+
 extern void *memcpy(void *restrict s1, const void *restrict s2, size_t n);
 extern void *memmove(void *s1, const void *s2, size_t n);
 extern void *memset(void *b, int c, size_t len);

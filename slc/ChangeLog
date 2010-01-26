@@ -1,5 +1,21 @@
 2010-01-25  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	Extend the SL standard library.
+	
+	* lib/include/undocumented.h: Add more C99 declarations.
+
+	* lib/src/atoi.c,
+	* lib/src/atol.c,
+	* lib/src/atoll.c,
+	* lib/src/strtol.c,
+	* lib/src/strtoll.c,
+	* lib/src/strtoul.c,
+	* lib/src/strtoull.c: New.
+
+	* lib/mtalpha.mk: Update accordingly.
+	
+2010-01-25  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	Misc fixes to MT-Alpha code generation.
 
 	A number of quirks were discovereed when manually inspecting

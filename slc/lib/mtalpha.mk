@@ -1,6 +1,9 @@
 ########### MT-Alpha components ###########
 
 EXTRA_DIST += \
+	src/atoi.c \
+	src/atol.c \
+	src/atoll.c \
 	src/ctype.c \
 	src/errno.c \
 	src/getenv.c \
@@ -23,7 +26,11 @@ EXTRA_DIST += \
 	src/strdup.c \
 	src/strlen.c \
 	src/strncmp.c \
-	src/strncpy.c
+	src/strncpy.c \
+	src/strtol.c \
+	src/strtoll.c \
+	src/strtoul.c \
+	src/strtoull.c
 
 nobase_dist_pkgdata_DATA += \
 	mtalpha-sim/include/svp_os.h \
@@ -36,6 +43,9 @@ nobase_pkglib_DATA += \
    mtalpha-sim/libsl.a
 
 mtalpha_sim_libsl_a_CONTENTS = \
+	mtalpha-sim/atoi.o \
+	mtalpha-sim/atol.o \
+	mtalpha-sim/atoll.o \
 	mtalpha-sim/ctype.o \
 	mtalpha-sim/divl.o \
 	mtalpha-sim/divq.o \
@@ -64,7 +74,11 @@ mtalpha_sim_libsl_a_CONTENTS = \
 	mtalpha-sim/strdup.o \
 	mtalpha-sim/strlen.o \
 	mtalpha-sim/strncmp.o \
-	mtalpha-sim/strncpy.o
+	mtalpha-sim/strncpy.o \
+	mtalpha-sim/strtol.o \
+	mtalpha-sim/strtoul.o \
+	mtalpha-sim/strtoll.o \
+	mtalpha-sim/strtoul.o
 
 
 include $(srcdir)/src/mtamathobjs.mk
@@ -165,6 +179,10 @@ CLEANFILES += \
 	mtalpha-sim/strlen.o \
 	mtalpha-sim/strncmp.o \
 	mtalpha-sim/strncpy.o \
+	mtalpha-sim/strtol.o \
+	mtalpha-sim/strtoul.o \
+	mtalpha-sim/strtoll.o \
+	mtalpha-sim/strtoul.o \
 	mtalpha-sim/libm.a \
 	mtalpha-sim/libsl.a
 
