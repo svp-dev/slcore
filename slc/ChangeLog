@@ -1,5 +1,13 @@
 2010-01-25  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	Minor bug fix.
+
+	* tools/bin/slr.in,
+	* tools/lib/r-mt-sim.sh.in: Care about potentially unset
+	variables (VERBOSE, DESCRIPTION).
+
+2010-01-25  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	Extend the SL standard library.
 
 	* lib/include/sac_helpers.h: Move definitions into...

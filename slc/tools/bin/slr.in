@@ -275,7 +275,7 @@ if test "x$SIMPROFILE" = "xlist"; then
               (printf '\t%s\t' "$b"; file -h "$f"|cut -d: -f2) >&2
           else
               . "$f"
-              printf '\t%s\t %s\n' "$b" "$DESCRIPTION" >&2
+              printf '\t%s\t %s\n' "$b" "${DESCRIPTION:-(no description)}" >&2
           fi
       fi
   done
@@ -289,7 +289,7 @@ if test "x$SIMPROFILE" = "xlist"; then
                 (printf '\t%s\t' "$b"; file -h "$f"|cut -d: -f2) >&2
             else
                 . "$f"
-                printf '\t%s\t %s\n' "$b" "$DESCRIPTION" >&2
+                printf '\t%s\t %s\n' "$b" "${DESCRIPTION:-(no description)}" >&2
             fi
         fi
     done     
