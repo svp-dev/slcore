@@ -15,6 +15,18 @@ Changes since 2.2
 - A long-standing bug with line numbering has been fixed. This allows
   proper error reporting and debugging information.
 
+- Additional support for the C99 library has been added (see CSA note
+  [sl5]).
+
+- Support GCC 4.4.3 in alternate compiler for MT-Alpha.
+
+- Using option ``slr -n`` now causes the program's top level thread
+  (``t_main``) to be automatically delegated to a SVP place of the
+  specified number of cores, instead of the previous behavior of
+  ``-n`` which caused the hardware parameters to change.
+
+- Fix bug with the ``fast_`` allocation macros.
+
 Version 2.2, December 2009
 ==========================
 
