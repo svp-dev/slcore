@@ -1,3 +1,11 @@
+2010-01-26  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
+	Simplify the package build process for MGSim.
+
+	* deploy/dist/mgsim-dist.mk: Require SystemC to be installed
+	separately to build the package itself. This removes the
+	dependency on the installer.
+
 2010-01-24  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
 	Update top-level package after refactoring.

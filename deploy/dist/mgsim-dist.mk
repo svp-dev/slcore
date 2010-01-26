@@ -32,12 +32,14 @@ $(MGSIM_METASRC)/bootstrap_done: $(MGSIM_METASRC)/download_done
 # rather hackish: in order to make an archive for mgsim,
 # we need to generate the man pages, which in turn require
 # to build the programs, which in turn require a properly 
-# built systemc. So we build just that first.
+# built systemc. This needs to be present on the system already!
 $(MGSIM_METASRC)/configure_done: $(MGSIM_METASRC)/bootstrap_done
 	rm -f $@
-	$(MAKE) sc-build
-	eval `$(MAKE) sc-flags` && \
-	   cd $(MGSIM_METASRC) && ./configure CPPFLAGS="$$CPPFLAGS" LDFLAGS="$$LDFLAGS"
+	cd $(MGSIM_METASRC) && ./configure CPPFLAGS="$$CPPFLAGS" LDFLAGS="$$LDFLAGS"
+	if grep -q 'WARNING: COMA simulation not available' $(MGSIM_METASRC)/config.log; then \
+	  echo; echo "*** COMA not enabled: SystemC missing? ***"; echo; \
+	  exit 1; \
+	fi
 	touch $@
 
 $(MGSIM_METASRC)/build1_done: $(MGSIM_METASRC)/configure_done
