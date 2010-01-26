@@ -16,24 +16,24 @@
 # define SLC_SVP_CALLGATE_H
 
 #ifdef __mt_freestanding__
-extern void __sl_callgate(void);
+extern void __sl_callgate_owntls(void);
 
 #if defined(__alpha__) || defined(__mtalpha__)
-#define CALL_WITH_INFO(Bottom, Place)					\
-  do {									\
-    long __fid;								\
-    __asm__ __volatile__("allocate %0, 0, 0, 0, 0\n"			\
-			 "\tsetstart %0, %2\n"				\
-			 "\tsetlimit %0, %3\n"				\
-			 "\tcrei %0, 0(%4)\n"				\
-			 "\tmov %0, $31 #SYNC\n"			\
-			 : "=&r"(__fid)					\
-			 : "0"(Place),					\
-			   "rI"(Bottom),				\
-			   "rI"(((char*)(void*)(Bottom))+1),		\
-			   "r"(__sl_callgate)				\
-			 : "memory");					\
-  } while(0);
+#define CALL_WITH_INFO(Top, Place)					\
+    do {                                                                \
+        long __fid;                                                     \
+        __asm__ __volatile__("allocate %0, 0, 0, 0, 0\n"                \
+                             "\tsetstart %0, %2\n"                      \
+                             "\tsetlimit %0, %3\n"                      \
+                             "\tcrei %0, 0(%4)\n"                       \
+                             "\tmov %0, $31 #SYNC\n"			\
+                             : "=&r"(__fid)                             \
+                             : "0"(Place),                              \
+                               "rI"(Top),                               \
+                               "rI"(((char*)(void*)(Top))+1),           \
+                               "r"(__sl_callgate_owntls)                \
+                             : "memory");                               \
+    } while(0);
 
 #endif
 #endif

@@ -1,5 +1,23 @@
 2010-01-25  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	Fix bug in support for the `fast_' allocation routines.
+
+	The call gate to C code used by the `fast_' macros in `cmalloc.h'
+	had become invalid at some point when support for varargs and
+	transparent function calls was implemented. A new call gate was
+	required.
+	
+	* tools/lib/mtalpha-sim/callgate.s: New gate
+	__sl_callgate_owntls. This is required for the manual call gate
+	implemented in the library, since CALL_WITH_INFO cannot guarantee
+	that the argument data in memory is at the tip of the stack.
+
+	Also, document the gates.
+
+	* lib/include/svp/callgate.h: Use the new gate.
+	
+2010-01-25  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	Add support for environment variables inside emulation.
 
 	* tools/bin/slr.in,
