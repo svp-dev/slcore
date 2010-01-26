@@ -18,7 +18,7 @@
 #include <svp/assert.h>
 #include <svp/gfx.h>
 #include <svp/sep.h>
-#include <cmalloc.h>
+#include <cstdlib.h>
 #include <cmath.h>
 
 #include "benchmark.h"

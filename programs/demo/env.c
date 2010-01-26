@@ -12,9 +12,8 @@
 // `COPYING' file in the root directory.
 //
 
-#include <svp/testoutput.h>
 #include <svp/iomacros.h>
-#include <undocumented.h>
+#include <cstdlib.h>
 
 // XIGNORE: *:D
 sl_def(t_main, void)

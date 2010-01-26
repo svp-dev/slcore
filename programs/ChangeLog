@@ -1,5 +1,16 @@
 2010-01-25  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	Reflect latest updates to SL standard library.
+
+	* benchmarks/blas/blasbench.h,
+	* benchmarks/fft/fft-bench.c,
+	* benchmarks/lib/benchmark.c,
+	* benchmarks/livermore/ll-generate.py,
+	* benchmarks/mandel/mandel.c,
+	* demo/env.c: Use new header names.
+
+2010-01-25  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	New `env' demo for environment variables.
 
 	* demo/env.c: New.

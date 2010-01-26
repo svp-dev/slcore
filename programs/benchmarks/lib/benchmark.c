@@ -12,13 +12,13 @@
 // `COPYING' file in the root directory.
 //
 
-#include "benchmark.h"
 #include <svp/perf.h>
 #include <svp/slr.h>
 #include <svp/abort.h>
 #include <svp/testoutput.h>
 #include <svp/iomacros.h>
-#include <cmalloc.h>
+#include <cstdlib.h>
+#include "benchmark.h"
 
 #ifdef puts
 #undef puts

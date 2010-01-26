@@ -16,7 +16,7 @@
 #include <svp/fibre.h>
 #include <svp/perf.h>
 #include <svp/assert.h>
-#include <cmalloc.h>
+#include <cstdlib.h>
 
 #include "benchmark.h"
 

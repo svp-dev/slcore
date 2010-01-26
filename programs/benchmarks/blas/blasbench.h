@@ -15,8 +15,8 @@
 #ifndef SL_BENCHMARKS_BLAS_BLASBENCH_H
 # define SL_BENCHMARKS_BLAS_BLASBENCH_H
 
-#include <cmalloc.h>
 #include <svp/testoutput.h>
+#include <cstdlib.h>
 #include <svp/assert.h>
 #include <svp/fibre.h>
 #include "benchmark.h"

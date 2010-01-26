@@ -220,7 +220,7 @@ def gencode(k):
 #include "benchmark.h"
 #include <svp/fibre.h>
 #include <svp/assert.h>
-#include <cmalloc.h>
+#include <cstdlib.h>
 
 """
 
