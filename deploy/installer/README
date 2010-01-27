@@ -14,6 +14,6 @@ The script "slenv" is also installed and provides an interactive menu
 to select one of the installed versions and setup environment
 variables accordingly.
 
-When new versions of the tools are available, copy
-``versions.mk.defaults`` to ``versions.mk`` and edit the values
-accordingly.
+When new versions of the tools are available, download a new installer
+archive or use the ``--with`` command line parameters to the
+``configure`` script (see ``configure --help``).

@@ -1,6 +1,3 @@
-include versions.mk.defaults
--include versions.mk
-
 DSTBASE = $(DESTDIR)$(prefix)
 
 REQNAME = slreqs-b$(BINUTILS_VERSION)-u$(MGGCC_VERSION)-g$(GCC_VERSION)-m$(M4_VERSION)-sc$(SC_VERSION)
@@ -59,7 +56,8 @@ UNTAR = do_extract() { \
      esac; }; do_extract
 
 RULEFILES = $(foreach P,$(PARTS),$(srcdir)/rules/$(P).mk)
-EXTRA_DIST =
+
+include $(srcdir)/build-aux/version.mk
 
 include $(RULEFILES)
 
@@ -94,3 +92,4 @@ uninstall-local:
 
 ALL_RULES = fetch reqs-install install $(foreach P,$(PARTS),$(foreach R,fetch configure build install,$(P)-$(R)))
 .PHONY: $(ALL_RULES)
+

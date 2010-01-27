@@ -2,9 +2,8 @@
 # slc, a SVP generic compiler.
 # Copyright (C) 2009 The CSA group, The SL project.
 
-set -e
+set -ex
 
-echo "Detecting which Autotools to use..."
 # Some systems ship both the latest Automake and
 # an older version, and default to the older. Try
 # to detect this.
@@ -19,12 +18,7 @@ else
   AUTORECONF=autoreconf
 fi
 
-slc/build-aux/sl-init-autoconf tests/build-aux
-slc/build-aux/sl-init-autoconf programs/build-aux
-(cd deploy/install && cp -vf ../../slc/build-aux/{version.mk,version-gen} ./build-aux/)
-(cd tests && ./build-aux/mkalltests.sh)
-(cd programs/benchmarks/livermore && python ./ll-generate.py <ll-bounds.csv)
-(cd programs/benchmarks/blas && ./gendata.sh)
+cp ../../slc/build-aux/{version.mk,version-gen} ./build-aux/
 $AUTORECONF -v -f -i
 
 echo "Reconfiguration done."

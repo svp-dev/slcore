@@ -1,3 +1,29 @@
+2010-01-27  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
+	Clean up version handling in installer.
+
+	This changeset makes the installer itself versioned, so that `make
+	dist' can generate different installer archives over time. Also,
+	it allows the user to select custom versions for the installed
+	tools using flags to `configure', instead of modifying a
+	configuration files.
+
+	* deploy/installer/build-aux/bootstrap,
+	* deploy/installer/build-aux/package-version: New.
+	* bootstrap: Update accordingly.
+
+	* deploy/installer/configure.ac,
+	* deploy/installer/Makefile.am: Use the same versioning mechanisms
+	(version.mk, version-gen) as the other members of the tool chain.
+
+	* deploy/installer/versions.mk.defaults: Rename into...
+	* deploy/installer/versions.m4: ...this. Use m4 syntax suitable
+	for inclusion in `configure.ac'.
+
+	* deploy/installer/configure.ac: Support new flags
+	`--with-binutils-version', `--with-binutils-archive' etc to
+	customer the installed components.
+
 2010-01-26  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
 	* deploy/installer/versions.mk.defaults: Bump version numbers.
