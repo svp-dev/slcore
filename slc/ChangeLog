@@ -1,3 +1,10 @@
+2010-01-27  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
+	Fix bug in `slr -m'.
+
+	* tools/lib/r-mt-sim.sh.in: Fix handling of custom profiles in
+	`~/.mt-profiles'.
+
 2010-01-26  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
 	Upgrade the mutc-ptl back-end.

@@ -29,26 +29,32 @@ if test -n "${SLR_RECURSIVE:-}"; then
   unset SLR_NCORES
 fi
 
-saveIFS=$IFS
-IFS=:
 found=
-for d in "$HOME/.mt-profiles" $slc_datadir; do
-   pf="$d/mt-profiles/$SIMPROFILE"
-   if test -r "$pf"; then
-      . "$d/mt-profiles/$SIMPROFILE"
-      if test -n "${VERBOSE:-}"; then
-         echo "$basename: using profile: $pf" >&2
-         echo "$basename: profile description: ${DESCRIPTION:-(no description)}" >&2
-         simargs_base+=(-d)
-      fi
-      found=1
-      break
-   fi
-done
-IFS=$saveIFS
+pf="$HOME/.mt-profiles/$SIMPROFILE"
+if test -r "$pf"; then
+    found=$pf
+else
+    saveIFS=$IFS
+    IFS=:
+    for d in $slc_datadir; do
+        pf="$d/mt-profiles/$SIMPROFILE"
+        if test -r "$pf"; then
+            found="$pf"
+            break
+        fi
+    done
+    IFS=$saveIFS
+fi
 if test -z "$found"; then
    echo "$basename: profile '$SIMPROFILE' not found." >&2
    exit 1
+else
+    . "$found"
+    if test -n "${VERBOSE:-}"; then
+        echo "$basename: using profile: $pf" >&2
+        echo "$basename: profile description: ${DESCRIPTION:-(no description)}" >&2
+        simargs_base+=(-d)
+    fi
 fi
 
 ##
