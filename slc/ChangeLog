@@ -1,3 +1,10 @@
+2010-02-05  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
+	Expose initial place to programs.
+
+	* lib/src/mtsep.c (sep_init): Initialize `__main_place_id' and
+	`__main_placeinfo'.
+
 2010-01-27  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
 	Fix bug in `slr -m'.

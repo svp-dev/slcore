@@ -36,6 +36,9 @@ struct sep_data_t {
   int irregular;
 };
 
+extern const struct placeinfo * __main_placeinfo;
+extern sl_place_t __main_place_id;
+
 __attribute__((always_inline))
 unsigned long fast_log2(unsigned long ncores) {
   /*
@@ -220,8 +223,11 @@ void sep_init(void* init_parameters)
       root_sep_data.allplaces[current_ring_id].pi.ncores = 1;
 
       if (!root_sep_data.sep_info.sep_place) {
-	root_sep_data.allplaces[current_ring_id].allocated = 1;
-	root_sep_data.sep_info.sep_place = root_sep_data.allplaces[current_ring_id].pi.pid;
+	  // first ring
+	  // FIXME: if running on first core, pid = 0 so this may be reached multiple times.
+          root_sep_data.allplaces[current_ring_id].allocated = 1;
+          __main_place_id = root_sep_data.sep_info.sep_place = root_sep_data.allplaces[current_ring_id].pi.pid;
+          __main_placeinfo = &root_sep_data.allplaces[current_ring_id].pi;
       }
     }
 
