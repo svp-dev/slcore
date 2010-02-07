@@ -1,5 +1,15 @@
 2010-02-07  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	Improve `slr'.
+
+	* tools/bin/slr.in: Fix support for '][' in Fibre input.
+
+	* tools/lib/r-mt-sim.sh.in: Avoid the symbol table generation and
+	do not set COMA when running recursively (i.e. when dumping input
+	data).
+
+2010-02-07  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	Add support for program symbol tables in MGSim.
 	
 	* build-aux/mgbinutils.m4: Also detect the `nm' utility.

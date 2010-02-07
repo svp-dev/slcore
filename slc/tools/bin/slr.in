@@ -456,9 +456,10 @@ if test -n "$dofdata"; then
 	    sed -e 's/^ *//g;
 s/\[[0-9 ,]*: */\[/g;
 s/ *\]/\]/g;
+s/\]\[/] [/g;
 s/  */,/g;
 s/[dD]/e/g;
-s/,$//g' | $python "$sag_helper" f >"$SLR_RDIR"/input/fdata.c
+s/,$//g;' | $python "$sag_helper" f >"$SLR_RDIR"/input/fdata.c
 	
 	# compile arggen.c with Fibre data in C
 	mkdir -p "$SLR_RDIR"/slc-rec
