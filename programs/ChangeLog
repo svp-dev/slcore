@@ -1,3 +1,9 @@
+2010-02-07  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
+	Extend `fibre' demo to test Fibre syntax more.
+
+	* demo/fibre.c.d3: Check handling of '][' in input.
+
 2010-01-26  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
 	Minor packaging fix.
