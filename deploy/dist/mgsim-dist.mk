@@ -18,6 +18,8 @@ MGSIM_DIST_VERSION = $(MGSIM_SVN_REV)-$(MGSIM_BASEBRANCH)
 MGSIM_DISTBASE = mgsim-$(MGSIM_DIST_VERSION)
 MGSIM_METASRC = $(META_SOURCES)/$(MGSIM_DISTBASE)
 
+MGSIM_PROGRAMS = mgsim-alpha simx-alpha mgsim-sparc
+
 $(MGSIM_METASRC)/download_done:
 	rm -f $@
 	$(MKDIR_P) $(META_SOURCES)
@@ -44,7 +46,7 @@ $(MGSIM_METASRC)/configure_done: $(MGSIM_METASRC)/bootstrap_done
 
 $(MGSIM_METASRC)/build1_done: $(MGSIM_METASRC)/configure_done
 	rm -f $@
-	cd $(MGSIM_METASRC) && $(MAKE) all
+	cd $(MGSIM_METASRC) && $(MAKE) .version && $(MAKE) -C src $(MGSIM_PROGRAMS)
 	touch $@
 
 .PHONY: mgsim-dist

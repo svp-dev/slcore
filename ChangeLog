@@ -1,3 +1,10 @@
+2010-02-07  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
+	Optimize the package build process for MGSim.
+
+	* deploy/dist/mgsim-dist.mk: Only build the targets necessary for
+	man page generation.
+
 2010-01-27  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
 	Clean up version handling in installer.
