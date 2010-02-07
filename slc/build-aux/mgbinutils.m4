@@ -6,9 +6,15 @@ AC_DEFUN([AC_WITH_MG_BINUTILS],
  AC_ARG_VAR([RANLIB_MTALPHA], [Location of the `ranlib' utility configured for the MT-Alpha binary format.])
  AC_PATH_PROG([RANLIB_MTALPHA], [mtalpha-linux-gnu-ranlib], [no], [$prefix/bin$PATH_SEPARATOR$PATH])
 
+ AC_ARG_VAR([NM_MTALPHA], [Location of the `nm' utility configured for the MT-Alpha binary format.])
+ AC_PATH_PROG([NM_MTALPHA], [mtalpha-linux-gnu-nm], [no], [$prefix/bin$PATH_SEPARATOR$PATH])
+
  AC_ARG_VAR([AR_MTSPARC], [Location of the `ar' utility configured for the MT-Sparc binary format.])
  AC_PATH_PROG([AR_MTSPARC], [mtsparc-leon-linux-ar], [no], [$prefix/bin$PATH_SEPARATOR$PATH])
 
  AC_ARG_VAR([RANLIB_MTSPARC], [Location of the `ranlib' utility configured for the MT-Sparc binary format.])
  AC_PATH_PROG([RANLIB_MTSPARC], [mtsparc-leon-linux-ranlib], [no], [$prefix/bin$PATH_SEPARATOR$PATH])
+
+ AC_ARG_VAR([NM_MTSPARC], [Location of the `nm' utility configured for the MT-Sparc binary format.])
+ AC_PATH_PROG([NM_MTSPARC], [mtsparc-leon-linux-nm], [no], [$prefix/bin$PATH_SEPARATOR$PATH])
 ])

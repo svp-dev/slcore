@@ -1,3 +1,12 @@
+2010-02-07  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
+	Add support for program symbol tables in MGSim.
+	
+	* build-aux/mgbinutils.m4: Also detect the `nm' utility.
+	* tools/lib/Makefile.am: Propagate `nm' to `r-mt-sim.sh.in'.	
+	* tools/lib/r-mt-sim.sh.in: Generate and pass program symbol table
+	to simulator.
+
 2010-02-05  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
 	Expose initial place to programs.
