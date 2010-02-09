@@ -28,7 +28,14 @@ AC_ARG_ENABLE([check-ppp],
  fi], [enable_check_ppp=$enable_mtalpha])
 AM_CONDITIONAL([ENABLE_CHECK_PPP], [test "x$enable_check_ppp" = "xyes"])
 
-AM_CONDITIONAL([ENABLE_CHECK_COMA], [test "x$enable_check_ppp" = "xyes" -a "x$SIMX_ALPHA" != "xno"])
+AC_ARG_ENABLE([check-coma],
+[AC_HELP_STRING([--disable-check-coma], [do not check COMA simulation (default is to check)])],
+[enable_check_coma=no
+ if test "x$enableval" = xyes; then
+   enable_check_coma=$enable_mtalpha
+ fi], [enable_check_coma=$enable_mtalpha])
+
+AM_CONDITIONAL([ENABLE_CHECK_COMA], [test "x$enable_check_ppp" = "xyes" -a "x$SIMX_ALPHA" != "xno" -a "x$enable_check_coma" = "xyes"])
 
 AC_ARG_ENABLE([check-ptl],
 [AC_HELP_STRING([--disable-check-ptl], [do not check muTC-ptl (default is to check)])],
