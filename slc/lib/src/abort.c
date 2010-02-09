@@ -1,5 +1,5 @@
 //
-// malloc_intrinsics.h: this file is part of the SL toolchain.
+// abort.c: this file is part of the SL toolchain.
 //
 // Copyright (C) 2009 The SL project.
 //
@@ -12,15 +12,12 @@
 // `COPYING' file in the root directory.
 //
 
-#define restrict __restrict__
-typedef unsigned long ptrdiff_t;
-typedef unsigned long size_t;
+#include <svp/abort.h>
+#include <cstdlib.h>
 
-void mg_puts(const char*);
-void mg_putux(unsigned long);
-void abort(void);
-
-void* sbrk(ptrdiff_t);
-
-void* memset(void *, int, size_t);
-void* memcpy(void * restrict, const void* restrict, size_t);
+void
+abort(void)
+{
+    svp_abort();
+    while(1);
+}

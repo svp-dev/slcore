@@ -15,23 +15,10 @@
 #ifndef SLC_SVP_ASSERT_H
 # define SLC_SVP_ASSERT_H
 
-#include <svp/iomacros.h>
-#include <svp/abort.h>
-#include <svp/compiler.h>
+#include <cassert.h>
 
-#ifdef NDEBUG
-#define svp_assert(e) ((void)0)
-#else
+#warning this header is deprecated. Use cassert.h instead.
 
-#define svp_assert(e)  \
-    ((void) (likely(e) ? 0 : svp__assert (#e, __FILE__, __LINE__)))
-#define svp__assert(e, file, line)			     \
-  ({							     \
-    printf("%s:%u: failed assertion `%s'\n",		     \
-	   (const char*)file, line, (const char*)e);	     \
-    svp_abort(); 0;					     \
-   })
-
-#endif
+#define svp_assert(e) assert(e)
 
 #endif // ! SLC_SVP_ASSERT_H

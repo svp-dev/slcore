@@ -32,7 +32,10 @@ extern int atoi(const char *);
 extern long atol(const char *);
 extern long long atoll(const char *); 
 
-/* missing: atof, strtod, strtof, strtold */
+/* missing: atof, strtold */
+
+double strtold(const char*restrict, char **restrict);
+float strtof(const char*restrict, char**restrict);
 
 extern long strtol(const char *restrict, char **restrict, int);
 extern long long strtoll(const char *restrict, char **restrict, int);
@@ -84,7 +87,9 @@ extern void* dlrealloc(void*, size_t);
 
 #endif
 
-/* missing: abort, atexit, exit, _Exit */
+void abort(void);
+
+/* missing: atexit, exit, _Exit */
 
 extern char *getenv(const char *name);
 

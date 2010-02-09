@@ -485,7 +485,10 @@ MAX_RELEASE_CHECK_RATE   default: 4095 unless not HAVE_MMAP
 #define DLMALLOC_VERSION 20804
 #endif /* DLMALLOC_VERSION */
 
-#include "malloc_intrinsics.h"
+#include <cstddef.h>
+#include <cstdlib.h>
+#include <cstring.h>
+#include <svp/testoutput.h>
 
 
 #ifndef WIN32
@@ -1290,7 +1293,7 @@ int mspace_mallopt(int, int);
 #include <errno.h>       /* for MALLOC_FAILURE_ACTION */
 #endif /* LACKS_ERRNO_H */
 #if FOOTERS || DEBUG
-#include <time.h>        /* for magic initialization */
+#include <ctime.h>        /* for magic initialization */
 #endif /* FOOTERS */
 #ifndef LACKS_STDLIB_H
 #include <stdlib.h>      /* for abort() */
@@ -1300,7 +1303,7 @@ int mspace_mallopt(int, int);
 #undef assert
 #define assert(x) if(!(x)) ABORT
 #else /* ABORT_ON_ASSERT_FAILURE */
-#include <assert.h>
+#include <cassert.h>
 #endif /* ABORT_ON_ASSERT_FAILURE */
 #else  /* DEBUG */
 #ifndef assert
@@ -3396,10 +3399,10 @@ static void internal_malloc_stats(mstate m) {
       }
     }
 
-    mg_puts("max system bytes = "); mg_putux(maxfp);
-    mg_puts("\nsystem bytes     = "); mg_putux(fp);
-    mg_puts("\nin use bytes     = "); mg_putux(used);
-    mg_puts("\n");
+    output_string("max system bytes = ", 1); output_uint(maxfp, 1);
+    output_string("\nsystem bytes     = ", 1); output_uint(fp, 1);
+    output_string("\nin use bytes     = ", 1); output_uint(used, 1);
+    output_char('\n', 1);
 
     POSTACTION(m);
   }

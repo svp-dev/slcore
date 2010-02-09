@@ -19,28 +19,30 @@
 
 #ifdef __mt_freestanding__
 
-extern void *memcpy(void *restrict s1, const void *restrict s2, size_t n);
-extern void *memmove(void *s1, const void *s2, size_t n);
+void *memcpy(void *restrict s1, const void *restrict s2, size_t n);
+void *memmove(void *s1, const void *s2, size_t n);
 
-extern char *strcpy(char * restrict dst, const char * restrict src);
-extern char *strncpy(char * restrict dst, const char * restrict src, size_t len);
+char *strcpy(char * restrict dst, const char * restrict src);
+char *strncpy(char * restrict dst, const char * restrict src, size_t len);
+
+
+char *strcat(char *restrict s1, const char *restrict s2);
+char *strncat(char *restrict s1, const char *restrict s2, size_t n);
 
 /* missing:
-   strcat
-   strncat
    memcmp
    strcmp
    strcoll
 */
 
-extern int strncmp(const char *s1, const char *s2, size_t n);
+int strncmp(const char *s1, const char *s2, size_t n);
 
 /* missing:
    strxfrm
    memchr
 */
 
-extern char *strchr(const char *s, int c);
+char *strchr(const char *s, int c);
 
 /* missing:
    strcspn
@@ -50,20 +52,23 @@ extern char *strchr(const char *s, int c);
    strstr
    strtok
 */
-extern void *memset(void *b, int c, size_t len);
+void *memset(void *b, int c, size_t len);
 
-/* missing:
-   strerror
-*/
+char *strerror(int errnum);
 
-extern size_t strlen(const char*);
+size_t strlen(const char*);
 
 /* POSIX extensions: */
-extern char *stpcpy(char * restrict dst, const char * restrict src);
-extern char *stpncpy(char * restrict dst, const char * restrict src, size_t len);
+char *stpcpy(char * restrict dst, const char * restrict src);
+char *stpncpy(char * restrict dst, const char * restrict src, size_t len);
+int strerror_r(int errnum, char *strerrbuf, size_t buflen);
 
-/* BSD extension: */
-extern char *strdup(const char *);
+/* BSD extensions: */
+char *strdup(const char *);
+size_t strnlen(const char*, size_t);
+size_t strlcpy(char * restrict dst, const char * restrict src, size_t len);
+size_t strlcat(char * restrict dst, const char * restrict src, size_t len);
+void bcopy(const void *s1, void *s2, size_t n);
 
 #ifndef shutup_cstring_h
 #warning this implementation of string.h is incomplete.

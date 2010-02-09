@@ -18,14 +18,14 @@
 extern int errno;
 
 /* used by SL library */
-#define ENOMEM          12    /* Cannot allocate memory */
-#define EINVAL          22    /* Invalid argument */
-#define EFAULT          14    /* Bad address */
+#define ENOMEM          1    /* Cannot allocate memory */
+#define EINVAL          2    /* Invalid argument */
+#define EFAULT          3    /* Bad address */
 
 /* required by C99 */
-#define EDOM            33    /* Numerical argument out of domain */
-#define ERANGE          34    /* Result too large */
-#define EILSEQ          92    /* Illegal byte sequence */
+#define EDOM            4    /* Numerical argument out of domain */
+#define ERANGE          5    /* Result too large */
+#define EILSEQ          6    /* Illegal byte sequence */
 
 #else
 #ifdef __cplusplus

@@ -13,10 +13,11 @@
 //
 
 #include <cstdint.h>
+#include <cstdio.h>
+#include <cassert.h>
 #include <svp/sep.h>
-#include <svp/assert.h>
-#include <svp/iomacros.h>
 #include <svp/compiler.h>
+
 
 #define MAX_NCORES 1024
 #define L2_MAX_NCORES 10
@@ -159,10 +160,10 @@ sl_def(sep_dump_info, void,
 {
   int i;
   struct sep_data_t* sd = (struct sep_data_t*)(void*)sl_getp(sep);
-  puts("PID\t#cores\tallocated\n");
+  puts("PID\t#cores\tallocated");
   for (i = 0; i < MAX_NCORES; ++i)
     if (sd->allplaces[i].pi.pid)
-      printf("0x%x\t%u\t%d\n",
+      printf("0x%lx\t%lu\t%d\n",
 	     sd->allplaces[i].pi.pid,
 	     sd->allplaces[i].pi.ncores,
 	     sd->allplaces[i].allocated);
@@ -189,7 +190,7 @@ void sep_init(void* init_parameters)
   };
   struct placeconf * restrict pc = (struct placeconf*) init_parameters;
 
-  svp_assert(pc->ncores <= MAX_NCORES);
+  assert(pc->ncores <= MAX_NCORES);
 
   size_t i;
   int current_ring_id = -1;

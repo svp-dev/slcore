@@ -25,6 +25,7 @@ EXTRA_DIST = \
 nobase_dist_pkgdata_DATA = \
 	include/bits/float.h \
 	include/calloca.h \
+	include/cassert.h \
 	include/cctype.h \
 	include/cerrno.h \
 	include/cfloat.h \
@@ -35,11 +36,13 @@ nobase_dist_pkgdata_DATA = \
 	include/cstdarg.h \
 	include/cstddef.h \
 	include/cstdint.h \
+	include/cstdio.h \
 	include/cstdlib.h \
 	include/cstring.h \
 	include/ctime.h \
 	include/sac_helpers.h \
 	include/undocumented.h \
+	include/sys/ctypes.h \
 	include/svp/argslot.h \
 	include/svp/assert.h \
 	include/svp/callgate.h \

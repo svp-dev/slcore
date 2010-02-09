@@ -18,6 +18,8 @@
 #include <svp/argslot.h>
 #include <cstddef.h>
 
+#warning this header is deprecated. Use cstdio.h instead.
+
 /* Print a single character to the console output. */
 sl_decl(svp_io_putc, void,
 	sl_glparm(char, c));

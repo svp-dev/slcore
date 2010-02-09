@@ -16,10 +16,10 @@
 
 #ifdef __mt_freestanding__
 
+#include <sys/ctypes.h>
 #include <cstddef.h>
 
 #define CLOCKS_PER_SEC 1000000000
-typedef long clock_t;
 
 extern clock_t clock(void);
 

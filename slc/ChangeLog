@@ -1,3 +1,127 @@
+2010-02-09  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
+	Extend and improve the SL standard library.
+
+	* lib/include/cassert.h,
+	* lib/include/cstdio.h,
+	* lib/include/sys/ctypes.h: New.
+	* lib/Makefile.am: Update accordingly.
+
+	* lib/include/svp/assert.h,
+	* lib/include/svp/io.h,
+	* lib/include/svp/iomacros.h: Deprecate.
+
+	* lib/src/mtsep.c: Use the new API.
+
+	* lib/include/cerrno.h,
+	* lib/include/cstdlib.h,
+	* lib/include/cstring.h: Extend.
+
+	* lib/include/ctime.h: Find `clock_t' in <sys/ctypes.h>.
+
+	* lib/src/malloc_intrinsics.h: Remove.
+	* lib/src/malloc_intrinsics.c: Remove. Contents in...
+	* lib/src/heap.c: ...here, and...
+	* lib/src/abort.c: ...here.
+	# lib/src/malloc.c: Update accordingly.
+
+	* lib/src/gdtoa/arith-mtalpha.h,
+	* lib/src/gdtoa/arith.h,
+	* lib/src/gdtoa/arithchk.c,
+	* lib/src/gdtoa/dmisc.c,
+	* lib/src/gdtoa/dtoa.c,
+	* lib/src/gdtoa/g_Qfmt.c,
+	* lib/src/gdtoa/g__fmt.c,
+	* lib/src/gdtoa/g_ddfmt.c,
+	* lib/src/gdtoa/g_dfmt.c,
+	* lib/src/gdtoa/g_ffmt.c,
+	* lib/src/gdtoa/g_xLfmt.c,
+	* lib/src/gdtoa/g_xfmt.c,
+	* lib/src/gdtoa/gd_qnan-mtalpha.h,
+	* lib/src/gdtoa/gd_qnan.h,
+	* lib/src/gdtoa/gdtoa.c,
+	* lib/src/gdtoa/gdtoa.h,
+	* lib/src/gdtoa/gdtoa_fltrnds.h,
+	* lib/src/gdtoa/gdtoaimp.h,
+	* lib/src/gdtoa/gethex.c,
+	* lib/src/gdtoa/gmisc.c,
+	* lib/src/gdtoa/hd_init.c,
+	* lib/src/gdtoa/hexnan.c,
+	* lib/src/gdtoa/makefile,
+	* lib/src/gdtoa/misc.c,
+	* lib/src/gdtoa/qnan.c,
+	* lib/src/gdtoa/smisc.c,
+	* lib/src/gdtoa/strtoIQ.c,
+	* lib/src/gdtoa/strtoId.c,
+	* lib/src/gdtoa/strtoIdd.c,
+	* lib/src/gdtoa/strtoIf.c,
+	* lib/src/gdtoa/strtoIg.c,
+	* lib/src/gdtoa/strtoIx.c,
+	* lib/src/gdtoa/strtoIxL.c,
+	* lib/src/gdtoa/strtod.c,
+	* lib/src/gdtoa/strtodI.c,
+	* lib/src/gdtoa/strtodg.c,
+	* lib/src/gdtoa/strtodnrp.c,
+	* lib/src/gdtoa/strtof.c,
+	* lib/src/gdtoa/strtopQ.c,
+	* lib/src/gdtoa/strtopd.c,
+	* lib/src/gdtoa/strtopdd.c,
+	* lib/src/gdtoa/strtopf.c,
+	* lib/src/gdtoa/strtopx.c,
+	* lib/src/gdtoa/strtopxL.c,
+	* lib/src/gdtoa/strtorQ.c,
+	* lib/src/gdtoa/strtord.c,
+	* lib/src/gdtoa/strtordd.c,
+	* lib/src/gdtoa/strtorf.c,
+	* lib/src/gdtoa/strtorx.c,
+	* lib/src/gdtoa/strtorxL.c,
+	* lib/src/gdtoa/sum.c,
+	* lib/src/gdtoa/ulp.c: Import from FreeBSD. This provides
+	`dtoa'/`strtod', etc.
+	* lib/gdtoa.mk: New.
+
+	* lib/src/dtoa_simple.c: Provide alternative `dtoa' since the
+	gdtoa code seems to have FP issues on the MG simulator at this
+	point.
+
+	* lib/src/floatio.h,
+	* lib/src/fpmath.h,
+	* lib/src/_hdtoa.c,
+	* lib/src/fprintf.c,
+	* lib/src/perror.c,
+	* lib/src/printf-pos.c,
+	* lib/src/printf.c,
+	* lib/src/printfcommon.h,
+	* lib/src/printflocal.h,
+	* lib/src/sprintf.c,
+	* lib/src/strcat.c,
+	* lib/src/strerror.c,
+	* lib/src/strlcat.c,
+	* lib/src/strlcpy.c,
+	* lib/src/strncat.c,
+	* lib/src/strnlen.c,
+	* lib/src/vfprintf.c: Import from FreeBSD. Use `dtoa_simple' in
+	printf's `%f', etc. for now.
+
+	* lib/src/mtstdio.h,
+	* lib/src/mtstdio.c: Provide barebones stdio FILEs.
+
+	* lib/src/fputc.c,
+	* lib/src/fputs.c,
+	* lib/src/putc.c,
+	* lib/src/putchar.c,
+	* lib/src/puts.c,
+	* lib/src/fwrite.c,
+	* lib/src/snprintf.c,
+	* lib/src/vsnprintf.c,
+	* lib/src/vprintf.c: Provide more I/O primitives from the basic
+	FreeBSD implementations.
+
+	* lib/src/sys_errlist.c,
+	* lib/src/bcopy.c: New. (dependencies to printf/perror)
+
+	* lib/mtalpha.mk: List the new files.
+
 2010-02-07  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
 	Improve `slr'.
