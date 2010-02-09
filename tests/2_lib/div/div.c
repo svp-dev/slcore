@@ -13,17 +13,17 @@
 //
 
 #include <svp/div.h>
-#include <svp/iomacros.h>
 #include <svp/slr.h>
+#include <cstdio.h>
 
 sl_def(testu, void,
        sl_glparm(uint64_t, x),
        sl_glparm(uint64_t, y))
 {
   uint64_t lx = sl_getp(x), ly = sl_getp(y);
-  printf("unsigned: %u : %u = ", lx, ly);
+  printf("unsigned: %llu : %llu = ", (unsigned long long)lx, (unsigned long long)ly);
   divmodu(lx, ly);
-  printf("%u : %u\n", lx, ly);
+  printf("%llu : %llu\n", (unsigned long long)lx, (unsigned long long)ly);
 }
 sl_enddef
 
@@ -32,9 +32,9 @@ sl_def(tests, void,
        sl_glparm(int64_t, y))
 {
   int64_t lx = sl_getp(x), ly = sl_getp(y);
-  printf("signed: %d : %d = ", lx, ly);
+  printf("signed: %lld : %lld = ", (long long)lx, (long long)ly);
   divmods(lx, ly);
-  printf("%d : %d\n", lx, ly);
+  printf("%lld : %lld\n", (long long)lx, (long long)ly);
 }
 sl_enddef
 
@@ -59,7 +59,7 @@ slr_decl(slr_var(unsigned long long, ua),
 
 sl_def(t_main, void)
 {
-  puts("----\n");
+  puts("----");
   sl_proccall(testu,
 	      sl_glarg(uint64_t, x, slr_get(ua)[0]),
 	      sl_glarg(uint64_t, y, slr_get(ub)[0]));

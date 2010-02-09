@@ -12,8 +12,8 @@
 // `COPYING' file in the root directory.
 //
 
-#include <cmalloc.h>
-#include <svp/iomacros.h>
+#include <cstdlib.h>
+#include <cstdio.h>
 
 sl_def(t_main, void)
 {
@@ -25,7 +25,6 @@ sl_def(t_main, void)
    p1[0] = '4';
    p1[1] = '\0';
    p2[0] = '2';
-   p2[1] = '\n';
    p2[2] = '\0';
 
    puts(p1); puts(p2);

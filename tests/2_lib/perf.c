@@ -13,7 +13,7 @@
 //
 
 #include <svp/perf.h>
-#include <svp/iomacros.h>
+#include <cstdio.h>
 
 // XIGNORE: *:D
 
@@ -21,18 +21,18 @@ sl_def(t_main, void)
 {
   counter_t ct[2][MTPERF_NCOUNTERS];
   mtperf_sample(ct[0]);
-  puts("hello, world!\n");
+  puts("hello, world!");
   mtperf_sample(ct[1]);
 
-  puts("differences (raw):\n");
+  puts("differences (raw):");
   mtperf_report_diffs(ct[0], ct[1], REPORT_RAW);
-  puts("differences (Fibre):\n");
+  puts("differences (Fibre):");
   mtperf_report_diffs(ct[0], ct[1], REPORT_FIBRE);
-  puts("differences (CSV):\n");
+  puts("differences (CSV):");
   mtperf_report_diffs(ct[0], ct[1], REPORT_CSV);
-  puts("differences (CSV+header):\n");
+  puts("differences (CSV+header):");
   mtperf_report_diffs(ct[0], ct[1], REPORT_CSV|CSV_INCLUDE_HEADER);
-  puts("differences (CSV+tabs):\n");
+  puts("differences (CSV+tabs):");
   mtperf_report_diffs(ct[0], ct[1], REPORT_CSV|CSV_SEP('\t'));
 }
 sl_enddef

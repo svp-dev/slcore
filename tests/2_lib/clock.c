@@ -13,17 +13,17 @@
 //
 
 #include <ctime.h>
-#include <svp/iomacros.h>
+#include <cstdio.h>
 
 // XIGNORE: *:D
 
 sl_def(t_main, void)
 {
   clock_t c1 = clock();
-  puts("hello, world!\n");
+  puts("hello, world!");
   clock_t c2 = clock();
-  printf("time to print message: %d clocks = %f seconds\n",
-	 c2-c1,
+  printf("time to print message: %d clocks = %g seconds\n",
+	 (int)(c2-c1),
 	 (float)(c2-c1)/(float)CLOCKS_PER_SEC);
 }
 sl_enddef

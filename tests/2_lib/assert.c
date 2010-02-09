@@ -12,15 +12,15 @@
 // `COPYING' file in the root directory.
 //
 
-#include<svp/assert.h>
+#include <cassert.h>
 
 int y = 4;
 
 sl_def(t_main, void)
 {
-  svp_assert(1 == 1);
+  assert(1 == 1);
   int x = 3;
-  svp_assert(x == 3);
-  svp_assert(y == 4);
+  assert(x == 3);
+  assert(y == 4);
 }
 sl_enddef

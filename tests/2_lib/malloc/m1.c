@@ -12,7 +12,7 @@
 // `COPYING' file in the root directory.
 //
 
-#include <cmalloc.h>
+#include <cstdlib.h>
 
 sl_def(t_main, void)
 {

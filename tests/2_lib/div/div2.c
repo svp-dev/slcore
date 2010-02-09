@@ -12,18 +12,18 @@
 // `COPYING' file in the root directory.
 //
 
-#include <svp/iomacros.h>
-#include <svp/assert.h>
 #include <svp/div.h>
+#include <cassert.h>
+#include <cstdio.h>
 
 sl_def(t_main, void)
 {
   uint64_t x = 69, y = 5;
   divmodu(x, y);
   uint64_t x1 = x, y1 = y;
-  while (x1--) putc('.'); putc('\n');
-  while (y1--) putc('.'); putc('\n');
-  svp_assert(x == 4);
-  svp_assert(y == 13);
+  while (x1--) putchar('.'); putchar('\n');
+  while (y1--) putchar('.'); putchar('\n');
+  assert(x == 4);
+  assert(y == 13);
 }
 sl_enddef
