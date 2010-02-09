@@ -1,5 +1,15 @@
 2010-02-09  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	More input for the `fibre' demo and new demo `pi'.
+
+	* demo/pi.c,
+	* demo/fibre.c.d4: New.
+	* demo/Makefile.am: Update accordingly.
+
+	* demo/fibre.c: Add `slt' run spec.
+
+2010-02-09  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	Update to latest SL library changes.
 
 	* benchmarks/blas/blasbench.h,

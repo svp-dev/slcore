@@ -20,6 +20,7 @@
 // SLT_RUN: -f TEST.d1
 // SLT_RUN: -f TEST.d2
 // SLT_RUN: -f TEST.d3
+// SLT_RUN: -f TEST.d4
 
 sl_def(t_main, void)
 {
