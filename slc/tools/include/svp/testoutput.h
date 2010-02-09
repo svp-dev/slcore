@@ -21,29 +21,29 @@
 
 # if defined(__alpha__) || defined(__mtalpha__)
 #  define output_float(F, Stream, Precision) __asm__ __volatile("printf %0, %1" : : "f"(F), \
-								"r"(Stream | (Precision << 4)))
+                                                                "r"((Stream) | (Precision << 4)))
 
-#  define output_uint(N, Stream) __asm__ __volatile__("print %0, %1" : : "r"(N), "rI"(Stream | (0 << 6)))
-#  define output_hex(N, Stream) __asm__ __volatile__("print %0, %1" : : "r"(N), "rI"(Stream | (1 << 6)))
-#  define output_int(N, Stream) __asm__ __volatile__("print %0, %1" : : "r"(N), "rI"(Stream | (2 << 6)))
-#  define output_char(N, Stream) __asm__ __volatile__("print %0, %1" : : "r"(N), "rI"(Stream | (3 << 6)))
+#  define output_uint(N, Stream) __asm__ __volatile__("print %0, %1" : : "r"(N), "rI"((Stream) | (0 << 6)))
+#  define output_hex(N, Stream) __asm__ __volatile__("print %0, %1" : : "r"(N), "rI"((Stream) | (1 << 6)))
+#  define output_int(N, Stream) __asm__ __volatile__("print %0, %1" : : "r"(N), "rI"((Stream) | (2 << 6)))
+#  define output_char(N, Stream) __asm__ __volatile__("print %0, %1" : : "r"(N), "rI"((Stream) | (3 << 6)))
 
 # else
 #  warning "Don't know how to define debug_int/debug_float on this platform."
 # endif
 
-# define output_string(S, Stream)				\
-  do {								\
-    const char *__ptr = (S);					\
-    while(likely(*__ptr)) output_char(*__ptr++, Stream);	\
-  } while(0)
+# define output_string(S, Stream)                                       \
+    do {								\
+        const unsigned char *__ptr = (const unsigned char*)(void*)(S);  \
+        while(likely(*__ptr)) output_char(*__ptr++, Stream);            \
+    } while(0)
 
 # define output_bytes(S, L, Stream)					\
-  do {									\
-    const char *__ptr = (const char*)(void*)(S);			\
-    unsigned long __i = 0, __max = (L);					\
-    while(likely(__i < __max)) output_char(__ptr[__i++], Stream);	\
-  } while(0)
+    do {                                                                \
+        const unsigned char *__ptr = (const unsigned char*)(void*)(S);  \
+        unsigned long __i = 0, __max = (L);                             \
+        while(likely(__i < __max)) output_char(__ptr[__i++], Stream);	\
+    } while(0)
 
 #else
 

@@ -1,5 +1,12 @@
 2010-02-09  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	Small optimization in run-time library.
+
+	* tools/include/svp/testoutput.h: Output using `unsigned
+	char'. (saves one instruction on Alpha)
+
+2010-02-09  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	Extend and improve the SL standard library.
 
 	* lib/include/cassert.h,
