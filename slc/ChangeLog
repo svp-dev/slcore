@@ -1,5 +1,9 @@
 2010-02-09  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	* doc/NEWS.txt: Initialize for 2.3.x.
+
+2010-02-09  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	Release version 2.3.
 
 	* build-aux/package-version: Update to 2.3.
