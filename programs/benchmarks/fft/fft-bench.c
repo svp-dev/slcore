@@ -15,7 +15,7 @@
 #include <svp/testoutput.h>
 #include <svp/fibre.h>
 #include <svp/perf.h>
-#include <svp/assert.h>
+#include <cassert.h>
 #include <cstdlib.h>
 
 #include "benchmark.h"
@@ -36,27 +36,27 @@ sl_def(initialize, void,
 {
   int i;
   struct bdata *bdata = (struct bdata*) malloc(sizeof(struct bdata));
-  svp_assert(bdata != 0);
+  assert(bdata != 0);
 
-  svp_assert(2*sizeof(double) == sizeof(cpx_t));
+  assert(2*sizeof(double) == sizeof(cpx_t));
 
-  svp_assert(fibre_tag(0) == 0);
-  svp_assert(fibre_rank(0) == 0);
+  assert(fibre_tag(0) == 0);
+  assert(fibre_rank(0) == 0);
   bdata->M = *(unsigned long*)fibre_data(0);
-  svp_assert(bdata->M <= TABLE_SIZE);
+  assert(bdata->M <= TABLE_SIZE);
   bdata->N = 1 << bdata->M;
 
-  svp_assert(fibre_tag(1) == 2);
-  svp_assert(fibre_rank(1) == 2);
-  svp_assert(fibre_shape(1)[0] >= bdata->N);
-  svp_assert(fibre_shape(1)[1] == 2);
+  assert(fibre_tag(1) == 2);
+  assert(fibre_rank(1) == 2);
+  assert(fibre_shape(1)[0] >= bdata->N);
+  assert(fibre_shape(1)[1] == 2);
   bdata->x_orig = (const cpx_t*)fibre_data(1);
 
   bdata->y_fft = (cpx_t*)malloc(sizeof(cpx_t) * bdata->N);
-  svp_assert(bdata->y_fft != 0);
+  assert(bdata->y_fft != 0);
 
   bdata->z_inv = (cpx_t*)malloc(sizeof(cpx_t) * bdata->N);
-  svp_assert(bdata->z_inv != 0);
+  assert(bdata->z_inv != 0);
 
   sl_getp(st)->data = bdata;
 }

@@ -1,3 +1,29 @@
+2010-02-09  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
+	Update to latest SL library changes.
+
+	* benchmarks/blas/blasbench.h,
+	* benchmarks/fft/fft-bench.c,
+	* benchmarks/lib/benchmark.c,
+	* benchmarks/livermore/kernel15.c,
+	* benchmarks/livermore/kernel21.c,
+	* benchmarks/livermore/kernel23.c,
+	* benchmarks/livermore/kernel6.c,
+	* benchmarks/livermore/kernel8.c,
+	* benchmarks/livermore/ll-generate.py,
+	* demo/10threads.c,
+	* demo/Makefile.am,
+	* demo/answer.c,
+	* demo/bitblt.c,
+	* demo/env.c,
+	* demo/fibonacci.c,
+	* demo/fibre.c,
+	* demo/helloworld.c,
+	* demo/keyblit.c,
+	* demo/roman.c,
+	* demo/sep.c: Change header names and use `assert' and `printf'
+	properly.
+
 2010-02-07  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
 	Extend `fibre' demo to test Fibre syntax more.

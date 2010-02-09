@@ -14,9 +14,9 @@
 
 #include <svp/perf.h>
 #include <svp/slr.h>
-#include <svp/abort.h>
 #include <svp/testoutput.h>
-#include <svp/iomacros.h>
+#include <cstdlib.h>
+#include <cstdio.h>
 #include <cstdlib.h>
 #include "benchmark.h"
 
@@ -98,7 +98,7 @@ sl_def(run_benchmark, void, sl_glparm(struct benchmark*, b))
 
     if (!sl_geta(p)) {
       output_string("Place allocation failed!\n", 2);
-      svp_abort();
+      abort();
     }
     bs.place = sl_geta(p);
     pid = bs.place->pid;

@@ -17,7 +17,7 @@
 
 #include <svp/testoutput.h>
 #include <cstdlib.h>
-#include <svp/assert.h>
+#include <cassert.h>
 #include <svp/fibre.h>
 #include "benchmark.h"
 
@@ -36,39 +36,39 @@
   { \
     int i, f = 0;							\
     struct bdata *bdata = (struct bdata*) malloc(sizeof(struct bdata)); \
-    svp_assert(bdata != NULL);
+    assert(bdata != NULL);
 
 #define READ_COUNTER(Var)				\
-  svp_assert(fibre_tag(f) == 0 || fibre_tag(f) == 1);	\
-  svp_assert(fibre_rank(f) == 0);			\
+  assert(fibre_tag(f) == 0 || fibre_tag(f) == 1);	\
+  assert(fibre_rank(f) == 0);			\
   bdata->Var = *(long*)fibre_data(f); ++f;
 
 #define READ_SCALAR(Var)			\
-  svp_assert(fibre_tag(f) == 2);		\
-  svp_assert(fibre_rank(f) == 0);		\
+  assert(fibre_tag(f) == 2);		\
+  assert(fibre_rank(f) == 0);		\
   bdata->Var = *(FLOAT*)fibre_data(f); ++f;
 
 #define READ_ARRAY_IN(Var, N)				 \
-  svp_assert(fibre_tag(f) == 2);			 \
-  svp_assert(fibre_rank(f) == 1);			 \
-  svp_assert(fibre_shape(f)[0] >= bdata->N);		 \
+  assert(fibre_tag(f) == 2);			 \
+  assert(fibre_rank(f) == 1);			 \
+  assert(fibre_shape(f)[0] >= bdata->N);		 \
   FLOAT *Var = (FLOAT*)malloc(bdata->N * sizeof(FLOAT)); \
-  svp_assert(Var != 0); \
+  assert(Var != 0); \
   for (i = 0; i < bdata->N; ++i) Var[i] = ((double*)fibre_data(f))[i]; \
   ++f;								       \
   bdata->Var = Var;
 
 #define READ_ARRAY_INOUT(Var, N)				       \
-  svp_assert(fibre_tag(f) == 2);			 \
-  svp_assert(fibre_rank(f) == 1);			 \
-  svp_assert(fibre_shape(f)[0] >= bdata->N);		 \
+  assert(fibre_tag(f) == 2);			 \
+  assert(fibre_rank(f) == 1);			 \
+  assert(fibre_shape(f)[0] >= bdata->N);		 \
   FLOAT *Var = (FLOAT*)malloc(bdata->N * sizeof(FLOAT));	       \
-  svp_assert(Var != 0);						       \
+  assert(Var != 0);						       \
   for (i = 0; i < bdata->N; ++i) Var[i] = ((double*)fibre_data(f))[i]; \
   ++f;								       \
   bdata->Var ## _orig = Var;					       \
   bdata->Var = (FLOAT*)malloc(bdata->N * sizeof(FLOAT));	       \
-  svp_assert(bdata->Var != 0);
+  assert(bdata->Var != 0);
 
 #define END_READ		     \
   sl_getp(st)->data = (void*) bdata; \

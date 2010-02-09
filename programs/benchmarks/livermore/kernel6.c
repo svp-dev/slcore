@@ -99,9 +99,9 @@ sl_def(kernel6, void,
        , sl_glparm(size_t, W_dim0)
     )
 {
-    svp_assert(sl_getp(B_dim0) == sl_getp(n));
-    svp_assert(sl_getp(B_dim1) == sl_getp(n));
-    svp_assert(sl_getp(W_dim0) == sl_getp(n));
+    assert(sl_getp(B_dim0) == sl_getp(n));
+    assert(sl_getp(B_dim1) == sl_getp(n));
+    assert(sl_getp(W_dim0) == sl_getp(n));
     sl_create(,, 1, sl_getp(n), , 2, , outerk6,
               sl_sharg(long, , 0),
               sl_glfarg(double, , 0.01),

@@ -13,7 +13,7 @@
 //
 
 #include <svp/roman.h>
-#include <svp/iomacros.h>
+#include <svp/testoutput.h>
 #include <svp/slr.h>
 
 slr_decl(slr_var(short, N, "number to print"));
@@ -23,10 +23,10 @@ slr_decl(slr_var(short, N, "number to print"));
 sl_def(t_main, void)
 {
   if (!slr_len(N))
-    puts("no number specified!\n");
+      output_string("no number specified!\n", 2);
   else {
-    sl_proccall(roman, sl_glarg(short, x, slr_get(N)[0]));
-    putc('\n');
+      sl_proccall(roman, sl_glarg(short, x, slr_get(N)[0]));
+      output_char('\n', 1);
   }
 }
 sl_enddef

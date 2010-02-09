@@ -12,7 +12,7 @@
 // `COPYING' file in the root directory.
 //
 
-#include <svp/iomacros.h>
+#include <cstdio.h>
 
 sl_def(t_main, void)
 {

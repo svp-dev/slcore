@@ -141,12 +141,12 @@ sl_def(kernel8,void,
        , sl_glparm(size_t, U3_dim1)
        , sl_glparm(size_t, U3_dim2))
 {
-    svp_assert(sl_getp(U1_dim0) == 2);
-    svp_assert(sl_getp(U2_dim0) == 2);
-    svp_assert(sl_getp(U3_dim0) == 2);
-    svp_assert(sl_getp(U1_dim2) == 4);
-    svp_assert(sl_getp(U2_dim2) == 4);
-    svp_assert(sl_getp(U3_dim2) == 4);
+    assert(sl_getp(U1_dim0) == 2);
+    assert(sl_getp(U2_dim0) == 2);
+    assert(sl_getp(U3_dim0) == 2);
+    assert(sl_getp(U1_dim2) == 4);
+    assert(sl_getp(U2_dim2) == 4);
+    assert(sl_getp(U3_dim2) == 4);
     sl_create(,, , sl_getp(n)*2, , ,, innerk8
               , sl_glfarg(double, , 2.0)
               , sl_glfarg(double, , sl_getp(A11))

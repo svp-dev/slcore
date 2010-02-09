@@ -12,8 +12,8 @@
 // `COPYING' file in the root directory.
 //
 
-#include <svp/iomacros.h>
-#include <svp/assert.h>
+#include <cstdio.h>
+#include <cassert.h>
 #include <svp/slr.h>
 
 #define INT unsigned long
@@ -40,7 +40,7 @@ sl_def(fibo_print, void,
   INT p3 = sl_getp(fibo)[i];
 
   INT n = sl_getp(guard);
-  printf("The %uth Fibonacci number is %u + %u = %u\n", (INT)i, p1, p2, p3);
+  printf("The %luth Fibonacci number is %lu + %lu = %lu\n", (INT)i, p1, p2, p3);
   sl_setp(guard, n);
 }
 sl_enddef
@@ -52,7 +52,7 @@ slr_decl(slr_var(int, N, "number of fibonacci numbers to generate"));
 
 sl_def(t_main, void)
 {
-  svp_assert(slr_len(N) >= 1);
+  assert(slr_len(N) >= 1);
   unsigned N = slr_get(N)[0] + 1;
 
   INT fibonums[N];

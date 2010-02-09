@@ -12,14 +12,13 @@
 // `COPYING' file in the root directory.
 //
 
-#include <svp/iomacros.h>
-#include <svp/roman.h>
+#include <cstdio.h>
 
 sl_def(foo, void, sl_shparm(int, a))
 {
    sl_setp(a, sl_getp(a) + 1);
 
-   putc('.');
+   putchar('.');
 }
 sl_enddef
 

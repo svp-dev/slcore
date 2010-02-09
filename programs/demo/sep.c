@@ -12,9 +12,9 @@
 // `COPYING' file in the root directory.
 //
 
+#include <cstdio.h>
 #include <svp/sep.h>
 #include <svp/perf.h>
-#include <svp/iomacros.h>
 #include <svp/slr.h>
 
 // SLT_RUN: L=1 nmax=4

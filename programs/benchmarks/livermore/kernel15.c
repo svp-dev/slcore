@@ -245,11 +245,11 @@ sl_def(kernel15, void,
     output_hex(sl_getp(VY)+sl_getp(VY_dim0)*sl_getp(VY_dim0), 2); output_char('\n',2);
     */
 
-    svp_assert(sl_getp(VF_dim0) == NG && sl_getp(VF_dim1) == sl_getp(n)+1);
-    svp_assert(sl_getp(VG_dim0) == NG && sl_getp(VG_dim1) == sl_getp(n)+1);
-    svp_assert(sl_getp(VH_dim0) == NG && sl_getp(VH_dim1) == sl_getp(n)+1);
-    svp_assert(sl_getp(VS_dim0) == NG && sl_getp(VS_dim1) == sl_getp(n)+1);
-    svp_assert(sl_getp(VY_dim0) == NG && sl_getp(VY_dim1) == sl_getp(n)+1);
+    assert(sl_getp(VF_dim0) == NG && sl_getp(VF_dim1) == sl_getp(n)+1);
+    assert(sl_getp(VG_dim0) == NG && sl_getp(VG_dim1) == sl_getp(n)+1);
+    assert(sl_getp(VH_dim0) == NG && sl_getp(VH_dim1) == sl_getp(n)+1);
+    assert(sl_getp(VS_dim0) == NG && sl_getp(VS_dim1) == sl_getp(n)+1);
+    assert(sl_getp(VY_dim0) == NG && sl_getp(VY_dim1) == sl_getp(n)+1);
     sl_create(,, 1*(NG-1), sl_getp(n)*(NG-1),, ,, innerk15
               , sl_glarg(size_t, , sl_getp(n))
               , sl_glfarg(double, , AR_init)

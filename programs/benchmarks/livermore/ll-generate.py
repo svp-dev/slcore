@@ -36,11 +36,11 @@ sl_def(initialize, void,
 {
    size_t i, f = 0;
    struct bdata *bdata = (struct bdata*) fast_malloc(sizeof (struct bdata));
-   svp_assert(bdata != NULL);
+   assert(bdata != NULL);
 
    output_char('\\n', 1);
-   svp_assert(fibre_tag(f) == 0);
-   svp_assert(fibre_rank(f) == 0);
+   assert(fibre_tag(f) == 0);
+   assert(fibre_rank(f) == 0);
    bdata->n = *(unsigned long*)fibre_data(f); ++f;
 """
 
@@ -50,16 +50,16 @@ sl_def(initialize, void,
         if 'r' not in spec['mode']:
             continue
         print >>f, '   output_string("#  reading data for %s...\\n", 1);' % name
-        print >>f, "   svp_assert(fibre_tag(f) == 2);"
+        print >>f, "   assert(fibre_tag(f) == 2);"
         if spec['type'] == 'scalar':
-            print >>f, "   svp_assert(fibre_rank(f) == 0);"
+            print >>f, "   assert(fibre_rank(f) == 0);"
             if 'w' in spec['mode']:
                 target = "bdata->%s_orig" % name
             else: 
                 target = "bdata->%s" % name
             print >>f, "   %s = *(double*)fibre_data(f); ++f;" % target;
         else:
-            print >>f, "   svp_assert(fibre_rank(f) == %d);" % len(spec['size'])
+            print >>f, "   assert(fibre_rank(f) == %d);" % len(spec['size'])
             for (i,_) in enumerate(spec['size']):
                 print >>f, "   bdata->%s_dim%d = fibre_shape(f)[%d];" % (name, i, i)
             sspec = " * ".join(("bdata->%s_dim%d" % (name,i) for i in xrange(len(spec['size']))))
@@ -219,7 +219,7 @@ def gencode(k):
 #include <svp/testoutput.h>
 #include "benchmark.h"
 #include <svp/fibre.h>
-#include <svp/assert.h>
+#include <cassert.h>
 #include <cstdlib.h>
 
 """

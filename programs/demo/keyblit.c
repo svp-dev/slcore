@@ -32,9 +32,9 @@ extern unsigned long sprite[];
 sl_def(t_main, void)
 {
   sl_create(,,,10,,,, key_blit,
-	    sl_glarg(unsigned long*restrict, _1, img),
-	    sl_glarg(unsigned long*restrict, _2, sprite),
-	    sl_glarg(unsigned long, _3, 3));
+	    sl_glarg(unsigned long*restrict, , img),
+	    sl_glarg(unsigned long*restrict, , sprite),
+	    sl_glarg(unsigned long, , 3));
   sl_sync();
 
 }
@@ -45,9 +45,9 @@ unsigned long sprite[10] = {3, 11, 3, 22, 3, 3, 3, 33, 3, 3};
 
 #else //! SIMPLE_MAIN
 
-#include <svp/iomacros.h>
+#include <cstdio.h>
+#include <cassert.h>
 #include <svp/fibre.h>
-#include <svp/assert.h>
 
 sl_def(printarray, void,
        sl_shparm(long, token),
@@ -55,7 +55,7 @@ sl_def(printarray, void,
 {
   sl_index(i);
   long x = sl_getp(token);
-  putu(sl_getp(img)[i]); putc('\n');
+  printf("%lu\n", sl_getp(img)[i]);
   sl_setp(token, x);
 }
 sl_enddef
@@ -69,18 +69,18 @@ sl_enddef
 
 sl_def(t_main, void)
 {
-  svp_assert(fibre_tag(0) < 2 && fibre_rank(0) == 1);
-  svp_assert(fibre_tag(1) < 2 && fibre_rank(1) == 1);
-  svp_assert(fibre_tag(2) < 2 && fibre_rank(2) == 0);
+  assert(fibre_tag(0) < 2 && fibre_rank(0) == 1);
+  assert(fibre_tag(1) < 2 && fibre_rank(1) == 1);
+  assert(fibre_tag(2) < 2 && fibre_rank(2) == 0);
   size_t len = min(fibre_shape(0)[0], fibre_shape(1)[0]);
   sl_create(,,,len,,,, key_blit,
-	    sl_glarg(unsigned long*restrict, _1, (unsigned long*)fibre_data(0)),
-	    sl_glarg(unsigned long*restrict, _2, (unsigned long*)fibre_data(1)),
-	    sl_glarg(unsigned long, _3, *(unsigned long*)fibre_data(2)));
+	    sl_glarg(unsigned long*restrict, , (unsigned long*)fibre_data(0)),
+	    sl_glarg(unsigned long*restrict, , (unsigned long*)fibre_data(1)),
+	    sl_glarg(unsigned long, , *(unsigned long*)fibre_data(2)));
   sl_sync();
   sl_create(,,,len,,,, printarray,
-	    sl_sharg(long, token, 0),
-	    sl_glarg(unsigned long*restrict, _4, (unsigned long*)fibre_data(0)));
+	    sl_sharg(long, , 0),
+	    sl_glarg(unsigned long*restrict, , (unsigned long*)fibre_data(0)));
   sl_sync();
 }
 sl_enddef

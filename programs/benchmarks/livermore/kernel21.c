@@ -84,9 +84,9 @@ sl_def(kernel21, void,
        , sl_glparm(size_t, VY_dim1)
     )
 {
-    svp_assert(sl_getp(PX_dim1) == 25);
-    svp_assert(sl_getp(CX_dim1) == 25);
-    svp_assert(sl_getp(VY_dim0) == 25);
+    assert(sl_getp(PX_dim1) == 25);
+    assert(sl_getp(CX_dim1) == 25);
+    assert(sl_getp(VY_dim0) == 25);
 
     //create the family of the appropriate size
     //specified in the 'inner' array

@@ -130,18 +130,18 @@ sl_def(kernel23, void,
        , sl_glparm(size_t, ZZ_dim1)
     )
 {
-    svp_assert(sl_getp(ZA_dim1) == sl_getp(n)+1);
-    svp_assert(sl_getp(ZB_dim1) == sl_getp(n)+1);
-    svp_assert(sl_getp(ZR_dim1) == sl_getp(n)+1);
-    svp_assert(sl_getp(ZU_dim1) == sl_getp(n)+1);
-    svp_assert(sl_getp(ZV_dim1) == sl_getp(n)+1);
-    svp_assert(sl_getp(ZZ_dim1) == sl_getp(n)+1);
-    svp_assert(sl_getp(ZA_dim0) == 7);
-    svp_assert(sl_getp(ZB_dim0) == 7);
-    svp_assert(sl_getp(ZR_dim0) == 7);
-    svp_assert(sl_getp(ZU_dim0) == 7);
-    svp_assert(sl_getp(ZV_dim0) == 7);
-    svp_assert(sl_getp(ZZ_dim0) == 7);
+    assert(sl_getp(ZA_dim1) == sl_getp(n)+1);
+    assert(sl_getp(ZB_dim1) == sl_getp(n)+1);
+    assert(sl_getp(ZR_dim1) == sl_getp(n)+1);
+    assert(sl_getp(ZU_dim1) == sl_getp(n)+1);
+    assert(sl_getp(ZV_dim1) == sl_getp(n)+1);
+    assert(sl_getp(ZZ_dim1) == sl_getp(n)+1);
+    assert(sl_getp(ZA_dim0) == 7);
+    assert(sl_getp(ZB_dim0) == 7);
+    assert(sl_getp(ZR_dim0) == 7);
+    assert(sl_getp(ZU_dim0) == 7);
+    assert(sl_getp(ZV_dim0) == 7);
+    assert(sl_getp(ZZ_dim0) == 7);
 
     sl_create(,, 1,6,,2,,outerk23,
               sl_sharg(long, , 0),
