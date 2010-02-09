@@ -1,5 +1,13 @@
 2010-02-09  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	Release version 2.3.
+
+	* build-aux/package-version: Update to 2.3.
+
+	* doc/NEWS.txt: Document recent changes.
+
+2010-02-09  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	Minor packaging fix.
 
 	* lib/src/gdtoa/README: New. (was listed but not imported)
