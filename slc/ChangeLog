@@ -1,5 +1,12 @@
 2010-02-09  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	Minor packaging fix.
+
+	* build-aux/Makefile.am: Ensure that the script `version-gen'
+	becomes executable upon installation.
+
+2010-02-09  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	Add option `--disable-check-coma' for other packages.
 
 	Since the COMA simulation may need to be avoided even if
