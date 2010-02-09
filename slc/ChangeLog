@@ -2,6 +2,12 @@
 
 	Minor packaging fix.
 
+	* lib/src/gdtoa/README: New. (was listed but not imported)
+
+2010-02-09  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
+	Minor packaging fix.
+
 	* build-aux/Makefile.am: Ensure that the script `version-gen'
 	becomes executable upon installation.
 
