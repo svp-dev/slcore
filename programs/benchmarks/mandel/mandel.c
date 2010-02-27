@@ -15,9 +15,9 @@
 #include <svp/compiler.h>
 #include <svp/testoutput.h>
 #include <svp/fibre.h>
-#include <svp/assert.h>
 #include <svp/gfx.h>
 #include <svp/sep.h>
+#include <cassert.h>
 #include <cstdlib.h>
 #include <cmath.h>
 
@@ -35,10 +35,11 @@ struct bdata {
   /* computed at initialization */
   double xstep, ystep;
   size_t N;
-  double pscale;
   sl_place_t par_place;
   sl_place_t excl_place;
+#ifdef MANY_COLORS
   uint32_t * restrict colors;
+#endif
 #ifndef SKIP_MEM
   struct point * restrict pixeldata;
 #endif
@@ -69,26 +70,26 @@ sl_def(initialize, void,
      4 x ulong (xres, yres, icount, blocksize)
      1 x double array (box)
   */
-  svp_assert(fibre_tag(0) == 0);
-  svp_assert(fibre_rank(0) == 0);
+  assert(fibre_tag(0) == 0);
+  assert(fibre_rank(0) == 0);
   bdata->xN = *(unsigned long*)fibre_data(0);
 
-  svp_assert(fibre_tag(1) == 0);
-  svp_assert(fibre_rank(1) == 0);
+  assert(fibre_tag(1) == 0);
+  assert(fibre_rank(1) == 0);
   bdata->yN = *(unsigned long*)fibre_data(1);
 
-  svp_assert(fibre_tag(2) == 0);
-  svp_assert(fibre_rank(2) == 0);
+  assert(fibre_tag(2) == 0);
+  assert(fibre_rank(2) == 0);
   bdata->icount = *(unsigned long*)fibre_data(2);
-  svp_assert(bdata->icount > 0);
+  assert(bdata->icount > 0);
 
-  svp_assert(fibre_tag(3) == 0);
-  svp_assert(fibre_rank(3) == 0);
+  assert(fibre_tag(3) == 0);
+  assert(fibre_rank(3) == 0);
   bdata->blocksize = *(unsigned long*)fibre_data(3);
 
-  svp_assert(fibre_tag(4) == 2);
-  svp_assert(fibre_rank(4) == 1);
-  svp_assert(fibre_shape(4)[0] == 4);
+  assert(fibre_tag(4) == 2);
+  assert(fibre_rank(4) == 1);
+  assert(fibre_shape(4)[0] == 4);
   double *box = (double*)fibre_data(4);
   bdata->xmin = box[0];
   bdata->xmax = box[1];
@@ -99,22 +100,21 @@ sl_def(initialize, void,
   bdata->ystep = (bdata->ymax - bdata->ymin) / bdata->yN;
 
   bdata->N = bdata->xN * bdata->yN;
-  svp_assert(bdata->N > 0);
+  assert(bdata->N > 0);
 
 #ifndef SKIP_MEM
   bdata->pixeldata = (struct point*)malloc(sizeof(struct point)*bdata->N);
 #endif
 
-  bdata->pscale = 256./(double)bdata->icount;
-
+#ifdef MANY_COLORS
   /* initialize colors */
   bdata->colors = (uint32_t*)malloc(sizeof(uint32_t) * (bdata->icount + 1));
   double licount = log(bdata->icount+1);
-  sl_create(,,,bdata->icount+2,,,, prepare_colors,
+  sl_create(,,,bdata->icount+2,,4,, prepare_colors,
 	    sl_glarg(uint32_t*, , bdata->colors),
 	    sl_glfarg(double, , licount));
   sl_sync();
-
+#endif
 
 #if SVP_HAS_SEP
   unsigned ncores_wanted = sl_getp(st)->place->ncores;
@@ -128,7 +128,7 @@ sl_def(initialize, void,
 	    sl_glarg(unsigned long, , SAL_DONTCARE),
 	    sl_sharg(struct placeinfo*, p2, 0));
   sl_sync();
-  svp_assert(sl_geta(p1) != 0 && sl_geta(p2) != 0);
+  assert(sl_geta(p1) != 0 && sl_geta(p2) != 0);
 
   bdata->p1 = sl_geta(p1);
   bdata->p2 = sl_geta(p2);
@@ -194,14 +194,16 @@ sl_def(displayAfter, void,
 sl_enddef
 
 sl_def(mandel, void,
+       sl_glfparm(double, four),
        sl_glfparm(double, xstart),
        sl_glfparm(double, ystart),
        sl_glfparm(double, xstep),
        sl_glfparm(double, ystep),
        sl_glparm(uint16_t, xres),
-       sl_glparm(size_t, icount),
-       sl_glparm(uint32_t*restrict, colors),
-       sl_glfparm(double, pscale)
+       sl_glparm(size_t, icount)
+#ifdef MANY_COLORS
+       , sl_glparm(uint32_t*restrict, colors)
+#endif
 #ifndef SKIP_MEM
        , sl_glparm(struct point*restrict, mem)
 #endif
@@ -216,19 +218,28 @@ sl_def(mandel, void,
 
   uint16_t dx = xb;
   uint16_t dy = yb;
+#ifdef TRACE_COMPUTE
   gfx_putpixel(dx, dy, 0xff0000);
+#endif
 
   double zx = cx, zy = cy;
-  uint32_t v;
+  size_t v;
   // size_t ic = sl_getp(icount);
-  for (v = 0; (zx*zx+zy*zy) < 4.0 && v < sl_getp(icount); ++v)
+  for (v = 0; likely(v < sl_getp(icount)); ++v)
     {
-      double t = zx * zx - zy * zy + cx;
-      zy = 2 * zx * zy + cy;
-      zx = t;
+        double q1 = zx * zx;
+        double q2 = zy * zy;
+        if (unlikely((q1 + q2) >= sl_getp(four)))
+            break;
+        double t = q1 - q2 + cx;
+        double q3 = zx * zy;
+        zy = q3 + q3 + cy;
+        zx = t;
     }
 
+#ifdef MANY_COLORS
   v = sl_getp(colors)[v];
+#endif
 #ifndef SKIP_MEM
   sl_getp(mem)[i].x = dx;
   sl_getp(mem)[i].y = dy;
@@ -238,9 +249,9 @@ sl_def(mandel, void,
 #ifndef PARALLEL_DISPLAY
   sl_create(,excl_place,,,,,,
 	    displayPoint,
-	    sl_glarg(uint16_t, _0, dx),
-	    sl_glarg(uint16_t, _1, dy),
-	    sl_glarg(uint32_t, _2, v));
+	    sl_glarg(uint16_t, , dx),
+	    sl_glarg(uint16_t, , dy),
+	    sl_glarg(uint32_t, , v));
   sl_sync();
 #else
   do_display(dx, dy, v);
@@ -257,14 +268,16 @@ sl_def(work, void, sl_glparm(struct benchmark_state*, st))
   start_interval(wl, "compute");
   sl_create(,bdata->par_place,,bdata->N,,bdata->blocksize,,
 	    mandel,
+            sl_glfarg(double, , 4.0),
 	    sl_glfarg(double, , bdata->xmin),
 	    sl_glfarg(double, , bdata->ymin),
 	    sl_glfarg(double, , bdata->xstep),
 	    sl_glfarg(double, , bdata->ystep),
 	    sl_glarg(uint16_t, , bdata->xN),
-	    sl_glarg(size_t, , bdata->icount),
-	    sl_glarg(uint32_t*restrict, , bdata->colors),
-	    sl_glfarg(double, , bdata->pscale)
+	    sl_glarg(size_t, , bdata->icount)
+#ifdef MANY_COLORS
+	    , sl_glarg(uint32_t*restrict, , bdata->colors)
+#endif
 #ifndef SKIP_MEM
 	    , sl_glarg(struct point*restrict, , bdata->pixeldata)
 #endif
@@ -309,7 +322,9 @@ sl_def(teardown, void,
 #ifndef SKIP_MEM
   free(bdata->pixeldata);
 #endif
+#ifdef MANY_COLORS
   free(bdata->colors);
+#endif
 #if SVP_HAS_SEP
   sl_create(,root_sep->sep_place|1,,,,,, root_sep->sep_free,
 	    sl_glarg(struct SEP*, _s1, root_sep),

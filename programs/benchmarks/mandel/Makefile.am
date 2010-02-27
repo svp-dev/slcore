@@ -13,7 +13,8 @@
 
 # 
 BENCHMARKS = \
-	mandel.c
+	mandel.c \
+	mandel_colors.c
 
 BENCHMARK_INPUTS = \
 	mandel.d1 \

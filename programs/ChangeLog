@@ -1,3 +1,14 @@
+2010-02-27  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
+	Separate `mandel' benchmark into drawing and non-drawing versions.
+	
+	* benchmarks/mandel/mandel.c: Conditionalize support for colors,
+	disable by default.
+	
+	* benchmarks/mandel/mandel_colors.c: New. Enable colors.
+
+	* benchmarks/mandel/Makefile.am: New target.
+
 2010-02-09  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
 	More input for the `fibre' demo and new demo `pi'.
