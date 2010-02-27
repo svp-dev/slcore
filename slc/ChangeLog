@@ -1,5 +1,12 @@
 2010-02-27  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	Minor packaging fix.
+	
+	* tools/lib/Makefile.am (nobase_dist_pkgdata_DATA): List the new
+	profiles.
+
+2010-02-27  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	Remove support for `slr -C', now replaced by `slr -m'.
 
 	"Forcing COMA" makes no sense when there are multiple

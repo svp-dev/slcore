@@ -67,12 +67,14 @@ nobase_dist_pkgdata_DATA = \
         mt-profiles/lzcoma128_2chan \
         mt-profiles/lzcoma256_1chan \
         mt-profiles/lzcoma256_4chan \
+	mt-profiles/lzcoma_default \
         mt-profiles/ml-npcrypt-p1 \
         mt-profiles/ml-npcrypt-p2 \
         mt-profiles/ml-npcrypt-p4 \
         mt-profiles/ml-npcrypt-p8 \
         mt-profiles/mlcoma128_1chan \
         mt-profiles/mlcoma256_1chan \
+	mt-profiles/mlcoma_default \
         mt-profiles/rbm1 \
         mt-profiles/rbm128 \
         mt-profiles/rbm256 \
