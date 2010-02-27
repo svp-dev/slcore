@@ -1,5 +1,18 @@
 2010-02-26  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	Minor packaging fix.
+
+	This fixes the following issue: if `configure' was run after a
+	first build and picks up new locations for tools (simulator,
+	compilers, etc), the SL scripts `cce', `slr' etc would not be
+	regenerated to reflect the new locations. (Thanks to A. Matei)
+
+	* tools/lib/Makefile.am,
+	* tools/bin/Makefile.am: Re-generate scripts when `Makefile'
+	changes, not only `Makefile.am'.
+
+2010-02-26  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	Minor cosmetic fix in `slr'.
 
 	* tools/bin/slr.in: Enhance output of `-m list'.

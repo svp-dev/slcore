@@ -54,7 +54,7 @@ edit_scripts = $(SED) \
 	       -e 's|@slc_version[@]|$(PACKAGE_VERSION)|g' \
 	       -e 's|@bugreports[@]|$(PACKAGE_BUGREPORT)|g'
 
-cce slr slc slt timeout slt-many cm4 slar slranlib: Makefile.am $(top_srcdir)/.version
+cce slr slc slt timeout slt-many cm4 slar slranlib: Makefile $(top_srcdir)/.version
 	$(AM_V_GEN)(D=$$$$.tmp; mkdir $$D && \
 	    $(edit_scripts) $(srcdir)/$@.in >$$D/sed_out && \
             chmod +x,a-w $$D/sed_out && \
