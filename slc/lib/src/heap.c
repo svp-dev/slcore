@@ -11,8 +11,9 @@
 // The complete GNU General Public Licence Notice can be found as the
 // `COPYING' file in the root directory.
 //
-
 #include <cerrno.h>
+#include <svp/testoutput.h>
+#include "heap.h"
 
 #ifndef PAGESIZE
 #define PAGESIZE 1024*1024*1024
@@ -48,4 +49,19 @@ void *brk(const void *p)
 void* sbrk(int incr)
 {
     return brk(brk_p + incr);
+}
+
+extern int verbose_boot;
+
+void sys_heap_init(void)
+{
+    if (!verbose_boot)
+        return;
+    
+    output_string("* heap at 0x", 2);
+    output_hex(brk_p, 2);
+    output_char(',', 2);
+    output_char(' ', 2);
+    output_uint(HEAP_SIZE, 2);
+    output_string(" bytes.\n", 2);
 }

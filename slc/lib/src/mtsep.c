@@ -13,11 +13,11 @@
 //
 
 #include <cstdint.h>
-#include <cstdio.h>
-#include <cassert.h>
+#include <cstdlib.h>
 #include <svp/sep.h>
 #include <svp/compiler.h>
-
+#include <svp/testoutput.h>
+#include "mtconf.h"
 
 #define MAX_NCORES 1024
 #define L2_MAX_NCORES 10
@@ -160,13 +160,17 @@ sl_def(sep_dump_info, void,
 {
   int i;
   struct sep_data_t* sd = (struct sep_data_t*)(void*)sl_getp(sep);
-  puts("PID\t#cores\tallocated");
+  output_string("PID\t#cores\tallocated\n", 1);
   for (i = 0; i < MAX_NCORES; ++i)
-    if (sd->allplaces[i].pi.pid)
-      printf("0x%lx\t%lu\t%d\n",
-	     sd->allplaces[i].pi.pid,
-	     sd->allplaces[i].pi.ncores,
-	     sd->allplaces[i].allocated);
+      if (sd->allplaces[i].pi.pid) {
+          output_char('0', 1); output_char('x', 1);
+          output_hex(sd->allplaces[i].pi.pid, 1);
+          output_char('\t', 1);
+          output_uint(sd->allplaces[i].pi.ncores, 1);
+          output_char('\t', 1);
+          output_int(sd->allplaces[i].allocated, 1);
+          output_char('\n', 1);
+      }
 }
 sl_enddef
 
@@ -182,7 +186,9 @@ static struct sep_data_t root_sep_data = {
 
 struct SEP *root_sep = &root_sep_data.sep_info;
 
-void sep_init(void* init_parameters)
+extern int verbose_boot;
+
+void sys_sep_init(void* init_parameters)
 {
   struct placeconf {
     uint32_t   ncores;
@@ -190,7 +196,16 @@ void sep_init(void* init_parameters)
   };
   struct placeconf * restrict pc = (struct placeconf*) init_parameters;
 
-  assert(pc->ncores <= MAX_NCORES);
+  if (verbose_boot) {
+      output_string("* SEP init: parsing layout for ", 2);
+      output_uint(pc->ncores, 2);
+      output_string(" cores...", 2);
+  }
+  // can't use assert() before places have been defined
+  if (!(pc->ncores <= MAX_NCORES)) {
+      output_string("SEP init fail: ncores > MAX_NCORES\n", 2);
+      abort();
+  }
 
   size_t i;
   int current_ring_id = -1;
@@ -222,6 +237,8 @@ void sep_init(void* init_parameters)
 	(pc->core_info[i][0] << 3) /* core id */
 	| 4 /* delegate, non-exclusive */;
       root_sep_data.allplaces[current_ring_id].pi.ncores = 1;
+      root_sep_data.allplaces[current_ring_id].pi.nfamilies_per_core = *mgconf_ftes_per_core;
+      root_sep_data.allplaces[current_ring_id].pi.nthreads_per_core = *mgconf_ttes_per_core;
 
       if (!root_sep_data.sep_info.sep_place) {
 	  // first ring
@@ -237,6 +254,7 @@ void sep_init(void* init_parameters)
       root_sep_data.allplaces[current_ring_id].pi.ncores += 1;
     }
   }
+
   /* add the last item to its pool */
   struct listnode* n = &root_sep_data.allplaces[current_ring_id];
   size_t ncores = n->pi.ncores;
@@ -249,4 +267,17 @@ void sep_init(void* init_parameters)
 
   root_sep_data.last_nonempty_pool = max_l2;
   root_sep_data.irregular = irregular;
+
+  if (verbose_boot) {
+      output_string(" done.\n  places:", 2);
+      for (i = 0; i < MAX_NCORES; ++i)
+          if (root_sep_data.allplaces[i].pi.pid) {
+              output_char(' ', 2);
+              output_uint(root_sep_data.allplaces[i].pi.ncores, 2);
+              output_char('(', 2);
+              output_hex(root_sep_data.allplaces[i].pi.pid, 2);
+              output_char(')', 2);
+          }
+      output_char('\n', 2);
+  }
 }

@@ -18,6 +18,7 @@ EXTRA_DIST += \
 	src/getenv.c \
 	src/_hdtoa.c \
 	src/heap.c \
+	src/heap.h \
 	src/malloc.c \
 	src/malloc_wrappers.c \
 	src/missing_uclibc_math.c \
@@ -26,6 +27,8 @@ EXTRA_DIST += \
 	src/mtalpha/memmove.S \
 	src/mtalpha/memset.S \
 	src/mtalpha/mtdiv.s \
+	src/mtconf.h \
+	src/mtconf.c \
 	src/mtinit.c \
 	src/mtsep.c \
 	src/mtstdio.h \
@@ -97,6 +100,7 @@ mtalpha_sim_libsl_a_CONTENTS = \
 	mtalpha-sim/memmove.o \
 	mtalpha-sim/memset.o \
 	mtalpha-sim/mtclock.o \
+	mtalpha-sim/mtconf.o \
 	mtalpha-sim/mtdiv.o \
 	mtalpha-sim/mtinit.o \
 	mtalpha-sim/mtsep.o \

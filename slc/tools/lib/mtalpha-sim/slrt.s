@@ -49,8 +49,8 @@ _start:
 	# $l2 set by the simulator
 	# all 4 are used by the init function
 	mov $l2, $l19
-	ldq $l27,_lib_init_routine($l29) !literal!1
-	jsr $l26,($l27),_lib_init_routine !lituse_jsr!1
+	ldq $l27,sys_init($l29) !literal!1
+	jsr $l26,($l27),sys_init !lituse_jsr!1
 	ldgp $l29,0($l26)
 
 	# initialize argc and argv for main()

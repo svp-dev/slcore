@@ -1,3 +1,28 @@
+2010-02-27  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
+	Extend the system initialization code.
+
+	* lib/src/mtconf.h,
+	* lib/src/mtconf.c: New. This reads extra configuration data from
+	the simulator, when present.
+
+	* lib/src/mtinit.c: Also call `sys_conf_init()'. Make
+	initialization verbose, unless disabled by environment
+	variable. Rename init routines with `sys_' prefix.
+
+	* tools/lib/mtalpha-sim/slrt.s: Use the new name `sys_init'.
+
+	* lib/src/mtsep.c,
+	* lib/src/heap.c: Make this verbose too.
+
+	* lib/src/heap.h: New.
+
+	* lib/include/svp/sep.h: Expose the number of family table entries
+	and thread entries in `struct placeinfo'.
+	* lib/src/mtsep.c: Initialize the extra fields.
+
+	* lib/mtalpha.mk: List the new files.
+
 2010-02-26  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
 	Minor packaging fix.

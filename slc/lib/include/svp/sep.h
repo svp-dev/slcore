@@ -19,13 +19,18 @@
 #define SVP_HAS_SEP 1
 
 #include <cstddef.h>
+#include <cstdint.h>
 
 // information returned by sep_alloc etc.
 struct placeinfo {
-  // identifier for the create() statement
-  sl_place_t  pid;
-  // number of cores in the place
-  size_t ncores;
+    // identifier for the create() statement
+    sl_place_t  pid;
+    // number of cores in the place
+    uint16_t ncores;
+    // number of family table entries per core
+    uint16_t nfamilies_per_core;
+    // number of thread table entries per core
+    uint16_t nthreads_per_core;
 };
 
 // place where all the sep_alloc calls should
@@ -66,7 +71,7 @@ struct SEP {
 extern struct SEP* root_sep;
 
 // to be called once (in the init routine)
-void sep_init(void* init_parameters);
+void sys_sep_init(void* init_parameters);
 
 #else
 #define SVP_HAS_SEP 0
