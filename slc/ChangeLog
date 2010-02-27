@@ -1,3 +1,9 @@
+2010-02-26  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
+	Minor cosmetic fix in `slr'.
+
+	* tools/bin/slr.in: Enhance output of `-m list'.
+
 2010-02-09  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
 	* doc/NEWS.txt: Initialize for 2.3.x.

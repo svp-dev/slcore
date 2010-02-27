@@ -284,7 +284,7 @@ if test "x$SIMPROFILE" = "xlist"; then
   done
   IFS=:
   for d in $slc_datadir; do
-    echo "(in $d)" >&2
+    echo "(in $d/mt-profiles)" >&2
     for f in "$d/mt-profiles/"*; do
         if test -r "$f"; then
             b=$(basename "$f")
