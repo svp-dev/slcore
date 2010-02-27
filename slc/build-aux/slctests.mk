@@ -22,7 +22,8 @@ endif
 if ENABLE_CHECK_PPP
 EXTRA_TEST_IMPL += ppp
 if ENABLE_CHECK_COMA
-EXTRA_TEST_IMPL += ppp::-C
+EXTRA_TEST_IMPL += ppp::-m~lzcoma_default
+EXTRA_TEST_IMPL += ppp::-m~mlcoma_default
 endif
 endif
 

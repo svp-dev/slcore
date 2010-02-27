@@ -84,14 +84,6 @@ Microgrid simulation options:
   -Ws,arg              Pass "arg" as extra command line parameter to the 
                        simulator, when the simulator is used.
 
-  -C                   Force COMA memory regardless of the simulator profile.
-
-  -Cc N                Configure N cores per L2 cache in the COMA network. 
-                       Implies -C. Overrides profile settings.
-
-  -Cd N                Configure N L2 caches per directory in the COMA network. 
-                       Implies -C. Overrides profile settings.
-
   -X                   Enable graphical output.
 
   -Xd W,H              Set initial gfx resolution to W(idth)xH(eight). Implies -X.
@@ -206,9 +198,6 @@ SIMGFX=
 gfx_scale=
 gfx_refresh=
 gfx_geometry=
-coma_cpc=
-coma_cpd=
-coma_force=
 debug_rec=
 SIMARGS=${SIMARGS:-}
 VERBOSE=${VERBOSE:-}
@@ -249,9 +238,6 @@ for arg in "$@"; do
       -wf)  prev_arg=wfdatafile; shift;;
       -wo)  preponly=1; shift;;
       -m)   prev_arg=SIMPROFILE; shift;;
-      -C)   coma_force=1; shift;;
-      -Cc)  coma_force=1; prev_arg=coma_cpc; shift;;
-      -Cd)  coma_force=1; prev_arg=coma_cpd; shift;;
       -X)   SIMGFX=1; shift;;
       -Xs)  SIMGFX=1; prev_arg=gfx_scale; shift;;
       -Xr)  SIMGFX=1; prev_arg=gfx_refresh; shift;;
@@ -561,7 +547,7 @@ fi
 
 export SIMARGS VERBOSE DEBUG SIMGFX SIMPROFILE TMPDIR
 export gfx_scale gfx_geometry gfx_refresh
-export coma_cpc coma_cpd coma_force SLR_NCORES
+export SLR_NCORES
 
 if test -n "$VERBOSE"; then
     echo "$basename: cwd: $PWD" >&2

@@ -1,5 +1,21 @@
 2010-02-27  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	Remove support for `slr -C', now replaced by `slr -m'.
+
+	"Forcing COMA" makes no sense when there are multiple
+	COMA implementations available. Let profiles select.
+
+	* tools/bin/slr.in,
+	* tools/lib/r-mt-sim.sh.in: Drop support for `-C', `-Cc' and
+	`-Cd'.
+
+	* tools/lib/mt-profiles/lzcoma_default,
+	* tools/lib/mt-profiles/mlcoma_default: New.
+
+	* build-aux/slctests.mk: Use the new COMA profiles for testing.
+
+2010-02-27  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	Cosmetic fix to `slr'.
 
 	* tools/lib/r-mt-sim.sh.in: Silence program initialization for
