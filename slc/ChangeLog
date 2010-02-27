@@ -1,5 +1,12 @@
 2010-02-27  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	Cosmetic fix to `slr'.
+
+	* tools/lib/r-mt-sim.sh.in: Silence program initialization for
+	recursive calls.
+
+2010-02-27  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	Extend simulator profiles.
 
 	* tools/lib/mt-profiles/coma128: Symlink to...
