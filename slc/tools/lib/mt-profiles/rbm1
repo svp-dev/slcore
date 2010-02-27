@@ -1,3 +1,5 @@
 DESCRIPTION="1-core, RB memory for tests, quick runs etc."
 COMA=
+simargs_base+=(-o MemoryType=RandomBanked)
 simargs_base+=(-o NumProcessors=1 -o NumProcessorsPerFPU=1)
+simargs_base+=(-o CoreFreq=1000)

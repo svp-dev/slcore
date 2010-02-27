@@ -1,0 +1,20 @@
+DESCRIPTION="256-core (1x4,2x2,4x2,8x2,16x2,32x2,64x2), ML's COMA, 1.2GHz cores, 1xDDR3-2400"
+simargs_base+=(-o NumProcessors=1,1,2,4,8,16,32,64,1,1,2,4,8,16,32,64)
+
+# in this implementation, we are using the "regular" mgsim executable
+# which has a memory type configuration, but we are restricted
+# to have core speed = memory speed. So with DDR3-2400 memory
+# the memory speed is 1200MHz, so we document to say the core speed is the same.
+COMA=
+simargs_base+=(-o MemoryType=COMA)
+simargs_base+=(-o DDRMemoryFreq=1200 -o CoreFreq=1200)
+
+# DDR Timings, in bus clock cycles, as per 
+# http://www.techpowerup.com/72319/Elpida_Buffalo_Release_Prototype_DDR3_2400_MHz_Memory.html
+simargs_base+=(-o DDR_tAL=0)
+simargs_base+=(-o DDR_tCL=11)
+simargs_base+=(-o DDR_tCWL=11)
+simargs_base+=(-o DDR_tRCD=11)
+simargs_base+=(-o DDR_tRP=11)
+simargs_base+=(-o DDR_tRAS=34)
+simargs_base+=(-o L2CacheAssociativity=4 -o L2CacheNumSets=128)

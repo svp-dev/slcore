@@ -1,5 +1,41 @@
 2010-02-27  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	Extend simulator profiles.
+
+	* tools/lib/mt-profiles/coma128: Symlink to...
+	* tools/lib/mt-profiles/lzcoma128_2chan: ...here. Fix sizes and timings.
+
+	* tools/lib/mt-profiles/coma256: Symlink to...
+	* tools/lib/mt-profiles/lzcoma256_2chan: ...here. Fix sizes and timings.
+
+	* tools/lib/mt-profiles/zlcoma128_1chan,
+	* tools/lib/mt-profiles/zlcoma256_1chan,
+	* tools/lib/mt-profiles/mlcoma128_1chan,
+	* tools/lib/mt-profiles/mlcoma256_1chan: New.
+
+	* tools/lib/mt-profiles/ml-npcrypt-p1,
+	* tools/lib/mt-profiles/ml-npcrypt-p2,
+	* tools/lib/mt-profiles/ml-npcrypt-p4,
+	* tools/lib/mt-profiles/ml-npcrypt-p8: Update descriptions.
+
+	* tools/lib/mt-profiles/rmb1,
+	* tools/lib/mt-profiles/rmb4,
+	* tools/lib/mt-profiles/rmb8,
+	* tools/lib/mt-profiles/rmb128,
+	* tools/lib/mt-profiles/rmb256: Rename to...
+	* tools/lib/mt-profiles/rbm1,
+	* tools/lib/mt-profiles/rbm4,
+	* tools/lib/mt-profiles/rbm8,
+	* tools/lib/mt-profiles/rbm128,
+	* tools/lib/mt-profiles/rbm256: ...here. Fix timings.
+
+	* tools/lib/mt-profiles/simple,
+	* tools/lib/mt-profiles/default: Update symlink after renaming.
+
+	* tools/lib/Makefile.am: Update accordingly.
+
+2010-02-27  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	Extend the system initialization code.
 
 	* lib/src/mtconf.h,

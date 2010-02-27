@@ -1,0 +1,17 @@
+DESCRIPTION="128-core (1x2,2x1,4x1,8x1,16x1,32x1,64x1), ZL's COMA, 1.2GHz cores, 1xDDR3-2400"
+COMA=1
+simargs_base+=(-o NumProcessors=1,1,2,4,8,16,32,64)
+simargs_base+=(-o NumRootDirectories=1)
+
+# DDR Timings, in bus clock cycles, as per 
+# http://www.techpowerup.com/72319/Elpida_Buffalo_Release_Prototype_DDR3_2400_MHz_Memory.html
+simargs_base+=(-o DDRMemoryFreq=1200 -o CoreFreq=1200)
+
+simargs_base+=(-o DDR_tAL=0)
+simargs_base+=(-o DDR_tCL=11)
+simargs_base+=(-o DDR_tCWL=11)
+simargs_base+=(-o DDR_tRCD=11)
+simargs_base+=(-o DDR_tRP=11)
+simargs_base+=(-o DDR_tRAS=34)
+
+simargs_base+=(-o L2CacheAssociativity=4 -o L2CacheNumSets=128)

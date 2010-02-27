@@ -60,19 +60,25 @@ nobase_dist_pkgdata_DATA = \
 	t-utc/slimpl.m4 \
 	t-utc0/slimpl.m4 \
 	t-utc0/include/sl_support.h \
+        mt-profiles/coma128 \
+        mt-profiles/coma256 \
         mt-profiles/default \
-	mt-profiles/coma128 \
-	mt-profiles/coma256 \
-	mt-profiles/rmb128 \
-	mt-profiles/rmb256 \
-	mt-profiles/rmb1 \
-	mt-profiles/rmb4 \
-	mt-profiles/rmb8 \
-	mt-profiles/ml-npcrypt-p1 \
-	mt-profiles/ml-npcrypt-p2 \
-	mt-profiles/ml-npcrypt-p4 \
-	mt-profiles/ml-npcrypt-p8 \
-	mt-profiles/simple
+        mt-profiles/lzcoma128_1chan \
+        mt-profiles/lzcoma128_2chan \
+        mt-profiles/lzcoma256_1chan \
+        mt-profiles/lzcoma256_4chan \
+        mt-profiles/ml-npcrypt-p1 \
+        mt-profiles/ml-npcrypt-p2 \
+        mt-profiles/ml-npcrypt-p4 \
+        mt-profiles/ml-npcrypt-p8 \
+        mt-profiles/mlcoma128_1chan \
+        mt-profiles/mlcoma256_1chan \
+        mt-profiles/rbm1 \
+        mt-profiles/rbm128 \
+        mt-profiles/rbm256 \
+        mt-profiles/rbm4 \
+        mt-profiles/rbm8 \
+        mt-profiles/simple
 
 include $(top_srcdir)/build-aux/sl.mk
 nobase_pkglib_DATA =

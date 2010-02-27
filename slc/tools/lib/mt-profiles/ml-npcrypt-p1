@@ -1,4 +1,4 @@
-DESCRIPTION="128-core (4x1,1x16,108x1), COMA, 1.4GHz cores, 2xDDR3-1600"
+DESCRIPTION="128-core (4x1,1x16,108x1), ZL's COMA, 1.4GHz cores, 2xDDR3-1600"
 COMA=1
 simargs_base+=(-o NumProcessors=4,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,108)
 simargs_base+=(-o NumRootDirectories=2)
