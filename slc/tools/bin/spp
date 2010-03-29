@@ -1931,6 +1931,9 @@ class pppalpha(object):
             outf.write(line)
       outf.close()
 
+class ppp2alpha(pppalpha):
+   pass
+
 class utc0(pppalpha):
    pass
 

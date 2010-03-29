@@ -1,5 +1,19 @@
 2010-03-29  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	Initialize new MT-alpha back-end `ppp2'.
+
+	* tools/bin/cce.in: Recognize `ppp2'.
+
+	* tools/bin/spp (ppp2alpha): Initialize new target class.
+
+	* tools/lib/t-pppalpha/slimpl.m4,
+	* tools/lib/t-pppalpha/include/sl_support.h: Copy to...
+
+	* tools/lib/t-ppp2alpha/slimpl.m4,
+	* tools/lib/t-ppp2alpha/include/sl_support.h: ... here.
+
+2010-03-29  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	Extend the MT-alpha back-end.
 
 	* tools/lib/t-pppalpha/include/sl_support.h: Implement a new
