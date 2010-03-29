@@ -26,22 +26,46 @@
     __sl_shparm_in_ ## Name;						\
   })
 
-[[#]]define __sl_setshp(Name, Value)					\
-({									\
-  __asm__ __volatile__("# MT: clobber incoming " # Name " (%0)"		\
-		       : "=rf"(__sl_shparm_in_ ## Name)			\
-		       : "0"(__sl_shparm_in_ ## Name));			\
-  __typeof__(Value) __tmp_set_ ## Name = (Value);			\
-  __asm__ __volatile__("# MT: start write shared " # Name " (%0)"	\
-		       : "=rf"(__sl_shparm_out_ ## Name)		\
-		       : "0"(__sl_shparm_out_ ## Name));		\
-  __sl_shparm_out_ ## Name = __tmp_set_ ## Name;			\
-  __asm__ __volatile__("# MT: end write shared " # Name " (%0)"		\
-		       : "=rf" (__sl_shparm_out_ ## Name),		\
-			 "=rf" (__sl_shparm_in_ ## Name)		\
-		       : "0"(__sl_shparm_out_ ## Name),			\
-			 "1" (__sl_shparm_in_ ## Name));		\
- })
+
+[[#]]ifndef MT_[[]]FORCE_TEMP_FOR_SHARED_WRITE
+
+[[#]]define __sl_setshp(Name, Value)                                  \
+({                                                                      \
+    __asm__ __volatile__("# MT: clobber incoming " # Name " (%0)"       \
+                         : "=rf"(__sl_shparm_in_ ## Name)               \
+                         : "0"(__sl_shparm_in_ ## Name));               \
+    __typeof__(__sl_shparm_out_ ## Name) __tmp_set_ ## Name = (Value);  \
+    __asm__ __volatile__("# MT: start write shared " # Name " (%0)"     \
+                         : "=rf"(__sl_shparm_out_ ## Name)              \
+                         : "0"(__sl_shparm_out_ ## Name));              \
+    __sl_shparm_out_ ## Name = __tmp_set_ ## Name;                      \
+    __asm__ __volatile__("# MT: end write shared " # Name " (%0)"       \
+                         : "=rf" (__sl_shparm_out_ ## Name),            \
+                           "=rf" (__sl_shparm_in_ ## Name)              \
+                         : "0"(__sl_shparm_out_ ## Name),               \
+                           "1" (__sl_shparm_in_ ## Name));              \
+})
+
+[[#]]else
+
+[[#]]define __sl_setshp(Name, Value)            \
+    ({                                                                  \
+        __asm__ __volatile__("# MT: clobber incoming " # Name " (%0)"   \
+                             : "=rf"(__sl_shparm_in_ ## Name)           \
+                             : "0"(__sl_shparm_in_ ## Name));           \
+        __typeof__(__sl_shparm_out_ ## Name) __tmp_set_ ## Name = (Value); \
+        __asm__ __volatile__("# MT: start write shared " # Name " (%0)" \
+                             : "=rf"(__sl_shparm_out_ ## Name)          \
+                             : "0"(__sl_shparm_out_ ## Name));          \
+        __asm__ __volatile__("mov %4, %0 # MT: write shared " # Name " (%0)" \
+                             : "=rf" (__sl_shparm_out_ ## Name),        \
+                               "=rf" (__sl_shparm_in_ ## Name)          \
+                             : "0"(__sl_shparm_out_ ## Name),           \
+                               "1" (__sl_shparm_in_ ## Name),           \
+                               "rf" (__tmp_set_ ## Name));              \
+    })
+    
+[[#]]endif
 
 #if 0 /* OLD TECHNIQUE, BUG WITH sl_setp(foo, a ? a : 0) */
 [[#]]define __sl_setshp(Name, Value)					\

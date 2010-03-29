@@ -1196,7 +1196,17 @@ class pppalpha(object):
                init.append(('other','fclr $lf%d' % r, 'init call freg'))
          fundata['prologue'] = fundata['prologue'] + init
       return items
-      
+
+   def adjustmov(self, fundata, items):
+      movr = re.compile(r'mov\s+(\$[gsld]?f\d+.*)')
+      for (type, content, comment) in items:
+         if type == 'other':
+            m = movr.match(content)
+            if m is not None:
+               yield (type, "fmov " + m.group(1), comment)
+               continue
+         yield (type, content, comment)
+
 
    def rewritejsr(self, fundata, items):
       spreg = int(self.reg_aliases['tlsp'][1:])
@@ -1869,7 +1879,7 @@ class pppalpha(object):
       Enhance already valid assembly.
       """
 
-      stages = ['remdefaults', 'findlabels', 'killunusedlabels',
+      stages = ['adjustmov', 'remdefaults', 'findlabels', 'killunusedlabels',
                 'addswchll', 'addswchbr', 'rmdupswch', 'rmswchbegin',
                 'prunenopend', 'protectend', 'fixemptyf']
       # parse flags
