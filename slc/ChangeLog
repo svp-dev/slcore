@@ -1,3 +1,14 @@
+2010-04-01  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
+	Implement code generation for new back-end `ppp2'.
+	
+	* tools/bin/cce.in: Enable `-fwesley' by default for target
+	`ppp2'.
+
+	* tools/lib/t-ppp2alpha/slimpl.m4,
+	* tools/lib/t-ppp2alpha/include/sl_support.h,
+	* tools/bin/spp: Implement.
+
 2010-03-29  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
 	Initialize new MT-alpha back-end `ppp2'.

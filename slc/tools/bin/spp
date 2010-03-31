@@ -1932,7 +1932,346 @@ class pppalpha(object):
       outf.close()
 
 class ppp2alpha(pppalpha):
-   pass
+
+
+   def create(self, funcname, tag, br, *args):
+
+      # DEBUG:
+      # print >>sys.stderr, args
+      if len(args) == 1 and args[0] == "":
+         args = ()
+
+      c = self.mapcall(funcname, args)
+
+      #pprint.pprint(c, sys.stderr)
+
+      print """
+      __sl_allocate(__sl_tag, _sl_place);
+      __sl_setstart(__sl_tag, _sl_start);
+      __sl_setlimit(__sl_tag, _sl_limit);
+      __sl_setstep(__sl_tag, _sl_step);
+      __sl_setblock(__sl_tag, _sl_block);
+      __sl_create(__sl_tag, "%d");
+      """ % c['gl_pv_offset']
+      
+      names = []
+      glibase = 0
+      glfbase = 0
+ 
+      atsync = []
+
+      if c['gl_mem_offset'] is not None:
+         print "struct __sl_ma_t_%s {" % tag
+         for d in c['memlayout']:
+            print d['ctype'], d['name'], ';'
+         print '} __sl_ma_data_%s;' % tag
+         atsync.append("""__sl_setma(__sl_tag, "%d");""" % c['gl_mem_offset']) 
+
+      atsync.append("""m4_ifblank(__sl_syncdst,[[__sl_sync_nouse(__sl_tag)]],[[__sl_sync(__sl_tag, __sl_syncdst)]]);""")
+      for species,d1 in c['args'].items():
+         for cat,d2 in d1.items():
+            for a in d2:
+               name = a['name']
+               names.append(name)
+               ctype = a['ctype']
+
+               if a['mode'] == 'mem':
+                  assert cat == 'gl'
+                  print r"""m4_pushdef([[__sl_seta_%s]],[[__sl_ma_data_%s.%s = ([[$1]])]]) m4_dnl""" % (name, tag, name)
+                  #print "FIXME: do something here with gl arg in mem"
+               else: # mode: reg
+                  regnr = a['regnr']
+                  print r"""m4_pushdef([[__sl_seta_%s]],[[__sl_set%s%sa(%s, __sl_tag, [[$1]], "%d")]]) m4_dnl""" % (name, cat, species, name, regnr)
+                  if cat == 'sh':
+                     atsync.append("""__sl_get%s%sa(%s, __sl_tag, "%d");""" % (cat, species, name, regnr))
+               atsync.append("""m4_popdef([[__sl_seta_%s]])""" % name)
+
+               if a['init'] is not None:
+                  print """sl_seta(%s, %s); m4_dnl""" % (name, a['init'])
+
+      atsync.append("""__sl_release(__sl_tag);""")
+      print r"""m4_pushdef([[__sl_atsync]],[[%s]])m4_dnl""" % 'm4_dnl\n'.join(atsync)
+
+   def addswchll(self, fundata, items):
+      re3way = re.compile(r'\w+\s([^,]+),([^,]+),([^,]+)$')
+      re1way = re.compile(r'\w+\s([^,]+)$')
+      re2way = re.compile(r'(?:mov|sqrt\S*|cvt\S*|itof\S*|ftoi\S*|sync|allocate)\s([^,]+),([^,]+)$')
+      rexway = re.compile(r'\w+\s([^,]+),(.*)')
+      reld = re.compile(r'(ld[lqts]|ld[bw]u)')
+      re3wayll = re.compile(r'((add|sub|mul|div)[fgts]|f?gets)')
+      w1way = re.compile(r'(rpcc|ldfp|f?clr)')
+      jre = self.jre
+
+      allregs = set(['$l%d' % x for x in xrange(31 - self.iargregs) if x not in (17, 18)] + \
+          ['$lf%d' % x for x in xrange(31 - self.fargregs)] + \
+          ['$d%d' % x for x in xrange(self.iargregs / 2)] + \
+          ['$df%d' % x for x in xrange(self.fargregs / 2)] + \
+          ['$%d' % x for x in xrange(31)])
+         
+      # initially exclude index
+      maybell = allregs.copy()
+      for (type, content, comment) in items:
+         #print (type,content[:3],comment)
+         if type == 'label' or (type == 'other' and jre.match(content)):
+            #print "FOO"
+            yield (type, content, comment)
+            maybell = allregs.copy()
+
+         elif type == 'empty':
+            yield (type, content, comment)
+            if comment.startswith('MTREG_SET:'):
+               hint = set(comment.split(':',1)[1].strip().split(','))
+               maybell = maybell - hint
+            elif comment.startswith('MTREG_SPEC:'):
+               hint = set(comment.split(':',1)[1].strip().split(','))
+               maybell = maybell - hint
+               allregs = allregs - hint
+
+         elif type == 'other':
+            #print "BAR %s :: %s ::" % (content, comment)
+            reads = []
+            shortwrites = []
+            longwrites = []
+            done = 0
+
+            if not done:
+               # check 3-way insns
+               m = re3way.match(content)
+               if m is not None:
+                  r1, r2, r3 = m.groups()
+                  reads.append(r1)
+                  reads.append(r2)
+                  if re3wayll.match(content) is None:
+                     shortwrites.append(r3)
+                  else:
+                     longwrites.append(r3)
+                  done = 1
+
+            if not done:
+               # check 1-way insn, 1st is target (e.g. break)
+               m = re1way.match(content)
+               if m is not None:
+                  r1 = m.group(1)
+                  if w1way.match(content) is not None:
+                     shortwrites.append(r1)
+                  else:
+                     reads.append(r1)
+                  done = 1
+
+
+            if not done:
+               # check 2-way insn, second is target (e.g. mov)
+               m = re2way.match(content)
+               if m is not None:
+                  r1, r2 = m.groups()
+                  reads.append(r1)
+                  if content.startswith('sqrt') or content.startswith('sync') or content.startswith('allocate'):
+                     longwrites.append(r2)
+                  else:
+                     shortwrites.append(r2)
+                  done = 1
+
+            if not done:
+               # check other insns, assume 1st is target
+               m = rexway.match(content)
+               if m is not None:
+                  r1, r2 = m.groups()
+                  reads.append(r2)
+
+                  # Special case for loads from memory:
+                  m2 = reld.match(content)
+                  if m2 is not None:
+                     longwrites.append(r1)
+                  elif content.startswith('lda') or content.startswith('ldgp'):
+                     #print "FOO"
+                     shortwrites.append(r1)
+                  elif content.startswith('cred') \
+                         or content.startswith('crei'):
+                     longwrites.append(r1)
+                     reads.append(r1)
+                  else:
+                     # insn reads 1st operand, then writes to it
+                     reads.append(r1)
+                     shortwrites.append(r1)
+                  done = 1
+
+            if not done:
+               # write barrier and other insns that have no args
+               pass
+            
+            test = 0
+            q = set()
+
+            # if one of the "maybe regs" is read from,
+            # assume we are reading result from long latency.
+            #print "maybell = %r" % (maybell,)
+            #print "reads = %r" % (reads,)
+            for rx in maybell:
+               for r in reads:
+                  if self.seereg(rx,r):
+                     test = 1
+                     q.add(rx)
+            if test == 1:
+               yield ('other','swch','MT: before-ll: %s' % ','.join(q))
+            yield (type, content, comment)
+            if test == 1:
+               yield ('other','swch','MT: after-ll: %s' % ','.join(q))
+
+            # all the registers that are "short written"
+            # will not cause long latency during next use
+            for rx in maybell:
+               for r in shortwrites:
+                  if self.seereg(rx, r):
+                     q.add(rx)
+
+            # remove touched registers from the long latency registers
+            for r in q:
+               maybell = set((x for x in maybell if x != r))
+            # add generated long latency
+            for rx in allregs:
+               for r in longwrites:
+                  if self.seereg(rx, r):
+                     maybell.add(rx)
+         else:
+            yield (type, content, comment)
+            
+
+   def rewritejsr(self, fundata, items):
+      spreg = int(self.reg_aliases['tlsp'][1:])
+      gpreg = int(self.reg_aliases['gp'][1:])
+      rareg = int(self.reg_aliases['ra'][1:])
+      pvreg = int(self.reg_aliases['pv'][1:])
+      rvreg = int(self.reg_aliases['rv'][1:])
+      frvreg = int(self.reg_aliases['frv'][2:])
+
+      rvused = fundata['usedregs'][rvreg]
+      frvused = fundata['usedfregs'][frvreg]
+      usedcallregs = fundata['usedcallregs']
+      usedcallfregs = fundata['usedcallfregs']
+      protocol = max(len(usedcallregs),len(usedcallfregs))
+      # struct { protocol/retval, fptr/fretval, args... }
+      gate_struct_size = 8 + 8 + 8 * 2 * protocol 
+
+
+      jsrre = re.compile('jsr\s+\$l(\d+)\s*,\s*\(\s*\$l(\d+)\s*\)')
+      brre = re.compile('br\s+\$l31\s*,\s*(\S+)\s*!samegp')
+      bsrre = re.compile('bsr\s+\$l(\d+)\s*,\s*(\S+)\s*!samegp')
+      for (type, content, comment) in items:
+         if type == "other":
+            m = brre.match(content)
+            if m is not None:
+               # handle "BR"
+               lbl = m.group(1)
+               yield ('empty','','MT: br call begin: %s' % content)
+               yield ('other','lda $l%d, %d($l31)' % (rareg, protocol), 'RA <- nr_call_regs')
+               yield ('other','stq $l%d, -8($l%d)' % (rareg, spreg), '.protocol := RA (nr_call_regs)')
+               yield ('other','allocate $l31, $l%d' % rareg, 'RA <- fid')
+               yield ('other','ldah $l%d, %s($l%d) !gprelhigh' % (pvreg, lbl, gpreg), 'PV <- target')
+               yield ('other','lda $l%d, %s($l%d) !gprellow' % (pvreg, lbl, pvreg), 'PV <- target')
+               yield ('other','stq $l%d, -16($l%d)' % (pvreg, spreg), '.fptr := PV')
+               arg_offset = -24
+               for i in xrange(protocol):
+                  if len(usedcallregs)>i and usedcallregs[i] is not None:
+                     yield ('other', 'stq $l%d, %d($l%d)' % (usedcallregs[i], arg_offset, spreg), '.arg[%d]' % i)
+                  if len(usedcallfregs)>i and usedcallfregs[i] is not None:
+                     yield ('other', 'stt $lf%d, %d($l%d)' % (usedcallfregs[i], arg_offset - 8, spreg), 
+                            '.farg[%d]' % i)
+                  arg_offset -= 16
+               yield ('other','ldq $l%d, __sl_callgate($l%d) !literal' % (pvreg, gpreg), 'PV <- callgate')
+               yield ('other','setstart $l%d, $l%d' % (rareg, spreg), 'setstart(SP)')
+               yield ('other','lda $l%d, 1($l%d)' % (spreg, spreg), 'SP <= SP + 1')
+               yield ('other','setlimit $l%d, $l%d' % (rareg, spreg), 'setlimit(SP+1)')
+               yield ('other', 'wb', '')
+               yield ('other','crei $l%d, 0($l%d)' % (rareg, pvreg), 'start call')
+               yield ('other','sync $l%d, $l%d' % (rareg, pvreg), 'SYNC: start wait')
+               yield ('other','mov $l%d, $l31' % (pvreg), 'SYNC: wait for return')
+               yield ('other','release $l%d' % rareg, 'SYNC: end')
+               yield ('other','end','call is end of thread')
+               yield ('empty','','MT: br call end')
+               continue
+
+            m = bsrre.match(content)
+            if m is not None:
+               # handle "BSR"
+               ra = int(m.group(1))
+               lbl = m.group(2)
+               yield ('empty','','MT: bsr call begin: %s' % content)
+               yield ('other','lda $l%d, %d($l31)' % (ra, protocol), 'RA <- nr_call_regs')
+               yield ('other','stq $l%d, -8($l%d)' % (ra, spreg), '.protocol := RA (nr_call_regs)')
+               yield ('other','allocate $l31, $l%d' % ra, 'RA <- fid')
+               yield ('other','ldah $l%d, %s($l%d) !gprelhigh' % (pvreg, lbl, gpreg), 'PV <- target')
+               yield ('other','lda $l%d, %s($l%d) !gprellow' % (pvreg, lbl, pvreg), 'PV <- target')
+               yield ('other','stq $l%d, -16($l%d)' % (pvreg, spreg), '.fptr := PV')
+               arg_offset = -24
+               for i in xrange(protocol):
+                  if len(usedcallregs)>i and usedcallregs[i] is not None:
+                     yield ('other', 'stq $l%d, %d($l%d)' % (usedcallregs[i], arg_offset, spreg), '.arg[%d]' % i)
+                  if len(usedcallfregs)>i and usedcallfregs[i] is not None:
+                     yield ('other', 'stt $lf%d, %d($l%d)' % (usedcallfregs[i], arg_offset - 8, spreg), 
+                            '.farg[%d]' % i)
+                  arg_offset -= 16
+               yield ('other','ldq $l%d, __sl_callgate($l%d) !literal' % (pvreg, gpreg), 'PV <- callgate')
+               yield ('other','setstart $l%d, $l%d' % (ra, spreg), 'setstart(SP)')
+               yield ('other','lda $l%d, 1($l%d)' % (spreg, spreg), 'SP <= SP + 1')
+               yield ('other','setlimit $l%d, $l%d' % (ra, spreg), 'setlimit(SP+1)')
+               yield ('other', 'wb', '')
+               yield ('other','crei $l%d, 0($l%d)' % (ra, pvreg), 'start call')
+               yield ('other','lda $l%d, -1($l%d)' % (spreg, spreg), 'SP <= SP - 1')
+               yield ('other','sync $l%d, $l%d' % (ra, pvreg), 'SYNC: start wait')
+               yield ('other','mov $l%d, $l31' % (pvreg), 'SYNC: wait for return')
+               yield ('other','release $l%d' % rareg, 'SYNC: end')
+               if rvused:
+                  yield ('other','ldq $l%d, -8($l%d)' % (rvreg, spreg), 'restore RV')
+                  yield ('other','mov $l%d, $l%d' % (rvreg, rvreg), 'complete memory load')
+               if frvused:
+                  yield ('other','ldt $lf%d, -16($l%d)' % (frvreg, spreg), 'restore FRV')
+                  yield ('other','cpys $lf%d, $lf%d, $lf%d' % (frvreg, frvreg, frvreg), 'complete memory load')
+               yield ('empty','','MT: bsr call end')
+               continue
+
+            m = jsrre.match(content)
+            if m is not None:
+               ra = int(m.group(1))
+               pv = int(m.group(2))
+
+               # compute structure
+               yield ('empty','','MT: jsr call begin: %s' % content)
+               yield ('other','lda $l%d, %d($l31)' % (ra, protocol), 'RA <- nr_call_regs')
+               yield ('other','stq $l%d, -8($l%d)' % (ra, spreg), '.protocol := RA (nr_call_regs)')
+               yield ('other','allocate $l31, $l%d' % ra, 'RA <- fid')
+               yield ('other','stq $l%d, -16($l%d)' % (pv, spreg), '.fptr := PV')
+               arg_offset = -24
+               for i in xrange(protocol):
+                  if len(usedcallregs)>i and usedcallregs[i] is not None:
+                     yield ('other', 'stq $l%d, %d($l%d)' % (usedcallregs[i], arg_offset, spreg), '.arg[%d]' % i)
+                  if len(usedcallfregs)>i and usedcallfregs[i] is not None:
+                     yield ('other', 'stt $lf%d, %d($l%d)' % (usedcallfregs[i], arg_offset - 8, spreg), 
+                            '.farg[%d]' % i)
+                  arg_offset -= 16
+               yield ('other','ldq $l%d, __sl_callgate($l%d) !literal' % (pv, gpreg), 'PV <- callgate')
+               yield ('other','setstart $l%d, $l%d' % (ra, spreg), 'setstart(SP)')
+               yield ('other','lda $l%d, 1($l%d)' % (spreg, spreg), 'SP <= SP + 1')
+               yield ('other','setlimit $l%d, $l%d' % (ra, spreg), 'setlimit(SP+1)')
+               yield ('other', 'wb', '')
+               yield ('other','crei $l%d, 0($l%d)' % (ra, pv), 'start call')
+               yield ('other','lda $l%d, -1($l%d)' % (spreg, spreg), 'SP <= SP - 1')
+               yield ('other','sync $l%d, $l%d' % (ra, pvreg), 'SYNC: start wait')
+               yield ('other','mov $l%d, $l31' % (pvreg), 'SYNC: wait for return')
+               yield ('other','release $l%d' % ra, 'SYNC: end')
+               if rvused:
+                  yield ('other','ldq $l%d, -8($l%d)' % (rvreg, spreg), 'restore RV')
+                  yield ('other','mov $l%d, $l%d' % (rvreg, rvreg), 'complete memory load')
+               if frvused:
+                  yield ('other','ldt $lf%d, -16($l%d)' % (frvreg, spreg), 'restore FRV')
+                  yield ('other','cpys $lf%d, $lf%d, $lf%d' % (frvreg, frvreg, frvreg), 'complete memory load')
+               yield ('empty','','MT: jsr call end')
+               continue
+
+            if content.startswith('jsr') or (content.startswith('b') and '!samegp' in content):
+               die("%s: unsupported call: %s" % (fundata['name'],content))
+            
+         yield (type, content, comment)
+
 
 class utc0(pppalpha):
    pass
