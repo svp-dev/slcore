@@ -30,14 +30,17 @@
 #if defined(__alpha__) || defined(__mtalpha__)
 #define INVOKE_MT(Place, Func)                                          \
     ({                                                                  \
-        sl_place_t __pid = (Place);                                     \
-        register void *__pv __asm__("$1") = (Func);                     \
-        long __ret;                                                     \
-        __asm__ __volatile__("allocate %0, 1, 0, 0, 0\n"                \
-                             "\tcrei %0, 0(%1)\n"                       \
-                             "\tmov %0, %0 #MT: sync"                   \
-                             : "=r"(__ret), "=r"(__pv)                  \
-                             : "0"(__pid), "1"(__pv));                  \
+        register sl_place_t __pid = (Place);                            \
+        register void *__pv = (Func);                                   \
+        register long __ret, __fid;                                     \
+        __asm__ __volatile__("allocate %2, %0\n"                        \
+                             "\tcrei %0, 0(%3)\n"                       \
+                             "\tputg %3, %0, 0\n"                       \
+                             "\tsync %0, %1\n"                          \
+                             "\tmov %1, $31 #MT: sync\n"                 \
+                             "\trelease %0"                             \
+                             : "=r"(__fid), "=r"(__ret)                 \
+                             : "r"(__pid), "1"(__pv));                  \
         __ret;                                                          \
     })
 #else

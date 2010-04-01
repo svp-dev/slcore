@@ -18,22 +18,22 @@
 extern void __divmodqu(void);
 extern void __divmodqs(void);
 
-#ifndef RL0
-#define RL0 "$0"
-#define RL1 "$1"
-#define RL2 "$2"
-#endif
-
 #define __ASM_DIVCALL(T, Ptr, X, Y)					\
   do {									\
-    register T __arg0 __asm__(RL0) = (X);				\
-    register T __arg1 __asm__(RL1) = (Y);				\
-    __asm__ ("allocate " RL2 ", 0, 0, 0, 0\n"				\
-	     "\t# SETREGS not necessary when (%0=" RL0") and (%1=" RL1 ")\n" \
-	     "\tcrei " RL2 ",0(%4)\n"					\
-	     "\tbis $31, " RL2 ", $31\n\tswch"				\
-	     : "=r"(__arg0), "=r"(__arg1)				\
-	     : "0"(__arg0), "1"(__arg1), "r"(Ptr) : RL2);		\
+      register T __arg0 = (X);                                          \
+    register T __arg1 = (Y);                                            \
+    register long __fid; \
+    __asm__ ("allocate $31, %2\n"                                       \
+	     "\tcrei %2, 0(%5)\n"					\
+             "\tputs %3, %2, 0\n"                                       \
+             "\tputs %4, %2, 1\n"                                       \
+             "\tsync %2, %0\n"                                          \
+             "\tmov %0, $31\n"                                          \
+             "\tgets %2, 0, %0\n"                                       \
+             "\tgets %2, 1, %1\n"                                       \
+	     "\trelease %2"                                             \
+	     : "=r"(__arg0), "=r"(__arg1), "=r"(__fid)                  \
+	     : "r"(__arg0), "r"(__arg1), "r"(Ptr));                     \
     (X) = __arg0; (Y) = __arg1;						\
   } while(0)
 

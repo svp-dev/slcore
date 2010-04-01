@@ -21,14 +21,16 @@ extern void __sl_callgate_owntls(void);
 #if defined(__alpha__) || defined(__mtalpha__)
 #define CALL_WITH_INFO(Top, Place)					\
     do {                                                                \
-        long __fid;                                                     \
-        __asm__ __volatile__("allocate %0, 0, 0, 0, 0\n"                \
-                             "\tsetstart %0, %2\n"                      \
-                             "\tsetlimit %0, %3\n"                      \
-                             "\tcrei %0, 0(%4)\n"                       \
-                             "\tmov %0, $31 #SYNC\n"			\
-                             : "=&r"(__fid)                             \
-                             : "0"(Place),                              \
+        long __fid, __ret;                                              \
+        __asm__ __volatile__("allocate %2, %0\n"                \
+                             "\tsetstart %0, %3\n"                      \
+                             "\tsetlimit %0, %4\n"                      \
+                             "\tcrei %0, 0(%5)\n"                       \
+                             "\tsync %0, %1\n"                          \
+                             "\tmov %1, $31 #SYNC\n"			\
+                             "\trelease %0"                             \
+                             : "=r"(__fid), "=r"(__ret)                 \
+                             : "r"(Place),                   \
                                "rI"(Top),                               \
                                "rI"(((char*)(void*)(Top))+1),           \
                                "r"(__sl_callgate_owntls)                \

@@ -72,15 +72,15 @@ Example one-word implementation aliases:
 
   ptl           muTC-ptl (pthreads / C++)
 
-  ppp           "alternate" compiler for MT-Alpha
+  mtalpha       "alternate" compiler for MT-Alpha
 
-  utc0          Alpha-gcc compiler
+  utc0          Core µTC compiler
 
   utcx          "desired muTC" (transform/preprocess only)
 
 Example "long" aliases:
 
-  ppp-mtalpha-sim utc0-mtalpha-sim ppp-host-host-ptl
+  ppp2-mtalpha-sim utc0-mtalpha-sim ptl-host-host-ptl
 
 Report bugs and patches to $bugreports.
 EOF
@@ -133,12 +133,14 @@ case $alias in
     seqc)  alias=seqc-host-host-seqc ;;
     ptl)   alias=ptl-host-host-ptl ;;
     utc0)  alias=utc0-mtalpha-sim ;;
-    ppp)   alias=ppp-mtalpha-sim ;;
-    ppp2)  alias=ppp2-mtalpha-sim ;;
+    ppp)   echo "$basename: warning: alias $alias is obsolete, use 'mtalpha' instead" >&2;
+           alias=ppp-mtalpha-sim ;;
+    ppp2)  echo "$basename: warning: alias $alias is obsolete, use 'mtalpha' instead" >&2;
+           alias=ppp2-mtalpha-sim ;;
     ptlx)  alias=ptlx-x-x ;;
     utcx)  alias=utc-x-x ;;
     *-*)   ;; # more than one word: pass to next stage
-    mt*)   alias=ppp-$alias-sim ;;
+    mt*)   alias=ppp2-$alias-sim ;;
     *)     # remaining single-word aliases
 	die "$alias: unknown alias" ;;
 esac

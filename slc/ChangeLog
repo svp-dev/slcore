@@ -1,5 +1,27 @@
 2010-04-01  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	Adapt library for new code generation.
+
+	* tools/bin/cce.in: Obsolete the short aliases `ppp' and `ppp2'.
+
+	* tools/include/svp/gomt.h,
+	* lib/include/svp/callgate.h,
+	* lib/src/mtalpha/mtdiv.s,
+	* lib/mtalpha-sim/include/svp_asmdiv.h: Use the new allocate/create
+	mechanism.
+
+	* tools/bin/spp,
+	* tools/lib/t-ppp2alpha/include/sl_support.h: Use `wmb', not `wb'.
+
+	* tools/lib/t-ppp2alpha/include/sl_support.h: `allocate' has side
+	effects, so make it `volatile'.
+
+	* lib/mtalpha.mk,
+	* tools/lib/mtalpha.mk: List the new files. Use `mtalpha' instead
+	of `ppp' as target.
+
+2010-04-01  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	Implement code generation for new back-end `ppp2'.
 	
 	* tools/bin/cce.in: Enable `-fwesley' by default for target

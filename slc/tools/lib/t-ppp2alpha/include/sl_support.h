@@ -109,7 +109,7 @@
 
 [[#]]define __sl_allocate(Tag, Place)			\
   register long __sl_fid_ ## Tag;					\
-  __asm__ ("allocate %1, %0\t# MT: CREATE" #Tag	\
+  __asm__ __volatile__ ("allocate %1, %0\t# MT: CREATE" #Tag	\
 			: "=r"(__sl_fid_ ## Tag)			\
 			: "rI"(Place))
 
@@ -140,7 +140,7 @@
   __asm__ ("puts %2, %0, " Offset "\t# MT: set shared " # Name : "=r"(__sl_fid_ ## Tag) : "0"(__sl_fid_ ## Tag), "rI"(Val))
 
 [[#]]define __sl_setma(Tag, Offset) \
-  __asm__ ("wb; putg %2, %0, " Offset "\t# MT: set offset for memargs" : "=r"(__sl_fid_ ## Tag) : "0"(__sl_fid_ ## Tag), "r"(&__sl_ma_data_ ## Tag))
+  __asm__ ("wmb; putg %2, %0, " Offset "\t# MT: set offset for memargs" : "=r"(__sl_fid_ ## Tag) : "0"(__sl_fid_ ## Tag), "r"(&__sl_ma_data_ ## Tag))
 
 [[#]]define __sl_setglfa(Name, Tag, Val, Offset) \
   __asm__ ("fputg %2, %0, " Offset "\t# MT: set global " # Name : "=r"(__sl_fid_ ## Tag) : "0"(__sl_fid_ ## Tag), "f"(__sl_after_ ## Name = (Val)))
@@ -155,13 +155,13 @@
   __asm__ ("gets %0, " Offset ", %1\t# MT: get shared " # Name : "=r"(__sl_fid_ ## Tag), "=r"(__sl_after_ ## Name) : "0"(__sl_fid_ ## Tag))
 
 [[#]]define __sl_create(Tag, OffsetGP)                                         \
-  __asm__ __volatile__("crei %0, 0(%2); wb; putg %2, %0, " OffsetGP "\t# MT: CREATE " # Tag : "=r"(__sl_fid_ ## Tag) : "0"(__sl_fid_ ## Tag), "r"(__sl_funcptr_ ## Tag) : "memory")
+  __asm__ __volatile__("crei %0, 0(%2); wmb; putg %2, %0, " OffsetGP "\t# MT: CREATE " # Tag : "=r"(__sl_fid_ ## Tag) : "0"(__sl_fid_ ## Tag), "r"(__sl_funcptr_ ## Tag) : "memory")
 
 [[#]]define __sl_sync_nouse(Tag)                                       \
   __asm__("sync %0, %1; mov %1, $31\t# MT: SYNC " # Tag : "=r"(__sl_fid_ ## Tag), "=r"(__sl_syncvar_ ## Tag) : "0"(__sl_fid_ ## Tag) : "memory")
 
 [[#]]define __sl_sync(Tag, Var)                                           \
-  __asm__("sync %0, %1; mov %1, %1\t# MT: SYNC " # Tag : "=r"(__sl_fid_ ## Tag), "=r"(Var) : "0"(__sl_fid_ ## Tag) : "memory")
+  __asm__("sync %0, %1; mov %1, $31\t# MT: SYNC " # Tag : "=r"(__sl_fid_ ## Tag), "=r"(Var) : "0"(__sl_fid_ ## Tag) : "memory")
 
 [[#]]define __sl_release(Tag) \
   __asm__ __volatile__("release %0" : : "r"(__sl_fid_ ## Tag));

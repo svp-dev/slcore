@@ -13,22 +13,26 @@
    .globl __divmodqu
    .ent __divmodqu
 __divmodqu:
-   .registers 0 2 4 0 0 0
+   .registers 0 2 3 0 0 0
 
-   clr $l3
-   allocate $l3, 0, 1, 0, 0
+   allocate $31, $l1
 
    # Find the highest set bit
    ctlz    $d1, $l2; swch
    sll     $d1, $l2, $l0      # $l0 = divisor
    addq    $l2, 1, $l2        # $l2 = shiftcount
-   mov     $d0, $l1; swch     # $l1 = dividend
 
-   setlimit $l3, $l2; swch
-   clr     $l2                # $l2 = answer
-   cred    $l3,__divmodqu_loop
-   mov     $l3, $31; swch
-   mov     $l1, $s0
+   setlimit $l1, $l2; swch
+   cred    $l1,__divmodqu_loop
+   puts    $d0, $l1, 0          ; swch # $d0 = dividend
+   putg    $l0, $l1, 0
+   puts    0, $l1, 1
+   sync    $l1, $l2             
+   mov     $l2, $31             ; swch
+   gets    $l1, 0, $l0
+   gets    $l1, 1, $l2
+   release $l1
+   mov     $l0, $s0             ; swch
    mov     $l2, $s1
    end
    .end __divmodqu
@@ -67,8 +71,7 @@ __divmodqu_loop:
 __divmodqs:
    .registers 0 2 6 0 0 0
 
-   clr $l5
-   allocate $l5, 0, 1, 0, 0
+   allocate $31, $l5
 
    negq      1, $l3            # $l3 = invsign
    mov     $d1, $l0; swch      # $l0 = divisor
@@ -95,10 +98,16 @@ __divmodqs:
 
    subq    $l2,   1, $l2
    sll     $l0, $l2, $l0      # $l0 = divisor
-   clr     $l2                # $l2 = answer
    cred    $l5,__divmodqs_loop
-   mov     $l5, $31; swch
-   mulq    $l1, $l4, $s0
+   putg    $l0, $l5, 0          ; swch
+   puts    0, $l5, 1
+   puts    $l1, $l5, 0
+   sync    $l5, $l1
+   mov     $l1, $31; swch
+   gets    $l5, 0, $l1
+   gets    $l5, 1, $l2
+   release $l5
+   mulq    $l1, $l4, $s0        ; swch
    mulq    $l2, $l3, $s1
    end
    .end __divmodqs
