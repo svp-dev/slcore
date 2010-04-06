@@ -1,5 +1,14 @@
 2010-04-06  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	Fix bug in MT-alpha code generation.
+
+	* tools/bin/spp,
+	* tools/lib/t-ppp2alpha/include/sl_support.h: Cast global or
+	shared argument to desired type before passing to `asm' statement,
+	so that constant `0' can be passed as a floating point.
+
+2010-04-06  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	Increase use of `-b mtalpha'.
 
 	* build-aux/slctests.mk,

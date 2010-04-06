@@ -133,25 +133,25 @@
 	   : "=r"(__sl_fid_ ## Tag) \
 	   : "0"(__sl_fid_ ## Tag), "rI"(Block))
 
-[[#]]define __sl_setshfa(Name, Tag, Val, Offset) \
-  __asm__ ("fputs %2, %0, " Offset "\t# MT: set shared " # Name : "=r"(__sl_fid_ ## Tag) : "0"(__sl_fid_ ## Tag), "f"(Val))
+[[#]]define __sl_setshfa(Name, Tag, Val, Offset, Type)                     \
+  __asm__ ("fputs %2, %0, " Offset "\t# MT: set shared " # Name : "=r"(__sl_fid_ ## Tag) : "0"(__sl_fid_ ## Tag), "f"((Type)(Val)))
 
-[[#]]define __sl_setshia(Name, Tag, Val, Offset) \
-  __asm__ ("puts %2, %0, " Offset "\t# MT: set shared " # Name : "=r"(__sl_fid_ ## Tag) : "0"(__sl_fid_ ## Tag), "rI"(Val))
+[[#]]define __sl_setshia(Name, Tag, Val, Offset, Type)                     \
+  __asm__ ("puts %2, %0, " Offset "\t# MT: set shared " # Name : "=r"(__sl_fid_ ## Tag) : "0"(__sl_fid_ ## Tag), "rI"((Type)(Val)))
 
 [[#]]define __sl_setma(Tag, Offset) \
   __asm__ ("wmb; putg %2, %0, " Offset "\t# MT: set offset for memargs" : "=r"(__sl_fid_ ## Tag) : "0"(__sl_fid_ ## Tag), "r"(&__sl_ma_data_ ## Tag))
 
-[[#]]define __sl_setglfa(Name, Tag, Val, Offset) \
+[[#]]define __sl_setglfa(Name, Tag, Val, Offset, Type)                     \
   __asm__ ("fputg %2, %0, " Offset "\t# MT: set global " # Name : "=r"(__sl_fid_ ## Tag) : "0"(__sl_fid_ ## Tag), "f"(__sl_after_ ## Name = (Val)))
 
-[[#]]define __sl_setglia(Name, Tag, Val, Offset) \
+[[#]]define __sl_setglia(Name, Tag, Val, Offset, Type)                     \
   __asm__ ("putg %2, %0, " Offset "\t# MT: set global " # Name : "=r"(__sl_fid_ ## Tag) : "0"(__sl_fid_ ## Tag), "rI"(__sl_after_ ## Name = (Val)))
 
-[[#]]define __sl_getshfa(Name, Tag, Offset) \
+[[#]]define __sl_getshfa(Name, Tag, Offset)                          \
   __asm__ ("fgets %0, " Offset ", %1\t# MT: get shared " # Name : "=r"(__sl_fid_ ## Tag), "=f"(__sl_after_ ## Name) : "0"(__sl_fid_ ## Tag))
 
-[[#]]define __sl_getshia(Name, Tag, Offset) \
+[[#]]define __sl_getshia(Name, Tag, Offset)                          \
   __asm__ ("gets %0, " Offset ", %1\t# MT: get shared " # Name : "=r"(__sl_fid_ ## Tag), "=r"(__sl_after_ ## Name) : "0"(__sl_fid_ ## Tag))
 
 [[#]]define __sl_create(Tag)                                         \

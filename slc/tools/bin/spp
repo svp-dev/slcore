@@ -2112,7 +2112,7 @@ class ppp2alpha(pppalpha):
                   #print "FIXME: do something here with gl arg in mem"
                else: # mode: reg
                   regnr = a['regnr']
-                  print r"""m4_pushdef([[__sl_seta_%s]],[[__sl_set%s%sa(%s, __sl_tag, [[$1]], "%d")]]) m4_dnl""" % (name, cat, species, name, regnr)
+                  print r"""m4_pushdef([[__sl_seta_%s]],[[__sl_set%s%sa(%s, __sl_tag, [[$1]], "%d", %s)]]) m4_dnl""" % (name, cat, species, name, regnr, ctype)
                   if cat == 'sh':
                      atsync.append("""__sl_get%s%sa(%s, __sl_tag, "%d");""" % (cat, species, name, regnr))
                atsync.append("""m4_popdef([[__sl_seta_%s]])""" % name)
