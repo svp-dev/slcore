@@ -1,5 +1,13 @@
 2010-04-06  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	Increase use of `-b mtalpha'.
+
+	* build-aux/slctests.mk,
+	* build-aux/sl.mk (SLC_BEFORE): Use `-b mtalpha' instead of `-b
+	ppp' to build programs.
+
+2010-04-06  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	Optimize the MT-alpha calling convention.
 
 	The calling convention was expecting PV to be present in some
