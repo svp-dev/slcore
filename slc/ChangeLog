@@ -1,3 +1,24 @@
+2010-04-06  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
+	Optimize the MT-alpha calling convention.
+
+	The calling convention was expecting PV to be present in some
+	global thread parameter in order to place `ldgp' (or `ldah,lda
+	!gpdisp') immediately at the start of the thread code. This
+	required to pass PV in a global thread argument even if it was
+	potentially not used in the target created family.
+
+	This is now optimized by computing PV in the threads that need it,
+	through the Alpha `br' instruction (`br $pv, 0' loads the PV of
+	the next instruction into $pv), now aliased to `ldpc' in the
+	assembler.
+
+	* tools/bin/spp (ppp2alpha): Handle the new calling convention.
+
+	* tools/lib/t-ppp2alpha/include/sl_support.h,
+	* tools/include/svp/gomt.h: Avoid passing PV, since it is no
+	longer needed.
+
 2010-04-01  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
 	Adapt library for new code generation.

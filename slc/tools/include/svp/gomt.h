@@ -31,16 +31,14 @@
 #define INVOKE_MT(Place, Func)                                          \
     ({                                                                  \
         register sl_place_t __pid = (Place);                            \
-        register void *__pv = (Func);                                   \
         register long __ret, __fid;                                     \
         __asm__ __volatile__("allocate %2, %0\n"                        \
                              "\tcrei %0, 0(%3)\n"                       \
-                             "\tputg %3, %0, 0\n"                       \
                              "\tsync %0, %1\n"                          \
                              "\tmov %1, $31 #MT: sync\n"                 \
                              "\trelease %0"                             \
-                             : "=r"(__fid), "=r"(__ret)                 \
-                             : "r"(__pid), "1"(__pv));                  \
+                             : "=&r"(__fid), "=r"(__ret)                 \
+                             : "r"(__pid), "r"(Func));                \
         __ret;                                                          \
     })
 #else

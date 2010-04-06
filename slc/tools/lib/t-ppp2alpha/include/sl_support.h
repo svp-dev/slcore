@@ -154,8 +154,8 @@
 [[#]]define __sl_getshia(Name, Tag, Offset) \
   __asm__ ("gets %0, " Offset ", %1\t# MT: get shared " # Name : "=r"(__sl_fid_ ## Tag), "=r"(__sl_after_ ## Name) : "0"(__sl_fid_ ## Tag))
 
-[[#]]define __sl_create(Tag, OffsetGP)                                         \
-  __asm__ __volatile__("crei %0, 0(%2); wmb; putg %2, %0, " OffsetGP "\t# MT: CREATE " # Tag : "=r"(__sl_fid_ ## Tag) : "0"(__sl_fid_ ## Tag), "r"(__sl_funcptr_ ## Tag) : "memory")
+[[#]]define __sl_create(Tag)                                         \
+  __asm__ __volatile__("wmb; crei %0, 0(%2)\t# MT: CREATE " # Tag : "=r"(__sl_fid_ ## Tag) : "0"(__sl_fid_ ## Tag), "r"(__sl_funcptr_ ## Tag) : "memory")
 
 [[#]]define __sl_sync_nouse(Tag)                                       \
   __asm__("sync %0, %1; mov %1, $31\t# MT: SYNC " # Tag : "=r"(__sl_fid_ ## Tag), "=r"(__sl_syncvar_ ## Tag) : "0"(__sl_fid_ ## Tag) : "memory")
