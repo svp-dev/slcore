@@ -149,10 +149,10 @@
   __asm__ ("putg %2, %0, " Offset "\t# MT: set global " # Name : "=r"(__sl_fid_ ## Tag) : "0"(__sl_fid_ ## Tag), "rI"(__sl_after_ ## Name = (Val)))
 
 [[#]]define __sl_getshfa(Name, Tag, Offset)                          \
-  __asm__ ("fgets %0, " Offset ", %1\t# MT: get shared " # Name : "=r"(__sl_fid_ ## Tag), "=f"(__sl_after_ ## Name) : "0"(__sl_fid_ ## Tag))
+  __asm__ ("fgets %0, " Offset ", %1; fmov %1, %1\t# MT: get shared " # Name : "=r"(__sl_fid_ ## Tag), "=f"(__sl_after_ ## Name) : "0"(__sl_fid_ ## Tag)); 
 
 [[#]]define __sl_getshia(Name, Tag, Offset)                          \
-  __asm__ ("gets %0, " Offset ", %1\t# MT: get shared " # Name : "=r"(__sl_fid_ ## Tag), "=r"(__sl_after_ ## Name) : "0"(__sl_fid_ ## Tag))
+  __asm__ ("gets %0, " Offset ", %1; mov %1, %1\t# MT: get shared " # Name : "=r"(__sl_fid_ ## Tag), "=r"(__sl_after_ ## Name) : "0"(__sl_fid_ ## Tag))
 
 [[#]]define __sl_create(Tag)                                         \
   __asm__ __volatile__("wmb; crei %0, 0(%2)\t# MT: CREATE " # Tag : "=r"(__sl_fid_ ## Tag) : "0"(__sl_fid_ ## Tag), "r"(__sl_funcptr_ ## Tag) : "memory")

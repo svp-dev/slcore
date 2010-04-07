@@ -1,5 +1,14 @@
 2010-04-07  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	Fix bug in MT-alpha code generation.
+
+	* tools/lib/t-ppp2alpha/include/sl_support.h: Ensure that the read
+	to a shared after sync completes in all cases. This is needed in case
+	the `gets' instruction is followed by `ldq' with the same register
+	as target ("cannot write to waiting register").
+
+2010-04-07  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	Fix handling of `slr' argument.
 
 	The `slr' utility needs to recompile code using the same back-end
