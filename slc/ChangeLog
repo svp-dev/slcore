@@ -1,3 +1,13 @@
+2010-04-07  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
+	Fix handling of `slr' argument.
+
+	The `slr' utility needs to recompile code using the same back-end
+	as the executed program. This is recognized by a text tag.
+
+	* tools/lib/mtalpha-sim/slrt.s (slr_datatag): Upgrade data tag
+	to new back-end name.
+
 2010-04-06  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
 	Fix bug in MT-alpha code generation.
