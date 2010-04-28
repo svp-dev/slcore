@@ -1,3 +1,10 @@
+2010-03-29  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
+	Enhance the `mandel' benchmark.
+
+	* benchmarks/mandel/mandel_colors.c: Enable drawing during
+	compute by default.
+
 2010-02-27  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
 	Separate `mandel' benchmark into drawing and non-drawing versions.
