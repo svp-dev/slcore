@@ -14,16 +14,17 @@
 
 #include <svp/compiler.h>
 
-sl_def(foo, void) { } sl_enddef
+// XIGNORE: *:*
+
+sl_def(foo, void) { sl_break; } sl_enddef
 
 sl_def(t_main, void)
 {
   int r;
   sl_family_t f;
   sl_create(f,,,,,, void, foo);
-  sl_kill(f);
   sl_sync(r);
-  if (r == SVP_EKILLED)
+  if (r == SVP_EBROKEN)
     nop();
 }
 sl_enddef

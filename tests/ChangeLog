@@ -1,3 +1,16 @@
+2010-04-29  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
+	Sanitize the test suite.
+
+	* 0_slc/1_create/fididreuse.c: Do not use `sl_kill' in test, since
+	the test is about something else.
+
+	* 0_slc/1_createargs/useexit2.c: Ignore test for now, since
+	neither `break' nor `kill' is properly implemented everywhere yet.
+
+	* 0_slc/4_funcalls/add.c: Remove. The `sl_funcall' syntax is
+	deprecated.
+
 2010-04-07  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
 	Fix one unit test.
