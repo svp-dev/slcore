@@ -1,5 +1,44 @@
 2010-04-29  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	Update copyright notice of files changed in 2010.
+
+	* build-aux/sl.mk,
+	* build-aux/slctests.mk,
+	* lib/Makefile.am,
+	* lib/include/cmalloc.h,
+	* lib/include/cstdio.h,
+	* lib/include/ctime.h,
+	* lib/include/svp/assert.h,
+	* lib/include/svp/callgate.h,
+	* lib/include/svp/io.h,
+	* lib/include/svp/iomacros.h,
+	* lib/include/svp/sep.h,
+	* lib/mtalpha-sim/include/svp_asmdiv.h,
+	* lib/src/abort.c,
+	* lib/src/heap.c,
+	* lib/src/malloc_wrappers.c,
+	* lib/src/mtsep.c,
+	* lib/src/perf.c,
+	* tools/bin/Makefile.am,
+	* tools/bin/cce.in,
+	* tools/bin/slc.in,
+	* tools/bin/spp,
+	* tools/include/m4sugar_foreach.m4,
+	* tools/include/m4sugar_version.m4,
+	* tools/include/svp/testoutput.h,
+	* tools/lib/Makefile.am,
+	* tools/lib/host-host-ptl/include/ptl_config.h,
+	* tools/lib/host-host-ptl/include/ptl_debug.h,
+	* tools/lib/host-host-ptl/include/ptl_deps.h,
+	* tools/lib/host-host-ptl/include/ptl_vars.h,
+	* tools/lib/host-host-ptl/ptl_debug.cc,
+	* tools/lib/host-host-ptl/ptl_vars.cc,
+	* tools/lib/mtalpha-sim/callgate.s,
+	* tools/lib/t-ppp2alpha/include/sl_support.h,
+	* tools/lib/t-pppalpha/include/sl_support.h: Add 2010 to copyright notice.
+
+2010-04-29  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	Remove support for `sl_funcall'.
 
 	The construct `sl_funcall' was obsolete for a while already.

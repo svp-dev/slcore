@@ -2,7 +2,7 @@
 # -*- mode: shell-script -*-
 # cce: This file is part of the SL toolchain.
 #
-copyright="Copyright (C) 2009 The SL project."
+copyright="Copyright (C) 2009,2010 The SL project."
 #
 # This program is free software; you can redistribute it and/or
 # modify it under the terms of the GNU General Public License

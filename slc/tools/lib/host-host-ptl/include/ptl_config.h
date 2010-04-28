@@ -1,7 +1,7 @@
 //
 // ptl_config.h: this file is part of the SL toolchain.
 //
-// Copyright (C) 2008,2009 The SL project.
+// Copyright (C) 2008,2009,2010 The SL project.
 // All rights reserved.
 
 #define UTC_CONFIG_NPTL_PTHREAD_EXIT_BUG
