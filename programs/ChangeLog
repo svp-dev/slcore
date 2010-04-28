@@ -1,3 +1,32 @@
+2010-04-29  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
+	Update copyright notice of files changed in 2010.
+
+	* benchmarks/blas/blasbench.h,
+	* benchmarks/fft/fft-bench.c,
+	* benchmarks/lib/Makefile.am,
+	* benchmarks/lib/benchmark.c,
+	* benchmarks/livermore/kernel15.c,
+	* benchmarks/livermore/kernel21.c,
+	* benchmarks/livermore/kernel23.c,
+	* benchmarks/livermore/kernel6.c,
+	* benchmarks/livermore/kernel8.c,
+	* benchmarks/livermore/kernel9.c,
+	* benchmarks/mandel/Makefile.am,
+	* benchmarks/mandel/mandel.c,
+	* demo/10threads.c,
+	* demo/Makefile.am,
+	* demo/answer.c,
+	* demo/bitblt.c,
+	* demo/fibonacci.c,
+	* demo/fibre.c,
+	* demo/helloworld.c,
+	* demo/keyblit.c,
+	* demo/perf.c,
+	* demo/pi.c,
+	* demo/roman.c,
+	* demo/sep.c: Add 2010 to copyright notice.
+
 2010-04-26  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
 	Increase use of `-b mtalpha'.
