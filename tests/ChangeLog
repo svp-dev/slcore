@@ -1,5 +1,19 @@
 2010-04-29  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	Update copyright notice of files changed in 2010.
+
+	* 0_slc/1_createargs/useexit2.c,
+	* 2_lib/assert.c,
+	* 2_lib/clock.c,
+	* 2_lib/div/div.c,
+	* 2_lib/div/div2.c,
+	* 2_lib/malloc/m1.c,
+	* 2_lib/malloc/m2.c,
+	* 2_lib/perf.c,
+	* 2_lib/sac1.c: Add 2010 to copyright notice.
+
+2010-04-29  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	Sanitize the test suite.
 
 	* 0_slc/1_create/fididreuse.c: Do not use `sl_kill' in test, since
