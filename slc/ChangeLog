@@ -1,3 +1,18 @@
+2010-04-29  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
+	Support `sl_create' inside plain C functions.
+
+	The MT-Alpha target now support the construct; this changeset
+	extends the functionality to the sequential C target.
+
+	* tools/lib/t-seqc/slimpl.m4: Deprecate `sl_kill'. Implement new
+	`sl_break' semantics (not yet official). This removes the need for
+	a linked list of family contexts, so a new child can appear
+	disconnected. This allows `sl_create' to appear inside plain C
+	functions.
+
+	* tools/lib/t-seqc/include/sl_support.h: Remove the obsolete field.
+
 2010-04-26  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
 	Adjust place usage in current MT-alpha delegations.

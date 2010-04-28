@@ -1,6 +1,6 @@
 # t-seqc/slimpl.m4: this file is part of the SL toolchain.
 # 
-# Copyright (C) 2008,2009 The SL project
+# Copyright (C) 2008,2009,2010 The SL project
 #
 # This program is free software; you can redistribute it and/or
 # modify it under the terms of the GNU General Public License
@@ -30,9 +30,8 @@ m4_define([[sl_def]],[[m4_dnl
 m4_define([[sl_thparms]],m4_dquote(m4_shift2($@)))m4_dnl
 void [[$1]](struct sl_famdata * __sl_fam) { m4_dnl
 struct { m4_dnl 
-m4_if(sl_breakable([[$2]]),1,[[[[$2]] __breakv; ]],)m4_dnl
 m4_foreach([[_sl_parm]],m4_quote(sl_thparms),[[_sl_parm;]])m4_dnl
-} *__sl_args = __sl_fam->a; struct sl_famdata __sl_child; m4_dnl
+} *__sl_args = __sl_fam->a; m4_dnl
 ]])
 
 m4_define([[sl_enddef]],[[} m4_dnl
@@ -80,20 +79,17 @@ m4_define([[_sl_limit]],m4_ifblank([[$4]],1,[[$4]]))m4_dnl
 m4_define([[_sl_step]],m4_ifblank([[$5]],1,[[$5]]))m4_dnl
 m4_define([[_sl_thargs]],m4_dquote(m4_shiftn(8,$@)))m4_dnl
 struct { m4_dnl
-m4_if(sl_breakable([[$7]]),1,[[[[$7]] __breakv; ]])m4_dnl
 m4_foreach([[_sl_arg]],m4_quote(_sl_thargs),[[m4_apply([[sl_declarg]],m4_split(_sl_arg,:))]]) m4_dnl
 } _sl_lbl[[]]_args; m4_dnl
-m4_if(sl_breakable([[$7]]),1,[[[[$7]] *_sl_fid[[]]_brk = &_sl_lbl[[]]_args.__breakv; ]])m4_dnl
 m4_foreach([[_sl_arg]],m4_quote(_sl_thargs),[[m4_apply([[sl_initarg]],m4_split(_sl_arg,:))]]) m4_dnl
-__sl_fam->ch = &__sl_child; m4_dnl
-m4_ifblank([[$1]],,[[([[$1]]) = &__sl_child;]]) m4_dnl
-__sl_child.be = _sl_start; m4_dnl
-__sl_child.li = _sl_limit; m4_dnl
-__sl_child.st = _sl_step; m4_dnl
-__sl_child.ch = 0; m4_dnl
-__sl_child.ex = SVP_ENOERR; m4_dnl
-__sl_child.f = ([[$8]]); m4_dnl
-__sl_child.a = &_sl_lbl[[]]_args m4_dnl
+struct sl_famdata __slf[[]]_sl_lbl;
+m4_ifblank([[$1]],,[[([[$1]]) = &__slf[[]]_sl_lbl;]]) m4_dnl
+__slf[[]]_sl_lbl.be = _sl_start; m4_dnl
+__slf[[]]_sl_lbl.li = _sl_limit; m4_dnl
+__slf[[]]_sl_lbl.st = _sl_step; m4_dnl
+__slf[[]]_sl_lbl.ex = SVP_ENOERR; m4_dnl
+__slf[[]]_sl_lbl.f = ([[$8]]); m4_dnl
+__slf[[]]_sl_lbl.a = &_sl_lbl[[]]_args m4_dnl
 ]])
 
 
@@ -107,24 +103,22 @@ m4_copy([[sl_sharg]],[[sl_glfarg]])
 m4_define([[sl_sync]],[[m4_dnl
 m4_ifndef([[_sl_increate]],[[m4_fatal(sync without create)]]) m4_dnl
 m4_define([[_sl_body]],[[{ m4_dnl
-if (__sl_child.ex != SVP_ENOERR) break; m4_dnl
-__sl_child.f(&__sl_child); m4_dnl
-if (__sl_fam->ex == SVP_EKILLED) return; m4_dnl
+__slf[[]]_sl_lbl.f(&__slf[[]]_sl_lbl); m4_dnl
+if (__slf[[]]_sl_lbl.ex != SVP_ENOERR) break; m4_dnl
 } m4_dnl
 ]])m4_dnl
-if (!__sl_child.st)m4_dnl
- for (__sl_child.ix = __sl_child.be; m4_dnl
-      ; __sl_child.ix += __sl_child.li) _sl_body m4_dnl
-else if (__sl_child.st > 0)m4_dnl
- for (__sl_child.ix = __sl_child.be; m4_dnl
-      __sl_child.ix < __sl_child.li; m4_dnl
-      __sl_child.ix += __sl_child.st) _sl_body m4_dnl
+if (!__slf[[]]_sl_lbl.st)m4_dnl
+ for (__slf[[]]_sl_lbl.ix = __slf[[]]_sl_lbl.be; m4_dnl
+      ; __slf[[]]_sl_lbl.ix += __slf[[]]_sl_lbl.li) _sl_body m4_dnl
+else if (__slf[[]]_sl_lbl.st > 0)m4_dnl
+ for (__slf[[]]_sl_lbl.ix = __slf[[]]_sl_lbl.be; m4_dnl
+      __slf[[]]_sl_lbl.ix < __slf[[]]_sl_lbl.li; m4_dnl
+      __slf[[]]_sl_lbl.ix += __slf[[]]_sl_lbl.st) _sl_body m4_dnl
 else m4_dnl
-for (__sl_child.ix = __sl_child.be; m4_dnl
-     __sl_child.ix > __sl_child.li; m4_dnl
-     __sl_child.ix += __sl_child.st) _sl_body m4_dnl
-__sl_fam->ch = 0; m4_dnl
-m4_ifblank([[$1]],,[[[[$1]] = __sl_child.ex;]]) m4_dnl
+for (__slf[[]]_sl_lbl.ix = __slf[[]]_sl_lbl.be; m4_dnl
+     __slf[[]]_sl_lbl.ix > __slf[[]]_sl_lbl.li; m4_dnl
+     __slf[[]]_sl_lbl.ix += __slf[[]]_sl_lbl.st) _sl_body m4_dnl
+m4_ifblank([[$1]],,[[[[$1]] = __slf[[]]_sl_lbl.ex;]]) m4_dnl
 m4_foreach([[_sl_arg]],m4_quote(_sl_thargs),[[m4_apply([[sl_copyarg]],m4_split(_sl_arg,:))]]) m4_dnl
 m4_undefine([[_sl_increate]]) m4_dnl
 ]])
@@ -136,23 +130,11 @@ m4_define([[sl_seta]],[[__sl_seta_$1([[$2]])]])
 
 # Pass transparently break and kill
 m4_define([[sl_break]],[[m4_dnl
-do { __sl_args->__breakv = ([[$1]]); __sl_fam->ex = SVP_EBROKEN; return; } while(0)m4_dnl
+do { __sl_fam->ex = SVP_EBROKEN; return; } while(0)m4_dnl
 ]])
 
 m4_define([[sl_kill]],[[m4_dnl
-  do {m4_dnl
-    struct sl_famdata *__sl_p;m4_dnl					
-    for (__sl_p = ([[$1]]); __sl_p; __sl_p = __sl_p->ch)m4_dnl
-      __sl_p->ex = SVP_EKILLED;m4_dnl
-    if (__sl_fam->ex == SVP_EKILLED) return;m4_dnl
-  } while(0)m4_dnl
+m4_error([[kill unsupported in this implementation]])
 ]])
-
-
-# Pass transparently sl_getbr
-m4_define([[sl_getbr]],(*[[$1]]_brk))
-
-m4_define([[sl_farg]], [[[[$2]]]])
-m4_define([[sl_funcall]], [[[[$3]](m4_shift3($@))]])
 
 # ## End macros for new muTC syntax ###
