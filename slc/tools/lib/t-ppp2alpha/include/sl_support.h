@@ -228,8 +228,8 @@ typedef long sl_family_t;
 typedef long sl_place_t;
 typedef void (*__sl_fptr_t)(void);
 
-[[#]]define PLACE_LOCAL   2
-[[#]]define PLACE_DEFAULT 0
+[[#]]define PLACE_LOCAL   0xA /* 4 = local, 8 = suspend */
+[[#]]define PLACE_DEFAULT 0x8 /* 8 = suspend */
 
 [[#]]define SVP_ENOERR 0
 [[#]]define SVP_EBROKEN 1

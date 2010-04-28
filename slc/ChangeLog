@@ -1,3 +1,21 @@
+2010-04-26  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
+	Adjust place usage in current MT-alpha delegations.
+
+	A new feature was added to the hardware to select the behavior of
+	`allocate' using a bit in the place identifier. When the bit is
+	*not* set, upon failure allocate returns FID 0. This will be used
+	later during automatic deadlock prevention. However, since the
+	current code assumes allocate always returns a valid FID, the bit
+	needs to be set everywhere for now.
+
+	* lib/include/cstdlib.h,
+	* lib/mtalpha-sim/include/svp_asmdiv.h,
+	* lib/src/mtalpha/mtdiv.s,
+	* lib/src/mtsep.c,
+	* tools/bin/spp,
+	* tools/lib/t-ppp2alpha/include/sl_support.h: Set bit 3 of place identifiers.
+
 2010-04-07  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
 	Fix bug in MT-alpha code generation.

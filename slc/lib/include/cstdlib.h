@@ -59,7 +59,7 @@ extern void* dlrealloc(void*, size_t);
 #include <cstdint.h>
 #include <svp/callgate.h>
 
-#define malloc_place 5
+#define malloc_place 0xf /* 8=suspend, 4|2=delegate, 1=exclusive (implicit core ID = 0) */
 
 #define fast_malloc(N) ({						\
       uint64_t __margs[3] = { (uint64_t)N, (uint64_t)&dlmalloc, 1 };	\

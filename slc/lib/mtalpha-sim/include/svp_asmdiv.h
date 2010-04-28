@@ -23,7 +23,7 @@ extern void __divmodqs(void);
       register T __arg0 = (X);                                          \
     register T __arg1 = (Y);                                            \
     register long __fid; \
-    __asm__ ("allocate $31, %2\n"                                       \
+    __asm__ ("allocate 8, %2\n"                                       \
 	     "\tcrei %2, 0(%5)\n"					\
              "\tputs %3, %2, 0\n"                                       \
              "\tputs %4, %2, 1\n"                                       \

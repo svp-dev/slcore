@@ -15,7 +15,7 @@
 __divmodqu:
    .registers 0 2 3 0 0 0
 
-   allocate $31, $l1
+   allocate 8, $l1
 
    # Find the highest set bit
    ctlz    $d1, $l2; swch
@@ -71,7 +71,7 @@ __divmodqu_loop:
 __divmodqs:
    .registers 0 2 6 0 0 0
 
-   allocate $31, $l5
+   allocate 8, $l5
 
    negq      1, $l3            # $l3 = invsign
    mov     $d1, $l0; swch      # $l0 = divisor

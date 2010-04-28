@@ -2296,7 +2296,7 @@ class ppp2alpha(pppalpha):
                yield ('empty','','MT: br call begin: %s' % content)
                yield ('other','lda $l%d, %d($l31)' % (rareg, protocol), 'RA <- nr_call_regs')
                yield ('other','stq $l%d, -8($l%d)' % (rareg, spreg), '.protocol := RA (nr_call_regs)')
-               yield ('other','allocate $l31, $l%d' % rareg, 'RA <- fid')
+               yield ('other','allocate 8, $l%d' % rareg, 'RA <- fid, PID = default|suspend')
                yield ('other','ldah $l%d, %s($l%d) !gprelhigh' % (pvreg, lbl, gpreg), 'PV <- target')
                yield ('other','lda $l%d, %s($l%d) !gprellow' % (pvreg, lbl, pvreg), 'PV <- target')
                yield ('other','stq $l%d, -16($l%d)' % (pvreg, spreg), '.fptr := PV')
@@ -2329,7 +2329,7 @@ class ppp2alpha(pppalpha):
                yield ('empty','','MT: bsr call begin: %s' % content)
                yield ('other','lda $l%d, %d($l31)' % (ra, protocol), 'RA <- nr_call_regs')
                yield ('other','stq $l%d, -8($l%d)' % (ra, spreg), '.protocol := RA (nr_call_regs)')
-               yield ('other','allocate $l31, $l%d' % ra, 'RA <- fid')
+               yield ('other','allocate 8, $l%d' % ra, 'RA <- fid, PID = default|suspend')
                yield ('other','ldah $l%d, %s($l%d) !gprelhigh' % (pvreg, lbl, gpreg), 'PV <- target')
                yield ('other','lda $l%d, %s($l%d) !gprellow' % (pvreg, lbl, pvreg), 'PV <- target')
                yield ('other','stq $l%d, -16($l%d)' % (pvreg, spreg), '.fptr := PV')
@@ -2369,7 +2369,7 @@ class ppp2alpha(pppalpha):
                yield ('empty','','MT: jsr call begin: %s' % content)
                yield ('other','lda $l%d, %d($l31)' % (ra, protocol), 'RA <- nr_call_regs')
                yield ('other','stq $l%d, -8($l%d)' % (ra, spreg), '.protocol := RA (nr_call_regs)')
-               yield ('other','allocate $l31, $l%d' % ra, 'RA <- fid')
+               yield ('other','allocate 8, $l%d' % ra, 'RA <- fid, PID = default|suspend')
                yield ('other','stq $l%d, -16($l%d)' % (pv, spreg), '.fptr := PV')
                arg_offset = -24
                for i in xrange(protocol):
