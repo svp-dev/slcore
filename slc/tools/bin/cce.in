@@ -282,8 +282,10 @@ esac
 
 # Compiler flags selection; default to optimize
 case $slc_dialect in
-    ppp*)
+    ppp)
 	slc_cflags+=(-O2) ;;
+    ppp2)
+	slc_cflags+=(-O2 -DMT_FORCE_TEMP_FOR_SHARED_WRITE=1) ;;
     utc0)
 	slc_cflags+=(-O1) ;;
     *) ;;
