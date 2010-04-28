@@ -1,3 +1,10 @@
+2010-04-26  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
+	Increase use of `-b mtalpha'.
+
+	* benchmarks/lib/Makefile.am: Use target alias `mtalpha' instead
+	of `ppp-mtalpha' as this is now resolved properly.
+
 2010-03-29  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
 	Enhance the `mandel' benchmark.

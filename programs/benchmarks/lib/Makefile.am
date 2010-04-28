@@ -66,7 +66,7 @@ mtalpha_sim_libbench_a_CONTENTS = \
 
 mtalpha-sim/%.o: $(srcdir)/%.c
 	$(AM_V_at)$(MKDIR_P) mtalpha-sim
-	$(slc_verbose)$(SLC_RUN) -b ppp-mtalpha -c -o $@ $<
+	$(slc_verbose)$(SLC_RUN) -b mtalpha -c -o $@ $<
 
 mtalpha-sim/libbench.a: $(mtalpha_sim_libbench_a_CONTENTS)
 	$(AM_V_at)rm -f $@
