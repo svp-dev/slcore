@@ -77,8 +77,11 @@ When committing to the ``trunk`` branch of the repository:
 1. ensure that ``make distcheck`` succeeds.
 
 2. update the appropriate ``ChangeLog`` with a detailed description of
-   your changes. (use ``C-x 4 a`` in Emacs from an edited file to get
-   the entry automatically generated)
+   your changes. [#]_
+
+   .. [#] Emacs users: use ``C-x 4 a`` from an edited file to get the
+      entry automatically generated. Vim users: see
+      http://www.vim.org/scripts/script.php?script_id=1631
 
    .. note:: There are 4 change logs, pick the one recursively nearest
       to each change to document them. Strip the beginning of the path
@@ -88,9 +91,11 @@ When committing to the ``trunk`` branch of the repository:
 
 3. save the output of ``svn diff`` to a file.
 
-4. commit your set(s) of changes, one per software package, ensuring
-   that the latest ``ChangeLog`` entry for each commit is pasted into
-   the commit message.
+4. commit your set(s) of changes, one per software package. The
+   content of the commit message should be the latest ``ChangeLog``
+   entry, *without* the time stamp, but *with* a prefix to the first
+   line identifying which component is being modified
+   (e.g. ``[sl-core]``, ``[sl-programs]``, etc).
 
 5. send the contents of the file from step #3 to the mailing list,
    ensuring that the changes to the change log(s) appear first in the
