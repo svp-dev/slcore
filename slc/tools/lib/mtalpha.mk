@@ -7,7 +7,9 @@ EXTRA_DIST += \
 
 nobase_dist_pkgdata_DATA += \
 	t-pppalpha/slimpl.m4 \
-	t-pppalpha/include/sl_support.h
+	t-pppalpha/include/sl_support.h \
+	t-ppp2alpha/slimpl.m4 \
+	t-ppp2alpha/include/sl_support.h
 
 if ENABLE_SLC_MTALPHA
 
@@ -26,7 +28,7 @@ mtalpha-sim/lib%.a:
 
 mtalpha-sim/libslc.a: $(mtalpha_sim_libslc_a_CONTENTS)
 
-SLC_MTALPHA = $(SLC_RUN) -b ppp-mtalpha -nostdlib
+SLC_MTALPHA = $(SLC_RUN) -b mtalpha -nostdlib
 
 mtalpha-sim/%.o: $(srcdir)/mtalpha-sim/%.s
 	$(AM_V_at)$(MKDIR_P) mtalpha-sim

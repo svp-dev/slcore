@@ -1,3 +1,82 @@
+2010-04-07  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
+	Fix bug in MT-alpha code generation.
+
+	* tools/lib/t-ppp2alpha/include/sl_support.h: Ensure that the read
+	to a shared after sync completes in all cases. This is needed in case
+	the `gets' instruction is followed by `ldq' with the same register
+	as target ("cannot write to waiting register").
+
+2010-04-07  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
+	Fix handling of `slr' argument.
+
+	The `slr' utility needs to recompile code using the same back-end
+	as the executed program. This is recognized by a text tag.
+
+	* tools/lib/mtalpha-sim/slrt.s (slr_datatag): Upgrade data tag
+	to new back-end name.
+
+2010-04-06  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
+	Fix bug in MT-alpha code generation.
+
+	* tools/bin/spp,
+	* tools/lib/t-ppp2alpha/include/sl_support.h: Cast global or
+	shared argument to desired type before passing to `asm' statement,
+	so that constant `0' can be passed as a floating point.
+
+2010-04-06  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
+	Increase use of `-b mtalpha'.
+
+	* build-aux/slctests.mk,
+	* build-aux/sl.mk (SLC_BEFORE): Use `-b mtalpha' instead of `-b
+	ppp' to build programs.
+
+2010-04-06  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
+	Optimize the MT-alpha calling convention.
+
+	The calling convention was expecting PV to be present in some
+	global thread parameter in order to place `ldgp' (or `ldah,lda
+	!gpdisp') immediately at the start of the thread code. This
+	required to pass PV in a global thread argument even if it was
+	potentially not used in the target created family.
+
+	This is now optimized by computing PV in the threads that need it,
+	through the Alpha `br' instruction (`br $pv, 0' loads the PV of
+	the next instruction into $pv), now aliased to `ldpc' in the
+	assembler.
+
+	* tools/bin/spp (ppp2alpha): Handle the new calling convention.
+
+	* tools/lib/t-ppp2alpha/include/sl_support.h,
+	* tools/include/svp/gomt.h: Avoid passing PV, since it is no
+	longer needed.
+
+2010-04-01  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
+	Adapt library for new code generation.
+
+	* tools/bin/cce.in: Obsolete the short aliases `ppp' and `ppp2'.
+
+	* tools/include/svp/gomt.h,
+	* lib/include/svp/callgate.h,
+	* lib/src/mtalpha/mtdiv.s,
+	* lib/mtalpha-sim/include/svp_asmdiv.h: Use the new allocate/create
+	mechanism.
+
+	* tools/bin/spp,
+	* tools/lib/t-ppp2alpha/include/sl_support.h: Use `wmb', not `wb'.
+
+	* tools/lib/t-ppp2alpha/include/sl_support.h: `allocate' has side
+	effects, so make it `volatile'.
+
+	* lib/mtalpha.mk,
+	* tools/lib/mtalpha.mk: List the new files. Use `mtalpha' instead
+	of `ppp' as target.
+
 2010-04-01  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
 	Implement code generation for new back-end `ppp2'.

@@ -1933,6 +1933,137 @@ class pppalpha(object):
 
 class ppp2alpha(pppalpha):
 
+   iargregs = 12 # no need to reserve for PV
+
+   def mapcall(self, funcname, args):
+      dic = { 
+         'i' : { 'sh' : [], 'gl' : [] },
+         'f' : { 'sh' : [], 'gl' : [] },
+         }
+      #print args
+      for a in args:
+         la = a.split(':')
+         cat, species, mode, ctype, name = la[:5]
+         name = name.strip()
+         init = ':'.join(la[5:]).strip()
+         if init == "":
+            init = None
+         dic[species][cat].append({'ctype':ctype, 'name':name, 'init':init, 'glmode':mode})
+
+      # Check if some parameters will use memory passing
+      escape = 0      
+      if len(dic['f']['sh']) * 2 + len(dic['f']['gl']) > self.fargregs:
+         escape = 1
+      if len(dic['i']['sh']) * 2 + len(dic['i']['gl']) > (self.iargregs - escape):
+         escape = 1
+
+      # Start allocate
+
+      islots_avail = self.iargregs - escape
+      fslots_avail = self.fargregs
+
+      # Allocate shareds first
+      if len(dic['i']['sh']) * 2 > islots_avail:
+         die("function '%s': too many int shareds, cannot pass them via memory yet" % funcname)
+      shc = 0
+      for s in dic['i']['sh']:
+         s['mode'] = 'reg'
+         s['regnr'] = shc
+         shc += 1
+         islots_avail -= 2
+      nrishareds = shc
+
+      if len(dic['f']['sh']) > fslots_avail:
+         die("function '%s': too many float shareds, cannot pass them via memory yet" % funcname)
+      shc = 0
+      for s in dic['f']['sh']:
+         s['mode'] = 'reg'
+         s['regnr'] = shc
+         shc += 1
+         fslots_avail -= 2
+      nrfshareds = shc
+   
+      # Allocate fp globals
+      glc = 0
+      memlayout = []
+      offset = 0
+      for s in dic['f']['gl']:
+         if fslots_avail > 0:
+            s['mode'] = 'reg'
+            s['regnr'] = glc
+            glc += 1
+            fslots_avail -= 1
+         else:
+            s['mode'] = 'mem'
+            s['offset'] = offset
+            offset += 1
+            memlayout.append({'cat':'glf','ctype':s['ctype'],'name':s['name'],'init':s['init']})
+      nrfglobals = glc
+
+      glc = 0
+      for s in dic['i']['gl']:
+         if islots_avail > 0:
+            s['mode'] = 'reg'
+            s['regnr'] = glc
+            glc += 1
+            islots_avail -= 1
+         else:
+            s['mode'] = 'mem'
+            s['offset'] = offset
+            offset += 1
+            memlayout.append({'cat':'gli','ctype':s['ctype'],'name':s['name'],'init':s['init']})
+      nriglobals = glc
+
+      ret = {}
+      if escape == 0:
+         ret['gl_mem_offset'] = None
+      else:
+         warn("function '%s': some arguments are passed via memory" % funcname)
+         nriglobals = glc + 1
+         ret['gl_mem_offset'] = glc
+
+      # nriglobals = nriglobals + 1 # count PV
+
+      ret['nrargregs'] = { 'gli' : nriglobals, 'shi' : nrishareds,
+                           'glf' : nrfglobals, 'shf' : nrfshareds }
+      ret['args'] = dic
+      ret['memlayout'] = memlayout
+
+      #pprint.pprint(ret)
+
+      return ret
+
+   def makespecial(self, fundata, items):
+      gli, shi, li, glf, shf, lf = fundata['regs']
+      assert li > 3
+      gpreg = li - 2
+      spreg = li - 1
+      pprologue = fundata['pprologue']
+      if fundata['use_gp']:
+         # GP needs to be initialized, do it:
+         newpprologue = []
+         if len(pprologue) == 1:
+            # form 1: "ldgp" was used by the compiler
+            assert pprologue[0][1].startswith('ldgp')
+            newpprologue.append(('other','ldpc $l%d' % gpreg,''))
+            newpprologue.append(('other','ldgp $l%d, 0($l%d)' % (gpreg, gpreg),''))
+         else:
+            #pprint.pprint(pprologue)
+            assert (len(pprologue) == 2 and 'gpdisp' in pprologue[0][1] and 'gpdisp' in pprologue[1][1])
+            disp = pprologue[0][1].split('!')[2]
+            newpprologue.append(('other','ldpc $l%d' % gpreg,''))
+            newpprologue.append(('other','ldah $l%d, 0($l%d) !gpdisp!%s' % (gpreg, gpreg, disp),''))
+            newpprologue.append(('other','lda $l%d, 0($l%d) !gpdisp!%s' % (gpreg, gpreg, disp),''))
+         fundata['pprologue'] = newpprologue
+      else:
+         assert len(pprologue) == 0
+      #if fundata['use_pv']:
+      #   fundata['prologue'].insert(0, ('other','mov $g%d, $l%d' % (pvargreg, pvreg), 'MT: init PV'))
+      if fundata['use_sp'] and spreg != 1:
+         fundata['prologue'].insert(0, ('other','ldfp $l%d' % spreg,'MT: init SP'))
+
+      return items
+
 
    def create(self, funcname, tag, br, *args):
 
@@ -1951,8 +2082,8 @@ class ppp2alpha(pppalpha):
       __sl_setlimit(__sl_tag, _sl_limit);
       __sl_setstep(__sl_tag, _sl_step);
       __sl_setblock(__sl_tag, _sl_block);
-      __sl_create(__sl_tag, "%d");
-      """ % c['gl_pv_offset']
+      __sl_create(__sl_tag);
+      """
       
       names = []
       glibase = 0
@@ -1981,7 +2112,7 @@ class ppp2alpha(pppalpha):
                   #print "FIXME: do something here with gl arg in mem"
                else: # mode: reg
                   regnr = a['regnr']
-                  print r"""m4_pushdef([[__sl_seta_%s]],[[__sl_set%s%sa(%s, __sl_tag, [[$1]], "%d")]]) m4_dnl""" % (name, cat, species, name, regnr)
+                  print r"""m4_pushdef([[__sl_seta_%s]],[[__sl_set%s%sa(%s, __sl_tag, [[$1]], "%d", %s)]]) m4_dnl""" % (name, cat, species, name, regnr, ctype)
                   if cat == 'sh':
                      atsync.append("""__sl_get%s%sa(%s, __sl_tag, "%d");""" % (cat, species, name, regnr))
                atsync.append("""m4_popdef([[__sl_seta_%s]])""" % name)
@@ -1999,7 +2130,7 @@ class ppp2alpha(pppalpha):
       rexway = re.compile(r'\w+\s([^,]+),(.*)')
       reld = re.compile(r'(ld[lqts]|ld[bw]u)')
       re3wayll = re.compile(r'((add|sub|mul|div)[fgts]|f?gets)')
-      w1way = re.compile(r'(rpcc|ldfp|f?clr)')
+      w1way = re.compile(r'(rpcc|ldfp|ldpc|f?clr)')
       jre = self.jre
 
       allregs = set(['$l%d' % x for x in xrange(31 - self.iargregs) if x not in (17, 18)] + \
@@ -2181,7 +2312,7 @@ class ppp2alpha(pppalpha):
                yield ('other','setstart $l%d, $l%d' % (rareg, spreg), 'setstart(SP)')
                yield ('other','lda $l%d, 1($l%d)' % (spreg, spreg), 'SP <= SP + 1')
                yield ('other','setlimit $l%d, $l%d' % (rareg, spreg), 'setlimit(SP+1)')
-               yield ('other', 'wb', '')
+               yield ('other', 'wmb', '')
                yield ('other','crei $l%d, 0($l%d)' % (rareg, pvreg), 'start call')
                yield ('other','sync $l%d, $l%d' % (rareg, pvreg), 'SYNC: start wait')
                yield ('other','mov $l%d, $l31' % (pvreg), 'SYNC: wait for return')
@@ -2214,7 +2345,7 @@ class ppp2alpha(pppalpha):
                yield ('other','setstart $l%d, $l%d' % (ra, spreg), 'setstart(SP)')
                yield ('other','lda $l%d, 1($l%d)' % (spreg, spreg), 'SP <= SP + 1')
                yield ('other','setlimit $l%d, $l%d' % (ra, spreg), 'setlimit(SP+1)')
-               yield ('other', 'wb', '')
+               yield ('other', 'wmb', '')
                yield ('other','crei $l%d, 0($l%d)' % (ra, pvreg), 'start call')
                yield ('other','lda $l%d, -1($l%d)' % (spreg, spreg), 'SP <= SP - 1')
                yield ('other','sync $l%d, $l%d' % (ra, pvreg), 'SYNC: start wait')
@@ -2252,7 +2383,7 @@ class ppp2alpha(pppalpha):
                yield ('other','setstart $l%d, $l%d' % (ra, spreg), 'setstart(SP)')
                yield ('other','lda $l%d, 1($l%d)' % (spreg, spreg), 'SP <= SP + 1')
                yield ('other','setlimit $l%d, $l%d' % (ra, spreg), 'setlimit(SP+1)')
-               yield ('other', 'wb', '')
+               yield ('other', 'wmb', '')
                yield ('other','crei $l%d, 0($l%d)' % (ra, pv), 'start call')
                yield ('other','lda $l%d, -1($l%d)' % (spreg, spreg), 'SP <= SP - 1')
                yield ('other','sync $l%d, $l%d' % (ra, pvreg), 'SYNC: start wait')

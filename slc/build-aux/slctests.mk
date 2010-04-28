@@ -20,10 +20,10 @@ EXTRA_TEST_IMPL += ptl
 endif
 
 if ENABLE_CHECK_PPP
-EXTRA_TEST_IMPL += ppp
+EXTRA_TEST_IMPL += mtalpha
 if ENABLE_CHECK_COMA
-EXTRA_TEST_IMPL += ppp::-m~lzcoma_default
-EXTRA_TEST_IMPL += ppp::-m~mlcoma_default
+EXTRA_TEST_IMPL += mtalpha::-m~lzcoma_default
+EXTRA_TEST_IMPL += mtalpha::-m~mlcoma_default
 endif
 endif
 
