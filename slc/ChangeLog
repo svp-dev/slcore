@@ -1,5 +1,13 @@
 2010-04-29  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	Release version 2.4.
+
+	* build-aux/package-version: Update to 2.4.
+
+	* doc/NEWS.txt: Document recent changes.
+
+2010-04-29  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	Update copyright notice of files changed in 2010.
 
 	* build-aux/sl.mk,

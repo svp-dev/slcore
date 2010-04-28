@@ -4,15 +4,72 @@
 
 This document describes major updates to the SL toolchain.
 
-Version 2.3.x
-=============
+Version 2.4, April 2010
+=======================
 
-Development version only.
+.. note:: A new SVP ISA and ABI have been implemented both in hardware
+   (MT-Alpha simulator) and in the compiler. All programs need to be
+   re-compiled, re-assembled and re-linked. The new MT-Alpha compiler
+   target name is ``mtalpha`` ("``ppp``" becomes obsolete).
 
 Changes since 2.3
 -----------------
 
-...
+Language and library
+````````````````````
+
+- The constructs ``sl_create``, ``sl_sync`` and uses of thread
+  arguments via ``sl_geta`` and ``sl_seta`` are now allowed in plain C
+  functions, not only thread functions defined with ``sl_def``.
+
+- Support for the construct ``sl_funcall`` and accompanying
+  ``sl_farg`` has been removed, since plain C function calls are
+  supported.
+
+Changes related to the Microgrid target
+```````````````````````````````````````
+
+- The Microgrid "operating system" now prints startup messages and
+  configuration information automatically on the standard error stream
+  at boot time. This display can be disabled by setting the
+  undocumented environment variable ``MGSYS_QUIET`` before startup.
+
+- A new COMA memory system was implemented. The previous
+  implementation stays available with profile names starting with
+  "``zlcoma...``"; the new implementation has profiles names starting
+  with "``mlcoma...``". Use ``slr -m list`` for details.
+
+- The option ``-C`` (force COMA) to ``slr`` is removed. Equivalent
+  behavior can be obtained by defining custom profiles.
+
+- The ``rmb*`` profiles have been renamed to ``rbm*`` (stands for
+  "Random Banked Memory").
+
+- A new ISA was implemented in the MT-Alpha platform, intended to
+  simplify a number of hardware mechanisms and provide SVP delegation
+  without resource costs in the requesting core. The ISA changes
+  required the implementation of a new MT-Alpha code generation
+  back-end, much simplified compared to the previous
+  implementation. This in turn allowed usage of the ``create``
+  construct from plain C function contexts, and enables further
+  work on automatic resource deadlock avoidance.
+ 
+- The complete ``cce`` string for the new back-end is
+  ``ppp2-mtalpha-sim``. The short alias ``ppp`` (for ``slc -b``, etc)
+  is now obsolete, use ``mtalpha`` instead.
+
+Known limitations
+-----------------
+
+- Support for the C99 standard library is incomplete.
+
+- C's ``long double`` type is not supported.
+
+- The C ``tgamma`` function may be incorrectly implemented.
+
+- SVP's *break* and *kill* operations are inconsistently supported
+  across targets (or not at all), since their definition is in flux at
+  this period (early 2010). No known programs are affected.
 
 Version 2.3, January 2010
 =========================
