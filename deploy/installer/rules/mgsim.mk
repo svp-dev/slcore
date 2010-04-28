@@ -22,7 +22,7 @@ $(MGSIM_SRC)/configure: $(MGSIM_ARCHIVE)
 $(MGSIM_BUILD)/configure_done: $(MGSIM_SRC)/configure $(SLTAG) $(SC_INST_TARGETS) $(BINUTILS_INST_TARGETS)
 	rm -f $@
 	$(MKDIR_P) $(MGSIM_BUILD)
-	cd $(DSTBASE) && rm -f slreqs-current && $(LN_S) $(REQNAME) slreqs-current
+	cd $(DSTBASE) && rm -f slreqs-$(SLNAME) && $(LN_S) $(REQNAME) slreqs-$(SLNAME)
 	SRC=$$(cd $(MGSIM_SRC) && pwd) && \
 	   cd $(MGSIM_BUILD) && \
 	   PATH=$(REQCURRENT)/bin:$$PATH $$SRC/configure --prefix=$(SLDIR) \

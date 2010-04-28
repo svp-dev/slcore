@@ -89,22 +89,26 @@ if test -r slenv_local; then cat slenv_local; fi
 cat <<EOF
 : Goodies for Bash ;
 if test -n "\$BASH_VERSION"; then
-PS1='(binutils-utgcc-gcc:\$(basename \$(cd $slreq_base;/bin/pwd)|cut -d- -f2-)) (mgsim-slc:\$(basename \$(cd $sl_base;/bin/pwd)|cut -d- -f2-))\n[\u@\h] \w\$ '; 
+PS1='(slreqs:\$(basename \$(cd $slreq_base;/bin/pwd)|cut -d- -f2-)) (sl:\$(basename \$(cd $sl_base;/bin/pwd)|cut -d- -f2-))\n[\u@\h] \w\$ '; 
 fi;
 : ;
 : Goodies for Zsh ;
 if test -n "\$ZSH_VERSION"; then 
 setopt PROMPT_SUBST;
 PROMPT=\$(printf '%%{\033[01m%%}%%n@%%m %%{\033[36m%%}%%32<...<%%~%%{\033[0m%%} %%# ');
-PROMPT=\$(printf '%s\n%s' '(binutils-utgcc-gcc:%B\$(basename \$(cd $slreq_base;/bin/pwd)|cut -d- -f2-)%b) (mgsim-slc:%B\$(basename \$(cd $sl_base;/bin/pwd)|cut -d- -f2-)%b)' "\$PROMPT"); 
+PROMPT=\$(printf '%s\n%s' '(slreqs:%B\$(basename \$(cd $slreq_base;/bin/pwd)|cut -d- -f2-)%b) (sl:%B\$(basename \$(cd $sl_base;/bin/pwd)|cut -d- -f2-)%b)' "\$PROMPT"); 
 fi;
 : ;
 : Tool locations ;
 export PATH=$sl_base/bin:$slreq_base/bin:\$PATH;
 export MANPATH=$sl_base/share/man:$slreq_base/share/man:\$MANPATH;
-export CC_ALPHA=$slreq_base/bin/alpha-linux-gnu-gcc;
-export UTCC_ALPHA=$slreq_base/bin/mtalpha-linux-gnu-gcc;
-export CC_SPARC=$slreq_base/bin/sparc-leon-linux-gcc;
-export UTCC_SPARC=$slreq_base/bin/mtsparc-leon-linux-gcc;
+export CC_ALPHA_OVERRIDE=$slreq_base/bin/alpha-linux-gnu-gcc;
+export UTCC_ALPHA_OVERRIDE=$slreq_base/bin/mtalpha-linux-gnu-gcc;
+export AR_MTALPHA_OVERRIDE=$slreq_base/bin/mtalpha-linux-gnu-ar;
+export RANLIB_MTALPHA_OVERRIDE=$slreq_base/bin/mtalpha-linux-gnu-ranlib;
+export CC_SPARC_OVERRIDE=$slreq_base/bin/sparc-leon-linux-gcc;
+export UTCC_SPARC_OVERRIDE=$slreq_base/bin/mtsparc-leon-linux-gcc;
+export AR_MTSPARC_OVERRIDE=$slreq_base/bin/mtsparc-leon-linux-ar;
+export RANLIB_MTSPARC_OVERRIDE=$slreq_base/bin/mtsparc-leon-linux-ranlib
 EOF
 

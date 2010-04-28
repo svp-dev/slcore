@@ -2,13 +2,14 @@ DSTBASE = $(DESTDIR)$(prefix)
 
 REQNAME = slreqs-b$(BINUTILS_VERSION)-u$(MGGCC_VERSION)-g$(GCC_VERSION)-m$(M4_VERSION)-sc$(SC_VERSION)
 REQDIR = $(DSTBASE)/$(REQNAME)
-REQCURRENT = $(DSTBASE)/slreqs-current
 REQTAG = $(REQDIR)/.tag
 
 SLNAME = sl-s$(MGSIM_VERSION)-c$(SLC_VERSION)
 SLDIR = $(DSTBASE)/$(SLNAME)
-SLCURRENT = $(DSTBASE)/sl-current
 SLTAG = $(SLDIR)/.tag
+
+REQCURRENT = $(DSTBASE)/slreqs-$(SLNAME)
+SLCURRENT = $(DSTBASE)/sl-current
 
 ARCHIVEDIR = distfiles
 SRCBASE = sources
@@ -88,7 +89,7 @@ uninstall-local:
 	  if test -z "$found"; then \
 	     rm -f $(prefix)/slenv $(prefix)/sl-current $(prefix)/slreqs-current; \
 	  fi
-	   
+
 
 ALL_RULES = fetch reqs-install install $(foreach P,$(PARTS),$(foreach R,fetch configure build install,$(P)-$(R)))
 .PHONY: $(ALL_RULES)

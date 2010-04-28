@@ -1,3 +1,15 @@
+2010-04-26  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
+	Enhance the deployment installer.
+
+	* deploy/installer/Makefile.am,
+	* deploy/installer/rules/mgsim.mk: Use `slreqs-$(SLNAME)' as base
+	prefix for requirement, so that different toolchain versions can
+	have different default prerequisites.
+
+	* deploy/installer/slenv: Environment variables to force
+	requirement paths end with `_OVERRIDE'. Use them.
+
 2010-02-07  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
 	Optimize the package build process for MGSim.
