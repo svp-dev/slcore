@@ -1,6 +1,6 @@
 # t-utc/slimpl.m4: this file is part of the SL toolchain.
 # 
-# Copyright (C) 2008,2009 The SL project
+# Copyright (C) 2008,2009,2010 The SL project
 #
 # This program is free software; you can redistribute it and/or
 # modify it under the terms of the GNU General Public License
@@ -78,9 +78,5 @@ m4_define([[sl_getfid]],[[$1]])
 
 # Pass transparently sl_getbr
 m4_define([[sl_getbr]],[[$1]]_brk)
-
-# Pass transparently function calls
-m4_define([[sl_farg]], [[[[$2]]]])
-m4_define([[sl_funcall]], [[[[$3]](m4_shift3($@))]])
 
 # ## End macros for new muTC syntax ###
