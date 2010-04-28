@@ -1,5 +1,19 @@
 2010-03-29  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	Extend the MT-alpha back-end.
+
+	* tools/lib/t-pppalpha/include/sl_support.h: Implement a new
+	"write-to-shared" macro that forces the value to be present
+	in a temporary before it is written to the shared register.
+
+	* tools/bin/slc.in: New option `-fwesley' that enables the new
+	handling of shared parameters.
+
+	* tools/bin/spp: New filter that ensures that `mov' instructions
+	operating on floating point registers are renamed to fmov.
+
+2010-03-29  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	Update documentation.
 
 	* doc/HACKING.txt: Reflect latest ChangeLog practices.

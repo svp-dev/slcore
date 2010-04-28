@@ -190,6 +190,7 @@ for arg in "$@"; do
           slc_debug_flags+=("$arg");;
       -g*|-p|-pg) slc_debug_flags+=("$arg");;
 
+      -fwesley) extra_cflags+=(-DMT_FORCE_TEMP_FOR_SHARED_WRITE=1);;
       -fasmopt)      do_filt2=yes ;;
       -fno-asmopt)   do_filt2= ;;
       -fasmopt-*)    extra_f2flags+=("${arg#-fasmopt-}");;
