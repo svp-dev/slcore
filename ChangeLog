@@ -1,3 +1,12 @@
+2010-04-29  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
+	Update copyright notice of files changed in 2010.	
+
+	* bootstrap,
+	* configure.ac,
+	* Makefile.am,
+	* deploy/installer/bootstrap: Add 2010 to copyright notice.
+
 2010-04-26  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
 	Enhance the deployment installer.

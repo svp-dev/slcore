@@ -1,6 +1,6 @@
 #! /bin/sh
 # slc, a SVP generic compiler.
-# Copyright (C) 2009 The CSA group, The SL project.
+# Copyright (C) 2009,2010 The CSA group, The SL project.
 
 set -e
 
