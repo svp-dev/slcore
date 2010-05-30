@@ -1,5 +1,25 @@
 2010-05-25  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	Support more debugging options.
+
+	* tools/lib/slc/front/dump.py (dump_gen): Allow to dump data
+	defined by a generator.
+
+	* tools/lib/slc/front/opts.py: Support parsing a provided list of
+	arguments instead of the default sys.argv. Move M4-specific
+	argument declaration (-P, -I) to...
+
+	* tools/lib/slc/front/cm4.py: ...here.
+
+	* tools/lib/slc/mtalpha/asmproc/base.py,
+	* tools/lib/slc/mtalpha/asmproc/opt.py: Support dumping
+	intermediate forms.
+
+	* tools/bin/slc.in: Support and propagate `-fdump-asmopt-XXX' and
+	`-fdump-fixup-XXX'.
+
+2010-05-25  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	Minor packaging fixes.
 
 	* tools/lib/mtalpha.mk (nobase_dist_pkgdata_DATA): Distribute and

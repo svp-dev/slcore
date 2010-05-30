@@ -1,4 +1,5 @@
 import optparse
+import sys
 from slc_config import package_version, package_bugreport
 _option_list = []
 
@@ -19,17 +20,16 @@ register_arg('-v', '--verbose', action = "store_true", dest="verbose", default =
              help="Run verbosely.")
 register_arg('-o', action = "store", nargs = 1, dest = "output", default = "-",
              metavar = "FILE", help="Print translated code to FILE.")
-register_arg('-P', action = "store_false", dest = "synclines", default = True,
-             help="Inhibit generation of linemarkers.")
-register_arg('-I', action = "append", nargs = 1, dest = "includes", metavar = "DIR",
-             help="Add DIR to the include search path.")
 
 resolved = None
 inputs = None
 
-def parse_args():
+def parse_args(args = None):
+    if args is None:
+        args = sys.argv[1:]
     stages = _dump_stages.keys() + ['all']
-    register_arg('-d', action = "append", dest = "dump_stages", metavar = "STAGES",
+    register_arg('-d', action = "append", dest = "dump_stages", metavar = "STAGE",
+                 nargs = 1,
                  choices = stages, default = [],
                  help="Make debugging dumps during compilation at the times specified (choice: %s)." 
                  % ', '.join(stages))
@@ -45,7 +45,7 @@ Written by Raphael 'kena' Poss.
 """ % package_version, epilog = "Report bugs and suggestions to %s." % package_bugreport)
 
     global resolved, inputs
-    resolved, inputs = parser.parse_args()
+    resolved, inputs = parser.parse_args(args)
     return (resolved, inputs)
     
 

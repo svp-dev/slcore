@@ -232,6 +232,10 @@ class CM4(object):
 from ..front import opts
 from ..front.dump import dump, get_dump_fname
 
+opts.register_arg('-P', action = "store_false", dest = "synclines", default = True,
+                  help="Inhibit generation of linemarkers.")
+opts.register_arg('-I', action = "append", nargs = 1, dest = "includes", metavar = "DIR",
+                  help="Add DIR to the include search path.")
 opts.register_arg('-X', action = "append", nargs = 1, dest = "m4_args", metavar = "ARG",
                   default = [],
                   help="Pass ARG as an extra argument to M4.")
