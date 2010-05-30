@@ -1,5 +1,16 @@
 2010-05-31  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	Code fixes in benchmarks.
+
+	* benchmarks/fft/fft_extra.c (FFT_Reverse): avoid declaring `k'
+	between `create' and `sync', this is now disallowed by the
+	grammar.
+
+	* benchmarks/livermore/kernel11.c: Fix syntax of initializer for
+	argument `Xkml'.
+
+2010-05-31  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	Downscale the default lookup table for the FFT benchmark.
 
 	* benchmarks/fft/Makefile.am,

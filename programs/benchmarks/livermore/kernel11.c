@@ -59,7 +59,7 @@ sl_def(kernel11,void,
     sl_create(,, 1, sl_getp(n),,,,innerk11,
               sl_glarg(double*, , sl_getp(X)),
               sl_glarg(const double*, , sl_getp(Y)),
-              sl_shfarg(double, Xkm1, sl_getp(Y[0])));
+              sl_shfarg(double, Xkm1, sl_getp(Y)[0]));
     sl_sync();
 }
 sl_enddef

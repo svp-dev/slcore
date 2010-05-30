@@ -33,15 +33,13 @@ sl_def(FFT_Reverse, void,
 {
   sl_index(i);
   unsigned long t = sl_getp(j);
+  unsigned long k;
   sl_create(,,,,,,, FFT_Swap,
 	    sl_glarg(cpx_t*restrict, gX, sl_getp(X)),
 	    sl_glarg(unsigned long, gi, i),
 	    sl_glarg(unsigned long, gt, t));
 
-  // NOTE: so much code between create and sync
-  // below has 'unspecified behavior' in SL.
-
-  unsigned long k = sl_getp(N) ;
+  k = sl_getp(N) ;
   while (k <= t)
     {
       t = t - k;
