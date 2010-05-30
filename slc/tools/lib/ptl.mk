@@ -55,6 +55,7 @@ ptl-host-host-ptl/%.o: $(srcdir)/%.c
 endif
 
 CLEANFILES += \
+	ptl-host-host-ptl/main.o \
 	ptl-host-host-ptl/slrt.o
 
 PTL_CREATE_SUBST = $(srcdir)/host-host-ptl/include/template.pl

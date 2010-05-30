@@ -23,8 +23,7 @@ if ENABLE_SLC_MTALPHA
 # nobase_pkglib_DATA += \
 # 	$(2)/slrt.o \
 # 	$(2)/libslc.a \
-# 	$(2)/libslmain.a \
-# 	$(2)/libslmain_seq.a
+# 	$(2)/libslmain.a 
 
 # $(3)_libslc_a_CONTENTS = \
 # 	$(2)/callgate.o 
@@ -66,8 +65,7 @@ if ENABLE_SLC_MTALPHA
 nobase_pkglib_DATA += \
 	mta_hybrid-mtalpha-sim/slrt.o \
 	mta_hybrid-mtalpha-sim/libslc.a \
-	mta_hybrid-mtalpha-sim/libslmain.a \
-	mta_hybrid-mtalpha-sim/libslmain_seq.a
+	mta_hybrid-mtalpha-sim/libslmain.a 
 
 mta_hybrid_mtalpha_sim_libslc_a_CONTENTS = \
 	mta_hybrid-mtalpha-sim/callgate.o 
@@ -107,8 +105,7 @@ CLEANFILES += \
 nobase_pkglib_DATA += \
 	seq_naked-mtalpha-sim/slrt.o \
 	seq_naked-mtalpha-sim/libslc.a \
-	seq_naked-mtalpha-sim/libslmain.a \
-	seq_naked-mtalpha-sim/libslmain_seq.a
+	seq_naked-mtalpha-sim/libslmain.a 
 
 seq_naked_mtalpha_sim_libslc_a_CONTENTS = \
 	seq_naked-mtalpha-sim/callgate.o 
@@ -148,8 +145,7 @@ CLEANFILES += \
 nobase_pkglib_DATA += \
 	mta_naked-mtalpha-sim/slrt.o \
 	mta_naked-mtalpha-sim/libslc.a \
-	mta_naked-mtalpha-sim/libslmain.a \
-	mta_naked-mtalpha-sim/libslmain_seq.a
+	mta_naked-mtalpha-sim/libslmain.a 
 
 mta_naked_mtalpha_sim_libslc_a_CONTENTS = \
 	mta_naked-mtalpha-sim/callgate.o 

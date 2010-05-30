@@ -1,5 +1,13 @@
 2010-05-31  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	Minor packaging fixes.
+	
+	* tools/lib/mtalpha.mk: Drop references to `libmain_seq.a' which
+	does not exist any more.
+	* tools/lib/ptl.mk: Also clean up `main.o'.
+
+2010-05-31  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	Introduce new targets and variants.
 
 	* tools/bin/cce.in: Introduce a "variant" part in the long alias.
