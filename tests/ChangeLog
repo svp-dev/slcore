@@ -1,3 +1,13 @@
+2010-05-26  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
+	Enhance the math tests.
+
+	* 2_lib/math/avail.c: Fix saving of results. Configure more `slt'
+	runs.
+
+	* 2_lib/math/tgamma.c: Copy results to variables before
+	printing. Configuremore `slt' runs.
+
 2010-05-21  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
 	Sanitize the test suite to prepare for the new compiler.
