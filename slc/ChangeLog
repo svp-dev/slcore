@@ -1,3 +1,13 @@
+2010-05-28  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
+	Use the new framework for `-b seqc'.
+
+	* tools/bin/cce.in: Expand `seqc' to
+	`spr+seq-host-host-seqc'. Remove support for two-word aliases.
+
+	* build-aux/slctests.mk: Do not test extra for
+	`spr+seq-host-host-seqc', since this is now the default.
+
 2010-05-27  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
 	Improve MT-Alpha code gen.

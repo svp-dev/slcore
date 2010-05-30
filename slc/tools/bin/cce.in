@@ -128,7 +128,7 @@ if test -z "$alias"; then do_usage; fi
 # Expand one-word aliases to some arbitrary
 # pre-defined configurations
 case $alias in
-    seqc)  alias=seqc-host-host-seqc ;;
+    seqc)  alias=spr+seq-host-host-seqc ;;
     ptl)   alias=ptl-host-host-ptl ;;
     utc0)  alias=utc0-mtalpha-sim ;;
     ptlx)  alias=ptlx-x-x ;;
@@ -147,18 +147,6 @@ case $alias in
 $alias
 EOF
 	case $alias in
-	    utc0-*)
-		alias=$alias-sim
-		;;
-	    spp-mt*|spr*-mt*)
-		alias=$alias-sim
-		;;
-	    ptl-host)
-		alias=$alias-host-ptl
-		;;
-	    seqc-host)
-		alias=$alias-host-seqc
-		;;
 	    *)
 		die "$alias: unknown alias" ;;
 	esac
