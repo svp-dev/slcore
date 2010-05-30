@@ -44,7 +44,7 @@ class Create_2_LowCreate(DefaultVisitor):
             newbl.append(flatten(cr.loc,
                                  "void * const %s = (void*)(" % lc.fun))
             newbl.append(cr.fun.accept(self))
-            newbl.append(flatten(cr.loc, ";"))
+            newbl.append(flatten(cr.loc, ");"))
 
         lcas = []
         newbody = Block(loc = cr.body.loc, loc_end = cr.body.loc_end)
@@ -54,13 +54,16 @@ class Create_2_LowCreate(DefaultVisitor):
                                type = a.type,
                                ctype = a.ctype)
             newbl.append(flatten(a.loc, "%s %s;" % (a.ctype, lc.arg_var(a.name))))
+
             if a.init is not None:
                 ininame = lc.arg_init_var(a.name)
+
                 newbl.append(flatten(a.loc, 
                                      "%s const %s = " 
                                      % (a.ctype, ininame)))
                 newbl.append(a.init.accept(self))
                 newbl.append(flatten(a.loc, ";"))
+
                 newbody += [flatten(a.loc, ";"),
                             SetA(loc = a.loc, name = a.name, 
                                  rhs = Block(items = [Opaque(ininame)]))]

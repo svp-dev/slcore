@@ -66,13 +66,17 @@ nobase_python_PYTHON = \
 	slc/mtalpha/regmagic.py \
 	slc/mtalpha/compile.py \
 	slc/mtalpha/spp.py \
+	slc/mtalpha/visitors.py \
 	slc/mtalpha/asmproc/__init__.py \
 	slc/mtalpha/asmproc/base.py \
 	slc/mtalpha/asmproc/common.py \
 	slc/mtalpha/asmproc/opt.py \
 	slc/lower/seq.py \
+	slc/lower/split.py \
 	slc/lower/lowercreate.py \
-	slc/input/__init__.py
+	slc/input/__init__.py \
+	slc/input/read.py \
+	slc/input/parse.py
 
 nobase_dist_pkgdata_DATA = \
 	arggen.c \

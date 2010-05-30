@@ -11,16 +11,39 @@ def flatten(loc, opaquetext):
 #### Base visitor and dispatch ####
 
 class BaseVisitor(object):
-      def dispatch(self):
-            if hasattr(self, 'dispatcher'):
-                  return getattr(self, 'dispatcher')
-            return self
+      def __init__(self, dispatcher = None):
+            self.dispatcher = dispatcher
+
+      def dispatch(self, item, seen_as = None, *args, **kwargs):
+            if seen_as is None:
+                  seen_as = item.__class__
+
+            if self.dispatcher is not None:
+                  return self.dispatcher.dispatch(self, item, seen_as, *args, **kwargs)
+            else:
+                  meth = getattr(self, 'visit_%s' % seen_as.__name__.lower())
+                  return meth(item, *args, **kwargs)
+
+      def visit_flavor(self, flavor):
+            if self.dispatcher is not None:
+                  self.dispatcher.start_flavor(flavor.flavor)
+
+            #print "before visit fl: %r" % flavor
+            flavor = self.dispatch(flavor, seen_as = Block)
+            #print "after visit fl: %r" % flavor
+
+            if self.dispatcher is not None:
+                  self.dispatcher.end_flavor(flavor.flavor)
+            
+            return flavor
+
+
 
 #### Default visitor: just visit ####
 
 class DefaultVisitor(BaseVisitor):
       def visit_program(self, program):
-            return self.dispatch().visit_block(program)
+            return self.dispatch(program, seen_as = Block)
 
       def visit_opaque(self, opaque):
             return opaque
@@ -43,7 +66,7 @@ class DefaultVisitor(BaseVisitor):
             return fundecl
 
       def visit_fundef(self, fundef):
-            self.dispatch().visit_fundecl(fundef)
+            self.dispatch(fundef, seen_as = FunDecl)
             fundef.body.accept(self)
             return fundef
 
@@ -137,13 +160,19 @@ class PrinterVisitor(DefaultVisitor):
         return fun
 
     def visit_fundecl(self, fundecl):
-        return self.dispatch().visit_funheader(fundecl, 'decl')
+        return self.visit_funheader(fundecl, 'decl')
     
     def visit_fundef(self, fundef):
-        self.dispatch().visit_funheader(fundef, 'def')
+        self.visit_funheader(fundef, 'def')
         fundef.body.accept(self)
         self.__out.write(' sl_enddef ')
         return fundef
+
+    def visit_flavor(self, f):
+          self.__out.write('/* BEGIN FLAVOR: %s */' % f.flavor)
+          DefaultVisitor.visit_flavor(self, f)
+          self.__out.write('/* END FLAVOR: %s */' % f.flavor)
+          return f
 
     def visit_block(self, block):
         if block.indexname is not None:

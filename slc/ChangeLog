@@ -1,3 +1,31 @@
+2010-05-08  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
+	Reach prototype of the deadlock avoidance scheme.
+
+	* tools/bin/spr: Move file reading and parsing to...
+
+	* tools/lib/input/read.py,
+	* tools/lib/input/parse.py: ...here.
+
+	* tools/bin/spr: Move MT-Alpha visitors to...
+
+	* tools/lib/mtalpha/visitors.py: ...here.
+
+	* tools/lib/ast.py: Introduce flavors. Move dispatch mechanisms
+	to...
+	* tools/lib/visitors.py: ...here.
+
+	* tools/lib/lower/split.py: Implement code duplication using
+	flavors.
+
+	* tools/lib/lower/seq.py: Update accordingly.
+
+	* tools/lib/Makefile.am: List the new files.
+
+	* tools/lib/lower/lowercreates.py: Fix typo (missing closing paren).
+
+	* tools/bin/spr: Use the new mechanisms.
+
 2010-05-03  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
 	Refactor `spr' and introduce intermediate create lowering.

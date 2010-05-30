@@ -9,7 +9,6 @@ class Item(object):
 
     def __init__(self, loc = None, loc_end = None, *args, **kwargs):
         super(Item, self).__init__(*args, **kwargs)
-
         self.loc = loc
         self.loc_end = loc_end
         
@@ -35,8 +34,7 @@ class Item(object):
         return copy.deepcopy(self)
 
     def accept(self, v):
-        vmethod = getattr(v.dispatch(), 'visit_%s' % self.__class__.__name__.lower())
-        return vmethod(self)
+        return v.dispatch(self)
 
     def __repr__(self):
         return '%s@0x%x(%s)' % (self.__class__.__name__, id(self),
@@ -65,17 +63,18 @@ class Block(Item):
 
     def __init__(self, items = None, indexname = None, *args, **kwargs):
         super(Block, self).__init__(*args, **kwargs)
-        if isinstance(items, Block):
-            items = items._items
+        #if isinstance(items, Block):
+        #    items = items._items
         if items is None:
             items = []
         self._items = items
         self._indexname = indexname
 
     def __iadd__(self, item):
-        if isinstance(item, Block):
-            self._items += item._items
-        elif isinstance(item, list):
+        #if isinstance(item, Block):
+        #    self._items += item._items
+        #el
+        if isinstance(item, list):
             self._items += item
         elif item is not None:
             self._items.append(item)
@@ -103,6 +102,15 @@ class Block(Item):
         if name is not None:
             name = lex.extract_id(self, name)
         self._indexname = name
+
+class Flavor(Block):
+    """
+    Flavor root for a branch of the AST.
+    """
+
+    def __init__(self, flavor = None, *args, **kwargs):
+        super(Flavor, self).__init__(*args, **kwargs)
+        self.flavor = flavor
             
 class Program(Block):
     """
@@ -111,15 +119,11 @@ class Program(Block):
 
     pass
 
-class FunDecl(Item):
-    """
-    Function declaration node.
 
-    Used to represent ``sl_decl``.
-    """
+class FunDeclBase(Item):
 
     def __init__(self, name = None, parms = None, *args, **kwargs):
-        super(FunDecl, self).__init__(*args, **kwargs)
+        super(FunDeclBase, self).__init__(*args, **kwargs)
         self._name = name
 
         if parms is None: parms = []
@@ -150,6 +154,25 @@ class FunDecl(Item):
     def name(self, name):
         self._name = lex.extract_id(self, name)
 
+
+class FunDeclPtr(FunDeclBase):
+    """
+    Function pointer declaration node.
+
+    Used to represent ``sl_decl_fptr``.
+    """
+
+    pass
+
+class FunDecl(FunDeclBase):
+    """
+    Function declaration node.
+
+    Used to represent ``sl_decl``.
+    """
+
+    pass
+
 class FunDef(FunDecl):
     """
     Function definition node.
@@ -157,8 +180,9 @@ class FunDef(FunDecl):
     Used to represent ``sl_def``.
     """
 
-    def __init__(self, body = None, *args, **kwargs):
+    def __init__(self, body = None, static = False, *args, **kwargs):
         super(FunDef, self).__init__(*args, **kwargs)
+        self.static = static
         self.body = body
 
 class ArgParm(Item):
@@ -310,10 +334,13 @@ class LowCreate(Item):
     FUN_PTR = 1
 
     def __init__(self, label = None, sync_type = None, 
+                 target_next = None,
+                 flavor = None,
                  body = None, args = None, 
                  *a, **kwargs):
         super(LowCreate, self).__init__(*a, **kwargs)
 
+        self.flavor = flavor
         self.label = label
         self.place = "__slC_place_%s" % label
         self.start = "__slC_start_%s" % label
@@ -322,27 +349,14 @@ class LowCreate(Item):
         self.block = "__slC_block_%s" % label
         self.retval = "__slC_ret_%s" % label
         self.target_resolved = "__slT_fini_%s" % label
+        self.target_next = target_next
         self.sync_type = sync_type
         self.body = body
         self.funtype = None
-        self._fun = None
+        self.fun = '__slC_fun_%s' % label
         if args is None:
             args = []
         self.args = args
-
-    @property
-    def fun(self):
-        if self.funtype is None: 
-            return None
-        elif self.funtype == self.FUN_ID: 
-            return self._fun
-        else:
-            return "__slC_fun_%s" % self.label
-
-    @fun.setter
-    def fun(self, fun):
-        assert self.funtype == self.FUN_ID
-        self._fun = fun
 
     @staticmethod
     def arg_init_var(name):
