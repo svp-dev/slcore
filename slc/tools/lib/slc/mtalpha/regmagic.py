@@ -292,11 +292,12 @@ def mapcall(args, funcname = '<unknown>', loc = None):
     anames = {}
     #print args
     for a in args:
-        assert a.type in ['sharg', 'shfarg',
-                          'glarg', 'glfgarg',
+        if a.type not in ['sharg', 'shfarg',
+                          'glarg', 'glfarg',
                           'shparm','shfparm',
                           'glparm','glfparm',
-                          'glparm_mutable', 'glfparm_mutable']
+                          'glparm_mutable', 'glfparm_mutable']:
+            die("unknown thread parameter/argument type: %s" % a.type, loc)
         cat = a.type[:2]
         if a.type[2] == 'f':
             species = 'f'                     

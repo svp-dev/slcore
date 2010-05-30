@@ -16,7 +16,6 @@
 import pprint
 import sys
 from slc.mtalpha import regmagic
-from slc.msg import warn
 from slc.mtalpha import compile
 from slc.mtalpha.asmproc import base, opt
 
@@ -176,7 +175,6 @@ def create(funcname, tag, br, *args):
 
 
 if __name__ == "__main__":
-   warn("this program is obsolete, use the new spr-based targets instead.")
    module = sys.argv[1]
    function = sys.argv[2]
    rest = sys.argv[3:]

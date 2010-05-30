@@ -1,5 +1,15 @@
 2010-05-19  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	Minor fixes.
+
+	* tools/bin/spp: Disable the warning for now, it is too
+	annoying.
+
+	* tools/lib/slc/mtalpha/regmagic.py (mapcall): Fix typo
+	(`glfarg').
+
+2010-05-19  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	Packaging fixes.
 
 	* tools/lib/Makefile.am,
