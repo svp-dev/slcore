@@ -73,12 +73,10 @@ m4_define([[_sl_start]],m4_ifblank([[$3]],0,[[$3]]))m4_dnl
 m4_define([[_sl_limit]],m4_ifblank([[$4]],1,[[$4]]))m4_dnl
 m4_define([[_sl_step]],m4_ifblank([[$5]],1,[[$5]]))m4_dnl
 m4_define([[_sl_block]],m4_ifblank([[$6]],0,[[$6]]))m4_dnl
-m4_define([[_sl_brkref]],m4_if(sl_breakable([[$7]]),1,[[_sl_brk[[,]]]],[[]]))m4_dnl
 m4_define([[_sl_thargs]],m4_dquote(m4_shiftn(8,$@)))m4_dnl
 sl_family_t _sl_lbl; m4_dnl
-m4_if(sl_breakable([[$7]]),1,[[[[$7]] _sl_brk;]],) m4_dnl
 m4_foreach([[_sl_arg]],m4_quote(_sl_thargs),[[m4_apply([[sl_declarg]],m4_split(_sl_arg,:))]]) m4_dnl
-uTC::create(_sl_lbl,_sl_place,false,false,_sl_start,_sl_limit,_sl_step,_sl_block,_sl_brkref m4_dnl
+uTC::create(_sl_lbl,_sl_place,false,false,_sl_start,_sl_limit,_sl_step,_sl_block, m4_dnl
 ([[$8]]) m4_dnl
 m4_foreach([[_sl_arg]],m4_quote(_sl_thargs),[[m4_apply([[sl_pullarg]],m4_split(_sl_arg,:))]]) m4_dnl
 ); m4_dnl
@@ -101,7 +99,7 @@ m4_define([[sl_getp]],[[__p_[[$1]]]])
 m4_define([[sl_setp]],[[__p_[[$1]] = [[$2]]]])
 
 # Pass transparently break and kill
-m4_define([[sl_break]],[[uTC::Break([[$1]])]])
+m4_define([[sl_break]],[[uTC::Break()]])
 m4_define([[sl_kill]],[[uTC::kill([[$1]])]])
 
 # Pass transparently the break id
