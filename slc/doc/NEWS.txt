@@ -4,6 +4,16 @@
 
 This document describes major updates to the SL toolchain.
 
+Version 2.4.x
+=============
+
+Development version only.
+
+Chances since 2.4
+-----------------
+
+...
+
 Version 2.4, April 2010
 =======================
 

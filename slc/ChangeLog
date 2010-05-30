@@ -1,5 +1,9 @@
 2010-04-29  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	* doc/NEWS.txt: Initialize for 2.4.x.
+
+2010-04-29  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	Release version 2.4.
 
 	* build-aux/package-version: Update to 2.4.
