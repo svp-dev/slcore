@@ -114,9 +114,11 @@ class DefaultVisitor(BaseVisitor):
             return create
 
       def visit_funparm(self, parm):
+            parm.ctype.accept(self)
             return parm
 
       def visit_createarg(self, arg):
+            arg.ctype.accept(self)
             if arg.init is not None:
                 arg.init.accept(self)
             return arg
@@ -137,8 +139,12 @@ class DefaultVisitor(BaseVisitor):
           return lc
 
       def visit_cvardecl(self, cd):
+            cd.ctype.accept(self)
             cd.init.accept(self)
             return cd
+
+      def visit_ctypeuse(self, ct):
+            return ct
 
       def visit_cvaruse(self, cu):
             return cu
@@ -154,6 +160,7 @@ class DefaultVisitor(BaseVisitor):
             return cg
 
       def visit_ccast(self, cc):
+            cc.ctype.accept(self)
             cc.expr.accept(self)
             return cc
 
@@ -164,6 +171,16 @@ class DefaultVisitor(BaseVisitor):
             ci.expr.accept(self)
             ci.index.accept(self)
             return ci
+
+      def visit_ctypehead(self, cth):
+            return cth
+
+      def visit_ctype(self, ct):
+            return self.dispatch(ct, seen_as = Block)
+
+      def visit_ctypedecl(self, ctd):
+            ctd.ctype.accept(self)
+            return ctd
 
 #### Scoped visitor: keep track of scopes ####
 
@@ -201,7 +218,9 @@ class PrintVisitor(DefaultVisitor):
         return opaque
             
     def visit_funparm(self, parm):
-        self.__out.write('sl_%s(%s, %s)' % (parm.type, parm.ctype, parm.name))
+        self.__out.write(' sl_%s(' % parm.type)
+        parm.ctype.accept(self)
+        self.__out.write(', %s)' % parm.name)
         return parm
 
     def visit_funheader(self, fun, htype):
@@ -254,8 +273,20 @@ class PrintVisitor(DefaultVisitor):
         self.__out.write(')')
         return vu
 
+    def visit_ctypehead(self, cth):
+          self.__out.write(' sl_CTH ')
+          return cth
+
+    def visit_ctype(self, ct):
+          self.__out.write(' sl_ctype(')
+          self.dispatch(ct, seen_as = Block)
+          self.__out.write(')')
+          return ct
+
     def visit_createarg(self, arg):
-        self.__out.write('sl_%s(%s, %s' % (arg.type, arg.ctype, arg.name))
+        self.__out.write(' sl_%s(' % arg.type)
+        arg.ctype.accept(self)
+        self.__out.write(', %s' % arg.name)
         if arg.init is not None:
             self.__out.write(',')
             arg.init.accept(self)
@@ -320,8 +351,16 @@ class PrintVisitor(DefaultVisitor):
         self.__out.write(' sl_lowcreate_end(%s) ' % lc.label)
         return lc
 
+    def visit_ctypedecl(self, ctd):
+          self.__out.write(' sl_ctypedecl(')
+          ctd.ctype.accept(self)
+          self.__out.write(', %s) /* 0x%x */\n' % (ctd.name, id(ctd)))
+          return ctd
+
     def visit_cvardecl(self, vd):
-          self.__out.write(' sl_cvardecl(%s, %s' % (vd.ctype, vd.name))
+          self.__out.write(' sl_cvardecl(')
+          vd.ctype.accept(self)
+          self.__out.write(', %s' % vd.name)
           if len(vd.init):
                 self.__out.write(', ')
                 vd.init.accept(self)
@@ -330,6 +369,10 @@ class PrintVisitor(DefaultVisitor):
 
     def visit_cvaruse(self, vu):
           self.__out.write(' sl_cvaruse(%s /* 0x%x */)' % (vu.decl.name, id(vu.decl)))
+          return vu
+
+    def visit_ctypeuse(self, vu):
+          self.__out.write(' sl_ctypeuse(%s /* 0x%x */)' % (vu.tdecl.name, id(vu.tdecl)))
           return vu
     
     def visit_cvarset(self, vs):
@@ -348,7 +391,9 @@ class PrintVisitor(DefaultVisitor):
 
 
     def visit_ccast(self, cc):
-          self.__out.write(' sl_ccast(%s, ' % cc.ctype)
+          self.__out.write(' sl_ccast(')
+          cc.ctype.accept(self)
+          self.__out.write(', ')
           cc.expr.accept(self)
           self.__out.write(')')
           return cc

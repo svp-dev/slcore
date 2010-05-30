@@ -6,8 +6,15 @@ class RenameCVars(DefaultVisitor):
         self.counter = 0
 
     def visit_cvardecl(self, cv):
+        cv.ctype.accept(self)
         cv.init.accept(self)
         cv.name = '__Scv$' + cv.name + "$%d" % self.counter
+        self.counter += 1
+        return cv
+
+    def visit_ctypedecl(self, cv):
+        cv.ctype.accept(self)
+        cv.name = '__Sct$' + cv.name + "$%d" % self.counter
         self.counter += 1
         return cv
 

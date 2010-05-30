@@ -78,7 +78,7 @@ def parse_argparm(p, cat, item):
             unexpected(item)
       p.loc = item['loc']
       p.type = item['type']
-      p.ctype = item['ctype']
+      p.ctype = CType(items = item['ctype'])
       p.name = item['name']
       if item.has_key('init'):
          p.init = parse_block(item['init'])

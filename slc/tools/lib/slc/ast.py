@@ -82,6 +82,8 @@ class Block(Item):
         #    items = items._items
         if items is None:
             items = []
+        elif isinstance(items, str):
+            items = [Opaque(text = items)]
         elif not isinstance(items, list):
             items = [items]
         self._items = items
@@ -123,6 +125,18 @@ class Scope(Block):
         self.decls = decls
         self.creates = {}
 
+class CTypeDecl(Item):
+    """
+    a C typedef declaration.
+    """
+
+    def __init__(self, name = None, ctype = None, *args, **kwargs):
+        super(CTypeDecl, self).__init__(*args, **kwargs)
+        self.name = name
+        if not isinstance(ctype, CType):
+            ctype = CType(items = ctype)
+        self.ctype = ctype
+
 class CVarDecl(Item):
     """
     A C variable declaration.
@@ -131,10 +145,22 @@ class CVarDecl(Item):
     def __init__(self, name = None, ctype = None, init = None, *args, **kwargs):
         super(CVarDecl, self).__init__(*args, **kwargs)
         self.name = name
+        if not isinstance(ctype, CType):
+            ctype = CType(items = ctype)
         self.ctype = ctype
         if not isinstance(init, Block):
             init = Block(items = init)
         self.init = init
+
+class CTypeUse(Item):
+    """
+    a C typedef name use.
+    """
+    
+
+    def __init__(self, tdecl = None, *args, **kwargs):
+        super(CTypeUse, self).__init__(*args, **kwargs)
+        self.tdecl = tdecl
 
 class CVarUse(Item):
     """
@@ -188,10 +214,25 @@ class CCast(Item):
 
     def __init__(self, ctype = None, expr = None, *args, **kwargs):
         super(CCast, self).__init__(*args, **kwargs)
+        if not isinstance(ctype, CType):
+            ctype = CType(items = ctype)
         self.ctype = ctype
         if not isinstance(expr, Block):
             expr = Block(items = expr)
         self.expr = expr
+
+class CTypeHead(Item):
+    """
+    The "center" of the declarator part of a C type string.
+    """
+    pass
+
+class CType(Block):
+    """
+    a C type string.
+    """
+    pass
+
 
 class CIndex(Item):
     """
@@ -288,6 +329,8 @@ class ArgParm(Item):
     def __init__(self, name = None, ctype = None, type = None, *args, **kwargs):
         super(ArgParm, self).__init__(*args, **kwargs)
         self._name = name
+        if not isinstance(ctype, CType):
+            ctype = CType(items = ctype)
         self.ctype = ctype
         self.type = type
         self.seen_set = False

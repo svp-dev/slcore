@@ -56,11 +56,15 @@ class Create_2_Loop(ScopedVisitor):
             assert cr.funtype == cr.FUN_VAR
 
             n = 'C$SF$%s' % lbl
-            t = '__slC_seqfunt_%s' % lbl
-            self.cur_scope.decls += flatten(cr.loc, 
-                                            "typedef long (*%s)(const long%s);"
-                                            % (t, protolist))
-            funvar = CVarDecl(loc = cr.loc, name = n, ctype = t)
+            t = 'C$SF$%s' % lbl
+            thetype = CTypeDecl(loc = cr.loc,
+                                name = t,
+                                ctype = CType(items = 
+                                              Opaque(text = "long (*") +
+                                              CTypeHead() + 
+                                              ')(const long%s)' % protolist))
+            self.cur_scope.decls += thetype
+            funvar = CVarDecl(loc = cr.loc, name = n, ctype = CTypeUse(tdecl = thetype))
             self.cur_scope.decls += funvar
 
             if lc.lowfun is not None:
@@ -71,7 +75,8 @@ class Create_2_Loop(ScopedVisitor):
 
             newbl.append(CVarSet(loc = cr.loc, 
                                  decl = funvar,
-                                 rhs = CCast(ctype = t, expr = thefun)))
+                                 rhs = CCast(ctype = CTypeUse(tdecl = thetype), 
+                                             expr = thefun)))
 
             funvar = CVarUse(decl = funvar)
 
@@ -79,7 +84,7 @@ class Create_2_Loop(ScopedVisitor):
         newbl.append(lc.body.accept(self))
 
         # here we expand the loop
-        indexvar = CVarDecl(loc = cr.loc_end, name = 'cr$Si$%s' % lbl, ctype = 'long')
+        indexvar = CVarDecl(loc = cr.loc_end, name = 'C$Si$%s' % lbl, ctype = 'long')
         self.cur_scope.decls += indexvar
 
         ix = CVarUse(decl = indexvar)
@@ -89,7 +94,7 @@ class Create_2_Loop(ScopedVisitor):
         docall = CVarSet(decl = cr.cvar_exitcode,
                          rhs = funvar + '(' + ix + callist + ')')
 
-        newbl.append(Opaque(loc = cr.loc_end, text = "if (!") + step + ') ' +
+        newbl.append(flatten(cr.loc_end, "if (!") + step + ') ' +
                      "for (" + ix + " = " + start + '; ;' + ix + " += " + limit + ")" +
                      "{ if (0 != (" + docall + ')) break; }' +
                      "else if (" + step + " > 0) " + 
@@ -118,7 +123,7 @@ class TFun_2_CFun(DefaultVisitor):
         if getp.name in self.__shlist:
             format = "(*__slP_%s)"
         else:
-            format = "__slP_%s"
+            format = " __slP_%s "
         return flatten(getp.loc, format % getp.name)
 
     def visit_setp(self, getp):
@@ -126,43 +131,43 @@ class TFun_2_CFun(DefaultVisitor):
         if getp.name in self.__shlist:
             format = "(*__slP_%s) = "
         else:
-            format = "__slP_%s = "
+            format = " __slP_%s = "
         return [flatten(getp.loc, format % getp.name), b]
 
     def visit_funparm(self, parm):
         if parm.type.startswith("sh"):
             self.__shlist.append(parm.name)
-            self.__buffer += ', register %s * const __restrict__ __slP_%s ' \
-                % (parm.ctype, parm.name)
+            self.__buffer += (Opaque(', register ') + parm.ctype + 
+                              ' * const __restrict__ __slP_%s ' % parm.name)
         else:
             self.__gllist.append(parm.name)
             if parm.type.endswith('_mutable'):
                 const = ""
             else:
                 const = "const"
-            self.__buffer += ', register %s %s __slP_%s ' \
-                % (parm.ctype, const, parm.name)
+            self.__buffer += (Opaque(', register ') + parm.ctype + 
+                              ' %s __slP_%s ' % (const, parm.name))
         return parm
 
     def visit_fundecl(self, fundecl, keep = False):
         self.__shlist = []
         self.__gllist = []
-        self.__buffer = "long %s(const long __slI" % fundecl.name
+        self.__buffer = Block(loc = fundecl.loc,
+                              items = Opaque("long %s(const long __slI" % fundecl.name))
         for parm in fundecl.parms:
             parm.accept(self)
         self.__buffer += ')'
-        ret = flatten(fundecl.loc, self.__buffer)
+        ret = self.__buffer
         self.__buffer = None
         if not keep:
             self.__shlist = self.__gllist = None
         return ret
 
     def visit_fundef(self, fundef):
-        newitems = []
-        newitems.append(self.dispatch(fundef, seen_as = FunDecl, keep = True))
-        newitems.append(flatten(fundef.loc, "{"))
-        newitems.append(fundef.body.accept(self))
-        newitems.append(flatten(fundef.loc_end, " return 0; }"))
+        newitems = self.dispatch(fundef, seen_as = FunDecl, keep = True)
+        newitems += flatten(fundef.loc, "{")
+        newitems += fundef.body.accept(self)
+        newitems += flatten(fundef.loc_end, " return 0; }")
         self.__shlist = self.__gllist = None
         return newitems
 

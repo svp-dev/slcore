@@ -1,3 +1,25 @@
+2010-05-17  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
+	Move forward with the new code transformation framework.
+
+	* tools/lib/slc/ast.py: Introduce nodes for C types, typedefs and
+	typedef uses.
+
+	* tools/lib/slc/visitors.py: Introduce default visits for the new
+	nodes.
+
+	* tools/lib/slc/lower/lowccast.py,
+	* tools/lib/slc/lower/lowcvars.py,
+	* tools/lib/slc/lower/rename.py: Adapt to use the new type nodes.
+
+	* tools/lib/slc/lower/seq.py,
+	* tools/lib/slc/mtalpha/visitors.py: Use the new type nodes for
+	the function pointers and memargs structure. Adapt function
+	parameter declarations.
+
+	* tools/lib/slc/lower/lowercreate.py: Emit line number before
+	assignment of exit code.
+
 2010-05-16  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 	
 	Move forward with the new code transformation framework.

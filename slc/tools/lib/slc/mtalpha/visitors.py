@@ -9,7 +9,6 @@ class Create_2_MTACreate(ScopedVisitor):
         super(Create_2_MTACreate, self).__init__(*args, **kwargs)
 
     def visit_seta(self, seta):
-        # FIXME
         b = seta.rhs.accept(self)
         
         name = seta.name
@@ -25,10 +24,9 @@ class Create_2_MTACreate(ScopedVisitor):
         newbl = []
         if a['mode'] == 'mem':
             mavar = seta.lowcreate.mavar
-            newbl.append(Opaque(loc = seta.loc, text = '(') +
+            newbl.append(flatten(seta.loc, '(') +
                          mavar + ').%s = ' % name +
                          CVarSet(decl = seta.decl.cvar, rhs = b))
-            newbl.append(b)
         else:
             ctype = a['ctype']
             cat = a['cat']
@@ -43,11 +41,11 @@ class Create_2_MTACreate(ScopedVisitor):
                 rspec = 'f'
             else: rspec = 'rI'
             regnr = a['regnr']
-            newbl.append(Opaque(loc = seta.loc, text = 
+            newbl.append(flatten(seta.loc, 
                                 ' __asm__ ("%(insn)s %%2, %%0, %(regnr)d\\t# MT: set %(cat)sarg %(name)s"'
                                  ' : "=r"(' % locals()) +
                          fidvar + ') : "0"(' + fidvar + 
-                         '), "%(rspec)s"((%(ctype)s)(' % locals() +
+                         '), "%s"((' % rspec + ctype + ')(' +
                          assign + ')))')
         return newbl
                   
@@ -71,17 +69,16 @@ class Create_2_MTACreate(ScopedVisitor):
         self.cur_scope.decls += fidvar
         
         usefvar = CVarUse(decl = fidvar)
-        newbl += (Opaque(loc = cr.loc, text = 
-                        '__asm__ __volatile__("allocate %%1, %%0\\t# MT: CREATE %s"'
-                         ' : "=r"(' % lbl) + 
+        newbl += (flatten(cr.loc,
+                          '__asm__ __volatile__("allocate %%1, %%0\\t# MT: CREATE %s"'
+                          ' : "=r"(' % lbl) + 
                   usefvar + ') : "rI"(' + CVarUse(decl = cr.cvar_place) + '));')
         
         if lc.target_next is None:
             # FIXME: ignore warning if the create is guaranteed to wait
             warn("this create may fail and no alternative is available", cr)
         else:
-            newbl += (Opaque(loc = cr.loc, text =
-                             ' if (!__builtin_expect(!!(') + 
+            newbl += (flatten(cr.loc, ' if (!__builtin_expect(!!(') + 
                       usefvar + '), 1)) ' + 
                       CGoto(target = lc.target_next)) + ';'
 
@@ -96,10 +93,17 @@ class Create_2_MTACreate(ScopedVisitor):
         else:
             assert cr.funtype == cr.FUN_VAR
 
-            n = '__slC_mtfun_%s' % lbl
-            t = '__slC_mtfunt_%s' % lbl
-            self.cur_scope.decls += flatten(cr.loc, 'typedef void (*%s)(void);' % t)
-            funvar = CVarDecl(loc = cr.loc, name = n, ctype = t)
+            n = 'C$mtF$%s' % lbl
+            t = 'C$mtF$%s' % lbl
+            
+            thetype = CTypeDecl(loc = cr.loc,
+                                name = t,
+                                ctype = CType(items = 
+                                              Opaque(text = "void (*") +
+                                              CTypeHead() + 
+                                              ')(void)'))
+            self.cur_scope.decls += thetype
+            funvar = CVarDecl(loc = cr.loc, name = n, ctype = CTypeUse(tdecl = thetype))
             self.cur_scope.decls += funvar
 
             if lc.lowfun is not None:
@@ -108,19 +112,28 @@ class Create_2_MTACreate(ScopedVisitor):
                 # not yet split
                 thefun = CVarUse(decl = cr.fun)
 
-            newbl += CVarSet(loc = cr.loc, decl = funvar, rhs = CCast(ctype = t, expr = thefun)) + ';'
+            newbl += CVarSet(loc = cr.loc, decl = funvar, 
+                             rhs = CCast(ctype = CTypeUse(tdecl = thetype),
+                                         expr = thefun)) + ';'
             funvar = CVarUse(decl = funvar)
 
         # prepare memory structure for memory-passed arguments
             ### FIXME: move stuff to cur_scope
-        maname = "C$mtM$%s" % lbl
-        mat = '__slC_mat_%s' % lbl
         if c['gl_mem_offset'] is not None:
-            self.cur_scope.decls += flatten(cr.loc, "typedef struct {")
+            maname = "C$mtM$%s" % lbl
+            mat = 'C$mtM$%s' % lbl
+
+            thestruct = Opaque('struct {')
             for d in c['memlayout']:
-                self.cur_scope.decls += flatten(d['loc'], "%s %s;" % (d['ctype'], d['name']))
-            self.cur_scope.decls += flatten(cr.loc, "} %s;" % mat)
-            mavar = CVarDecl(loc = cr.loc, name = maname, ctype = mat)
+                thestruct = thestruct + (Opaque(loc = d['loc']) + d['ctype'] + ' ' + d['name'] + ';')
+            thestruct = thestruct + '}'
+
+            thetype = CTypeDecl(loc = cr.loc,
+                                name = mat,
+                                ctype = thestruct)
+
+            self.cur_scope.decls += thetype
+            mavar = CVarDecl(loc = cr.loc, name = maname, ctype = CTypeUse(tdecl = thetype))
             self.cur_scope.decls += mavar
             mavar = CVarUse(decl = mavar)
             lc.mavar = mavar
@@ -130,7 +143,7 @@ class Create_2_MTACreate(ScopedVisitor):
         limit = CVarUse(decl = cr.cvar_limit)
         step = CVarUse(decl = cr.cvar_step)
         block = CVarUse(decl = cr.cvar_block)
-        newbl += (Opaque(loc = cr.loc, text =
+        newbl += (flatten(cr.loc, 
                          '__asm__ ("setstart %%0, %%2\\t# MT: CREATE %s"'
                          ' : "=r"(' % lbl) +
                   usefvar + ') : "0"(' + usefvar + '), "rI"(' + start + ')); ' +
@@ -156,7 +169,7 @@ class Create_2_MTACreate(ScopedVisitor):
         # we need to push the argument register to the child family.
         
         if c['gl_mem_offset'] is not None:
-            newbl += (Opaque(loc = cr.loc_end, text =
+            newbl += (flatten(cr.loc_end, 
                              ' __asm__ ("wmb; putg %%2, %%0, %d\\t#MT: set offset for memargs"' 
                              % c['gl_mem_offset']) + 
                       ' : "=r"(' + usefvar + ') : "0"(' + usefvar + '),' +
@@ -167,7 +180,7 @@ class Create_2_MTACreate(ScopedVisitor):
             # normal, synchronized create
 
             # first wait for child family to terminate.
-            newbl += (Opaque(loc = cr.loc_end, text =
+            newbl += (flatten(cr.loc_end, 
                              '__asm__ __volatile__("sync %%0, %%1; '
                              ' mov %%1, $31\\t# MT: SYNC %s"' % lbl) +
                       ' : "=r"(' + usefvar + '), "=r"(' + 
@@ -192,7 +205,7 @@ class Create_2_MTACreate(ScopedVisitor):
                     regnr = arg['regnr']
                     argvar = crarg.cvar
                     # FIXME: perform "mov" after all "get" have been issued!
-                    newbl += (Opaque(loc = cr.loc_end, text =
+                    newbl += (flatten(cr.loc_end, 
                                      ' __asm__ ('
                                      '"%(insn1)s %%0, %(regnr)d, %%1; '
                                      ' %(insn2)s %%1, %%1'
@@ -202,7 +215,7 @@ class Create_2_MTACreate(ScopedVisitor):
     
                           
         # in call cases (sync and detach), release resources.
-        newbl += (Opaque(loc = cr.loc_end, text = 
+        newbl += (flatten(cr.loc_end, 
                          ' __asm__ __volatile__("release %%0\\t#MT: SYNC %s"' % lbl) +
                   ' : : "r"(' + usefvar + '));')
 
@@ -257,7 +270,7 @@ class TFun_2_MTATFun(DefaultVisitor):
                 self.gllist_mem.append(d['name'])
                 
                 # also issue a field in the data structure
-                newitems.append(flatten(d['loc'], "%s %s;" % (d['ctype'], d['name'])))
+                newitems.append(flatten(d['loc'], ' ') + d['ctype'] + ' %s' % d['name'] + ';')
                 
             memescape_reg = regmagic.vname_to_legacy('g%d' % c['gl_mem_offset'])
             newitems.append(flatten(fundef.loc, 
@@ -284,10 +297,10 @@ class TFun_2_MTATFun(DefaultVisitor):
                                 sreg = "s%d" % regnr
                             dreg = regmagic.vname_to_legacy(dreg)
                             sreg = regmagic.vname_to_legacy(sreg)
-                            newitems.append(flatten(a['loc'], 
-                                                    'register %(ctype)s __slPsin_%(name)s __asm__("%(dreg)s"); '
-                                                    'register %(ctype)s __slPsout_%(name)s __asm__("%(sreg)s"); '
-                                                    % locals()))
+                            newitems.append(flatten(a['loc'], 'register ') +
+                                            ctype + ' __slPsin_%(name)s __asm__("%(dreg)s"); '
+                                            'register ' % locals() + ctype + 
+                                            ' __slPsout_%(name)s __asm__("%(sreg)s"); '  % locals())
 
                         else: # cat: gl
                             self.gllist.append(name)                              
@@ -296,9 +309,9 @@ class TFun_2_MTATFun(DefaultVisitor):
                             else:
                                 reg = "g%d" % regnr
                             reg = regmagic.vname_to_legacy(reg)
-                            newitems.append(flatten(a['loc'], 
-                                                    'register %(ctype)s const __slPg_%(name)s __asm__("%(reg)s"); ' 
-                                                    % locals()))
+                            newitems.append(flatten(a['loc'], 'register ') + 
+                                            ctype + 
+                                            ' const __slPg_%(name)s __asm__("%(reg)s"); ' % locals())
 
         # For every global parameter which is also declared
         # mutable, we have to create a "regular" variable for it
@@ -310,9 +323,8 @@ class TFun_2_MTATFun(DefaultVisitor):
                     orig = "__slPgm->%s" % p.name
                 else:
                     orig = "__slPg_%s" % p.aname
-                newitems.append(flatten(p.loc, 
-                                        "%s __slPwg_%s = %s;" 
-                                        % (p.ctype, p.name, orig)))
+                newitems.append(flatten(p.loc,'') + p.ctype + 
+                                " __slPwg_%s = %s;" % (p.name, orig))
 
         # consume the body
         fundef.lbl_end = CLabel(loc = fundef.loc_end, name = "mtend")
