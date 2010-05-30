@@ -1,5 +1,11 @@
 2010-05-28  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	Also check `spr+seq-mtalpha-sim' in tests.
+
+	* build-aux/slctests.mk (EXTRA_TEST_IMPL): Add the new target.
+
+2010-05-28  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	Sanitize handling of `main' and `t_main'.
 
 	Until this point `main' was reserved and a SL program did not have

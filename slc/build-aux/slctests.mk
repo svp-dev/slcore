@@ -29,6 +29,7 @@ endif
 
 if ENABLE_CHECK_SPR
 if ENABLE_CHECK_SPR_MTA
+EXTRA_TEST_IMPL += spr+seq-mtalpha-sim
 EXTRA_TEST_IMPL += spr+mta-mtalpha-sim
 EXTRA_TEST_IMPL += spr+mta+seq-mtalpha-sim
 endif
