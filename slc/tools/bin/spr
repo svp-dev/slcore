@@ -1,0 +1,466 @@
+#! /usr/bin/env python
+#
+# spr: This file is part of the SL toolchain.
+#
+import sys
+import re
+
+ws = r'(?:\s|#line\s[^\n]*\n)*'
+
+re_ws = re.compile('^' + ws + '$', re.S)
+re_identifier = re.compile('^' + ws + r'([a-zA-Z_][a-zA-Z0-9_]*)' + ws + '$', re.S)
+
+re_endswithline = re.compile(r'.*#line\s+\d+(?:\s+"[^"]*")?\s+$', re.S)
+
+#### Abstract syntax tree ####
+
+def extract_id(context, name):
+      m = re_identifier.match(name)
+      if m is None:
+            choke(context, "invalid identifier: '%s'" % name)
+      return m.group(1)
+
+
+class Item(object):
+      def __init__(self):
+            self.loc = None
+            self.loc_end = None
+     
+      def set_loc(self, loc):
+            self.loc = loc
+      def set_loc_end(self, loc_end):
+            self.loc_end = loc_end
+
+class Opaque(Item):
+      def __init__(self):
+            Item.__init__(self)
+            self.text = None
+      def set_text(self, text):
+            self.text = text
+
+      def accept(self, v):
+            v.visit_opaque(self)
+
+class Block(Item):
+      def __init__(self):
+            Item.__init__(self)
+            self.items = []
+            self.indexname = None
+      
+      def add_item(self, item):
+            self.items.append(item)
+
+      def set_indexname(self, name):
+            self.indexname = extract_id(self, name)
+
+      def accept(self, v):
+            v.visit_block(self)
+
+class Program(Block):
+      def accept(self, v):
+            v.visit_program(self)
+
+class FunDecl(Item):
+      def __init__(self):
+            Item.__init__(self)
+            self.name = None
+            self.parms = []
+
+      def set_name(self, name):
+            self.name = extract_id(self, name)
+
+      def add_parm(self, parm):
+            self.parms.append(parm)
+      
+      def accept(self, v):
+            v.visit_fundecl(self)
+
+class FunDef(FunDecl):
+      def __init__(self):
+            FunDecl.__init__(self)
+            self.body = None
+
+      def set_body(self, body):
+            self.body = body
+
+      def accept(self, v):
+            v.visit_fundef(self)
+
+class ArgParam(Item):
+      def __init__(self):
+            Item.__init__(self)
+            self.name = None
+            self.ctype = None
+            self.type = None
+
+      def set_type(self, type):
+            self.type = type
+      def set_ctype(self, ctype):
+            self.ctype = ctype
+      def set_name(self, name):
+            self.name = extract_id(self, name)
+
+class FunParam(ArgParam):
+      def accept(self, v):
+            v.visit_funparm(self)
+
+class CreateArg(ArgParam):
+      def __init__(self):
+            self.init = None
+
+      def set_init(self, init): self.init = init
+
+      def accept(self, v):
+            v.visit_createarg(self)
+
+class VarUse(Item):
+      def __init__(self):
+            Item.__init__(self)
+            self.name = None
+      def set_name(self, name):
+            self.name = extract_id(self, name)
+
+class VarSet(VarUse):
+      def __init__(self):
+            VarUse.__init__(self)
+            self.rhs = None
+      def set_rhs(self, rhs):
+            self.rhs = rhs
+
+class GetParam(VarUse): 
+      def accept(self, v): v.visit_getp(self)
+
+class GetArg(VarUse): 
+      def accept(self, v): v.visit_geta(self)
+
+class SetParam(VarSet): 
+      def accept(self, v): v.visit_setp(self)
+
+class SetArg(VarSet): 
+      def accept(self, v): v.visit_seta(self)
+
+class Create(Item):
+      def __init__(self):
+            Item.__init__(self)
+            self.label = None
+            self.place = None
+            self.start = None
+            self.step = None
+            self.limit = None
+            self.block = None
+            self.id = None
+            self.sync_type = None
+            self.body = None
+            self.result_lvalue = None
+            self.fid_lvalue = None
+            self.fun = None
+            self.args = []
+      def add_arg(self, arg): self.args.append(arg)
+      def set_label(self, label): self.label = extract_id(self, label)
+      def set_place(self, place): self.place = place
+      def set_start(self, start): self.start = start
+      def set_step(self, step): self.step = step
+      def set_limit(self, limit): self.limit = limit
+      def set_block(self, block): self.block = block
+      def set_id(self, id): self.id = id
+      def set_sync_type(self, sync_type): self.sync_type = sync_type
+      def set_body(self, body): self.body = body
+      def set_result_lvalue(self, lvalue): self.result_lvalue = lvalue
+      def set_fid_lvalue(self, lvalue): self.fid_lvalue = lvalue
+      def set_fun(self, fun):
+            if len(fun.items) == 1:
+                  m = re_identifier.match(fun.items[0].text)
+                  if m is not None:
+                        self.fun = m.group(1)
+                        return
+            self.fun = fun
+      def funIsIdentifier(self):
+            return type(self.fun) == type('')
+
+      def accept(self, v):
+            v.visit_create(self)
+
+class EndThread(Item):
+      def accept(self, v):
+            v.visit_end_thread(self)
+
+#### Parser ####
+
+
+def cleanup(source):
+      # remove extra whitespace
+      if type(source) == type([]):
+            return [x for x in (cleanup(y) for y in source) if len(x) != 0]
+      elif type(source) == type(""):
+            #if re_endswithline.match(source) is not None:
+            #      return source.lstrip()
+            return source.strip(' \t')
+      elif type(source) == type({}):
+            return dict( ( (k,cleanup(v)) for (k,v) in source.iteritems() ) )
+      else: 
+            raise RuntimeError, "unknown item type: %r" % source
+
+
+def choke(item, msg):
+      if type(item) == type({}) and item.has_key('loc'):
+            print >>sys.stderr, '%s:' % item['loc'],
+      elif hasattr(item, 'loc'):
+            print >>sys.stderr, '%s:' % getattr(item, 'loc'),
+      print >>sys.stderr, msg
+      sys.exit(1)
+
+def unexpected(item):
+      choke(item, "unexpected construct '%s'" % item.get('type','unknown'))
+
+def make_opaque(item):
+      c = Opaque()
+      c.set_text(item)
+      return c
+
+def isemptyblock(item):
+      return item == [] or (len(item) == 1 and len(item[0]) == 0)
+
+def parse_varuse(varuse, item):
+      varuse.set_loc(item['loc'])
+      varuse.set_name(item['name'])
+      if item.has_key('body'):
+            varuse.set_rhs(parse_block(item['body'], False))
+      return varuse
+
+def parse_create(item):
+      c = Create()
+      c.set_loc(item['loc'])
+      c.set_loc_end(item['loc_end'])
+      c.set_label(item['lbl'])
+      c.set_place(parse_block(item['place'], False))
+      c.set_start(parse_block(item['start'], False))
+      c.set_limit(parse_block(item['limit'], False))
+      c.set_step(parse_block(item['step'], False))
+      c.set_block(parse_block(item['block'], False))
+      c.set_sync_type(item['sync'])
+      c.set_fun(parse_block(item['fun'], False))
+      for p in item['args']:
+            c.add_arg(parse_argparm(CreateArg(), 'arg', p))
+      c.set_body(parse_block(item['body'], False))
+      if item.has_key('result') and item['result']:
+            c.set_result_lvalue(parse_block(item['result'], False))
+      if item.has_key('fid') and item['fid']:
+            c.set_fid_lvalue(parse_block(item['fid'], False))
+      return c
+
+def parse_block(items, allow_index = False):
+      b = Block()
+      for item in items:
+            if type(item) == type({}):
+                  t = item['type']
+                  if t == 'indexdecl' and allow_index: b.set_indexname(item['name'])
+                  elif t == 'getp': b.add_item(parse_varuse(GetParam(), item))
+                  elif t == 'setp': b.add_item(parse_varuse(SetParam(), item))
+                  elif t == 'geta': b.add_item(parse_varuse(GetArg(), item))
+                  elif t == 'seta': b.add_item(parse_varuse(SetArg(), item))
+                  elif t == 'create': b.add_item(parse_create(item))
+                  elif t == 'end_thread': b.add_item(parse_end_thread(item))
+                  else: unexpected(item)
+                        
+            else: b.add_item(make_opaque(item))
+      return b
+
+def parse_argparm(p, cat, item):
+      if not item['type'].endswith(cat):
+            unexpected(item)
+      p.set_loc(item['loc'])
+      p.set_type(item['type'])
+      p.set_ctype(item['ctype'])
+      p.set_name(item['name'])
+      if item.has_key('init'):
+         p.set_init(parse_block(item['init'], False))
+      return p            
+
+def parse_end_thread(item):
+      e = EndThread()
+      e.set_loc(item['loc'])
+      return e
+
+def parse_fundecl(item):
+      d = FunDecl()
+      d.set_loc(item['loc'])
+      d.set_name(item['name'])
+      for p in item['params']:
+            d.add_parm(parse_argparm(FunParam(), 'parm', p))
+      return d
+
+def parse_fundef(item):
+      d = FunDef()
+      d.set_loc(item['loc'])
+      d.set_loc_end(item['loc_end'])
+      d.set_name(item['name'])
+      for p in item['params']:
+            d.add_parm(parse_argparm(FunParam(), 'parm', p))
+      d.set_body(parse_block(item['body'], allow_index = True))
+      return d
+
+def parse_program(source):
+      p = Program()
+      for item in source:
+            if type(item) == type({}):
+                  t = item['type']
+                  if t == 'decl': p.add_item(parse_fundecl(item))
+                  elif t == 'fundef': p.add_item(parse_fundef(item))
+                  else: unexpected(item)
+            else: p.add_item(make_opaque(item))
+      return p
+
+#### Default visitor: just visit ####
+
+class DefaultVisitor(object):
+      def visit_program(self, program):
+            self.visit_block(program)
+
+      def visit_opaque(self, opaque):
+            pass
+
+      def visit_block(self, block):
+            for item in block.items:
+                  item.accept(self)
+
+      def visit_fundecl(self, fundecl):
+            for parm in fundecl.parms:
+                  parm.accept(self)
+
+      def visit_fundef(self, fundef):
+            self.visit_fundecl(fundef)
+            fundef.body.accept(self)
+
+      def visit_getp(self, getp):
+            pass
+      def visit_geta(self, geta):
+            pass
+      def visit_setp(self, setp):
+            setp.rhs.accept(self)
+      def visit_seta(self, seta):
+            seta.rhs.accept(self)
+      def visit_create(self, create):
+            if create.fid_lvalue is not None:
+                  create.fid_lvalue.accept(self)
+            create.place.accept(self)
+            create.start.accept(self)
+            create.step.accept(self)
+            create.limit.accept(self)
+            create.block.accept(self)
+            if not create.funIsIdentifier():
+                  create.fun.accept(self)
+            for arg in create.args:
+                  arg.accept(self)
+            create.body.accept(self)
+            if create.result_lvalue is not None:
+                  create.result_lvalue.accept(self)
+
+      def visit_funparm(self, parm):
+            pass
+
+      def visit_createarg(self, arg):
+            pass
+
+      def visit_end_thread(self, et):
+            pass
+
+#### Printer visitor: reprint SL code ####
+
+class PrinterVisitor(DefaultVisitor):
+      def __init__(self):
+            self.buffer = ""
+
+      def visit_opaque(self, opaque):
+            if opaque.text is not None and opaque.text.startswith('#'):
+                  self.buffer += '\n'
+            self.buffer += opaque.text
+            
+      def visit_funparm(self, parm):
+            self.buffer += ' sl_%s(%s, %s)' % (parm.type, parm.ctype, parm.name)
+
+      def visit_funheader(self, fun, htype):
+            self.buffer += " sl_%s(%s, void" % (htype, fun.name)
+            for parm in fun.parms:
+                  self.buffer += ', '
+                  parm.accept(self)
+            self.buffer += ')'
+
+      def visit_fundecl(self, fundecl):
+            self.visit_funheader(fundecl, 'decl')
+      
+      def visit_fundef(self, fundef):
+            self.visit_funheader(fundef, 'def')
+            fundef.body.accept(self)
+            self.buffer += ' sl_enddef '
+
+      def visit_block(self, block):
+            if block.indexname is not None:
+                  self.buffer += '{ sl_index(%s); ' % block.indexname
+            DefaultVisitor.visit_block(self, block)
+            if block.indexname is not None:
+                  self.buffer += '}'
+
+      def visit_getp(self, vu):
+            self.buffer += ' sl_getp(%s)' % vu.name
+      def visit_geta(self, vu):
+            self.buffer += ' sl_geta(%s)' % vu.name
+      def visit_setp(self, vu):
+            self.buffer += ' sl_setp(%s, ' % vu.name
+            vu.rhs.accept(self)
+            self.buffer += ')'
+      def visit_seta(self, vu):
+            self.buffer += ' sl_seta(%s, ' % vu.name
+            vu.rhs.accept(self)
+            self.buffer += ')'
+
+      def visit_createarg(self, arg):
+            self.buffer += ' sl_%s(%s, %s' % (arg.type, arg.ctype, arg.name)
+            if arg.init is not None:
+                  self.buffer += ','
+                  arg.init.accept(self)
+            self.buffer += ')'
+
+      def visit_end_thread(self, et):
+            self.buffer += ' sl_end_thread '
+
+      def visit_create(self, c):
+            self.buffer += ' sl_create('
+            if c.fid_lvalue is not None:
+                  c.fid_lvalue.accept(self)
+            for b in (c.place, c.start, c.step, c.limit, c.block):
+                  self.buffer += ','
+                  b.accept(self)
+            self.buffer += ',/**/,'
+            if c.funIsIdentifier():
+                  self.buffer += c.fun
+            else:
+                  c.fun.accept(self)
+            for arg in c.args:
+                  self.buffer += ','
+                  arg.accept(self)
+            self.buffer += ')'
+            c.body.accept(self)
+            
+            if c.sync_type == 'release':
+                  self.buffer += ' sl_release()'
+            else:
+                  self.buffer += ' sl_sync('
+                  if c.result_lvalue is not None:
+                        c.result_lvalue.accept(self)
+                  self.buffer += ')'
+
+if __name__ == "__main__":
+      source = eval('["""'+sys.stdin.read()+'"""]')
+
+      source = cleanup(source)
+      
+      import pprint
+      pprint.pprint(source)
+
+      p = parse_program(source)
+
+      p.accept(DefaultVisitor())
+      pp = PrinterVisitor()
+      p.accept(pp)
+      print pp.buffer
+      

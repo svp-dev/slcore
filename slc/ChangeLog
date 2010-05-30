@@ -1,5 +1,13 @@
 2010-04-26  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	Introduce `spr'.
+
+	* tools/bin/spr: New.
+
+	* tools/lib/t-spr/slimpl.m4: Preserve backslashes in C text.
+
+2010-04-26  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	Prepare for new code splitting tool `spr'.
 
 	* tools/lib/t-spr/slimpl.m4: Implement macros that split the code.
