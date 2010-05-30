@@ -19,17 +19,17 @@
 #include <svp/perf.h>
 
 struct work_lapses {
-  size_t current_interval;
-  size_t current_iter;
-  struct s_interval *intervals;
+    size_t current_interval;
+    size_t current_iter;
+    struct s_interval *intervals;
 };
 
 struct benchmark_state {
-  void* data;
+    void* data;
 #if SVP_HAS_SEP
-  struct placeinfo *place;
+    struct placeinfo *place;
 #endif
-  struct work_lapses * wl;
+    struct work_lapses * wl;
 };
 
 struct benchmark {

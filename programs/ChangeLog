@@ -1,5 +1,12 @@
 2010-05-31  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	Minor cosmetic fixes.
+
+	* benchmarks/lib/benchmark.h: Whitespace.
+	* benchmarks/mandel/mandel.c: Anonymize argument in `proccall'.
+
+2010-05-31  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	Code fixes in benchmarks.
 
 	* benchmarks/fft/fft_extra.c (FFT_Reverse): avoid declaring `k'

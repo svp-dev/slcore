@@ -347,7 +347,7 @@ sl_def(t_main, void)
     "Iterate z_{n-1} = z_n^2 + c over the complex plane",
     &initialize, 0, &work, &output, &teardown
   };
-  sl_proccall(run_benchmark, sl_glarg(struct benchmark*, b, &b));
+  sl_proccall(run_benchmark, sl_glarg(struct benchmark*, , &b));
 
 }
 sl_enddef
