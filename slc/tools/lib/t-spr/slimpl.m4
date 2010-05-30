@@ -68,7 +68,7 @@ m4_define([[sl_break]], [[m4_dnl
 m4_define([[sl_decl]], [[m4_dnl
 [[""", {'loc':r"""]]__file__:__line__[[""",'type':'decl','name':"""$1""",'params': []]m4_dnl
 m4_shift2($@)m4_dnl
-[[],'loc_end':r"""]]__file__:__line__[["""}, r"""]]m4_dnl
+[[],'extras':[r""" $2 """], 'loc_end':r"""]]__file__:__line__[["""}, r"""]]m4_dnl
 ]])
 
 m4_define([[sl_index]], [[m4_dnl

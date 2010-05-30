@@ -1,5 +1,12 @@
 2010-05-28  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	Fix handling of `sl_decl' with `spr'.
+
+	* tools/lib/t-spr/slimpl.m4: Define `extras' for `sl_decl' too,
+	since the parser expects it.
+
+2010-05-28  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	Expose blocking and non-blocking place ids in SEP interface.
 
 	* lib/include/svp/sep.h: New attribute `soft_pid'.
