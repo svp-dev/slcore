@@ -1,5 +1,11 @@
 2010-05-19  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	Minor API improvement.
+
+	* tools/lib/slc/msg.py: Allow to use `warn' and `log' without context. 
+
+2010-05-19  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	Merge CM4 into new framework.
 
 	* tools/bin/cm4.in: Copy functionality to...

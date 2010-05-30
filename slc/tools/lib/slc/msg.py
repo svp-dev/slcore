@@ -20,10 +20,10 @@ def die(msg, context = None, code = 1):
     log(msg, context)
     sys.exit(code)
 
-def warn(msg, context):
+def warn(msg, context = None):
     log('warning: %s' % msg, context)
 
-def info(msg, context):
+def info(msg, context = None):
     log(msg, context, stream = sys.stdout)
 
 
