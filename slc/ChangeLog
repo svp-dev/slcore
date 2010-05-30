@@ -1,5 +1,12 @@
 2010-05-28  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	Improve debugging with `slr'.
+
+	* tools/bin/slr.in: Keep object files around when compiling
+	`arggen.c' with `-gd' enabled, so that the debugger can find them.
+
+2010-05-28  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	Use the new framework for `-b seqc'.
 
 	* tools/bin/cce.in: Expand `seqc' to

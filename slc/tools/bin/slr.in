@@ -396,9 +396,13 @@ if test -n "$dodata"; then
 	if test -n "$VERBOSE"; then
 	    echo "$basename: running: TMPDIR=$SLR_RDIR/slc-rec @BASH@ $slc_helper -b $datatag -o $SLR_RDIR/input/gend.x -I$SLR_RDIR/input $arggen" >&2
 	fi
-	TMPDIR="$SLR_RDIR"/slc-rec @BASH@ \
-            "$slc_helper" -b "$datatag" -o "$SLR_RDIR"/input/gend.x -I"$SLR_RDIR/input" "$arggen"
-
+	if test -n "$debug_rec"; then
+	    TMPDIR="$SLR_RDIR"/slc-rec @BASH@ \
+                "$slc_helper" -b "$datatag" -g -save-temps -v -o "$SLR_RDIR"/input/gend.x -I"$SLR_RDIR/input" "$arggen"
+        else
+	    TMPDIR="$SLR_RDIR"/slc-rec @BASH@ \
+                "$slc_helper" -b "$datatag" -o "$SLR_RDIR"/input/gend.x -I"$SLR_RDIR/input" "$arggen"
+        fi
 	# run slr recursively on the arggen binary to dump the data
 	mkdir -p "$SLR_RDIR"/slr-rec
 	if test -n "$VERBOSE"; then
