@@ -1,3 +1,17 @@
+2010-05-27  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
+	Improve MT-Alpha code gen.
+
+	The previous fix to protect "end" after a branch is not needed any
+	more as the underlying hardware now ignores the end if the branch
+	is taken. However we need to protect it for branches that may
+	return, since the return goes to the following instruction which
+	then must end the hread.
+
+	* tools/lib/slc/mtalpha/asmproc/opt.py (protectend): Avoid
+	inserting `nop' between normal branch and `end', only bsr and
+	equivalent.
+
 2010-05-25  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
 	Fix the math library.
