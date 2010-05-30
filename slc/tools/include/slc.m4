@@ -29,15 +29,6 @@ m4_include([[slimpl.m4]])
 # sl_proccall() - helper macro, encapsulate a singleton create
 m4_define([[sl_proccall]],[[do { sl_create(,,,,,,,$@); sl_sync(); } while(0)]])
 
-# sl_begin_header() / sl_end_header() - helper macros, protect against multiple inclusion
-m4_define([[sl_begin_header]],[[m4_dnl
-m4_ifndef([[$1_found]],[[m4_define([[$1_found]],1)m4_divert_push(0)]],[[m4_divert_push([[KILL]])]])m4_dnl
-]])
-
-m4_define([[sl_end_header]],[[m4_dnl
-m4_divert_pop()
-]])
-
 # Provide a helper M4 macro that defeats
 # extra quoting after preprocessing
 m4_define([[sl_cquote]], [[']])

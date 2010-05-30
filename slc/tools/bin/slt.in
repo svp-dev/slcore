@@ -687,7 +687,7 @@ do_preptest() {
 	COMPILE_ARGS+=("-I$SRCDIR/$reldir")
     fi
 
-    outdir=$reldir/_${1//[\~\/:.--- ]/_}
+    outdir=$reldir/_${1//[\~\/:+.--- ]/_}
     outdir=${outdir#./}
    
     baseout=$outdir/$testname

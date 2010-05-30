@@ -1,5 +1,15 @@
 2010-05-21  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	Minor cleanups.
+
+	* tools/bin/slt.in: Also replace `+' by `_' when generating test 
+	output directory names.
+
+	* tools/include/slc.m4: Remove support for `sl_begin_header' and
+	`sl_end_header', which are now long obsolete.
+
+2010-05-21  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	Integrate `spr' and `slc' some more.
 
 	* tools/bin/cce.in: Remove `utc' and `utc0' from the
