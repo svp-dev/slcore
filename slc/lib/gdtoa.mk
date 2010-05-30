@@ -1,9 +1,4 @@
-EXTRA_DIST += \
-	src/gdtoa/arith.h \
-	src/gdtoa/arith-mtalpha.h \
-	src/gdtoa/gd_qnan.h \
-	src/gdtoa/gd_qnan-mtalpha.h \
-	src/gdtoa/arithchk.c \
+GDTOA_SRC = \
 	src/gdtoa/dmisc.c \
 	src/gdtoa/dtoa.c \
 	src/gdtoa/g__fmt.c \
@@ -14,17 +9,11 @@ EXTRA_DIST += \
 	src/gdtoa/g_xfmt.c \
 	src/gdtoa/g_xLfmt.c \
 	src/gdtoa/gdtoa.c \
-	src/gdtoa/gdtoa.h \
-	src/gdtoa/gdtoa_fltrnds.h \
-	src/gdtoa/gdtoaimp.h \
 	src/gdtoa/gethex.c \
 	src/gdtoa/gmisc.c \
 	src/gdtoa/hd_init.c \
 	src/gdtoa/hexnan.c \
-	src/gdtoa/makefile \
 	src/gdtoa/misc.c \
-	src/gdtoa/qnan.c \
-	src/gdtoa/README \
 	src/gdtoa/smisc.c \
 	src/gdtoa/strtod.c \
 	src/gdtoa/strtodg.c \
@@ -53,50 +42,18 @@ EXTRA_DIST += \
 	src/gdtoa/sum.c \
 	src/gdtoa/ulp.c
 
-mtalpha_sim_libsl_a_CONTENTS += \
-	mtalpha-sim/gdtoa_dmisc.o \
-	mtalpha-sim/gdtoa_dtoa.o \
-	mtalpha-sim/gdtoa_g__fmt.o \
-	mtalpha-sim/gdtoa_g_ddfmt.o \
-	mtalpha-sim/gdtoa_g_dfmt.o \
-	mtalpha-sim/gdtoa_g_ffmt.o \
-	mtalpha-sim/gdtoa_g_Qfmt.o \
-	mtalpha-sim/gdtoa_g_xfmt.o \
-	mtalpha-sim/gdtoa_g_xLfmt.o \
-	mtalpha-sim/gdtoa_gdtoa.o \
-	mtalpha-sim/gdtoa_gethex.o \
-	mtalpha-sim/gdtoa_gmisc.o \
-	mtalpha-sim/gdtoa_hd_init.o \
-	mtalpha-sim/gdtoa_hexnan.o \
-	mtalpha-sim/gdtoa_misc.o \
-	mtalpha-sim/gdtoa_smisc.o \
-	mtalpha-sim/gdtoa_strtod.o \
-	mtalpha-sim/gdtoa_strtodg.o \
-	mtalpha-sim/gdtoa_strtodI.o \
-	mtalpha-sim/gdtoa_strtof.o \
-	mtalpha-sim/gdtoa_strtoId.o \
-	mtalpha-sim/gdtoa_strtoIdd.o \
-	mtalpha-sim/gdtoa_strtoIf.o \
-	mtalpha-sim/gdtoa_strtoIg.o \
-	mtalpha-sim/gdtoa_strtoIQ.o \
-	mtalpha-sim/gdtoa_strtoIx.o \
-	mtalpha-sim/gdtoa_strtoIxL.o \
-	mtalpha-sim/gdtoa_strtopd.o \
-	mtalpha-sim/gdtoa_strtopdd.o \
-	mtalpha-sim/gdtoa_strtopf.o \
-	mtalpha-sim/gdtoa_strtopQ.o \
-	mtalpha-sim/gdtoa_strtopx.o \
-	mtalpha-sim/gdtoa_strtopxL.o \
-	mtalpha-sim/gdtoa_strtord.o \
-	mtalpha-sim/gdtoa_strtordd.o \
-	mtalpha-sim/gdtoa_strtorf.o \
-	mtalpha-sim/gdtoa_strtorQ.o \
-	mtalpha-sim/gdtoa_strtorx.o \
-	mtalpha-sim/gdtoa_strtorxL.o \
-	mtalpha-sim/gdtoa_sum.o \
-	mtalpha-sim/gdtoa_ulp.o
+GDTOA_EXTRA = \
+	src/gdtoa/arith.h \
+	src/gdtoa/arith-mtalpha.h \
+	src/gdtoa/gd_qnan.h \
+	src/gdtoa/gd_qnan-mtalpha.h \
+	src/gdtoa/gdtoa_fltrnds.h \
+	src/gdtoa/gdtoaimp.h \
+	src/gdtoa/gdtoa.h \
+	src/gdtoa/qnan.c \
+	src/gdtoa/arithchk.c \
+	src/gdtoa/makefile \
+	src/gdtoa/README
 
-mtalpha-sim/gdtoa_%.o: $(srcdir)/src/gdtoa/%.c
-	$(AM_V_at)$(MKDIR_P) mtalpha-sim
-	$(slc_verbose)$(SLC_MTALPHA) -I$(srcdir)/src/gdtoa -c -o $@ $<
+EXTRA_DIST += $(GDTOA_SRC) $(GDTOA_EXTRA)
 

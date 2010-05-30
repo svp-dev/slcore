@@ -5,29 +5,27 @@ nobase_dist_pkgdata_DATA += \
 
 if ENABLE_SLC_PTL
 
-nobase_pkglib_LIBRARIES += host-host-ptl/libsl.a 
+nobase_pkglib_LIBRARIES += ptl-host-host-ptl/libsl.a 
 
-host_host_ptl_libsl_a_SOURCES =
-host_host_ptl_libsl_a_LIBADD = \
-	host-host-ptl/io.o \
-	host-host-ptl/roman.o \
-	host-host-ptl/perf.o \
-	host-host-ptl/gfx.o \
-	host-host-ptl/div.o
+ptl_host_host_ptl_libsl_a_BUILTOBJS = \
+	ptl-host-host-ptl/io.o \
+	ptl-host-host-ptl/roman.o \
+	ptl-host-host-ptl/perf.o \
+	ptl-host-host-ptl/gfx.o \
+	ptl-host-host-ptl/div.o
+
+ptl_host_host_ptl_libsl_a_SOURCES =
+ptl_host_host_ptl_libsl_a_LIBADD = $(ptl_host_host_ptl_libsl_a_BUILTOBJS)
 
 SLC_PTL = $(SLC_RUN) -b ptl -nostdlib $(CXXFLAGS)
 
-host-host-ptl/%.o: $(srcdir)/src/%.c
-	$(AM_V_at)$(MKDIR_P) host-host-ptl
+ptl-host-host-ptl/%.o: $(srcdir)/src/%.c
+	$(AM_V_at)$(MKDIR_P) ptl-host-host-ptl
 	$(slc_verbose)$(SLC_PTL) -c -o $@ $<
+
+CLEANFILES += $(ptl_host_host_ptl_libsl_a_BUILTOBJS)
 
 endif
 
-CLEANFILES += \
-	host-host-ptl/io.o \
-	host-host-ptl/gfx.o \
-	host-host-ptl/perf.o \
-	host-host-ptl/div.o \
-	host-host-ptl/roman.o
 
 

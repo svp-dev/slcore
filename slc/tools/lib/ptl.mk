@@ -20,42 +20,42 @@ EXTRA_DIST += \
 if ENABLE_SLC_PTL
 
 nobase_pkglib_DATA += \
-	host-host-ptl/slrt.o
+	ptl-host-host-ptl/slrt.o
 
 nobase_pkglib_LIBRARIES += \
-	host-host-ptl/libslc.a \
-	host-host-ptl/libslmain.a
+	ptl-host-host-ptl/libslc.a \
+	ptl-host-host-ptl/libslmain.a
 
-host_host_ptl_libslc_a_CPPFLAGS = \
+ptl_host_host_ptl_libslc_a_CPPFLAGS = \
 	-I$(srcdir)/host-host-ptl/include \
 	-I$(builddir)/host-host-ptl/include
 
-host_host_ptl_libslc_a_SOURCES = \
+ptl_host_host_ptl_libslc_a_SOURCES = \
 	host-host-ptl/ptl_debug.cc \
 	host-host-ptl/ptl_vars.cc \
 	host-host-ptl/ptl_svp.cc
 
-host_host_ptl_libslmain_a_SOURCES = empty.c
-host_host_ptl_libslmain_a_LIBADD = host-host-ptl/main.o
+ptl_host_host_ptl_libslmain_a_SOURCES = 
+ptl_host_host_ptl_libslmain_a_LIBADD = ptl-host-host-ptl/main.o
 
 BUILT_SOURCES += \
 	host-host-ptl/include/ptl_create.h
 
 
-SLC_PTL = $(SLC_RUN) -b ptl -nostdlib -nodefaultmain
+SLC_PTL = $(SLC_RUN) -b ptl 
 
-host-host-ptl/%.o: $(srcdir)/host-host-ptl/%.c
-	$(AM_V_at)$(MKDIR_P) host-host-ptl
-	$(slc_verbose)$(SLC_PTL) -I$(srcdir)/t-ptl/include -c -o $@ $< $(AM_CXXFLAGS) $(CXXFLAGS)
+ptl-host-host-ptl/%.o: $(srcdir)/host-host-ptl/%.c
+	$(AM_V_at)$(MKDIR_P) ptl-host-host-ptl
+	$(slc_verbose)$(SLC_PTL) -c -o $@ $< $(AM_CXXFLAGS) $(CXXFLAGS)
 
-host-host-ptl/%.o: $(srcdir)/%.c
-	$(AM_V_at)$(MKDIR_P) host-host-ptl
-	$(slc_verbose)$(SLC_PTL) -I$(srcdir)/t-ptl/include -c -o $@ $< $(AM_CXXFLAGS) $(CXXFLAGS)
+ptl-host-host-ptl/%.o: $(srcdir)/%.c
+	$(AM_V_at)$(MKDIR_P) ptl-host-host-ptl
+	$(slc_verbose)$(SLC_PTL) -c -o $@ $< $(AM_CXXFLAGS) $(CXXFLAGS)
 
 endif
 
 CLEANFILES += \
-	host-host-ptl/slrt.o
+	ptl-host-host-ptl/slrt.o
 
 PTL_CREATE_SUBST = $(srcdir)/host-host-ptl/include/template.pl
 PTL_CREATE_TEMPL = $(srcdir)/host-host-ptl/include/create.tpl

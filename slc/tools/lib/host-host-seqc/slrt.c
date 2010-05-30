@@ -17,7 +17,7 @@
 sl_place_t __main_place_id = PLACE_DEFAULT;
 
 const char *__tag__ = "\0slr_runner:host:";
-const char *__datatag__ = "\0slr_datatag:spr+seq-host-host-seqc:";
+const char *__datatag__ = "\0slr_datatag:seqc-seqc_o-host-host-seqc:";
 
 #include "../load.c"
 

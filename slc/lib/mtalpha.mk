@@ -1,6 +1,6 @@
 ########### MT-Alpha components ###########
 
-EXTRA_DIST += \
+MTALIB_CSRC = \
 	src/abort.c \
 	src/atoi.c \
 	src/atol.c \
@@ -10,8 +10,6 @@ EXTRA_DIST += \
 	src/ctype.c \
 	src/dtoa_simple.c \
 	src/errno.c \
-	src/floatio.h \
-	src/fpmath.h \
 	src/fprintf.c \
 	src/fputc.c \
 	src/fputs.c \
@@ -19,24 +17,15 @@ EXTRA_DIST += \
 	src/getenv.c \
 	src/_hdtoa.c \
 	src/heap.c \
-	src/heap.h \
 	src/malloc.c \
 	src/malloc_wrappers.c \
 	src/memcpy.c \
 	src/memmove.c \
 	src/memset.c \
-	src/missing_uclibc_math.c \
-	src/mtalpha/divide.S \
-	src/mtalpha/mtdiv.s \
-	src/mtconf.h \
 	src/mtconf.c \
-	src/mtinit.c \
-	src/mtsep.c \
-	src/mtstdio.h \
 	src/mtstdio.c \
+	src/perf.c \
 	src/printf.c \
-	src/printflocal.h \
-	src/printfcommon.h \
 	src/printf-pos.c \
 	src/putc.c \
 	src/putchar.c \
@@ -66,100 +55,38 @@ EXTRA_DIST += \
 	src/vprintf.c \
 	src/vsnprintf.c
 
+MTALIB_SRC = \
+	src/div.c \
+	src/roman.c \
+	src/io.c \
+	src/mtinit.c \
+	src/mtsep.c
+
+MTALIB_EXTRA = \
+	src/floatio.h \
+	src/fpmath.h \
+	src/heap.h \
+	src/missing_uclibc_math.c \
+	src/mtconf.h \
+	src/mtstdio.h \
+	src/printfcommon.h \
+	src/printflocal.h
+
+EXTRA_DIST += $(MTALIB_CSRC) $(MTALIB_SRC) $(MTALIB_EXTRA)
+
 nobase_dist_pkgdata_DATA += \
 	mtalpha-sim/include/svp_os.h \
 	mtalpha-sim/include/svp_asmdiv.h
 
-if ENABLE_SLC_MTALPHA
-
-nobase_pkglib_DATA += \
-   mtalpha-sim/libm.a \
-   mtalpha-sim/libsl.a
-
-mtalpha_sim_libsl_a_CONTENTS = \
-	mtalpha-sim/abort.o \
-	mtalpha-sim/atoi.o \
-	mtalpha-sim/atol.o \
-	mtalpha-sim/atoll.o \
-	mtalpha-sim/bcopy.o \
-	mtalpha-sim/ctype.o \
-	mtalpha-sim/divl.o \
-	mtalpha-sim/divq.o \
-	mtalpha-sim/dtoa_simple.o \
-	mtalpha-sim/errno.o \
-	mtalpha-sim/fprintf.o \
-	mtalpha-sim/fputc.o \
-	mtalpha-sim/fputs.o \
-	mtalpha-sim/fwrite.o \
-	mtalpha-sim/getenv.o \
-	mtalpha-sim/_hdtoa.o \
-	mtalpha-sim/heap.o \
-	mtalpha-sim/io.o \
-	mtalpha-sim/malloc.o \
-	mtalpha-sim/malloc_wrappers.o \
-	mtalpha-sim/memcpy.o \
-	mtalpha-sim/memmove.o \
-	mtalpha-sim/memset.o \
-	mtalpha-sim/mtclock.o \
-	mtalpha-sim/mtconf.o \
-	mtalpha-sim/mtdiv.o \
-	mtalpha-sim/mtinit.o \
-	mtalpha-sim/mtsep.o \
-	mtalpha-sim/mtstdio.o \
-	mtalpha-sim/perf.o \
-	mtalpha-sim/printf.o \
-	mtalpha-sim/printf-pos.o \
-	mtalpha-sim/putc.o \
-	mtalpha-sim/putchar.o \
-	mtalpha-sim/puts.o \
-	mtalpha-sim/reml.o \
-	mtalpha-sim/remq.o \
-	mtalpha-sim/roman.o \
-	mtalpha-sim/snprintf.o \
-	mtalpha-sim/sprintf.o \
-	mtalpha-sim/stpcpy.o \
-	mtalpha-sim/stpncpy.o \
-	mtalpha-sim/strcat.o \
-	mtalpha-sim/strchr.o \
-	mtalpha-sim/strcpy.o \
-	mtalpha-sim/strdup.o \
-	mtalpha-sim/strerror.o \
-	mtalpha-sim/strlcat.o \
-	mtalpha-sim/strlcpy.o \
-	mtalpha-sim/strlen.o \
-	mtalpha-sim/strncat.o \
-	mtalpha-sim/strncmp.o \
-	mtalpha-sim/strncpy.o \
-	mtalpha-sim/strnlen.o \
-	mtalpha-sim/strtol.o \
-	mtalpha-sim/strtoul.o \
-	mtalpha-sim/strtoll.o \
-	mtalpha-sim/strtoul.o \
-	mtalpha-sim/sys_errlist.o \
-	mtalpha-sim/vprintf.o \
-	mtalpha-sim/vsnprintf.o \
-	mtalpha-sim/vfprintf.o
 
 include $(srcdir)/gdtoa.mk
-
-CLEANFILES += $(mtalpha_sim_libsl_a_CONTENTS) \
-	mtalpha-sim/libsl.a
 
 include $(srcdir)/src/mtamathobjs.mk
 EXTRA_DIST += $(MTAMATHOBJS)
 
-mtalpha_sim_libm_a_CONTENTS = \
-	$(MTAMATHOBJS) \
-	mtalpha-sim/missing_uclibc_math.o
+if ENABLE_SLC_MTALPHA
 
-CLEANFILES += mtalpha-sim/missing_uclibc_math.o \
-	mtalpha-sim/libm.a
-
-SLC_MTALPHA = $(SLC_RUN) -b mtalpha -nostdlib -Dshutup_cstring_h -Dshutup_cstdlib_h -Dshutup_cstdio_h
-
-mtalpha-sim/%.o: $(srcdir)/src/%.c
-	$(AM_V_at)$(MKDIR_P) mtalpha-sim
-	$(slc_verbose)$(SLC_MTALPHA) -c -o $@ $<
+SHUTUP = -Dshutup_cstring_h -Dshutup_cstdlib_h -Dshutup_cstdio_h -Dshutup_cstrings_h
 
 MALLOC_DEFS = -DLACKS_SYS_TYPES_H \
 	-DUSE_DL_PREFIX \
@@ -174,47 +101,180 @@ MALLOC_DEFS = -DLACKS_SYS_TYPES_H \
 	-DLACKS_TIME \
 	-DPAGESIZE=0x40000000U
 
-mtalpha-sim/malloc.o: $(srcdir)/src/malloc.c
-	$(AM_V_at)$(MKDIR_P) mtalpha-sim
-	$(slc_verbose)$(SLC_MTALPHA) -c -o $@ $< $(MALLOC_DEFS)
+MTALIB_COBJS = \
+	$(addprefix mta_,$(addsuffix .o,$(notdir $(basename $(MTALIB_CSRC))))) \
+	$(addprefix mta_gdtoa_,$(addsuffix .o,$(notdir $(basename $(GDTOA_SRC)))))
 
-mtalpha-sim/malloc_debug.o: $(srcdir)/src/malloc.c
-	$(AM_V_at)$(MKDIR_P) mtalpha-sim
-	$(slc_verbose)$(SLC_MTALPHA) -c -o $@ $< $(MALLOC_DEFS) -DDEBUG -DABORT_ON_ASSERT_FAILURE=0
+SLC_MTA = $(SLC_RUN) -b mta $(SHUTUP)
 
-mtalpha-sim/%.o: $(srcdir)/src/mtalpha/%.s
-	$(AM_V_at)$(MKDIR_P) mtalpha-sim
-	$(slc_verbose)$(SLC_MTALPHA) -c -o $@ $<
+mta_%.o: $(srcdir)/src/%.c
+	$(slc_verbose)$(SLC_MTA) -c -o $@ $<
 
-mtalpha-sim/%.o: $(srcdir)/src/mtalpha/%.S
-	$(AM_V_at)$(MKDIR_P) mtalpha-sim
-	$(slc_verbose)$(SLC_MTALPHA) -c -o $@ $<
+mta_gdtoa_%.o: $(srcdir)/src/gdtoa/%.c
+	$(slc_verbose)$(SLC_MTA) -c -o $@ $<
 
-mtalpha-sim/divl.o: $(srcdir)/src/mtalpha/divide.S
-	$(AM_V_at)$(MKDIR_P) mtalpha-sim
-	$(slc_verbose)$(SLC_MTALPHA) -c -o $@ $< -DDIV -DINTSIZE
+mta_malloc.o: $(srcdir)/src/malloc.c
+	$(slc_verbose)$(SLC_MTA) -c -o $@ $< $(MALLOC_DEFS)
 
-mtalpha-sim/reml.o: $(srcdir)/src/mtalpha/divide.S
-	$(AM_V_at)$(MKDIR_P) mtalpha-sim
-	$(slc_verbose)$(SLC_MTALPHA) -c -o $@ $< -DDIV -DINTSIZE
+mta_malloc_debug.o: $(srcdir)/src/malloc.c
+	$(slc_verbose)$(SLC_MTA) -c -o $@ $< $(MALLOC_DEFS) -DDEBUG -DABORT_ON_ASSERT_FAILURE=0
 
-mtalpha-sim/divq.o: $(srcdir)/src/mtalpha/divide.S
-	$(AM_V_at)$(MKDIR_P) mtalpha-sim
-	$(slc_verbose)$(SLC_MTALPHA) -c -o $@ $< -DDIV
 
-mtalpha-sim/remq.o: $(srcdir)/src/mtalpha/divide.S
-	$(AM_V_at)$(MKDIR_P) mtalpha-sim
-	$(slc_verbose)$(SLC_MTALPHA) -c -o $@ $< -DREM
+### Common rules ###
 
-mtalpha-sim/libsl.a: $(mtalpha_sim_libsl_a_CONTENTS)
+# define MTA_TEMPLATE
+
+# # # arg 1 = slc target
+# # # arg 2 = libdir
+# # # arg 3 = libdir_undescores
+
+# nobase_pkglib_DATA += \
+#    $(2)/libm.a \
+#    $(2)/libsl.a
+
+# $(3)_libsl_a_CONTENTS = \
+#	$(MTALIB_COBJS) \
+# 	$(addprefix $(2)/,$(addsuffix .o,$(notdir $(basename $(MTALIB_SRC)))))
+
+# CLEANFILES += \
+# 	$($(3)_libsl_a_CONTENTS) \
+# 	$(2)/libsl.a
+
+# $(3)_libm_a_CONTENTS = \
+# 	$(MTAMATHOBJS) \
+# 	$(2)/missing_uclibc_math.o
+
+# CLEANFILES += \
+# 	$(2)/missing_uclibc_math.o \
+# 	$(2)/libm.a
+
+# SLC_CMD = $(SLC_RUN) -b $(1) $(SHUTUP)
+
+# $(2)/%.o: $(srcdir)/src/%.c
+# 	$(AM_V_at)$(MKDIR_P) $(2)
+# 	$(slc_verbose)$(SLC_CMD) -c -o $@ $<
+
+# $(2)/%.a:
+#	$(AM_V_at)rm -f $@
+#	$(AM_V_AR)$(AR_MTALPHA) cru $@ $^
+#	$(AM_V_at)$(RANLIB_MTALPHA) $@
+
+# $(2)/libsl.a: $($(3)_libsl_a_CONTENTS)
+# $(2)/libm.a: $($(3)_libm_a_CONTENTS)
+
+# enddef
+
+### MT-hybrid targets
+
+#$(eval $(call MTA_TEMPLATE,mta,mta_hybrid-mtalpha-sim,mta_hybrid_mtalpha_sim)
+
+nobase_pkglib_DATA += \
+   mta_hybrid-mtalpha-sim/libm.a \
+   mta_hybrid-mtalpha-sim/libsl.a
+
+mta_hybrid_mtalpha_sim_libsl_a_CONTENTS = \
+	$(MTALIB_COBJS) \
+	$(addprefix mta_hybrid-mtalpha-sim/,$(addsuffix .o,$(notdir $(basename $(MTALIB_SRC)))))
+
+CLEANFILES += \
+	$(mta_hybrid_mtalpha_sim_libsl_a_CONTENTS) \
+	mta_hybrid-mtalpha-sim/libsl.a
+
+mta_hybrid_mtalpha_sim_libm_a_CONTENTS = \
+	$(MTAMATHOBJS) \
+	mta_hybrid-mtalpha-sim/missing_uclibc_math.o
+
+CLEANFILES += \
+	mta_hybrid-mtalpha-sim/missing_uclibc_math.o \
+	mta_hybrid-mtalpha-sim/libm.a
+
+mta_hybrid-mtalpha-sim/%.o: $(srcdir)/src/%.c
+	$(AM_V_at)$(MKDIR_P) mta_hybrid-mtalpha-sim
+	$(slc_verbose)$(SLC_MTA) -c -o $@ $<
+
+mta_hybrid-mtalpha-sim/%.a:
 	$(AM_V_at)rm -f $@
 	$(AM_V_AR)$(AR_MTALPHA) cru $@ $^
 	$(AM_V_at)$(RANLIB_MTALPHA) $@
 
-mtalpha-sim/libm.a: $(mtalpha_sim_libm_a_CONTENTS)
+mta_hybrid-mtalpha-sim/libsl.a: $(mta_hybrid_mtalpha_sim_libsl_a_CONTENTS)
+mta_hybrid-mtalpha-sim/libm.a: $(mta_hybrid_mtalpha_sim_libm_a_CONTENTS)
+
+### seq-naked targets
+
+#$(eval $(call MTA_TEMPLATE,mta_s,seq_naked-mtalpha-sim,seq_naked_mtalpha_sim)
+
+nobase_pkglib_DATA += \
+   seq_naked-mtalpha-sim/libm.a \
+   seq_naked-mtalpha-sim/libsl.a
+
+seq_naked_mtalpha_sim_libsl_a_CONTENTS = \
+	$(MTALIB_COBJS) \
+	$(addprefix seq_naked-mtalpha-sim/,$(addsuffix .o,$(notdir $(basename $(MTALIB_SRC)))))
+
+CLEANFILES += \
+	$(seq_naked_mtalpha_sim_libsl_a_CONTENTS) \
+	seq_naked-mtalpha-sim/libsl.a
+
+seq_naked_mtalpha_sim_libm_a_CONTENTS = \
+	$(MTAMATHOBJS) \
+	seq_naked-mtalpha-sim/missing_uclibc_math.o
+
+CLEANFILES += \
+	seq_naked-mtalpha-sim/missing_uclibc_math.o \
+	seq_naked-mtalpha-sim/libm.a
+
+SLC_MTA_S = $(SLC_RUN) -b mta_s $(SHUTUP)
+
+seq_naked-mtalpha-sim/%.o: $(srcdir)/src/%.c
+	$(AM_V_at)$(MKDIR_P) seq_naked-mtalpha-sim
+	$(slc_verbose)$(SLC_MTA_S) -c -o $@ $<
+
+seq_naked-mtalpha-sim/%.a:
 	$(AM_V_at)rm -f $@
 	$(AM_V_AR)$(AR_MTALPHA) cru $@ $^
 	$(AM_V_at)$(RANLIB_MTALPHA) $@
+
+seq_naked-mtalpha-sim/libsl.a: $(seq_naked_mtalpha_sim_libsl_a_CONTENTS)
+seq_naked-mtalpha-sim/libm.a: $(seq_naked_mtalpha_sim_libm_a_CONTENTS)
+
+### MT-naked targets
+
+#$(eval $(call MTA_TEMPLATE,mta_n,mta_naked-mtalpha-sim,mta_naked_mtalpha_sim)
+
+nobase_pkglib_DATA += \
+   mta_naked-mtalpha-sim/libm.a \
+   mta_naked-mtalpha-sim/libsl.a
+
+mta_naked_mtalpha_sim_libsl_a_CONTENTS = \
+	$(MTALIB_COBJS) \
+	$(addprefix mta_naked-mtalpha-sim/,$(addsuffix .o,$(notdir $(basename $(MTALIB_SRC))))) 
+
+CLEANFILES += \
+	$(mta_naked_mtalpha_sim_libsl_a_CONTENTS) \
+	mta_naked-mtalpha-sim/libsl.a
+
+mta_naked_mtalpha_sim_libm_a_CONTENTS = \
+	$(MTAMATHOBJS) \
+	mta_naked-mtalpha-sim/missing_uclibc_math.o
+
+CLEANFILES += \
+	mta_naked-mtalpha-sim/missing_uclibc_math.o \
+	mta_naked-mtalpha-sim/libm.a
+
+SLC_MTA_N = $(SLC_RUN) -b mta_n $(SHUTUP)
+
+mta_naked-mtalpha-sim/%.o: $(srcdir)/src/%.c
+	$(AM_V_at)$(MKDIR_P) mta_naked-mtalpha-sim
+	$(slc_verbose)$(SLC_MTA_N) -c -o $@ $<
+
+mta_naked-mtalpha-sim/%.a:
+	$(AM_V_at)rm -f $@
+	$(AM_V_AR)$(AR_MTALPHA) cru $@ $^
+	$(AM_V_at)$(RANLIB_MTALPHA) $@
+
+mta_naked-mtalpha-sim/libsl.a: $(mta_naked_mtalpha_sim_libsl_a_CONTENTS)
+mta_naked-mtalpha-sim/libm.a: $(mta_naked_mtalpha_sim_libm_a_CONTENTS)
 
 
 endif

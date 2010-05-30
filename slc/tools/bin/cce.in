@@ -12,6 +12,8 @@ copyright="Copyright (C) 2009,2010 The SL project."
 # The complete GNU General Public Licence Notice can be found as the
 # `COPYING' file in the root directory.
 #
+PS4='+ cce($$): '
+if test -n "$TRACE"; then set -x; fi
 set -e
 
 python=${PYTHON:-@python@}
@@ -78,7 +80,7 @@ Example one-word implementation aliases:
 
 Example "long" aliases:
 
-  spp-mtalpha-sim utc0-mtalpha-sim ptl-host-host-ptl
+  spp--mtalpha-sim utc0--mtalpha-sim ptl--host-host-ptl
 
 Report bugs and patches to $bugreports.
 EOF
@@ -128,36 +130,27 @@ if test -z "$alias"; then do_usage; fi
 # Expand one-word aliases to some arbitrary
 # pre-defined configurations
 case $alias in
-    seqc)  alias=spr+seq-host-host-seqc ;;
-    ptl)   alias=ptl-host-host-ptl ;;
-    utc0)  alias=utc0-mtalpha-sim ;;
-    ptlx)  alias=ptlx-x-x ;;
-    utcx)  alias=utc-x-x ;;
+    seqc)         alias=spr-seq_naked-host-host-seqc ;;
+    seqc_o)       alias=seqc-seqc_o-host-host-seqc ;;
+    mtalpha|mta)  alias=spr-mta_hybrid-mtalpha-sim ;;
+    mta_n)        alias=spr-mta_naked-mtalpha-sim ;;
+    mta_on)       alias=spp-mta_naked-mtalpha-sim ;;
+    mta_s)        alias=spr-seq_naked-mtalpha-sim ;;
+
+    ptl)   alias=ptl-ptl-host-host-ptl ;;
+    utc0)  alias=utc0-mta_naked-mtalpha-sim ;;
+    ptlx)  alias=ptlx--x-x ;;
+    utcx)  alias=utc--x-x ;;
     *-*)   ;; # more than one word: pass to next stage
-    mt*)   alias=spp-$alias-sim ;;
     *)     # remaining single-word aliases
 	die "$alias: unknown alias" ;;
 esac
 
-# Expand two-word aliases according to inventory
-case $alias in
-    *-*-*)   ;; # more than two word: pass to next stage
-    *)
-	IFS='-' read dialect arch <<EOF
-$alias
-EOF
-	case $alias in
-	    *)
-		die "$alias: unknown alias" ;;
-	esac
-	;;
-esac
-
 # Other cases
 case $alias in
-    *-*-*)
-     # 3 or more parts, use them
-	IFS='-' read slc_dialect slc_arch slc_os <<EOF
+    *-*-*-*)
+     # 4 or more parts, use them
+	IFS='-' read slc_dialect slc_variant slc_arch slc_os <<EOF
 $alias
 EOF
 	;;
@@ -166,7 +159,7 @@ EOF
 	die "$alias: unknown alias" ;;
 esac
 
-slc_tag=$slc_dialect-$slc_arch-$slc_os
+slc_tag=$slc_dialect-$slc_variant-$slc_arch-$slc_os
 
 if test "x$set_vars" = x; then
     echo $slc_tag
@@ -180,30 +173,34 @@ basearchvar=$(tr a-z A-Z <<<"$basearch")
 # Language mode selection
 slc_complang=unknown
 case $slc_dialect in
-    ptl*)     slc_complang=cpp;;
-    spr*|seqc|spp) slc_complang=c;;
-    utc*)     slc_complang=utc;;
+    ptl*)         slc_complang=cpp;;
+    spr|seqc|spp) slc_complang=c;;
+    utc*)         slc_complang=utc;;
     *) echo "unknown dialect: $slc_dialect" >&2;;
 esac
 
 # Transformation selection
 case $slc_dialect in
-    spp*|utc*|seqc*|ptl*) 
+    spp|utc*|seqc*|ptl*) 
         slc_translator=("$cm4_helper" -fcm4-lquote='[[' -fcm4-rquote=']]')
         slc_tflags+=(-X "-DPYTHON=$python" -X "-DSPP_PY=$spp_helper") 
         ;;
-    spr*)
-        target=${slc_dialect:4}
-        if test -z "$target"; then target=seq; fi
+    spr)
+        target=unknown
+        case $slc_variant in
+            seq_naked) target=seq ;;
+            mta_naked) target=mta ;;
+            mta_hybrid) target=mta+seq ;;
+            *) echo "unknown variant: $slc_dialect-$slc_variant" >&2 ;;
+        esac
         slc_translator=("$spr_helper" -b "$target")
-        slc_dialect=spr
         ;;
 esac
 
 slc_transbase=unknown
 case $slc_dialect in
-    spr*|utc*|seqc*|ptl*) slc_transbase=$slc_dialect	;;
-    spp*)     slc_transbase=$slc_dialect$basearch ;;
+    spr|utc*|seqc*|ptl*) slc_transbase=$slc_dialect ;;
+    spp) slc_transbase=$slc_dialect$basearch ;;
 esac
 
 
@@ -342,17 +339,6 @@ case $slc_arch-$slc_os in
 	;;
 esac
 
-# main function selection
-libmain=slmain
-case $slc_dialect-$slc_arch in
-    spr-mtalpha)
-        if test "x$target" = "xseq"; then
-            libmain=slmain_seq
-        fi
-        ;;
-    *) ;;
-esac
-
 # OS selection
 case $slc_os in
     x) ;;
@@ -361,26 +347,28 @@ case $slc_os in
         IFS=:
         for d in $slc_datadir; do
             slc_ppflags+=("-I$d/$slc_arch-$slc_os/include")
-            # slc_cflags="$slc_cflags -I$d/$slc_arch-$slc_os/include"
         done
 	if test "$slc_use_slrt" != "no"; then
             found=
             for d in $slc_libdir; do
-  		osdir=$d/$slc_arch-$slc_os
+  		osdir=$d/$slc_variant-$slc_arch-$slc_os
 		if test -r "$osdir/slrt.o"; then
 		    found=$osdir/slrt.o
 		    break
 		fi
             done
 	    if test -z "$found"; then
-		echo "$basename: warning: slrt.o not found for $slc_arch-$slc_os in $slc_libdir" >&2
+		echo "$basename: warning: slrt.o not found for $slc_variant-$slc_arch-$slc_os in $slc_libdir" >&2
             else
 		slc_ldflags+=("$found")
 	    fi
         fi
 
 	for d in $slc_libdir; do
-	    slc_ldflags+=("-L$d/$slc_arch-$slc_os")
+            ldir=$d/$slc_variant-$slc_arch-$slc_os
+            if test -r $ldir; then
+	        slc_ldflags+=("-L$ldir")
+            fi
         done
 	if test "$slc_use_libsl" != "no"; then
             slc_ldflags+=("-lsl")
@@ -388,7 +376,7 @@ case $slc_os in
 	slc_ldflags+=("-lslc")
 
         if test "$slc_use_main" != "no"; then
-            slc_ldflags+=("-l$libmain")
+            slc_ldflags+=("-lslmain")
         fi
 
         IFS=$save_IFS

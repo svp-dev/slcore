@@ -20,18 +20,26 @@ EXTRA_TEST_IMPL += ptl
 endif
 
 if ENABLE_CHECK_PPP
-EXTRA_TEST_IMPL += mtalpha
+EXTRA_TEST_IMPL += mta_on
 if ENABLE_CHECK_COMA
-EXTRA_TEST_IMPL += mtalpha::-m~lzcoma_default
-EXTRA_TEST_IMPL += mtalpha::-m~mlcoma_default
+EXTRA_TEST_IMPL += mta_on::-m~lzcoma_default
+EXTRA_TEST_IMPL += mta_on::-m~mlcoma_default
 endif
 endif
 
 if ENABLE_CHECK_SPR
 if ENABLE_CHECK_SPR_MTA
-EXTRA_TEST_IMPL += spr+seq-mtalpha-sim
-EXTRA_TEST_IMPL += spr+mta-mtalpha-sim
-EXTRA_TEST_IMPL += spr+mta+seq-mtalpha-sim
+EXTRA_TEST_IMPL += mta
+EXTRA_TEST_IMPL += mta_n
+EXTRA_TEST_IMPL += mta_s
+if ENABLE_CHECK_COMA
+EXTRA_TEST_IMPL += mta::-m~lzcoma_default
+EXTRA_TEST_IMPL += mta::-m~mlcoma_default
+EXTRA_TEST_IMPL += mta_n::-m~lzcoma_default
+EXTRA_TEST_IMPL += mta_n::-m~mlcoma_default
+EXTRA_TEST_IMPL += mta_s::-m~lzcoma_default
+EXTRA_TEST_IMPL += mta_s::-m~mlcoma_default
+endif
 endif
 # add extra implementations here when they become available
 endif

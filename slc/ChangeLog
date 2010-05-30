@@ -1,3 +1,35 @@
+2010-05-31  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
+	Introduce new targets and variants.
+
+	* tools/bin/cce.in: Introduce a "variant" part in the long alias.
+	Drop support for 2-word aliases. Expand `seqc' to the new
+	`spr'-based target, keep `seqc_o' as an alias to the old target.
+	Introduce `mta', equivalent to `mtalpha'. Default `mta'/`mtalpha'
+	to the `spr'-based target, keep `mta_on' (mta-old-naked) as an
+	alias to the old target. New targets `mta_n' and `mta_s'
+	(mta-naked, mta-seq). Assume separate library and slrt binaries
+	for all targets.
+
+	* tools/lib/mtalpha-sim/slrt.s,
+	* tools/lib/host-host-seqc/slrt.c: Use the new aliases.
+
+	* build-aux/sl.mk,
+	* build-aux/slctests.mk: Build and test for the new targets.
+
+	* tools/lib/seqc.mk,
+	* tools/lib/ptl.mk,
+	* tools/lib/mtalpha.mk: Build separate libraries for all targets.
+
+	* tools/lib/empty.c: New (so that the linker does not complain
+	that `libslc.a' is empty).
+
+	* lib/gdtoa.mk: Separate list of buildable sources from other
+	files.
+	* lib/mtalpha.mk,
+	* lib/ptl.mk,
+	* lib/seqc.mk: Build separate libraries for all targets.
+
 2010-05-30  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
 	Use the new function pointer syntax for `sep.h'.

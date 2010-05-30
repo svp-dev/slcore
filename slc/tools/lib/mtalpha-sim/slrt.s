@@ -89,7 +89,7 @@ $fini:
 
 	.section .rodata
 	.ascii "\0slr_runner:mtalpha-sim:\0"
-	.ascii "\0slr_datatag:mtalpha:\0"
+	.ascii "\0slr_datatag:mta:\0"
 
 $msg:	
 	.ascii "slrt: main returned \0"

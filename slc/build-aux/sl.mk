@@ -44,9 +44,18 @@ SLC_BEFORE = function slc_compile() { \
 	$(slc_ifptl) echo "  SLC    $$SLC_OUT".ptl && \
         $(slc_ifptl) $(SLC_LOCAL) $${SLC_OUT:+-o "$$SLC_OUT".ptl} -b ptl "$$@" -I$(srcdir) -I$(builddir) \
 	      $(AM_CXXFLAGS) $(CXXFLAGS) $(SLFLAGS) $(SLFLAGS_PTL) $(LIBS) && \
-	$(slc_ifmtalpha) echo "  SLC    $$SLC_OUT".mtalpha && \
-        $(slc_ifmtalpha) $(SLC_LOCAL) $${SLC_OUT:+-o "$$SLC_OUT".mtalpha} -b mtalpha "$$@" \
-	      -I$(srcdir) -I$(builddir) -lm $(SLFLAGS) $(SLFLAGS_MTALPHA) && \
+	$(slc_ifmtalpha) echo "  SLC    $$SLC_OUT".mta && \
+        $(slc_ifmtalpha) $(SLC_LOCAL) $${SLC_OUT:+-o "$$SLC_OUT".mta} -b mta "$$@" \
+	      -I$(srcdir) -I$(builddir) -lm $(SLFLAGS) $(SLFLAGS_MTALPHA) $(SLFLAGS_MTA) && \
+	$(slc_ifmtalpha) echo "  SLC    $$SLC_OUT".mta_n && \
+        $(slc_ifmtalpha) $(SLC_LOCAL) $${SLC_OUT:+-o "$$SLC_OUT".mta_n} -b mta_n "$$@" \
+	      -I$(srcdir) -I$(builddir) -lm $(SLFLAGS) $(SLFLAGS_MTALPHA) $(SLFLAGS_MTA_N) && \
+	$(slc_ifmtalpha) echo "  SLC    $$SLC_OUT".mta_on && \
+        $(slc_ifmtalpha) $(SLC_LOCAL) $${SLC_OUT:+-o "$$SLC_OUT".mta_on} -b mta_on "$$@" \
+	      -I$(srcdir) -I$(builddir) -lm $(SLFLAGS) $(SLFLAGS_MTALPHA) $(SLFLAGS_MTA_ON) && \
+	$(slc_ifmtalpha) echo "  SLC    $$SLC_OUT".mta_s && \
+        $(slc_ifmtalpha) $(SLC_LOCAL) $${SLC_OUT:+-o "$$SLC_OUT".mta_s} -b mta_s "$$@" \
+	      -I$(srcdir) -I$(builddir) -lm $(SLFLAGS) $(SLFLAGS_MTALPHA) $(SLFLAGS_MTA_S) && \
 	if test -n "$$SLC_OUT"; then \
 	  printf '\#! /bin/sh\n' >"$@" && \
 	  printf 'echo "This script is only a stub. Run the actual program with:"\n' >>"$@" && \
