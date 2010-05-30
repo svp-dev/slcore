@@ -43,7 +43,6 @@ class Item(object):
                                      ))
                            )
 
-
     def __add__(self, other):
         if isinstance(other, Item):
             loc_end = other.loc_end
@@ -257,6 +256,34 @@ class Flavor(Block):
     def __init__(self, flavor = None, *args, **kwargs):
         super(Flavor, self).__init__(*args, **kwargs)
         self.flavor = flavor
+
+_handle = []
+class Extras(Block):
+    """
+    Extra annotations to function definitions/declarations
+    and creates.
+    """
+
+    def get_attr(self, name, default = _handle):
+        for a in self:
+            if isinstance(a, Attr) and a.name == name:
+                return a
+        if default is _handle:
+            raise KeyError, name
+        return default
+
+class Attr(Item):
+    """
+    some attribute in the extra annotations
+    """
+
+    def __init__(self, name, payload = None, *args, **kwargs):
+        super(Attr, self).__init__(*args, **kwargs)
+        self.name = name
+        if payload is None:
+            payload = {}
+        for k, v in payload.items():
+            setattr(self, k, v)
             
 class Program(Block):
     """
@@ -268,12 +295,15 @@ class Program(Block):
 
 class FunDeclBase(Item):
 
-    def __init__(self, name = None, parms = None, *args, **kwargs):
+    def __init__(self, name = None, parms = None, extras = None, *args, **kwargs):
         super(FunDeclBase, self).__init__(*args, **kwargs)
         self._name = name
 
         if parms is None: parms = []
         self.parms = parms
+        
+        if extras is None: extras = Extras()
+        self.extras = extras
 
     def __len__(self):
         return len(self.parms)
@@ -419,7 +449,7 @@ class Create(Item):
     def __init__(self, label = None, place = None, 
                  start = None, step = None, limit = None, block = None,
                  sync_type = None, fun = None, body = None,
-                 result_lvalue = None, 
+                 result_lvalue = None, extras = None,
                  args = None,
                  *a, **kwargs):
         super(Create, self).__init__(*a, **kwargs)
@@ -436,6 +466,9 @@ class Create(Item):
         if args is None:
             args = []
         self.args = args
+        if extras is None:
+            extras = Extras()
+        self.extras = extras
 
     @property
     def label(self): return self._label

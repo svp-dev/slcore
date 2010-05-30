@@ -1,5 +1,24 @@
 2010-05-21  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	Add support for function/create attributes.
+
+	* tools/lib/t-spr/slimpl.m4: New syntax for attributes, new
+	attributes `sl__static' and `sl__naked'.
+
+	* tools/lib/slc/ast.py: New nodes `Attr' and `Extras' to carry
+	attributes. Change `FunDecl' and `Create' accordingly.
+
+	* tools/lib/slc/input/parse.py: Load the extra attributes from the
+	input.
+
+	* tools/lib/slc/visitors.py: Print the extras if present.
+
+	* tools/lib/slc/lower/split.py,
+	* tools/lib/slc/lower/seq.py: Use the extra attributes `static' and
+	`naked' where appropriate. In particular, force `t_main' to be naked.
+
+2010-05-21  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	Minor front-end fix.
 
 	* tools/lib/t-spr/slimpl.m4: Protect against whitespaces and newlines

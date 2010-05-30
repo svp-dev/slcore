@@ -40,12 +40,15 @@ m4_define([[sl_shparm]], [[_sl_doparm([[shparm]],[[$1]],[[$2]])]])
 m4_define([[sl_shfparm]], [[_sl_doparm([[shfparm]],[[$1]],[[$2]])]])
 m4_define([[sl_glparm_mutable]], [[_sl_doparm([[glparm_mutable]],[[$1]],[[$2]])]])
 
+m4_define([[sl__static]], [[[[""", {'type':'attr', 'name':'static'}, r"""]]]])
+m4_define([[sl__naked]], [[[[""", {'type':'attr', 'name':'naked', 'flavor':r""" $1 """}, r"""]]]])
+
 m4_define([[sl_def]],[[m4_dnl
 m4_ifdef([[_sl_increate]],[[m4_fatal(missing sync after create)]])m4_dnl
 m4_pushdef([[_sl_curfun]],[[$1]])m4_dnl
 [[""", {'loc':r"""]]__file__:__line__[[""",'type':'fundef','name':"""$1""",'params':[]]m4_dnl
 m4_shift2($@)[[]]m4_dnl
-[[],'body':[r"""]]
+[[],'extras':[r""" $2 """], 'body':[r"""]]
 ]])
 
 m4_define([[sl_enddef]],[[m4_dnl
@@ -79,6 +82,7 @@ m4_pushdef([[_sl_lbl]],F[[]]_sl_crcnt)m4_dnl
 [[""",]]m4_dnl
 [[{'type':'create',]]m4_dnl
 [['loc':r"""]]__file__:__line__[[""",]]m4_dnl
+[['extras':[r""" $7 """],]]m4_dnl
 [['fun':[r""" $8 """],]]m4_dnl
 [['lbl':']]_sl_lbl[[',]]m4_dnl
 [['place':[r""" ]]m4_ifblank([[$2]],0,[[$2]])[[ """],]]m4_dnl

@@ -1,20 +1,43 @@
 import copy
 from ..visitors import DefaultVisitor, flatten
 from ..ast import *
+from ..msg import die
 
 class ExampleOracle(object):
 
     mapping = {'cmta':(0,'fmta'), 'cseq':(1,'fseq')}
+
     def flavors_for_create(self, cr):
+        n = cr.extras.get_attr('naked', None)
+        if n is not None:
+            if n.flavor == 'native':
+                return ['cmta']
+            elif n.flavor == 'seq':
+                return ['cseq']
+            else:
+                die("unsupported naked specifier: %s" % n.flavor, cr)
+        
         return ['cmta', 'cseq']
 
     def flavors_for_fun(self, fd):
-        return ['fmta', 'fseq']
+        n = fd.extras.get_attr('naked', None)
+        if n is not None:
+            if n.flavor == 'native':
+                return (True, ['fmta'])
+            elif n.flavor == 'seq':
+                return (True, ['fseq'])
+            else:
+                die("unsupported naked specifier: %s" % n.flavor, fn)
+                
+        return (False, ['fmta', 'fseq'])
 
     def flavored_funsym(self, name, flavor):
         return "__slF%s_%s" % (flavor, name)
 
     def lowfun_for_create(self, cr, flavor):
+
+        if cr.extras.get_attr('naked', None) is not None:
+            return cr.fun
 
         ix, f_flavor = self.mapping[flavor]
 
@@ -97,28 +120,48 @@ class SplitFuns(DefaultVisitor):
 
     def visit_fundecl(self, fd):
 
-        flavors = self.oracle.flavors_for_fun(fd)
+        (naked, flavors) = self.oracle.flavors_for_fun(fd)
 
+        if naked:
+            return Flavor(flavors[0], items = fd)
+
+        # general case: split
         newbl = []
         for f in flavors:
             newfd = FunDecl(name = self.oracle.flavored_funsym(fd.name, f), 
                             parms = copy.deepcopy(fd.parms),
+                            extras = copy.deepcopy(fd.extras),
                             loc = fd.loc)
             newbl.append(Flavor(f, items = [ newfd ]))
             newbl.append(flatten(fd.loc, ';'))
-        newbl.append(flatten(fd.loc, "extern void * restrict const %s" % fd.name))
+
+        if fd.extras.get_attr('static', None) is not None:
+            qual = "static"
+        else:
+            qual = "extern"
+
+        newbl.append(flatten(fd.loc, " %s void * restrict const %s" % (qual, fd.name)))
         
         return newbl
 
     def visit_fundef(self, fd):
-        
-        name = fd.name
 
+        # t_main is a special case
+        if fd.name == "t_main":
+            # append to the end without replacing, so that
+            # the user can overload
+            fd.extras += Attr(name = 'naked', payload = {'flavor':'native'})
+        
+        (naked, flavors) = self.oracle.flavors_for_fun(fd)
+
+        if naked:
+            return Flavor(flavors[0], items = fd)
+        
+        # general case: split
+
+        name = fd.name
         newbl = self.dispatch(fd, seen_as = FunDecl)
         newbl.append(flatten(fd.loc, ';'))
-
-        flavors = self.oracle.flavors_for_fun(fd)
-
 
         for f in flavors:
             newfd = copy.deepcopy(fd)
@@ -127,7 +170,7 @@ class SplitFuns(DefaultVisitor):
 
 
 
-        if fd.static:
+        if fd.extras.get_attr('static', None) is not None:
             qual = "static"
         else:
             qual = ""

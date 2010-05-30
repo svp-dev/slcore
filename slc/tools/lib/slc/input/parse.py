@@ -22,6 +22,7 @@ def parse_create(item):
                  limit = parse_block(item['limit']),
                  step = parse_block(item['step']),
                  block = parse_block(item['block']),
+                 extras = parse_extras(item['extras']),
                  sync_type = item['sync'],
                  fun = parse_block(item['fun']),
                  body = parse_block(item['body']))
@@ -44,8 +45,34 @@ def parse_scope(item):
       s += parse_block(item['body'])
       return s
                 
+def parse_attr(item):
+      n = item['name']
+      del item['type']
+      del item['name']
 
-def parse_block(items, allow_index = False):
+      for k in item:
+            item[k] = item[k].strip()
+
+      return Attr(name = n, 
+                  payload = item)
+
+def parse_extras(items):
+      if len(items) == 0:
+            return None
+      b = Extras()
+      for item in items:
+            if isinstance(item, dict):
+                  t = item['type']
+                  if t == 'attr': b += parse_attr(item)
+                  else: unexpected(item)
+            else:
+                  assert isinstance(item, str)
+                  # ignore strings
+      if len(b) > 0:
+            return b
+      return None
+
+def parse_block(items):
       if len(items) == 0:
             return None
       b = Block()
@@ -91,7 +118,9 @@ def parse_end_thread(item):
       return EndThread(loc = item['loc'])
 
 def parse_fundecl(item):
-      d = FunDecl(loc = item['loc'], name = item['name'])
+      d = FunDecl(loc = item['loc'], 
+                  name = item['name'],
+                  extras = parse_extras(item['extras']))
       for p in item['params']:
             d += parse_argparm(FunParm(), 'parm', p)
       return d
@@ -100,6 +129,7 @@ def parse_fundef(item):
       d = FunDef(loc = item['loc'], 
                  loc_end = item['loc_end'], 
                  name = item['name'],
+                 extras = parse_extras(item['extras']),
                  body = parse_block(item['body']))
       for p in item['params']:
             d += parse_argparm(FunParm(), 'parm', p)

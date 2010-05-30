@@ -224,7 +224,8 @@ class PrintVisitor(DefaultVisitor):
         return parm
 
     def visit_funheader(self, fun, htype):
-        self.__out.write(" sl_%s(%s, void" % (htype, fun.name))
+        self.__out.write(" sl_%s(%s, (%s)" 
+                         % (htype, fun.name, ','.join((repr(x) for x in fun.extras))))
         for parm in fun.parms:
             self.__out.write(', ')
             parm.accept(self)
