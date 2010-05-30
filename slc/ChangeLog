@@ -1,5 +1,16 @@
 2010-05-24  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	Minor packaging fixes.
+
+	* tools/lib/Makefile.am (nobase_python_PYTHON): Fix typo in file
+	list.
+
+	* tools/bin/cm4.in,
+	* tools/bin/slc.in: Update documentation (`-Wm4' replaced by `-X',
+	`-Xm4').
+
+2010-05-24  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	Adapt tools and library for the new calling convention.
 
 	* tools/lib/mtalpha-sim/callgate.s,

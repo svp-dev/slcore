@@ -386,7 +386,7 @@ General options:
 
   -nostdlib          Implies options -nostartfiles and -nodefaultlibs.
 
-  -Wm4,option        Pass "option" as an option to M4.
+  -Xm4 OPTION        Pass OPTION as a command-line argument to M4.
 
   -fno-asmopt        Do not enhance the assembly code between
                      post-compilation fixup and assembly. The fixed

@@ -42,7 +42,7 @@ def parse_args(args):
     -fcm4-line=S        Set M4 macro name for setting current line number (default __line__)
     -fcm4-trace=FILE    Capture M4 trace to FILE (default: don't capture)
     -fcm4-dump=FILE     Capture filtered input to FILE (default: don't capture)
-    -Wm4,OPTION         Add OPTION to M4 command-line
+    -X OPTION           Add OPTION to M4 command-line
     -IPATH              Add PATH to the M4 search path
 
     Other command-line arguments are read as input files.
