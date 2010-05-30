@@ -1,5 +1,12 @@
 2010-05-28  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	Extend the test suite.
+
+	* 0_slc/4_vlas/bigarray2.c: New. This exercises a compiler bug
+	where a forbidden register may be used upon stack unwinding.
+
+2010-05-28  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	Fix one unit test.	
 
 	* 0_slc/1_createargs/useexit2.c: Use the new `delegate.h' and
