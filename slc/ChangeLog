@@ -1,5 +1,13 @@
 2010-05-21  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	Introduce test targets for the new framework.
+
+	* build-aux/slctests.m4,
+	* build-aux/slctests.mk: New flag `--enable-check-spr' and corresponding
+	test targets.
+
+2010-05-21  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	Sanitize UI of `cm4'.
 
 	* tools/bin/cm4.in: Replace parameter syntax `-Wm4,XXX' by `-X

@@ -44,4 +44,11 @@ AC_ARG_ENABLE([check-ptl],
    enable_check_ptl=$enable_ptl
  fi], [enable_check_ptl=$enable_ptl])
 AM_CONDITIONAL([ENABLE_CHECK_PTL], [test "x$enable_check_ptl" = "xyes"])
+
+AC_ARG_ENABLE([check-spr],
+[AC_HELP_STRING([--disable-check-spr], [do not check SPR compiler (default is to check)])],
+[enable_check_spr=$enableval], [enable_check_spr=yes])
+AM_CONDITIONAL([ENABLE_CHECK_SPR], [test "x$enable_check_spr" = "xyes"])
+AM_CONDITIONAL([ENABLE_CHECK_SPR_MTA], [test "x$enable_check_spr" = "xyes" -a "x$enable_mtalpha" = "xyes"])
+
 ])
