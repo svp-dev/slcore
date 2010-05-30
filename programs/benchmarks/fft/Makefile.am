@@ -23,7 +23,7 @@ BENCHMARK_INPUTS = \
 	fft-bench2-small.inputs \
 	fft-bench1.inputs \
 	fft-bench2.inputs \
-	fft.d1 fft.d2 fft.d8 fft.d256 fft.d1024 fft.d4096 fft.d16384 fft.d65536
+	fft.d1 fft.d2 fft.d8 fft.d256 # fft.d1024 fft.d4096 fft.d16384 fft.d65536
 
 EXTRA_DIST = \
 	$(BENCHMARKS) \
@@ -36,10 +36,10 @@ include $(top_srcdir)/build-aux/benchmarks.mk
 
 dist_noinst_SCRIPTS = gen_table_2.sh
 
-fft-bench1.x: fft-bench.c fft_impl1.c fft_extra.c fft.h fft_table1_16_data.h
-fft-bench2.x: fft-bench.c fft_impl2.c fft_extra.c fft.h fft_table2_16_data.h
-fft-bench1-small.x: fft-bench.c fft_impl1.c fft.h fft_table1_16_data.h
-fft-bench2-small.x: fft-bench.c fft_impl2.c fft.h fft_table2_16_data.h
+fft-bench1.x: fft-bench.c fft_impl1.c fft_extra.c fft.h fft_table1_8_data.h
+fft-bench2.x: fft-bench.c fft_impl2.c fft_extra.c fft.h fft_table2_8_data.h
+fft-bench1-small.x: fft-bench.c fft_impl1.c fft.h fft_table1_8_data.h
+fft-bench2-small.x: fft-bench.c fft_impl2.c fft.h fft_table2_8_data.h
 
 noinst_PROGRAMS = gen_table_1_16 gen_table_1_8
 gen_table_1_16_SOURCES = gen_table_1.c

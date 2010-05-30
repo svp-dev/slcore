@@ -20,7 +20,7 @@
 
 #include "benchmark.h"
 
-#define TABLE_SIZE 16
+#define TABLE_SIZE 8
 #include "fft.h"
 
 struct bdata {

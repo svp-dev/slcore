@@ -1,5 +1,14 @@
 2010-05-31  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	Downscale the default lookup table for the FFT benchmark.
+
+	* benchmarks/fft/Makefile.am,
+	* benchmarks/fft/fft-bench.c: Reduce support to M=8 instead of
+	16. This is needed since compilation times with `spr' skyrocket on
+	large code.
+
+2010-05-31  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	Update benchmarking framework to use the new target names.
 
 	* build-aux/benchmarks.mk: Benchmark all `mta' targets.
