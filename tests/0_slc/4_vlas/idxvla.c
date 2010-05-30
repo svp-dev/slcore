@@ -1,7 +1,7 @@
 //
 // idxvla.c: this file is part of the SL toolchain.
 //
-// Copyright (C) 2009 The SL project.
+// Copyright (C) 2009,2010 The SL project.
 //
 // This program is free software; you can redistribute it and/or
 // modify it under the terms of the GNU General Public License
@@ -18,7 +18,7 @@
 noinline
 int foo(int*a) { barrier(); return a[42]; }
 
-sl_def(t_main, void)
+sl_def(bar, void)
 {
   sl_index(i);
   int a[i + 69];
@@ -27,5 +27,12 @@ sl_def(t_main, void)
   output_char('\n', 1);
   output_int(a[42], 1);
   output_char('\n', 1);
+}
+sl_enddef
+
+sl_def(t_main, void)
+{
+    sl_create(,,,,,,, bar);
+    sl_sync();
 }
 sl_enddef
