@@ -1,7 +1,7 @@
 //
 // benchmark.h: this file is part of the SL program suite.
 //
-// Copyright (C) 2009 The SL project.
+// Copyright (C) 2009,2010 The SL project.
 //
 // This program is free software; you can redistribute it and/or
 // modify it under the terms of the GNU General Public License
@@ -33,14 +33,14 @@ struct benchmark_state {
 };
 
 struct benchmark {
-  const char *title;
-  const char *author;
-  const char *description;
-  sl_decl((*initialize), void, sl_glparm(struct benchmark_state*, state));
-  sl_decl((*prepare), void, sl_glparm(struct benchmark_state*, state));
-  sl_decl((*work), void, sl_glparm(struct benchmark_state*, state));
-  sl_decl((*output), void, sl_glparm(struct benchmark_state*, state));
-  sl_decl((*teardown), void, sl_glparm(struct benchmark_state*, state));
+    const char *title;
+    const char *author;
+    const char *description;
+    sl_decl_fptr(initialize, void, sl_glparm(struct benchmark_state*, state));
+    sl_decl_fptr(prepare, void, sl_glparm(struct benchmark_state*, state));
+    sl_decl_fptr(work, void, sl_glparm(struct benchmark_state*, state));
+    sl_decl_fptr(output, void, sl_glparm(struct benchmark_state*, state));
+    sl_decl_fptr(teardown, void, sl_glparm(struct benchmark_state*, state));
 };
 
 sl_decl(run_benchmark, void, sl_glparm(struct benchmark*, b));

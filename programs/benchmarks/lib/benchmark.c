@@ -52,11 +52,11 @@ sl_def(run_benchmark, void, sl_glparm(struct benchmark*, b))
 
   /* extract benchmark callbacks */
   struct benchmark *b = sl_getp(b);
-  sl_decl((*initialize), void, sl_glparm(struct benchmark_state*, state));
-  sl_decl((*prepare), void, sl_glparm(struct benchmark_state*, state));
-  sl_decl((*work), void, sl_glparm(struct benchmark_state*, state));
-  sl_decl((*output), void, sl_glparm(struct benchmark_state*, state));
-  sl_decl((*teardown), void, sl_glparm(struct benchmark_state*, state));
+  sl_decl_fptr(initialize, void, sl_glparm(struct benchmark_state*, state));
+  sl_decl_fptr(prepare, void, sl_glparm(struct benchmark_state*, state));
+  sl_decl_fptr(work, void, sl_glparm(struct benchmark_state*, state));
+  sl_decl_fptr(output, void, sl_glparm(struct benchmark_state*, state));
+  sl_decl_fptr(teardown, void, sl_glparm(struct benchmark_state*, state));
   initialize = b->initialize;
   prepare = b->prepare;
   work = b->work;
@@ -89,7 +89,7 @@ sl_def(run_benchmark, void, sl_glparm(struct benchmark*, b))
 #if SVP_HAS_SEP
   {
     mtperf_start_interval(intervals, p, -1, "sep_alloc");
-    sl_create(,root_sep->sep_place|1,,,,,, root_sep->sep_alloc,
+    sl_create(,root_sep->sep_place|1,,,,,, *root_sep->sep_alloc,
 	      sl_glarg(struct SEP*, , root_sep),
 	      sl_glarg(unsigned long, , SAL_EXACT|ncores),
 	      sl_sharg(struct placeinfo*, p, 0));
@@ -105,7 +105,7 @@ sl_def(run_benchmark, void, sl_glparm(struct benchmark*, b))
 
     if (sep_dump) {
       puts("done\n# SEP status dump after initial allocation:\n");
-      sl_create(,root_sep->sep_place|1,,,,,, root_sep->sep_dump_info,
+      sl_create(,root_sep->sep_place|1,,,,,, *root_sep->sep_dump_info,
 		sl_glarg(struct SEP*, , root_sep));
       sl_sync();
     }
@@ -120,7 +120,7 @@ sl_def(run_benchmark, void, sl_glparm(struct benchmark*, b))
   puts("# 2. initialize...");
   if (initialize) {
     mtperf_start_interval(intervals, p, -1, "initialize");
-    sl_proccall(initialize, sl_glarg(struct benchmark_state*, , &bs));
+    sl_proccall(*initialize, sl_glarg(struct benchmark_state*, , &bs));
     mtperf_finish_interval(intervals, p++);
     puts("ok\n");
   } else {
@@ -133,7 +133,7 @@ sl_def(run_benchmark, void, sl_glparm(struct benchmark*, b))
     printf("# 3.%u prepare...", i+1);
     if (prepare) {
       mtperf_start_interval(intervals, p, i, "prepare");
-      sl_proccall(prepare, sl_glarg(struct benchmark_state*, , &bs));
+      sl_proccall(*prepare, sl_glarg(struct benchmark_state*, , &bs));
       mtperf_finish_interval(intervals, p++);
       puts("ok\n");
     } else {
@@ -145,7 +145,7 @@ sl_def(run_benchmark, void, sl_glparm(struct benchmark*, b))
     wl.current_interval = p+1;
     wl.current_iter = i;
     mtperf_start_interval(intervals, p, i, "work");
-    sl_create(, pid,,,,,, work, sl_glarg(struct benchmark_state*, , &bs));
+    sl_create(, pid,,,,,, *work, sl_glarg(struct benchmark_state*, , &bs));
     sl_sync();
     mtperf_finish_interval(intervals, p);
     p = wl.current_interval;
@@ -156,7 +156,7 @@ sl_def(run_benchmark, void, sl_glparm(struct benchmark*, b))
   if (results && output) {
     putc('\n');
     mtperf_start_interval(intervals, p, -1, "output");
-    sl_proccall(output, sl_glarg(struct benchmark_state*, , &bs));
+    sl_proccall(*output, sl_glarg(struct benchmark_state*, , &bs));
     mtperf_finish_interval(intervals, p++);
     putc('\n');
   } else {
@@ -167,7 +167,7 @@ sl_def(run_benchmark, void, sl_glparm(struct benchmark*, b))
   puts("# 5. teardown...");
   if (teardown) {
     mtperf_start_interval(intervals, p, -1, "teardown");
-    sl_proccall(teardown, sl_glarg(struct benchmark_state*, _0, &bs));
+    sl_proccall(*teardown, sl_glarg(struct benchmark_state*, _0, &bs));
     mtperf_finish_interval(intervals, p++);
     puts("ok\n");
   } else {

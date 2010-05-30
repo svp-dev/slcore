@@ -1,3 +1,19 @@
+2010-05-31  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
+	Update programs to use the new framework.
+
+	* benchmarks/lib/benchmark.h,
+	* benchmarks/lib/benchmark.c: Update to use the new function
+	pointer declaration syntax.
+
+	* benchmarks/lib/benchmark.c,
+	* benchmarks/mandel/mandel.c,
+	* demo/sep.c: Ensure that `create'-to-pointer dereference the
+	function pointer.
+
+	* benchmarks/sha/sha1_alt.c: Include `delegate.h' to reach
+	`PLACE_LOCAL'.
+
 2010-04-29  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
 	Update copyright notice of files changed in 2010.

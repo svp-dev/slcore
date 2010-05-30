@@ -76,9 +76,9 @@ sl_def(t_main, void)
     int i;
     for (i = 0; i < N; ++i) {
       mtperf_sample(ct[i]);
-      sl_create(,root_sep->sep_place|1,,,,,, root_sep->sep_alloc,
-		sl_glarg(struct SEP*, _0, root_sep),
-		sl_glarg(unsigned long, _1, reqs[i].policy),
+      sl_create(,root_sep->sep_place|1,,,,,, *root_sep->sep_alloc,
+		sl_glarg(struct SEP*, , root_sep),
+		sl_glarg(unsigned long, , reqs[i].policy),
 		sl_sharg(struct placeinfo*, p, 0));
       sl_sync();
       reqs[i].result = sl_geta(p);
@@ -95,8 +95,8 @@ sl_def(t_main, void)
     }
 
     puts("Status dump (after alloc):\n");
-    sl_create(,root_sep->sep_place|1,,,,,, root_sep->sep_dump_info,
-	      sl_glarg(struct SEP*, _2, root_sep));
+    sl_create(,root_sep->sep_place|1,,,,,, *root_sep->sep_dump_info,
+	      sl_glarg(struct SEP*, , root_sep));
     sl_sync();
 
 
@@ -105,9 +105,9 @@ sl_def(t_main, void)
     for (i = 0; i < N; ++i) {
       mtperf_sample(ct[i]);
       if (reqs[i].result) {
-	sl_create(,root_sep->sep_place|1,,,,,, root_sep->sep_free,
-		  sl_glarg(struct SEP*, _0, root_sep),
-		  sl_glarg(struct placeinfo*, _1, reqs[i].result));
+	sl_create(,root_sep->sep_place|1,,,,,, *root_sep->sep_free,
+		  sl_glarg(struct SEP*, , root_sep),
+		  sl_glarg(struct placeinfo*, , reqs[i].result));
 	sl_sync();
       }
     }
@@ -123,8 +123,8 @@ sl_def(t_main, void)
     }
 
     puts("Status dump (after free):\n");
-    sl_create(,root_sep->sep_place|1,,,,,, root_sep->sep_dump_info,
-	      sl_glarg(struct SEP*, _3, root_sep));
+    sl_create(,root_sep->sep_place|1,,,,,, *root_sep->sep_dump_info,
+	      sl_glarg(struct SEP*, , root_sep));
     sl_sync();
 
 
