@@ -123,7 +123,13 @@ nobase_dist_pkgdata_DATA = \
 include $(top_srcdir)/build-aux/sl.mk
 nobase_pkglib_DATA =
 nobase_pkglib_LIBRARIES = 
-EXTRA_DIST = r-mt-sim.sh.in r-host.sh.in
+
+EXTRA_DIST = \
+	r-mt-sim.sh.in \
+	r-host.sh.in \
+	main.c \
+	load.c
+
 MAINTAINERCLEANFILES = 
 BUILT_SOURCES = 
 

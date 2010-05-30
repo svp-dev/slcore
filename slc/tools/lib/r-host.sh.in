@@ -33,7 +33,10 @@ b=${program##*/}
 d=$(dirname "$program")
 if test -z "${SLR_RDIR:-}"; then d=$(cd "$d" && pwd -P); fi
 
-runner_cmdline=(${RUNNER_PREFIX:-} $do_debug "$d/$b" "$datafile" "$fdatafile" ${1:+"$@"})
+SLR_DATA=$datafile
+SLR_FDATA=$fdatafile
+export SLR_DATA SLR_FDATA
+runner_cmdline=(${RUNNER_PREFIX:-} $do_debug "$d/$b" ${1:+"$@"})
 
 if test -n "${SLR_RDIR:-}"; then
   cat >"$SLR_RDIR"/run.sh <<EOF

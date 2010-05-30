@@ -1,5 +1,5 @@
 //
-// lib_main.c: this file is part of the SL toolchain.
+// main.c: this file is part of the SL toolchain.
 //
 // Copyright (C) 2009 The SL project.
 //
@@ -12,15 +12,19 @@
 // `COPYING' file in the root directory.
 //
 
-extern void t_main(struct sl_famdata*);
+#include <svp/delegate.h>
 
-void lib_main(void) {
-  struct { } args;
-  struct sl_famdata root;
-  root.ix = root.be = 0;
-  root.li = root.st = 1;
-  root.f = t_main;
-  root.a = &args;
-  root.ex = 0;
-  t_main(&root);
+extern sl_place_t __main_place_id;
+
+// at this point __main_place_id has been set
+// by the standard library (if linked), or is
+// set to PLACE_DEFAULT.
+
+sl_decl(t_main, void);
+
+int main(int argc, char **argv) {
+    int ret;
+    sl_create(, __main_place_id, ,,,,, t_main);
+    sl_sync(ret);
+    return ret;
 }

@@ -1,5 +1,52 @@
 2010-05-28  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	Sanitize handling of `main' and `t_main'.
+
+	Until this point `main' was reserved and a SL program did not have
+	access to argc/argv. This changeset resolves the issue and opens
+	`main' for public use again.
+
+	* tools/lib/host-host-seqc/load.c: Move to...
+
+	* tools/lib/load.c: ...here. Get file names from environment
+	variables, not `argv'. Define as initializer to the linker, to
+	avoid requiring a custom `main'.
+
+	* tools/lib/r-host.sh.in: Provide files in env var, instead of
+	command line.
+
+	* tools/lib/host-host-ptl/ptl_svp.cc: Initialize with global
+	constructor/destructor, instead of init function.
+
+	* tools/lib/mtalpha-sim/main.c,
+	* tools/lib/host-host-seqc/lib_main.c,
+	* tools/lib/host-host-seqc/main.c: Remove.
+
+	* tools/lib/host-host-ptl/slrt.c,
+	* tools/lib/host-host-seqc/slrt.c: Define `__main_place_id' here,
+	and inline the code from `load.c'.
+
+	* tools/lib/main.c: New default `main', simply creates `t_main'.
+
+	* tools/lib/empty.c: New empty source to create empty libraries.
+
+	* tools/lib/Makefile.am: List the new files.
+	* tools/lib/mtalpha.mk,
+	* tools/lib/ptl.mk,
+	* tools/lib/seqc.mk: Remove references to deleted files. Also
+	build `libslmain.a' containing the object for `main.c'.
+
+	* tools/lib/mtalpha.mk: Build `libslmain_seq.a' for target
+	`spr+seq-mtalpha-sim', needed since the calling convention for
+	`t_main' is different.
+
+	* tools/bin/slc.in,
+	* tools/bin/cce.in: New flag `-nodefaultmain'. Add `-lslmain' to
+	the linker unless `-nodefaultmain' is specified. Special case for
+	`spr+seq-metalpha-sim'.
+
+2010-05-28  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	Fix handling of `sl_decl' with `spr'.
 
 	* tools/lib/t-spr/slimpl.m4: Define `extras' for `sl_decl' too,

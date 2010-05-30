@@ -12,5 +12,13 @@
 // `COPYING' file in the root directory.
 //
 
+#include <svp/delegate.h>
+
+sl_place_t __main_place_id = PLACE_DEFAULT;
+
 const char *__tag__ = "\0slr_runner:host:";
 const char *__datatag__ = "\0slr_datatag:ptl-host-host-ptl:";
+
+#include "../load.c"
+
+

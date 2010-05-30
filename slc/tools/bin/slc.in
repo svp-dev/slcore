@@ -35,6 +35,7 @@ verbose=
 verdisplay=
 do_filt2=yes
 
+slc_use_main=yes
 slc_use_slrt=yes
 slc_use_libsl=yes
 
@@ -180,9 +181,10 @@ for arg in "$@"; do
                 extra_ppflags+=("$arg")
                 ;;
 
-      -nostartfiles) slc_use_slrt=no ;;
+      -nodefaultmain) slc_use_main=no ;;
+      -nostartfiles) slc_use_slrt=no; slc_use_main=no ;;
       -nodefaultlibs) slc_use_libsl=no ;;
-      -nostdlib) slc_use_slrt=no; slc_use_libsl=no ;;
+      -nostdlib) slc_use_slrt=no; slc_use_libsl=no; slc_use_main=no ;;
 
       -g3) 
           echo "$basename: warning: support for $arg is incomplete" >&2
@@ -507,7 +509,7 @@ EOF
 fi
 
 # Here check the configuration
-eval $(slc_use_slrt=$slc_use_slrt slc_use_libsl=$slc_use_libsl slc_debug_flags="${slc_debug_flags[*]}" "$cce_helper" -s "$impl")
+eval $(slc_use_slrt=$slc_use_slrt slc_use_main=$slc_use_main slc_use_libsl=$slc_use_libsl slc_debug_flags="${slc_debug_flags[*]}" "$cce_helper" -s "$impl")
 
 # If we were requested to test the configuration, do it now
 if test -n "$check"; then

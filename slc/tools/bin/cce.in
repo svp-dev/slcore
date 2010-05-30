@@ -342,6 +342,17 @@ case $slc_arch-$slc_os in
 	;;
 esac
 
+# main function selection
+libmain=slmain
+case $slc_dialect-$slc_arch in
+    spr-mtalpha)
+        if test "x$target" = "xseq"; then
+            libmain=slmain_seq
+        fi
+        ;;
+    *) ;;
+esac
+
 # OS selection
 case $slc_os in
     x) ;;
@@ -375,6 +386,10 @@ case $slc_os in
             slc_ldflags+=("-lsl")
 	fi
 	slc_ldflags+=("-lslc")
+
+        if test "$slc_use_main" != "no"; then
+            slc_ldflags+=("-l$libmain")
+        fi
 
         IFS=$save_IFS
 	;;

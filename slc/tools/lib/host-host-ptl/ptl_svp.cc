@@ -1127,28 +1127,19 @@ namespace uTC
         pthread_cond_destroy(&m_thread_cleanup);
     }
 
-    extern "C" void lib_main(void)
+    extern "C" place __main_place_id;
+    struct Init 
     {
-        init();
+        Init() {
+            DPRINT("Initializing...");
+            init();
+            __main_place_id = generate_local_place(false);
+            
+        }
 
-        DPRINT("UTC_PTL: Init complete, creating user program");
-
-        // Create the root family
-        family f;
-        
-        // Generate a local place for the main family to run on
-        place mainplace = generate_local_place(false);
-
-        create(f, mainplace, true, false, 0, 1, 1, 0, t_main);
-
-        sync(f);
-        
-        // Clean up the local place for main() again
-        destroy_local_place(mainplace);
-
-        DPRINT("UTC_PTL: User program complete, cleaning up and exiting");
-
-        cleanup();
-    }
-
+        ~Init() {
+            DPRINT("Cleaning up...");
+            cleanup();
+        }
+    } __init_obj;
 }
