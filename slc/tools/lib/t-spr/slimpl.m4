@@ -46,9 +46,12 @@ m4_ifdef([[_sl_increate]],[[m4_fatal(missing sync after create)]]) m4_dnl
 m4_popdef([[_sl_curfun]])
 ]])
 
-# end of thread
 m4_define([[sl_end_thread]], [[m4_dnl
 [[ """, { 'loc': r"""]]__file__:__line__[[""", 'type' : 'end_thread' }, r""" ]]m4_dnl
+]])
+
+m4_define([[sl_break]], [[m4_dnl
+[[ """, { 'loc': r"""]]__file__:__line__[[""", 'type' : 'break' }, r""" ]]m4_dnl
 ]])
 
 m4_define([[sl_decl]], [[m4_dnl

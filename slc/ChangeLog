@@ -1,3 +1,13 @@
+2010-04-28  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
+	Move forward with the new code transformation framework.
+
+	* tools/lib/t-spr/slimpl.m4: Define `sl_break'.
+
+	* tools/bin/spr: Modify visitor framework to allow stages to
+	replace the node they are visiting with something else. Implement
+	the transforms to sequential execution.
+
 2010-04-26  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
 	Introduce `spr'.
