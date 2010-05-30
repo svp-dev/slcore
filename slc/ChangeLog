@@ -1,3 +1,12 @@
+2010-05-24  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
+	Improve support for `slc -P'.
+
+	* tools/bin/slc.in: Propagate `-P' where needed.
+	
+	* tools/lib/slc/visitors.py (flatten): Omit linemarkers if `-P' is
+	specified.
+
 2010-05-21  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
 	Fix `sl_proccall' for `spr'.

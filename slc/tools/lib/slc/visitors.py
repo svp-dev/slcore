@@ -1,12 +1,16 @@
 import sys
 from ast import *
+from front import opts
 
 #### Common services ####
 
 def flatten(loc, opaquetext):
-      if loc is not None:
-            opaquetext = ('\n%s\n' % loc.ppline()) + opaquetext
-      return Opaque(opaquetext)
+      o = Opaque(opaquetext)
+      if loc is not None and opts.resolved.synclines:
+            o = Opaque('\n%s\n' % loc.ppline()) + o
+      else:
+            o = Opaque('\n') + o
+      return o
 
 #### Base visitor and dispatch ####
 

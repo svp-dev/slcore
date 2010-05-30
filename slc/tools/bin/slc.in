@@ -151,7 +151,7 @@ for arg in "$@"; do
 
       -t)       prev_arg=tmpdir;;
 
-      -P)	extra_ppflags+=(-E); extra_tflags+=(-E) ;;
+      -P)	extra_ppflags+=(-P); extra_tflags+=(-P); extra_cflags+=(-P) ;;
       -o)	prev_arg=outfile;;
       -save-temps) keep=yes ;;
       -v)         verbose=yes ;;
