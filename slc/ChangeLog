@@ -1,5 +1,11 @@
 2010-05-30  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	Use the new function pointer syntax for `sep.h'.
+
+	* lib/include/svp/sep.h: Use the new syntax.
+
+2010-05-30  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	Portability workaround with old `ptl' semantics.
 
 	* tools/lib/t-ptl/slimpl.m4: Ignore the 6th `create' field

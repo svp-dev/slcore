@@ -54,22 +54,22 @@ struct SEP {
   sl_place_t sep_place;
 
   // allocation routine
-  sl_decl((*sep_alloc),
-	  void,
-	  sl_glparm(struct SEP*, sep),
-	  sl_glparm(unsigned long, policy),
-	  sl_shparm(struct placeinfo*, result));
+  sl_decl_fptr(sep_alloc,
+               void,
+               sl_glparm(struct SEP*, sep),
+               sl_glparm(unsigned long, policy),
+               sl_shparm(struct placeinfo*, result));
 
   // deallocation routine
-  sl_decl((*sep_free), 
-	  void, 
-	  sl_glparm(struct SEP*, sep),
-	  sl_glparm(struct placeinfo*, p));
+  sl_decl_fptr(sep_free, 
+               void, 
+               sl_glparm(struct SEP*, sep),
+               sl_glparm(struct placeinfo*, p));
 
   // status routine
-  sl_decl((*sep_dump_info),
-	  void,
-	  sl_glparm(struct SEP*, sep));
+  sl_decl_fptr(sep_dump_info,
+               void,
+               sl_glparm(struct SEP*, sep));
 };
 
 extern struct SEP* root_sep;
