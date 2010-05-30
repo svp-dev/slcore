@@ -1,3 +1,12 @@
+2010-04-30  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
+	Move forward with the new code transformation framework.
+
+	* tools/bin/spr: Implement the transform of thread function
+	definitions to MT-Alpha thread functions (not creates). Introduce
+	indirection through dispatcher in visitor for future
+	alternate dispatch.
+
 2010-04-28  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
 	Move forward with the new code transformation framework.
