@@ -25,8 +25,10 @@
 
 // information returned by sep_alloc etc.
 struct placeinfo {
-    // identifier for the create() statement
+    // identifier for the create() statement, waits until place become free
     sl_place_t  pid;
+    // identifier for the create() statement, may fail
+    sl_place_t  soft_pid;
     // number of cores in the place
     uint16_t ncores;
     // number of family table entries per core

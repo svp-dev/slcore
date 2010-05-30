@@ -1,5 +1,13 @@
 2010-05-28  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	Expose blocking and non-blocking place ids in SEP interface.
+
+	* lib/include/svp/sep.h: New attribute `soft_pid'.
+
+	* lib/src/mtsep.c: Expose both `pid' and `soft_pid'.
+
+2010-05-28  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	Move place type and constants to library.
 
 	* tools/lib/t-seqc/include/sl_support.h,

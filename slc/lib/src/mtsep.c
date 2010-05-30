@@ -233,10 +233,12 @@ void sys_sep_init(void* init_parameters)
       current_ring_id = pc->core_info[i][1];
 
       /* start configuring the place */
-      root_sep_data.allplaces[current_ring_id].pi.pid =
-	(pc->core_info[i][0] << 4) /* core id */
-	| 6 /* delegate, non-exclusive */
-        | 8 /* suspend */;
+      sl_place_t the_pid = (pc->core_info[i][0] << 4) /* core id */
+          | 6 /* delegate, non-exclusive */;
+
+      root_sep_data.allplaces[current_ring_id].pi.pid = the_pid | 8 /* suspend */;
+      root_sep_data.allplaces[current_ring_id].pi.soft_pid = the_pid; 
+
       root_sep_data.allplaces[current_ring_id].pi.ncores = 1;
       root_sep_data.allplaces[current_ring_id].pi.nfamilies_per_core = *mgconf_ftes_per_core;
       root_sep_data.allplaces[current_ring_id].pi.nthreads_per_core = *mgconf_ttes_per_core;
