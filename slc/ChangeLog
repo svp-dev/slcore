@@ -1,5 +1,31 @@
 2010-05-03  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	Refactor `spr' and introduce intermediate create lowering.
+
+	* tools/bin/spr,
+	* tools/lib/slc/ast.py: Kill definitions and uses of the
+	`fid_lvalue'.
+
+	* tools/lib/slc_config.py.in,
+	* tools/lib/slc/lower/__init__.py,
+	* tools/lib/slc/input/__init__.py: New.
+
+	* tools/bin/spr: Extract visitor definitions to...
+	* tools/lib/slc/visitors.py,
+	* tools/lib/slc/lower/seq.py: ... here.
+
+	* tools/lib/slc/ast.py: New `LowCreate' and `LowCreateArg' nodes.
+	* tools/lib/slc/lower/lowercreate.py: New.
+
+	* tools/lib/slc/lower/seq.py: Simplify by using the result of
+	create lowering.
+	
+	* tools/lib/Makefile.am: List the new files.
+	
+	* tools/bin/spr: Test the new lowering.
+
+2010-05-03  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	Refactor `spp' and `spr'.
 
 	Since some features from `spp' and `spr' are shared, and `spr' is

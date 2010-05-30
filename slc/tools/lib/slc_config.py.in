@@ -1,0 +1,4 @@
+m4 = "@M4@"
+package_name = "@PACKAGE_NAME@"
+package_version = "@PACKAGE_VERSION@"
+package_bugreport = "@PACKAGE_BUGREPORT@"

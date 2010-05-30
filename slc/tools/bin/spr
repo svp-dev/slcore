@@ -9,7 +9,9 @@ import pprint
 from slc.mtalpha import regmagic
 from slc.msg import die, log
 from slc.ast import *
-
+from slc.visitors import *
+from slc.lower.seq import *
+from slc.lower.lowercreate import *
 
 #### Abstract syntax tree ####
 
@@ -35,9 +37,6 @@ def unexpected(item):
       die("unexpected construct '%s'" % item.get('type','unknown'), item)
 
 
-def isemptyblock(item):
-      return item == [] or (len(item) == 1 and len(item[0]) == 0)
-
 def parse_varuse(varuse, item):
       #print "parse varuse %x: item %x: %r" % (id(varuse), id(item), item)
       varuse.loc = item['loc']
@@ -62,12 +61,8 @@ def parse_create(item):
       for p in item['args']:
             c.args.append(parse_argparm(CreateArg(), 'arg', p))
 
-
       if 'result' in item and item['result']:
             c.result_lvalue = parse_block(item['result'], False)
-
-      if 'fid' in item and item['fid']:
-            c.fid_lvalue = parse_block(item['fid'], False)
 
       return c
 
@@ -138,384 +133,6 @@ def parse_program(source):
                   else: unexpected(item)
             else: p += Opaque(item)
       return p
-
-#### Base visitor and dispatch ####
-
-class BaseVisitor(object):
-      def dispatch(self):
-            if hasattr(self, 'dispatcher'):
-                  return getattr(self, 'dispatcher')
-            return self
-
-#### Default visitor: just visit ####
-
-class DefaultVisitor(BaseVisitor):
-      def visit_program(self, program):
-            return self.dispatch().visit_block(program)
-
-      def visit_opaque(self, opaque):
-            return opaque
-
-      def visit_block(self, block):
-            newbl = Block()
-            # print "visiting block %x: %r" % (id(block), block)
-            for item in block:
-                  # print "in block %x: item %x: %r" % (id(block), id(item), item)
-                  newbl += item.accept(self)
-            block.reset(newbl)
-            #print "return %x: %r" % (id(block), block)
-            return block
-
-      def visit_fundecl(self, fundecl):
-            p = FunDecl()
-            for parm in fundecl.parms:
-                  p += parm.accept(self)
-            fundecl.reset(p)
-            return fundecl
-
-      def visit_fundef(self, fundef):
-            self.dispatch().visit_fundecl(fundef)
-            fundef.body.accept(self)
-            return fundef
-
-      def visit_getp(self, getp):
-            return getp
-      def visit_geta(self, geta):
-            return geta
-
-      def visit_setp(self, setp):
-            setp.rhs.accept(self)
-            return setp
-
-      def visit_seta(self, seta):
-            seta.rhs.accept(self)
-            return seta
-
-      def visit_create(self, create):
-            if create.fid_lvalue is not None:
-                  create.fid_lvalue.accept(self)
-            create.place.accept(self)
-            create.start.accept(self)
-            create.step.accept(self)
-            create.limit.accept(self)
-            create.block.accept(self)
-            if not create.funIsIdentifier():
-                  create.fun.accept(self)
-            a = []
-            for arg in create.args:
-                  new = arg.accept(self)
-                  if type(new) == type([]):
-                        a += new
-                  elif new is not None:
-                        a.append(new)
-            create.args = a
-
-            create.body.accept(self)
-            if create.result_lvalue is not None:
-                  create.result_lvalue.accept(self)
-
-            return create
-
-      def visit_funparm(self, parm):
-            return parm
-
-      def visit_createarg(self, arg):
-            if arg.init is not None:
-                  arg.init.accept(self)
-            return arg
-
-      def visit_endthread(self, et):
-            return et
-
-      def visit_break(self, br):
-            return br
-
-#### Printer visitor: reprint SL code ####
-
-class PrinterVisitor(DefaultVisitor):
-      def __init__(self):
-            self.buffer = ""
-
-      def visit_opaque(self, opaque):
-            if opaque.text is not None and opaque.text.startswith('#'):
-                  self.buffer += '\n'
-            self.buffer += opaque.text
-            return opaque
-            
-      def visit_funparm(self, parm):
-            self.buffer += ' sl_%s(%s, %s)' % (parm.type, parm.ctype, parm.name)
-            return parm
-
-      def visit_funheader(self, fun, htype):
-            self.buffer += " sl_%s(%s, void" % (htype, fun.name)
-            for parm in fun.parms:
-                  self.buffer += ', '
-                  parm.accept(self)
-            self.buffer += ')'
-            return fun
-
-      def visit_fundecl(self, fundecl):
-            return self.dispatch().visit_funheader(fundecl, 'decl')
-      
-      def visit_fundef(self, fundef):
-            self.dispatch().visit_funheader(fundef, 'def')
-            fundef.body.accept(self)
-            self.buffer += ' sl_enddef '
-            return fundef
-
-      def visit_block(self, block):
-            if block.indexname is not None:
-                  self.buffer += '{ sl_index(%s); ' % block.indexname
-            #print "visiting %x: block %x: %r" % (id(self), id(block), block)
-            DefaultVisitor.visit_block(self, block)
-            if block.indexname is not None:
-                  self.buffer += '}'
-            return block
-
-      def visit_getp(self, vu):
-            self.buffer += ' sl_getp(%s)' % vu.name
-            return vu
-      def visit_geta(self, vu):
-            self.buffer += ' sl_geta(%s)' % vu.name
-            return vu
-      def visit_setp(self, vu):
-            self.buffer += ' sl_setp(%s, ' % vu.name
-            vu.rhs.accept(self)
-            self.buffer += ')'
-            return vu
-      def visit_seta(self, vu):
-            self.buffer += ' sl_seta(%s, ' % vu.name
-            vu.rhs.accept(self)
-            self.buffer += ')'
-            return vu
-
-      def visit_createarg(self, arg):
-            self.buffer += ' sl_%s(%s, %s' % (arg.type, arg.ctype, arg.name)
-            if arg.init is not None:
-                  self.buffer += ','
-                  arg.init.accept(self)
-            self.buffer += ')'
-            return arg
-
-      def visit_break(self, br):
-            self.buffer += ' sl_break '
-            return br
-
-      def visit_endthread(self, et):
-            self.buffer += ' sl_end_thread '
-            return et
-
-      def visit_create(self, c):
-            self.buffer += ' sl_create('
-
-            if c.fid_lvalue is not None:
-                  c.fid_lvalue.accept(self)
-
-            for b in (c.place, c.start, c.step, c.limit, c.block):
-                  self.buffer += ','
-                  b.accept(self)
-
-            self.buffer += ',/**/,'
-
-            if c.funIsIdentifier():
-                  self.buffer += c.fun
-            else:
-                  c.fun.accept(self)
-
-            for arg in c.args:
-                  self.buffer += ','
-                  arg.accept(self)
-            self.buffer += ')'
-
-            c.body.accept(self)
-            
-            if c.sync_type == 'release':
-                  self.buffer += ' sl_release()'
-            else:
-                  self.buffer += ' sl_sync('
-                  if c.result_lvalue is not None:
-                        c.result_lvalue.accept(self)
-                  self.buffer += ')'
-
-            return c
-
-#### Sequential transforms ####
-
-def flatten(loc, opaquetext):
-      if loc is not None:
-            opaquetext = ('\n%s\n' % loc.ppline()) + opaquetext
-      return Opaque(opaquetext)
-
-class Create_2_Loop(DefaultVisitor):
-      def __init__(self):
-            self.decls = None
-            self.callist = None
-            self.protolist = None
-
-      def visit_geta(self, geta):
-            return flatten(geta.loc, "__slA_%s" % geta.name)
-      
-      def visit_seta(self, seta):
-            b = seta.rhs.accept(self)
-            return [flatten(seta.loc, "__slA_%s = " % seta.name), b]
-
-      def visit_createarg(self, arg):
-            # prepare declarations
-            if arg.type.startswith('gl'):
-                  reg = "register"
-            else:
-                  reg = ""
-            if arg.init is None:
-                  self.decls.append(flatten(arg.loc, "%s %s __slA_%s;" % (reg, arg.ctype, arg.name)))
-            else:
-                  init = arg.init.accept(self)
-                  self.decls.append(flatten(arg.loc, "%s %s __slA_%s = " % (reg, arg.ctype, arg.name)))
-                  self.decls.append(init)
-                  self.decls.append(flatten(arg.loc, ";"))
-
-            # prepare proto and uses
-            if arg.type.startswith("sh"):
-                  self.callist += ", &__slA_%s" % arg.name
-                  self.protolist += ", %s *" % arg.ctype
-            else:
-                  self.callist += ", __slA_%s" % arg.name
-                  self.protolist += ", %s" % arg.ctype
-
-      def visit_create(self, cr):
-            old_decls = self.decls  # allow for nested creates
-            old_callist = self.callist 
-            old_protolist = self.protolist
-            self.decls = []
-            self.callist = ""
-            self.protolist = ""
-
-            DefaultVisitor.visit_create(self, cr) # this will accumulate the arg declarations in self.decls
-
-            newbl = []
-            lbl = cr.label
-            if cr.fid_lvalue is not None:
-                  # we "consume" the FID lvalue, to force its evaluation
-                  # in case it consumes side effects
-                  newbl.append(flatten(cr.loc, "(void)("))
-                  newbl.append(cr.fid_lvalue)
-                  newbl.append(flatten(cr.loc, ");"))
-
-            # ditto for the place expression, maybe it has side effects
-            newbl.append(flatten(cr.loc, "(void)("))
-            newbl.append(cr.place)
-            newbl.append(flatten(cr.loc, "); register long __slC_ret_%s = 0; register const long __slC_st_%s = " 
-                                 % (lbl, lbl)))
-            newbl.append(cr.start)
-            newbl.append(flatten(cr.loc, "; register const long __slC_li_%s = " % lbl))
-            newbl.append(cr.limit)
-            newbl.append(flatten(cr.loc, "; register const long __slC_stp_%s = " % lbl))
-            newbl.append(cr.step)
-
-            # again, we don't use the block value but maybe it has side effects
-            newbl.append(flatten(cr.loc, "; (void)("))
-            newbl.append(cr.block)
-            
-            # now generate the function pointer
-            newbl.append(flatten(cr.loc, "); long (*__slC_fun_%s)(const long %s) = (long (*)(const long%s))(" %
-                                 (lbl, self.protolist, self.protolist)))
-
-            if cr.funIsIdentifier():
-                  newbl.append(flatten(cr.loc, cr.fun))
-            else:
-                  newbl.append(cr.fun)
-            newbl.append(flatten(cr.loc, ");"))
-
-            newbl += self.decls # consume argument declarations / inits
-
-            newbl.append(cr.body)    
-
-            # here we expand the loop
-            newbl.append(flatten(cr.loc_end, """
-register long __slC_ix_%(lbl)s;
-if (!__slC_stp_%(lbl)s)
-   for (__slC_ix_%(lbl)s = __slC_st_%(lbl)s; ; __slC_ix_%(lbl)s += __slC_li_%(lbl)s)
-     { if (SVP_ENORMAL != (__slC_ret_%(lbl)s = __slC_fun_%(lbl)s(__slC_ix_%(lbl)s%(callist)s))) break; }
-else if (__slC_stp_%(lbl)s > 0)
-   for (__slC_ix_%(lbl)s = __slC_st_%(lbl)s; __slC_ix_%(lbl)s < __slC_li_%(lbl)s; 
-        __slC_ix_%(lbl)s += __slC_stp_%(lbl)s)
-     { if (SVP_ENORMAL != (__slC_ret_%(lbl)s = __slC_fun_%(lbl)s(__slC_ix_%(lbl)s%(callist)s))) break; }
-else
-   for (__slC_ix_%(lbl)s = __slC_st_%(lbl)s; __slC_ix_%(lbl)s > __slC_li_%(lbl)s; 
-        __slC_ix_%(lbl)s += __slC_stp_%(lbl)s)
-     { if (SVP_ENORMAL != (__slC_ret_%(lbl)s = __slC_fun_%(lbl)s(__slC_ix_%(lbl)s%(callist)s))) break; }
-""".replace('\n','') % {'lbl':lbl, 'callist':self.callist}))
-
-            if cr.result_lvalue is not None:
-                  newbl.append(flatten(cr.loc_end, "("))
-                  newbl.append(cr.result_value)
-                  newbl.append(flatten(cr.loc_end, ") = __slC_ret_%s" % lbl))
-
-            self.decls = old_decls
-            self.callist = old_callist
-            self.protolist = old_protolist
-            return newbl
-
-
-class TFun_2_CFun(DefaultVisitor):
-
-      def __init__(self):
-            self.shlist = []
-            self.gllist = []
-
-      def visit_getp(self, getp):
-            if getp.name in self.shlist:
-                  format = "(*__slP_%s)"
-            else:
-                  format = "__slP_%s"
-            return flatten(getp.loc, format % getp.name)
-
-      def visit_setp(self, getp):
-            b = getp.rhs.accept(self)
-            if getp.name in self.shlist:
-                  format = "(*__slP_%s) = "
-            else:
-                  format = "__slP_%s = "
-            return [flatten(getp.loc, format % getp.name), b]
-
-      def visit_funparm(self, parm):
-            if parm.type.startswith("sh"):
-                  self.shlist.append(parm.name)
-                  self.buffer += ', register %s * const __restrict__ __slP_%s' % (parm.ctype, parm.name)
-            else:
-                  self.gllist.append(parm.name)
-                  if parm.type.endswith('_mutable'):
-                        const = ""
-                  else:
-                        const = "const"
-                  self.buffer += ', register %s %s __slP_%s' % (parm.ctype, const, parm.name)
-            return parm
-
-      def visit_fundecl(self, fundecl):
-            self.buffer = "long %s(const long __slI" % fundecl.name
-            fundecl = DefaultVisitor.visit_fundecl(self, fundecl)
-            self.buffer += ')'
-            return flatten(fundecl.loc, self.buffer)
-
-      def visit_fundef(self, fundef):
-            self.shlist = []
-            self.gllist = []
-
-            newitems = []
-            newitems.append(self.dispatch().visit_fundecl(fundef))
-            newitems.append(flatten(fundef.loc, "{"))
-            if fundef.body.indexname is not None:
-                  newitems.append(flatten(fundef.loc, "register const long %s = __slI;" % fundef.body.indexname)) 
-            b = fundef.body.accept(self)
-            b.indexname = None 
-            newitems.append(b)
-            newitems.append(flatten(fundef.loc_end, "return SVP_ENORMAL; }"))
-            return newitems
-
-      def visit_break(self, br):
-            return flatten(br.loc, "return SVP_EBROKEN")
-
-      def visit_endthread(self, et):
-            return flatten(et.loc, "return SVP_ENORMAL")
 
 #### MT-Alpha transforms ####
 
@@ -850,37 +467,33 @@ if __name__ == "__main__":
       print "#### PRINT ORIG ####"
       pp = PrinterVisitor()
       p.accept(pp)
-      print pp.buffer
 
-      print "#### TFUN -> MTA_TFUN ####"
-      pmt = p.accept(TFun_2_MTATFun())
+      print "#### CREATE -> LOWCREATE ####"
+      plc = p.accept(Create_2_LowCreate())
+
+      print "#### PRINT LOWCREATE ####"
+      plc.accept(pp)
+
+      # print "#### TFUN -> MTA_TFUN ####"
+      # pmt = plc.accept(TFun_2_MTATFun())
       
-      print "#### PRINT MTA_TFUN ####"
-      pp = PrinterVisitor()
-      pmt.accept(pp)
-      print pp.buffer
+      # print "#### PRINT MTA_TFUN ####"
+      # pmt.accept(pp)
 
-      print "#### CREATE -> MTA_CREATE ####"
-      pmtc = p.accept(Create_2_MTACreate())
+      # print "#### CREATE -> MTA_CREATE ####"
+      # pmtc = pmt.accept(Create_2_MTACreate())
       
-      print "#### PRINT MTA_CREATE ####"
-      pp = PrinterVisitor()
-      pmtc.accept(pp)
-      print pp.buffer
-
+      # print "#### PRINT MTA_CREATE ####"
+      # pmtc.accept(pp)
       
-      # print "#### TFUN -> CFUN ####"
-      # ps = p.accept(TFun_2_CFun())
+      print "#### TFUN -> CFUN ####"
+      ps = plc.accept(TFun_2_CFun())
 
-      # print "#### PRINT CFUN ####"
-      # pp = PrinterVisitor()
-      # ps.accept(pp)
-      # print pp.buffer
+      print "#### PRINT CFUN ####"
+      ps.accept(pp)
 
-      # print "#### CREATE -> LOOP ####"
-      # pc = p.accept(Create_2_Loop())
+      print "#### CREATE -> LOOP ####"
+      pc = ps.accept(Create_2_Loop())
 
-      # print "#### PRINT LOOP ####"
-      # pp = PrinterVisitor()
-      # ps.accept(pp)
-      # print pp.buffer
+      print "#### PRINT LOOP ####"
+      pc.accept(pp)

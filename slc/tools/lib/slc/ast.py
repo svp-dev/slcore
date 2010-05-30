@@ -246,7 +246,7 @@ class Create(Item):
     def __init__(self, label = None, place = None, 
                  start = None, step = None, limit = None, block = None,
                  sync_type = None, fun = None, body = None,
-                 result_lvalue = None, fid_lvalue = None,
+                 result_lvalue = None, 
                  args = None,
                  *a, **kwargs):
         super(Create, self).__init__(*a, **kwargs)
@@ -259,7 +259,6 @@ class Create(Item):
         self.sync_type = sync_type
         self.body = body
         self.result_lvalue = result_lvalue
-        self.fid_lvalue = fid_lvalue
         self.fun = fun
         if args is None:
             args = []
@@ -290,6 +289,68 @@ class Create(Item):
     def funIsIdentifier(self):
         return isinstance(self.fun, str)
 
+class LowCreateArg(CreateArg):
+    """
+    Node type for LowCreate arguments.
+
+    Differs from CreateArg in that there is no "init" field
+    (they are replaced by SetA)
+    """
+    pass
+
+class LowCreate(Item):
+    """
+    Create-sync or Create-detach block, with
+    all complex expressions reduced to simple identifiers.
+
+    Computed by visitor Create_2_LowCreate.
+    """
+
+    FUN_ID = 0
+    FUN_PTR = 1
+
+    def __init__(self, label = None, sync_type = None, 
+                 body = None, args = None, 
+                 *a, **kwargs):
+        super(LowCreate, self).__init__(*a, **kwargs)
+
+        self.label = label
+        self.place = "__slC_place_%s" % label
+        self.start = "__slC_start_%s" % label
+        self.limit = "__slC_limit_%s" % label
+        self.step = "__slC_step_%s" % label
+        self.block = "__slC_block_%s" % label
+        self.retval = "__slC_ret_%s" % label
+        self.target_resolved = "__slT_fini_%s" % label
+        self.sync_type = sync_type
+        self.body = body
+        self.funtype = None
+        self._fun = None
+        if args is None:
+            args = []
+        self.args = args
+
+    @property
+    def fun(self):
+        if self.funtype is None: 
+            return None
+        elif self.funtype == self.FUN_ID: 
+            return self._fun
+        else:
+            return "__slC_fun_%s" % self.label
+
+    @fun.setter
+    def fun(self, fun):
+        assert self.funtype == self.FUN_ID
+        self._fun = fun
+
+    @staticmethod
+    def arg_init_var(name):
+        return "__slAi_%s" % name
+
+    @staticmethod
+    def arg_var(name):
+        return "__slA_%s" % name
 
 class EndThread(Item):
     pass

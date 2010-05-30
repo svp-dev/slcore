@@ -56,9 +56,12 @@ r-mtsparc-sim.sh: r-mt-sim.sh.in Makefile
 	$(AM_V_at)mv -f $@.out $@
 
 nobase_python_PYTHON = \
+	slc_config.py \
 	slc/__init__.py \
 	slc/msg.py \
 	slc/loc.py \
+	slc/ast.py \
+	slc/visitors.py \
 	slc/mtalpha/__init__.py \
 	slc/mtalpha/regmagic.py \
 	slc/mtalpha/compile.py \
@@ -66,7 +69,10 @@ nobase_python_PYTHON = \
 	slc/mtalpha/asmproc/__init__.py \
 	slc/mtalpha/asmproc/base.py \
 	slc/mtalpha/asmproc/common.py \
-	slc/mtalpha/asmproc/opt.py
+	slc/mtalpha/asmproc/opt.py \
+	slc/lower/seq.py \
+	slc/lower/lowercreate.py \
+	slc/input/__init__.py
 
 nobase_dist_pkgdata_DATA = \
 	arggen.c \

@@ -84,6 +84,7 @@ AC_CONFIG_FILES([
         tools/Makefile
 	tools/bin/Makefile
 	tools/lib/Makefile
+        tools/lib/slc_config.py
 	lib/Makefile
 	doc/Makefile
 ])
