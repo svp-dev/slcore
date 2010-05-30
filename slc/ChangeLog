@@ -1,5 +1,18 @@
 2010-05-21  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	Integrate `spr' and `slc' some more.
+
+	* tools/bin/cce.in: Remove `utc' and `utc0' from the
+	documentation, since they are not really usable. Add support for
+	`spr' targets.
+
+	* tools/bin/slc.in: Remove `-fwesley', obsolete since the `ppp'
+	target disappeared. New `-fdump-spr-XXX' argument. Remove references
+	to `-fcm4' in the documentation, since they are not really usable and
+	will disappear soon.	
+
+2010-05-21  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	Integrate all `spr' processes into a unique front-end.
 
 	* tools/lib/slc/front/__init__.py,

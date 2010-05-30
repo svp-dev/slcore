@@ -74,11 +74,7 @@ Example one-word implementation aliases:
 
   ptl           muTC-ptl (pthreads / C++)
 
-  mtalpha       "alternate" compiler for MT-Alpha
-
-  utc0          Core µTC compiler
-
-  utcx          "desired muTC" (transform/preprocess only)
+  mtalpha       MT-Alpha / Microgrid simulator
 
 Example "long" aliases:
 
@@ -154,7 +150,7 @@ EOF
 	    utc0-*)
 		alias=$alias-sim
 		;;
-	    spp-mt*|spr-mt*)
+	    spp-mt*|spr*-mt*)
 		alias=$alias-sim
 		;;
 	    ptl-host)
@@ -197,26 +193,29 @@ basearchvar=$(tr a-z A-Z <<<"$basearch")
 slc_complang=unknown
 case $slc_dialect in
     ptl*)     slc_complang=cpp;;
-    spr|seqc|spp) slc_complang=c;;
+    spr*|seqc|spp) slc_complang=c;;
     utc*)     slc_complang=utc;;
     *) echo "unknown dialect: $slc_dialect" >&2;;
 esac
 
 # Transformation selection
-slc_transbase=unknown
-case $slc_dialect in
-    spr*|utc*|seqc*|ptl*) slc_transbase=$slc_dialect	;;
-    spp*)     slc_transbase=$slc_dialect$basearch ;;
-esac
-
 case $slc_dialect in
     spp*|utc*|seqc*|ptl*) 
         slc_translator=("$cm4_helper" -fcm4-lquote='[[' -fcm4-rquote=']]')
         slc_tflags+=(-X "-DPYTHON=$python" -X "-DSPP_PY=$spp_helper") 
         ;;
     spr*)
-        slc_translator=("$spr_helper")
+        target=${slc_dialect:4}
+        if test -z "$target"; then target=seq; fi
+        slc_translator=("$spr_helper" -b "$target")
+        slc_dialect=spr
         ;;
+esac
+
+slc_transbase=unknown
+case $slc_dialect in
+    spr*|utc*|seqc*|ptl*) slc_transbase=$slc_dialect	;;
+    spp*)     slc_transbase=$slc_dialect$basearch ;;
 esac
 
 

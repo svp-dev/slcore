@@ -188,11 +188,12 @@ for arg in "$@"; do
           slc_debug_flags+=("$arg");;
       -g*|-p|-pg) slc_debug_flags+=("$arg");;
 
-      -fwesley) extra_cflags+=(-DMT_FORCE_TEMP_FOR_SHARED_WRITE=1);;
       -fasmopt)      do_filt2=yes ;;
       -fno-asmopt)   do_filt2= ;;
       -fasmopt-*)    extra_f2flags+=("${arg#-fasmopt-}");;
       -fno-asmopt-*) extra_f2flags+=(no-"${arg#-fno-asmopt-}");;
+
+      -fdump-spr-*)  extra_tflags+=(-d "${arg#-fdump-spr-}");;
 
       -)        in_pp_spec+=("$arg");;
 
@@ -436,10 +437,6 @@ Compiler debugging options:
                      directory (TMPDIR or /tmp) is used; unless -save-temps
                      is specified, in which case the current directory is
                      used instead.
-
-  -fcm4-dump=file    Dump the M4 intermediary data files to "file.mX".
-
-  -fcm4-trace=file   Dump the M4 macro expansion trace to file "file".
 
 Other options:
   -h, --help         Print this help; do not process anything.
