@@ -1,5 +1,13 @@
 2010-05-21  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	Fix `sl_proccall' for `spr'.
+
+	* tools/lib/t-spr/include/sl_support: Implement `sl_proccall'
+	here, since it needs to be expanded before CM4 runs and replaces
+	braces by sl_lbr/sl_rbr.
+
+2010-05-21  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	Minor cleanups.
 
 	* tools/bin/slt.in: Also replace `+' by `_' when generating test 
