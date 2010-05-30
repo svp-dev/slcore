@@ -1,5 +1,23 @@
 2010-05-19  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	Remove targets `ppp' and `ppp2'. Keep `spp' as transition target.
+
+	* tools/lib/t-ppp2alpha/slimpl.m4,
+	* tools/lib/t-ppp2alpha/include/sl_support.h: Rename to...
+
+	* tools/lib/t-sppalpha/slimpl.m4,
+	* tools/lib/t-sppalpha/include/sl_support.h: ... here.
+
+	* tools/bin/cce.in: Remove references to `ppp' and
+	`ppp2'. Introduce `spp' instead.
+
+	* tools/bin/spp: Update accordingly.
+
+	* tools/lib/mtalpha-sim/slrt.s: Use the short alias `mtalpha' for the
+	slr data tag, to allow future adaptation.
+
+2010-05-19  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	Migrate `spp' to the new framework.
 
 	* tools/bin/spp: Use the new framework.

@@ -180,7 +180,7 @@ if __name__ == "__main__":
    module = sys.argv[1]
    function = sys.argv[2]
    rest = sys.argv[3:]
-   assert module in ['ppp2alpha', 'spr']
+   assert module in ['sppalpha', 'spr']
    assert function in ['fundef', 'create', 'compile','filter','filter2']
    if function == 'fundef':
       fundef(*rest)
