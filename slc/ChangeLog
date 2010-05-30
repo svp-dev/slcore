@@ -1,5 +1,17 @@
 2010-05-30  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	Middle-end fixes in `spr'.
+
+	* tools/lib/slc/lower/seq.py: Fix flattening of argument types for
+	`create'.
+	
+	* tools/lib/slc/lower/split.py: Handle flattening of naked
+	`create' constructs to a function named by identifier. Remove
+	special behavior for `t_main', since it confuses things. Expose
+	split descriptor as array[2] instead of pointer-to-descriptor.
+
+2010-05-30  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	Minor whitespace fixes.
 
 	* tools/lib/slc/input/cm4.py: Tolerate more combinations of quotes

@@ -18,11 +18,11 @@ class Create_2_Loop(ScopedVisitor):
         if arg.type.startswith("sh"):
             self.__callist.append(flatten(None, ', &'))
             self.__callist.append(CVarUse(decl = arg.cvar))
-            self.__protolist += ", %s *" % arg.ctype
+            self.__protolist += flatten(None, ', ') + arg.ctype + flatten(None, ' *')
         else:
             self.__callist.append(flatten(None, ', '))
             self.__callist.append(CVarUse(decl = arg.cvar))
-            self.__protolist += ", %s" % arg.ctype
+            self.__protolist += flatten(None, ', ') + arg.ctype
         return arg
 
     def visit_lowcreate(self, lc):
@@ -30,7 +30,7 @@ class Create_2_Loop(ScopedVisitor):
         cr = self.cur_scope.creates[lc.label]
 
         self.__callist = []
-        self.__protolist = ""
+        self.__protolist = Block()
 
         if lc.target_next is not None:
             warn("alternative %s not used (sequential execution always succeeds)" %
@@ -62,7 +62,7 @@ class Create_2_Loop(ScopedVisitor):
                                 ctype = CType(items = 
                                               Opaque(text = "long (*") +
                                               CTypeHead() + 
-                                              ')(const long%s)' % protolist))
+                                              ')(const long' + protolist + ')'))
             self.cur_scope.decls += thetype
             funvar = CVarDecl(loc = cr.loc, name = n, ctype = CTypeUse(tdecl = thetype))
             self.cur_scope.decls += funvar

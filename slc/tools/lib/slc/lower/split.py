@@ -37,7 +37,11 @@ class ExampleOracle(object):
     def lowfun_for_create(self, cr, flavor):
 
         if cr.extras.get_attr('naked', None) is not None:
-            return cr.fun
+            if cr.funtype == cr.FUN_ID:
+                return cr.fun
+            else:
+                assert cr.funtype == cr.FUN_VAR
+                return CVarUse(decl = cr.fun)
 
         ix, f_flavor = self.mapping[flavor]
 
@@ -78,6 +82,13 @@ class SplitCreates(DefaultVisitor):
         
         # retrieve the corresponding create
         cr = self.cur_scope.creates[lc.label]
+
+        # # t_main is a special case
+        # if cr.funtype == cr.FUN_ID and cr.fun == "t_main":
+        #     # append to the end without replacing, so that
+        #     # the user can overload
+        #     cr.extras += Attr(name = 'naked', payload = {'flavor':'native'})
+
 
         # we need to remember declarations to avoid
         # deep copying of cvaruses/cvarsets
@@ -120,6 +131,12 @@ class SplitFuns(DefaultVisitor):
 
     def visit_fundecl(self, fd):
 
+        # # t_main is a special case
+        # if fd.name == "t_main":
+        #     # append to the end without replacing, so that
+        #     # the user can overload
+        #     fd.extras += Attr(name = 'naked', payload = {'flavor':'native'})
+
         (naked, flavors) = self.oracle.flavors_for_fun(fd)
 
         if naked:
@@ -140,7 +157,7 @@ class SplitFuns(DefaultVisitor):
         else:
             qual = "extern"
 
-        newbl.append(flatten(fd.loc, " %s void * restrict const %s" % (qual, fd.name)))
+        newbl.append(flatten(fd.loc, " %s void * restrict const %s[2]" % (qual, fd.name)))
         
         return newbl
 
@@ -161,11 +178,13 @@ class SplitFuns(DefaultVisitor):
 
     def visit_fundef(self, fd):
 
-        # t_main is a special case
-        if fd.name == "t_main":
-            # append to the end without replacing, so that
-            # the user can overload
-            fd.extras += Attr(name = 'naked', payload = {'flavor':'native'})
+        fd.body.accept(self)
+
+        # # t_main is a special case
+        # if fd.name == "t_main":
+        #     # append to the end without replacing, so that
+        #     # the user can overload
+        #     fd.extras += Attr(name = 'naked', payload = {'flavor':'native'})
         
         (naked, flavors) = self.oracle.flavors_for_fun(fd)
 
@@ -200,9 +219,9 @@ class SplitFuns(DefaultVisitor):
         #                      '__attribute__((__alias__("__slD_%(name)s")));'
         #                      % locals()))
         newbl.append(flatten(fd.loc, 
-                             'static void * const __slD_%(name)s[%(nflavors)d] = '
+                             ' %(qual)s void * restrict const %(name)s[%(nflavors)d] = '
                              '{ %(lfuncs)s };'
-                             '%(qual)s void * restrict const %(name)s = &__slD_%(name)s;'
+                             #'%(qual)s void * restrict const %(name)s = &__slD_%(name)s;'
                              % locals()))
 
 
