@@ -1,3 +1,10 @@
+2010-05-28  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
+	Fix one unit test.	
+
+	* 0_slc/1_createargs/useexit2.c: Use the new `delegate.h' and
+	constant names. Remove reference to family ID.
+
 2010-05-26  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
 	Enhance the math tests.
