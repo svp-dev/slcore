@@ -1,5 +1,6 @@
 !build-aux
 build-aux/depcomp
+build-aux/py-compile
 build-aux/missing
 build-aux/install-sh
 .version

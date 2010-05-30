@@ -7,11 +7,15 @@ aclocal.m4
 build
 config.log
 config.status
+.version
+*.pyc
+*.pyo
 README
 NEWS
 *.tar.gz
 *.tar.bz2
 *.tbz
+*.bug
 *~
 a.out
 foo*
