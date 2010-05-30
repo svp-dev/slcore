@@ -1,5 +1,9 @@
 2010-05-25  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	* lib/src/printf-pos.c: Include <cstrings.h> for `bcopy'.
+
+2010-05-25  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	* tools/bin/Makefile.am (dist_bin_SCRIPTS): Also install `spr'.
 
 2010-05-24  Raphael 'kena' Poss  <r.c.poss@uva.nl>
