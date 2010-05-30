@@ -25,54 +25,113 @@ noinst_LIBRARIES =
 ##
 ## Targets for `seqc'
 ##
-noinst_LIBRARIES += host-host-seqc/libbench.a
+noinst_LIBRARIES += seqc/libbench.a
 
-host_host_seqc_libbench_a_SOURCES =
-host_host_seqc_libbench_a_LIBADD = \
-	host-host-seqc/benchmark.o
+seqc_libbench_a_SOURCES =
+seqc_libbench_a_LIBADD = \
+	seqc/benchmark.o
 
-host-host-seqc/%.o: $(srcdir)/%.c
-	$(AM_V_at)$(MKDIR_P) host-host-seqc
+seqc/%.o: $(srcdir)/%.c
+	$(AM_V_at)$(MKDIR_P) seqc
 	$(slc_verbose)$(SLC_RUN) -g -b seqc -c -o $@ $<
 
-CLEANFILES += host-host-seqc/benchmark.o
+CLEANFILES += seqc/benchmark.o
 
 ###
 ### Targets for `ptl'
 ###
 if ENABLE_SLC_PTL
-noinst_LIBRARIES += host-host-ptl/libbench.a
+noinst_LIBRARIES += ptl/libbench.a
 
-host_host_ptl_libbench_a_SOURCES =
-host_host_ptl_libbench_a_LIBADD = \
-	host-host-ptl/benchmark.o
+ptl_libbench_a_SOURCES =
+ptl_libbench_a_LIBADD = \
+	ptl/benchmark.o
 
-host-host-ptl/%.o: $(srcdir)/%.c
-	$(AM_V_at)$(MKDIR_P) host-host-ptl
+ptl/%.o: $(srcdir)/%.c
+	$(AM_V_at)$(MKDIR_P) ptl
 	$(slc_verbose)$(SLC_RUN) -g -b ptl -c -o $@ $<
 
-CLEANFILES += host-host-ptl/benchmark.o
+CLEANFILES += ptl/benchmark.o
 endif
 
 ###
 ### Targets for `mtalpha'
 ###
 if ENABLE_SLC_MTALPHA
-noinst_DATA += mtalpha-sim/libbench.a
-CLEANFILES += mtalpha-sim/libbench.a
 
-mtalpha_sim_libbench_a_CONTENTS = \
-    mtalpha-sim/benchmark.o
+noinst_DATA += mta/libbench.a
+CLEANFILES += mta/libbench.a
 
-mtalpha-sim/%.o: $(srcdir)/%.c
-	$(AM_V_at)$(MKDIR_P) mtalpha-sim
-	$(slc_verbose)$(SLC_RUN) -b mtalpha -c -o $@ $<
+mta_libbench_a_CONTENTS = \
+    mta/benchmark.o
 
-mtalpha-sim/libbench.a: $(mtalpha_sim_libbench_a_CONTENTS)
+mta/%.o: $(srcdir)/%.c
+	$(AM_V_at)$(MKDIR_P) mta
+	$(slc_verbose)$(SLC_RUN) -b mta -c -o $@ $<
+
+mta/libbench.a: $(mta_libbench_a_CONTENTS)
 	$(AM_V_at)rm -f $@
 	$(AM_V_AR)$(AR_MTALPHA) cru $@ $^
 	$(AM_V_at)$(RANLIB_MTALPHA) $@
 
-CLEANFILES += mtalpha-sim/benchmark.o
+CLEANFILES += mta/benchmark.o
+
+##
+
+noinst_DATA += mta_n/libbench.a
+CLEANFILES += mta_n/libbench.a
+
+mta_n_libbench_a_CONTENTS = \
+    mta_n/benchmark.o
+
+mta_n/%.o: $(srcdir)/%.c
+	$(AM_V_at)$(MKDIR_P) mta_n
+	$(slc_verbose)$(SLC_RUN) -b mta_n -c -o $@ $<
+
+mta_n/libbench.a: $(mta_n_libbench_a_CONTENTS)
+	$(AM_V_at)rm -f $@
+	$(AM_V_AR)$(AR_MTALPHA) cru $@ $^
+	$(AM_V_at)$(RANLIB_MTALPHA) $@
+
+CLEANFILES += mta_n/benchmark.o
+
+##
+
+noinst_DATA += mta_on/libbench.a
+CLEANFILES += mta_on/libbench.a
+
+mta_on_libbench_a_CONTENTS = \
+    mta_on/benchmark.o
+
+mta_on/%.o: $(srcdir)/%.c
+	$(AM_V_at)$(MKDIR_P) mta_on
+	$(slc_verbose)$(SLC_RUN) -b mta_on -c -o $@ $<
+
+mta_on/libbench.a: $(mta_on_libbench_a_CONTENTS)
+	$(AM_V_at)rm -f $@
+	$(AM_V_AR)$(AR_MTALPHA) cru $@ $^
+	$(AM_V_at)$(RANLIB_MTALPHA) $@
+
+CLEANFILES += mta_on/benchmark.o
+
+##
+
+noinst_DATA += mta_s/libbench.a
+CLEANFILES += mta_s/libbench.a
+
+mta_s_libbench_a_CONTENTS = \
+    mta_s/benchmark.o
+
+mta_s/%.o: $(srcdir)/%.c
+	$(AM_V_at)$(MKDIR_P) mta_s
+	$(slc_verbose)$(SLC_RUN) -b mta_s -c -o $@ $<
+
+mta_s/libbench.a: $(mta_s_libbench_a_CONTENTS)
+	$(AM_V_at)rm -f $@
+	$(AM_V_AR)$(AR_MTALPHA) cru $@ $^
+	$(AM_V_at)$(RANLIB_MTALPHA) $@
+
+CLEANFILES += mta_s/benchmark.o
+
 endif
 

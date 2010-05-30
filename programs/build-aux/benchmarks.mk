@@ -3,9 +3,12 @@
 ###
 include $(top_srcdir)/build-aux/sl.mk
 SLFLAGS = -I$(top_srcdir)/benchmarks/lib -lbench
-SLFLAGS_PTL = -g -L$(top_builddir)/benchmarks/lib/host-host-ptl
-SLFLAGS_SEQC = -g -L$(top_builddir)/benchmarks/lib/host-host-seqc
-SLFLAGS_MTALPHA = -L$(top_builddir)/benchmarks/lib/mtalpha-sim
+SLFLAGS_PTL = -g -L$(top_builddir)/benchmarks/lib/ptl
+SLFLAGS_SEQC = -g -L$(top_builddir)/benchmarks/lib/seqc
+SLFLAGS_MTA = -L$(top_builddir)/benchmarks/lib/mta
+SLFLAGS_MTA_N = -L$(top_builddir)/benchmarks/lib/mta_n
+SLFLAGS_MTA_ON = -L$(top_builddir)/benchmarks/lib/mta_on
+SLFLAGS_MTA_S = -L$(top_builddir)/benchmarks/lib/mta_s
 CLEANFILES = $(BENCHMARKS:.c=.x) $(BENCHMARKS:.c=.bin.*)
 DISTCLEANFILES = 
 BUILT_SOURCES =
@@ -14,7 +17,7 @@ BUILT_SOURCES =
 ### Generating dependency makefiles
 ###
 PLIST ?= 1 2 4 8 16 32 64
-BENCH_BINFORMATS ?= seqc ptl mtalpha
+BENCH_BINFORMATS ?= seqc ptl mta mta_n mta_on mta_s
 
 SUFFIXES += .ilist
 ILIST_FILES = $(BENCHMARKS:.c=.ilist)

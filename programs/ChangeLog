@@ -1,5 +1,13 @@
 2010-05-31  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	Update benchmarking framework to use the new target names.
+
+	* build-aux/benchmarks.mk: Benchmark all `mta' targets.
+	* benchmarks/lib/Makefile.am: Also build libraries for all the
+	`mta' targets. Simplify directory names.
+
+2010-05-31  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	Update programs to use the new framework.
 
 	* benchmarks/lib/benchmark.h,
