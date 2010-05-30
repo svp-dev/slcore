@@ -288,7 +288,7 @@ def addswchll(fundata, items):
             yield (type, content, comment)
 
 
-_re_br = re.compile(r'(f?(br|beq|bne|bge|ble|bgt|blt|blbc)|jsr|ret|jmp|jsr_coroutine)\s')
+_re_br = re.compile(r'(f?(beq|bne|bge|ble|bgt|blt|blbc)|br|bsr|jsr|ret|jmp|jsr_coroutine)\s')
 def addswchbr(fundata, items):
     """
     Insert "swch" after branch instructions.
@@ -364,15 +364,17 @@ def prunenopend(fundata, items):
 def protectend(fundata, items):
     """
     Insert a "nop" instruction just before "end" 
-    when "end" immediately succeeds a label.
+    when "end" immediately succeeds a label or a branch.
     """
     atlabel = True
     for (type, content, comment) in items:
-        if type == 'label': # or (type == 'other' and content == 'swch' and comment == 'MT: branch'):
+        if type == 'label' or (type == 'other' and 
+                               (_re_br.match(content) is not None or \
+                                    (content == 'swch' and comment == 'MT: branch'))):
             atlabel = True
         elif type == 'other':
             if content == 'end' and atlabel:
-                yield ('other', 'nop', 'MT: end after label')
+                yield ('other', 'nop', 'MT: end after label/branch')
             atlabel = False
         yield (type, content, comment)
 

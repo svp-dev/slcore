@@ -1,5 +1,13 @@
 2010-05-24  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	Fix bug with MT-Alpha code generation.
+
+	* tools/lib/slc/mtalpha/asmproc/opt.py: Also recognize `bsr' as a
+	branch instruction. Ensure that "nop" is inserted between a branch
+	and "end".
+
+2010-05-24  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	Minor packaging fixes.
 
 	* tools/lib/Makefile.am (nobase_python_PYTHON): Fix typo in file
