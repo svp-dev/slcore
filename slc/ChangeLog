@@ -1,3 +1,13 @@
+2010-05-19  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
+	Merge CM4 into new framework.
+
+	* tools/bin/cm4.in: Copy functionality to...
+	* tools/lib/slc/input/cm4.py: ... here.
+
+	* tools/bin/cm4.in: Handle parameters `-P' and `-fcm4-trace'.
+	* tools/bin/slc.in: Use the new parameters.
+
 2010-05-17  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
 	Move forward with the new code transformation framework.

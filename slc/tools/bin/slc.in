@@ -549,15 +549,13 @@ if test -n "$verbose"; then
   cm4flags+=(-v)
 fi
 
-if test -n "$synclines"; then
-  cm4flags+=(-Wm4,-s)
-else
-  # cpp -P: do not generate synclines
+if test -z "$synclines"; then
+  cm4flags+=(-P)
   slc_ppflags+=(-P)
 fi
 
 if test -n "$m4trace"; then
-  cm4flags+=(-Wm4,-dV "-Wm4,--debugfile=$m4trace")
+  cm4flags+=("-fcm4-trace=$m4trace")
 fi
 for fl in "${slc_tflags[@]}"; do
     cm4flags+=("-Wm4,$fl")
