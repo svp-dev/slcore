@@ -1,3 +1,15 @@
+2010-05-28  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
+	Modify the stock GCC to better support C99's VLA's.
+
+	The stock GNU compiler needs to juggle around the stack pointer
+	when using large frames. When restoring the frame pointer on exit,
+	it needs a temporary register. However at this point it does not
+	honor `-ffixed', so a "forbidden" register could get used. This
+	changeset prevents this by using the AT register instead.
+	
+	* deploy/patches/gcc.patch: Extend changes to `alpha.c'.
+
 2010-04-29  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
 	Update installer version to suggest upgrading.

@@ -1,6 +1,6 @@
-diff -uNr -x '*.orig' gcc-4.4.3/gcc/config/alpha/alpha.c gcc-4.4.3-work/gcc/config/alpha/alpha.c
+diff -uNr -x '*.orig' -x b -x '*~' gcc-4.4.3/gcc/config/alpha/alpha.c gcc-4.4.3-work/gcc/config/alpha/alpha.c
 --- gcc-4.4.3/gcc/config/alpha/alpha.c	2010-01-02 15:28:25.000000000 +0100
-+++ gcc-4.4.3-work/gcc/config/alpha/alpha.c	2010-01-21 22:32:52.000000000 +0100
++++ gcc-4.4.3-work/gcc/config/alpha/alpha.c	2010-05-30 23:44:06.000000000 +0200
 @@ -7574,20 +7574,6 @@
  
    if (frame_size <= 32768)
@@ -62,7 +62,7 @@ diff -uNr -x '*.orig' gcc-4.4.3/gcc/config/alpha/alpha.c gcc-4.4.3-work/gcc/conf
 -
 -	     Yes, that's correct -- we have to reload the whole constant
 -	     into a temporary via ldah+lda then subtract from sp.  */
-+            rtx ptr = gen_rtx_REG (DImode, 28);
++            rtx ptr = gen_rtx_REG (DImode, 0);
  
  	  HOST_WIDE_INT lo, hi;
  	  lo = ((frame_size & 0xffff) ^ 0x8000) - 0x8000;
@@ -100,7 +100,7 @@ diff -uNr -x '*.orig' gcc-4.4.3/gcc/config/alpha/alpha.c gcc-4.4.3-work/gcc/conf
  	    sa_bias = reg_offset, reg_offset = 0;
  
 -	  sa_reg = gen_rtx_REG (DImode, 24);
-+	  sa_reg = gen_rtx_REG (DImode, 28);
++	  sa_reg = gen_rtx_REG (DImode, 0);
  	  sa_bias_rtx = GEN_INT (sa_bias);
  
  	  if (add_operand (sa_bias_rtx, DImode))
@@ -113,9 +113,44 @@ diff -uNr -x '*.orig' gcc-4.4.3/gcc/config/alpha/alpha.c gcc-4.4.3-work/gcc/conf
  	  sa_reg_exp = plus_constant (stack_pointer_rtx, bias);
  
  	  FRP (emit_move_insn (sa_reg, sa_reg_exp));
-diff -uNr -x '*.orig' gcc-4.4.3/gcc/config/alpha/alpha.h gcc-4.4.3-work/gcc/config/alpha/alpha.h
+@@ -8182,7 +8114,7 @@
+ 
+       if (eh_ofs)
+ 	{
+-	  sp_adj1 = gen_rtx_REG (DImode, 23);
++	  sp_adj1 = gen_rtx_REG (DImode, 28);
+ 	  emit_move_insn (sp_adj1,
+ 			  gen_rtx_PLUS (Pmode, stack_pointer_rtx, eh_ofs));
+ 	}
+@@ -8195,7 +8127,7 @@
+ 	sp_adj2 = GEN_INT (frame_size);
+       else if (TARGET_ABI_UNICOSMK)
+ 	{
+-	  sp_adj1 = gen_rtx_REG (DImode, 23);
++	  sp_adj1 = gen_rtx_REG (DImode, 28);
+ 	  FRP (emit_move_insn (sp_adj1, hard_frame_pointer_rtx));
+ 	  sp_adj2 = const0_rtx;
+ 	}
+@@ -8208,14 +8140,14 @@
+ 	    sp_adj1 = sa_reg;
+ 	  else
+ 	    {
+-	      sp_adj1 = gen_rtx_REG (DImode, 23);
++	      sp_adj1 = gen_rtx_REG (DImode, 28);
+ 	      FRP (emit_move_insn (sp_adj1, sp_adj2));
+ 	    }
+ 	  sp_adj2 = GEN_INT (low);
+ 	}
+       else
+ 	{
+-	  rtx tmp = gen_rtx_REG (DImode, 23);
++	  rtx tmp = gen_rtx_REG (DImode, 28);
+ 	  FRP (sp_adj2 = alpha_emit_set_const (tmp, DImode, frame_size,
+ 					       3, false));
+ 	  if (!sp_adj2)
+diff -uNr -x '*.orig' -x b -x '*~' gcc-4.4.3/gcc/config/alpha/alpha.h gcc-4.4.3-work/gcc/config/alpha/alpha.h
 --- gcc-4.4.3/gcc/config/alpha/alpha.h	2009-02-20 16:20:38.000000000 +0100
-+++ gcc-4.4.3-work/gcc/config/alpha/alpha.h	2010-01-21 22:32:56.000000000 +0100
++++ gcc-4.4.3-work/gcc/config/alpha/alpha.h	2010-01-26 16:19:27.000000000 +0100
 @@ -526,7 +526,7 @@
     class that represents their union.  */
  
@@ -152,9 +187,9 @@ diff -uNr -x '*.orig' gcc-4.4.3/gcc/config/alpha/alpha.h gcc-4.4.3-work/gcc/conf
    : (REGNO) == 27 ? R27_REG			\
    : (REGNO) >= 32 && (REGNO) <= 62 ? FLOAT_REGS	\
    : GENERAL_REGS)
-diff -uNr -x '*.orig' gcc-4.4.3/gcc/config/alpha/alpha.md gcc-4.4.3-work/gcc/config/alpha/alpha.md
+diff -uNr -x '*.orig' -x b -x '*~' gcc-4.4.3/gcc/config/alpha/alpha.md gcc-4.4.3-work/gcc/config/alpha/alpha.md
 --- gcc-4.4.3/gcc/config/alpha/alpha.md	2009-11-23 22:14:32.000000000 +0100
-+++ gcc-4.4.3-work/gcc/config/alpha/alpha.md	2010-01-21 22:33:12.000000000 +0100
++++ gcc-4.4.3-work/gcc/config/alpha/alpha.md	2010-01-26 16:19:27.000000000 +0100
 @@ -784,12 +784,10 @@
    "umulh %1,%2,%0"
    [(set_attr "type" "imul")
@@ -584,9 +619,9 @@ diff -uNr -x '*.orig' gcc-4.4.3/gcc/config/alpha/alpha.md gcc-4.4.3-work/gcc/con
        emit_move_insn (stack_pointer_rtx, want);
        emit_move_insn (operands[0], virtual_stack_dynamic_rtx);
        DONE;
-diff -uNr -x '*.orig' gcc-4.4.3/gcc/config/alpha/constraints.md gcc-4.4.3-work/gcc/config/alpha/constraints.md
+diff -uNr -x '*.orig' -x b -x '*~' gcc-4.4.3/gcc/config/alpha/constraints.md gcc-4.4.3-work/gcc/config/alpha/constraints.md
 --- gcc-4.4.3/gcc/config/alpha/constraints.md	2007-08-26 21:04:09.000000000 +0200
-+++ gcc-4.4.3-work/gcc/config/alpha/constraints.md	2010-01-21 22:33:04.000000000 +0100
++++ gcc-4.4.3-work/gcc/config/alpha/constraints.md	2010-01-26 16:19:27.000000000 +0100
 @@ -23,12 +23,6 @@
  
  ;; Integer register constraints.
