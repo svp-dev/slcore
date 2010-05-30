@@ -1,5 +1,11 @@
 2010-04-29  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	Update installer version to suggest upgrading.
+
+	* deploy/installer/build-aux/package-version: Bump to 2.4.
+
+2010-04-29  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	Change installer defaults to the new ABI.
 
 	* deploy/installer/versions.m4: Bump versions numbers.
