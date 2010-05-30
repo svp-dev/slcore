@@ -66,7 +66,9 @@ def parse_block(items, allow_index = False):
                   else: unexpected(item)
             else: 
                   assert isinstance(item, str)
-                  b += Opaque(item)
+                  csp = item.strip(' \t')
+                  if len(csp) > 0:
+                        b += Opaque(item)
             #print "parse block %x: item %x -- END (len %d)" % (id(b), id(item), len(b))
       return b
 

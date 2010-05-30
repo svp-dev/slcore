@@ -1,5 +1,14 @@
 2010-05-09  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	Minor whitespace handling improvements.
+
+	* tools/lib/slc/input/parse.py (parse_block): Ignore chunks of C text
+	with only horizontal whitespace.
+
+	* tools/lib/t-spr/slimpl.m4: Force `#line' at the start of a C block.
+
+2010-05-09  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	Implement tree checking.
 
 	* tools/lib/slc/ast.py,

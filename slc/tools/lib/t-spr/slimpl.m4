@@ -19,7 +19,7 @@ m4_define([[_sl_crcnt]],0)
 
 # C braces
 m4_define([[sl_lbr]], [[m4_dnl
-[[""", {'loc':r"""]]__file__:__line__[[""",'type':'scope', 'body':[r"""]]m4_dnl
+[[""", {'loc':r"""]]__file__:__line__[[""",'type':'scope', 'body':[r"""]]
 ]])
 
 m4_define([[sl_rbr]], [[m4_dnl
