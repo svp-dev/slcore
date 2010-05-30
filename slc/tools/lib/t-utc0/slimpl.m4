@@ -37,6 +37,7 @@ m4_define([[sl_decl]],[[m4_dnl
 m4_define([[sl_thparms]],[[m4_shiftn(2,$@)]])m4_dnl
 thread [[$2]] [[$1]]m4_if((sl_thparms),(),(void),(sl_thparms))m4_dnl
 ]])
+m4_define([[sl_decl_fptr]], [[sl_decl((*[[$1]]), m4_shift($@))]])
 
 # Pass transparently parameter declarations.
 m4_define([[sl_shparm]], [[shared [[$1]] __p_[[]]m4_ifblank([[$2]],sl_anonymous,[[$2]])]])

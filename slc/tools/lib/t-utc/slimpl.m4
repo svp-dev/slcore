@@ -26,6 +26,7 @@ m4_define([[sl_enddef]],[[]])
 
 # With the new syntax, a declaration looks the same as a definition.
 m4_define([[sl_decl]], m4_defn([[sl_def]]))
+m4_define([[sl_decl_fptr]], [[sl_decl((*[[$1]]), m4_shift($@))]])
 
 # Pass transparently parameter declarations.
 m4_define([[sl_shparm]], [[ shared [[$1]] [[$2]]]])

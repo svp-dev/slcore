@@ -20,6 +20,8 @@ m4_define([[__sl_crcnt]],0)
 
 m4_define([[sl_decl]], [[void [[$1]](void)]])
 
+m4_define([[sl_decl_fptr]], [[void (*[[$1]])(void)]])
+
 m4_define([[sl_shparm]],[[shparm:m4_normalize([[$1]]):m4_ifblank([[$2]],sl_anonymous,m4_normalize([[$2]]))]])
 m4_define([[sl_glparm]],[[glparm:m4_normalize([[$1]]):m4_ifblank([[$2]],sl_anonymous,m4_normalize([[$2]]))]])
 m4_define([[sl_glparm_mutable]],[[gparm_mutable:m4_normalize([[$1]]):m4_ifblank([[$2]],sl_anonymous,m4_normalize([[$2]]))]])

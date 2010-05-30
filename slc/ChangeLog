@@ -1,3 +1,23 @@
+2010-05-30  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
+	Implement support for thread function pointers.
+
+	* tools/lib/t-utc/slimpl.m4,
+	* tools/lib/t-utc0/slimpl.m4,
+	* tools/lib/t-ptl/slimpl.m4,
+	* tools/lib/t-sppalpha/slimpl.m4,
+	* tools/lib/t-seqc/slimpl.m4,
+	* tools/lib/t-spr/slimpl.m4: New syntax `sl_decl_fptr' and
+	`sl_typedef_fptr'.
+
+	* tools/lib/slc/ast.py,
+	* tools/lib/slc/input/parse.py,
+	* tools/lib/slc/visitors.py,
+	* tools/lib/slc/lower/split.py,
+	* tools/lib/slc/lower/seq.py,
+	* tools/lib/slc/mtalpha/visitors.py: Parse and convert function
+	pointer declarations.
+
 2010-05-28  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
 	Also check `spr+seq-mtalpha-sim' in tests.

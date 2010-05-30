@@ -111,6 +111,13 @@ class DefaultVisitor(BaseVisitor):
             fundecl.reset(p)
             return fundecl
 
+      def visit_fundeclptr(self, fundecl):
+            p = FunDeclPtr()
+            for parm in fundecl.parms:
+                  p += parm.accept(self)
+            fundecl.reset(p)
+            return fundecl
+
       def visit_fundef(self, fundef):
             self.dispatch(fundef, seen_as = FunDecl)
             fundef.body.accept(self)
@@ -274,6 +281,13 @@ class PrintVisitor(DefaultVisitor):
 
     def visit_fundecl(self, fundecl):
         return self.visit_funheader(fundecl, 'decl')
+
+    def visit_fundeclptr(self, fundecl):
+          if fundecl.extras.get_attr('typedef', None) is not None:
+                t = 'typedef_funptr'
+          else:
+                t = 'decl_funptr'
+          return self.visit_funheader(fundecl, t)
     
     def visit_fundef(self, fundef):
         self.visit_funheader(fundef, 'def')

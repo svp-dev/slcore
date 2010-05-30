@@ -67,6 +67,14 @@ class CheckVisitor(DefaultVisitor):
             p.accept(self)
         self.leave()
 
+    def visit_fundeclptr(self, fd):
+        fd.parm_dic = {}
+
+        self.enter(cur_fun = fd, in_parm_list = True)
+        for p in fd.parms:
+            p.accept(self)
+        self.leave()
+
     def visit_fundef(self, fd):
         if self.cur_fun is not None:
             self.err("cannot nest thread function definition", fd)

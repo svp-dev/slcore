@@ -227,6 +227,16 @@ class TFun_2_MTATFun(DefaultVisitor):
     
     def visit_fundecl(self, fundecl):
         return flatten(fundecl.loc, " void %s(void)" % fundecl.name)
+
+    def visit_fundeclptr(self, fundecl):
+        if fundecl.extras.get_attr('typedef', None) is not None:
+            qual = 'typedef'
+        elif fundecl.extras.get_attr('static', None) is not None:
+            qual = 'static'
+        else:
+            qual = ''
+        
+        return flatten(fundecl.loc, " %s void (*%s)(void)" % (qual, fundecl.name))
     
     def visit_fundef(self, fundef):
         newitems = []

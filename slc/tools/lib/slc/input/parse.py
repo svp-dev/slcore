@@ -89,6 +89,7 @@ def parse_block(items):
                   elif t == 'create': b += parse_create(item)
                   elif t == 'break': b += parse_break(item)
                   elif t == 'end_thread': b += parse_end_thread(item)
+                  elif t == 'decl_funptr': b += parse_funptrdecl(item)
                   elif t == 'scope': b += parse_scope(item)
                   else: unexpected(item)
             else: 
@@ -119,6 +120,15 @@ def parse_break(item):
 def parse_end_thread(item):
       return EndThread(loc = item['loc'])
 
+def parse_funptrdecl(item):
+      d = FunDeclPtr(loc = item['loc'],
+                     loc_end = item['loc_end'],
+                     name = item['name'].strip(),
+                     extras = parse_extras(item['extras']))
+      for p in item['params']:
+            d += parse_argparm(FunParm(), 'parm', p)
+      return d
+
 def parse_fundecl(item):
       d = FunDecl(loc = item['loc'], 
                   name = item['name'],
@@ -146,6 +156,7 @@ def parse_program(source):
             if type(item) == type({}):
                   t = item['type']
                   if t == 'decl': p += parse_fundecl(item)
+                  elif t == 'decl_funptr': p += parse_funptrdecl(item)
                   elif t == 'fundef': p += parse_fundef(item)
                   elif t == 'scope': p += parse_scope(item)
                   else: unexpected(item)

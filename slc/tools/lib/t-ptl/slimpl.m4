@@ -33,6 +33,7 @@ m4_ifdef([[_sl_increate]],[[m4_fatal(missing sync after create)]])m4_dnl
 
 # With the corecc syntax, a declaration looks the same as a definition.
 m4_define([[sl_decl]], m4_defn([[sl_def]]))
+m4_define([[sl_decl_fptr]], [[sl_decl((*[[$1]]), m4_shift($@))]])
 
 # Pass transparently parameter declarations.
 m4_define([[sl_shparm]], [[uTC::shared<[[$1]]>& __p_[[]]m4_ifblank([[$2]],sl_anonymous,[[$2]])]])

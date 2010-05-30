@@ -331,6 +331,15 @@ class FunDeclBase(Item):
         self._name = lex.extract_id(self, name)
 
 
+class FunDeclPtr(FunDeclBase):
+    """
+    Function pointer/typedef declaration node.
+
+    Used to represent ``sl_decl_funptr`` ``sl_typedef_funptr``.
+    """
+
+    pass
+
 class FunDecl(FunDeclBase):
     """
     Function declaration node.

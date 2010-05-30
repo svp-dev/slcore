@@ -144,6 +144,21 @@ class SplitFuns(DefaultVisitor):
         
         return newbl
 
+    def visit_fundeclptr(self, fd):
+        
+        (naked, flavors) = self.oracle.flavors_for_fun(fd)
+        if naked:
+            return Flavor(flavors[0], items = fd)
+
+        if fd.extras.get_attr('typedef', None) is not None:
+            qual = 'typedef'
+        elif fd.extras.get_attr('static', None) is not None:
+            qual = 'static'
+        else:
+            qual = ''
+
+        return flatten(fd.loc, " %s void * restrict const (*%s)[2]" % (qual, fd.name))
+
     def visit_fundef(self, fd):
 
         # t_main is a special case

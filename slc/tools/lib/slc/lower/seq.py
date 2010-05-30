@@ -169,6 +169,26 @@ class TFun_2_CFun(DefaultVisitor):
         if not keep:
             self.__shlist = self.__gllist = None
         return ret
+ 
+    def visit_fundeclptr(self, fundecl):
+        self.__shlist = []
+        self.__gllist = []
+        if fundecl.extras.get_attr('typedef', None) is not None:
+            qual = "typedef"
+        elif fundecl.extras.get_attr('static', None) is not None:
+            qual = "static"
+        else:
+            qual = ''
+        self.__buffer = flatten(fundecl.loc, 
+                                " %s long (*%s)(const long __slI" 
+                                % (qual, fundecl.name))
+        for parm in fundecl.parms:
+            parm.accept(self)
+        self.__buffer += ')'
+        ret = self.__buffer
+        self.__buffer = None
+        self.__shlist = self.__gllist = None
+        return ret
 
     def visit_fundef(self, fundef):
         newitems = self.dispatch(fundef, seen_as = FunDecl, keep = True, omitextern = True)
