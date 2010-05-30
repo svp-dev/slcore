@@ -20,12 +20,12 @@ m4_define([[__sl_crcnt]],0)
 
 m4_define([[sl_decl]], [[void [[$1]](void)]])
 
-m4_define([[sl_shparm]],[[sh:i:r:m4_normalize([[$1]]):m4_ifblank([[$2]],sl_anonymous,m4_normalize([[$2]]))]])
-m4_define([[sl_glparm]],[[gl:i:r:m4_normalize([[$1]]):m4_ifblank([[$2]],sl_anonymous,m4_normalize([[$2]]))]])
-m4_define([[sl_glparm_mutable]],[[gl:i:w:m4_normalize([[$1]]):m4_ifblank([[$2]],sl_anonymous,m4_normalize([[$2]]))]])
-m4_define([[sl_shfparm]],[[sh:f:r:m4_normalize([[$1]]):m4_ifblank([[$2]],sl_anonymous,m4_normalize([[$2]]))]])
-m4_define([[sl_glfparm]],[[gl:f:r:m4_normalize([[$1]]):m4_ifblank([[$2]],sl_anonymous,m4_normalize([[$2]]))]])
-m4_define([[sl_glfparm_mutable]],[[gl:f:w:m4_normalize([[$1]]):m4_ifblank([[$2]],sl_anonymous,m4_normalize([[$2]]))]])
+m4_define([[sl_shparm]],[[shparm:m4_normalize([[$1]]):m4_ifblank([[$2]],sl_anonymous,m4_normalize([[$2]]))]])
+m4_define([[sl_glparm]],[[glparm:m4_normalize([[$1]]):m4_ifblank([[$2]],sl_anonymous,m4_normalize([[$2]]))]])
+m4_define([[sl_glparm_mutable]],[[gparm_mutable:m4_normalize([[$1]]):m4_ifblank([[$2]],sl_anonymous,m4_normalize([[$2]]))]])
+m4_define([[sl_shfparm]],[[shfparm:m4_normalize([[$1]]):m4_ifblank([[$2]],sl_anonymous,m4_normalize([[$2]]))]])
+m4_define([[sl_glfparm]],[[glfparm:m4_normalize([[$1]]):m4_ifblank([[$2]],sl_anonymous,m4_normalize([[$2]]))]])
+m4_define([[sl_glfparm_mutable]],[[glfparm_mutable:m4_normalize([[$1]]):m4_ifblank([[$2]],sl_anonymous,m4_normalize([[$2]]))]])
 
 m4_define([[m4_sh_escape]],[['m4_bpatsubst([[$1]],[[[']]],[['"'"']])']])
 
@@ -53,17 +53,17 @@ m4_define([[sl_end_thread]], [[goto __sl_end_thread]])
 m4_define([[sl_getp]],[[m4_expand([[__sl_getp_]]m4_normalize([[$1]]))]])
 m4_define([[sl_setp]],[[m4_expand([[__sl_setp_]]m4_normalize([[$1]])[[([[$2]])]])]])
 
-m4_define([[sl_sharg]],[[sh:i:r:[[$1]]:m4_ifblank([[$2]],sl_anonymous,[[$2]]):[[$3]]]])
-m4_define([[sl_glarg]],[[gl:i:r:[[$1]]:m4_ifblank([[$2]],sl_anonymous,[[$2]]):[[$3]]]])
-m4_define([[sl_shfarg]],[[sh:f:r:[[$1]]:m4_ifblank([[$2]],sl_anonymous,[[$2]]):[[$3]]]])
-m4_define([[sl_glfarg]],[[gl:f:r:[[$1]]:m4_ifblank([[$2]],sl_anonymous,[[$2]]):[[$3]]]])
+m4_define([[sl_sharg]],[[sharg:[[$1]]:m4_ifblank([[$2]],sl_anonymous,[[$2]]):[[$3]]]])
+m4_define([[sl_glarg]],[[glarg:[[$1]]:m4_ifblank([[$2]],sl_anonymous,[[$2]]):[[$3]]]])
+m4_define([[sl_shfarg]],[[shfarg:[[$1]]:m4_ifblank([[$2]],sl_anonymous,[[$2]]):[[$3]]]])
+m4_define([[sl_glfarg]],[[glfarg:[[$1]]:m4_ifblank([[$2]],sl_anonymous,[[$2]]):[[$3]]]])
 
 m4_define([[sl_geta]],[[m4_expand([[__sl_geta_]]m4_normalize([[$1]]))]])
 m4_define([[sl_seta]],[[m4_expand([[__sl_seta_]]m4_normalize([[$1]])[[([[$2]])]])]])
 
 m4_define([[sl_initarg]],[[ m4_dnl
-[[$4]] __sl_after_[[$5]]; m4_dnl
-m4_define([[__sl_geta_$5]],[[__sl_after_[[]]m4_normalize([[$5]])]]) m4_dnl
+[[$2]] __sl_after_[[$3]]; m4_dnl
+m4_define([[__sl_geta_$3]],[[__sl_after_[[]]m4_normalize([[$3]])]]) m4_dnl
 ]])
 
 m4_define([[sl_create]], [[m4_dnl

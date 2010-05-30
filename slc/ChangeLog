@@ -1,5 +1,15 @@
 2010-05-19  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	Migrate `spp' to the new framework.
+
+	* tools/bin/spp: Use the new framework.
+	* tools/lib/slc/mtalpha/spp.py: Remove, obsoleted by `spp'.
+
+	* tools/lib/t-ppp2alpha/slimpl.m4: Adjust parameter declarations
+	for the new syntax required by `spp'.
+
+2010-05-19  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	Minor API improvement.
 
 	* tools/lib/slc/msg.py: Allow to use `warn' and `log' without context. 
