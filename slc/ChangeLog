@@ -1,5 +1,19 @@
 2010-05-21  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	Minor fixes.
+
+	* tools/lib/slc/lower/lowercreate.py: Fix typo (cr/lc).
+
+	* tools/lib/slc/mtalpha/visitors.py: Place extra spaces at start
+	of flattening.
+
+	* tools/lib/t-spr/slimpl.m4: Remove unneeded whitespace.
+
+	* tools/lib/slc/input/parse.py: Check for empty blocks also
+	*after* parsing the contents.
+
+2010-05-21  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	Add support for function/create attributes.
 
 	* tools/lib/t-spr/slimpl.m4: New syntax for attributes, new

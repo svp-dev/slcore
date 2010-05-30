@@ -226,7 +226,7 @@ class Create_2_MTACreate(ScopedVisitor):
 class TFun_2_MTATFun(DefaultVisitor):
     
     def visit_fundecl(self, fundecl):
-        return flatten(fundecl.loc, "void %s(void)" % fundecl.name)
+        return flatten(fundecl.loc, " void %s(void)" % fundecl.name)
     
     def visit_fundef(self, fundef):
         newitems = []
@@ -243,8 +243,9 @@ class TFun_2_MTATFun(DefaultVisitor):
                                             c['nrargregs']['glf'],
                                             c['nrargregs']['shf'])
         idxreg = regmagic.vname_to_legacy("idx_init")
+
         newitems.append(flatten(fundef.loc,
-                                'extern void %(name)s(void); '
+                                ' extern void %(name)s(void); '
                                 'void __slf_%(name)s(void) {'
                                 ' register long __slI __asm__("%(idxreg)s");'
                                 ' __asm__("# MT: index in %%0 (must be %(idxreg)s)"'

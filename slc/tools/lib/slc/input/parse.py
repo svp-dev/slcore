@@ -97,7 +97,9 @@ def parse_block(items):
                   if len(csp) > 0:
                         b += Opaque(item)
             #print "parse block %x: item %x -- END (len %d)" % (id(b), id(item), len(b))
-      return b
+      if len(b) > 0:
+            return b
+      return None
 
 def parse_argparm(p, cat, item):
       #print "parse argparm %x: item %x: %r" % (id(p), id(item), item)

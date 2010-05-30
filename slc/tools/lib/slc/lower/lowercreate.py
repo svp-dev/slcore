@@ -75,7 +75,7 @@ class Create_2_LowCreate(DefaultVisitor):
             newbl.append(flatten(cr.loc_end, "; (") +
                          cr.result_lvalue.accept(self) +
                          ') = ' +
-                         CVarUse(loc = cr.loc, decl = lc.cvar_exitcode))
+                         CVarUse(loc = cr.loc, decl = cr.cvar_exitcode))
 
         return newbl
                          

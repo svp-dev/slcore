@@ -90,7 +90,7 @@ m4_pushdef([[_sl_lbl]],F[[]]_sl_crcnt)m4_dnl
 [['limit':[r""" ]]m4_ifblank([[$4]],1,[[$4]])[[ """],]]m4_dnl
 [['step':[r""" ]]m4_ifblank([[$5]],1,[[$5]])[[ """],]]m4_dnl
 [['block':[r""" ]]m4_ifblank([[$6]],0,[[$6]])[[ """],]]m4_dnl
-[['args': []]m4_shiftn(8,$@)[[],]]m4_dnl
+[['args':[]]m4_shiftn(8,$@)[[],]]m4_dnl
 [['body': [r"""]]
 ]])
 
