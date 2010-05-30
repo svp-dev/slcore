@@ -78,6 +78,8 @@ def parse_args(args):
 
 # regex for C comments: 
 re_com = r'/[*].*?[*]/|//.*?(?=\n)'
+# regex for C braces:
+re_br = r'(?P<braces>[{}])'
 # regex for C strings:
 re_str = r'''(?P<str>"(?:[^\\"]|\\.)*"|['](?:[^\\']|\\.)*['])'''
 # regex for whitespace
@@ -86,7 +88,7 @@ re_ws = r'(?P<ws>\s+)'
 re_line = r'#(?:[ \t]*line|)[ \t]+(?P<line>[0-9]+)[ \t]+"(?P<file>.*?)".*?(?=\n)'
 # regex for id
 re_id = r'(?P<id>[a-zA-Z_][$a-zA-Z0-9_]*)' 
-re_all = r'%s|%s|%s|%s|(?P<rest>\(|[^\(\'\"\#a-zA-Z_]+|.)' % (re_str, re_ws, re_line, re_id)
+re_all = r'%s|%s|%s|%s|%s|(?P<rest>\(|[^{}\(\'\"\#a-zA-Z_]+|.)' % (re_br, re_str, re_ws, re_line, re_id)
 
 acc_nl = None
 def com_repl(matchobj):
@@ -144,6 +146,16 @@ def wrepl(matchobj):
         # log("STR: %r" % str);
         last_seen = 'rest'
         data = acc_ws + '%s%s%s' % (m4_lquote, quotes_escaper(str), m4_rquote)
+        acc_ws = ''
+        return data
+
+    br = matchobj.group('braces')
+    if br is not None:
+        last_seen = 'rest'
+        if br == '{': name = 'sl_lbr'
+        else: name = 'sl_rbr'
+        
+        data = acc_ws + '[[]]%s[[]]' % name
         acc_ws = ''
         return data
 

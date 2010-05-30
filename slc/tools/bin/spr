@@ -13,6 +13,7 @@ from slc.input.parse import parse_program
 from slc.lower.seq import *
 from slc.lower.lowercreate import *
 from slc.lower.split import *
+from slc.lower.lowgeta import *
 from slc.mtalpha.visitors import *
 from slc.ast import LowCreate
 
@@ -48,9 +49,6 @@ class Dispatcher(object):
             m = getattr(base_visitor, methname)
             return m(item, *args, **kwargs)
 
-class ReduceGetA(DefaultVisitor):
-      def visit_geta(self, geta):
-            return flatten(geta.loc, LowCreate.arg_var(geta.name))
 
 
 if __name__ == "__main__":

@@ -58,6 +58,9 @@ class DefaultVisitor(BaseVisitor):
             #print "return %x: %r" % (id(block), block)
             return block
 
+      def visit_scope(self, scope):
+            return self.dispatch(scope, seen_as = Block)
+
       def visit_fundecl(self, fundecl):
             p = FunDecl()
             for parm in fundecl.parms:
@@ -121,6 +124,9 @@ class DefaultVisitor(BaseVisitor):
       def visit_break(self, br):
             return br
 
+      def visit_indexdecl(self, idecl):
+            return idecl
+
       def visit_lowcreatearg(self, arg):
           return arg
 
@@ -148,7 +154,7 @@ class PrinterVisitor(DefaultVisitor):
         return opaque
             
     def visit_funparm(self, parm):
-        self.__out.write(' sl_%s(%s, %s)' % (parm.type, parm.ctype, parm.name))
+        self.__out.write('sl_%s(%s, %s)' % (parm.type, parm.ctype, parm.name))
         return parm
 
     def visit_funheader(self, fun, htype):
@@ -174,14 +180,11 @@ class PrinterVisitor(DefaultVisitor):
           self.__out.write('/* END FLAVOR: %s */' % f.flavor)
           return f
 
-    def visit_block(self, block):
-        if block.indexname is not None:
-            self.__out.write('{ sl_index(%s); ' % block.indexname)
-        #print "visiting %x: block %x: %r" % (id(self), id(block), block)
-        DefaultVisitor.visit_block(self, block)
-        if block.indexname is not None:
-            self.__out.write('}')
-        return block
+    def visit_scope(self, scope):
+          self.__out.write('{')
+          self.dispatch(scope, seen_as = Block)
+          self.__out.write('}')
+          return scope
 
     def visit_getp(self, vu):
         self.__out.write(' sl_getp(%s)' % vu.name)
@@ -204,7 +207,7 @@ class PrinterVisitor(DefaultVisitor):
         return vu
 
     def visit_createarg(self, arg):
-        self.__out.write(' sl_%s(%s, %s' % (arg.type, arg.ctype, arg.name))
+        self.__out.write('sl_%s(%s, %s' % (arg.type, arg.ctype, arg.name))
         if arg.init is not None:
             self.__out.write(',')
             arg.init.accept(self)
@@ -214,6 +217,10 @@ class PrinterVisitor(DefaultVisitor):
     def visit_break(self, br):
         self.__out.write(' sl_break ')
         return br
+
+    def visit_indexdecl(self, idecl):
+          self.__out.write(' sl_index(%s)' % idecl.indexname)
+          return idecl
 
     def visit_endthread(self, et):
         self.__out.write(' sl_end_thread ')
@@ -251,14 +258,14 @@ class PrinterVisitor(DefaultVisitor):
         return c
 
     def visit_lowcreatearg(self, arg):
-        self.__out.write(' sl_%s(%s, %s' % (arg.type, arg.ctype, arg.name))
+        self.__out.write('sl_%s(%s, %s' % (arg.type, arg.ctype, arg.name))
         if arg.init is not None:
             self.__out.write(', %s' % arg.init)
         self.__out.write(')')
         return arg
 
     def visit_lowcreate(self, lc):
-        self.__out.write(' /*LOW*/sl_create(')
+        self.__out.write('/*LOW*/sl_create(')
 
         for b in (lc.place, lc.start, lc.step, lc.limit, lc.block):
             self.__out.write(', %s' % b)
@@ -273,9 +280,9 @@ class PrinterVisitor(DefaultVisitor):
         lc.body.accept(self)
           
         if lc.sync_type == 'release':
-            self.__out.write(' /*LOW*/sl_release()')
+            self.__out.write('/*LOW*/sl_release()')
         else:
-            self.__out.write(' /*LOW*/sl_sync(%s)' % lc.retval)
+            self.__out.write('/*LOW*/sl_sync(%s)' % lc.retval)
 
         return lc
         

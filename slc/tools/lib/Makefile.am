@@ -74,6 +74,7 @@ nobase_python_PYTHON = \
 	slc/lower/seq.py \
 	slc/lower/split.py \
 	slc/lower/lowercreate.py \
+	slc/lower/lowgeta.py \
 	slc/input/__init__.py \
 	slc/input/read.py \
 	slc/input/parse.py

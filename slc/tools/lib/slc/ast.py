@@ -103,6 +103,12 @@ class Block(Item):
             name = lex.extract_id(self, name)
         self._indexname = name
 
+class Scope(Block):
+    """
+    A block surrounded by {}.
+    """
+    pass
+
 class Flavor(Block):
     """
     Flavor root for a branch of the AST.
@@ -371,3 +377,9 @@ class EndThread(Item):
 
 class Break(Item):
     pass
+
+class IndexDecl(Item):
+    def __init__(self, indexname = None, *args, **kwargs):
+        super(IndexDecl, self).__init__(*args, **kwargs)
+        self.indexname = indexname
+

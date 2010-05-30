@@ -296,16 +296,8 @@ class TFun_2_MTATFun(DefaultVisitor):
                                         "%s __slPwg_%s = %s;" 
                                         % (p.ctype, p.name, orig)))
 
-        # if there is an index declaration, define the index.
-        if fundef.body.indexname is not None:
-            newitems.append(flatten(fundef.loc, 
-                                    "register const long %s = __slI;" 
-                                    % fundef.body.indexname)) 
-
-        # consume the body and remove the index annotation
-        b = fundef.body.accept(self)
-        b.indexname = None
-        newitems.append(b)
+        # consume the body
+        newitems.append(fundef.body.accept(self))
 
         # close the body definition with a target label for sl_end_thread
         newitems.append(flatten(fundef.loc_end, "__sl_end: (void)0; }"))
@@ -368,5 +360,9 @@ class TFun_2_MTATFun(DefaultVisitor):
     def visit_endthread(self, et):
         return flatten(et.loc, " goto __sl_end ")
 
+    def visit_indexdecl(self, idecl):
+        return flatten(idecl.loc, 
+                       " register const long %s = __slI " 
+                       % idecl.indexname) 
 
 __all__ = ['Create_2_MTACreate', 'TFun_2_MTATFun']

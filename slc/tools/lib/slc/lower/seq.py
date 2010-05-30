@@ -116,7 +116,7 @@ class TFun_2_CFun(DefaultVisitor):
     def visit_funparm(self, parm):
         if parm.type.startswith("sh"):
             self.__shlist.append(parm.name)
-            self.__buffer += ', register %s * const __restrict__ __slP_%s' \
+            self.__buffer += ', register %s * const __restrict__ __slP_%s ' \
                 % (parm.ctype, parm.name)
         else:
             self.__gllist.append(parm.name)
@@ -124,7 +124,7 @@ class TFun_2_CFun(DefaultVisitor):
                 const = ""
             else:
                 const = "const"
-            self.__buffer += ', register %s %s __slP_%s' \
+            self.__buffer += ', register %s %s __slP_%s ' \
                 % (parm.ctype, const, parm.name)
         return parm
 
@@ -145,22 +145,21 @@ class TFun_2_CFun(DefaultVisitor):
         newitems = []
         newitems.append(self.dispatch(fundef, seen_as = FunDecl, keep = True))
         newitems.append(flatten(fundef.loc, "{"))
-        if fundef.body.indexname is not None:
-            newitems.append(flatten(fundef.loc, 
-                                    "register const long %s = __slI;" 
-                                    % fundef.body.indexname)) 
-        b = fundef.body.accept(self)
-        b.indexname = None 
-        newitems.append(b)
-        newitems.append(flatten(fundef.loc_end, "return 0; }"))
+        newitems.append(fundef.body.accept(self))
+        newitems.append(flatten(fundef.loc_end, " return 0; }"))
         self.__shlist = self.__gllist = None
         return newitems
 
+    def visit_indexdecl(self, idecl):
+        return flatten(idecl.loc, 
+                       " register const long %s = __slI " 
+                       % idecl.indexname) 
+
     def visit_break(self, br):
-        return flatten(br.loc, "return 1")
+        return flatten(br.loc, " return 1 ")
 
     def visit_endthread(self, et):
-        return flatten(et.loc, "return 0")
+        return flatten(et.loc, " return 0 ")
 
 
 __all__ = ['Create_2_Loop', 'TFun_2_CFun']

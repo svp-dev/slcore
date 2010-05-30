@@ -1,5 +1,30 @@
 2010-05-08  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	Introduce support for scopes, free index declarations.
+
+	* tools/bin/cm4.in: Escape `{' and `}' to `sl_lbr' and `sl_rbr'.
+
+	* tools/lib/t-spr/slimpl.m4,
+	* tools/lib/slc/ast.py,
+	* tools/lib/slc/input/parse.py: Introduce scopes and parse them.
+
+	* tools/lib/visitors.py: Handle scopes.
+
+	* tools/lib/slc/ast.py: Introduce node for index declarations.
+
+	* tools/lib/slc/visitors.py,
+	* tools/lib/slc/input/parse.py,
+	* tools/lib/slc/lower/seq.py,
+	* tools/lib/slc/mtalpha/visitors.py: Handle individual index
+	declaration nodes. Simplify block handling accordingly.
+
+	* tools/bin/spr: Move final lowering of `sl_geta' to...
+	* tools/lib/slc/lower/lowgeta.py: ...here.
+
+	* tools/lib/Makefile.am: List the new file.
+
+2010-05-08  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	Reach prototype of the deadlock avoidance scheme.
 
 	* tools/bin/spr: Move file reading and parsing to...
