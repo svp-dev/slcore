@@ -1,3 +1,13 @@
+2010-05-21  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
+	Sanitize UI of `cm4'.
+
+	* tools/bin/cm4.in: Replace parameter syntax `-Wm4,XXX' by `-X
+	XXX'. Support redirecting to the output specified with `-o'.
+
+	* tools/bin/cce.in,
+	* tools/bin/slc.in: Use `-X' and `-o'.
+
 2010-05-20  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
 	Start integrating `spr' with `slc'.

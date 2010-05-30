@@ -65,7 +65,7 @@ def parse_args(args):
         elif arg.startswith('-fcm4-line='):    m4_line = arg.split('=',1)[1]
         elif arg.startswith('-fcm4-dump='):    dump_trans = arg.split('=',1)[1]
         elif arg.startswith('-I'):             m4_args.append(arg)
-        elif arg.startswith('-Wm4,'):          m4_args += arg.split(',')[1:]
+        elif arg.startswith('-X'):             m4_args.append(args[i + 1]); i = i + 2; continue
         elif arg == '--': input_files += args[i+1:]; return
         elif arg == '-':  input_files.append(arg)
         elif arg.startswith('-'): 
@@ -104,7 +104,14 @@ def do_combine(cm4):
     data = cm4.massage(data)
     maybe_capture(dump_trans, "massaged source", "ms", data)
     data = cm4.do_m4(data, m4_args, m4_trace)
-    print data
+
+    if output_file == '-':
+        out = sys.stdout
+    else:
+        out = file(output_file, 'w')
+    out.write(data)
+    out.flush()
+    if output_file != '-': out.close()
 
 if __name__ == "__main__":
     parse_args(sys.argv[1:])

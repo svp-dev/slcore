@@ -212,7 +212,7 @@ esac
 case $slc_dialect in
     spp*|utc*|seqc*|ptl*) 
         slc_translator=("$cm4_helper" -fcm4-lquote='[[' -fcm4-rquote=']]')
-        slc_tflags+=("-Wm4,-DPYTHON=$python" "-Wm4,-DSPP_PY=$spp_helper") 
+        slc_tflags+=(-X "-DPYTHON=$python" -X "-DSPP_PY=$spp_helper") 
         ;;
     spr*)
         slc_translator=("$spr_helper")
@@ -248,7 +248,7 @@ for m4_preinc in slc_m4sugar.m4 slc.m4; do
    if test -z "$found"; then
       echo "$basename: warning: could not find $m4_preinc in $slc_incdir" >&2
    else
-      slc_tflags+=("-Wm4,$found")
+      slc_tflags+=("-X" "$found")
    fi
 done
 for d in $slc_incdir; do

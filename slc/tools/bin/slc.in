@@ -130,6 +130,7 @@ for arg in "$@"; do
         ignore) continue;;
         touch) touch "$arg" ; continue;;
         pparg) extra_ppflags+=("$pparg" "$arg"); continue;;
+        targ)  extra_tflags+=("$pparg" "$arg"); continue;;
      esac
   fi
 
@@ -164,7 +165,8 @@ for arg in "$@"; do
 
       -I*)            extra_inc+=("$arg") ;;
       -Wa,*)          extra_asflags+=("$arg") ;;
-      -Wm4,*|-fcm4*)  extra_tflags+=("$arg") ;;
+      -fcm4*)         extra_tflags+=("$arg") ;;
+      -Xm4)           followaction=targ; pparg="-X";;
 
       -W*|-d*|-pedantic*|-ansi|-std*)
          extra_ppflags+=("$arg")
@@ -756,7 +758,9 @@ EOF
 	      slc_cflags+=("-I$dsrcdir")
           done
 	  cmd=("${slc_translator[@]}" "${slc_tflags[@]}" "${tdeps[@]}")
-	  if ! test "$slc_mode" = "trans" -a -z "$outfile"; then capturestdout=1; fi
+	  if ! test "$slc_mode" = "trans" -a -z "$outfile"; then 
+              cmd+=('-o' "$target")
+          fi
 	  ;;
       C)
 	  res=4
