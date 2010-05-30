@@ -1,7 +1,7 @@
 //
-// indcreate.c: this file is part of the SL toolchain.
+// bigarray2.c: this file is part of the SL toolchain.
 //
-// Copyright (C) 2009,2010 The SL project.
+// Copyright (C) 2010 The SL project.
 //
 // This program is free software; you can redistribute it and/or
 // modify it under the terms of the GNU General Public License
@@ -12,20 +12,25 @@
 // `COPYING' file in the root directory.
 //
 
-sl_def(foo, void)
-{ }
-sl_enddef
+#include <svp/compiler.h>
+#include <svp/testoutput.h>
 
-sl_decl_fptr(foo1, void) = &foo;
+noinline
+int foo(int*a) { barrier(); return a[42]; }
+
+// XIGNORE: ptl*:R
+
+noinline
+int bar(void)
+{
+    int a[90000];
+    a[42] = 123;
+    return foo(a)-23-58;
+}
 
 sl_def(t_main, void)
 {
-    sl_decl_fptr(foo2, void) = &foo;
-
-    sl_create(,,,,,,, *foo1);
-    sl_sync();
-    
-    sl_create(,,,,,,, *foo2);
-    sl_sync();
+    output_int(bar(), 1);
+    output_char('\n', 1);
 }
 sl_enddef

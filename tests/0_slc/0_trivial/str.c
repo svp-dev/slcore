@@ -1,7 +1,7 @@
 //
-// indcreate.c: this file is part of the SL toolchain.
+// str.c: this file is part of the SL toolchain.
 //
-// Copyright (C) 2009,2010 The SL project.
+// Copyright (C) 2010 The SL project.
 //
 // This program is free software; you can redistribute it and/or
 // modify it under the terms of the GNU General Public License
@@ -12,20 +12,23 @@
 // `COPYING' file in the root directory.
 //
 
-sl_def(foo, void)
-{ }
-sl_enddef
 
-sl_decl_fptr(foo1, void) = &foo;
+const char * a[] = {
+   "",
 
-sl_def(t_main, void)
-{
-    sl_decl_fptr(foo2, void) = &foo;
+   """",
+   "" "",
 
-    sl_create(,,,,,,, *foo1);
-    sl_sync();
-    
-    sl_create(,,,,,,, *foo2);
-    sl_sync();
-}
-sl_enddef
+   "a""",
+
+   """a",
+   "[""",
+   "]"""
+   "]]",
+   "[[",
+   "]]""", 
+};
+
+// XIGNORE: *:L
+
+

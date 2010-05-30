@@ -1,3 +1,17 @@
+2010-05-30  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
+	Extend the test suite.
+
+	* 0_slc/2_usegp/indcreate.c: Use the new syntax for function
+	pointer declarations.
+
+	* 0_slc/0_trivial/str.c,
+	* 0_slc/2_usegp/fptr.c,
+	* 0_slc/2_usegp/indcreate2.c,
+	* 0_slc/4_funcalls/createinfun.c,
+	* 0_slc/4_vlas/bigarray3.c,
+	* 0_slc/4_vlas/bigarray4.c: New.
+
 2010-05-28  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
 	Extend the test suite.

@@ -1,5 +1,5 @@
 //
-// indcreate.c: this file is part of the SL toolchain.
+// createinfun.c: this file is part of the SL toolchain.
 //
 // Copyright (C) 2009,2010 The SL project.
 //
@@ -11,21 +11,25 @@
 // The complete GNU General Public Licence Notice can be found as the
 // `COPYING' file in the root directory.
 //
+#include <svp/testoutput.h>
 
-sl_def(foo, void)
-{ }
+sl_def(bar, void, sl_shparm(int, x))
+{
+    sl_setp(x, sl_getp(x)+1);
+}
 sl_enddef
 
-sl_decl_fptr(foo1, void) = &foo;
+int foo(int x) {
+    
+    sl_create(,,,,,,, bar, sl_sharg(int, xs, x));
+    sl_sync();
+    return sl_geta(xs);
+
+}
 
 sl_def(t_main, void)
 {
-    sl_decl_fptr(foo2, void) = &foo;
-
-    sl_create(,,,,,,, *foo1);
-    sl_sync();
-    
-    sl_create(,,,,,,, *foo2);
-    sl_sync();
+    output_int(foo(41), 1);
+    output_char('\n', 1);
 }
 sl_enddef
