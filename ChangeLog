@@ -1,5 +1,11 @@
 2010-04-29  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	Change installer defaults to the new ABI.
+
+	* deploy/installer/versions.m4: Bump versions numbers.
+
+2010-04-29  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	Update copyright notice of files changed in 2010.	
 
 	* bootstrap,
