@@ -1,3 +1,35 @@
+2010-05-03  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
+	Refactor `spp' and `spr'.
+
+	Since some features from `spp' and `spr' are shared, and `spr' is
+	deemed to grow larger, split them as an installable Python library
+	tree.
+
+	* tools/bin/spr: Extract location definitions and AST nodes to...
+	* tools/lib/slc/loc.py: ... here,
+	* tools/lib/slc/lex.py: ... here, and ...
+	* tools/lib/slc/ast.py: ... here. Refactor as needed.
+
+	* tools/bin/spr: Extract register magic to...
+	* tools/lib/slc/mtalpha/regmagic.py: ... here.
+
+	* tools/lib/slc/__init__.py,
+	* tools/lib/slc/mtalpha/__init__.py,
+	* tools/lib/slc/mtalpha/asmproc/__init__.py: New.
+
+	* tools/bin/spp: Split into...
+
+	* tools/lib/slc/msg.py,
+	* tools/lib/slc/mtalpha/spp.py,
+	* tools/lib/slc/mtalpha/compile.py,
+	* tools/lib/slc/mtalpha/asmproc/base.py,
+	* tools/lib/slc/mtalpha/asmproc/common.py,
+	* tools/lib/slc/mtalpha/asmproc/opt.py: ... this. Refactor as needed.
+
+	* tools/lib/Makefile.am (nobase_python_PYTHON): List the new
+	files.
+
 2010-05-01  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
 	Move forward with the new code transformation framework.

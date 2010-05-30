@@ -55,6 +55,19 @@ r-mtsparc-sim.sh: r-mt-sim.sh.in Makefile
 	$(AM_V_at)chmod +x,a-w $@.out
 	$(AM_V_at)mv -f $@.out $@
 
+nobase_python_PYTHON = \
+	slc/__init__.py \
+	slc/msg.py \
+	slc/loc.py \
+	slc/mtalpha/__init__.py \
+	slc/mtalpha/regmagic.py \
+	slc/mtalpha/compile.py \
+	slc/mtalpha/spp.py \
+	slc/mtalpha/asmproc/__init__.py \
+	slc/mtalpha/asmproc/base.py \
+	slc/mtalpha/asmproc/common.py \
+	slc/mtalpha/asmproc/opt.py
+
 nobase_dist_pkgdata_DATA = \
 	arggen.c \
 	t-utc/slimpl.m4 \

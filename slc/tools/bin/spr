@@ -6,216 +6,13 @@ import sys
 import re
 import pprint
 
-ws = r'(?:\s|#line\s[^\n]*\n)*'
+from slc.mtalpha import regmagic
+from slc.msg import die, log
+from slc.ast import *
 
-re_ws = re.compile('^' + ws + '$', re.S)
-re_identifier = re.compile('^' + ws + r'([a-zA-Z_][a-zA-Z0-9_]*)' + ws + '$', re.S)
-
-re_endswithline = re.compile(r'.*#line\s+\d+(?:\s+"[^"]*")?\s+$', re.S)
-
-def die(msg):
-   print >>sys.stderr, "%s:" % sys.argv[0], msg
-   sys.exit(1)
 
 #### Abstract syntax tree ####
 
-def extract_id(context, name):
-      m = re_identifier.match(name)
-      if m is None:
-            choke(context, "invalid identifier: '%s'" % name)
-      return m.group(1)
-
-def makeloc(locinfo):
-      f, l = locinfo.rsplit(':', 1)
-      return (int(l), f)
-
-class Item(object):
-      def __init__(self):
-            self.loc = None
-            self.loc_end = None
-            self.repr = None
-     
-      def set_loc(self, loc):
-            if type(loc) == type(''): loc = makeloc(loc)
-            self.loc = loc
-      def set_loc_end(self, loc_end):
-            if type(loc_end) == type(''): loc_end = makeloc(loc_end)
-            self.loc_end = loc_end
-
-class Opaque(Item):
-      def __init__(self):
-            Item.__init__(self)
-            self.text = None
-      def set_text(self, text):
-            self.text = text
-
-      def accept(self, v):
-            return v.dispatch().visit_opaque(self)
-
-      def __repr__(self):
-            return '<Opaque@0x%x: %r>' % (id(self), self.text)
-
-# class Alternate(Item):
-#       def __init__(self):
-#             self.parts = {}
-
-#       def set_part(self, name, item): 
-#             self.parts[name] = item
-
-#       def accept(self, v):
-#             newd = {}
-#             for (name, item) in self.parts.iteritems():
-#                   n = v.dispatch_alternate(name, item)
-#                   if n is not None:
-#                         newd[name] = n
-#             self.parts = newd
-
-class Block(Item):
-      def __init__(self):
-            Item.__init__(self)
-            self.items = []
-            self.indexname = None
-      
-      def add_item(self, item):
-            self.items.append(item)
-
-      def set_indexname(self, name):
-            self.indexname = extract_id(self, name)
-
-      def accept(self, v):
-            return v.dispatch().visit_block(self)
-
-class Program(Block):
-      def accept(self, v):
-            return v.dispatch().visit_program(self)
-
-class FunDecl(Item):
-      def __init__(self):
-            Item.__init__(self)
-            self.name = None
-            self.parms = []
-
-      def set_name(self, name):
-            self.name = extract_id(self, name)
-
-      def add_parm(self, parm):
-            self.parms.append(parm)
-      
-      def accept(self, v):
-            return v.dispatch().visit_fundecl(self)
-
-class FunDef(FunDecl):
-      def __init__(self):
-            FunDecl.__init__(self)
-            self.body = None
-
-      def set_body(self, body):
-            self.body = body
-
-      def accept(self, v):
-            return v.dispatch().visit_fundef(self)
-
-class ArgParam(Item):
-      def __init__(self):
-            Item.__init__(self)
-            self.name = None
-            self.ctype = None
-            self.type = None
-
-      def set_type(self, type):
-            self.type = type
-      def set_ctype(self, ctype):
-            self.ctype = ctype
-      def set_name(self, name):
-            self.name = extract_id(self, name)
-
-class FunParam(ArgParam):
-      def accept(self, v):
-            return v.dispatch().visit_funparm(self)
-
-class CreateArg(ArgParam):
-      def __init__(self):
-            self.init = None
-
-      def set_init(self, init): self.init = init
-
-      def accept(self, v):
-            return v.dispatch().visit_createarg(self)
-
-class VarUse(Item):
-      def __init__(self):
-            Item.__init__(self)
-            self.name = None
-      def set_name(self, name):
-            self.name = extract_id(self, name)
-
-class VarSet(VarUse):
-      def __init__(self):
-            VarUse.__init__(self)
-            self.rhs = None
-      def set_rhs(self, rhs):
-            self.rhs = rhs
-
-class GetParam(VarUse): 
-      def accept(self, v): return v.dispatch().visit_getp(self)
-
-class GetArg(VarUse): 
-      def accept(self, v): return v.dispatch().visit_geta(self)
-
-class SetParam(VarSet): 
-      def accept(self, v): return v.dispatch().visit_setp(self)
-
-class SetArg(VarSet): 
-      def accept(self, v): return v.dispatch().visit_seta(self)
-
-class Create(Item):
-      def __init__(self):
-            Item.__init__(self)
-            self.label = None
-            self.place = None
-            self.start = None
-            self.step = None
-            self.limit = None
-            self.block = None
-            self.id = None
-            self.sync_type = None
-            self.body = None
-            self.result_lvalue = None
-            self.fid_lvalue = None
-            self.fun = None
-            self.args = []
-      def add_arg(self, arg): self.args.append(arg)
-      def set_label(self, label): self.label = extract_id(self, label)
-      def set_place(self, place): self.place = place
-      def set_start(self, start): self.start = start
-      def set_step(self, step): self.step = step
-      def set_limit(self, limit): self.limit = limit
-      def set_block(self, block): self.block = block
-      def set_id(self, id): self.id = id
-      def set_sync_type(self, sync_type): self.sync_type = sync_type
-      def set_body(self, body): self.body = body
-      def set_result_lvalue(self, lvalue): self.result_lvalue = lvalue
-      def set_fid_lvalue(self, lvalue): self.fid_lvalue = lvalue
-      def set_fun(self, fun):
-            if len(fun.items) == 1:
-                  m = re_identifier.match(fun.items[0].text)
-                  if m is not None:
-                        self.fun = m.group(1)
-                        return
-            self.fun = fun
-      def funIsIdentifier(self):
-            return type(self.fun) == type('')
-
-      def accept(self, v):
-            return v.dispatch().visit_create(self)
-
-class EndThread(Item):
-      def accept(self, v):
-            return v.dispatch().visit_end_thread(self)
-
-class Break(Item):
-      def accept(self, v):
-            return v.dispatch().visit_break(self)
 
 #### Parser ####
 
@@ -231,124 +28,104 @@ def cleanup(source):
       elif type(source) == type({}):
             return dict( ( (k,cleanup(v)) for (k,v) in source.iteritems() ) )
       else: 
-            raise RuntimeError, "unknown item type: %r" % source
+            die("unknown item type: %r" % source)
 
-
-def choke(item, msg, warning = False):
-      if type(item) == type({}) and item.has_key('loc'):
-            item = item['loc']
-      elif hasattr(item, 'loc'):
-            item = getattr(item, 'loc')
-           
-      if type(item) == type(()) and len(item) == 2:
-            item = '%s:%d' % (item[1], item[0])
-
-      if type(item) == type(''):
-            print >>sys.stderr, '%s:' % item,
-
-      print >>sys.stderr, msg
-      if not warning:
-            sys.exit(1)
-
-def warn(item, msg):
-      return choke(item, msg, warning = True)
 
 def unexpected(item):
-      choke(item, "unexpected construct '%s'" % item.get('type','unknown'))
+      die("unexpected construct '%s'" % item.get('type','unknown'), item)
 
-def make_opaque(item):
-      c = Opaque()
-      c.set_text(item)
-      return c
 
 def isemptyblock(item):
       return item == [] or (len(item) == 1 and len(item[0]) == 0)
 
 def parse_varuse(varuse, item):
-      varuse.set_loc(item['loc'])
-      varuse.set_name(item['name'])
+      #print "parse varuse %x: item %x: %r" % (id(varuse), id(item), item)
+      varuse.loc = item['loc']
+      varuse.name = item['name']
       if item.has_key('body'):
-            varuse.set_rhs(parse_block(item['body'], False))
+            varuse.rhs = parse_block(item['body'], False)
       return varuse
 
 def parse_create(item):
-      c = Create()
-      c.set_loc(item['loc'])
-      c.set_loc_end(item['loc_end'])
-      c.set_label(item['lbl'])
-      c.set_place(parse_block(item['place'], False))
-      c.set_start(parse_block(item['start'], False))
-      c.set_limit(parse_block(item['limit'], False))
-      c.set_step(parse_block(item['step'], False))
-      c.set_block(parse_block(item['block'], False))
-      c.set_sync_type(item['sync'])
-      c.set_fun(parse_block(item['fun'], False))
+      c = Create(loc = item['loc'],
+                 loc_end = item['loc_end'],
+                 label = item['lbl'],
+                 place = parse_block(item['place'], False),
+                 start = parse_block(item['start'], False),
+                 limit = parse_block(item['limit'], False),
+                 step = parse_block(item['step'], False),
+                 block = parse_block(item['block'], False),
+                 sync_type = item['sync'],
+                 fun = parse_block(item['fun'], False),
+                 body = parse_block(item['body'], False))
+                 
       for p in item['args']:
-            c.add_arg(parse_argparm(CreateArg(), 'arg', p))
-      c.set_body(parse_block(item['body'], False))
-      if item.has_key('result') and item['result']:
-            c.set_result_lvalue(parse_block(item['result'], False))
-      if item.has_key('fid') and item['fid']:
-            c.set_fid_lvalue(parse_block(item['fid'], False))
+            c.args.append(parse_argparm(CreateArg(), 'arg', p))
+
+
+      if 'result' in item and item['result']:
+            c.result_lvalue = parse_block(item['result'], False)
+
+      if 'fid' in item and item['fid']:
+            c.fid_lvalue = parse_block(item['fid'], False)
+
       return c
 
 def parse_block(items, allow_index = False):
       if len(items) == 0:
             return None
       b = Block()
+      #print "new block %x (len %d)" % (id(b), len(b))
       for item in items:
-            if type(item) == type({}):
+            #print "parse block %x (len %d): item %x: %r" % (id(b), len(b), id(item), item)
+            if isinstance(item, dict):
                   t = item['type']
-                  if t == 'indexdecl' and allow_index: b.set_indexname(item['name'])
-                  elif t == 'getp': b.add_item(parse_varuse(GetParam(), item))
-                  elif t == 'setp': b.add_item(parse_varuse(SetParam(), item))
-                  elif t == 'geta': b.add_item(parse_varuse(GetArg(), item))
-                  elif t == 'seta': b.add_item(parse_varuse(SetArg(), item))
-                  elif t == 'create': b.add_item(parse_create(item))
-                  elif t == 'break': b.add_item(parse_break(item))
-                  elif t == 'end_thread': b.add_item(parse_end_thread(item))
+                  if t == 'indexdecl' and allow_index: b.indexname = item['name']
+                  elif t == 'getp': b += parse_varuse(GetP(), item)
+                  elif t == 'setp': b += parse_varuse(SetP(), item)
+                  elif t == 'geta': b += parse_varuse(GetA(), item)
+                  elif t == 'seta': b += parse_varuse(SetA(), item)
+                  elif t == 'create': b += parse_create(item)
+                  elif t == 'break': b += parse_break(item)
+                  elif t == 'end_thread': b += parse_end_thread(item)
                   else: unexpected(item)
-                        
-            else: b.add_item(make_opaque(item))
+            else: 
+                  assert isinstance(item, str)
+                  b += Opaque(item)
+            #print "parse block %x: item %x -- END (len %d)" % (id(b), id(item), len(b))
       return b
 
 def parse_argparm(p, cat, item):
+      #print "parse argparm %x: item %x: %r" % (id(p), id(item), item)
       if not item['type'].endswith(cat):
             unexpected(item)
-      p.set_loc(item['loc'])
-      p.set_type(item['type'])
-      p.set_ctype(item['ctype'])
-      p.set_name(item['name'])
+      p.loc = item['loc']
+      p.type = item['type']
+      p.ctype = item['ctype']
+      p.name = item['name']
       if item.has_key('init'):
-         p.set_init(parse_block(item['init'], False))
+         p.init = parse_block(item['init'], False)
       return p            
 
 def parse_break(item):
-      b = Break()
-      b.set_loc(item['loc'])
-      return b
+      return Break(loc = item['loc'])
 
 def parse_end_thread(item):
-      e = EndThread()
-      e.set_loc(item['loc'])
-      return e
+      return EndThread(loc = item['loc'])
 
 def parse_fundecl(item):
-      d = FunDecl()
-      d.set_loc(item['loc'])
-      d.set_name(item['name'])
+      d = FunDecl(loc = item['loc'], name = item['name'])
       for p in item['params']:
-            d.add_parm(parse_argparm(FunParam(), 'parm', p))
+            d += parse_argparm(FunParm(), 'parm', p)
       return d
 
 def parse_fundef(item):
-      d = FunDef()
-      d.set_loc(item['loc'])
-      d.set_loc_end(item['loc_end'])
-      d.set_name(item['name'])
+      d = FunDef(loc = item['loc'], 
+                 loc_end = item['loc_end'], 
+                 name = item['name'],
+                 body = parse_block(item['body'], allow_index = True))
       for p in item['params']:
-            d.add_parm(parse_argparm(FunParam(), 'parm', p))
-      d.set_body(parse_block(item['body'], allow_index = True))
+            d += parse_argparm(FunParm(), 'parm', p)
       return d
 
 def parse_program(source):
@@ -356,10 +133,10 @@ def parse_program(source):
       for item in source:
             if type(item) == type({}):
                   t = item['type']
-                  if t == 'decl': p.add_item(parse_fundecl(item))
-                  elif t == 'fundef': p.add_item(parse_fundef(item))
+                  if t == 'decl': p += parse_fundecl(item)
+                  elif t == 'fundef': p += parse_fundef(item)
                   else: unexpected(item)
-            else: p.add_item(make_opaque(item))
+            else: p += Opaque(item)
       return p
 
 #### Base visitor and dispatch ####
@@ -380,29 +157,20 @@ class DefaultVisitor(BaseVisitor):
             return opaque
 
       def visit_block(self, block):
-            l = []
-            for item in block.items:
-                  if not hasattr(item, 'accept'):
-                        print >>sys.stderr, "invalid item:"
-                        pprint.pprint(item, stream=sys.stderr)
-                        choke(block, "internal error")
-                  new = item.accept(self)
-                  if type(new) == type([]):
-                        l += new
-                  elif new is not None:
-                        l.append(new)
-            block.items = l
+            newbl = Block()
+            # print "visiting block %x: %r" % (id(block), block)
+            for item in block:
+                  # print "in block %x: item %x: %r" % (id(block), id(item), item)
+                  newbl += item.accept(self)
+            block.reset(newbl)
+            #print "return %x: %r" % (id(block), block)
             return block
 
       def visit_fundecl(self, fundecl):
-            p = []
+            p = FunDecl()
             for parm in fundecl.parms:
-                  new = parm.accept(self)
-                  if type(new) == type([]):
-                        p += new
-                  elif new is not None:
-                        p.append(new)
-            fundecl.parms = p
+                  p += parm.accept(self)
+            fundecl.reset(p)
             return fundecl
 
       def visit_fundef(self, fundef):
@@ -456,7 +224,7 @@ class DefaultVisitor(BaseVisitor):
                   arg.init.accept(self)
             return arg
 
-      def visit_end_thread(self, et):
+      def visit_endthread(self, et):
             return et
 
       def visit_break(self, br):
@@ -498,6 +266,7 @@ class PrinterVisitor(DefaultVisitor):
       def visit_block(self, block):
             if block.indexname is not None:
                   self.buffer += '{ sl_index(%s); ' % block.indexname
+            #print "visiting %x: block %x: %r" % (id(self), id(block), block)
             DefaultVisitor.visit_block(self, block)
             if block.indexname is not None:
                   self.buffer += '}'
@@ -532,7 +301,7 @@ class PrinterVisitor(DefaultVisitor):
             self.buffer += ' sl_break '
             return br
 
-      def visit_end_thread(self, et):
+      def visit_endthread(self, et):
             self.buffer += ' sl_end_thread '
             return et
 
@@ -574,10 +343,8 @@ class PrinterVisitor(DefaultVisitor):
 
 def flatten(loc, opaquetext):
       if loc is not None:
-            opaquetext = ('\n#line %d "%s"\n' % loc) + opaquetext
-      o = Opaque()
-      o.set_text(opaquetext)
-      return o
+            opaquetext = ('\n%s\n' % loc.ppline()) + opaquetext
+      return Opaque(opaquetext)
 
 class Create_2_Loop(DefaultVisitor):
       def __init__(self):
@@ -747,426 +514,16 @@ class TFun_2_CFun(DefaultVisitor):
       def visit_break(self, br):
             return flatten(br.loc, "return SVP_EBROKEN")
 
-      def visit_end_thread(self, et):
+      def visit_endthread(self, et):
             return flatten(et.loc, "return SVP_ENORMAL")
 
 #### MT-Alpha transforms ####
 
-class MTA_RegisterMagic(object):
-
-      # Magic numbers
-      #iargregs = 6 # 1 reserved for PV
-      #fargregs = 4
-      iargregs = 12
-      fargregs = 12
-      ilocalregs = 19
-      flocalregs = 19
-
-      legacy_fregs = {
-         # Scratch registers
-         'ft0' : 10,
-         'ft1' : 11,
-         'ft2' : 12,
-         'ft3' : 13,
-         'ft4' : 14,
-         'ft5' : 15,
-         'ft6' : 22,
-         'ft7' : 23,
-         'ft8' : 24,
-         'ft9' : 25,
-         'ft10' : 26,
-         'ft11' : 27,
-         'ft12' : 28,
-         'ft13' : 29,
-         'ft14' : 30,
-         # Return value registers
-         'frv' : 0,
-         'frv2' : 1,
-         # Incoming parameters
-         'fa0' : 16,
-         'fa1' : 17,
-         'fa2' : 18,
-         'fa3' : 19,
-         'fa4' : 20,
-         'fa5' : 21,
-         # Call-save registers
-         'fs0' : 2,
-         'fs1' : 3,
-         'fs2' : 4,
-         'fs3' : 5,
-         'fs4' : 6,
-         'fs5' : 7,
-         'fs6' : 8,
-         'fs7' : 9,
-         # Zero 
-         'fzero' : 31,
-         }
-   
-      legacy_regs = {
-         # function temporaries
-         't0' : 1,
-         't1' : 2,
-         't2' : 3,
-         't3' : 4,
-         't4' : 5,
-         't5' : 6,
-         't6' : 7,
-         't7' : 8,
-         't8' : 22,
-         't9' : 23,
-         't10' : 24,
-         't11' : 25,
-         # assembly scratch
-         'at' : 28,
-         # return value
-         'rv' : 0,
-         # incoming parameters
-         'a5' : 21,
-         'a4' : 20,
-         'a3' : 19,
-         'a2' : 18,
-         'a1' : 17,
-         'a0' : 16,
-         # procedure function / temporary
-         'pv' : 27,
-         't12' : 27,
-         # Callee-save registers
-         's0' : 9,
-         's1' : 10,
-         's2' : 11,
-         's3' : 12,
-         's4' : 13,
-         's5' : 14,
-         # Return address
-         'ra' : 26,
-         # Frame pointer / callee save
-         'fp' : 15,
-         's6' : 15,
-         # Global pointer
-         'gp' : 29,
-         # Stack pointer
-         'sp' : 30,
-         # Zero
-         'zero' : 31
-         }
-   
-   
-       ######################
-       # GCC Allocation order
-       ######################
-       # #define REG_ALLOC_ORDER {
-       #    1, 2, 3, 4, 5, 6, 7, 8,      /* nonsaved integer registers */
-       #    22, 23, 24, 25, 28,          /* likewise */
-       #    0,                           /* likewise, but return value */
-       #    21, 20, 19, 18, 17, 16,      /* likewise, but input args */
-       #    27,                          /* likewise, but OSF procedure value */
-       #    f10, f11, f12, f13, f14, f15,      /* nonsaved floating-point registers */
-       #    f22, f23, f24, f25, f26, f27,      /* likewise */
-       #    f28, f29, f30,                  /* likewise */
-       #    f0, f1,                      /* likewise, but return values */
-       #    f21, f20, f19, f18, f17, f16,      /* likewise, but input args */
-       #    9, 10, 11, 12, 13, 14,       /* saved integer registers */
-       #    26,                          /* return address */
-       #    15,                          /* hard frame pointer */
-       #    f2, f3, f4, f5, f6, f7,      /* saved floating-point registers */
-       #    f8, f9,                      /* likewise */
-       #    29, 30, 31, f31               /* gp, sp, ap, sfp */
-       # }
-   
-   
-      reg_mapping = {
-         # Globals
-         'g0' : 't11',
-         'g1' : 't10',
-         'g2' : 't9',
-         'g3' : 't8',
-         'g4' : 't7',
-         'g5' : 't6',
-         'g6' : 't5',
-         'g7' : 't4',
-         'g8' : 't3',
-         'g9' : 't2',
-         'g10' : 't1',
-         'g11' : 't0',
-   
-         'gf0' : 'ft11',
-         'gf1' : 'ft10',
-         'gf2' : 'ft9',
-         'gf3' : 'ft8',
-         'gf4'  : 'ft7',
-         'gf5' : 'ft6',
-         'gf6' : 'ft5',
-         'gf7' : 'ft4',
-         'gf8' : 'ft3',
-         'gf9' : 'ft2',
-         'gf10' : 'ft1',
-         'gf11' : 'ft0',
-         
-         # Shareds
-         's0' : 't0',
-         'd0' : 't1',
-         's1' : 't2',
-         'd1' : 't3',
-         's2' : 't4',
-         'd2' : 't5',
-         's3' : 't6',
-         'd3' : 't7',
-         's4' : 't8',
-         'd4' : 't9',
-         's5' : 't10',
-         'd5' : 't11',
-   
-         'sf0' : 'ft0',
-         'df0' : 'ft1',
-         'sf1' : 'ft2',
-         'df1' : 'ft3',
-         'sf2' : 'ft4',
-         'df2' : 'ft5',
-         'sf3' : 'ft6',
-         'df3' : 'ft7',
-         'sf4' : 'ft8',
-         'df4' : 'ft9',
-         'sf5' : 'ft10',
-         'df5' : 'ft11',
-         
-         'lf31' : 'fzero',
-         
-         'lf0' : 'ft12',
-         'lf1' : 'ft13',
-         'lf2' : 'ft14',
-         'lf3' : 'frv',
-         'lf4' : 'frv2',
-         'lf5' : 'fa5',
-         'lf6' : 'fa4',
-         'lf7' : 'fa3',
-         'lf8' : 'fa2',
-         'lf9' : 'fa1',
-         'lf10' : 'fa0',
-         'lf11' : 'fs0',
-         'lf12' : 'fs1',
-         'lf13' : 'fs2',
-         'lf14' : 'fs3',
-         'lf15' : 'fs4',
-         'lf16' : 'fs5',
-         'lf17' : 'fs6',
-         'lf18' : 'fs7',
-   
-         # Special locals
-         'l31' : 'zero',
-         'l18' : 'sp',
-         'l17' : 'gp',
-         'l16' : 'fp',
-         'l15' : 'ra',
-         'l14' : 'pv',
-         'l13' : 's5',
-   
-         'l12' : 's4',
-         'l11' : 's3',
-         'l10' : 's2',
-         'l9' : 's1',
-         'l8' : 's0',
-         'l7' : 'a0',
-         'l6' : 'a1',
-         'l5' : 'a2',
-         'l4' : 'a3',
-         'l3' : 'a4',
-         'l2' : 'a5',
-         'l1' : 'rv',
-         'l0' : 'at',
-         }
-   
-      reg_aliases = {
-         'tlsp' : 'l18',
-         'gp' : 'l17',
-         'pv' : 'l14',
-         'ra' : 'l15',
-         'fp' : 'l16',
-         'rv' : 'l1',
-         'idx_init' : 'l0',
-         'basearg' : 'l1',
-         'zero' : 'l31',
-         'frv' : 'lf3',
-         'fzero' : 'lf31',
-         'fbasearg' : 'lf1'
-         }
-   
-      def __init__(self):
-            regs = { 
-               'i' : { 'l' : [None]*32, 'g' : [None]*32, 's' : [None]*32, 'd' : [None]*32 },
-               'f' : { 'l' : [None]*32, 'g' : [None]*32, 's' : [None]*32, 'd' : [None]*32 },
-               }
-            reg_inv = map(lambda x:[], xrange(32))
-            freg_inv = map(lambda x:[], xrange(32))
-            aliases = {}
-
-            for r,t in self.reg_mapping.items():
-               cat = r[0]
-               if r[1] == 'f':
-                  species = 'f'
-                  nr = int(r[2:])
-                  legnr = self.legacy_fregs[t]
-                  inv_dic = freg_inv
-               else:
-                  species = 'i'
-                  nr = int(r[1:])
-                  legnr = self.legacy_regs[t]
-                  inv_dic = reg_inv
-
-               reg = { 'species' : species, 'cat' : cat, 'name' : r, 'legname' : t, 'nr' : nr, 'legnr' : legnr }
-               if aliases.has_key(r):
-                  die("alias %s already defined" % r)
-               aliases[r] = reg
-               if regs[species][cat][nr] is not None:
-                  die("register %s already defined" % r)
-               regs[species][cat][nr] = reg
-               inv_dic[legnr].append(reg)
-
-            for a,k in self.reg_aliases.items():
-               if aliases.has_key(a):
-                  die("alias %s already defined" % a)
-               aliases[a] = aliases[k]
-
-            # Consistency check
-            for i in reg_inv:
-               if len(i) == 0:
-                  die("all legacy integer registers are not used")
-            if i in freg_inv:
-               if len(i) == 0:
-                  die("all legacy fp registers are not used")
-
-            self.reg_inv = reg_inv
-            self.freg_inv = freg_inv
-            self.regs = regs
-            self.aliases = aliases
-
-      
-      def mapcall(self, loc, funcname, args):
-            dic = { 
-               'i' : { 'sh' : [], 'gl' : [] },
-               'f' : { 'sh' : [], 'gl' : [] },
-               }
-            anames = {}
-            #print args
-            for a in args:
-               cat = a.type[:2]
-               if a.type[2] == 'f':
-                     species = 'f'                     
-               else:
-                     species = 'i'
-               if a.type.endswith('_mutable'):
-                     mode = 'w'
-               else:
-                     mode = 'r'
-
-               na = {'loc':a.loc, 'cat':cat, 'species':species, 'ctype':a.ctype, 'name':a.name, 'init':getattr(a, 'init', None), 'glmode':mode}
-               anames[a.name] = na
-               dic[species][cat].append(na)
-
-            # Check if some parameters will use memory passing
-            escape = 0      
-            if len(dic['f']['sh']) * 2 + len(dic['f']['gl']) > self.fargregs:
-               escape = 1
-            if len(dic['i']['sh']) * 2 + len(dic['i']['gl']) > (self.iargregs - escape):
-               escape = 1
-
-            # Start allocate
-
-            islots_avail = self.iargregs - escape
-            fslots_avail = self.fargregs
-
-            # Allocate shareds first
-            if len(dic['i']['sh']) * 2 > islots_avail:
-               choke(loc, "%s: too many int shareds, cannot pass them via memory yet" % funcname)
-            shc = 0
-            for s in dic['i']['sh']:
-               s['mode'] = 'reg'
-               s['regnr'] = shc
-               shc += 1
-               islots_avail -= 2
-            nrishareds = shc
-
-            if len(dic['f']['sh']) > fslots_avail:
-               choke(loc, "%s: too many float shareds, cannot pass them via memory yet" % funcname)
-            shc = 0
-            for s in dic['f']['sh']:
-               s['mode'] = 'reg'
-               s['regnr'] = shc
-               shc += 1
-               fslots_avail -= 2
-            nrfshareds = shc
-
-            # Allocate fp globals
-            glc = 0
-            memlayout = []
-            offset = 0
-            for s in dic['f']['gl']:
-               if fslots_avail > 0:
-                  s['mode'] = 'reg'
-                  s['regnr'] = glc
-                  glc += 1
-                  fslots_avail -= 1
-               else:
-                  s['mode'] = 'mem'
-                  s['offset'] = offset
-                  offset += 1
-                  memlayout.append(s)
-            nrfglobals = glc
-
-            glc = 0
-            for s in dic['i']['gl']:
-               if islots_avail > 0:
-                  s['mode'] = 'reg'
-                  s['regnr'] = glc
-                  glc += 1
-                  islots_avail -= 1
-               else:
-                  s['mode'] = 'mem'
-                  s['offset'] = offset
-                  offset += 1
-                  memlayout.append(s)
-            nriglobals = glc
-
-            ret = {}
-            if escape == 0:
-               ret['gl_mem_offset'] = None
-            else:
-               warn(loc, "%s: some arguments are passed via memory" % funcname)
-               nriglobals = glc + 1
-               ret['gl_mem_offset'] = glc
-
-            # nriglobals = nriglobals + 1 # count PV
-
-            ret['nrargregs'] = { 'gli' : nriglobals, 'shi' : nrishareds,
-                                 'glf' : nrfglobals, 'shf' : nrfshareds }
-            ret['args'] = dic
-            ret['nargs'] = anames
-            ret['memlayout'] = memlayout
-
-            #pprint.pprint(ret)
-
-            return ret
-
-      def vreg_to_legacy(self, vreg):
-            if vreg['species'] == 'f':
-                  return "$f%d" % vreg['legnr']
-            else:
-                  return "$%d" % vreg['legnr']
-
-      def get_vreg(self, vname):
-            return self.aliases[vname]
-
-      def vname_to_legacy(self, vname):
-            return self.vreg_to_legacy(self.get_vreg(vname))
-
 
 class Create_2_MTACreate(DefaultVisitor):
-      def __init__(self, magic = None):
+      def __init__(self):
             self.args = {}
             self.lbl = None
-            if magic is not None:
-                  self.magic = magic
-            else:
-                  self.magic = MTA_RegisterMagic()
 
       def visit_geta(self, geta):
             return flatten(geta.loc, "__slA_%s" % geta.name)
@@ -1209,53 +566,49 @@ __asm__ ("%(insn)s %%2, %%0, %(regnr)d\t# set arg %(name)s"
 
       def visit_create(self, cr):
 
-            newbl = []
+            newbl = Block(loc = cr.loc)
             lbl = cr.label
 
-            newbl.append(flatten(cr.loc, "register const long __slC_pl_%s = " % lbl))
-            newbl.append(cr.place.accept(self))
-            newbl.append(flatten(cr.loc, "; register const long __slC_st_%s = " % lbl)) 
-            newbl.append(cr.start.accept(self))
-            newbl.append(flatten(cr.loc, "; register const long __slC_li_%s = " % lbl))
-            newbl.append(cr.limit.accept(self))
-            newbl.append(flatten(cr.loc, "; register const long __slC_stp_%s = " % lbl))
-            newbl.append(cr.step.accept(self))
-            newbl.append(flatten(cr.loc, "; register const long __slC_bl_%s = " % lbl))
-            newbl.append(cr.block.accept(self))
-            newbl.append(flatten(cr.loc, "; register void (*__slC_fun_%s)(void) = (void (*)(void))(" % lbl))
+            newbl += flatten(cr.loc, "register const long __slC_pl_%s = " % lbl)
+            newbl += cr.place.accept(self)
+            newbl += flatten(cr.loc, "; register const long __slC_st_%s = " % lbl)
+            newbl += cr.start.accept(self)
+            newbl += flatten(cr.loc, "; register const long __slC_li_%s = " % lbl)
+            newbl += cr.limit.accept(self)
+            newbl += flatten(cr.loc, "; register const long __slC_stp_%s = " % lbl)
+            newbl += cr.step.accept(self)
+            newbl += flatten(cr.loc, "; register const long __slC_bl_%s = " % lbl)
+            newbl += cr.block.accept(self)
+            newbl += flatten(cr.loc, "; register void (*__slC_fun_%s)(void) = (void (*)(void))(" % lbl)
             if cr.funIsIdentifier():
-                  newbl.append(flatten(cr.loc, cr.fun))
+                  newbl += flatten(cr.loc, cr.fun)
             else:
-                  newbl.append(cr.fun.accept(self))
-            newbl.append(flatten(cr.loc, ");"))
+                  newbl += cr.fun.accept(self)
+            newbl += flatten(cr.loc, ");")
 
 
-            c = self.magic.mapcall(cr.loc, "create", cr.args)
+            c = regmagic.mapcall(cr.args, funcname = "create", loc = cr.loc)
 
             if c['gl_mem_offset'] is not None:
-                  newbl.append(flatten(cr.loc, "struct {"))
+                  newbl += flatten(cr.loc, "struct {")
                   for d in c['memlayout']:
-                        newbl.append(flatten(d['loc'], "%s %s;" % (d['ctype'], d['name'])))
-                  newbl.append(flatten(cr.loc, "} __slC_ma_%s;" % lbl))
+                        newbl += flatten(d['loc'], "%s %s;" % (d['ctype'], d['name']))
+                  newbl += flatten(cr.loc, "} __slC_ma_%s;" % lbl)
 
             inis = []
             for name, arg in c['nargs'].iteritems():
                   ctype = arg['ctype']
                   loc = arg['loc']
-                  newbl.append(flatten(loc, "%s __slA_%s;" % (ctype, name)))
+                  newbl += flatten(loc, "%s __slA_%s;" % (ctype, name))
                   if arg['init'] is not None:
-                        newbl.append(flatten(loc, "%s const __slAi_%s = " % (ctype, name)))
-                        newbl.append(arg['init'].accept(self))
-                        newbl.append(flatten(loc, ";"))
-                        ini = SetArg()
-                        ini.set_loc(loc)
-                        ini.set_name(name)
-                        ini.set_rhs(make_opaque('__slAi_%s' % name))
-                        b = Block()
-                        b.add_item(ini)
-                        inis.append(b)
+                        newbl += flatten(loc, "%s const __slAi_%s = " % (ctype, name))
+                        newbl += arg['init'].accept(self)
+                        newbl += flatten(loc, ";")
+                        inis.append(SetA(loc = loc, 
+                                         name = name, 
+                                         rhs = Opaque('__slAi_%s' % name)))
                         inis.append(flatten(loc, ';'))
-            newbl.append(flatten(cr.loc, """
+            newbl += flatten(cr.loc, """
 register long __slC_fid_%(lbl)s;
 __asm__ __volatile__("allocate %%1, %%0\t# MT: CREATE %(lbl)s"
   : "=r"(__slC_fid_%(lbl)s) : "rI"(__slC_pl_%(lbl)s));
@@ -1270,7 +623,7 @@ __asm__ ("setblock %%0, %%2\t# MT: CREATE %(lbl)s"
 __asm__ __volatile__("wmb; crei %%0, 0(%%2)\t# MT: CREATE %(lbl)s"
   : "=r"(__slC_fid_%(lbl)s) : "0"(__slC_fid_%(lbl)s),
     "r"(__slC_fun_%(lbl)s) : "memory");
-""".replace('\n','') % { 'lbl': lbl }))
+""".replace('\n','') % { 'lbl': lbl })
 
             old_args = self.args 
             old_lbl = self.lbl
@@ -1278,9 +631,9 @@ __asm__ __volatile__("wmb; crei %%0, 0(%%2)\t# MT: CREATE %(lbl)s"
             self.lbl = lbl
 
             for ini in inis:
-                  newbl.append(ini.accept(self))
+                  newbl += ini.accept(self)
 
-            newbl.append(cr.body.accept(self))
+            newbl += cr.body.accept(self)
 
             self.args = old_args
             self.lbl = old_lbl
@@ -1288,19 +641,19 @@ __asm__ __volatile__("wmb; crei %%0, 0(%%2)\t# MT: CREATE %(lbl)s"
             # here handle sync
             
             if c['gl_mem_offset'] is not None:
-                  newbl.append(flatten(cr.loc_end, """
+                  newbl += flatten(cr.loc_end, """
 __asm__ ("wmb; putg %%2, %%0, %(offset)d\t#MT: set offset for memargs"
   : "=r"(__slC_fid_%(lbl)s) : "0"(__slC_fid_%(lbl)s),
     "r"(&__slC_ma_%(lbl)s));
-""".replace('\n','') % { 'lbl':lbl, 'offset':c['gl_mem_offset']} ))
+""".replace('\n','') % { 'lbl':lbl, 'offset':c['gl_mem_offset']} )
 
             if cr.sync_type == 'normal':
-                  newbl.append(flatten(cr.loc_end, """
+                  newbl += flatten(cr.loc_end, """
 register long __slC_ret_%(lbl)s;
 __asm__ __volatile__("sync %%0, %%1; mov %%1, $31\t# MT: SYNC %(lbl)s"
   : "=r"(__slC_fid_%(lbl)s), "=r"(__slC_ret_%(lbl)s)
   : "0"(__slC_fid_%(lbl)s) : "memory");
-""".replace('\n','') % { 'lbl':lbl }))
+""".replace('\n','') % { 'lbl':lbl })
 
                   for name, arg in c['nargs'].iteritems():
                         if arg['mode'] == 'reg' and arg['cat'] == 'sh':
@@ -1313,35 +666,31 @@ __asm__ __volatile__("sync %%0, %%1; mov %%1, $31\t# MT: SYNC %(lbl)s"
                                     insn2 = 'mov'
                                     rspec = 'r'
                               regnr = arg['regnr']
-                              newbl.append(flatten(cr.loc_end, """
+                              newbl += flatten(cr.loc_end, """
 __asm__ ("%(insn1)s %%0, %(regnr)d, %%1; %(insn2)s %%1, %%1\t# MT: get shared %(name)s"
   : "=r"(__slC_fid_%(lbl)s), "=%(rspec)s"(__slA_%(name)s)
   : "0"(__slC_fid_%(lbl)s));
-""".replace('\n','') % locals()))
+""".replace('\n','') % locals())
     
                               
 
-                  newbl.append(flatten(cr.loc_end, """
+                  newbl += flatten(cr.loc_end, """
 __asm__ __volatile__("release %%0\t#MT: SYNC %(lbl)s"
   : : "r"(__slC_fid_%(lbl)s));
-""".replace('\n','') % { 'lbl':lbl }))
+""".replace('\n','') % { 'lbl':lbl })
 
                   if cr.result_lvalue is not None:
-                        newbl.append(flatten(cr.loc_end, "("))
-                        newbl.append(cr.result_lvalue.accept(self))
-                        newbl.append(flatten(cr.loc_end, ") = __slC_ret_%s" % lbl))
+                        newbl += flatten(cr.loc_end, "(")
+                        newbl += cr.result_lvalue.accept(self)
+                        newbl += flatten(cr.loc_end, ") = __slC_ret_%s" % lbl)
 
             return newbl
 
 
 
 class TFun_2_MTATFun(DefaultVisitor):
-      def __init__(self, magic = None):
-            if magic is not None:
-                  self.magic = magic
-            else:
-                  self.magic = MTA_RegisterMagic()
-                  
+      def __init__(self):
+            pass
 
       def visit_fundecl(self, fundecl):
             return flatten(fundecl.loc, "void %s(void)" % fundecl.name)
@@ -1349,7 +698,9 @@ class TFun_2_MTATFun(DefaultVisitor):
       def visit_fundef(self, fundef):
             newitems = []
             
-            c = self.magic.mapcall(fundef.loc, "function '%s'" % fundef.name, fundef.parms)
+            c = regmagic.mapcall(fundef.parms, 
+                                 funcname = "function '%s'" % fundef.name, 
+                                 loc = fundef.loc)
 
             self.gllist = []
             self.shlist = []
@@ -1363,15 +714,13 @@ extern void %(name)s(void);
 void __slf_%(name)s(void) {
    register long __slI __asm__("%(indexreg)s");
    __asm__("# MT: index in %%0 (must be %(indexreg)s)" : "=r"(__slI));
-   __asm__ __volatile__(".registers %(gli)d %(shi)d %(li)d %(glf)d %(shf)d %(lf)d\n");
+   __asm__ __volatile__("%(regdir)s\n");
 """.replace('\n','') % { 'name': fundef.name, 
-                         'gli' : c['nrargregs']['gli'],
-                         'shi' : c['nrargregs']['shi'],
-                         'glf' : c['nrargregs']['glf'],
-                         'shf' : c['nrargregs']['shf'],
-                         'li' : self.magic.ilocalregs,
-                         'lf' : self.magic.flocalregs,
-                         'indexreg' : self.magic.vname_to_legacy("idx_init") }))
+                         'regdir' : regmagic.get_dot_registers(c['nrargregs']['gli'],
+                                                               c['nrargregs']['shi'],
+                                                               c['nrargregs']['glf'],
+                                                               c['nrargregs']['shf']),
+                         'indexreg' : regmagic.vname_to_legacy("idx_init") }))
 
             if c['gl_mem_offset'] is not None:
                   newitems.append(flatten(fundef.loc, "register const struct {"))
@@ -1379,7 +728,7 @@ void __slf_%(name)s(void) {
                         self.gllist_mem.append(d['name'])
                         newitems.append(flatten(d['loc'], "%s %s;" % (d['ctype'], d['name'])))
                   newitems.append(flatten(fundef.loc, '} * __restrict__ const __slPgm __asm__("%s");' % 
-                                          self.magic.vname_to_legacy('g%d' % c['gl_mem_offset'])))
+                                          regmagic.vname_to_legacy('g%d' % c['gl_mem_offset'])))
 
                   
             for species,d1 in c['args'].items():
@@ -1404,8 +753,8 @@ void __slf_%(name)s(void) {
 register %(ctype)s __slPsin_%(name)s __asm__("%(dreg)s");
 register %(ctype)s __slPsout_%(name)s __asm__("%(sreg)s");
 """.replace('\n','') % { 'name':name, 'ctype':ctype, 
-                         'dreg': self.magic.vname_to_legacy(dreg),
-                         'sreg':self.magic.vname_to_legacy(sreg) }))
+                         'dreg': regmagic.vname_to_legacy(dreg),
+                         'sreg': regmagic.vname_to_legacy(sreg) }))
 
                         else: # cat: gl
                               self.gllist.append(name)                              
@@ -1413,7 +762,7 @@ register %(ctype)s __slPsout_%(name)s __asm__("%(sreg)s");
                                     reg = "gf%d" % regnr
                               else:
                                     reg = "g%d" % regnr
-                              newitems.append(flatten(a['loc'], 'register %s const __slPg_%s __asm__("%s");' % (ctype, name, self.magic.vname_to_legacy(reg))))
+                              newitems.append(flatten(a['loc'], 'register %s const __slPg_%s __asm__("%s");' % (ctype, name, regmagic.vname_to_legacy(reg))))
 
             for p in fundef.parms:
                   if p.type.endswith('_mutable'):
@@ -1480,7 +829,7 @@ __asm__ __volatile__("mov %%4, %%0\t# MT: write shared %(name)s (%%0)"
       def visit_break(self, br):
             return flatten(br.loc, """do { __asm__ __volatile__("break; end\tMT: break"); __builtin_unreachable(); } while(0)""")
 
-      def visit_end_thread(self, et):
+      def visit_endthread(self, et):
             return flatten(et.loc, "goto __sl_end")
             
 
