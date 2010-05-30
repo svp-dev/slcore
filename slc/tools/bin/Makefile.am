@@ -13,7 +13,7 @@
 
 # 
 bin_SCRIPTS = cce slc slr slt timeout slt-many cm4 slar slranlib
-dist_bin_SCRIPTS = scu spp sag
+dist_bin_SCRIPTS = scu spp sag spr
 
 EXTRA_DIST = cce.in slc.in slr.in slt.in timeout.in slt-many.in cm4.in slar.in slranlib.in
 

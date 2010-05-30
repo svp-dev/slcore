@@ -1,3 +1,7 @@
+2010-05-25  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
+	* tools/bin/Makefile.am (dist_bin_SCRIPTS): Also install `spr'.
+
 2010-05-24  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
 	Fix bug with MT-Alpha code generation.
