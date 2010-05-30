@@ -1,5 +1,17 @@
 2010-05-31  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	Update check expectations.
+
+	* benchmarks/sha/sha1.c: Expect failure for naked mta targets
+	only.
+
+	* benchmarks/sha/sha1_alt.c: Do not expect failure any more.
+
+	* demo/sep.c: Expect failure for `mta_s' (temporary, likely due to
+	underlying hardware bug).
+
+2010-05-31  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	Minor cosmetic fixes.
 
 	* benchmarks/lib/benchmark.h: Whitespace.

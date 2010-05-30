@@ -301,7 +301,7 @@ uint32_t output[5];
 slr_decl(slr_var(unsigned, N, "problem size (512-bit chunks)"));
 
 // SLT_RUN: N=10
-// XIGNORE: ppp:R
+// XIGNORE: mta_*n:R
 
 sl_def(t_main, void)
 {
