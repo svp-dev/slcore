@@ -1,5 +1,41 @@
 2010-05-24  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	Implement support for C function calls in caller thread context.
+
+	* tools/lib/slc/mtalpha/compile.py: Re-enable call-save registers.
+
+	* tools/lib/slc/mtalpha/asmproc/base.py (grouper): Also group
+	plain C functions. Also recognize non-global (e.g. C's static)
+	functions.
+
+	* tools/lib/slc/mtalpha/asmproc/common.py (cfunfilter, flattener),
+	* tools/lib/slc/mtalpha/asmproc/base.py (_cfilter_inner, filter):
+	Allow to define processing of plain C functions.
+
+	* tools/lib/slc/mtalpha/asmproc/base.py (stripmask, filter):
+	Define a stage to remove the `.mask' directive, rendered
+	ineffective by the new calling convention. Us eit.
+
+	* tools/lib/slc/mtalpha/regmagic.py (makecrepl),
+	* tools/lib/slc/mtalpha/asmproc/base.py (crenameregs,
+	_cfilter_inner): Rename registers in plain C functions to use the
+	new calling convention.
+
+	* tools/lib/slc/mtalpha/asmproc/base.py (initspecial,
+	makespecialtransform, compress, protectallcallregs,
+	protectcallsave): Adapt initialisations in prologue in presence of
+	C function calls.
+
+	* tools/lib/slc/mtalpha/asmproc/base.py (_filter_inner):
+	Re-organize processing stages.
+
+	* tools/lib/slc/mtalpha/visitors.py,
+	* tools/lib/t-sppalpha/include/sl_support.h: Force all function
+	calls to return to the parent thread function (prevent tail calls)
+	so that the "end" marker is always reached.
+
+2010-05-24  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	Reduce dependency on hand-coded assembly. 
 
 	* lib/src/bzero.c,

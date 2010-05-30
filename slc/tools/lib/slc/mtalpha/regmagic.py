@@ -460,6 +460,29 @@ def alias_to_vname(alias):
     """
     return '$' + _reg_aliases[alias]
 
+def makecrepl(funname):
+    """
+    Create a substitution function suitable for re.sub,
+    for renaming C-used registers to the base of the register
+    window.
+    """
+
+    subst = {}
+    regs = _regs
+    for (spec, pref) in [('i',''),('f','f')]:
+        for r in (r for r in regs[spec]['l'] if r is not None):
+            key = "$%s%d" % (pref,r['legnr'])
+            assert not subst.has_key(key)
+            subst[key] = '$' + r['name'][1:]
+    import sys
+    #print >>sys.stderr, "XXX", subst
+    def repl(match):
+        k = match.group(1)
+        if k not in subst:
+            raise die("in function %s: unsupported use of register %s" % (funname, k))
+        return subst[k]
+    return repl
+
 def makerepl(gli, shi, glf, shf):
     """ 
     Create a substitution function suitable for re.sub,
@@ -518,10 +541,17 @@ for (v, l) in [("f",_freg_inv), ("",_reg_inv)]:
     for r in fixed:
         fixed_registers.append('$%s%d' % (v, r))
 
-call_used_registers = []
+call_saved_registers = []
 for i in xrange(6):
-    call_used_registers.append('$%d' % _legacy_regs['s%d' % i])
+    call_saved_registers.append('$%d' % _legacy_regs['s%d' % i])
 for i in xrange(8):
-    call_used_registers.append('$f%d' % _legacy_fregs['fs%d' % i])
+    call_saved_registers.append('$f%d' % _legacy_fregs['fs%d' % i])
+
+call_arg_registers = []
+for i in xrange(6):
+    call_arg_registers.append('$%d' % _legacy_regs['a%d' % i])
+for i in xrange(6):
+    call_arg_registers.append('$f%d' % _legacy_fregs['fa%d' % i])
+
 
 

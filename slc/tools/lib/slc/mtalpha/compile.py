@@ -9,7 +9,7 @@ def compile(compiler, *args):
 
     # Obey suggestions from the register magic module
     fargs = ['-ffixed-%s' % x for x in regmagic.fixed_registers]
-    fargs += ['-fcall-used-%s' % x for x in regmagic.call_used_registers]
+    #fargs += ['-fcall-used-%s' % x for x in regmagic.call_used_registers]
     
     cmd = [compiler] + fargs + list(args) # + ['-fverbose-asm']
     if os.getenv('SLC_VERBOSE', 'no') == 'yes':

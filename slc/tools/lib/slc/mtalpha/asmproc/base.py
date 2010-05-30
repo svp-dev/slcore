@@ -4,7 +4,7 @@ from .. import regmagic
 _presets = set(["$l0"])
 def grouper(items):
     """
-    Group thread function code together (when applicable).
+    Group function code together (when applicable).
     Produce a generator of (type, code, comment).
 
     For functions, emit a single item with type == "fun". In this case
@@ -15,41 +15,55 @@ def grouper(items):
 
     state = 0
     queue = []
+    name = None
+    globl = False
 
     for (type, content, comment) in items:
-        if state == 0:
-            # expect: .globl __slf_...
-            if content.startswith('.globl'):
-                name = content.split(' ')[1]
-                if name.startswith('__slf_'):
-                    state += 1
-                    queue.append((type, content, comment))
-                    continue
-        elif state == 1:
-            # expect: .ent __slf_...
-            if content.startswith('.ent'):
-                maybe_name = content.split(' ')[1]
-                if maybe_name == name:
-                    state += 1
-                    queue.append((type, content, comment))
-                    continue
-        elif state == 2:
-            # expect: stuff, then .end __slf_...
+        
+        if state == 0 and content.startswith('.globl'):
+            name = content.split(' ')[1]
+            queue.append((type, content, comment))               
+            state = 1
+            globl = True
+            continue
+        if state in [0, 1] and content.startswith('.ent'):
+            maybe_name = content.split(' ')[1]
+            if state == 1 and maybe_name != name:
+                # globl seen before, but for a different name;
+                # it must be for a different declaration, so reinit
+                globl = False
+                for q in queue: yield q
+                queue = []
+
+            name = maybe_name
+            queue.append((type, content, comment))               
+            state = 2
+            continue
+        if state == 2:    
+            # expect: stuff, then .end XXX...
             queue.append((type, content, comment))
             if not content.startswith('.end'):
                 continue
             maybe_name = content.split(' ')[1]
-            if maybe_name == name:
-                state = 0
-                yield ('fun', {'name':name[6:],
-                               'body':queue, 
-                               'specials':{}, 
-                               'prologue':[], 
-                               'pprologue':[],
-                               'prologuen':0,
-                               'presets':_presets.copy()},'')
-                queue = []
-                continue
+            assert maybe_name == name # cannot have .end without .ent
+
+            state = 0
+            if name.startswith('__slf_'):
+                funtype = 'fun'
+                name = name[6:]
+            else:
+                funtype = 'cfun'
+            yield (funtype, {'name':name,
+                             'body':queue, 
+                             'global':globl,
+                             'specials':{}, 
+                             'prologue':[], 
+                             'pprologue':[],
+                             'prologuen':0,
+                             'presets':_presets.copy()},'')
+            globl = False
+            queue = []
+            continue
 
         for q in queue:
             yield q
@@ -82,6 +96,30 @@ def renameregs(fundata, items):
     """
     rd = fundata['regs']
     repl = regmagic.makerepl(rd[0],rd[1],rd[3],rd[4])
+    for (type, content, comment) in items:
+        content = _re_rr1reg.sub(repl, content)
+        comment = _re_rr1reg.sub(repl, comment)
+        yield (type, content, comment)
+
+def stripmask(fundata, items):
+    """
+    Remove .mask directives, unsupported for now
+    """
+
+    for (type, content, comment) in items:
+        if type == 'directive' and content.startswith('.mask'):
+            yield ('empty','','MT: unsupported %s' % content)
+        else:
+            yield (type, content, comment)
+            
+
+def crenameregs(fundata, items):
+    """
+    Collate legacy register names in regular C function
+    bodies to the beginning of the register window.
+    """
+    repl = regmagic.makecrepl(fundata['name']
+)
     for (type, content, comment) in items:
         content = _re_rr1reg.sub(repl, content)
         comment = _re_rr1reg.sub(repl, comment)
@@ -296,8 +334,13 @@ def initspecial(fundata, items):
     """
     gli, shi, li, glf, shf, lf = fundata['regs']
     assert li > 3
-    gpreg = li - 2
-    spreg = li - 1
+    gpreg = regmagic.alias_to_vname("gp")
+    spreg = regmagic.alias_to_vname("tlsp")
+    pvreg = regmagic.alias_to_vname("pv")
+    if fundata['hasjumps']:
+        gpinitreg = pvreg
+    else:
+        gpinitreg = gpreg
     pprologue = fundata['pprologue']
     if fundata['use_gp']:
         # GP needs to be initialized, do it:
@@ -305,22 +348,22 @@ def initspecial(fundata, items):
         if len(pprologue) == 1:
             # form 1: "ldgp" was used by the compiler
             assert pprologue[0][1].startswith('ldgp')
-            newpprologue.append(('other','ldpc $l%d' % gpreg,''))
-            newpprologue.append(('other','ldgp $l%d, 0($l%d)' % (gpreg, gpreg),''))
+            newpprologue.append(('other','ldpc %s' % gpinitreg,''))
+            newpprologue.append(('other','ldgp %s, 0(%s)' % (gpreg, gpinitreg),''))
         else:
             #pprint.pprint(pprologue)
             assert (len(pprologue) == 2 and 'gpdisp' in pprologue[0][1] and 'gpdisp' in pprologue[1][1])
             disp = pprologue[0][1].split('!')[2]
-            newpprologue.append(('other','ldpc $l%d' % gpreg,''))
-            newpprologue.append(('other','ldah $l%d, 0($l%d) !gpdisp!%s' % (gpreg, gpreg, disp),''))
-            newpprologue.append(('other','lda $l%d, 0($l%d) !gpdisp!%s' % (gpreg, gpreg, disp),''))
+            newpprologue.append(('other','ldpc %s' % gpinitreg,''))
+            newpprologue.append(('other','ldah %s, 0(%s) !gpdisp!%s' % (gpreg, gpinitreg, disp),''))
+            newpprologue.append(('other','lda %s, 0(%s) !gpdisp!%s' % (gpreg, gpreg, disp),''))
         fundata['pprologue'] = newpprologue
     else:
         assert len(pprologue) == 0
     #if fundata['use_pv']:
     #    fundata['prologue'].insert(0, ('other','mov $g%d, $l%d' % (pvargreg, pvreg), 'MT: init PV'))
-    if fundata['use_sp'] and spreg != 1: # FIXME: why != 1?
-        fundata['prologue'].insert(0, ('other','ldfp $l%d' % spreg,'MT: init SP'))
+    if fundata['use_sp']: # and spreg != 1: # FIXME: why != 1?
+        fundata['prologue'].insert(0, ('other','ldfp %s' % spreg,'MT: init SP'))
 
     return items
 
@@ -360,7 +403,7 @@ def optprologue(fundata, items):
         else:
             newprologue.append((type, content, comment))
 
-    if found == True:
+    if found or fundata['hasjumps']:
         newprologue.insert(0,('other','mov $l31, %s' % fpreg,'MT: init FP'))
     fundata['prologue'] = newprologue
 
@@ -632,19 +675,19 @@ def makespecialtransform(special):
     def dotransform(fundata, items):
         regname = '$l%d' % nr
         rmask = fundata['usedregs']
-        dorename = 0
+        dorename = False
         newnr = nr
-        if rmask[nr] == True and False in rmask[:nr]:
+        if rmask[nr] == True and False in rmask[:nr] and not fundata['hasjumps']:
             freenr = [i for (i,r) in enumerate(rmask) if r == False][0]
             newnr = freenr
-            dorename = 1
+            dorename = True
             newname = '$l%d' % freenr
             rmask[nr] = False
             rmask[freenr] = True
             yield ('empty','','MT: special "%s" renamed from %s to %s' % (special, regname, newname))
         fundata['specials'][special] = newnr
         for (type, content, comment) in items:
-            if type == 'other' and dorename == 1:
+            if type == 'other' and dorename:
                 content = content.replace(regname, newname)
             yield (type, content, comment)
     return dotransform
@@ -664,20 +707,21 @@ def compress(fundata, items):
     rgmask = fundata['usedgl']
     rgfmask = fundata['usedglf']
 
-    # Compress integer locals
-    lastfound = None
-    for i in xrange(30, -1, -1):
-        if rmask[i]:
-            lastfound = i
-            break
-    if lastfound is None:
-        newnr = 0
-    else:
-        newnr = lastfound + 1
-        
-    if newnr < regs[2]:
-        yield ('empty','','MT: compressed integer locals from %d to %d' % (regs[2], newnr))
-        regs[2] = newnr
+    if not fundata['hasjumps']:
+        # Compress integer locals
+        lastfound = None
+        for i in xrange(30, -1, -1):
+            if rmask[i]:
+                lastfound = i
+                break
+        if lastfound is None:
+            newnr = 0
+        else:
+            newnr = lastfound + 1
+
+        if newnr < regs[2]:
+            yield ('empty','','MT: compressed integer locals from %d to %d' % (regs[2], newnr))
+            regs[2] = newnr
 
     # Compress integer globals
     lastfound = None
@@ -694,18 +738,19 @@ def compress(fundata, items):
         regs[0] = newnr
 
     # Compress FP locals
-    lastfound = None
-    for i in xrange(30, -1, -1):
-        if rfmask[i]:
-            lastfound = i
-            break
-    if lastfound is None:
-        newnr = 0
-    else:
-        newnr = lastfound + 1
-    if newnr < regs[5]:
-        yield ('empty','','MT: compressed FP locals from %d to %d' % (regs[5], newnr))
-        regs[5] = newnr
+    if not fundata['hasjumps']:
+        lastfound = None
+        for i in xrange(30, -1, -1):
+            if rfmask[i]:
+                lastfound = i
+                break
+        if lastfound is None:
+            newnr = 0
+        else:
+            newnr = lastfound + 1
+        if newnr < regs[5]:
+            yield ('empty','','MT: compressed FP locals from %d to %d' % (regs[5], newnr))
+            regs[5] = newnr
 
     # Compress FP globals
     lastfound = None
@@ -777,10 +822,40 @@ def makeprotectspecial(keyname, regname):
             yield (type, content, comment)
     return protectspecial
 
+def protectallcallregs(fundata, items):
+    if fundata['hasjumps']:
+        for leg_preg in regmagic.call_arg_registers:
+            pregs = regmagic.get_vregs_for_legacy(leg_preg)
+            assert len(pregs) == 1
+            r = pregs[0]
+            if r['species'] == 'f':
+                pref = 'f'
+            else:
+                pref = ''
+            fundata['prologue'].append(('other','%sclr $%s' % (pref, r['name']), 'maybe used in call'))
+
+    return items
+
+def protectcallsave(fundata, items):
+    if fundata['hasjumps']:
+        for leg_preg in regmagic.call_saved_registers:
+            pregs = regmagic.get_vregs_for_legacy(leg_preg)
+            assert len(pregs) == 1
+            r = pregs[0]
+            if r['species'] == 'f':
+                pref = 'f'
+            else:
+                pref = ''
+            fundata['prologue'].append(('other','%sclr $%s' % (pref, r['name']), 'maybe used in call'))
+
+    return items
+    
 from common import *
 
 _filter_begin = [reader, lexer, splitsemi, parser, grouper]
-_filter_inner = [regextract,
+_cfilter_inner = [crenameregs, stripmask]
+_filter_inner = [
+                regextract,
                 renameregs,
                 detectregs,
                 replaceret,
@@ -789,15 +864,17 @@ _filter_inner = [regextract,
                 xsplit,
                 
                 avoidframespills,
+                findcalls,
+                protectcallsave,
+                protectallcallregs,
                 initspecial,
-                killgpreload,
+                #killgpreload,
                 optprologue,
                 
-                markused,
-                findcalls,
-                findusedcallregs,
-                protectcallregs,
-                rewritejsr,
+                #markused,
+                #findusedcallregs,
+                #protectcallregs,
+                #rewritejsr,
                 
                 xjoin1,
                 
@@ -812,11 +889,13 @@ _filter_inner = [regextract,
                 xjoin2,
                 
                 munchret,
+                #makeprotectspecial('hasjumps','fp'),
                 makedetectload('hasraload','ra'),
                 makecompleteload('hasraload','ra'),
                 makeprotectspecial('hasraload', 'ra'),
                 makedetectload('hasfpload','fp'),
                 makecompleteload('hasfpload','fp'),
+                stripmask,
                 ]
 _filter_end = [flattener, forcezero, printer]
 
@@ -836,6 +915,8 @@ def filter(output, *inputs):
             items = t(items)
         for t in _filter_inner:
             items = funfilter(t, items)
+        for t in _cfilter_inner:
+            items = cfunfilter(t, items)
         for t in _filter_end:
             items = t(items)
         lines = items

@@ -105,7 +105,7 @@
     __asm__ __volatile__(".registers " # GI " " # SI " 19 " # GF " " # SF " 19\n");
 
 [[#]]define __sl_epilogue(Name, ArgSpec)		\
-  __sl_end_thread: (void)0; }
+    __sl_end_thread: __asm__ __volatile__("# MT: end follows"); }
 
 [[#]]define __sl_allocate(Tag, Place)			\
   register long __sl_fid_ ## Tag;					\
