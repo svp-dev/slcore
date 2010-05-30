@@ -68,7 +68,6 @@ char *strdup(const char *);
 size_t strnlen(const char*, size_t);
 size_t strlcpy(char * restrict dst, const char * restrict src, size_t len);
 size_t strlcat(char * restrict dst, const char * restrict src, size_t len);
-void bcopy(const void *s1, void *s2, size_t n);
 
 #ifndef shutup_cstring_h
 #warning this implementation of string.h is incomplete.

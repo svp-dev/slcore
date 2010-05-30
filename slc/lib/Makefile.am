@@ -39,6 +39,7 @@ nobase_dist_pkgdata_DATA = \
 	include/cstdio.h \
 	include/cstdlib.h \
 	include/cstring.h \
+	include/cstrings.h \
 	include/ctime.h \
 	include/sac_helpers.h \
 	include/undocumented.h \

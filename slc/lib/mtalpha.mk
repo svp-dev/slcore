@@ -6,6 +6,7 @@ EXTRA_DIST += \
 	src/atol.c \
 	src/atoll.c \
 	src/bcopy.c \
+	src/bzero.c \
 	src/ctype.c \
 	src/dtoa_simple.c \
 	src/errno.c \
@@ -21,11 +22,11 @@ EXTRA_DIST += \
 	src/heap.h \
 	src/malloc.c \
 	src/malloc_wrappers.c \
+	src/memcpy.c \
+	src/memmove.c \
+	src/memset.c \
 	src/missing_uclibc_math.c \
 	src/mtalpha/divide.S \
-	src/mtalpha/memcpy.s \
-	src/mtalpha/memmove.S \
-	src/mtalpha/memset.S \
 	src/mtalpha/mtdiv.s \
 	src/mtconf.h \
 	src/mtconf.c \

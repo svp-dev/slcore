@@ -1,5 +1,26 @@
 2010-05-24  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	Reduce dependency on hand-coded assembly. 
+
+	* lib/src/bzero.c,
+	* lib/src/bcopy.c,
+	* lib/src/memcpy.c,
+	* lib/src/memmove.c,
+	* lib/src/memset.c: Import from FreeBSD.
+
+	* lib/src/mtalpha/memcpy.s,
+	* lib/src/mtalpha/memmove.S,
+	* lib/src/mtalpha/memset.S: Remove.
+
+	* lib/include/cstring.h: Move declaration of `bcopy' to...
+	* lib/include/cstrings.h: ...here. Declare `bzero'.
+
+	* lib/Makefile.am,
+	* lib/mtalpha.mk: Update accordingly.
+
+
+2010-05-24  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	Improve support for `slc -P'.
 
 	* tools/bin/slc.in: Propagate `-P' where needed.
