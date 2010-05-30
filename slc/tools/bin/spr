@@ -15,6 +15,12 @@ from slc.lower.seq import *
 from slc.lower.lowercreate import *
 from slc.lower.split import *
 from slc.lower.lowgeta import *
+from slc.lower.lowcvars import *
+from slc.lower.lowccast import *
+from slc.lower.lowclabels import *
+from slc.lower.flavorseta import *
+from slc.lower.rename import *
+from slc.lower.remflavors import *
 from slc.mtalpha.visitors import *
 from slc.ast import LowCreate
 
@@ -22,9 +28,13 @@ class Dispatcher(object):
       
       def __init__(self, flavored_visitors):
             self.flavored_visitors = flavored_visitors
-            for k in self.flavored_visitors:
-                  self.flavored_visitors[k].dispatcher = self
-
+            for k, v in self.flavored_visitors.items():
+                  self.__dict__.update(v.__dict__)
+                  v.__dict__ = self.__dict__
+                  print "REG V: %x, d = %x" % (id(v), id(v.__dict__))
+            self.dispatcher = self
+                  
+            print self.__dict__
             self.current_flavors = []
 
       def start_flavor(self, f):
@@ -52,95 +62,53 @@ class Dispatcher(object):
 
 
 
+t = [('walk', DefaultVisitor()),
+     ('check', CheckVisitor()),
+     ('cr2lc', Create_2_LowCreate()),
+     ('splitcr', SplitCreates()),
+     ('flseta', FlavorSetA()),
+     ('splitfun', SplitFuns()),
+     ('flattencr', ScopedVisitor(Dispatcher({'cmta':Create_2_MTACreate(),
+                                           'cseq':Create_2_Loop()}))),
+     ('flattenfun', DefaultVisitor(Dispatcher({'fmta':TFun_2_MTATFun(),
+                                               'fseq':TFun_2_CFun()}))),
+     ('geta', ReduceGetA()),
+     ('rnlbls', RenameCLabels()),
+     ('rnvars', RenameCVars()),
+     ('cvars', ReduceCVars()),
+     ('ccast', ReduceCCast()),
+     ('clabels', ReduceCLabels()),
+     ('remflavors', RemoveFlavors()),
+     ]
+
 if __name__ == "__main__":
 
       source = read(sys.stdin)
+      tmpfmt = 'tmp.%03dt.%s.c'
+      src = 'tmp.000t.c'
+      
+      
+      f = file(src, 'w')
+      print >>f, "/* SOURCE */"
+      pprint.pprint(source, stream = f)
+      f.close()
 
-      print "##### SOURCE #####"
-      pprint.pprint(source)
-
-      print "#### PARSE ####"
       p = parse_program(source)
 
-      print "#### WALK ####"
-      p.accept(DefaultVisitor())
+      for (ph, (lbl, visitor)) in enumerate(t):
+            print "Applying: %s / %r" % (lbl, visitor)
+            p.accept(visitor)
 
-      print "#### CHECK ####"
-      cv = CheckVisitor()
-      p.accept(cv)
-      if cv.has_errors:
-            sys.exit(1)
+            if lbl == 'check':
+                  if visitor.has_errors:
+                        sys.exit(1)
 
-      print "#### PRINT ORIG ####"
-      pp = PrinterVisitor()
-      p.accept(pp)
+            fname = tmpfmt % (ph+1, lbl)
+            f = file(fname, 'w')
+            print >>f, "/* AFTER %s / %r */" % (lbl, visitor)
+            p.accept(PrintVisitor(stream = f))
+            f.close()
+            print "  -> output: %s" % fname
 
-      print "#### CREATE -> LOWCREATE ####"
-      pc = copy.deepcopy(p)
-      pc.accept(Create_2_LowCreate())
 
-      print "#### PRINT LOWCREATE ####"
-      pc.accept(pp)
-
-      print "#### LOWCREATE -> SPLIT ####"
-      pc.accept(SplitCreates())
-
-      print "#### PRINT SPLIT ####"
-      pc.accept(pp)
-
-      print "### FUN -> FSPLIT ###"
-      pc.accept(SplitFuns())
-
-      print "### PRINT FSPLIT ###"
-      pc.accept(pp)
-
-      print "#### FSPLIT -> MTA_TFUN, CFUN ####"
-      pc.accept(DefaultVisitor(Dispatcher({'fmta':TFun_2_MTATFun(),
-                                           'fseq':TFun_2_CFun()})))
-
-      print "### PRINT DUAL FUN ###"
-      pc.accept(pp)
-
-      print "#### SPLIT -> MTA_CREATE, CLOOP ####"
-      pc.accept(DefaultVisitor(Dispatcher({'cmta':Create_2_MTACreate(),
-                                           'cseq':Create_2_Loop()})))
-
-      print "#### PRINT DUAL CREATE ####"
-      pc.accept(pp)
-
-      print "#### DUAL -> CLEANGETA ####"
-      pc.accept(ReduceGetA())
-
-      print "#### PRINT CLEAN ####"
-      pc.accept(pp)
-
-      
-
-      #print "#### TFUN -> CFUN ####"
-      #ps = copy.deepcopy(p)
-      #ps.accept(TFun_2_CFun())
-
-      #print "#### PRINT CFUN ####"
-      #ps.accept(pp)
-
-      # print "#### CREATE -> CLOOP ####"
-      # pc = copy.deepcopy(p)
-      # pc.accept(Create_2_Loop())
-
-      # print "#### PRINT CLOOP ####"
-      # pc.accept(pp)
-
-      #print "#### TFUN -> MTA_TFUN ####"
-      #pmt = copy.deepcopy(p)
-      #pmt.accept(TFun_2_MTATFun())
-      
-      #print "#### PRINT MTA_TFUN ####"
-      #pmt.accept(pp)
-
-      # print "#### CREATE -> MTA_CREATE ####"
-      # pmtc = copy.deepcopy(p)
-      # pmtc = pmtc.accept(Create_2_MTACreate())
-      
-      # print "#### PRINT MTA_CREATE ####"
-      # pmtc.accept(pp)
       

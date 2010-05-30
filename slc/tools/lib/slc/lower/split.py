@@ -14,14 +14,20 @@ class ExampleOracle(object):
     def flavored_funsym(self, name, flavor):
         return "__slF%s_%s" % (flavor, name)
 
-    def funptr_for_lowcreate(self, lc):
+    def lowfun_for_create(self, cr, flavor):
 
-        index, f_flavor = self.mapping[lc.flavor]
+        ix, f_flavor = self.mapping[flavor]
 
-        if lc.funtype == lc.FUN_ID:
-            return self.flavored_funsym(lc.fun, f_flavor)
+        if cr.funtype == cr.FUN_ID:
+            d = Opaque(self.flavored_funsym(cr.fun, f_flavor))
+            #print "LF2C_id(%s): %r -> %r" % (flavor, cr.fun, d)
+            return d
         else:
-            return "((void**)%s)[%d]" % (lc.fun, index)
+            assert cr.funtype == cr.FUN_VAR
+            #print "LF2C_var(%s): %r" % (flavor, cr.fun)
+            return CIndex(expr = CCast(ctype = 'void**', 
+                                       expr = CVarUse(decl = cr.fun)),
+                          index = Opaque("%d" % ix))
         
 
 class SplitCreates(DefaultVisitor):
@@ -29,44 +35,55 @@ class SplitCreates(DefaultVisitor):
     def __init__(self, oracle = ExampleOracle(), *args, **kwargs):
         super(SplitCreates, self).__init__(*args, **kwargs)
         self.oracle = oracle
+        self.cur_scope = None
+
+    def visit_scope(self, sc):
+        old = self.cur_scope
+        self.cur_scope = sc
+        super(SplitCreates, self).visit_scope(sc)
+        self.cur_scope = old
+        return sc
 
     def visit_lowcreate(self, lc):
         """
         Here we multiply a create by duplicating the code.
        
         """
+
+        # first split recursively
+        lc.body.accept(self)
         
-        flavors = self.oracle.flavors_for_create(lc)
+        # retrieve the corresponding create
+        cr = self.cur_scope.creates[lc.label]
+
+        # we need to remember declarations to avoid
+        # deep copying of cvaruses/cvarsets
+        memo = {}
+        for d in self.cur_scope.decls:
+            memo[id(d)] = d
+
+        flavors = self.oracle.flavors_for_create(cr)
 
         flavors.reverse()
         newbl = []
+
         next = None
         for f in flavors:
-            thisalt = []
-
-            newnext = "__slC%s_%s" % (f, lc.label)
-            thisalt.append(flatten(lc.loc, " %s: (void)0;" % newnext))
-
-            newlc = copy.deepcopy(lc)
+            newmemo = copy.copy(memo)
+            newlc = copy.deepcopy(lc, newmemo)
             newlc.target_next = next
             newlc.flavor = f
 
-            funexpr = self.oracle.funptr_for_lowcreate(newlc)
-
-            if newlc.funtype == newlc.FUN_PTR:
-                newfun = "__slC%s_fptr_%s" % (f, newlc.label)
-                thisalt.append(flatten(newlc.loc, 
-                                       "void * const %s = %s;"
-                                       % (newfun, funexpr)))
-                newlc.fun = newfun
-            else:
-                newlc.fun = funexpr
+            newlc.lowfun = Block(items = self.oracle.lowfun_for_create(cr, f))
+            #print "IN SPLIT, gen %x, %r" % (id(newlc), newlc.lowfun)
             
-            thisalt.append(Flavor(f, items = [newlc]))
-            thisalt.append(flatten(lc.loc_end, " goto %s;" % lc.target_resolved))
+            thisalt = []
+            next = CLabel(loc = cr.loc_end, name = "Cn$%s$%s" % (f, lc.label))
+            thisalt.append(next)
+            thisalt.append(Flavor(f, items = newlc))
+            thisalt.append(CGoto(loc = cr.loc_end, target = cr.target_resolved) + ';')
 
             newbl = thisalt + newbl
-            next = newnext
             
         return newbl
 

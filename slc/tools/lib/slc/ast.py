@@ -30,9 +30,6 @@ class Item(object):
         assert loc_end is None or isinstance(loc_end, Loc)
         self._loc_end = loc_end
 
-    def clone(self):
-        return copy.deepcopy(self)
-
     def accept(self, v):
         return v.dispatch(self)
 
@@ -47,6 +44,22 @@ class Item(object):
                            )
 
 
+    def __add__(self, other):
+        if isinstance(other, Item):
+            loc_end = other.loc_end
+        else:
+            loc_end = None
+        newbl = Block(loc = self.loc, loc_end = loc_end)
+        if isinstance(self, Block):
+            newbl += self._items
+        else:
+            newbl += self
+        if isinstance(other, Block):
+            newbl += other._items
+        else:
+            newbl += other
+        return newbl
+
 class Opaque(Item):
     """
     Opaque chunk of C text.
@@ -56,19 +69,22 @@ class Opaque(Item):
         super(Opaque, self).__init__(*args, **kwargs)
         self.text = text
 
+
+
 class Block(Item):
     """
     Sequence of AST nodes, possibly annotated with an index name.
     """
 
-    def __init__(self, items = None, indexname = None, *args, **kwargs):
+    def __init__(self, items = None, *args, **kwargs):
         super(Block, self).__init__(*args, **kwargs)
         #if isinstance(items, Block):
         #    items = items._items
         if items is None:
             items = []
+        elif not isinstance(items, list):
+            items = [items]
         self._items = items
-        self._indexname = indexname
 
     def __iadd__(self, item):
         #if isinstance(item, Block):
@@ -76,6 +92,8 @@ class Block(Item):
         #el
         if isinstance(item, list):
             self._items += item
+        elif isinstance(item, str):
+            self._items.append(Opaque(item))
         elif item is not None:
             self._items.append(item)
         return self
@@ -94,15 +112,6 @@ class Block(Item):
             items = items._items
         self._items = items
 
-    @property
-    def indexname(self): return self._indexname
-
-    @indexname.setter
-    def indexname(self, name):
-        if name is not None:
-            name = lex.extract_id(self, name)
-        self._indexname = name
-
 class Scope(Block):
     """
     A block surrounded by {}.
@@ -112,6 +121,92 @@ class Scope(Block):
         if not isinstance(decls, Block):
             decls = Block(items = decls)
         self.decls = decls
+        self.creates = {}
+
+class CVarDecl(Item):
+    """
+    A C variable declaration.
+    """
+
+    def __init__(self, name = None, ctype = None, init = None, *args, **kwargs):
+        super(CVarDecl, self).__init__(*args, **kwargs)
+        self.name = name
+        self.ctype = ctype
+        if not isinstance(init, Block):
+            init = Block(items = init)
+        self.init = init
+
+class CVarUse(Item):
+    """
+    a C variable use.
+    """
+
+    def __init__(self, decl = None, *args, **kwargs):
+        super(CVarUse, self).__init__(*args, **kwargs)
+        self.decl = decl
+
+
+class CVarSet(Item):
+    """
+    a C variable assignment.
+    """
+
+    def __init__(self, decl = None, rhs = None, *args, **kwargs):
+        super(CVarSet, self).__init__(*args, **kwargs)
+        self.decl = decl
+
+        if not isinstance(rhs, Block):
+            rhs = Block(items = rhs)
+        self.rhs = rhs
+
+    #def __deepcopy__(self, memo = {}):
+    #    new = super(CVarSet, self).__deepcopy__(memo)
+    #    new.rhs = copy.deepcopy(self.rhs, memo)
+    #    return new
+
+class CLabel(Item):
+    """
+    a C label.
+    """
+    def __init__(self, name = None, *args, **kwargs):
+        super(CLabel, self).__init__(*args, **kwargs)
+        self.name = name
+
+class CGoto(Item):
+    """
+    a C goto statement.
+    """
+
+    def __init__(self, target = None, *args, **kwargs):
+        super(CGoto, self).__init__(*args, **kwargs)
+        self.target = target
+
+class CCast(Item):
+    """
+    a C cast expression.
+    """
+
+    def __init__(self, ctype = None, expr = None, *args, **kwargs):
+        super(CCast, self).__init__(*args, **kwargs)
+        self.ctype = ctype
+        if not isinstance(expr, Block):
+            expr = Block(items = expr)
+        self.expr = expr
+
+class CIndex(Item):
+    """
+    a C indexing expression.
+    """
+
+    def __init__(self, expr = None, index = None, *args, **kwargs):
+        super(CIndex, self).__init__(*args, **kwargs)
+        if not isinstance(expr, Block):
+            expr = Block(items = expr)
+        self.expr = expr
+        if not isinstance(index, Block):
+            index = Block(items = index)
+        self.index = index
+            
 
 class Flavor(Block):
     """
@@ -165,15 +260,6 @@ class FunDeclBase(Item):
         self._name = lex.extract_id(self, name)
 
 
-class FunDeclPtr(FunDeclBase):
-    """
-    Function pointer declaration node.
-
-    Used to represent ``sl_decl_fptr``.
-    """
-
-    pass
-
 class FunDecl(FunDeclBase):
     """
     Function declaration node.
@@ -214,12 +300,14 @@ class ArgParm(Item):
     def name(self, name):
         self._name = lex.extract_id(self, name)
 
+
 class FunParm(ArgParm):
     """
     Base node type for function parameters.
 
     Used to represent ``sl_*parm``.
     """
+
     pass
 
 class CreateArg(ArgParm):
@@ -260,6 +348,8 @@ class VarSet(VarUse):
 
     def __init__(self, rhs = None, *args, **kwargs):
         super(VarSet, self).__init__(*args, **kwargs)
+        if not isinstance(rhs, Block):
+            rhs = Block(items = rhs)
         self.rhs = rhs
 
 class GetP(VarUse): 
@@ -278,6 +368,10 @@ class Create(Item):
     """
     Create-sync or Create-detach block.
     """
+
+    FUN_ID = 0
+    FUN_VAR = 1
+    FUN_OPAQUE = 2
 
     def __init__(self, label = None, place = None, 
                  start = None, step = None, limit = None, block = None,
@@ -314,25 +408,21 @@ class Create(Item):
 
     @fun.setter
     def fun(self, fun):
-        assert isinstance(fun, Block)
-        if len(fun) == 1 and isinstance(fun[0], Opaque):
-            (t, i) = lex.is_simple_identifier(fun[0].text)
-            if t:
-                self._fun = i
-                return
-            self._fun = fun
-
-    def funIsIdentifier(self):
-        return isinstance(self.fun, str)
-
-class LowCreateArg(CreateArg):
-    """
-    Node type for LowCreate arguments.
-
-    Differs from CreateArg in that there is no "init" field
-    (they are replaced by SetA)
-    """
-    pass
+        self._fun = fun
+        if isinstance(fun, CVarDecl):
+            self.funtype = self.FUN_VAR
+        elif isinstance(fun, str):
+            self.funtype = self.FUN_ID
+        elif isinstance(fun, Block):
+            if len(fun) == 1 and isinstance(fun[0], Opaque):
+                (t, i) = lex.is_simple_identifier(fun[0].text)
+                if t:
+                    self._fun = i
+                    self.funtype = self.FUN_ID
+                    return
+            self.funtype = self.FUN_OPAQUE
+        else:
+            self.funtype = None
 
 class LowCreate(Item):
     """
@@ -342,41 +432,23 @@ class LowCreate(Item):
     Computed by visitor Create_2_LowCreate.
     """
 
-    FUN_ID = 0
-    FUN_PTR = 1
-
-    def __init__(self, label = None, sync_type = None, 
-                 target_next = None,
+    def __init__(self, 
+                 label = None, 
+                 body = None,
                  flavor = None,
-                 body = None, args = None, 
-                 *a, **kwargs):
-        super(LowCreate, self).__init__(*a, **kwargs)
+                 target_next = None,
+                 *args, **kwargs):
+        super(LowCreate, self).__init__(*args, **kwargs)
 
         self.flavor = flavor
         self.label = label
-        self.place = "__slC_place_%s" % label
-        self.start = "__slC_start_%s" % label
-        self.limit = "__slC_limit_%s" % label
-        self.step = "__slC_step_%s" % label
-        self.block = "__slC_block_%s" % label
-        self.retval = "__slC_ret_%s" % label
-        self.target_resolved = "__slT_fini_%s" % label
         self.target_next = target_next
-        self.sync_type = sync_type
+
+        if not isinstance(body, Block):
+            body = Block(items = body)
         self.body = body
-        self.funtype = None
-        self.fun = '__slC_fun_%s' % label
-        if args is None:
-            args = []
-        self.args = args
-
-    @staticmethod
-    def arg_init_var(name):
-        return "__slAi_%s" % name
-
-    @staticmethod
-    def arg_var(name):
-        return "__slA_%s" % name
+        
+        self.lowfun = None
 
 class EndThread(Item):
     pass

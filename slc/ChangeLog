@@ -1,3 +1,74 @@
+2010-05-16  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+	
+	Move forward with the new code transformation framework.
+
+	Framework usability improvements:
+
+	* tools/lib/slc/ast.py (Item): Implement `+' for items to simplify
+	block composition.
+
+	* tools/lib/slc/ast.py (Block): Allow to instanciate with only one
+	item. Convert plain strings to opaques.
+
+	* tools/bin/spr: Move specification of stages to a data
+	structure. Output intermediate results to files.
+
+	New features:
+
+	* tools/lib/slc/ast.py: Introduce nodes for C variable
+	declarations and uses; C labels and gotos; cast expressions, and
+	subscript operations.
+
+	* tools/lib/slc/visitors.py: Introduce default visits for the new
+	nodes. New `ScopedVisitor'.
+
+	* tools/bin/spr (Dispatcher),
+	* tools/lib/slc/visitors.py (BaseVisitor): Merge state of split
+	visitors (alias `__dict__' between dispatcher and alternates).
+
+	* tools/lib/lower/rename.py,
+	* tools/lib/lower/lowccast.py,
+	* tools/lib/lower/lowclabels.py,
+	* tools/lib/lower/lowcvars.py,
+	* tools/lib/lower/remflavors.py: New stages. 
+
+	Changes:
+
+	* tools/bin/spr: Use the new stages.
+
+	* tools/lib/input/check.py: Ensure `break' and `end_thread' do not
+	appear within create/sync. Keep track of relation between `create'
+	and scopes.
+
+	* tools/lib/slc/ast.py: Simplify `LowCreate'. Remove
+	`LowCreateArg'. Move `funtype' to `Create'.
+
+	* tools/lib/slc/visitors.py,
+	* tools/lib/slc/lower/split.py,
+	* tools/lib/slc/lower/seq.py,
+	* tools/lib/slc/mtalpha/visitors.py: Update accordingly. Improve
+	algorithms. Fix false duplication of C variable declarations in
+	split.
+
+	* tools/lib/lower/flavorseta.py: New. Annotate `SetA' with the
+	relevant references to `LowCreate'.
+
+	* tools/lib/lower/seq.py,
+	* tools/lib/mtalpha/visitors.py: Use the annotations in
+	`visit_seta'.
+
+	* tools/lib/lower/lowgeta.py: Use the new syntax for lowering.
+
+	Minor code cleanups:
+
+	* tools/lib/slc/ast.py (Item): Remove `Item.clone' (never used).
+	* tools/lib/slc/ast.py (Block): Remove `indexname' (now unused).
+	* tools/lib/slc/ast.py: Remove `FunDeclPtr' (not yet used).
+
+	* tools/lib/slc/lower/seq.py,
+	* tools/lib/slc/mtalpha/visitors.py: Remove `visit_geta' (now
+	handled by ReduceGetA).
+
 2010-05-09  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
 	Minor whitespace handling improvements.

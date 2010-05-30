@@ -12,6 +12,8 @@ def flatten(loc, opaquetext):
 
 class BaseVisitor(object):
       def __init__(self, dispatcher = None):
+            if dispatcher is not None:
+                  self.__dict__ = dispatcher.__dict__
             self.dispatcher = dispatcher
 
       def dispatch(self, item, seen_as = None, *args, **kwargs):
@@ -94,12 +96,12 @@ class DefaultVisitor(BaseVisitor):
             create.step.accept(self)
             create.limit.accept(self)
             create.block.accept(self)
-            if not create.funIsIdentifier():
+            if create.funtype == create.FUN_OPAQUE:
                   create.fun.accept(self)
             a = []
             for arg in create.args:
                   new = arg.accept(self)
-                  if type(new) == type([]):
+                  if isinstance(new, list):
                         a += new
                   elif new is not None:
                         a.append(new)
@@ -128,19 +130,63 @@ class DefaultVisitor(BaseVisitor):
       def visit_indexdecl(self, idecl):
             return idecl
 
-      def visit_lowcreatearg(self, arg):
-          return arg
-
       def visit_lowcreate(self, lc):
+          if lc.lowfun is not None:
+                lc.lowfun.accept(self)
           lc.body.accept(self)
           return lc
+
+      def visit_cvardecl(self, cd):
+            cd.init.accept(self)
+            return cd
+
+      def visit_cvaruse(self, cu):
+            return cu
+
+      def visit_cvarset(self, vs):
+            vs.rhs.accept(self)
+            return vs
+
+      def visit_clabel(self, cl):
+            return cl
+
+      def visit_cgoto(self, cg):
+            return cg
+
+      def visit_ccast(self, cc):
+            cc.expr.accept(self)
+            return cc
+
+      def visit_cignore(self, ci):
+            return ci
+
+      def visit_cindex(self, ci):
+            ci.expr.accept(self)
+            ci.index.accept(self)
+            return ci
+
+#### Scoped visitor: keep track of scopes ####
+
+class ScopedVisitor(DefaultVisitor):
+
+      def __init__(self, *args, **kwargs):
+            super(ScopedVisitor, self).__init__(*args, **kwargs)
+            self.cur_scope = None
+
+      def visit_scope(self, sc):
+            old = self.cur_scope
+            self.cur_scope = sc
+            # print "IN SCOPE (v = %x, d = %x, sc = %x, %r)" % (id(self), id(self.__dict__), id(sc), dir(sc))
+            sc = super(ScopedVisitor, self).visit_scope(sc)
+            self.cur_scope = old
+            return sc
 
 #### Printer visitor: reprint SL code ####
 
 
-class PrinterVisitor(DefaultVisitor):
+class PrintVisitor(DefaultVisitor):
     def __init__(self, stream = None, *args, **kwargs):
-        super(PrinterVisitor, self).__init__(*args, **kwargs)
+        super(PrintVisitor, self).__init__(*args, **kwargs)
 
         if stream is None:
             stream = sys.stdout
@@ -176,9 +222,9 @@ class PrinterVisitor(DefaultVisitor):
         return fundef
 
     def visit_flavor(self, f):
-          self.__out.write('/* BEGIN FLAVOR: %s */' % f.flavor)
+          self.__out.write('\n/* BEGIN FLAVOR: %s */\n' % f.flavor)
           DefaultVisitor.visit_flavor(self, f)
-          self.__out.write('/* END FLAVOR: %s */' % f.flavor)
+          self.__out.write('\n/* END FLAVOR: %s */\n' % f.flavor)
           return f
 
     def visit_scope(self, scope):
@@ -235,10 +281,12 @@ class PrinterVisitor(DefaultVisitor):
             self.__out.write(',')
             b.accept(self)
 
-        self.__out.write(',/**/,')
+        self.__out.write(', ,')
 
-        if c.funIsIdentifier():
+        if c.funtype == c.FUN_ID:
             self.__out.write(c.fun)
+        elif c.funtype == c.FUN_VAR:
+              self.__out.write('sl_cvaruse(%s)' % c.fun.name)
         else:
             c.fun.accept(self)
 
@@ -259,34 +307,64 @@ class PrinterVisitor(DefaultVisitor):
 
         return c
 
-    def visit_lowcreatearg(self, arg):
-        self.__out.write('sl_%s(%s, %s' % (arg.type, arg.ctype, arg.name))
-        if arg.init is not None:
-            self.__out.write(', %s' % arg.init)
-        self.__out.write(')')
-        return arg
-
     def visit_lowcreate(self, lc):
-        self.__out.write('/*LOW*/sl_create(')
-
-        for b in (lc.place, lc.start, lc.step, lc.limit, lc.block):
-            self.__out.write(', %s' % b)
-
-        self.__out.write(',/**/, %s' % lc.fun)
-
-        for arg in lc.args:
-            self.__out.write(',')
-            arg.accept(self)
-        self.__out.write(')')
-
+        self.__out.write(' sl_lowcreate(%s' % lc.label)
+        if lc.lowfun is not None:
+              self.__out.write(', fun: ')
+              lc.lowfun.accept(self)
+        if lc.target_next is not None:
+              self.__out.write(', target_next: %s@0x%x' % (lc.target_next.name, id(lc.target_next)))
+              
+        self.__out.write(') ')
         lc.body.accept(self)
-          
-        if lc.sync_type == 'release':
-            self.__out.write('/*LOW*/sl_release()')
-        else:
-            self.__out.write('/*LOW*/sl_sync(%s)' % lc.retval)
-
+        self.__out.write(' sl_lowcreate_end(%s) ' % lc.label)
         return lc
-        
 
-__all__ = ['flatten', 'BaseVisitor', 'DefaultVisitor', 'PrinterVisitor']
+    def visit_cvardecl(self, vd):
+          self.__out.write(' sl_cvardecl(%s, %s' % (vd.ctype, vd.name))
+          if len(vd.init):
+                self.__out.write(', ')
+                vd.init.accept(self)
+          self.__out.write(') /* 0x%x */\n' % id(vd))
+          return vd
+
+    def visit_cvaruse(self, vu):
+          self.__out.write(' sl_cvaruse(%s /* 0x%x */)' % (vu.decl.name, id(vu.decl)))
+          return vu
+    
+    def visit_cvarset(self, vs):
+          self.__out.write(' sl_cvarset(%s /* 0x%x */, ' % (vs.decl.name, id(vs.decl)))
+          vs.rhs.accept(self)
+          self.__out.write(')')
+          return vs
+
+    def visit_clabel(self, cl):
+          self.__out.write(' sl_clabel(%s /* 0x%x */)' % (cl.name, id(cl)))
+          return cl
+
+    def visit_cgoto(self, cg):
+          self.__out.write(' sl_cgoto(%s /* 0x%x */)' % (cg.target.name, id(cg.target)))
+          return cg
+
+
+    def visit_ccast(self, cc):
+          self.__out.write(' sl_ccast(%s, ' % cc.ctype)
+          cc.expr.accept(self)
+          self.__out.write(')')
+          return cc
+
+    def visit_cignore(self, ci):
+          self.__out.write('\n#if 0 /* IGNORED TEXT */\n')
+          ci.body.accept(self)
+          self.__out.write('\n#endif /* END IGNORED TEXT */\n')
+          return ci
+
+    def visit_cindex(self, ci):
+          self.__out.write('((')
+          ci.expr.accept(self)
+          self.__out.write(')[')
+          ci.index.accept(self)
+          self.__out.write('])')
+          return ci
+
+__all__ = ['flatten', 'BaseVisitor', 'DefaultVisitor', 'ScopedVisitor', 'PrintVisitor']

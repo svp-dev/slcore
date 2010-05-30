@@ -9,80 +9,73 @@ class Create_2_LowCreate(DefaultVisitor):
 
         lc = LowCreate(loc = cr.loc,
                        loc_end = cr.loc_end,
-                       label = cr.label,
-                       sync_type = cr.sync_type)
+                       label = cr.label)
         
         newbl = []
+        decls = cr.scope.decls
 
-        newbl.append(flatten(cr.loc, 
-                             "long const %s = " % lc.place))
-        newbl.append(cr.place.accept(self))
-        newbl.append(flatten(cr.loc, 
-                             "; "
-                             "long const %s = " % lc.start))
-        newbl.append(cr.start.accept(self))
-        newbl.append(flatten(cr.loc,
-                             "; "
-                             "long const %s = " % lc.limit))
-        newbl.append(cr.limit.accept(self))
-        newbl.append(flatten(cr.loc,
-                             "; "
-                             "long const %s = " % lc.step))
-        newbl.append(cr.step.accept(self))
-        newbl.append(flatten(cr.loc,
-                             "; "
-                             "long const %s = " % lc.block))
-        newbl.append(cr.block.accept(self))
+        cr.cvar_exitcode = CVarDecl(loc = cr.loc_end, name = 'C$R$%s' % cr.label, ctype = 'long')
+        decls += cr.cvar_exitcode
 
-        newbl.append(flatten(cr.loc, ";"))
+        for item in ('place', 'start', 'limit', 'step', 'block'):
+            var = CVarDecl(loc = cr.loc, name = 'C$%s$%s' % (item, cr.label), ctype = 'long')
 
-        if cr.funIsIdentifier():
-            lc.funtype = lc.FUN_ID
-            lc.fun = cr.fun
+            decls += var
+
+            setattr(cr, 'cvar_%s' % item, var)
+
+            newbl.append(CVarSet(loc = cr.loc, decl = var, rhs = getattr(cr, item)) + ';')
+            
+        if cr.funtype == cr.FUN_OPAQUE:
+            cr.funtype = cr.FUN_VAR
+            var = CVarDecl(loc = cr.loc, name = 'C$F$%s' % cr.label, ctype = 'void *')
+            decls += var
+            newbl.append(CVarSet(loc = cr.loc, decl = var, 
+                                 rhs = CCast(ctype = 'void *',
+                                             expr = cr.fun.accept(self))) + ';')
+            cr.fun = var
         else:
-            lc.funtype = lc.FUN_PTR
-            newbl.append(flatten(cr.loc,
-                                 "void * const %s = (void*)(" % lc.fun))
-            newbl.append(cr.fun.accept(self))
-            newbl.append(flatten(cr.loc, ");"))
+            assert cr.funtype == cr.FUN_ID
 
-        lcas = []
         newbody = Block(loc = cr.body.loc, loc_end = cr.body.loc_end)
         for a in cr.args:
-            lca = LowCreateArg(loc = a.loc,
-                               name = a.name,
-                               type = a.type,
-                               ctype = a.ctype)
-            newbl.append(flatten(a.loc, "%s %s;" % (a.ctype, lc.arg_var(a.name))))
+            argvar = CVarDecl(loc = a.loc, name = 'C$a$%s' % a.name, ctype = a.ctype)
+            
+            decls += argvar
+            a.cvar = argvar
 
             if a.init is not None:
-                ininame = lc.arg_init_var(a.name)
+                initvar = CVarDecl(loc = a.loc, name = 'C$ai$%s' % a.name, ctype = a.ctype)
 
-                newbl.append(flatten(a.loc, 
-                                     "%s const %s = " 
-                                     % (a.ctype, ininame)))
-                newbl.append(a.init.accept(self))
-                newbl.append(flatten(a.loc, ";"))
+                decls += initvar
+                a.cvar_init = initvar
 
-                newbody += [flatten(a.loc, ";"),
-                            SetA(loc = a.loc, name = a.name, 
-                                 rhs = Block(items = [Opaque(ininame)]))]
-            lcas.append(lca)
+                newbl.append(CVarSet(loc = a.loc, decl = initvar, 
+                                     rhs = a.init.accept(self)) + ';')
 
-        lc.args = lcas
+                seta = SetA(loc = a.loc, name = a.name, 
+                            rhs = CVarUse(decl = initvar))
+                seta.decl = a
+                seta.scope = cr.scope
+                a.seen_set = True
+                
+                newbody += (Opaque(';') + seta)
+
+
         lc.body = newbody
         lc.body += cr.body.accept(self)
 
-        newbl.append(flatten(cr.loc, "long %s;" % lc.retval))
-
         newbl.append(lc)
+        newbl.append(flatten(None, ';'))
 
-        newbl.append(flatten(cr.loc_end, "; %s: (void)0 " % lc.target_resolved))
+        cr.target_resolved = CLabel(loc = cr.loc_end, name = 'Ce$%s' % cr.label) 
+        newbl.append(cr.target_resolved)
 
         if cr.result_lvalue is not None:
-            newbl.append(flatten(cr.loc_end, "; ("))
-            newbl.append(cr.result_lvalue.accept(self))
-            newbl.append(flatten(cr.loc_end, ") = %s" % lc.retval))
+            newbl.append(Opaque(loc = cr.loc_end, text = "; (") +
+                         cr.result_lvalue.accept(self) +
+                         ') = ' +
+                         CVarUse(loc = cr.loc, decl = lc.cvar_exitcode))
 
         return newbl
                          

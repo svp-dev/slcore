@@ -92,12 +92,16 @@ class CheckVisitor(DefaultVisitor):
     def visit_break(self, br):
         if self.cur_fun is None or self.cur_scope is None:
             self.err("'break' outside of thread function body", br)
+        if self.cur_create is not None:
+            self.err("'break' inside of 'create' construct", br)
         br.fun = self.cur_fun
         return br
 
     def visit_endthread(self, et):
         if self.cur_fun is None or self.cur_scope is None:
-            self.err("'end thread' outside of thread function body", br)
+            self.err("'end thread' outside of thread function body", et)
+        if self.cur_create is not None:
+            self.err("'end thread' inside of 'create' construct", et)
         et.fun = self.cur_fun
         return et
 
@@ -178,6 +182,9 @@ class CheckVisitor(DefaultVisitor):
                 self.err("read from create argument '%s' inside create construct" % p.name, p)
                 self.err("  in create construct starting here", p.decl.create)
                 self.err("  in create construct ending here", p.decl.create.loc_end)
+            else:
+                # FIXME: check that geta does not occur after detach in a continuation create
+                pass
             p.decl.seen_get = True
 
         return p
@@ -217,10 +224,18 @@ class CheckVisitor(DefaultVisitor):
             self.err("'create' outside of C block", c)
             return c
 
+        c.scope = self.cur_scope
+
+        if c.label in c.scope.creates:
+            self.err("'create' with label %s already in scope" % c.label)
+            self.err("previous definition of %s was here" % c.label, c.scope.creates[c.label])
+            return c
+        c.scope.creates[c.label] = c
+
         for b in (c.place, c.start, c.step, c.limit, c.block):
             b.accept(self)
 
-        if not c.funIsIdentifier():
+        if c.funtype == c.FUN_OPAQUE:
             c.fun.accept(self)
 
         # preprocess initializers before
@@ -231,7 +246,6 @@ class CheckVisitor(DefaultVisitor):
                 a.init.accept(self)
                 a.seen_set = True
 
-        c.scope = self.cur_scope
         c.arg_dic = {}
 
         self.enter(cur_create = c, in_arg_list = True)

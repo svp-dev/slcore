@@ -1,37 +1,40 @@
-from ..visitors import DefaultVisitor, flatten
-from ..ast import FunDecl, LowCreate
+from ..visitors import DefaultVisitor, ScopedVisitor, flatten
+from ..ast import *
 from ..msg import warn
 
 #### Sequential transforms ####
 
-class Create_2_Loop(DefaultVisitor):
+class Create_2_Loop(ScopedVisitor):
 
     def __init__(self, *args, **kwargs):
         super(Create_2_Loop, self).__init__(*args, **kwargs)
-        
-    def visit_geta(self, geta):
-        return flatten(geta.loc, LowCreate.arg_var(geta.name))
       
     def visit_seta(self, seta):
         b = seta.rhs.accept(self)
-        return [flatten(seta.loc, "%s = " % LowCreate.arg_var(seta.name)), b]
+        return CVarSet(loc = seta.loc, decl = seta.decl.cvar, rhs = b) 
 
-    def visit_lowcreatearg(self, arg):
+    def visit_createarg(self, arg):
         # prepare proto and uses
         if arg.type.startswith("sh"):
-            self.__callist += ", &%s" % LowCreate.arg_var(arg.name)
+            self.__callist.append(flatten(None, ', &'))
+            self.__callist.append(CVarUse(decl = arg.cvar))
             self.__protolist += ", %s *" % arg.ctype
         else:
-            self.__callist += ", %s" % LowCreate.arg_var(arg.name)
+            self.__callist.append(flatten(None, ', '))
+            self.__callist.append(CVarUse(decl = arg.cvar))
             self.__protolist += ", %s" % arg.ctype
+        return arg
 
-    def visit_lowcreate(self, cr):
-        self.__callist = ""
+    def visit_lowcreate(self, lc):
+        
+        cr = self.cur_scope.creates[lc.label]
+
+        self.__callist = []
         self.__protolist = ""
 
-        if cr.target_next is not None:
+        if lc.target_next is not None:
             warn("alternative %s not used (sequential execution always succeeds)" %
-                 cr.target_next, cr)
+                 lc.target_next.name, lc)
 
         for a in cr.args:
             a.accept(self) # accumulate the call/protolists
@@ -44,49 +47,62 @@ class Create_2_Loop(DefaultVisitor):
 
         # generate the function pointer
         if cr.funtype == cr.FUN_ID:
-            funvar = cr.fun
+            if lc.lowfun is not None:
+                funvar = lc.lowfun
+            else:
+                # not yet split
+                funvar = Opaque(cr.fun)
         else:
-            funvar = '__slC_seqfun_%s' % lbl
-            newbl.append(flatten(cr.loc, 
-                                 " long (*%s)(const long %s) = "
-                                 "(long (*)(const long%s))(%s);" 
-                                 % (funvar, protolist, 
-                                    protolist, cr.fun)))
+            assert cr.funtype == cr.FUN_VAR
+
+            n = 'C$SF$%s' % lbl
+            t = '__slC_seqfunt_%s' % lbl
+            self.cur_scope.decls += flatten(cr.loc, 
+                                            "typedef long (*%s)(const long%s);"
+                                            % (t, protolist))
+            funvar = CVarDecl(loc = cr.loc, name = n, ctype = t)
+            self.cur_scope.decls += funvar
+
+            if lc.lowfun is not None:
+                thefun = lc.lowfun
+            else:
+                # not yet split
+                thefun = CVarUse(decl = cr.fun)
+
+            newbl.append(CVarSet(loc = cr.loc, 
+                                 decl = funvar,
+                                 rhs = CCast(ctype = t, expr = thefun)))
+
+            funvar = CVarUse(decl = funvar)
 
         # consume body
-        newbl.append(cr.body.accept(self))
+        newbl.append(lc.body.accept(self))
 
         # here we expand the loop
-        indexvar = "__slC_ix_%s" % lbl
-        newbl.append(flatten(cr.loc_end, 
-                             "long %(idx)s; "
-                             "if (!%(step)s)"
-                             "  for (%(idx)s = %(start)s; ;"
-                             "       %(idx)s += %(limit)s)"
-                             "  { if (0 != (%(retval)s ="
-                             "    %(fun)s(%(idx)s%(callist)s)))"
-                             "    break; } "
-                             "else if (%(step)s > 0)"
-                             "  for (%(idx)s = %(start)s;"
-                             "       %(idx)s < %(limit)s;"
-                             "       %(idx)s += %(step)s)"
-                             "  { if (0 != (%(retval)s ="
-                             "    %(fun)s(%(idx)s%(callist)s)))"
-                             "    break; } "
-                             "else"
-                             "  for (%(idx)s = %(start)s;"
-                             "       %(idx)s > %(limit)s;"
-                             "       %(idx)s += %(step)s)"
-                             "  { if (0 != (%(retval)s ="
-                             "    %(fun)s(%(idx)s%(callist)s)))"
-                             "    break; }; "
-                             % { 'callist' : callist,
-                                 'idx' : indexvar,
-                                 'fun' : funvar,
-                                 'start' : cr.start,
-                                 'limit' : cr.limit,
-                                 'step' : cr.step,
-                                 'retval' : cr.retval }))
+        indexvar = CVarDecl(loc = cr.loc_end, name = 'cr$Si$%s' % lbl, ctype = 'long')
+        self.cur_scope.decls += indexvar
+
+        ix = CVarUse(decl = indexvar)
+        start = CVarUse(decl = cr.cvar_start)
+        limit = CVarUse(decl = cr.cvar_limit)
+        step = CVarUse(decl = cr.cvar_step)
+        docall = CVarSet(decl = cr.cvar_exitcode,
+                         rhs = funvar + '(' + ix + callist + ')')
+
+        newbl.append(Opaque(loc = cr.loc_end, text = "if (!") + step + ') ' +
+                     "for (" + ix + " = " + start + '; ;' + ix + " += " + limit + ")" +
+                     "{ if (0 != (" + docall + ')) break; }' +
+                     "else if (" + step + " > 0) " + 
+                     "for (" + ix + " = " + start + "; " + 
+                     ix + " < " + limit + "; " +
+                     ix + " += " + step + ") " +
+                     "{ if (0 != (" + docall + ")) break; }" +
+                     "else "
+                     "for (" + ix + " = " + start + "; " + 
+                     ix + " > " + limit + "; " +
+                     ix + " += " + step + ") " +
+                     "{ if (0 != (" + docall + ")) break; }" +
+                     ";")
 
         return newbl
 

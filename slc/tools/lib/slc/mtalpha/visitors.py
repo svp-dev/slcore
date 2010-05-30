@@ -1,62 +1,64 @@
-from ..visitors import DefaultVisitor, flatten
-from ..ast import LowCreate, Block
+from ..visitors import DefaultVisitor, ScopedVisitor, flatten
+from ..ast import *
 from ..msg import warn
 import regmagic
 
 
-class Create_2_MTACreate(DefaultVisitor):
+class Create_2_MTACreate(ScopedVisitor):
     def __init__(self, *args, **kwargs):
         super(Create_2_MTACreate, self).__init__(*args, **kwargs)
-        self.__args = None
-        self.__maname = None
-        self.__fidvar = None
-        
-    def visit_geta(self, geta):
-        return flatten(geta.loc, LowCreate.arg_var(geta.name))
 
     def visit_seta(self, seta):
+        # FIXME
         b = seta.rhs.accept(self)
         
         name = seta.name
+
+        adic = seta.lowcreate.callconv
+        fidvar = seta.lowcreate.fidvar
+
         # print "looking up %s in %r" % (name, self.__args)
-        assert self.__args.has_key(name)
+        assert name in adic
         
-        a = self.__args[name]
-        fidvar = self.__fidvar
+        a = adic[name]
         
         newbl = []
         if a['mode'] == 'mem':
-            maname = self.__maname
-            newbl.append(flatten(seta.loc, 
-                                 " %s.%s = %s = " 
-                                 % (maname, name, LowCreate.arg_var(name))))
+            mavar = seta.lowcreate.mavar
+            newbl.append(Opaque(loc = seta.loc, text = '(') +
+                         mavar + ').%s = ' % name +
+                         CVarSet(decl = seta.decl.cvar, rhs = b))
             newbl.append(b)
         else:
             ctype = a['ctype']
             cat = a['cat']
             if cat == 'sh': 
                 insn = 'puts'
-                assign = ""
+                assign = b
             else: 
-                assign = " %s = " % LowCreate.arg_var(name)
+                assign = CVarSet(decl = seta.decl.cvar, rhs = b)
                 insn = 'putg'
             if a['species'] == 'f': 
                 insn = 'f' + insn
                 rspec = 'f'
             else: rspec = 'rI'
             regnr = a['regnr']
-            newbl.append(flatten(seta.loc, 
-                                 ' __asm__ ("%(insn)s %%2, %%0, %(regnr)d\\t# MT: set %(cat)sarg %(name)s"'
-                                 ' : "=r"(%(fidvar)s)'
-                                 ' : "0"(%(fidvar)s),'
-                                 ' "%(rspec)s"((%(ctype)s)(%(assign)s('
-                                 % locals()))
-            newbl.append(b)
-            newbl.append(flatten(seta.loc, "))))"))
+            newbl.append(Opaque(loc = seta.loc, text = 
+                                ' __asm__ ("%(insn)s %%2, %%0, %(regnr)d\\t# MT: set %(cat)sarg %(name)s"'
+                                 ' : "=r"(' % locals()) +
+                         fidvar + ') : "0"(' + fidvar + 
+                         '), "%(rspec)s"((%(ctype)s)(' % locals() +
+                         assign + ')))')
         return newbl
                   
 
-    def visit_lowcreate(self, cr):
+    def visit_lowcreate(self, lc):
+
+
+        #print "IN LOWC (v = %x, d = %x, lc = %x)" % (id(self), id(self.__dict__), id(lc))
+        cr = self.cur_scope.creates[lc.label]
+
+
 
         # compute the calling convention
         c = regmagic.mapcall(cr.args, funcname = "create", loc = cr.loc)
@@ -65,71 +67,88 @@ class Create_2_MTACreate(DefaultVisitor):
         lbl = cr.label
 
         # generate allocate + test for alternative
-        fidvar = "__slC_mtfid_%s" % lbl
-        newbl += flatten(cr.loc, 
-                         ' long %(fidvar)s;'
-                         '__asm__ __volatile__("allocate %%1, %%0\\t# MT: CREATE %(lbl)s"'
-                         ' : "=r"(%(fidvar)s) : "rI"(%(place)s)); '
-                         % { 'lbl': lbl, 'fidvar' : fidvar, 'place' : cr.place })
+        fidvar = CVarDecl(loc = cr.loc, name = "C$mtF$%s" % lbl, ctype = 'long')
+        self.cur_scope.decls += fidvar
         
-        if cr.target_next is None:
+        usefvar = CVarUse(decl = fidvar)
+        newbl += (Opaque(loc = cr.loc, text = 
+                        '__asm__ __volatile__("allocate %%1, %%0\\t# MT: CREATE %s"'
+                         ' : "=r"(' % lbl) + 
+                  usefvar + ') : "rI"(' + CVarUse(decl = cr.cvar_place) + '));')
+        
+        if lc.target_next is None:
             # FIXME: ignore warning if the create is guaranteed to wait
             warn("this create may fail and no alternative is available", cr)
         else:
-            newbl += flatten(cr.loc,
-                             ' if (!__builtin_expect(!!(%s), 1)) goto %s ;' % (fidvar, cr.target_next))
+            newbl += (Opaque(loc = cr.loc, text =
+                             ' if (!__builtin_expect(!!(') + 
+                      usefvar + '), 1)) ' + 
+                      CGoto(target = lc.target_next)) + ';'
 
 
         # generate the function pointer
         if cr.funtype == cr.FUN_ID:
-            funvar = cr.fun
+            if lc.lowfun is not None:
+                funvar = lc.lowfun
+            else:
+                # not yet split
+                funvar = Opaque(cr.fun)
         else:
-            funvar = '__slC_mtfun_%s' % lbl
-            newbl += flatten(cr.loc, 
-                             " void (*%s)(void) ="
-                             "(void (*)(void))(%s);" % (funvar, cr.fun))
+            assert cr.funtype == cr.FUN_VAR
+
+            n = '__slC_mtfun_%s' % lbl
+            t = '__slC_mtfunt_%s' % lbl
+            self.cur_scope.decls += flatten(cr.loc, 'typedef void (*%s)(void);' % t)
+            funvar = CVarDecl(loc = cr.loc, name = n, ctype = t)
+            self.cur_scope.decls += funvar
+
+            if lc.lowfun is not None:
+                thefun = lc.lowfun
+            else:
+                # not yet split
+                thefun = CVarUse(decl = cr.fun)
+
+            newbl += CVarSet(loc = cr.loc, decl = funvar, rhs = CCast(ctype = t, expr = thefun)) + ';'
+            funvar = CVarUse(decl = funvar)
 
         # prepare memory structure for memory-passed arguments
-        maname = "__slC_ma_%s" % lbl
+            ### FIXME: move stuff to cur_scope
+        maname = "C$mtM$%s" % lbl
+        mat = '__slC_mat_%s' % lbl
         if c['gl_mem_offset'] is not None:
-            newbl += flatten(cr.loc, " struct {")
+            self.cur_scope.decls += flatten(cr.loc, "typedef struct {")
             for d in c['memlayout']:
-                newbl += flatten(d['loc'], "%s %s;" % (d['ctype'], d['name']))
-            newbl += flatten(cr.loc, "} %s;" % maname)
+                self.cur_scope.decls += flatten(d['loc'], "%s %s;" % (d['ctype'], d['name']))
+            self.cur_scope.decls += flatten(cr.loc, "} %s;" % mat)
+            mavar = CVarDecl(loc = cr.loc, name = maname, ctype = mat)
+            self.cur_scope.decls += mavar
+            mavar = CVarUse(decl = mavar)
+            lc.mavar = mavar
 
         # generate create
-        newbl += flatten(cr.loc, 
-                         '__asm__ ("setstart %%0, %%2\\t# MT: CREATE %(lbl)s"'
-                         ' : "=r"(%(fidvar)s) : "0"(%(fidvar)s), "rI"(%(start)s)); '
-                         '__asm__ ("setlimit %%0, %%2\\t# MT: CREATE %(lbl)s"'
-                         ' : "=r"(%(fidvar)s) : "0"(%(fidvar)s), "rI"(%(limit)s)); '
-                         '__asm__ ("setstep %%0, %%2\\t# MT: CREATE %(lbl)s"'
-                         ' : "=r"(%(fidvar)s) : "0"(%(fidvar)s), "rI"(%(step)s));'
-                         '__asm__ ("setblock %%0, %%2\\t# MT: CREATE %(lbl)s"'
-                         ' : "=r"(%(fidvar)s) : "0"(%(fidvar)s), "rI"(%(block)s));'
-                         '__asm__ __volatile__("wmb; crei %%0, 0(%%2)\\t# MT: CREATE %(lbl)s"'
-                         ' : "=r"(%(fidvar)s) : "0"(%(fidvar)s),'
-                         '   "r"(%(funvar)s) : "memory");'
-                         % { 'lbl' : lbl,
-                             'funvar' : funvar,
-                             'fidvar' : fidvar,
-                             'start' : cr.start,
-                             'limit' : cr.limit,
-                             'step' : cr.step,
-                             'block' : cr.block })
+        start = CVarUse(decl = cr.cvar_start)
+        limit = CVarUse(decl = cr.cvar_limit)
+        step = CVarUse(decl = cr.cvar_step)
+        block = CVarUse(decl = cr.cvar_block)
+        newbl += (Opaque(loc = cr.loc, text =
+                         '__asm__ ("setstart %%0, %%2\\t# MT: CREATE %s"'
+                         ' : "=r"(' % lbl) +
+                  usefvar + ') : "0"(' + usefvar + '), "rI"(' + start + ')); ' +
+                  '__asm__ ("setlimit %%0, %%2\\t# MT: CREATE %s"' % lbl +
+                  ' : "=r"(' + usefvar + ') : "0"(' + usefvar  + '), "rI"(' + limit + ')); ' +
+                  '__asm__ ("setstep %%0, %%2\\t# MT: CREATE %s"' % lbl +
+                  ' : "=r"(' + usefvar + ') : "0"(' + usefvar + '), "rI"(' + step + ')); ' +
+                  '__asm__ ("setblock %%0, %%2\\t# MT: CREATE %s"' % lbl +
+                  ' : "=r"(' + usefvar + ') : "0"(' + usefvar + '), "rI"(' + block + ')); ' +
+                  '__asm__ __volatile__("wmb; crei %%0, 0(%%2)\\t# MT: CREATE %s"' % lbl +
+                  ' : "=r"(' + usefvar + ') : "0"(' + usefvar + '),' +
+                  '   "r"(' + funvar + ') : "memory");')
 
-        old_maname = self.__maname
-        old_args = self.__args 
-        old_fidvar = self.__fidvar
-        self.__args = c['nargs']
-        self.__fidvar = fidvar
-        self.__maname = maname
+        lc.callconv = c['nargs']
+        lc.fidvar = usefvar
 
-        newbl += cr.body.accept(self)
+        newbl += lc.body.accept(self)
 
-        self.__args = old_args
-        self.__fidvar = old_fidvar
-        self.__maname = old_maname
 
         # done with body, now handle sync
 
@@ -137,30 +156,30 @@ class Create_2_MTACreate(DefaultVisitor):
         # we need to push the argument register to the child family.
         
         if c['gl_mem_offset'] is not None:
-              newbl += flatten(cr.loc_end, 
-                               ' __asm__ ("wmb; putg %%2, %%0, %(offset)d\\t#MT: set offset for memargs"'
-                               ' : "=r"(%(fidvar)s) : "0"(%(fidvar)s),'
-                               '   "r"(&__slC_ma_%(lbl)s));'
-                               % { 'lbl' : lbl, 
-                                   'fidvar' : fidvar,
-                                   'offset' : c['gl_mem_offset']} )
+            newbl += (Opaque(loc = cr.loc_end, text =
+                             ' __asm__ ("wmb; putg %%2, %%0, %d\\t#MT: set offset for memargs"' 
+                             % c['gl_mem_offset']) + 
+                      ' : "=r"(' + usefvar + ') : "0"(' + usefvar + '),' +
+                      '   "r"(&' + mavar + '));')
 
         # now, on to the sync.
         if cr.sync_type == 'normal':
             # normal, synchronized create
 
             # first wait for child family to terminate.
-            newbl += flatten(cr.loc_end, 
+            newbl += (Opaque(loc = cr.loc_end, text =
                              '__asm__ __volatile__("sync %%0, %%1; '
-                             ' mov %%1, $31\\t# MT: SYNC %(lbl)s"'
-                             ' : "=r"(%(fidvar)s), "=r"(%(retvar)s)'
-                             ' : "0"(%(fidvar)s) : "memory");'
-                             % { 'lbl' : lbl, 
-                                 'fidvar' : fidvar,
-                                 'retvar' : cr.retval })
+                             ' mov %%1, $31\\t# MT: SYNC %s"' % lbl) +
+                      ' : "=r"(' + usefvar + '), "=r"(' + 
+                      CVarUse(decl = cr.cvar_exitcode) + 
+                      ') : "0"(' + usefvar + ') : "memory");')
             
             # then pull shared arguments back.
             for name, arg in c['nargs'].iteritems():
+                crarg = cr.arg_dic[name]
+                if not crarg.seen_get:
+                    # geta() is not used, so no need to retrieve
+                    continue
                 if arg['mode'] == 'reg' and arg['cat'] == 'sh':
                     if arg['species'] == 'f':
                         insn1 = 'fgets'
@@ -171,23 +190,22 @@ class Create_2_MTACreate(DefaultVisitor):
                         insn2 = 'mov'
                         rspec = 'r'
                     regnr = arg['regnr']
-                    argvar = cr.arg_var(name)
+                    argvar = crarg.cvar
                     # FIXME: perform "mov" after all "get" have been issued!
-                    newbl += flatten(cr.loc_end, 
+                    newbl += (Opaque(loc = cr.loc_end, text =
                                      ' __asm__ ('
                                      '"%(insn1)s %%0, %(regnr)d, %%1; '
                                      ' %(insn2)s %%1, %%1'
-                                     '\\t# MT: get shared %(name)s"'
-                                     ' : "=r"(%(fidvar)s), "=%(rspec)s"(%(argvar)s)'
-                                     ' : "0"(%(fidvar)s));'
-                                     % locals())
+                                     '\\t# MT: get shared %(name)s"' % locals()) +
+                              ' : "=r"(' + usefvar + '), "=%(rspec)s"(' % locals() +
+                              CVarUse(decl = argvar) + ') : "0"(' + usefvar + '));')
     
                           
         # in call cases (sync and detach), release resources.
-        newbl += flatten(cr.loc_end, 
-                         ' __asm__ __volatile__("release %%0\\t#MT: SYNC %(lbl)s"'
-                         ' : : "r"(%(fidvar)s));'
-                         % locals())
+        newbl += (Opaque(loc = cr.loc_end, text = 
+                         ' __asm__ __volatile__("release %%0\\t#MT: SYNC %s"' % lbl) +
+                  ' : : "r"(' + usefvar + '));')
+
         return newbl
 
 
@@ -297,10 +315,12 @@ class TFun_2_MTATFun(DefaultVisitor):
                                         % (p.ctype, p.name, orig)))
 
         # consume the body
+        fundef.lbl_end = CLabel(loc = fundef.loc_end, name = "mtend")
+        self.cur_fun = fundef
         newitems.append(fundef.body.accept(self))
 
         # close the body definition with a target label for sl_end_thread
-        newitems.append(flatten(fundef.loc_end, "__sl_end: (void)0; }"))
+        newitems.append(fundef.lbl_end + '}')
         return newitems
 
     def visit_getp(self, getp):
@@ -358,7 +378,7 @@ class TFun_2_MTATFun(DefaultVisitor):
                        '} while(0)')
     
     def visit_endthread(self, et):
-        return flatten(et.loc, " goto __sl_end ")
+        return CGoto(loc = et.loc, target = self.cur_fun.lbl_end)
 
     def visit_indexdecl(self, idecl):
         return flatten(idecl.loc, 
