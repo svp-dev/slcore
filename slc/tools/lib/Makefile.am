@@ -61,6 +61,7 @@ nobase_python_PYTHON = \
 	slc/msg.py \
 	slc/loc.py \
 	slc/ast.py \
+	slc/lex.py \
 	slc/visitors.py \
 	slc/mtalpha/__init__.py \
 	slc/mtalpha/regmagic.py \

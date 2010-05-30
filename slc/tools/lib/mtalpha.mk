@@ -6,6 +6,8 @@ EXTRA_DIST += \
 	mtalpha-sim/callgate.s
 
 nobase_dist_pkgdata_DATA += \
+	t-spr/slimpl.m4 \
+	t-spr/include/sl_support.h \
 	t-sppalpha/slimpl.m4 \
 	t-sppalpha/include/sl_support.h
 

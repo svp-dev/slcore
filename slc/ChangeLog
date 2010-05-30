@@ -1,5 +1,14 @@
 2010-05-25  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	Minor packaging fixes.
+
+	* tools/lib/mtalpha.mk (nobase_dist_pkgdata_DATA): Distribute and
+	install `t-spr'.
+
+	* tools/lib/Makefile.am (nobase_python_PYTHON): List `lex.py'.
+
+2010-05-25  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	* lib/src/printf-pos.c: Include <cstrings.h> for `bcopy'.
 
 2010-05-25  Raphael 'kena' Poss  <r.c.poss@uva.nl>
