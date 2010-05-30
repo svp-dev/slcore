@@ -141,7 +141,7 @@ fi
 
 runner_cmdline=("${thesim[@]}" \
     ${simargs_base+"${simargs_base[@]}"} ${SIMARGS:-} \
-    -t -L16 "$datafile" -L17 "$fdatafile" -L18 "$envfile" ${1+"$@"} "$d/$b")
+    -t -L7 "$datafile" -L6 "$fdatafile" -L5 "$envfile" ${1+"$@"} "$d/$b")
 
 first=${runner_cmdline[0]}
 unset runner_cmdline[0]

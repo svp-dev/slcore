@@ -16,69 +16,70 @@
 	.globl _start
 	.registers 0 0 31 0 0 31
 _start:
-	#MTREG_SET: $l2,$l16,$l17,$l18,$l27
-	ldgp $l29, 0($l27)
-	ldfp $l30
+	#MTREG_SET: $l2,$l5,$l6,$l7,$l27
+	ldgp $l17, 0($l27)
+	ldfp $l18
 
-	mov $l30, $l15 # set up frame pointer
+	mov $l18, $l16 # set up frame pointer
+	clr $l8 # flush callee-save reg
 	clr $l9 # flush callee-save reg
 	clr $l10 # flush callee-save reg
 	clr $l11 # flush callee-save reg
 	clr $l12 # flush callee-save reg
 	clr $l13 # flush callee-save reg
-	clr $l14 # flush callee-save reg
-	fclr $lf2 # flush callee-save reg
-	fclr $lf3 # flush callee-save reg
-	fclr $lf4 # flush callee-save reg
-	fclr $lf5 # flush callee-save reg
-	fclr $lf6 # flush callee-save reg
-	fclr $lf7 # flush callee-save reg
-	fclr $lf8 # flush callee-save reg
-	fclr $lf9 # flush callee-save reg
-	fclr $lf0 # init FP return reg
-	clr $l20 # flush arg reg
-	clr $l21 # flush arg reg
-	fclr $lf16 # flush arg reg
-	fclr $lf17 # flush arg reg
-	fclr $lf18 # flush arg reg
-	fclr $lf19 # flush arg reg
-	fclr $lf20 # flush arg reg
-	fclr $lf21 # flush arg reg
+	fclr $lf11 # flush callee-save reg
+	fclr $lf12 # flush callee-save reg
+	fclr $lf13 # flush callee-save reg
+	fclr $lf14 # flush callee-save reg
+	fclr $lf15 # flush callee-save reg
+	fclr $lf16 # flush callee-save reg
+	fclr $lf17 # flush callee-save reg
+	fclr $lf18 # flush callee-save reg
+	fclr $lf3 # init FP return reg
+	clr $l3 # flush arg reg
+	fclr $lf5 # flush arg reg
+	fclr $lf6 # flush arg reg
+	fclr $lf7 # flush arg reg
+	fclr $lf8 # flush arg reg
+	fclr $lf9 # flush arg reg
+	fclr $lf10 # flush arg reg
 
-	# here $l16, $l17 and $l18 are set by the environment
-	# $l2 set by the simulator
+	# here $l7(a0), $l6(a1), $l5(a2) are set by the environment
+	# $l2 set by the simulator, but must go to a3
 	# all 4 are used by the init function
-	mov $l2, $l19
-	ldq $l27,sys_init($l29) !literal!1
-	jsr $l26,($l27),sys_init !lituse_jsr!1
-	ldgp $l29,0($l26)
+        mov $l2, $l4 # config -> a3
+	ldq $l14,sys_init($l17) !literal!1
+	jsr $l15,($l14),sys_init !lituse_jsr!1
+	ldgp $l17,0($l15)
 
 	# initialize argc and argv for main()
-	lda $l16,1($l31)
-	ldq $l17,__pseudo_argv($l29) !literal
-	ldq $l18,environ($l29) !literal
+	lda $l7,1($l31)
+	ldq $l6,__pseudo_argv($l17) !literal
+	ldq $l5,environ($l17) !literal
 
 	# call main()
-	ldq $l27,main($l29) !literal!2
-	jsr $l26,($l27),main !lituse_jsr!2
-	ldgp $l29,0($l26)
-	
-	bne $l0, $bad
-	nop
+	ldq $l14,main($l17) !literal!2
+	jsr $l15,($l14),main !lituse_jsr!2
+	ldgp $l17,0($l15)
+
+	bne $l1, $bad
+        nop
 	end
 $bad:
-	ldah $l1, $msg($l29) !gprelhigh
+	ldah $l3, $msg($l17) !gprelhigh
 	lda $l2, 115($l31)  # char <- 's'
-	lda $l1, $msg($l1) !gprellow
+	lda $l3, $msg($l3) !gprellow
 	.align 4
 $L0:
 	print $l2, 194  # print char -> stderr
-	lda $l1, 1($l1)
-	ldbu $l2, 0($l1)
+	lda $l3, 1($l3)
+	ldbu $l2, 0($l3)
 	sextb $l2, $l2
 	bne $l2, $L0
 
-	print $l0, 130 # print int -> stderr
+	print $l1, 130 # print int -> stderr
+        lda $l1, 10($l31) # NL
+	print $l1, 194  # print char -> stderr
 $fini:	
 	nop
 	nop

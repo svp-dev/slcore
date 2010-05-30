@@ -1,5 +1,15 @@
 2010-05-24  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	Adapt tools and library for the new calling convention.
+
+	* tools/lib/mtalpha-sim/callgate.s,
+	* tools/lib/mtalpha-sim/slrt.s: Use the new calling convention.
+
+	* tools/lib/r-mt-sim.sh.in: Pass external data using the new
+	argument registers.
+
+2010-05-24  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	Implement support for C function calls in caller thread context.
 
 	* tools/lib/slc/mtalpha/compile.py: Re-enable call-save registers.
