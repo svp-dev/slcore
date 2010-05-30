@@ -1,3 +1,9 @@
+2010-05-01  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
+	Move forward with the new code transformation framework.
+
+	* tools/bin/spr: Implement the transform of creates to MT-Alpha.
+
 2010-04-30  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
 	Move forward with the new code transformation framework.

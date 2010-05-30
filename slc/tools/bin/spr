@@ -36,9 +36,11 @@ class Item(object):
             self.repr = None
      
       def set_loc(self, loc):
-            self.loc = makeloc(loc)
+            if type(loc) == type(''): loc = makeloc(loc)
+            self.loc = loc
       def set_loc_end(self, loc_end):
-            self.loc_end = makeloc(loc_end)
+            if type(loc_end) == type(''): loc_end = makeloc(loc_end)
+            self.loc_end = loc_end
 
 class Opaque(Item):
       def __init__(self):
@@ -49,6 +51,9 @@ class Opaque(Item):
 
       def accept(self, v):
             return v.dispatch().visit_opaque(self)
+
+      def __repr__(self):
+            return '<Opaque@0x%x: %r>' % (id(self), self.text)
 
 # class Alternate(Item):
 #       def __init__(self):
@@ -596,9 +601,9 @@ class Create_2_Loop(DefaultVisitor):
             if arg.init is None:
                   self.decls.append(flatten(arg.loc, "%s %s __slA_%s;" % (reg, arg.ctype, arg.name)))
             else:
-                  arg.init.accept(self)
+                  init = arg.init.accept(self)
                   self.decls.append(flatten(arg.loc, "%s %s __slA_%s = " % (reg, arg.ctype, arg.name)))
-                  self.decls.append(arg.init)
+                  self.decls.append(init)
                   self.decls.append(flatten(arg.loc, ";"))
 
             # prepare proto and uses
@@ -642,24 +647,20 @@ class Create_2_Loop(DefaultVisitor):
             # again, we don't use the block value but maybe it has side effects
             newbl.append(flatten(cr.loc, "; (void)("))
             newbl.append(cr.block)
-            newbl.append(flatten(cr.loc, ");"))
             
-            newbl += self.decls # consume argument declarations / inits
-
             # now generate the function pointer
-            newbl.append(flatten(cr.loc, "long (*__slC_fun_%s)(const long %s) = (long (*)(const long%s))(" %
+            newbl.append(flatten(cr.loc, "); long (*__slC_fun_%s)(const long %s) = (long (*)(const long%s))(" %
                                  (lbl, self.protolist, self.protolist)))
 
             if cr.funIsIdentifier():
                   newbl.append(flatten(cr.loc, cr.fun))
             else:
                   newbl.append(cr.fun)
-            newbl.append(flatten(cr.loc, ")"))
+            newbl.append(flatten(cr.loc, ");"))
 
+            newbl += self.decls # consume argument declarations / inits
 
-            newbl.append(cr.body)
-
-      
+            newbl.append(cr.body)    
 
             # here we expand the loop
             newbl.append(flatten(cr.loc_end, """
@@ -678,7 +679,7 @@ else
 """.replace('\n','') % {'lbl':lbl, 'callist':self.callist}))
 
             if cr.result_lvalue is not None:
-                  newbl.append(flatten(cr.loc_end, "("));
+                  newbl.append(flatten(cr.loc_end, "("))
                   newbl.append(cr.result_value)
                   newbl.append(flatten(cr.loc_end, ") = __slC_ret_%s" % lbl))
 
@@ -759,6 +760,7 @@ class MTA_RegisterMagic(object):
       iargregs = 12
       fargregs = 12
       ilocalregs = 19
+      flocalregs = 19
 
       legacy_fregs = {
          # Scratch registers
@@ -1043,11 +1045,12 @@ class MTA_RegisterMagic(object):
                'i' : { 'sh' : [], 'gl' : [] },
                'f' : { 'sh' : [], 'gl' : [] },
                }
+            anames = {}
             #print args
             for a in args:
                cat = a.type[:2]
                if a.type[2] == 'f':
-                     species = 'f'
+                     species = 'f'                     
                else:
                      species = 'i'
                if a.type.endswith('_mutable'):
@@ -1055,7 +1058,9 @@ class MTA_RegisterMagic(object):
                else:
                      mode = 'r'
 
-               dic[species][cat].append({'loc':a.loc, 'ctype':a.ctype, 'name':a.name, 'init':getattr(a, 'init', None), 'glmode':mode})
+               na = {'loc':a.loc, 'cat':cat, 'species':species, 'ctype':a.ctype, 'name':a.name, 'init':getattr(a, 'init', None), 'glmode':mode}
+               anames[a.name] = na
+               dic[species][cat].append(na)
 
             # Check if some parameters will use memory passing
             escape = 0      
@@ -1071,7 +1076,7 @@ class MTA_RegisterMagic(object):
 
             # Allocate shareds first
             if len(dic['i']['sh']) * 2 > islots_avail:
-               choke(loc, "function '%s': too many int shareds, cannot pass them via memory yet" % funcname)
+               choke(loc, "%s: too many int shareds, cannot pass them via memory yet" % funcname)
             shc = 0
             for s in dic['i']['sh']:
                s['mode'] = 'reg'
@@ -1081,7 +1086,7 @@ class MTA_RegisterMagic(object):
             nrishareds = shc
 
             if len(dic['f']['sh']) > fslots_avail:
-               choke(loc, "function '%s': too many float shareds, cannot pass them via memory yet" % funcname)
+               choke(loc, "%s: too many float shareds, cannot pass them via memory yet" % funcname)
             shc = 0
             for s in dic['f']['sh']:
                s['mode'] = 'reg'
@@ -1104,7 +1109,7 @@ class MTA_RegisterMagic(object):
                   s['mode'] = 'mem'
                   s['offset'] = offset
                   offset += 1
-                  memlayout.append({'loc':s['loc'],'cat':'glf','ctype':s['ctype'],'name':s['name'],'init':s['init']})
+                  memlayout.append(s)
             nrfglobals = glc
 
             glc = 0
@@ -1118,14 +1123,14 @@ class MTA_RegisterMagic(object):
                   s['mode'] = 'mem'
                   s['offset'] = offset
                   offset += 1
-                  memlayout.append({'loc':s['loc'],'cat':'gli','ctype':s['ctype'],'name':s['name'],'init':s['init']})
+                  memlayout.append(s)
             nriglobals = glc
 
             ret = {}
             if escape == 0:
                ret['gl_mem_offset'] = None
             else:
-               warn(loc, "function '%s': some arguments are passed via memory" % funcname)
+               warn(loc, "%s: some arguments are passed via memory" % funcname)
                nriglobals = glc + 1
                ret['gl_mem_offset'] = glc
 
@@ -1134,6 +1139,7 @@ class MTA_RegisterMagic(object):
             ret['nrargregs'] = { 'gli' : nriglobals, 'shi' : nrishareds,
                                  'glf' : nrfglobals, 'shf' : nrfshareds }
             ret['args'] = dic
+            ret['nargs'] = anames
             ret['memlayout'] = memlayout
 
             #pprint.pprint(ret)
@@ -1153,6 +1159,181 @@ class MTA_RegisterMagic(object):
             return self.vreg_to_legacy(self.get_vreg(vname))
 
 
+class Create_2_MTACreate(DefaultVisitor):
+      def __init__(self, magic = None):
+            self.args = {}
+            self.lbl = None
+            if magic is not None:
+                  self.magic = magic
+            else:
+                  self.magic = MTA_RegisterMagic()
+
+      def visit_geta(self, geta):
+            return flatten(geta.loc, "__slA_%s" % geta.name)
+
+      def visit_seta(self, seta):
+            b = seta.rhs.accept(self)
+            
+            name = seta.name
+            assert self.args.has_key(name)
+
+            a = self.args[name]
+            lbl = self.lbl
+
+            newbl = []
+            if a['mode'] == 'mem':
+                  newbl.append(flatten(seta.loc, "__slC_ma_%s.%s = __slA_%s = " % (lbl, name, name)))
+                  newbl.append(b)
+            else:
+                  ctype = a['ctype']
+                  if a['cat'] == 'sh': 
+                        insn = 'puts'
+                        assign = ""
+                  else: 
+                        assign = "__slA_%s = " % name
+                        insn = 'putg'
+                  if a['species'] == 'f': 
+                        insn = 'f' + insn
+                        rspec = 'f'
+                  else: rspec = 'rI'
+                  regnr = a['regnr']
+                  newbl.append(flatten(seta.loc, """
+__asm__ ("%(insn)s %%2, %%0, %(regnr)d\t# set arg %(name)s"
+ : "=r"(__slC_fid_%(lbl)s) : "0"(__slC_fid_%(lbl)s),
+   "%(rspec)s"(%(assign)s(%(ctype)s)(
+""".replace('\n','') % locals()))
+                  newbl.append(b)
+                  newbl.append(flatten(seta.loc, ")))"))
+            return newbl
+                  
+
+      def visit_create(self, cr):
+
+            newbl = []
+            lbl = cr.label
+
+            newbl.append(flatten(cr.loc, "register const long __slC_pl_%s = " % lbl))
+            newbl.append(cr.place.accept(self))
+            newbl.append(flatten(cr.loc, "; register const long __slC_st_%s = " % lbl)) 
+            newbl.append(cr.start.accept(self))
+            newbl.append(flatten(cr.loc, "; register const long __slC_li_%s = " % lbl))
+            newbl.append(cr.limit.accept(self))
+            newbl.append(flatten(cr.loc, "; register const long __slC_stp_%s = " % lbl))
+            newbl.append(cr.step.accept(self))
+            newbl.append(flatten(cr.loc, "; register const long __slC_bl_%s = " % lbl))
+            newbl.append(cr.block.accept(self))
+            newbl.append(flatten(cr.loc, "; register void (*__slC_fun_%s)(void) = (void (*)(void))(" % lbl))
+            if cr.funIsIdentifier():
+                  newbl.append(flatten(cr.loc, cr.fun))
+            else:
+                  newbl.append(cr.fun.accept(self))
+            newbl.append(flatten(cr.loc, ");"))
+
+
+            c = self.magic.mapcall(cr.loc, "create", cr.args)
+
+            if c['gl_mem_offset'] is not None:
+                  newbl.append(flatten(cr.loc, "struct {"))
+                  for d in c['memlayout']:
+                        newbl.append(flatten(d['loc'], "%s %s;" % (d['ctype'], d['name'])))
+                  newbl.append(flatten(cr.loc, "} __slC_ma_%s;" % lbl))
+
+            inis = []
+            for name, arg in c['nargs'].iteritems():
+                  ctype = arg['ctype']
+                  loc = arg['loc']
+                  newbl.append(flatten(loc, "%s __slA_%s;" % (ctype, name)))
+                  if arg['init'] is not None:
+                        newbl.append(flatten(loc, "%s const __slAi_%s = " % (ctype, name)))
+                        newbl.append(arg['init'].accept(self))
+                        newbl.append(flatten(loc, ";"))
+                        ini = SetArg()
+                        ini.set_loc(loc)
+                        ini.set_name(name)
+                        ini.set_rhs(make_opaque('__slAi_%s' % name))
+                        b = Block()
+                        b.add_item(ini)
+                        inis.append(b)
+                        inis.append(flatten(loc, ';'))
+            newbl.append(flatten(cr.loc, """
+register long __slC_fid_%(lbl)s;
+__asm__ __volatile__("allocate %%1, %%0\t# MT: CREATE %(lbl)s"
+  : "=r"(__slC_fid_%(lbl)s) : "rI"(__slC_pl_%(lbl)s));
+__asm__ ("setstart %%0, %%2\t# MT: CREATE %(lbl)s"
+  : "=r"(__slC_fid_%(lbl)s) : "0"(__slC_fid_%(lbl)s), "rI"(__slC_st_%(lbl)s));
+__asm__ ("setlimit %%0, %%2\t# MT: CREATE %(lbl)s"
+  : "=r"(__slC_fid_%(lbl)s) : "0"(__slC_fid_%(lbl)s), "rI"(__slC_li_%(lbl)s));
+__asm__ ("setstep %%0, %%2\t# MT: CREATE %(lbl)s"
+  : "=r"(__slC_fid_%(lbl)s) : "0"(__slC_fid_%(lbl)s), "rI"(__slC_stp_%(lbl)s));
+__asm__ ("setblock %%0, %%2\t# MT: CREATE %(lbl)s"
+  : "=r"(__slC_fid_%(lbl)s) : "0"(__slC_fid_%(lbl)s), "rI"(__slC_bl_%(lbl)s));
+__asm__ __volatile__("wmb; crei %%0, 0(%%2)\t# MT: CREATE %(lbl)s"
+  : "=r"(__slC_fid_%(lbl)s) : "0"(__slC_fid_%(lbl)s),
+    "r"(__slC_fun_%(lbl)s) : "memory");
+""".replace('\n','') % { 'lbl': lbl }))
+
+            old_args = self.args 
+            old_lbl = self.lbl
+            self.args = c['nargs']
+            self.lbl = lbl
+
+            for ini in inis:
+                  newbl.append(ini.accept(self))
+
+            newbl.append(cr.body.accept(self))
+
+            self.args = old_args
+            self.lbl = old_lbl
+
+            # here handle sync
+            
+            if c['gl_mem_offset'] is not None:
+                  newbl.append(flatten(cr.loc_end, """
+__asm__ ("wmb; putg %%2, %%0, %(offset)d\t#MT: set offset for memargs"
+  : "=r"(__slC_fid_%(lbl)s) : "0"(__slC_fid_%(lbl)s),
+    "r"(&__slC_ma_%(lbl)s));
+""".replace('\n','') % { 'lbl':lbl, 'offset':c['gl_mem_offset']} ))
+
+            if cr.sync_type == 'normal':
+                  newbl.append(flatten(cr.loc_end, """
+register long __slC_ret_%(lbl)s;
+__asm__ __volatile__("sync %%0, %%1; mov %%1, $31\t# MT: SYNC %(lbl)s"
+  : "=r"(__slC_fid_%(lbl)s), "=r"(__slC_ret_%(lbl)s)
+  : "0"(__slC_fid_%(lbl)s) : "memory");
+""".replace('\n','') % { 'lbl':lbl }))
+
+                  for name, arg in c['nargs'].iteritems():
+                        if arg['mode'] == 'reg' and arg['cat'] == 'sh':
+                              if arg['species'] == 'f':
+                                    insn1 = 'fgets'
+                                    insn2 = 'fmov'
+                                    rspec = 'f'
+                              else:
+                                    insn1 = 'gets'
+                                    insn2 = 'mov'
+                                    rspec = 'r'
+                              regnr = arg['regnr']
+                              newbl.append(flatten(cr.loc_end, """
+__asm__ ("%(insn1)s %%0, %(regnr)d, %%1; %(insn2)s %%1, %%1\t# MT: get shared %(name)s"
+  : "=r"(__slC_fid_%(lbl)s), "=%(rspec)s"(__slA_%(name)s)
+  : "0"(__slC_fid_%(lbl)s));
+""".replace('\n','') % locals()))
+    
+                              
+
+                  newbl.append(flatten(cr.loc_end, """
+__asm__ __volatile__("release %%0\t#MT: SYNC %(lbl)s"
+  : : "r"(__slC_fid_%(lbl)s));
+""".replace('\n','') % { 'lbl':lbl }))
+
+                  if cr.result_lvalue is not None:
+                        newbl.append(flatten(cr.loc_end, "("))
+                        newbl.append(cr.result_lvalue.accept(self))
+                        newbl.append(flatten(cr.loc_end, ") = __slC_ret_%s" % lbl))
+
+            return newbl
+
+
 
 class TFun_2_MTATFun(DefaultVisitor):
       def __init__(self, magic = None):
@@ -1168,7 +1349,7 @@ class TFun_2_MTATFun(DefaultVisitor):
       def visit_fundef(self, fundef):
             newitems = []
             
-            c = self.magic.mapcall(fundef.loc, fundef.name, fundef.parms)
+            c = self.magic.mapcall(fundef.loc, "function '%s'" % fundef.name, fundef.parms)
 
             self.gllist = []
             self.shlist = []
@@ -1180,14 +1361,16 @@ class TFun_2_MTATFun(DefaultVisitor):
 """
 extern void %(name)s(void);
 void __slf_%(name)s(void) {
-   register const long __slI __asm__("%(indexreg)s");
+   register long __slI __asm__("%(indexreg)s");
    __asm__("# MT: index in %%0 (must be %(indexreg)s)" : "=r"(__slI));
-   __asm__ __volatile__(".registers %(gli)d %(shi)d 0 %(glf)d %(shf)d 0\n");
+   __asm__ __volatile__(".registers %(gli)d %(shi)d %(li)d %(glf)d %(shf)d %(lf)d\n");
 """.replace('\n','') % { 'name': fundef.name, 
                          'gli' : c['nrargregs']['gli'],
                          'shi' : c['nrargregs']['shi'],
                          'glf' : c['nrargregs']['glf'],
                          'shf' : c['nrargregs']['shf'],
+                         'li' : self.magic.ilocalregs,
+                         'lf' : self.magic.flocalregs,
                          'indexreg' : self.magic.vname_to_legacy("idx_init") }))
 
             if c['gl_mem_offset'] is not None:
@@ -1218,8 +1401,8 @@ void __slf_%(name)s(void) {
                                     dreg = "d%d" % regnr
                                     sreg = "s%d" % regnr
                               newitems.append(flatten(a['loc'], """
-register %(ctype)s __slPsin_%(name)s __asm__(%(dreg)s);
-register %(ctype)s __slPsout_%(name)s __asm__(%(sreg)s);
+register %(ctype)s __slPsin_%(name)s __asm__("%(dreg)s");
+register %(ctype)s __slPsout_%(name)s __asm__("%(sreg)s");
 """.replace('\n','') % { 'name':name, 'ctype':ctype, 
                          'dreg': self.magic.vname_to_legacy(dreg),
                          'sreg':self.magic.vname_to_legacy(sreg) }))
@@ -1230,7 +1413,7 @@ register %(ctype)s __slPsout_%(name)s __asm__(%(sreg)s);
                                     reg = "gf%d" % regnr
                               else:
                                     reg = "g%d" % regnr
-                              newitems.append(flatten(a['loc'], "register %s const __slPg_%s __asm__(%s);" % (ctype, name, self.magic.vname_to_legacy(reg))))
+                              newitems.append(flatten(a['loc'], 'register %s const __slPg_%s __asm__("%s");' % (ctype, name, self.magic.vname_to_legacy(reg))))
 
             for p in fundef.parms:
                   if p.type.endswith('_mutable'):
@@ -1241,7 +1424,6 @@ register %(ctype)s __slPsout_%(name)s __asm__(%(sreg)s);
                               orig = "__slPg_%s" % p.aname
                         newitems.append(flatten(p.loc, "%s __slPwg_%s = %s;" % (p.ctype, p.name, orig)))
 
-            newitems.append(flatten(fundef.loc, "{"))
             if fundef.body.indexname is not None:
                   newitems.append(flatten(fundef.loc, "register const long %s = __slI;" % fundef.body.indexname)) 
 
@@ -1275,20 +1457,20 @@ __slPsin_%(name)s;
                   p = { 'name' : setp.name }
                   b = []
                   b.append(flatten(setp.loc, """
-({
+do {
 __asm__ __volatile__("# MT: clobber incoming %(name)s (%%0)"
-  : "=rf"(__slPsin_%(name)s) : "0"(__slPsin_%(name)s);
+  : "=rf"(__slPsin_%(name)s) : "0"(__slPsin_%(name)s));
 __typeof__(__slPsout_%(name)s) __tmp_set_%(name)s = (
 """.replace('\n','') % p))
                   b.append(rhs)
                   b.append(flatten(setp.loc, """); 
 __asm__ __volatile__("# MT: start write shared %(name)s (%%0)"
-  : "=rf"(__slPsout_%(name)s) : "0"(__slPsout_%(name)s);
+  : "=rf"(__slPsout_%(name)s) : "0"(__slPsout_%(name)s));
 __asm__ __volatile__("mov %%4, %%0\t# MT: write shared %(name)s (%%0)"
   : "=rf" (__slPsout_%(name)s), "=rf" (__slPsin_%(name)s)
   : "0"(__slPsout_%(name)s), "1" (__slPsin_%(name)s), 
-    "rf" (__tmp_set_%(name)s);
-})
+    "rf" (__tmp_set_%(name)s));
+} while(0)
 """.replace('\n','') % p))
                   return b
             else:
@@ -1328,6 +1510,15 @@ if __name__ == "__main__":
       pp = PrinterVisitor()
       pmt.accept(pp)
       print pp.buffer
+
+      print "#### CREATE -> MTA_CREATE ####"
+      pmtc = p.accept(Create_2_MTACreate())
+      
+      print "#### PRINT MTA_CREATE ####"
+      pp = PrinterVisitor()
+      pmtc.accept(pp)
+      print pp.buffer
+
       
       # print "#### TFUN -> CFUN ####"
       # ps = p.accept(TFun_2_CFun())
