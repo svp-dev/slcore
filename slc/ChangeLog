@@ -1,5 +1,12 @@
 2010-05-21  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	Minor front-end fix.
+
+	* tools/lib/t-spr/slimpl.m4: Protect against whitespaces and newlines
+	in names.
+
+2010-05-21  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	Introduce test targets for the new framework.
 
 	* build-aux/slctests.m4,

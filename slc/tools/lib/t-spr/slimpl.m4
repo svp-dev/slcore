@@ -29,9 +29,9 @@ m4_define([[sl_rbr]], [[m4_dnl
 # Thread definitions
 
 m4_define([[_sl_doparm]], [[m4_dnl
-[[{'loc':r"""]]__file__:__line__[[""",'type':'$1','ctype':r""" $2 """,'name':']]m4_dnl
+[[{'loc':r"""]]__file__:__line__[[""",'type':"""$1""",'ctype':r""" $2 """,'name':"""]]m4_dnl
 m4_ifblank([[$3]],sl_anonymous,[[$3]])[[]]m4_dnl
-[['}]]m4_dnl
+[["""}]]m4_dnl
 ]])
 
 m4_define([[sl_glparm]], [[_sl_doparm([[glparm]],[[$1]],[[$2]])]])
@@ -43,7 +43,7 @@ m4_define([[sl_glparm_mutable]], [[_sl_doparm([[glparm_mutable]],[[$1]],[[$2]])]
 m4_define([[sl_def]],[[m4_dnl
 m4_ifdef([[_sl_increate]],[[m4_fatal(missing sync after create)]])m4_dnl
 m4_pushdef([[_sl_curfun]],[[$1]])m4_dnl
-[[""", {'loc':r"""]]__file__:__line__[[""",'type':'fundef','name':'$1','params':[]]m4_dnl
+[[""", {'loc':r"""]]__file__:__line__[[""",'type':'fundef','name':"""$1""",'params':[]]m4_dnl
 m4_shift2($@)[[]]m4_dnl
 [[],'body':[r"""]]
 ]])
@@ -63,13 +63,13 @@ m4_define([[sl_break]], [[m4_dnl
 ]])
 
 m4_define([[sl_decl]], [[m4_dnl
-[[""", {'loc':r"""]]__file__:__line__[[""",'type':'decl','name':'$1','params': []]m4_dnl
+[[""", {'loc':r"""]]__file__:__line__[[""",'type':'decl','name':"""$1""",'params': []]m4_dnl
 m4_shift2($@)m4_dnl
 [[],'loc_end':r"""]]__file__:__line__[["""}, r"""]]m4_dnl
 ]])
 
 m4_define([[sl_index]], [[m4_dnl
-[[""", {'loc':r"""]]__file__:__line__[[""",'type':'indexdecl','name':'$1'}, r"""]]m4_dnl
+[[""", {'loc':r"""]]__file__:__line__[[""",'type':'indexdecl','name':"""$1"""}, r"""]]m4_dnl
 ]])
 
 m4_define([[sl_create]], [[m4_dnl
@@ -91,10 +91,10 @@ m4_pushdef([[_sl_lbl]],F[[]]_sl_crcnt)m4_dnl
 ]])
 
 m4_define([[_sl_doarg]], [[m4_dnl
-[[{'loc':r"""]]__file__:__line__[[""",'type':'$1','ctype':'$2',]]m4_dnl
-[['init':[r""" $4 """],'name':']]m4_dnl
+[[{'loc':r"""]]__file__:__line__[[""",'type':'$1','ctype':"""$2""",]]m4_dnl
+[['init':[r""" $4 """],'name':"""]]m4_dnl
 m4_ifblank([[$3]],sl_anonymous,[[$3]])[[]]m4_dnl
-[['}]]m4_dnl
+[["""}]]m4_dnl
 ]])
 
 m4_define([[sl_glarg]], [[_sl_doarg([[glarg]],[[$1]],[[$2]],[[$3]])]])
@@ -119,11 +119,11 @@ m4_popdef([[_sl_lbl]])m4_dnl
 ]])
 
 m4_define([[_sl_doget]],[[m4_dnl
-[[""", {'loc':r"""]]__file__:__line__[[""",'type':'get$1','name':'$2'},r"""]]m4_dnl
+[[""", {'loc':r"""]]__file__:__line__[[""",'type':'get$1','name':"""$2"""},r"""]]m4_dnl
 ]])
 
 m4_define([[_sl_doset]],[[m4_dnl
-[[""", {'loc':r"""]]__file__:__line__[[""",'type':'set$1','name':'$2',]]m4_dnl
+[[""", {'loc':r"""]]__file__:__line__[[""",'type':'set$1','name':"""$2""",]]m4_dnl
 [['rhs':[r""" $3 """]},r"""]]
 ]])
 
