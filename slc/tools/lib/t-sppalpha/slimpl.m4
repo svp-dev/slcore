@@ -71,7 +71,7 @@ m4_ifdef([[_sl_increate]],[[m4_fatal(cannot nest create)]])m4_dnl
 m4_define([[_sl_increate]],1)m4_dnl
 m4_step([[__sl_crcnt]])m4_dnl
 m4_define([[__sl_tag]],__child[[]]__sl_crcnt)m4_dnl
-m4_define([[_sl_place]],m4_ifblank([[$2]],PLACE_DEFAULT,[[$2]]))m4_dnl
+m4_define([[_sl_place]],m4_ifblank([[$2]],0,[[$2]]))m4_dnl
 m4_define([[_sl_start]],m4_ifblank([[$3]],0,[[$3]]))m4_dnl
 m4_define([[_sl_limit]],m4_ifblank([[$4]],1,[[$4]]))m4_dnl
 m4_define([[_sl_step]],m4_ifblank([[$5]],1,[[$5]]))m4_dnl

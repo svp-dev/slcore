@@ -1,5 +1,27 @@
 2010-05-28  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	Move place type and constants to library.
+
+	* tools/lib/t-seqc/include/sl_support.h,
+	* tools/lib/t-ptl/include/sl_support.h,
+	* tools/lib/t-sppalpha/include/sl_support.h,
+	* tools/lib/t-utc0/include/sl_support.h: Move declaration of
+	`sl_place_t' and constants to...
+
+	* tools/include/svp/delegate.h: ...here.
+	* tools/Makefile.am: List the new file.
+	* lib/include/svp/sep.h: Use it.
+
+	* tools/lib/t-ptl/slimpl.m4,
+	* tools/lib/t-sppalpha/slimpl.m4,
+	* tools/lib/t-seqc/slimpl.m4: Do not use the constants, since they
+	are not visible any more during translation.
+
+	* tools/lib/host-host-ptl/include/ptl_svp.h: Force values in enum
+	`ExitCode', so the constants become reliable.
+
+2010-05-28  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	Improve debugging with `slr'.
 
 	* tools/bin/slr.in: Keep object files around when compiling

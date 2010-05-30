@@ -31,14 +31,6 @@
 [[#]]define __svp_kill(Val) __asm__ __volatile__("kill %0" : : "r"(Val))
 
 typedef long sl_family_t;
-typedef long sl_place_t;
-
-[[#]]define PLACE_LOCAL   0
-[[#]]define PLACE_DEFAULT 1
-
-[[#]]define SVP_ENORMAL 0
-[[#]]define SVP_EBROKEN 1
-[[#]]define SVP_EKILLED 2
 
 [[#]]endif
 

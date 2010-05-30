@@ -29,14 +29,6 @@ struct sl_famdata {
 };
 
 typedef struct sl_famdata *sl_family_t;
-typedef int sl_place_t;
-
-[[#]]define PLACE_LOCAL 0
-[[#]]define PLACE_DEFAULT 0
-
-[[#]]define SVP_ENOERR 0
-[[#]]define SVP_EBROKEN 1
-[[#]]define SVP_EKILLED 2
 
 [[#]]endif
 

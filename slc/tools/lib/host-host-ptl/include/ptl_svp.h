@@ -30,10 +30,9 @@ namespace uTC
     //
     enum ExitCode
     {
-        EXIT_NORMAL,
-        EXIT_BREAK,
-        EXIT_KILL,
-        EXIT_SQUEEZE
+        EXIT_NORMAL = 0,
+        EXIT_BREAK = 1,
+        EXIT_KILL = 2
     };
 
     class FamilyBase;

@@ -15,6 +15,8 @@
 #ifndef SLC_SVP_SEP_H
 # define SLC_SVP_SEP_H
 
+#include <svp/delegate.h>
+
 #ifdef __mt_freestanding__
 #define SVP_HAS_SEP 1
 

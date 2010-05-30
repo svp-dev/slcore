@@ -87,7 +87,7 @@ m4_ifblank([[$1]],,[[([[$1]]) = &__slf[[]]_sl_lbl;]]) m4_dnl
 __slf[[]]_sl_lbl.be = _sl_start; m4_dnl
 __slf[[]]_sl_lbl.li = _sl_limit; m4_dnl
 __slf[[]]_sl_lbl.st = _sl_step; m4_dnl
-__slf[[]]_sl_lbl.ex = SVP_ENOERR; m4_dnl
+__slf[[]]_sl_lbl.ex = 0; m4_dnl
 __slf[[]]_sl_lbl.f = ([[$8]]); m4_dnl
 __slf[[]]_sl_lbl.a = &_sl_lbl[[]]_args m4_dnl
 ]])
@@ -104,7 +104,7 @@ m4_define([[sl_sync]],[[m4_dnl
 m4_ifndef([[_sl_increate]],[[m4_fatal(sync without create)]]) m4_dnl
 m4_define([[_sl_body]],[[{ m4_dnl
 __slf[[]]_sl_lbl.f(&__slf[[]]_sl_lbl); m4_dnl
-if (__slf[[]]_sl_lbl.ex != SVP_ENOERR) break; m4_dnl
+if (__slf[[]]_sl_lbl.ex != 0) break; m4_dnl
 } m4_dnl
 ]])m4_dnl
 if (!__slf[[]]_sl_lbl.st)m4_dnl
@@ -130,7 +130,7 @@ m4_define([[sl_seta]],[[__sl_seta_$1([[$2]])]])
 
 # Pass transparently break and kill
 m4_define([[sl_break]],[[m4_dnl
-do { __sl_fam->ex = SVP_EBROKEN; return; } while(0)m4_dnl
+do { __sl_fam->ex = 1; return; } while(0)m4_dnl
 ]])
 
 m4_define([[sl_kill]],[[m4_dnl
