@@ -21,7 +21,6 @@ root=$(cd $(dirname "$0"); pwd -P)
 timeout=$root/timeout
 TIMEOUT=${TIMEOUT:-10000}; export TIMEOUT
 cce_helper=${CCE:-@cce_helper@}
-cm4_helper=${CM4:-@cm4_helper@}
 basename=${0##*/}
 TMPDIR=${TMPDIR:-/tmp}
 
@@ -31,8 +30,6 @@ bugreports=@bugreports@
 # Load defaults
 slc_mode=ld
 impl=seqc
-m4trace=
-synclines=yes
 combine=
 verbose=
 verdisplay=
@@ -153,9 +150,8 @@ for arg in "$@"; do
 
       -t)       prev_arg=tmpdir;;
 
-      -P)	synclines= ;;
+      -P)	extra_ppflags+=(-E); extra_tflags+=(-E) ;;
       -o)	prev_arg=outfile;;
-      -ftrace-m4=*) m4trace=${arg#*=} ;;
       -save-temps) keep=yes ;;
       -v)         verbose=yes ;;
       -combine=*) combine=${arg#*=} ;;
@@ -439,9 +435,9 @@ Compiler debugging options:
                      is specified, in which case the current directory is
                      used instead.
 
-  -fcm4-dump=file    Dump the M4 input code to file "file".
+  -fcm4-dump=file    Dump the M4 intermediary data files to "file.mX".
 
-  -ftrace-m4=file    Dump the M4 macro expansion trace to file "file".
+  -fcm4-trace=file   Dump the M4 macro expansion trace to file "file".
 
 Other options:
   -h, --help         Print this help; do not process anything.
@@ -534,42 +530,19 @@ fi
 ###################################
 # Gathering flags per tool category
 slc_ppflags+=("${extra_inc[@]}" "${extra_ppflags[@]}" "${extra_cflags[@]}")
+slc_tflags+=("${extra_inc[@]}" "${extra_tflags[@]}")
 slc_cflags+=("${extra_cflags[@]}" "${slc_debug_flags[@]}")
 slc_asflags+=("${slc_cflags[@]}" "${extra_asflags[@]}")
 slc_ldflags+=("${slc_cflags[@]}" "${extra_ldflags[@]}")
-
-###################################
-# Settings special for M4
-###################################
-
-# m4 -E: stop after errors
-cm4flags=(-Wm4,-E -fcm4-lquote=[[ -fcm4-rquote=]])
-
-if test -n "$verbose"; then
-  cm4flags+=(-v)
-fi
-
-if test -z "$synclines"; then
-  cm4flags+=(-P)
-  slc_ppflags+=(-P)
-fi
-
-if test -n "$m4trace"; then
-  cm4flags+=("-fcm4-trace=$m4trace")
-fi
-for fl in "${slc_tflags[@]}"; do
-    cm4flags+=("-Wm4,$fl")
-done
-for ei in "${extra_inc[@]}"; do
-    cm4flags+=("-Wm4,$ei")
-done
-cm4flags+=("${extra_tflags[@]}")
 
 ################
 # Misc settings
 ################
 
 # Propagate $verbose
+if test -n "$verbose"; then
+  slc_tflags+=(-v)
+fi
 export SLC_VERBOSE=${verbose:-no}
 
 # Select file extension for intermediate source files
@@ -748,7 +721,7 @@ if test -n "$verbose"; then (
            combine outfile tmpdir; do
     eval "echo \"   $i -> \$$i\"" 
   done
-  for i in cm4flags extra_f2flags; do
+  for i in extra_f2flags; do
     eval "echo \"   $i -> \${$i[*]}\"" 
   done
   set | grep '^slc_' | sed -e 's/^/   /g' 
@@ -776,13 +749,13 @@ EOF
 	  ;;
       T)
 	  res=3
-          cm4deps=()
+          tdeps=()
           for d in $deps; do
-	      cm4dsrcdir=$(dirname "$d")
-	      cm4deps+=("-Wm4,-I$cm4dsrcdir" "$d")
-	      slc_cflags+=("-I$cm4dsrcdir")
+	      dsrcdir=$(dirname "$d")
+	      tdeps+=("-I$dsrcdir" "$d")
+	      slc_cflags+=("-I$dsrcdir")
           done
-	  cmd=("$cm4_helper" "${cm4flags[@]}" "${cm4deps[@]}")
+	  cmd=("${slc_translator[@]}" "${slc_tflags[@]}" "${tdeps[@]}")
 	  if ! test "$slc_mode" = "trans" -a -z "$outfile"; then capturestdout=1; fi
 	  ;;
       C)

@@ -17,6 +17,7 @@ SLC_VARS = \
 	SLC_DATADIR=$(SLC_DATADIR) \
 	PYTHONPATH=$(PYTHONPATH) \
 	SPP=$(SPP) \
+	SPR=$(SPR) \
 	SCU=$(SCU) \
 	SAG=$(SAG) \
 	CCE=$(CCE) \

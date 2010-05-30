@@ -207,7 +207,7 @@ class CM4(object):
         """
 
         # prepare command line
-        m4_cmdline = [self.m4]
+        m4_cmdline = [self.m4, '-E'] # -E = fail on error
         if self.synclines: m4_cmdline.append('-s')
         if tracefile is not None: 
             m4_cmdline.append('-dV')

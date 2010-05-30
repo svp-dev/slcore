@@ -50,6 +50,7 @@ edit_scripts = $(SED) \
 	       -e 's|@slt_helper[@]|$(bindir)/slt|g' \
 	       -e 's|@sag_helper[@]|$(bindir)/sag|g' \
 	       -e 's|@spp_helper[@]|$(bindir)/spp|g' \
+	       -e 's|@spr_helper[@]|$(bindir)/spr|g' \
 	       -e 's|@cm4_helper[@]|$(bindir)/cm4|g' \
 	       -e 's|@slc_version[@]|$(PACKAGE_VERSION)|g' \
 	       -e 's|@bugreports[@]|$(PACKAGE_BUGREPORT)|g'

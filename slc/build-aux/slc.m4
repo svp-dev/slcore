@@ -137,6 +137,7 @@ AC_DEFUN([AC_WITH_SLC],
     SLC_DATADIR=$base_src/tools/lib:$base_build/tools/lib:$base_src/lib:$base_build/lib
     PYTHONPATH=$base_src/tools/lib:$base_build/tools/lib
     SPP=$base_src/tools/bin/spp
+    SPR=$base_src/tools/bin/spr
     SCU=$base_src/tools/bin/scu
     SAG=$base_src/tools/bin/sag
     CCE=$base_build/tools/bin/cce
@@ -167,6 +168,7 @@ AC_DEFUN([AC_WITH_SLC],
     SLC_DATADIR=$SLC_BASE/share/sl-core
     PYTHONPATH=$SLC_BASE/tools/lib:$SLC_BASE/tools/lib
     SPP=$SLC_BASE/bin/spp
+    SPR=$SLC_BASE/bin/spr
     SCU=$SLC_BASE/bin/scu
     SAG=$SLC_BASE/bin/sag
     CCE=$SLC_BASE/bin/cce
@@ -183,6 +185,7 @@ AC_DEFUN([AC_WITH_SLC],
   AC_SUBST([SLC_LOCAL])
   AC_SUBST([PYTHONPATH])
   AC_SUBST([SPP])
+  AC_SUBST([SPR])
   AC_SUBST([SCU])
   AC_SUBST([SAG])
   AC_SUBST([CCE])

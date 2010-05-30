@@ -43,6 +43,7 @@ def parse_args(args):
     -fcm4-trace=FILE    Capture M4 trace to FILE (default: don't capture)
     -fcm4-dump=FILE     Capture filtered input to FILE (default: don't capture)
     -Wm4,OPTION         Add OPTION to M4 command-line
+    -IPATH              Add PATH to the M4 search path
 
     Other command-line arguments are read as input files.
     """
@@ -63,6 +64,7 @@ def parse_args(args):
         elif arg.startswith('-fcm4-trace='):   m4_trace = arg.split('=',1)[1]
         elif arg.startswith('-fcm4-line='):    m4_line = arg.split('=',1)[1]
         elif arg.startswith('-fcm4-dump='):    dump_trans = arg.split('=',1)[1]
+        elif arg.startswith('-I'):             m4_args.append(arg)
         elif arg.startswith('-Wm4,'):          m4_args += arg.split(',')[1:]
         elif arg == '--': input_files += args[i+1:]; return
         elif arg == '-':  input_files.append(arg)

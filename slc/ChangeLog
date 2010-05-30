@@ -1,3 +1,23 @@
+2010-05-20  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
+	Start integrating `spr' with `slc'.
+
+	* tools/bin/cm4.in: Recognize `-I'.
+
+	* tools/bin/slc.in: Move cm4-specific stuff to...
+	* tools/bin/cce.in: ...here. Generalize translation stage via
+	new variable `$slc_translator'. Allow `spr' to replace `cm4'.
+	* tools/bin/slc.in: Simplify accordingly.
+	
+	* tools/bin/slc.in: Propagate `-P' to underlying tools instead of
+	translating. Move setting of `-E' to...
+	* tools/lib/slc/input/cm4.py: ...here.
+
+	* tools/bin/Makefile.am,
+	* build-aux/slc.m4,
+	* build-aux/slcvars.mk: Make the tools aware of the location of
+	`spr'.
+
 2010-05-19  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
 	Minor fixes.
