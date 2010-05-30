@@ -1,6 +1,7 @@
 from ..visitors import DefaultVisitor
 from ..msg import log, warn
 from ..ast import *
+import sys
 
 class CheckVisitor(DefaultVisitor):
 
@@ -20,6 +21,11 @@ class CheckVisitor(DefaultVisitor):
         self.cur_fun = None
         self.in_parm_list = False
         self.in_arg_list = False
+
+    def visit_program(self, p):
+        super(CheckVisitor, self).visit_program(p)
+        if self.has_errors:
+            sys.exit(1)
 
     def enter(self, **kwargs):       
         save = {}

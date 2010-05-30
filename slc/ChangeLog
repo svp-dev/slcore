@@ -1,5 +1,37 @@
 2010-05-21  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	Integrate all `spr' processes into a unique front-end.
+
+	* tools/lib/slc/front/__init__.py,
+	* tools/lib/slc/front/dump.py,
+	* tools/lib/slc/front/opts.py: New.
+
+	* tools/bin/spr: Move `Dispatcher' to...
+	* tools/lib/slc/visitors.py: ...here.
+
+	* tools/bin/spr: Move visitor chain definition to...
+	* tools/lib/slc/front/chains.py: ...here. Define multiple chains.
+
+	* tools/bin/spr: Move front-end main body to...
+	* tools/lib/slc/front/main.py: ...here. Move the initial evaluation to...
+	* tools/lib/slc/input/parse.py: ...here.
+
+	* tools/lib/slc/input/cm4.py: Define configuration arguments and
+	main process.
+	* tools/lib/slc/front/main.py: Use it.
+
+	* tools/lib/slc/front/main.py: Move the test for check errors to...
+	* tools/lib/slc/input/check.py (CheckVisitor.visit_program): ...here.
+
+	* tools/lib/slc/lower/flavorseta.py: New visitor `LinkSetA' to link
+	`SetA' instances to the corresponding `LowCreate'. This is needed when
+	`split' is not used.
+	* tools/lib/slc/front/chains.py: Use `LinkSetA' where appropriate.
+
+	* tools/lib/Makefile.am (nobase_python_PYTHON): List the new files.
+
+2010-05-21  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	Minor fixes.
 
 	* tools/lib/slc/lower/lowercreate.py: Fix typo (cr/lc).

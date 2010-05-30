@@ -54,7 +54,7 @@ class CM4(object):
     - do_m4()
     """
 
-    def __init__(self, m4_lquote = '`', m4_rquote = "'",
+    def __init__(self, m4_lquote = '[[', m4_rquote = "]]",
                  m4_file = "__file__", m4_line = "__line__",
                  sl_lbr = 'sl_lbr', sl_rbr = 'sl_rbr',
                  m4 = None,
@@ -228,6 +228,32 @@ class CM4(object):
 
         return o
 
+
+from ..front import opts
+from ..front.dump import dump, get_dump_fname
+
+opts.register_arg('-X', action = "append", nargs = 1, dest = "m4_args", metavar = "ARG",
+                  default = [],
+                  help="Pass ARG as an extra argument to M4.")
+opts.register_dump_stage('combine', 'Combined input')
+opts.register_dump_stage('remcoms', 'Input with comments removed')
+opts.register_dump_stage('massage', 'Massaged input')
+opts.register_dump_stage('m4trace', 'M4 debug trace')
+opts.register_dump_stage('m4out', 'M4 output')
+
+def process(input_files):
+    c = CM4(synclines = opts.resolved.synclines, verbose = opts.resolved.verbose)
+    d = c.combine(input_files)
+    dump('combine', d)
+    d = c.remove_comments(d)
+    dump('remcoms', d)
+    d = c.massage(d)
+    dump('massage', d)
+    d = c.do_m4(d, m4_args = ['-I%s' % x for x in opts.resolved.includes] + opts.resolved.m4_args, 
+                tracefile = get_dump_fname('m4trace'))
+    d = ''.join(['["""', d, '"""]'])
+    dump('m4out', d)
+    return d
 
 if __name__ == "__main__":
     c = CM4()

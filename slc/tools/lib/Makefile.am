@@ -85,7 +85,12 @@ nobase_python_PYTHON = \
 	slc/input/read.py \
 	slc/input/parse.py \
 	slc/input/cm4.py \
-	slc/input/check.py
+	slc/input/check.py \
+	slc/front/__init__.py,
+	slc/front/main.py \
+	slc/front/chains.py \
+	slc/front/dump.py \
+	slc/front/opts.py
 
 nobase_dist_pkgdata_DATA = \
 	arggen.c \

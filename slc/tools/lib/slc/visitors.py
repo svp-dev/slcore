@@ -40,6 +40,42 @@ class BaseVisitor(object):
             return flavor
 
 
+class Dispatcher(object):
+      
+      def __init__(self, flavored_visitors):
+            self.flavored_visitors = flavored_visitors
+            for k, v in self.flavored_visitors.items():
+                  self.__dict__.update(v.__dict__)
+                  v.__dict__ = self.__dict__
+                  #print "REG V: %x, d = %x" % (id(v), id(v.__dict__))
+            self.dispatcher = self
+                  
+            #print self.__dict__
+            self.current_flavors = []
+
+      def start_flavor(self, f):
+            self.current_flavors.insert(0, f)
+
+      def end_flavor(self, f):
+            assert self.current_flavors[0] == f
+            self.current_flavors.pop(0)
+
+      def dispatch(self, base_visitor, item, seen_as, *args, **kwargs):
+            # here we look up the method in the 
+            # flavored visitors first, and fall back
+            # to the base visitor if that fails.
+            
+            methname = 'visit_%s' % seen_as.__name__.lower()
+            for f in self.current_flavors:
+                  v = self.flavored_visitors.get(f, None)
+                  if v is not None:
+                        if methname in v.__class__.__dict__:
+                              m = getattr(v, methname)
+                              return m(item, *args, **kwargs)
+            # here, no visitor is found
+            m = getattr(base_visitor, methname)
+            return m(item, *args, **kwargs)
+
 
 #### Default visitor: just visit ####
 
@@ -413,4 +449,4 @@ class PrintVisitor(DefaultVisitor):
           self.__out.write('])')
           return ci
 
-__all__ = ['flatten', 'BaseVisitor', 'DefaultVisitor', 'ScopedVisitor', 'PrintVisitor']
+__all__ = ['flatten', 'BaseVisitor', 'Dispatcher', 'DefaultVisitor', 'ScopedVisitor', 'PrintVisitor']

@@ -138,6 +138,9 @@ def parse_fundef(item):
       return d
 
 def parse_program(source):
+
+      source = eval(source)
+
       p = Program()
       for item in source:
             if type(item) == type({}):
