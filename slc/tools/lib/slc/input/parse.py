@@ -8,7 +8,7 @@ def unexpected(item):
 def parse_varuse(varuse, item):
       #print "parse varuse %x: item %x: %r" % (id(varuse), id(item), item)
       varuse.loc = item['loc']
-      varuse.name = item['name']
+      varuse.name = item['name'].strip()
       if item.has_key('rhs'):
             varuse.rhs = parse_block(item['rhs'])
       return varuse
@@ -37,16 +37,16 @@ def parse_create(item):
 
 def parse_indexdecl(item):
       return IndexDecl(loc = item['loc'],
-                    indexname = item['name'])
+                       indexname = item['name'].strip())
 
 def parse_scope(item):
       s = Scope(loc = item['loc'],
                 loc_end = item['loc_end'])
       s += parse_block(item['body'])
       return s
-                
+  
 def parse_attr(item):
-      n = item['name']
+      n = item['name'].strip()
       del item['type']
       del item['name']
 
@@ -109,7 +109,7 @@ def parse_argparm(p, cat, item):
       p.loc = item['loc']
       p.type = item['type']
       p.ctype = CType(items = item['ctype'])
-      p.name = item['name']
+      p.name = item['name'].strip()
       if item.has_key('init'):
          p.init = parse_block(item['init'])
       return p            
@@ -131,7 +131,8 @@ def parse_funptrdecl(item):
 
 def parse_fundecl(item):
       d = FunDecl(loc = item['loc'], 
-                  name = item['name'],
+                  loc_end = item['loc_end'],
+                  name = item['name'].strip(),
                   extras = parse_extras(item['extras']))
       for p in item['params']:
             d += parse_argparm(FunParm(), 'parm', p)
@@ -140,7 +141,7 @@ def parse_fundecl(item):
 def parse_fundef(item):
       d = FunDef(loc = item['loc'], 
                  loc_end = item['loc_end'], 
-                 name = item['name'],
+                 name = item['name'].strip(),
                  extras = parse_extras(item['extras']),
                  body = parse_block(item['body']))
       for p in item['params']:

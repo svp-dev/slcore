@@ -29,7 +29,7 @@ def makeqesc(specialchars):
     specials = ''.join(specialchars)
     def escaper(str):
         if str[0] == '"':
-            d = '""'
+            d = '" "'
         else: 
             d = ''
         newstr = ''
@@ -80,7 +80,7 @@ class CM4(object):
         # replacement for quote chars in strings
         self.quotes_escaper = makeqesc(list(set(m4_lquote + m4_rquote)))
         # replacement for strings
-        self.quoted_string_fmt = "%s%%s%s" % (m4_lquote, m4_rquote)
+        self.quoted_string_fmt = "%s%%s%s " % (m4_lquote, m4_rquote)
 
     def _combine_gen(self, input_files):
         for fname in input_files:

@@ -1,5 +1,15 @@
 2010-05-30  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	Minor whitespace fixes.
+
+	* tools/lib/slc/input/cm4.py: Tolerate more combinations of quotes
+	and strings.
+
+	* tools/lib/slc/input/parse.py: Strip all whitespace (also `\n')
+	from identifiers before use.
+
+2010-05-30  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	Implement support for thread function pointers.
 
 	* tools/lib/t-utc/slimpl.m4,
