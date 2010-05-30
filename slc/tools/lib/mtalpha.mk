@@ -6,10 +6,8 @@ EXTRA_DIST += \
 	mtalpha-sim/callgate.s
 
 nobase_dist_pkgdata_DATA += \
-	t-pppalpha/slimpl.m4 \
-	t-pppalpha/include/sl_support.h \
-	t-ppp2alpha/slimpl.m4 \
-	t-ppp2alpha/include/sl_support.h
+	t-sppalpha/slimpl.m4 \
+	t-sppalpha/include/sl_support.h
 
 if ENABLE_SLC_MTALPHA
 

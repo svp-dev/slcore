@@ -65,19 +65,26 @@ nobase_python_PYTHON = \
 	slc/mtalpha/__init__.py \
 	slc/mtalpha/regmagic.py \
 	slc/mtalpha/compile.py \
-	slc/mtalpha/spp.py \
 	slc/mtalpha/visitors.py \
 	slc/mtalpha/asmproc/__init__.py \
 	slc/mtalpha/asmproc/base.py \
 	slc/mtalpha/asmproc/common.py \
 	slc/mtalpha/asmproc/opt.py \
+	slc/lower/__init__.py \
 	slc/lower/seq.py \
 	slc/lower/split.py \
 	slc/lower/lowercreate.py \
 	slc/lower/lowgeta.py \
+	slc/lower/flavorseta.py \
+	slc/lower/lowccast.py \
+	slc/lower/lowclabels.py \
+	slc/lower/lowcvars.py \
+	slc/lower/remflavors.py \
+	slc/lower/rename.py \
 	slc/input/__init__.py \
 	slc/input/read.py \
 	slc/input/parse.py \
+	slc/input/cm4.py \
 	slc/input/check.py
 
 nobase_dist_pkgdata_DATA = \

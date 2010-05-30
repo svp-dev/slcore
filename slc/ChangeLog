@@ -1,5 +1,16 @@
 2010-05-19  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	Packaging fixes.
+
+	* tools/lib/Makefile.am,
+	* tools/lib/mtalpha.mk: Adjust file paths after recent changes.
+
+	* build-aux/slc.m4,
+	* build-aux/slcvars.mk: Make the tools aware of the new Python
+	library via `PYTHONPATH'.
+
+2010-05-19  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	Remove targets `ppp' and `ppp2'. Keep `spp' as transition target.
 
 	* tools/lib/t-ppp2alpha/slimpl.m4,
