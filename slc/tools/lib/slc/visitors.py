@@ -59,6 +59,7 @@ class DefaultVisitor(BaseVisitor):
             return block
 
       def visit_scope(self, scope):
+            scope.decls = scope.decls.accept(self)
             return self.dispatch(scope, seen_as = Block)
 
       def visit_fundecl(self, fundecl):
@@ -182,6 +183,7 @@ class PrinterVisitor(DefaultVisitor):
 
     def visit_scope(self, scope):
           self.__out.write('{')
+          scope.decls.accept(self)
           self.dispatch(scope, seen_as = Block)
           self.__out.write('}')
           return scope

@@ -10,6 +10,7 @@ import copy
 from slc.visitors import *
 from slc.input.read import read
 from slc.input.parse import parse_program
+from slc.input.check import CheckVisitor
 from slc.lower.seq import *
 from slc.lower.lowercreate import *
 from slc.lower.split import *
@@ -61,8 +62,14 @@ if __name__ == "__main__":
       print "#### PARSE ####"
       p = parse_program(source)
 
-      print "#### CHECK ####"
+      print "#### WALK ####"
       p.accept(DefaultVisitor())
+
+      print "#### CHECK ####"
+      cv = CheckVisitor()
+      p.accept(cv)
+      if cv.has_errors:
+            sys.exit(1)
 
       print "#### PRINT ORIG ####"
       pp = PrinterVisitor()

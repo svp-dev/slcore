@@ -107,7 +107,11 @@ class Scope(Block):
     """
     A block surrounded by {}.
     """
-    pass
+    def __init__(self, decls = None, *args, **kwargs):
+        super(Scope, self).__init__(*args, **kwargs)
+        if not isinstance(decls, Block):
+            decls = Block(items = decls)
+        self.decls = decls
 
 class Flavor(Block):
     """
@@ -200,6 +204,8 @@ class ArgParm(Item):
         self._name = name
         self.ctype = ctype
         self.type = type
+        self.seen_set = False
+        self.seen_get = False
 
     @property
     def name(self): return self._name

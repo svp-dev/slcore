@@ -77,7 +77,8 @@ nobase_python_PYTHON = \
 	slc/lower/lowgeta.py \
 	slc/input/__init__.py \
 	slc/input/read.py \
-	slc/input/parse.py
+	slc/input/parse.py \
+	slc/input/check.py
 
 nobase_dist_pkgdata_DATA = \
 	arggen.c \

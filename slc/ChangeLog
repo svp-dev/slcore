@@ -1,3 +1,16 @@
+2010-05-09  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
+	Implement tree checking.
+
+	* tools/lib/slc/ast.py,
+	* tools/lib/slc/visitors.py: Introduce a `decl' part in scopes.
+
+	* tools/lib/slc/input/check.py: New.
+
+	* tools/bin/spr: Use the tree checker.
+
+	* tools/lib/Makefile.am: List the new file.
+
 2010-05-08  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
 	Introduce support for scopes, free index declarations.
