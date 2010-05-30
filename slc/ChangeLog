@@ -1,3 +1,12 @@
+2010-04-26  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
+	Prepare for new code splitting tool `spr'.
+
+	* tools/lib/t-spr/slimpl.m4: Implement macros that split the code.
+	* tools/lib/t-spr/include/sl_support.h: Placeholder to please `slc'.
+
+	* tools/bin/cce.in: Make `t-spr' usable for tests.
+
 2010-04-29  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
 	* doc/NEWS.txt: Initialize for 2.4.x.
