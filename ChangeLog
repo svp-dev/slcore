@@ -1,5 +1,11 @@
 2010-05-31  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	Update simulator version in installer.
+
+	* deploy/installer/versions.m4: Bump version number.
+
+2010-05-31  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	Update installer version to suggest upgrading.
 
 	* deploy/installer/build-aux/package-version: Bump to 3.0.
