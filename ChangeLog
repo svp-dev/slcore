@@ -1,5 +1,11 @@
 2010-05-31  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	Update installer version to suggest upgrading.
+
+	* deploy/installer/build-aux/package-version: Bump to 3.0.
+
+2010-05-31  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	Upgrade environment scripts.
 
 	* deploy/installer/slenv: Also set `PYTHONPATH'.
