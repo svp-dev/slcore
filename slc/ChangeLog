@@ -1,5 +1,13 @@
 2010-05-31  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	Release version 3.0.
+
+	* build-aux/package-version: Update to 3.0.
+
+	* doc/NEWS.txt: Document recent changes.
+
+2010-05-31  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	Minor packaging fixes.
 
 	* tools/lib/mtalpha.mk,

@@ -4,15 +4,87 @@
 
 This document describes major updates to the SL toolchain.
 
-Version 2.4.x
-=============
+Version 3.0, May 2010
+=====================
 
-Development version only.
+.. note:: The SL language has evolved. Check CSA note [sl1] for
+   details.
 
-Chances since 2.4
+.. note:: A new SVP ISA and ABI have been implemented both in hardware
+   (MT-Alpha simulator) and in the compiler. All programs need to be
+   re-compiled, re-assembled and re-linked.
+
+Changes since 2.4
 -----------------
 
-...
+Language and library
+````````````````````
+
+- Programs can define their own ``main`` function with the standard C
+  semantics (in which case ``t_main`` loses its special meaning).
+
+- The constructs ``sl_create`` / ``sl_sync`` can be nested.
+
+- Restrictions on the code that can be expressed between ``sl_create``
+  and ``sl_sync`` have been removed.
+
+- Pointer variables and typedefs can be declared with ``sl_decl_fptr``
+  and ``sl_typedef_fptr``.
+
+- Thread functions can have "attributes" (that must be repeated in
+  ``sl_create``). 
+
+- Improved checking of invalid uses of language constructs (better
+  diagnostics).
+
+Changes related to the Microgrid target
+```````````````````````````````````````
+
+- C function calls are performed within the same thread context as the
+  caller. This decreases resource usage.
+
+- A scheme has been implemented to flatten concurrency within the
+  current thread context when concurrent resources are exhausted and
+  until they become available again.
+
+- Multiple MT targets are now available:
+
+  - ``mta`` (a.k.a ``mtalpha``): hybrid scheme with tolerance to
+    resource exhaustion;
+ 
+  - ``mta_n`` ("naked"): pure microthreaded code sensitive to resource
+    exhaustion;
+
+  - ``mta_s`` ("sequential"): all concurrency flattened inside a
+    single thread (useful for comparisons)
+
+  - ``mta_on`` ("old naked"): previous implementation of the compiler;
+    no support for the latest language developments.
+
+Bug fixes since 2.4
+-------------------
+
+- The ``tgamma`` was incorrectly implemented. This has been replaced
+  by a more correct but numerically inaccurate implementation.
+
+Known limitations
+-----------------
+
+- Support for the C99 standard library is incomplete.
+
+- C's ``long double`` type is not supported.
+
+- The C ``tgamma`` function is less accurate than required by the specification.
+
+- SVP's *break* and *kill* operations are inconsistently supported
+  across targets (or not at all), since their definition is in flux at
+  this period (early 2010). No known programs are affected.
+
+- Due to both software and hardware limitations, Microgrid code is
+  much less efficient in several key places than the architecture
+  would allow it to be (poor register management due to conservative
+  assumptions about unknown use in C function calls). This will be
+  investigated and optimized in future versions of the tool chain.
 
 Version 2.4, April 2010
 =======================
