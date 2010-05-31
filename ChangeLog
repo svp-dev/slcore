@@ -1,3 +1,9 @@
+2010-05-31  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
+	Change installer defaults to the new ABI.
+
+	* deploy/installer/versions.m4: Bump version numbers.
+
 2010-05-28  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
 	Modify the stock GCC to better support C99's VLA's.
