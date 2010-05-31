@@ -1,0 +1,48 @@
+#! /bin/bash
+
+prefix=$(dirname "$0")
+prefix=$(cd "$prefix"; pwd)
+
+save_IFS=$IFS
+IFS=:
+NEWPATH=
+for p in $PATH; do
+   if test "x${p#$prefix}" != "x$p"; then
+      continue
+   else
+      NEWPATH="$NEWPATH$p:"
+   fi
+done
+NEWPATH="$NEWPATH$p"
+
+NEWPYPATH=
+for p in $PYTHONPATH; do
+   if test "x${p#$prefix}" != "x$p"; then
+      continue
+   else
+      NEWPYPATH="$NEWPYPATH$p:"
+   fi
+done
+NEWPYPATH="$NEWPYPATH$p"
+
+NEWMANPATH=
+for p in $MANPATH; do
+   if test "x${p#$prefix}" != "x$p"; then
+      continue
+   else
+      NEWMANPATH="$NEWMANPATH$p:"
+   fi
+done
+NEWMANPATH="$NEWMANPATH$p"
+IFS=$saveIFS
+
+cat <<EOF
+unset SLC SPP SPR SLT SCU SAG CCE SLR CM4;
+unset CC_ALPHA CC_ALPHA_OVERRIDE UTCC_ALPHA UTCC_ALPHA_OVERRIDE;
+unset AR_MTALPHA AR_MTALPHA_OVERRIDE RANLIB_MTALPHA RANLIB_MTALPHA_OVERRIDE;
+unset CC_SPARC CC_SPARC_OVERRIDE;
+unset AR_MTSPARC AR_MTSPARC_OVERRIDE RANLIB_MTSPARC RANLIB_MTSPARC_OVERRIDE;
+export PYTHONPATH=$NEWPYPATH ;
+export PATH=$NEWPATH ;
+export MANPATH=$NEWMANPATH ;
+EOF

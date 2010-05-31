@@ -100,6 +100,7 @@ PROMPT=\$(printf '%s\n%s' '(slreqs:%B\$(basename \$(cd $slreq_base;/bin/pwd)|cut
 fi;
 : ;
 : Tool locations ;
+export PYTHONPATH=$sl_base/lib/python2.6/site-packages:$sl_base/lib/python2.5/site-packages:\$PYTHONPATH;
 export PATH=$sl_base/bin:$slreq_base/bin:\$PATH;
 export MANPATH=$sl_base/share/man:$slreq_base/share/man:\$MANPATH;
 export CC_ALPHA_OVERRIDE=$slreq_base/bin/alpha-linux-gnu-gcc;

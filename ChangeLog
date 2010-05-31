@@ -1,5 +1,14 @@
 2010-05-31  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	Upgrade environment scripts.
+
+	* deploy/installer/slenv: Also set `PYTHONPATH'.
+
+	* deploy/installer/deslenv: New script to unset variables.
+	* deploy/installer/rules/slenv.mk: Install the new script.
+
+2010-05-31  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	Change installer defaults to the new ABI.
 
 	* deploy/installer/versions.m4: Bump version numbers.
