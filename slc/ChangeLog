@@ -1,6 +1,19 @@
 2010-05-31  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
 	Minor packaging fixes.
+
+	* tools/lib/mtalpha.mk,
+	* tools/lib/ptl.mk,
+	* tools/lib/seqc.mk: Use `-nostdlib' to appease `cce' while `slrt'
+	is being built.
+	
+	* tools/lib/Makefile.am (nodist_nobase_python_PYTHON): Do not
+	distribute `slc_config.py', since it must be regenerated for every
+	installation.
+
+2010-05-31  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
+	Minor packaging fixes.
 	
 	* tools/lib/mtalpha.mk: Drop references to `libmain_seq.a' which
 	does not exist any more.

@@ -81,7 +81,7 @@ mta_hybrid-mtalpha-sim/%.a:
 mta_hybrid-mtalpha-sim/libslc.a: $(mta_hybrid_mtalpha_sim_libslc_a_CONTENTS)
 mta_hybrid-mtalpha-sim/libslmain.a: $(mta_hybrid_mtalpha_sim_libslmain_a_CONTENTS)
 
-SLC_MTA := $(SLC_RUN) -b mta 
+SLC_MTA := $(SLC_RUN) -b mta -nostdlib
 
 mta_hybrid-mtalpha-sim/%.o: $(srcdir)/mtalpha-sim/%.s
 	$(AM_V_at)$(MKDIR_P) mta_hybrid-mtalpha-sim
@@ -121,7 +121,7 @@ seq_naked-mtalpha-sim/%.a:
 seq_naked-mtalpha-sim/libslc.a: $(seq_naked_mtalpha_sim_libslc_a_CONTENTS)
 seq_naked-mtalpha-sim/libslmain.a: $(seq_naked_mtalpha_sim_libslmain_a_CONTENTS)
 
-SLC_MTA_S := $(SLC_RUN) -b mta_s 
+SLC_MTA_S := $(SLC_RUN) -b mta_s -nostdlib
 
 seq_naked-mtalpha-sim/%.o: $(srcdir)/mtalpha-sim/%.s
 	$(AM_V_at)$(MKDIR_P) seq_naked-mtalpha-sim
@@ -161,7 +161,7 @@ mta_naked-mtalpha-sim/%.a:
 mta_naked-mtalpha-sim/libslc.a: $(mta_naked_mtalpha_sim_libslc_a_CONTENTS)
 mta_naked-mtalpha-sim/libslmain.a: $(mta_naked_mtalpha_sim_libslmain_a_CONTENTS)
 
-SLC_CMD := $(SLC_RUN) -b mta_n 
+SLC_CMD := $(SLC_RUN) -b mta_n -nostdlib
 
 mta_naked-mtalpha-sim/%.o: $(srcdir)/mtalpha-sim/%.s
 	$(AM_V_at)$(MKDIR_P) mta_naked-mtalpha-sim

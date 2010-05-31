@@ -58,7 +58,7 @@ seqc_o_host_host_seqc_libslc_a_SOURCES = empty.c # empty for now
 seqc_o_host_host_seqc_libslmain_a_SOURCES = # empty for now
 seqc_o_host_host_seqc_libslmain_a_LIBADD = seqc_o-host-host-seqc/main.o
 
-SLC_SEQC_O = $(SLC_RUN) -b seqc_o 
+SLC_SEQC_O = $(SLC_RUN) -b seqc_o -nostdlib
 
 seqc_o-host-host-seqc/%.o: $(srcdir)/host-host-seqc/%.c
 	$(AM_V_at)$(MKDIR_P) seqc_o-host-host-seqc
@@ -89,7 +89,7 @@ seq_naked_host_host_seqc_libslc_a_SOURCES = empty.c # empty for now
 seq_naked_host_host_seqc_libslmain_a_SOURCES = # empty for now
 seq_naked_host_host_seqc_libslmain_a_LIBADD = seq_naked-host-host-seqc/main.o
 
-SLC_SEQC = $(SLC_RUN) -b seqc -nostdlib -nodefaultmain
+SLC_SEQC = $(SLC_RUN) -b seqc -nostdlib
 
 seq_naked-host-host-seqc/%.o: $(srcdir)/host-host-seqc/%.c
 	$(AM_V_at)$(MKDIR_P) seqc_o-host-host-seqc
