@@ -2,6 +2,12 @@
 
 	Update check expectations.
 
+	* demo/sep.c: Remove expected failure (underlying bug was fixed).
+
+2010-05-31  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
+	Update check expectations.
+
 	* benchmarks/sha/sha1.c: Expect failure for naked mta targets
 	only.
 

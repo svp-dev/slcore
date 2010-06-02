@@ -20,7 +20,7 @@
 #include <svp/testoutput.h>
 
 // SLT_RUN: L=1 nmax=4
-// XIGNORE: *:D mta_s*:R
+// XIGNORE: *:D
 
 slr_decl(slr_var(unsigned, L, "number of rounds"),
 	 slr_var(unsigned, nmax, "max nr policies used"));
