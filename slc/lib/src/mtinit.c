@@ -67,16 +67,16 @@ void sys_environ_init(char *initenv)
     output_string(" done.\n", 2);
 }
 
-static unsigned sys_req_ncores;
 extern sl_place_t __main_place_id;
 extern struct placeinfo *__main_placeinfo;
 
-sl_def(sys_set_main_pid, void)
+static noinline
+void sys_set_main_pid(unsigned req_ncores)
 {
     if (verbose_boot) output_string(" -> request to SEP...", 2);
-    sl_create(,PLACE_LOCAL,,,,,, root_sep->sep_alloc,
+    sl_create(,PLACE_LOCAL,,,,,, *root_sep->sep_alloc,
               sl_glarg(struct SEP*, , root_sep),
-              sl_glarg(unsigned long, , SAL_EXACT | sys_req_ncores),
+              sl_glarg(unsigned long, , SAL_EXACT | req_ncores),
               sl_sharg(struct placeinfo*, p, 0));
     sl_sync();
     if (sl_geta(p)) {
@@ -86,6 +86,7 @@ sl_def(sys_set_main_pid, void)
             output_string(" success", 2);
     } else {
         if (verbose_boot) output_string(" failed", 2);
+        abort();
     }
     if (verbose_boot) 
     {
@@ -96,7 +97,6 @@ sl_def(sys_set_main_pid, void)
         output_char('\n', 2);
     }
 }
-sl_enddef
 
 static noinline
 void sys_check_ncores(void)
@@ -107,9 +107,9 @@ void sys_check_ncores(void)
             output_string("* -n ", 2);
             output_string(v, 2);
         }
-        sys_req_ncores = strtoul(v, 0, 10);
-        if (sys_req_ncores)
-            (void)INVOKE_MT(PLACE_LOCAL, sys_set_main_pid);
+        unsigned req_ncores = strtoul(v, 0, 10);
+        if (req_ncores)
+            sys_set_main_pid(req_ncores);
         else
             if (verbose_boot) 
                 output_string(" (invalid, ignoring)\n", 2);
