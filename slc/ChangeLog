@@ -1,5 +1,12 @@
 2010-06-02  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	Add missing module initializers in slc library.
+
+	* tools/lib/slc/input/__init__.py,
+	* tools/lib/slc/lower/__init__.py: New.
+
+2010-06-02  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	Fix bug with `slr -n'.
 
 	* lib/src/mtinit.c: Dereference function pointer in SEP call. Turn
