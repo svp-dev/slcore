@@ -38,7 +38,7 @@ $(MGSIM_METASRC)/bootstrap_done: $(MGSIM_METASRC)/download_done
 $(MGSIM_METASRC)/configure_done: $(MGSIM_METASRC)/bootstrap_done
 	rm -f $@
 	cd $(MGSIM_METASRC) && ./configure CPPFLAGS="$$CPPFLAGS" LDFLAGS="$$LDFLAGS"
-	if grep -q 'WARNING: COMA simulation not available' $(MGSIM_METASRC)/config.log; then \
+	if grep -q 'WARNING:.*COMA simulation not available' $(MGSIM_METASRC)/config.log; then \
 	  echo; echo "*** COMA not enabled: SystemC missing? ***"; echo; \
 	  exit 1; \
 	fi
