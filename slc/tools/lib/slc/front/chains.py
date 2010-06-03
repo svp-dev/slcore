@@ -14,6 +14,7 @@ from ..lower.flavorseta import *
 from ..lower.rename import *
 from ..lower.remflavors import *
 from ..mtalpha.visitors import *
+from ..am.visitors import *
 
 _common_prefix = [
     ('walk', DefaultVisitor()),
@@ -36,6 +37,10 @@ _chains = {
         ('lseta', LinkSetA()),
         ('flattencr',Create_2_Loop()),
         ('flattenfun',TFun_2_CFun())] + _common_suffix,
+    'am' : _common_prefix + [
+        ('lseta', LinkSetA()),
+        ('flattencr',Visitor1()),
+        ('flattenfun',Visitor2())] + _common_suffix,
     'mta' : _common_prefix + [
         ('lseta', LinkSetA()),
         ('flattencr', Create_2_MTACreate()), 

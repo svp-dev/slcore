@@ -136,6 +136,7 @@ case $alias in
     mta_n)        alias=spr-mta_naked-mtalpha-sim ;;
     mta_on)       alias=spp-mta_naked-mtalpha-sim ;;
     mta_s)        alias=spr-seq_naked-mtalpha-sim ;;
+    am)           alias=spr-am_naked-host-host-seqc ;;
 
     ptl)   alias=ptl-ptl-host-host-ptl ;;
     utc0)  alias=utc0-mta_naked-mtalpha-sim ;;
@@ -189,6 +190,7 @@ case $slc_dialect in
         target=unknown
         case $slc_variant in
             seq_naked) target=seq ;;
+            am_naked) target=am ;;
             mta_naked) target=mta ;;
             mta_hybrid) target=mta+seq ;;
             *) echo "unknown variant: $slc_dialect-$slc_variant" >&2 ;;
