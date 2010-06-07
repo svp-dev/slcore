@@ -39,8 +39,8 @@ _chains = {
         ('flattenfun',TFun_2_CFun())] + _common_suffix,
     'am' : _common_prefix + [
         ('lseta', LinkSetA()),
-        ('flattencr',Visitor1()),
-        ('flattenfun',Visitor2())] + _common_suffix,
+        ('flattencr',Create_2_HydraCall()),
+        ('flattenfun',TFun_2_HydraCFunctions())], #  + _common_suffix,
     'mta' : _common_prefix + [
         ('lseta', LinkSetA()),
         ('flattencr', Create_2_MTACreate()), 
