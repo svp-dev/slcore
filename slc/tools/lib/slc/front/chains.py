@@ -40,7 +40,7 @@ _chains = {
     'am' : _common_prefix + [
         ('lseta', LinkSetA()),
         ('flattencr',Create_2_HydraCall()),
-        ('flattenfun',TFun_2_HydraCFunctions())], #  + _common_suffix,
+        ('flattenfun',TFun_2_HydraCFunctions())] + _common_suffix,
     'mta' : _common_prefix + [
         ('lseta', LinkSetA()),
         ('flattencr', Create_2_MTACreate()), 
