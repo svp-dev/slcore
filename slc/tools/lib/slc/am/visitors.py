@@ -4,7 +4,8 @@ from ..visitors import *
 from ..ast import *
 
 
-def gen_loop_fun_name(orig_name):
+def gen_loop_fun_name(orig_name):  # takes a thread function name and generates a name that will be used as
+                                   # the name of the function that implements the corresponding loop
     return Opaque("_fam_") + orig_name
 
 class Create_2_HydraCall(ScopedVisitor):
@@ -12,21 +13,21 @@ class Create_2_HydraCall(ScopedVisitor):
     def __init__(self, *args, **kwargs):
         super(Create_2_HydraCall, self).__init__(*args, **kwargs)
       
-    def get_num_shareds(self):
+    def get_no_shareds(self):
         rez = 0
         for a in self.__cur_cr.args:
             if (a.type.startswith("sh")):
                 rez += 1
         return rez
     
-    def get_num_globals(self):
+    def get_no_globals(self):
         rez = 0
         for a in self.__cur_cr.args:
             if (not(a.type.startswith("sh"))):
                 rez += 1
         return rez
 
-    def get_arg_index(self, arg, shared):
+    def get_arg_index(self, arg, shared):  # returns the index of a specified argument, among shareds of globals
         index = 0
         for a in self.__cur_cr.args:
             if (a == arg):
@@ -51,45 +52,24 @@ class Create_2_HydraCall(ScopedVisitor):
         else:
             # find my own index
             index = self.get_arg_index(arg = seta.decl, shared = False)
-            setter = (flatten(seta.loc, "write_global(&") +
-                self.__fam_context + ', ' + index + ', ' + b + ');\n')
-                
+            # setting a global is done by first writing to a local var (so that the parent get read it
+            # back if it does a geta) and the calling "write_global" with the value of the local var (so
+            # that we don't execute the rhs again)
+            setter = CVarSet(loc = seta.loc, decl = seta.decl.cvar, rhs = b) + ';'
+            setter += (flatten(seta.loc, "write_global(") +
+                self.__fam_context + ', %s' % index + ', ' + CVarUse(decl = seta.decl.cvar) + ');\n')
 
         self.__arg_setters.append(setter)
         return None
         #return CVarSet(loc = seta.loc, decl = seta.decl.cvar, rhs = b) 
 
-    '''
-    def visit_geta(self, geta):
-        #pprint.pprint(object = geta, depth = 1)
-        if geta.decl.type.startswith("sh"):
-            shared = True
-            # find my own index
-            index = self.get_arg_index(arg = geta.decl, shared = True)
-        else:
-            shared = False
-            index = self.get_arg_index(arg = geta.decl, shared = True)
-        
-        if shared:
-            # generate the name of the local variable that was introduced for
-            # the shared
-            return CVarUse(decl = geta.decl.cvar)
-        else:
-            pass
-    '''
 
     def visit_createarg(self, arg):
-        # prepare proto and uses
+        # for shareds, append a pointer to the corresponding local variable to a list
+        # of arguments that will be passed to sync
         if arg.type.startswith("sh"):
             self.__callist.append(flatten(None, ', &'))
             self.__callist.append(CVarUse(decl = arg.cvar))
-            self.__protolist += flatten(None, ', ') + arg.ctype + flatten(None, ' *')
-        '''
-        else:
-            self.__callist.append(flatten(None, ', '))
-            self.__callist.append(CVarUse(decl = arg.cvar))
-            self.__protolist += flatten(None, ', ') + arg.ctype
-        '''
         return arg
 
     def visit_lowcreate(self, lc):
@@ -117,8 +97,6 @@ class Create_2_HydraCall(ScopedVisitor):
         # initialize members to be used when visiting the arguments
         cr = self.cur_scope.creates[lc.label]
         self.__callist = []
-        self.__protolist = Block()
-        #self.__shareds = []
         self.__arg_setters = []
         self.__cur_cr = cr
 
@@ -142,8 +120,8 @@ class Create_2_HydraCall(ScopedVisitor):
                                    ctype = 'fam_context_t*')
         self.cur_scope.decls += fam_context_var
 
-        no_shareds = str(self.get_num_shareds())
-        no_globals = str(self.get_num_globals())
+        no_shareds = str(self.get_no_shareds())
+        no_globals = str(self.get_no_globals())
        
         rrhs = flatten(cr.loc_end, 'allocate_fam(&') + gen_loop_fun_name(funvar) + ', ' \
                 + no_shareds + ', ' +  no_globals + ', ' + start + ', ' \
@@ -197,8 +175,8 @@ class Create_2_HydraCall(ScopedVisitor):
 class TFun_2_HydraCFunctions(DefaultVisitor):
     def __init__(self, *args, **kwargs):
         super(TFun_2_HydraCFunctions, self).__init__(*args, **kwargs)
-        self.__shlist = None
-        self.__gllist = None
+        #self.__shlist = None
+        #self.__gllist = None
 
 
     def visit_getp(self, getp):
@@ -206,7 +184,7 @@ class TFun_2_HydraCFunctions(DefaultVisitor):
         param = self.__paramNames_2_params[getp.name]
         if not param.isShared:
             newbl.append(flatten(None,
-                        'read_istruct_same_tc(&cur_tc->globals[%d])',
+                        'read_istruct(&cur_tc->globals[%d], _get_parent_ident())' %
                         param.index))
         else: #shared
             if self.__state == 0: #begin
@@ -230,82 +208,55 @@ class TFun_2_HydraCFunctions(DefaultVisitor):
 
         return newbl
 
-        #print 'GETP'
-        #print type(getp)
-        #print '%s - %s' % (type(getp), getp.name)
-        #pdb.set_trace()
-
-        #if getp.name in self.__shlist:
-        #    format = "(*__slP_%s)"
-        #else:
-        #    format = " __slP_%s "
-        #return flatten(getp.loc, format % getp.name)
-
-    def visit_setp(self, getp):
-        b = getp.rhs.accept(self)
-        param = self.__paramNames_2_params[getp.name]
+    def visit_setp(self, setp):
+        b = setp.rhs.accept(self)
+        param = self.__paramNames_2_params[setp.name]
         newbl = []
 
         #assert we're writing to a shared... TODO: check if it is possible to
         #write to a global (from a child) and, if so, what it's supposed to mean
         assert(param.isShared)
 
-        if self.__state == 0: #begin
-            newbl.append(flatten(None,#getp.loc,
-                         'write_istruct_same_tc(&cur_tc->shareds[%d],' %
-                          param.index) + b + ')')
-            
-        elif self.__state == 1: #middle
-            newbl.append(flatten(None,#getp.loc,
-                         'write_istruct_same_tc(&cur_tc->shareds[%d],' %
-                          param.index) + b + ')')
-        elif self.__state == 2 or self.__state == 3: #end and generic
-            newbl.append(flatten(None,#getp.loc,
-                         'if (_is_last_tc()) {shareds[%d] = ' % param.index) \
-                         + b \
-                         + ';} else {write_istruct(&next->tc->shareds[%d], ' % param.index \
-                         + b + ', next);}')
-        else:
-            assert(0)
+        if setp.decl.seen_get:
+            if self.__state == 0: #begin
+                newbl.append(flatten(None,#setp.loc,
+                             'write_istruct_same_tc(&cur_tc->shareds[%d],' %
+                              param.index) + b + ')')
+                
+            elif self.__state == 1: #middle
+                newbl.append(flatten(None,#setp.loc,
+                             'write_istruct_same_tc(&cur_tc->shareds[%d],' %
+                              param.index) + b + ')')
+            elif self.__state == 2 or self.__state == 3: #end and generic
+                newbl.append(flatten(None,#setp.loc,
+                             'if (_is_last_tc()) {shareds[%d] = ' % param.index) \
+                             + b \
+                             + ';} else {write_istruct(&next->tc->shareds[%d], ' % param.index \
+                             + b + ', next);}')
+            else:
+                assert(0)
+        else:  # no need to write to anything; just generate the rhs
+            #TODO(kena): check that you're fine with this
+            newbl.append(flatten(setp.loc,'(void)(') + b + ');') # cast to void suppress "statement has no effect warning" 
 
         return newbl
-        #if getp.name in self.__shlist:
-        #    format = "(*__slP_%s) = "
-        #else:
-        #    format = " __slP_%s = "
-        #return [flatten(getp.loc, format % getp.name), b]
 
     def visit_funparm(self, parm):
-        #print 'funparm'
-        #print '%s - %s' % (type(parm), parm.name)
-
         self.__paramNames_2_params[parm.name] = parm
         if parm.type.startswith("sh"):
             parm.isShared = True
             parm.index = self.__sh_parm_index
             self.__sh_parm_index += 1
-            #self.__shlist.append(parm.name)
-            #self.__buffer += (Opaque(', register ') + parm.ctype + 
-            #                  ' * const __restrict__ __slP_%s ' % parm.name)
         else:
             parm.isShared = False
             parm.index = self.__gl_parm_index
             self.__gl_parm_index += 1
-            #self.__gllist.append(parm.name)
-            #if parm.type.endswith('_mutable'):
-            #    const = ""
-            #else:
-            #    const = "const"
-            #self.__buffer += (Opaque(', register ') + parm.ctype + 
-            #                  ' %s __slP_%s ' % (const, parm.name))
         return parm
 
     def visit_fundecl(self, fundecl, keep = False, omitextern = False):
-        self.__sh_parm_index = 0
-        self.__gl_parm_index = 0
+        self.__sh_parm_index = 0  # counter for the number of shareds seen
+        self.__gl_parm_index = 0  # counter for the number of globals seen
         self.__paramNames_2_params = {}
-        self.__shlist = []
-        self.__gllist = []
         if fundecl.extras.get_attr('static', None) is not None:
             qual = "static"
         elif omitextern:
@@ -320,11 +271,10 @@ class TFun_2_HydraCFunctions(DefaultVisitor):
         self.__buffer += ')'
         ret = self.__buffer
         self.__buffer = None
-        if not keep:
-            self.__shlist = self.__gllist = None
         return ret
  
     def visit_fundeclptr(self, fundecl):
+        #TODO
         assert False
         '''
         self.__shlist = []
@@ -360,24 +310,28 @@ class TFun_2_HydraCFunctions(DefaultVisitor):
         self.dispatch(fundef, seen_as = FunDecl, keep = True, omitextern = True)
  
         #TODO: maybe special case for t_main...
-        
-        self.__state = 0  #begin
-        newitems = flatten(fundef.loc, ("long %s_begin(const tc_ident_t* prev, " +
-                                       "long __index) {\n") % fundef.name)
-        newitems += begin_body.accept(self)
-        newitems += flatten(fundef.loc_end, "return 0; \n}")
+   
+        newitems = Block()   
 
-        self.__state = 1  #middle
-        newitems += flatten(fundef.loc, "long %s_middle(long __index) {\n" %
-                                        fundef.name)
-        newitems += middle_body.accept(self)
-        newitems += flatten(fundef.loc_end, "return 0; \n}")
+        if fundef.name <> "t_main":  # for main, we just need the generic variant
+            self.__state = 0  #begin
+            newitems = flatten(fundef.loc, ("long %s_begin(const tc_ident_t* prev, " +
+                                           "long __index) {\n") % fundef.name)
+            newitems += begin_body.accept(self)
+            newitems += flatten(fundef.loc_end, "return 0; \n}")
 
-        self.__state = 2  #end
-        newitems += flatten(fundef.loc, ("long %s_end(const tc_ident_t* next, " +
-                            "long* shareds, long __index) {\n") % fundef.name)
-        newitems += end_body.accept(self)
-        newitems += flatten(fundef.loc_end, "return 0; \n}")
+            self.__state = 1  #middle
+            newitems += flatten(fundef.loc, "long %s_middle(long __index) {\n" %
+                                            fundef.name)
+            newitems += middle_body.accept(self)
+            newitems += flatten(fundef.loc_end, "return 0; \n}")
+
+            self.__state = 2  #end
+            newitems += flatten(fundef.loc, ("long %s_end(const tc_ident_t* next, " +
+                                "long* shareds, long __index) {\n") % fundef.name)
+            newitems += end_body.accept(self)
+            newitems += flatten(fundef.loc_end, "return 0; \n}")
+
         
         self.__state = 3  #generic
         newitems += flatten(fundef.loc, ("long %s_generic(const tc_ident_t* " +
@@ -388,11 +342,6 @@ class TFun_2_HydraCFunctions(DefaultVisitor):
        
         # generate loop function
 
-        print '!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!'
-        print type(fundef)
-        print type(fundef.name)
-        print fundef.name
-    
         newitems += flatten(fundef.loc, "void ") + \
                     gen_loop_fun_name(fundef.name) + "()" +" {\n"
         newitems += "long __index, __start_index = _get_start_index(), " +\
@@ -404,13 +353,19 @@ class TFun_2_HydraCFunctions(DefaultVisitor):
             const tc_ident_t* next = _get_next_ident();
             
             if (__end_index - __start_index > 4) {\n
-            """ \
-            + fundef.name + """_begin(prev, __start_index);
+            """
+        if fundef.name <> "t_main":  # for main, we won't need this branch (and we can't generate it either
+                                     # cause we haven't generated the non-generic flavours of the thread func
+            newitems += fundef.name + """_begin(prev, __start_index);
                 for (__index = __start_index + 1; __index < __end_index; ++__index) {
                 """ + fundef.name + """_middle(__index); // TODO: check for break return value
                 }
             """ \
-            + fundef.name + """_end(next, &fam_context->shareds[0], __end_index);
+            + fundef.name + """_end(next, &fam_context->shareds[0], __end_index);"""
+        else:
+            newitems += "exit(1);  // main should never be created as a family of more than one thread"
+
+        newitems += """
             } else {
                 for (__index = __start_index; __index <= __end_index; ++__index) {
                 """ + fundef.name + """_generic(prev, next, 
@@ -429,23 +384,13 @@ class TFun_2_HydraCFunctions(DefaultVisitor):
         }
         """ 
 
-        self.__shlist = self.__gllist = None
         return newitems
 
-        #newitems = self.dispatch(fundef, seen_as = FunDecl, keep = True, omitextern = True)
-        #newitems += flatten(fundef.loc, "{")
-        #newitems += fundef.body.accept(self)
-        #newitems += flatten(fundef.loc_end, " return 0; }")
-        #self.__shlist = self.__gllist = None
-        #return newitems
 
 
     def visit_indexdecl(self, idecl):
         return flatten(idecl.loc, "register const long %s = __index" %
                        idecl.indexname)
-        #return flatten(idecl.loc, 
-        #               " register const long %s = __slI " 
-        #               % idecl.indexname) 
 
     def visit_break(self, br):
         return flatten(br.loc, " return 1 ")
@@ -456,6 +401,7 @@ class TFun_2_HydraCFunctions(DefaultVisitor):
 
     def visit_program(self, p):
         # TODO: remove the absolute path below
+        p._items.insert(0, Opaque("#include <stdlib.h>"))
         p._items.insert(0, Opaque("#include \"/home/amatei/src/thesis/trunk/runtime/rt.h\""))
         super(TFun_2_HydraCFunctions, self).visit_program(p)  # TODO: do I need
                                                               # this call?
