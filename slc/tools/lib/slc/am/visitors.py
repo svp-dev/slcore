@@ -1,5 +1,4 @@
 import pprint
-import pdb
 from ..visitors import *
 from ..ast import *
 
@@ -106,13 +105,13 @@ class Create_2_HydraCall(ScopedVisitor):
         self.cur_scope.decls += mapping_decision_var
         
         start = CVarUse(decl = cr.cvar_start)
-        limit = CVarUse(decl = cr.cvar_limit) + " - 1"
+        end_index = CVarUse(decl = cr.cvar_limit) + " - 1"  # this is now inclusive
         step = CVarUse(decl = cr.cvar_step)
         
-        rrhs = flatten(cr.loc_end, 'map_fam(&') + gen_loop_fun_name(funvar) + ', ' + start \
-                + ', ' + limit + ', NULL)'
+        rrhs = flatten(cr.loc_end, 'map_fam(&') + gen_loop_fun_name(funvar) + ', (' + end_index \
+                       + ' - ' + start + '+ 1) / ' + step+ ', NULL)'
 
-        mapping_call = CVarSet(decl = mapping_decision_var, rhs = rrhs)  #TODO: add step here
+        mapping_call = CVarSet(decl = mapping_decision_var, rhs = rrhs)
         newbl.append(mapping_call + ';\n')
 
         #expand call to allocate_fam()
@@ -125,9 +124,9 @@ class Create_2_HydraCall(ScopedVisitor):
        
         rrhs = flatten(cr.loc_end, 'allocate_fam(&') + gen_loop_fun_name(funvar) + ', ' \
                 + no_shareds + ', ' +  no_globals + ', ' + start + ', ' \
-                + limit + ', NULL, &' + CVarUse(decl = mapping_decision_var) + ')'
+                + end_index + ', ' + step + ', NULL, &' + CVarUse(decl = mapping_decision_var) + ')'
         allocate_call = CVarSet(decl = fam_context_var, 
-                               rhs = rrhs)  #TODO: add step here
+                               rhs = rrhs)
         newbl.append(allocate_call + ';\n')
 
         #expand call to create_fam()
@@ -305,12 +304,8 @@ class TFun_2_HydraCFunctions(DefaultVisitor):
         end_body = copy.deepcopy(fundef.body)
         generic_body = copy.deepcopy(fundef.body)
       
-        #TODO: function declaration... 
-        #newitems = self.dispatch(fundef, seen_as = FunDecl, keep = True, omitextern = True)
         self.dispatch(fundef, seen_as = FunDecl, keep = True, omitextern = True)
  
-        #TODO: maybe special case for t_main...
-   
         newitems = Block()   
 
         if fundef.name <> "t_main":  # for main, we just need the generic variant
