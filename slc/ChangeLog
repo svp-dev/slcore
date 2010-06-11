@@ -1,5 +1,18 @@
 2010-06-11  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	Remove obsolete files.
+
+	* lib/host-host-ptl/include/svp_os.h,
+	* lib/host-host-seqc/include/svp_os.h,
+	* lib/mtalpha-sim/include/svp_asmdiv.h,
+	* lib/mtalpha-sim/include/svp_os.h: Remove.
+
+	* lib/seqc.mk,
+	* lib/ptl.mk,
+	* lib/mtalpha.mk: Update accordingly.
+
+2010-06-11  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	Enhance `cce'.
 
 	* tools/bin/cce.in: Propagate more information to programs: efine

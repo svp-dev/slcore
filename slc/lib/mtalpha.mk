@@ -75,11 +75,6 @@ MTALIB_EXTRA = \
 
 EXTRA_DIST += $(MTALIB_CSRC) $(MTALIB_SRC) $(MTALIB_EXTRA)
 
-nobase_dist_pkgdata_DATA += \
-	mtalpha-sim/include/svp_os.h \
-	mtalpha-sim/include/svp_asmdiv.h
-
-
 include $(srcdir)/gdtoa.mk
 
 include $(srcdir)/src/mtamathobjs.mk

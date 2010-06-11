@@ -1,8 +1,5 @@
 ########## muTC-PTL implementation ##########
 
-nobase_dist_pkgdata_DATA += \
-	host-host-ptl/include/svp_os.h
-
 if ENABLE_SLC_PTL
 
 nobase_pkglib_LIBRARIES += ptl-host-host-ptl/libsl.a 
