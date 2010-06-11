@@ -1,3 +1,11 @@
+2010-06-11  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
+	Minor packaging fix.
+
+	* bootstrap: Properly recurse into `deploy/installer'. Create
+	`data' subdirectory for livermore benchmarks before generating
+	data files.
+
 2010-06-02  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
 	Minor packaging fix.
