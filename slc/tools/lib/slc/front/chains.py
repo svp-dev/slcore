@@ -34,12 +34,16 @@ _common_suffix = [
 _chains = {
     'seq' : _common_prefix + [
         ('lseta', LinkSetA()),
+        ('autores', AutoResolve()),
         ('flattencr',Create_2_Loop()),
-        ('flattenfun',TFun_2_CFun())] + _common_suffix,
+        ('flattenfun',TFun_2_CFun()),
+        ] + _common_suffix,
     'mta' : _common_prefix + [
         ('lseta', LinkSetA()),
+        ('autores', AutoResolve()),
         ('flattencr', Create_2_MTACreate()), 
-        ('flattenfun',TFun_2_MTATFun())] + _common_suffix,
+        ('flattenfun',TFun_2_MTATFun()),
+        ] + _common_suffix,
     'mta+seq' : _common_prefix + [
         ('splitcr', SplitCreates()),
         ('lseta', LinkSetA()),

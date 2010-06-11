@@ -1,5 +1,5 @@
 import copy
-from ..visitors import DefaultVisitor, flatten
+from ..visitors import DefaultVisitor, ScopedVisitor, flatten
 from ..ast import *
 from ..msg import die
 
@@ -57,19 +57,11 @@ class ExampleOracle(object):
                           index = Opaque("%d" % ix))
         
 
-class SplitCreates(DefaultVisitor):
+class SplitCreates(ScopedVisitor):
 
     def __init__(self, oracle = ExampleOracle(), *args, **kwargs):
         super(SplitCreates, self).__init__(*args, **kwargs)
         self.oracle = oracle
-        self.cur_scope = None
-
-    def visit_scope(self, sc):
-        old = self.cur_scope
-        self.cur_scope = sc
-        super(SplitCreates, self).visit_scope(sc)
-        self.cur_scope = old
-        return sc
 
     def visit_lowcreate(self, lc):
         """
@@ -118,6 +110,8 @@ class SplitCreates(DefaultVisitor):
             thisalt.append(CGoto(loc = cr.loc_end, target = cr.target_resolved) + ';')
 
             newbl = thisalt + newbl
+
+        newbl.insert(0, CGoto(loc = cr.loc, target = next) + ';')
             
         return newbl
 
