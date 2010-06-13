@@ -1,4 +1,4 @@
-AC_PREREQ([2.61])
+AC_PREREQ([2.65])
 AC_INIT([sl-installer], 
         m4_esyscmd([(pre=; if test -d ../../.git -a ! -d .git; then pre=$PWD/; cd ../..; fi; \
                     ${pre}build-aux/version-gen \

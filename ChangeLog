@@ -1,3 +1,10 @@
+2010-06-13  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
+	Minor packaging fix.
+
+	* deploy/installer/configure.ac: Require Autoconf 2.65, since we
+	are using `m4_ifblank'.
+
 2010-06-11  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
 	Minor packaging fix.
