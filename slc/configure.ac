@@ -11,7 +11,7 @@
 ## `COPYING' file in the root directory.
 ##
 
-AC_PREREQ([2.61])
+AC_PREREQ([2.65])
 AC_INIT([sl-core], 
         m4_esyscmd([(pre=; if test -d ../.git -a ! -d .git; then pre=$PWD/; cd ..; fi; \
                     ${pre}build-aux/version-gen ${pre}build-aux/tarball-version ${pre}build-aux/package-version)]), 
@@ -32,7 +32,7 @@ AC_CACHE_CHECK([for Bourne-Again shell], [ac_cv_path_BASH],
 AC_SUBST([BASH], [$ac_cv_path_BASH])
 
 AC_PROG_GNU_M4
-AM_PATH_PYTHON([2.5],[],[AC_MSG_ERROR([`slr' requires Python 2.5 or later])])
+AM_PATH_PYTHON([2.6],[],[AC_MSG_ERROR([The SL tool chain requires Python >= 2.6.])])
 
 
 m4_define([SLC_OPT_PROG],

@@ -1,5 +1,11 @@
 2010-06-13  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	Bump required tool versions.
+
+	* configure.ac: Require Autoconf 2.65 and Python 2.6.
+
+2010-06-13  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	Better support for C99.
 
 	* configure.ac: Require a C99 compiler.
