@@ -59,7 +59,12 @@ SLC_OPT_PROG([help2man],
 
 AC_PROG_EGREP
 AC_PROG_SED
-AC_PROG_CC
+AC_PROG_CC_C99
+
+if test "x$ac_cv_prog_cc_c99" = "xno"; then
+   AC_MSG_ERROR([Cannot find a C99 compiler.])
+fi
+
 AC_PROG_CXX
 AC_PROG_RANLIB
 AC_PROG_LN_S

@@ -1,3 +1,12 @@
+2010-06-13  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
+	Better support for C99.
+
+	* configure.ac: Require a C99 compiler.
+
+	* tools/bin/cce.in: Do not add `-std=gnu99', since `configure' now
+	does the right thing.
+
 2010-06-11  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
 	Remove obsolete files.
