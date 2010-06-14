@@ -12,8 +12,8 @@
 // `COPYING' file in the root directory.
 //
 
-#include <cstdint.h>
-#include <cstdlib.h>
+#include <stdint.h>
+#include <stdlib.h>
 #include <svp/sep.h>
 #include <svp/compiler.h>
 #include <svp/testoutput.h>
@@ -41,6 +41,7 @@ extern const struct placeinfo * __main_placeinfo;
 extern sl_place_t __main_place_id;
 
 __attribute__((always_inline))
+static
 unsigned long fast_log2(unsigned long ncores) {
   /*
   switch(ncores) {

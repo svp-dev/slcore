@@ -29,7 +29,7 @@ THIS SOFTWARE.
 /* Please send bug reports to David M. Gay (dmg@acm.org). */
 
 #include "gdtoaimp.h"
-#include <cstring.h>
+#include <string.h>
 
  char *
 #ifdef KR_headers

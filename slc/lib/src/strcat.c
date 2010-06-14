@@ -35,7 +35,7 @@ static char sccsid[] = "@(#)strcat.c	8.1 (Berkeley) 6/4/93";
 __FBSDID("$FreeBSD: src/lib/libc/string/strcat.c,v 1.8.10.1 2009/08/03 08:13:06 kensmith Exp $");
 */
 
-#include <cstring.h>
+#include <string.h>
 
 char *
 strcat(char * restrict s, const char * restrict append)

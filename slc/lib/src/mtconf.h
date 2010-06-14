@@ -1,7 +1,7 @@
 #ifndef MT_CONF_H
 #define MT_CONF_H
 
-#include <cstdint.h>
+#include <stdint.h>
 
 typedef uint32_t confword_t;
 

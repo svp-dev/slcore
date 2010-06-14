@@ -16,9 +16,9 @@
 # define SLC_SVP_IO_H
 
 #include <svp/argslot.h>
-#include <cstddef.h>
+#include <stddef.h>
 
-#warning this header is deprecated. Use cstdio.h instead.
+#warning "this header is deprecated. Use <stdio.h> instead."
 
 /* Print a single character to the console output. */
 sl_decl(svp_io_putc, void,

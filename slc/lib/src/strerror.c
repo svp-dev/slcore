@@ -39,10 +39,10 @@ __FBSDID("$FreeBSD: src/lib/libc/string/strerror.c,v 1.16.10.1 2009/08/03 08:13:
 #include <nl_types.h>
 #endif
 
-#include <climits.h>
-#include <cerrno.h>
-#include <cstring.h>
-#include <cstdio.h>
+#include <limits.h>
+#include <errno.h>
+#include <string.h>
+#include <stdio.h>
 
 #define	UPREFIX		"Unknown error"
 

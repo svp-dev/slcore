@@ -41,10 +41,10 @@
 
 #ifndef NO_FLOATING_POINT
 
-#include <sys/ctypes.h>
-#include <cstdlib.h>
-#include <cfloat.h>
-#include <cmath.h>
+#include <sys/types.h>
+#include <stdlib.h>
+#include <float.h>
+#include <math.h>
 #include "floatio.h"
 
 // FIXME: buf in gdtoa, using "simple" version from dtoa_simple.c

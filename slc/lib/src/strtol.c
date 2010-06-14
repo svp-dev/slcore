@@ -35,10 +35,10 @@ static char sccsid[] = "@(#)strtol.c	8.1 (Berkeley) 6/4/93";
 __FBSDID("$FreeBSD: src/lib/libc/stdlib/strtol.c,v 1.20.10.1 2009/08/03 08:13:06 kensmith Exp $");
 */
 
-#include <climits.h>
-#include <cctype.h>
-#include <cerrno.h>
-#include <cstring.h>
+#include <limits.h>
+#include <ctype.h>
+#include <errno.h>
+#include <string.h>
 
 /*
  * Convert a string to a long integer.

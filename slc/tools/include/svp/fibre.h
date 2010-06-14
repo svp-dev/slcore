@@ -15,7 +15,7 @@
 #ifndef SLC_SVP_FIBRE_H
 # define SLC_SVP_FIBRE_H
 
-#include <cstddef.h>
+#include <stddef.h>
 
 extern struct fibre_base_t {
        int tag;

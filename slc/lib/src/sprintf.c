@@ -37,9 +37,9 @@ static char sccsid[] = "@(#)sprintf.c	8.1 (Berkeley) 6/4/93";
 #include <sys/cdefs.h>
 __FBSDID("$FreeBSD: src/lib/libc/stdio/sprintf.c,v 1.16.2.2 2010/01/20 00:53:44 delphij Exp $");
 */
-#include <cstdio.h>
-#include <cstdarg.h>
-#include <cstdint.h>
+#include <stdio.h>
+#include <stdarg.h>
+#include <stdint.h>
 
 int
 sprintf(char * restrict str, char const * restrict fmt, ...)

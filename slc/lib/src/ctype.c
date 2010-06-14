@@ -12,7 +12,7 @@
 // `COPYING' file in the root directory.
 //
 
-#include <cctype.h>
+#include <ctype.h>
 
 #undef isalnum
 #undef isalpha

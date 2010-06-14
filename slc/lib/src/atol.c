@@ -34,7 +34,7 @@ static char sccsid[] = "@(#)atol.c	8.1 (Berkeley) 6/4/93";
 __FBSDID("$FreeBSD: src/lib/libc/stdlib/atol.c,v 1.5.10.1 2009/08/03 08:13:06 kensmith Exp $");
 */
 
-#include <cstdlib.h>
+#include <stdlib.h>
 
 long
 atol(const char *str)

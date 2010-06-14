@@ -1,8 +1,8 @@
-#include <cstdlib.h>
-#include <cmath.h>
-#include <cfloat.h>
 #include <svp/compiler.h>
 #include <svp/testoutput.h>
+#include <stdlib.h>
+#include <math.h>
+#include <float.h>
 #include "gdtoa/gdtoaimp.h" // for (n)rv_alloc
 
 

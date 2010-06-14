@@ -19,10 +19,10 @@
 /*
 #include <sys/cdefs.h>
 __FBSDID("$FreeBSD: src/lib/libc/string/strlcat.c,v 1.12.2.1 2009/08/03 08:13:06 kensmith Exp $");
+*/
 
 #include <sys/types.h>
-*/
-#include <cstring.h>
+#include <string.h>
 
 /*
  * Appends src to string dst of size siz (unlike strncat, siz is the

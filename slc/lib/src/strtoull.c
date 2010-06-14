@@ -35,10 +35,10 @@ static char sccsid[] = "@(#)strtouq.c	8.1 (Berkeley) 6/4/93";
 __FBSDID("$FreeBSD: src/lib/libc/stdlib/strtoull.c,v 1.21.10.1 2009/08/03 08:13:06 kensmith Exp $");
 */
 
-#include <climits.h>
-#include <cerrno.h>
-#include <cctype.h>
-#include <cstring.h>
+#include <limits.h>
+#include <errno.h>
+#include <ctype.h>
+#include <string.h>
 
 /*
  * Convert a string to an unsigned long long integer.

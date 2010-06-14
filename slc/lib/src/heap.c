@@ -11,7 +11,7 @@
 // The complete GNU General Public Licence Notice can be found as the
 // `COPYING' file in the root directory.
 //
-#include <cerrno.h>
+#include <errno.h>
 #include <svp/testoutput.h>
 #include "heap.h"
 

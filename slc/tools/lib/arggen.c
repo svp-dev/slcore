@@ -12,7 +12,7 @@
 // `COPYING' file in the root directory.
 //
 
-#include <cstddef.h>
+#include <stddef.h>
 #include <svp/testoutput.h>
 
 #ifdef FIBRE_DATA

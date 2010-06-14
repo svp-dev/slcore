@@ -1,4 +1,4 @@
-#include <cstring.h>
+#include <string.h>
 
 const char * const sys_errlist[] = {
     /* 0 */       "Unknown error: 0",

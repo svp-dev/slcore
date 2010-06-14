@@ -23,7 +23,7 @@ EXTRA_DIST = \
 	src/div.c
 
 nobase_dist_pkgdata_DATA = \
-	include/bits/float.h \
+	include/sys/ctypes.h \
 	include/calloca.h \
 	include/cassert.h \
 	include/cctype.h \
@@ -48,6 +48,7 @@ nobase_dist_pkgdata_DATA = \
 	include/svp/assert.h \
 	include/svp/callgate.h \
 	include/svp/div.h \
+	include/svp/fast_malloc.h \
 	include/svp/gfx.h \
 	include/svp/io.h \
 	include/svp/iomacros.h \

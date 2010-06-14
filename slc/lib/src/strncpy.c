@@ -39,7 +39,7 @@ static char sccsid[] = "@(#)strncpy.c	8.1 (Berkeley) 6/4/93";
 __FBSDID("$FreeBSD: src/lib/libc/string/strncpy.c,v 1.8.2.1 2009/08/03 08:13:06 kensmith Exp $");
 */
 
-#include <cstring.h>
+#include <string.h>
 
 /*
  * Copy src to dst, truncating or null-padding to always copy n bytes.

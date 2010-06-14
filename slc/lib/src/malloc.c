@@ -485,11 +485,8 @@ MAX_RELEASE_CHECK_RATE   default: 4095 unless not HAVE_MMAP
 #define DLMALLOC_VERSION 20804
 #endif /* DLMALLOC_VERSION */
 
-#include <cstddef.h>
-#include <cstdlib.h>
-#include <cstring.h>
+#include <stddef.h>
 #include <svp/testoutput.h>
-
 
 #ifndef WIN32
 #ifdef _WIN32
@@ -1293,7 +1290,7 @@ int mspace_mallopt(int, int);
 #include <errno.h>       /* for MALLOC_FAILURE_ACTION */
 #endif /* LACKS_ERRNO_H */
 #if FOOTERS || DEBUG
-#include <ctime.h>        /* for magic initialization */
+#include <time.h>        /* for magic initialization */
 #endif /* FOOTERS */
 #ifndef LACKS_STDLIB_H
 #include <stdlib.h>      /* for abort() */

@@ -32,7 +32,7 @@ THIS SOFTWARE.
 /* $FreeBSD: src/contrib/gdtoa/hexnan.c,v 1.2.2.1 2009/08/03 08:13:06 kensmith Exp $ */
 
 #include "gdtoaimp.h"
-#include <cctype.h>
+#include <ctype.h>
 
  static void
 #ifdef KR_headers

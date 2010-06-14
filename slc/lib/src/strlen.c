@@ -29,8 +29,8 @@
 __FBSDID("$FreeBSD: src/lib/libc/string/strlen.c,v 1.7.2.1 2009/08/03 08:13:06 kensmith Exp $");
 */
 
-#include <cstring.h>
-#include <cstdint.h>
+#include <string.h>
+#include <stdint.h>
 
 /*
  * Portable strlen() for 32-bit and 64-bit systems.

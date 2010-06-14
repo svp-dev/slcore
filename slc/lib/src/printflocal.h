@@ -33,7 +33,7 @@
  * $FreeBSD: src/lib/libc/stdio/printflocal.h,v 1.3.2.1 2009/08/03 08:13:06 kensmith Exp $
  */
 
-#include <sys/ctypes.h>
+#include <sys/types.h>
 
 /*
  * Flags used during conversion.

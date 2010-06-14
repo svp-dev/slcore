@@ -29,9 +29,9 @@
 __FBSDID("$FreeBSD: src/lib/libc/gdtoa/_hdtoa.c,v 1.7.2.1 2009/08/03 08:13:06 kensmith Exp $");
 */
 
-#include <cfloat.h>
-#include <climits.h>
-#include <cmath.h>
+#include <float.h>
+#include <limits.h>
+#include <math.h>
 
 #include "floatio.h"
 #include "fpmath.h"

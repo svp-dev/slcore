@@ -28,7 +28,7 @@
 #include <sys/cdefs.h>
 __FBSDID("$FreeBSD: src/lib/libc/string/strnlen.c,v 1.1.2.1 2009/08/03 08:13:06 kensmith Exp $");
 */
-#include <cstring.h>
+#include <string.h>
 
 size_t
 strnlen(const char *s, size_t maxlen)

@@ -38,8 +38,8 @@ static char sccsid[] = "@(#)printf.c	8.1 (Berkeley) 6/4/93";
 __FBSDID("$FreeBSD: src/lib/libc/stdio/printf.c,v 1.11.10.1 2009/08/03 08:13:06 kensmith Exp $");
 */
 
-#include <cstdio.h>
-#include <cstdarg.h>
+#include <stdio.h>
+#include <stdarg.h>
 
 int
 printf(char const * restrict fmt, ...)

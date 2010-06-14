@@ -4,8 +4,8 @@
 // this ought to be entirely replaced
 // once proper I/O streams are supported by OS
 
-#include <cstdio.h>
-#include <cstring.h>
+#include <stdio.h>
+#include <string.h>
 #include <svp/compiler.h>
 #include <svp/testoutput.h>
 

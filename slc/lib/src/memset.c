@@ -39,15 +39,15 @@ static char sccsid[] = "@(#)memset.c	8.1 (Berkeley) 6/4/93";
 __FBSDID("$FreeBSD: src/lib/libc/string/memset.c,v 1.9.10.1 2009/08/03 08:13:06 kensmith Exp $");
 */
 
-#include <sys/ctypes.h>
+#include <sys/types.h>
 
-#include <climits.h>
+#include <limits.h>
 
 #define	wsize	sizeof(u_int)
 #define	wmask	(wsize - 1)
 
 #ifdef BZERO
-#include <cstrings.h>
+#include <strings.h>
 
 #define	RETURN	return
 #define	VAL	0
@@ -56,7 +56,7 @@ __FBSDID("$FreeBSD: src/lib/libc/string/memset.c,v 1.9.10.1 2009/08/03 08:13:06 
 void
 bzero(void *dst0, size_t length)
 #else
-#include <cstring.h>
+#include <string.h>
 
 #define	RETURN	return (dst0)
 #define	VAL	c0

@@ -13,7 +13,7 @@
 //
 
 #include <svp/abort.h>
-#include <cstdlib.h>
+#include <stdlib.h>
 
 void
 abort(void)

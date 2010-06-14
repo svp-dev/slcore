@@ -15,9 +15,9 @@
 #ifndef SLC_SVP_ASSERT_H
 # define SLC_SVP_ASSERT_H
 
-#include <cassert.h>
+#include <assert.h>
 
-#warning this header is deprecated. Use cassert.h instead.
+#warning "this header is deprecated. Use <assert.h> instead."
 
 #define svp_assert(e) assert(e)
 

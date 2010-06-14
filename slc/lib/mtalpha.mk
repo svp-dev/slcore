@@ -82,7 +82,32 @@ EXTRA_DIST += $(MTAMATHOBJS)
 
 if ENABLE_SLC_MTALPHA
 
-SHUTUP = -Dshutup_cstring_h -Dshutup_cstdlib_h -Dshutup_cstdio_h -Dshutup_cstrings_h
+nobase_dist_pkgdata_DATA += \
+	mtalpha-sim/include/sys/types.h \
+	mtalpha-sim/include/bits/float.h \
+	mtalpha-sim/include/alloca.h \
+	mtalpha-sim/include/assert.h \
+	mtalpha-sim/include/ctype.h \
+	mtalpha-sim/include/errno.h \
+	mtalpha-sim/include/float.h \
+	mtalpha-sim/include/limits.h \
+	mtalpha-sim/include/math.h \
+	mtalpha-sim/include/stdbool.h \
+	mtalpha-sim/include/stdarg.h \
+	mtalpha-sim/include/stddef.h \
+	mtalpha-sim/include/stdint.h \
+	mtalpha-sim/include/stdio.h \
+	mtalpha-sim/include/stdlib.h \
+	mtalpha-sim/include/string.h \
+	mtalpha-sim/include/strings.h \
+	mtalpha-sim/include/time.h 
+
+SHUTUP = \
+	-Dshutup_cstring_h \
+	-Dshutup_cstdlib_h \
+	-Dshutup_cstdio_h \
+	-Dshutup_cstrings_h \
+	-Dshutup_ctime_h
 
 MALLOC_DEFS = -DLACKS_SYS_TYPES_H \
 	-DUSE_DL_PREFIX \
@@ -90,11 +115,7 @@ MALLOC_DEFS = -DLACKS_SYS_TYPES_H \
 	-DMORECORE_CANNOT_TRIM \
 	-DMALLOC_FAILURE_ACTION="" \
 	-DLACKS_UNISTD_H \
-	-DLACKS_ERRNO_H \
-	-DLACKS_STDLIB_H \
-	-DLACKS_STRING_H \
-	-DLACKS_STRINGS_H \
-	-DUSE_BUILTIN_FFS=1 -Dffs=__builtin_ffs \
+	-DUSE_BUILTIN_FFS=1 \
 	-DLACKS_SYS_PARAM_H \
 	-DLACKS_TIME \
 	-DPAGESIZE=0x40000000U

@@ -1,7 +1,7 @@
 //
 // perf.h: this file is part of the SL toolchain.
 //
-// Copyright (C) 2009 The SL project.
+// Copyright (C) 2009,2010 The SL project.
 //
 // This program is free software; you can redistribute it and/or
 // modify it under the terms of the GNU General Public License
@@ -18,7 +18,7 @@
 #ifndef shutup_ctime_h
 #define shutup_ctime_h
 #endif
-#include <ctime.h>
+#include <time.h>
 #undef shutup_ctime_h
 
 #define get_cycles() m4_warning("get_cycles() is deprecated. use clock() and CLOCKS_PER_SEC instead.") clock()

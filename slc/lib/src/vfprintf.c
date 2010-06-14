@@ -45,20 +45,20 @@ __FBSDID("$FreeBSD: src/lib/libc/stdio/vfprintf.c,v 1.90.2.1 2009/08/03 08:13:06
  */
 
 // #include "namespace.h"
-// #include <sys/types.h>
+#include <sys/types.h>
 
-//#include <ctype.h>
-#include <climits.h>
+#include <ctype.h>
+#include <limits.h>
 //#include <locale.h>
-#include <cstddef.h>
-#include <cstdint.h>
-#include <cstdio.h>
-#include <cstdlib.h>
-#include <cstring.h>
+#include <stddef.h>
+#include <stdint.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
 //#include <wchar.h>
 //#include <printf.h>
 
-#include <cstdarg.h>
+#include <stdarg.h>
 //#include "un-namespace.h"
 
 //#include "libc_private.h"

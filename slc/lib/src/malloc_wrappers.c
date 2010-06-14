@@ -12,7 +12,7 @@
 // `COPYING' file in the root directory.
 //
 
-#include <cstdlib.h>
+#include <stdlib.h>
 
 void* malloc(size_t sz)
 {

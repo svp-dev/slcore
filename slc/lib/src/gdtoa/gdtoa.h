@@ -33,7 +33,7 @@ THIS SOFTWARE.
 #define GDTOA_H_INCLUDED
 
 #include "arith.h"
-#include <cstddef.h> /* for size_t */
+#include <stddef.h> /* for size_t */
 
 #ifndef Long
 #define Long long

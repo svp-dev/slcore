@@ -1,7 +1,7 @@
 //
 // div.h: this file is part of the SL toolchain.
 //
-// Copyright (C) 2009 The SL project.
+// Copyright (C) 2009,2010 The SL project.
 //
 // This program is free software; you can redistribute it and/or
 // modify it under the terms of the GNU General Public License
@@ -15,7 +15,7 @@
 #ifndef SLC_SVP_DIV_H
 # define SLC_SVP_DIV_H
 
-#include <cstdint.h>
+#include <stdint.h>
 
 #ifdef USE_C_DIVIDE
 

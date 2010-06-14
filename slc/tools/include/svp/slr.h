@@ -15,7 +15,7 @@
 #ifndef SLC_SVP_SLR_H
 # define SLC_SVP_SLR_H
 
-#include <cstddef.h>
+#include <stddef.h>
 
 extern struct __slr_base_t { ptrdiff_t offset; size_t nitems; } *__slr_base;
 

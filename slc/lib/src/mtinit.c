@@ -17,9 +17,9 @@
 #include <svp/fibre.h>
 #include <svp/slr.h>
 #include <svp/gomt.h>
-#include <cstdlib.h>
-#include <cstring.h>
-#include <ctime.h>
+#include <stdlib.h>
+#include <string.h>
+#include <time.h>
 #include "mtconf.h"
 #include "heap.h"
 

@@ -19,10 +19,10 @@
 /*
 #include <sys/cdefs.h>
 __FBSDID("$FreeBSD: src/lib/libc/string/strlcpy.c,v 1.11.2.1 2009/08/03 08:13:06 kensmith Exp $");
+*/
 
 #include <sys/types.h>
-*/
-#include <cstring.h>
+#include <string.h>
 
 /*
  * Copy src to string dst of size siz.  At most siz-1 characters

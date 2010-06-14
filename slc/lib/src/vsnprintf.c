@@ -1,5 +1,5 @@
 #include "mtstdio.h"
-#include <cstdint.h>
+#include <stdint.h>
 
 int vsnprintf(char*restrict buf, size_t sz, const char*restrict fmt, va_list args)
 {

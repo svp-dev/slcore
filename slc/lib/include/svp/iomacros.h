@@ -15,10 +15,10 @@
 #ifndef SLC_SVP_IOMACROS_H
 # define SLC_SVP_IOMACROS_H
 
-#include <cstdio.h>
-#include <cstdint.h>
+#include <stdio.h>
+#include <stdint.h>
 
-#warning this header is deprecated. Use cstdio.h instead.
+#warning "this header is deprecated. Use <stdio.h> instead."
 
 #define putf(N, Prec) printf("%.*lf", (int)(Prec), (double)(N))
 

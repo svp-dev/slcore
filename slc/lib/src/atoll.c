@@ -31,7 +31,7 @@
 __FBSDID("$FreeBSD: src/lib/libc/stdlib/atoll.c,v 1.5.10.1 2009/08/03 08:13:06 kensmith Exp $");
 */
 
-#include <cstdlib.h>
+#include <stdlib.h>
 
 long long
 atoll(const char *str)

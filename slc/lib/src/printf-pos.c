@@ -44,15 +44,15 @@ __FBSDID("$FreeBSD: src/lib/libc/stdio/printf-pos.c,v 1.6.2.1 2009/08/03 08:13:0
  */
 
 //#include "namespace.h"
-#include <sys/ctypes.h>
+#include <sys/types.h>
 
-#include <cstdarg.h>
-#include <cstddef.h>
-#include <cstdint.h>
-#include <cstdio.h>
-#include <cstdlib.h>
-#include <cstring.h>
-#include <cstrings.h>
+#include <stdarg.h>
+#include <stddef.h>
+#include <stdint.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <strings.h>
 //#include <wchar.h>
 
 //#include "un-namespace.h"

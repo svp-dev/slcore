@@ -188,9 +188,9 @@ THIS SOFTWARE.
 #define Bug(x) {fprintf(stderr, "%s\n", x); exit(1);}
 #endif
 
-#include <climits.h>
-#include <cstdlib.h>
-#include <cstring.h>
+#include <limits.h>
+#include <stdlib.h>
+#include <string.h>
 //#include "libc_private.h"
 
 //#include "namespace.h"
@@ -222,7 +222,7 @@ THIS SOFTWARE.
 #define IEEE_Arith
 #endif
 
-#include <cerrno.h>
+#include <errno.h>
 #ifdef Bad_float_h
 
 #ifdef IEEE_Arith
@@ -255,7 +255,7 @@ THIS SOFTWARE.
 #endif
 
 #else /* ifndef Bad_float_h */
-#include <cfloat.h>
+#include <float.h>
 #endif /* Bad_float_h */
 
 #ifdef IEEE_Arith
@@ -272,7 +272,7 @@ THIS SOFTWARE.
 #endif
 
 #ifndef __MATH_H__
-#include <cmath.h>
+#include <math.h>
 #endif
 
 #ifdef __cplusplus

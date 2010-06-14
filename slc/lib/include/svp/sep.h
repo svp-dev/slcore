@@ -20,8 +20,8 @@
 #ifdef __mt_freestanding__
 #define SVP_HAS_SEP 1
 
-#include <cstddef.h>
-#include <cstdint.h>
+#include <stddef.h>
+#include <stdint.h>
 
 // information returned by sep_alloc etc.
 struct placeinfo {
