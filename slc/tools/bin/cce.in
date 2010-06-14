@@ -255,9 +255,9 @@ case $slc_dialect-$slc_arch in
     *-x) slc_compiler=("$scu_helper" compile) ;;
     *-host)
 	case $slc_complang-$slc_os in
-            c-*hrt) slc_compiler=($PTHREAD_CC $PTHREAD_CFLAGS) ;;
-	    cpp-*) slc_compiler=($CXX_HOST) ;;
-	    c-*)   slc_compiler=($CC_HOST) ;;
+            c-*hrt)   slc_compiler=($PTHREAD_CC $PTHREAD_CFLAGS) ;;
+            cpp-*ptl) slc_compiler=($CXX_HOST $PTHREAD_CFLAGS -D_GLIBCXX_USE_C99_MATH=1) ;; 
+	    c-*)      slc_compiler=($CC_HOST) ;;
 	    *) echo "$basename: warning: no compiler for $dialect-$arch" >&2 ;;
 	esac
 	slc_filter1=(cp)
@@ -299,9 +299,9 @@ case $slc_complang-$slc_arch in
     *-x)      slc_aslink=("$scu_helper" assemble/link);;
     *-host)
 	case $slc_complang-$slc_os in
-            c-*hrt) slc_aslink=($PTHREAD_CC $PTHREAD_CFLAGS $PTHREAD_LIBS) ;;
-	    cpp-*) slc_aslink=($CXX_HOST) ;;
-	    c-*)   slc_aslink=($CC_HOST) ;;
+            c-*hrt)   slc_aslink=($PTHREAD_CC $PTHREAD_CFLAGS $PTHREAD_LIBS) ;;
+	    cpp-*ptl) slc_aslink=($CXX_HOST $PTHREAD_CFLAGS $PTHREAD_LIBS) ;;
+	    c-*)      slc_aslink=($CC_HOST) ;;
 	    *) echo "$basename: warning: no as/ld for $dialect-$arch" >&2 ;;
 	esac
 	;;
@@ -410,14 +410,6 @@ case $slc_os in
 
         IFS=$save_IFS
 	;;
-esac
-
-# Program entry selection
-case $slc_os in
-    host-ptl)
-	slc_ldflags+=(-lpthread)
-	;;
-    *)  ;;
 esac
 
 set | grep '^slc_'

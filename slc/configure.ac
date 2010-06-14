@@ -81,6 +81,10 @@ if test "x$enable_ptl" = "xyes"; then
      AC_MSG_WARN([not using the GNU C++ compiler. muTC-ptl support is disabled.])
      enable_ptl=no
   fi
+  if test "x$ax_pthread_ok" != "xyes"; then
+     AC_MSG_WARN([POSIX threads not available. muTC-ptl support is disabled.])
+     enable_hrt=no
+  fi
 fi
 
 if test "x$enable_hrt" = "xyes"; then

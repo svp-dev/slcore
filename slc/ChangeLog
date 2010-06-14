@@ -1,5 +1,21 @@
 2010-06-13  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	Enhance `ptl' target.
+
+	* configure.ac: Disable `ptl' target if POSIX threads are not
+	detected.
+	
+	* tools/bin/cce.in: Use `PTHREAD_CFLAGS' and `PTHREAD_LIBS' when
+	compiling for target `ptl'. Define `_GLIBCXX_USE_C99_MATH' always
+	for `ptl'.
+
+	* tools/lib/ptl.mk (ptl_host_host_ptl_libslc_a_CXXFLAGS): Use
+	`PTHREAD_CFLAGS.'
+	
+	* lib/ptl.mk (SLC_PTL): Use `AM_CXXFLAGS' too.
+
+2010-06-13  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	Fix bug in build of `libslc' for `hrt' targets.
 
 	* tools/lib/hrt.mk: Use `CFLAGS' instead of `CXXFLAGS'. Use `slc'

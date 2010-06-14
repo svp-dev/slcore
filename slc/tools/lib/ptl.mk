@@ -26,6 +26,7 @@ nobase_pkglib_LIBRARIES += \
 	ptl-host-host-ptl/libslc.a \
 	ptl-host-host-ptl/libslmain.a
 
+ptl_host_host_ptl_libslc_a_CXXFLAGS = $(PTHREAD_CFLAGS) $(AM_CXXFLAGS)
 ptl_host_host_ptl_libslc_a_CPPFLAGS = \
 	-I$(srcdir)/host-host-ptl/include \
 	-I$(builddir)/host-host-ptl/include
@@ -42,15 +43,15 @@ BUILT_SOURCES += \
 	host-host-ptl/include/ptl_create.h
 
 
-SLC_PTL = $(SLC_RUN) -b ptl -nostdlib
+SLC_PTL = $(SLC_RUN) -b ptl -nostdlib $(AM_CXXFLAGS) $(CXXFLAGS)
 
 ptl-host-host-ptl/%.o: $(srcdir)/host-host-ptl/%.c
 	$(AM_V_at)$(MKDIR_P) ptl-host-host-ptl
-	$(slc_verbose)$(SLC_PTL) -c -o $@ $< $(AM_CXXFLAGS) $(CXXFLAGS)
+	$(slc_verbose)$(SLC_PTL) -c -o $@ $< 
 
 ptl-host-host-ptl/%.o: $(srcdir)/%.c
 	$(AM_V_at)$(MKDIR_P) ptl-host-host-ptl
-	$(slc_verbose)$(SLC_PTL) -c -o $@ $< $(AM_CXXFLAGS) $(CXXFLAGS)
+	$(slc_verbose)$(SLC_PTL) -c -o $@ $< 
 
 endif
 
