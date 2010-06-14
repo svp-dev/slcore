@@ -58,7 +58,7 @@ int rsize()
     int rv = 8 << (lrand() % 15);
     rv = lrand() & (rv-1);
 #ifdef DEBUG_MALLOC_STORAGE
-    rv &= DELEGATION_THRESHOLD - 1;
+    rv &= (FIRST_SIZE_CLASS << (NR_OF_BINS-1)) - 1;
 #endif
     return rv;
 }
@@ -76,6 +76,12 @@ void do_test(void)
 
     for (i = 0; i < MAXP; ++i)
         pointers[i] = tls_malloc(rsize());
+#ifdef DO_MALLINFO
+    fprintf(stderr, "---- stats ----\n");
+    tls_malloc_stats();
+    fflush(stdout);
+    fprintf(stderr, "---- end stats ----\n");
+#endif
     for (i = 0; i < MAXP; ++i)
         tls_free(pointers[i]);
 
@@ -90,7 +96,7 @@ void do_test(void)
                 for (i=0; i<MAXP; i++)
                 {
 #ifdef DO_MALLINFO
-                    tls_mallinfo();
+                    tls_malloc_stats();
 #endif
                     int rno = rand();
                     if (rno & 8)

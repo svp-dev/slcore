@@ -1,5 +1,18 @@
 2010-06-14  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	Improve the TLS memory allocator.
+
+	* lib/src/tlsmalloc/tlsconfig.h,
+	* lib/src/tlsmalloc/tlsmalloc.c: Optimize bin selection by using
+	compiler built-in bit count operations.
+
+	* lib/src/tlsmalloc/tlsmcheck.c: Update accordingly.
+
+	* lib/src/tlsmalloc/tlsmalloc.c (free_superblock): Fix bug where
+	too many superblocks would be released.
+
+2010-06-14  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	Minor fixes to quiet compiler warnings.
 
 	* lib/src/strncmp.c,

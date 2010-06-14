@@ -116,28 +116,28 @@ size_t sb_is_empty(struct superblock *sb)
 #ifdef DEBUG_MALLOC
     fprintf(stderr, "sb %p is %s (alloc %zu)\n", 
             sb, isempty ? "empty" : "nonempty", sb->header.nr_allocated_blocks);
-    assert(!isempty || (0 == sb->header.nr_allocated_blocks));
 #endif
+    assert(!isempty || (0 == sb->header.nr_allocated_blocks));
     return isempty;
 }
 
 static inline
-bool sb_is_full(struct superblock *sb, UWORD blocksize)
+bool sb_is_full(struct superblock *sb, size_t blocksize)
 {
-    bool isfull = (sb->header.first_free == 0) 
-        && (sb->header.wilderness_size < blocksize);
+    bool isfull = likely(sb->header.first_free == 0) 
+        && likely(sb->header.wilderness_size < blocksize);
 #ifdef DEBUG_MALLOC
     fprintf(stderr, "sb %p is %s (alloc %zu, ff %p, w %zu, bs %u)\n", 
             sb, isfull ? "full" : "nonfull", sb->header.nr_allocated_blocks,
             sb->header.first_free, sb->header.wilderness_size, (unsigned)blocksize);
-    assert(!isfull || (0 < sb->header.nr_allocated_blocks));
 #endif
+    assert(!isfull || (0 < sb->header.nr_allocated_blocks));
     return isfull;
 }
 
 static inline
 void move_to_bin_head(struct control_block *cb, struct superblock *sb,
-                      UWORD bin)
+                      size_t bin)
 {
     cb->bins[bin] = sb;
 }
@@ -159,7 +159,7 @@ void free_superblock(struct control_block *cb, struct superblock *sb)
         return ;
     }
 
-    UWORD bin = sb->header.bin;
+    size_t bin = sb->header.bin;
     struct superblock *next = sb->header.next;
 
     /* remove from circular list */
@@ -181,16 +181,17 @@ void free_superblock(struct control_block *cb, struct superblock *sb)
 #ifdef RELEASE_STORAGE
     /* threshold: half the count of allocated superblocks */
     size_t half_alloc = cb->nr_allocated_sbs / 2;
+    size_t busy = cb->nr_busy_sbs;
 #ifdef DEBUG_MALLOC_STORAGE
     fprintf(stderr, "%zu busy sbs, %zu alloc, half %zu\n",
             cb->nr_busy_sbs, cb->nr_allocated_sbs, half_alloc);
 #endif
-    if (half_alloc && (cb->nr_busy_sbs < half_alloc))
+    if (half_alloc && (busy < half_alloc))
     {
         struct superblock *asb;
         struct superblock *next;
         for (asb = cb->first_available, next = asb->header.next; 
-             half_alloc; 
+             busy < half_alloc; 
              --half_alloc, asb = next, next = asb->header.next)
         {
 #ifdef DEBUG_MALLOC_STORAGE
@@ -214,7 +215,7 @@ void free_superblock(struct control_block *cb, struct superblock *sb)
 static inline
 struct superblock* init_superblock(struct control_block *cb,
                                    struct superblock *sb,
-                                   UWORD bin)
+                                   size_t bin)
 {
     /* insert into bin */
     struct superblock *current_first = cb->bins[bin];
@@ -253,7 +254,7 @@ struct superblock* init_superblock(struct control_block *cb,
 }
 
 static inline
-struct superblock* get_new_superblock(struct control_block *cb,  UWORD bin)
+struct superblock* get_new_superblock(struct control_block *cb,  size_t bin)
 {
     struct superblock *new_sb;
     if (likely((new_sb = cb->first_available) != 0))
@@ -301,7 +302,7 @@ struct superblock* get_new_superblock(struct control_block *cb,  UWORD bin)
 
 static inline
 struct block *carve_new_block(struct superblock *sb,
-                              UWORD blocksize)
+                              size_t blocksize)
 {
     /* here the superblock needs a new block, and
        the wilderness has enough room for one */
@@ -322,8 +323,8 @@ struct block* register_allocated_block(struct superblock *sb,
 static inline
 struct block *alloc_block_from_nonempty_sb(struct control_block *cb,
                                            struct superblock *sb,
-                                           UWORD blocksize,
-                                           UWORD bin)
+                                           size_t blocksize,
+                                           size_t bin)
 {
     struct block *bl;
 
@@ -354,8 +355,8 @@ struct block *alloc_block_from_nonempty_sb(struct control_block *cb,
 static inline
 struct block* garbage_collect(struct control_block *cb,
                               struct superblock *sb_start,
-                              UWORD blocksize,
-                              UWORD bin)
+                              size_t blocksize,
+                              size_t bin)
 {
     /* scan the superblocks for this bin and attempt to find
        some free blocks. Return 0 if no free block was found,
@@ -420,7 +421,7 @@ void* tag_and_get_payload(struct block *bl)
 
 static inline
 void *alloc_from_empty_sb(struct superblock *sb,
-                          UWORD blocksize)
+                          size_t blocksize)
 {
     struct block *bl;
     bl = carve_new_block(sb, blocksize);
@@ -431,46 +432,46 @@ void *alloc_from_empty_sb(struct superblock *sb,
 static inline
 void *alloc_from_nonfull_sb(struct control_block *cb,
                             struct superblock *sb,
-                            UWORD blocksize,
-                            UWORD bin)
+                            size_t blocksize,
+                            size_t bin)
 {
     struct block *bl;
     bl = alloc_block_from_nonempty_sb(cb, sb, blocksize, bin);
     return tag_and_get_payload(bl);
 }
 
+static forceinline
+size_t find_bin(size_t sz)
+{
+    sz += sizeof(BLOCK_TAG_T);
+    sz -= 1;
+    sz |= FIRST_SIZE_CLASS/2;  
+    size_t l2 = __builtin_clzl(sz);
+    l2 = sizeof(size_t)*CHAR_BIT - l2 - __builtin_ctzl(FIRST_SIZE_CLASS);
+    return l2;
+}
+
+static forceinline
+size_t get_blocksize(size_t bin)
+{
+    return ((size_t)FIRST_SIZE_CLASS) << bin;
+}
 
 void* tls_malloc(size_t sz)
 {
-    if (unlikely(sz > MAXBINSIZE)) goto fallback;
+    size_t ubin = find_bin(sz);
+    if (unlikely(ubin >= NR_OF_BINS))
+        goto fallback;
 
     void *ret;
     struct control_block *cb = CURRENT_CB();
     struct superblock **bin;
-    UWORD blocksize;
-    if (sz <= SZ_CLASS_0) { bin = cb->bins + 0; blocksize = SZ_CLASS_0+sizeof(BLOCK_TAG_T); }
-#if NR_OF_BINS > 1
-    else if (sz <= SZ_CLASS_1) { bin = cb->bins + 1; blocksize = SZ_CLASS_1+sizeof(BLOCK_TAG_T); }
-#endif
-#if NR_OF_BINS > 2
-    else if (sz <= SZ_CLASS_2) { bin = cb->bins + 2; blocksize = SZ_CLASS_2+sizeof(BLOCK_TAG_T); }
-#endif
-#if NR_OF_BINS > 3
-    else if (sz <= SZ_CLASS_3) { bin = cb->bins + 3; blocksize = SZ_CLASS_3+sizeof(BLOCK_TAG_T); }
-#endif
-#if NR_OF_BINS > 4
-    else if (sz <= SZ_CLASS_4) { bin = cb->bins + 4; blocksize = SZ_CLASS_4+sizeof(BLOCK_TAG_T); }
-#endif
-#if NR_OF_BINS > 5
-    else if (sz <= SZ_CLASS_5) { bin = cb->bins + 5; blocksize = SZ_CLASS_5+sizeof(BLOCK_TAG_T); }
-#endif
-#if NR_OF_BINS > 6
-    else if (sz <= SZ_CLASS_6) { bin = cb->bins + 6; blocksize = SZ_CLASS_6+sizeof(BLOCK_TAG_T); }
-#endif
-/* (extend as needed) */
-    
+    size_t blocksize;
+    bin = cb->bins + ubin;
     struct superblock *sb;
     struct block *bl;
+
+    blocksize = get_blocksize(ubin);
 
     if (unlikely(*bin == 0)) {
         /* bin empty */
@@ -479,9 +480,10 @@ void* tls_malloc(size_t sz)
 
     /* here *bin is valid, may be full ? */
     sb = *bin;
+    
     if (unlikely(sb_is_full(sb, blocksize)))
     {
-        bl = garbage_collect(cb, sb, blocksize, bin - cb->bins);
+        bl = garbage_collect(cb, sb, blocksize, ubin);
         
         if (bl == 0)
             /* GC failed */
@@ -497,7 +499,7 @@ void* tls_malloc(size_t sz)
             return ret;
         }
     } 
-    ret = alloc_from_nonfull_sb(cb, sb, blocksize, bin - cb->bins);
+    ret = alloc_from_nonfull_sb(cb, sb, blocksize, ubin);
 
 #ifdef DEBUG_MALLOC
     fprintf(stderr, "malloc nonfull sb (%p): %p -> %p (%zu -> %zu)\n", 
@@ -507,7 +509,7 @@ void* tls_malloc(size_t sz)
     return ret;
 
 new_needed:
-    sb = get_new_superblock(cb, bin - cb->bins);
+    sb = get_new_superblock(cb, ubin);
 
     if (unlikely(sb == 0)) /* no more superblock left, fall back */
         goto fallback;
@@ -601,33 +603,10 @@ void *tls_realloc(void *ptr, size_t ns)
     struct block* bl = block_of_ptr(ptr);
     struct superblock *sb = sb_of_block(bl);
     
-    unsigned bin = sb->header.bin;
+    size_t bin = sb->header.bin;
     
     assert(bin < NR_OF_BINS);
-    size_t osz = 0;
-    switch(bin)
-    {
-    case 0: osz = SZ_CLASS_0; break;
-#if NR_OF_BINS > 1
-    case 1: osz = SZ_CLASS_1; break;
-#endif
-#if NR_OF_BINS > 2
-    case 2: osz = SZ_CLASS_2; break;
-#endif
-#if NR_OF_BINS > 3
-    case 3: osz = SZ_CLASS_3; break;
-#endif
-#if NR_OF_BINS > 4
-    case 4: osz = SZ_CLASS_4; break;
-#endif
-#if NR_OF_BINS > 5
-    case 5: osz = SZ_CLASS_5; break;
-#endif
-#if NR_OF_BINS > 6
-    case 6: osz = SZ_CLASS_6; break;
-#endif
-// increase as needed
-    }
+    size_t osz = get_blocksize(bin) - sizeof(BLOCK_TAG_T);
 
     if (unlikely(osz >= ns)) {
 #ifdef DEBUG_MALLOC
@@ -713,31 +692,7 @@ void tls_local_stats(void *p)
 
     for (bin = 0; bin < NR_OF_BINS; ++bin)
     {
-        sz = 0;
-    switch(bin)
-    {
-    case 0: sz = SZ_CLASS_0; break;
-#if NR_OF_BINS > 1
-    case 1: sz = SZ_CLASS_1; break;
-#endif
-#if NR_OF_BINS > 2
-    case 2: sz = SZ_CLASS_2; break;
-#endif
-#if NR_OF_BINS > 3
-    case 3: sz = SZ_CLASS_3; break;
-#endif
-#if NR_OF_BINS > 4
-    case 4: sz = SZ_CLASS_4; break;
-#endif
-#if NR_OF_BINS > 5
-    case 5: sz = SZ_CLASS_5; break;
-#endif
-#if NR_OF_BINS > 6
-    case 6: sz = SZ_CLASS_6; break;
-#endif
-// increase as needed
-    }
-    sz += sizeof(BLOCK_TAG_T);
+        sz = get_blocksize(bin);
         sb_first = cb->bins[bin]; 
         if (sb_first)
         {
