@@ -45,7 +45,6 @@ nobase_dist_pkgdata_DATA = \
 	include/ctime.h \
 	include/sac_helpers.h \
 	include/undocumented.h \
-	include/sys/ctypes.h \
 	include/svp/argslot.h \
 	include/svp/assert.h \
 	include/svp/callgate.h \

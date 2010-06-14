@@ -72,6 +72,8 @@ nobase_python_PYTHON = \
 	slc/mtalpha/asmproc/base.py \
 	slc/mtalpha/asmproc/common.py \
 	slc/mtalpha/asmproc/opt.py \
+	slc/am/__init__.py \
+	slc/am/visitors.py \
 	slc/lower/__init__.py \
 	slc/lower/seq.py \
 	slc/lower/split.py \

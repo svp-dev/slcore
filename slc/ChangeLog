@@ -1,5 +1,14 @@
 2010-06-14  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	Packaging fixes.
+	
+	* lib/Makefile.am (nobase_dist_pkgdata_DATA): Remove duplicate.
+	* lib/src/tlsmalloc/Makefile.am: List `tls_arch_pthreads.h' and
+	`tlsconfig.h'.
+	* tools/lib/Makefile.am (nobase_python_PYTHON): List `am'.
+
+2010-06-14  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	Fix library build.
 	
 	* lib/src/getenv.c,
