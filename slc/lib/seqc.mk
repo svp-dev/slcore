@@ -1,9 +1,5 @@
 ########## Sequential-C implementation ##########
 
-nobase_dist_pkgdata_DATA += \
-	host-host-seqc/include/svp_os.h 
-
-
 ### Common rules ###
 
 # define SEQC_TEMPLATE
