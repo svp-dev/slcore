@@ -1,5 +1,15 @@
 2010-06-14  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	Make the TLS memory allocator the default allocator on MT-Alpha.
+
+	* lib/src/malloc_wrappers.c: Remove.
+	
+	* lib/mtalpha.mk: Do not build the dlmalloc wrappers any
+	more. Compile `tlsmalloc' and rename the services to their
+	standard C names.
+
+2010-06-14  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	Enhance the TLS memory allocator.
 
 	* lib/mtalpha-sim/include/stdlib.h: Rename the `fast_XXX' macros

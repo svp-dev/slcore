@@ -20,7 +20,6 @@ MTALIB_CSRC = \
 	src/_hdtoa.c \
 	src/heap.c \
 	src/malloc.c \
-	src/malloc_wrappers.c \
 	src/memcpy.c \
 	src/memmove.c \
 	src/memset.c \
@@ -121,6 +120,14 @@ MALLOC_DEFS = -DLACKS_SYS_TYPES_H \
 	-DLACKS_TIME \
 	-DPAGESIZE=0x40000000U
 
+TLSMALLOC_DEFS = \
+	-DNDEBUG \
+	-DARCH_TLS_SERVICES=\"tls_arch_mtalpha.h\" \
+	-Dtls_malloc=malloc \
+	-Dtls_free=free \
+	-Dtls_realloc=realloc \
+	-Dtls_calloc=calloc
+
 MTALIB_COBJS = \
 	$(addprefix mta_,$(addsuffix .o,$(notdir $(basename $(MTALIB_CSRC))))) \
 	$(addprefix mta_gdtoa_,$(addsuffix .o,$(notdir $(basename $(GDTOA_SRC))))) \
@@ -135,7 +142,7 @@ mta_gdtoa_%.o: $(srcdir)/src/gdtoa/%.c
 	$(slc_verbose)$(SLC_MTA) -c -o $@ $<
 
 mta_tlsmalloc.o: $(srcdir)/src/tlsmalloc/tlsmalloc.c
-	$(slc_verbose)$(SLC_MTA) -c -o $@ $< -DARCH_TLS_SERVICES=\"tls_arch_mtalpha.h\"
+	$(slc_verbose)$(SLC_MTA) -c -o $@ $< $(TLSMALLOC_DEFS)
 
 mta_malloc.o: $(srcdir)/src/malloc.c
 	$(slc_verbose)$(SLC_MTA) -c -o $@ $< $(MALLOC_DEFS)
