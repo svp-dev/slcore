@@ -11,7 +11,9 @@
 ## `COPYING' file in the root directory.
 ##
 
-# 
+#
+SUBDIRS = src/tlsmalloc
+ 
 EXTRA_DIST = \
 	src/io.c \
 	src/gfx.c \

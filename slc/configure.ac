@@ -69,12 +69,19 @@ AC_PROG_CXX
 AC_PROG_RANLIB
 AC_PROG_LN_S
 AX_PTHREAD
+AX_TLS
 
 ######### Options #########
 
 SLC_PATH_LOCAL([.])
 AC_WITH_SLC
 SLC_CHECK_TARGETS
+
+if test "x$ax_pthread_ok" = "xyes" -a "x$ac_cv_tls" != "xnone"; then
+   PTHREAD_CFLAGS="$PTHREAD_CFLAGS -DTHREADSPEC=$ac_cv_tls"
+fi
+AM_CONDITIONAL([CHECK_TLSMALLOC], [test "x$ax_pthread_ok" = "xyes" -a "x$ac_cv_tls" != "xnone"])
+
 
 if test "x$enable_ptl" = "xyes"; then
   if test "x$GXX" != "xyes"; then
@@ -130,6 +137,7 @@ AC_CONFIG_FILES([
 	tools/lib/Makefile
         tools/lib/slc_config.py
 	lib/Makefile
+        lib/src/tlsmalloc/Makefile
 	doc/Makefile
 ])
 

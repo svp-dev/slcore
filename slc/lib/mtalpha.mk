@@ -122,7 +122,8 @@ MALLOC_DEFS = -DLACKS_SYS_TYPES_H \
 
 MTALIB_COBJS = \
 	$(addprefix mta_,$(addsuffix .o,$(notdir $(basename $(MTALIB_CSRC))))) \
-	$(addprefix mta_gdtoa_,$(addsuffix .o,$(notdir $(basename $(GDTOA_SRC)))))
+	$(addprefix mta_gdtoa_,$(addsuffix .o,$(notdir $(basename $(GDTOA_SRC))))) \
+	mta_tlsmalloc.o
 
 SLC_MTA = $(SLC_RUN) -b mta $(SHUTUP)
 
@@ -131,6 +132,9 @@ mta_%.o: $(srcdir)/src/%.c
 
 mta_gdtoa_%.o: $(srcdir)/src/gdtoa/%.c
 	$(slc_verbose)$(SLC_MTA) -c -o $@ $<
+
+mta_tlsmalloc.o: $(srcdir)/src/tlsmalloc/tlsmalloc.c
+	$(slc_verbose)$(SLC_MTA) -c -o $@ $< -DARCH_TLS_SERVICES=\"tls_arch_mtalpha.h\"
 
 mta_malloc.o: $(srcdir)/src/malloc.c
 	$(slc_verbose)$(SLC_MTA) -c -o $@ $< $(MALLOC_DEFS)

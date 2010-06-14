@@ -1,5 +1,24 @@
 2010-06-13  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	Initial implementation of TLS memory allocator.
+
+	* lib/src/tlsmalloc/Makefile.am,
+	* lib/src/tlsmalloc/tls_arch_mtalpha.h,
+	* lib/src/tlsmalloc/tls_arch_pthread.h,
+	* lib/src/tlsmalloc/tlsconfig.h,
+	* lib/src/tlsmalloc/tlsmalloc.c,
+	* lib/src/tlsmalloc/tlsmalloc.h,
+	* lib/src/tlsmalloc/tlsmcheck.c,
+	* lib/src/tlsmalloc/tricks.h: New.
+
+	* lib/Makefile.am,
+	* lib/mtalpha.mk: List the new files.
+
+	* build-aux/ax_tls.m4: New.
+	* configure.ac: Use it.
+
+2010-06-13  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	Support use of standard C header names in SL code.
 
 	* lib/include/bits/float.h,
