@@ -1,5 +1,12 @@
 2010-06-14  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	Minor fixes to quiet compiler warnings.
+
+	* programs/benchmarks/sha/sha1.c,
+	* programs/benchmarks/sha/sha1_alt.c: Use the standard C `assert'.
+
+2010-06-14  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	New `tmalloc' demo for memory allocation.
 
 	* demo/tmalloc.c: New.

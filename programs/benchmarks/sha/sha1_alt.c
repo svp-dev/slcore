@@ -14,8 +14,8 @@
 
 #include <stdint.h>
 #include <stddef.h>
+#include <assert.h>
 #include <svp/slr.h>
-#include <svp/assert.h>
 #include <svp/delegate.h>
 
 #define ROL32(W, bits) (((W) << bits) | ((W) >> (32 - bits)))
@@ -150,7 +150,7 @@ slr_decl(slr_var(unsigned, N, "problem size (512-bit chunks)"));
 sl_def(t_main, void)
 {
   unsigned sz = slr_get(N)[0];
-  svp_assert(sz < MAX_CHUNKS);
+  assert(sz < MAX_CHUNKS);
   sl_create(,,,,,,, sha1_kernel,
 	    sl_glarg(uint32_t*restrict, gout, output),
 	    sl_glarg(const uint32_t*restrict, ginput, data),
