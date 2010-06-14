@@ -1,8 +1,17 @@
 2010-06-13  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	Remove `hrt' from default build.
+
+	The set of conditions that allow to build the `hrt' runtime is not
+	yet precisely known. Build is likely to fail on most systems.
+
+	* configure.ac: Disable `hrt' by default.
+
+2010-06-13  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	Fix bug in `spr'.
 
-	* slc/tools/lib/slc/lower/lowercreate.py (AutoResolve): Insert
+	* tools/lib/slc/lower/lowercreate.py (AutoResolve): Insert
 	missing semicolon in generated code.
 
 2010-06-13  Raphael 'kena' Poss  <kena@coda.science.uva.nl>

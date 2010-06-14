@@ -76,9 +76,9 @@ AC_DEFUN([SLC_CHECK_TARGETS],
   AM_CONDITIONAL([ENABLE_SLC_PTL], [test "x$enable_ptl" = "xyes"])
 
   AC_ARG_ENABLE([hrt],
-                [AC_HELP_STRING([--disable-hrt],
-                                [disable support for the Hydra runtime (default is enable)])],
-                [], [enable_hrt=yes])
+                [AC_HELP_STRING([--enable-hrt],
+                                [enable support for the Hydra runtime (default is disable)])],
+                [], [enable_hrt=no])
   AM_CONDITIONAL([ENABLE_SLC_HRT], [test "x$enable_hrt" = "xyes"])               
                   
 
