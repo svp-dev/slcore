@@ -1,5 +1,13 @@
 2010-06-14  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	Release version 3.1.
+
+	* build-aux/package_version: Update to 3.1.
+
+	* doc/NEWS.txt: Document recent changes.
+
+2010-06-14  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	Packaging fixes.
 	
 	* lib/Makefile.am (nobase_dist_pkgdata_DATA): Remove duplicate.

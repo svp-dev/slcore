@@ -4,15 +4,43 @@
 
 This document describes major updates to the SL toolchain.
 
-Version 3.x
-===========
-
-Development version only.
+Version 3.1, June 2010
+======================
 
 Changes since 3.0
 -----------------
 
-...
+Language and library
+````````````````````
+
+- The standard C header names are supported for all targets
+  (``stdio.h`` instead of ``cstdio.h``, etc).
+
+Changes related to the Microgrid targets
+````````````````````````````````````````
+
+- A new lock-free memory heap allocator using thread-local storage has
+  been introduced, and is now the default for all Microgrid targets
+  (requires simulator version 2.0.162-r3816 or later).
+
+Known limitations
+-----------------
+
+- Support for the C99 standard library is incomplete.
+
+- C's ``long double`` type is not supported.
+
+- The C ``tgamma`` function is less accurate than required by the specification.
+
+- SVP's *break* and *kill* operations are inconsistently supported
+  across targets (or not at all), since their definition is in flux at
+  this period (early 2010). No known programs are affected.
+
+- Due to both software and hardware limitations, Microgrid code is
+  much less efficient in several key places than the architecture
+  would allow it to be (poor register management due to conservative
+  assumptions about unknown use in C function calls). This will be
+  investigated and optimized in future versions of the tool chain.
 
 Version 3.0, May 2010
 =====================
