@@ -12,8 +12,8 @@
 // `COPYING' file in the root directory.
 //
 
-#include <ctime.h>
-#include <cstdio.h>
+#include <time.h>
+#include <stdio.h>
 
 // XIGNORE: *:D
 

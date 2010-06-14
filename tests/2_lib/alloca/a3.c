@@ -12,7 +12,7 @@
 // `COPYING' file in the root directory.
 //
 
-#include <calloca.h>
+#include <alloca.h>
 #include <svp/iomacros.h>
 
 sl_def(foo, void,

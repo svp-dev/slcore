@@ -12,7 +12,7 @@
 // `COPYING' file in the root directory.
 //
 
-#include <cmath.h>
+#include <math.h>
 #include <svp/slr.h>
 #include <svp/testoutput.h>
 

@@ -13,7 +13,7 @@
 //
 
 #include <svp/testoutput.h>
-#include <cmath.h>
+#include <math.h>
 #include <svp/slr.h>
 
 typedef struct {

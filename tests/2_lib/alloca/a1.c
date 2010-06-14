@@ -12,7 +12,7 @@
 // `COPYING' file in the root directory.
 //
 
-#include <calloca.h>
+#include <alloca.h>
 
 sl_def(t_main, void)
 {

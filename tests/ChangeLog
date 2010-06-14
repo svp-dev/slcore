@@ -1,3 +1,25 @@
+2010-06-13  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
+	Use standard C header names in tests.
+
+	* 2_lib/alloca/a1.c,
+	* 2_lib/alloca/a2.c,
+	* 2_lib/alloca/a3.c,
+	* 2_lib/assert.c,
+	* 2_lib/clock.c,
+	* 2_lib/div/div.c,
+	* 2_lib/div/div2.c,
+	* 2_lib/malloc/m1.c,
+	* 2_lib/malloc/m2.c,
+	* 2_lib/malloc/m3.c,
+	* 2_lib/math/avail.c,
+	* 2_lib/math/tgamma.c,
+	* 2_lib/perf.c,
+	* 2_lib/sac1.c,
+	* 2_lib/va.c,
+	* 2_lib/va2.c,
+	* 2_lib/va3.c: Do it.
+
 2010-05-30  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
 	Extend the test suite.

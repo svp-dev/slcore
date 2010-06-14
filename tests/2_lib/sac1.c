@@ -13,7 +13,7 @@
 //
 
 #include <sac_helpers.h>
-#include <cstdio.h>
+#include <stdio.h>
 #include <svp/compiler.h>
 
 noinline char *pass(char *reg) { return reg; }

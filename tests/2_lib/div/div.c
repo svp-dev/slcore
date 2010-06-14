@@ -14,7 +14,7 @@
 
 #include <svp/div.h>
 #include <svp/slr.h>
-#include <cstdio.h>
+#include <stdio.h>
 
 sl_def(testu, void,
        sl_glparm(uint64_t, x),

@@ -12,7 +12,7 @@
 // `COPYING' file in the root directory.
 //
 
-#include <cstdarg.h>
+#include <stdarg.h>
 #include <svp/testoutput.h>
 
 double select(int s, ...)

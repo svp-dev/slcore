@@ -13,7 +13,7 @@
 //
 
 #include <svp/perf.h>
-#include <cstdio.h>
+#include <stdio.h>
 
 // XIGNORE: *:D
 

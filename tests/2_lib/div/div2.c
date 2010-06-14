@@ -13,8 +13,8 @@
 //
 
 #include <svp/div.h>
-#include <cassert.h>
-#include <cstdio.h>
+#include <assert.h>
+#include <stdio.h>
 
 sl_def(t_main, void)
 {
