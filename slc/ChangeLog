@@ -1,5 +1,14 @@
 2010-06-11  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	Enhance `cce'.
+
+	* tools/bin/cce.in: Propagate more information to programs: efine
+	`__slc_dialect_XXX__', `__slc_variant_XXX__', `__slc_arch_XXX__'
+	and `__slc_os_XXX__' according to parameters. Optimize more when compiling
+	for host. Avoid linking in `libslc' if `-nostartfiles' is specified.
+
+2010-06-11  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	Appease compiler when using `spr'.
 
 	* tools/lib/slc/lower/split.py (SplitCreates.visit_lowcreate):

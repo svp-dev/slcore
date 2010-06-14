@@ -203,7 +203,6 @@ case $slc_dialect in
     spp) slc_transbase=$slc_dialect$basearch ;;
 esac
 
-
 save_IFS=$IFS
 IFS=:
 found=
@@ -218,7 +217,7 @@ if test -z "$found"; then
 else
     slc_trans=$found
     slc_tflags+=("-I$slc_trans")
-    slc_pp_prefix=(-include "$slc_trans/include/sl_support.h")
+    slc_pp_prefix+=(-include "$slc_trans/include/sl_support.h")
 fi
 
 for m4_preinc in slc_m4sugar.m4 slc.m4; do
@@ -273,12 +272,14 @@ case $slc_dialect-$slc_arch in
 esac
 
 # Compiler flags selection; default to optimize
-case $slc_dialect in
-    spr)
+case $slc_dialect-$slc_arch in
+    spr-mt*)
 	slc_cflags+=(-O2) ;;
-    spp)
+    spr-host)
+        slc_cflags+=(-O3) ;;
+    spp-*)
 	slc_cflags+=(-O2 -DMT_FORCE_TEMP_FOR_SHARED_WRITE=1) ;;
-    utc0)
+    utc0-*)
 	slc_cflags+=(-O1) ;;
     *) ;;
 esac
@@ -321,6 +322,13 @@ case $slc_arch in
 	;;
 esac
 slc_ppflags+=(-DUSE_C_DIVIDE)
+
+# Propagate selection to programs/libraries
+slc_ppflags+=( \
+    -D__slc_dialect_${slc_dialect//[^a-zA-Z0-9]/_}__ \
+    -D__slc_variant_${slc_variant//[^a-zA-Z0-9]/_}__ \
+    -D__slc_arch_${slc_arch//[^a-zA-Z0-9]/_}__ \
+    -D__slc_os_${slc_os//[^a-zA-Z0-9]/_}__ )
 
 # Extra flag selection
 case $slc_arch-$slc_os in
@@ -373,7 +381,10 @@ case $slc_os in
 	if test "$slc_use_libsl" != "no"; then
             slc_ldflags+=("-lsl")
 	fi
-	slc_ldflags+=("-lslc")
+
+        if test "$slc_use_slrt" != "no"; then
+	    slc_ldflags+=("-lslc")
+        fi
 
         if test "$slc_use_main" != "no"; then
             slc_ldflags+=("-lslmain")
