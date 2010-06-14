@@ -137,6 +137,10 @@ case $alias in
     mta_on)       alias=spp-mta_naked-mtalpha-sim ;;
     mta_s)        alias=spr-seq_naked-mtalpha-sim ;;
 
+    hrt)          alias=spr-hrt_hybrid-host-host-hrt ;;
+    hrt_n)        alias=spr-hrt_naked-host-host-hrt ;;
+    hrt_s)        alias=spr-seq_naked-host-host-hrt ;;
+
     ptl)   alias=ptl-ptl-host-host-ptl ;;
     utc0)  alias=utc0-mta_naked-mtalpha-sim ;;
     ptlx)  alias=ptlx--x-x ;;
@@ -191,6 +195,8 @@ case $slc_dialect in
             seq_naked) target=seq ;;
             mta_naked) target=mta ;;
             mta_hybrid) target=mta+seq ;;
+            hrt_naked)  target=hrt ;;
+            hrt_hybrid) target=hrt+seq ;;
             *) echo "unknown variant: $slc_dialect-$slc_variant" >&2 ;;
         esac
         slc_translator=("$spr_helper" -b "$target")
@@ -342,6 +348,9 @@ case $slc_arch-$slc_os in
 	fi
 	slc_debug_flags=()
 	;;
+    host-host-hrt)
+        slc_cflags+=(-static -pthread)
+        ;;
     *)
 	slc_debug_flags=(${slc_debug_flags:+$slc_debug_flags})
 	;;

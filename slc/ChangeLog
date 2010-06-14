@@ -1,5 +1,12 @@
 2010-06-11  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	Introduce new `hrt' targets.
+
+	* tools/bin/cce.in: Recognize aliases `hrt', `hrt_n' and
+	`hrt_s'. Update flags accordingly.
+
+2010-06-11  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	Remove obsolete files.
 
 	* lib/host-host-ptl/include/svp_os.h,
