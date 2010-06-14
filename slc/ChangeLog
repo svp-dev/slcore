@@ -1,3 +1,10 @@
+2010-06-13  Raphael 'kena' Poss  <kena@coda.science.uva.nl>
+
+	Try to provide some FreeBSD compatibility for `hrt'.
+
+	* tools/lib/host-host-hrt/tc.c (alloc_stack): Try to use
+	`MAP_STACK' if `MAP_GROWSDOWN' is not defined (FreeBSD).
+
 2010-06-13  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
 	Merge the following changes.

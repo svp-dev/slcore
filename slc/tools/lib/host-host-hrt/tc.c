@@ -562,7 +562,15 @@ stack_t alloc_stack(int tc_index, int size) {
   void* stack_lowaddr = stack_highaddr - size + 1;
   void* mapping =
     mmap(stack_lowaddr, size, PROT_READ | PROT_WRITE,
-         MAP_PRIVATE|MAP_FIXED|MAP_ANON|MAP_GROWSDOWN, -1, 0);
+         MAP_PRIVATE|MAP_FIXED|MAP_ANON|
+#if defined(MAP_GROWSDOWN) /* linux */
+   MAP_GROWSDOWN
+#elif defined(MAP_STACK) /* FreeBSD */
+   MAP_STACK
+#else
+#error Cannot request stack-like mmap on this system.
+#endif
+    , -1, 0);
   if (mapping == MAP_FAILED) {
     perror("alloc_stack"); exit(1);
   }
