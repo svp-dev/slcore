@@ -149,24 +149,26 @@ class TFun_2_CFun(DefaultVisitor):
                               ' %s __slP_%s ' % (const, parm.name))
         return parm
 
-    def visit_fundecl(self, fundecl, keep = False, omitextern = False):
+    def visit_fundecl(self, fundecl, infundef = False):
         self.__shlist = []
         self.__gllist = []
+        qual = ""
+        iattr = ""
         if fundecl.extras.get_attr('static', None) is not None:
             qual = "static"
-        elif omitextern:
-            qual = ""
+        elif infundef:
+            iattr = " __attribute__((__unused__))"
         else:
             qual = "extern"
         self.__buffer = flatten(fundecl.loc, 
-                                " %s long %s(const long __slI" 
-                                % (qual, fundecl.name))
+                                " %s long %s(const long __slI%s" 
+                                % (qual, fundecl.name, iattr))
         for parm in fundecl.parms:
             parm.accept(self)
         self.__buffer += ')'
         ret = self.__buffer
         self.__buffer = None
-        if not keep:
+        if not infundef:
             self.__shlist = self.__gllist = None
         return ret
  
@@ -191,7 +193,7 @@ class TFun_2_CFun(DefaultVisitor):
         return ret
 
     def visit_fundef(self, fundef):
-        newitems = self.dispatch(fundef, seen_as = FunDecl, keep = True, omitextern = True)
+        newitems = self.dispatch(fundef, seen_as = FunDecl, infundef = True)
         newitems += flatten(fundef.loc, "{")
         newitems += fundef.body.accept(self)
         newitems += flatten(fundef.loc_end, " return 0; }")

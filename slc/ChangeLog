@@ -1,5 +1,24 @@
 2010-06-11  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	Appease compiler when using `spr'.
+
+	* tools/lib/slc/lower/split.py (SplitCreates.visit_lowcreate):
+	Ensure label for first alternative is always used.
+
+	* tools/lib/slc/lower/lowercreate.py (AutoResolve): New visitor to
+	ensure that the resolved label is always used.
+	* tools/lib/slc/front/chains.py: Use it.
+
+	* tools/lib/slc/lower/seq.py: Indicate that `__slI' is maybe unused.
+
+	* tools/lib/slc/mtalpha/visitors.py: Ensure that the end label is
+	always used.
+
+	* tools/lib/slc/lower/split.py (SplitCreates): Simplify by reusing
+	`ScopedVisitor'.
+
+2010-06-11  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	Minor MT-Alpha optimizations.
 
 	* tools/bin/cce.in: Option `-mcpu' actually overrides `-mfix',

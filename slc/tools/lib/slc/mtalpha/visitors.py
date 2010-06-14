@@ -343,7 +343,9 @@ class TFun_2_MTATFun(DefaultVisitor):
         newitems.append(fundef.body.accept(self))
 
         # close the body definition with a target label for sl_end_thread
-        newitems.append(fundef.lbl_end + ' __asm__ __volatile__("# MT: end follows"); }')
+        newitems.append(CGoto(loc = fundef.loc_end, target = fundef.lbl_end) + ';' 
+                        + fundef.lbl_end 
+                        + ' __asm__ __volatile__("# MT: end follows"); }')
         return newitems
 
     def visit_getp(self, getp):
