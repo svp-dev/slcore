@@ -1,5 +1,11 @@
 2010-06-13  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	Update check expectations.
+	
+	* benchmarks/sha/sha1_alt.c: Expect failure for naked mta targets.
+
+2010-06-13  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	Use standard C header names in programs.
 
 	* benchmarks/blas/blasbench.h,
