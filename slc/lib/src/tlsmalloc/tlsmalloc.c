@@ -14,10 +14,9 @@
 struct superblock;
 
 struct control_block {
-    struct superblock *bins[NR_OF_BINS];
-
-    struct superblock *first_available;
     size_t nr_allocated_sbs;
+    struct superblock *bins[NR_OF_BINS];
+    struct superblock *first_available;
     size_t nr_busy_sbs;
 
     BITMAP_LIMB_T bitmap[];
@@ -266,9 +265,18 @@ struct superblock* get_new_superblock(struct control_block *cb,  UWORD bin)
     else
     {
         /* free list empty, need a new superblock */
-        
+
+        size_t nr_alloc = cb->nr_allocated_sbs;
+        if (unlikely(nr_alloc == 0))
+        {
+            /* the controlblock itself is not yet allocated, do this first of hand */
+            if (MAP_STORAGE(cb, SLOT_SIZE) == MAP_STORAGE_FAIL)
+                return 0;
+            nr_alloc = 1;
+        }
+
         /* are there available slots? */
-        if (unlikely((NR_SLOTS_IN_TLS() - cb->nr_allocated_sbs - 1) == 0))
+        if (unlikely((NR_SLOTS_IN_TLS() - nr_alloc) == 0))
             /* no */ return 0;
 
         /* yes */
@@ -284,7 +292,7 @@ struct superblock* get_new_superblock(struct control_block *cb,  UWORD bin)
 
         /* inform */
         bitmap_set_1(cb->bitmap, slot_nr);
-        ++(cb->nr_allocated_sbs);
+        cb->nr_allocated_sbs = nr_alloc + 1;
 
         /* init */
         return init_superblock(cb, (struct superblock*)base, bin);
@@ -522,9 +530,9 @@ fallback:
     
 }
 
-void *tls_calloc(size_t sz)
+void *tls_calloc(size_t cnt, size_t sz)
 {
-    void *p = tls_malloc(sz);
+    void *p = tls_malloc(cnt*sz);
     if (unlikely(!p)) return p;
     memset(p, 0, sz);
     return p;
@@ -644,7 +652,7 @@ void *tls_realloc(void *ptr, size_t ns)
 }
 
 static
-void tls_sb_mallinfo(struct superblock *sb, unsigned bin, size_t blocksize)
+void tls_sb_stats(struct superblock *sb, unsigned bin, size_t blocksize)
 {
     printf("  sb %p: "
            "link (%p,%p), "
@@ -664,7 +672,7 @@ void tls_sb_mallinfo(struct superblock *sb, unsigned bin, size_t blocksize)
     assert(sb->header.bin == bin);
 }
 
-void tls_local_mallinfo(void *p)
+void tls_local_stats(void *p)
 {
     unsigned bin;
     struct superblock *sb;
@@ -672,15 +680,15 @@ void tls_local_mallinfo(void *p)
     struct control_block *cb = (struct control_block*)p;
     size_t sz;
 
-    printf("mallinfo for cb %p:\n"
+    printf("stats for cb %p:\n"
            "  storage: %zu KB alloc (%zu sbs), "
            "%zu KB used (%zu sbs, %.2f%%)\n",
            cb, 
-           (cb->nr_allocated_sbs+1) * SLOT_SIZE / 1024, 
-           (cb->nr_allocated_sbs+1),
+           (cb->nr_allocated_sbs) * SLOT_SIZE / 1024, 
+           (cb->nr_allocated_sbs),
            (cb->nr_busy_sbs+1) * SLOT_SIZE / 1024,
            (cb->nr_busy_sbs+1),
-           ((float)(cb->nr_busy_sbs+1)*100./(float)(cb->nr_allocated_sbs+1)));
+           ((float)(cb->nr_busy_sbs+1)*100./(float)(cb->nr_allocated_sbs)));
     
     for (bin = 0; bin < NR_OF_BINS; ++bin)
     {
@@ -736,7 +744,7 @@ void tls_local_mallinfo(void *p)
             sb = sb_first;
             do
             {
-                tls_sb_mallinfo(sb, bin, sz);
+                tls_sb_stats(sb, bin, sz);
                 sb = sb->header.next;
             } while(sb != sb_first);
         }                      
@@ -744,13 +752,15 @@ void tls_local_mallinfo(void *p)
 
 }
 
-void tls_mallinfo(void)
+void tls_malloc_stats(void)
 {
     struct control_block *cb;
 
     for (cb = TLS_BASE(); cb != 0; cb = TLS_NEXT(cb))
     {
         if (cb->nr_allocated_sbs)
-            tls_local_mallinfo(cb);
+            tls_local_stats(cb);
     }
 }
+
+

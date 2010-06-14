@@ -1,5 +1,27 @@
 2010-06-14  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	Enhance the TLS memory allocator.
+
+	* lib/mtalpha-sim/include/stdlib.h: Rename the `fast_XXX' macros
+	to `excl_dlXXX' to clarify their meaning.
+
+	* lib/src/tlsmalloc/tls_arch_mtalpha.h: Use them. Also, use the
+	new MGSim mmap/munmap interface to manage storage.
+
+	* lib/src/tlsmalloc/tlsmalloc.c: Place the count of superblocks at
+	the first word, since this has a special behavior on the Microgrid
+	(permissions are not checked for the first word of TLS, so it can
+	be read to 0 without error). Also, map and count the control block
+	itself. Rename the `mallinfo' services to `stats', since
+	`mallinfo' has special semantics not supported yet. 
+
+	* lib/src/tlsmalloc/tlsmalloc.h,
+	* lib/src/tlsmalloc/tlsmalloc.c: Fix interface of `calloc'.
+
+	* lib/src/tlsmalloc/tricks.h: Fix `forceinline'.
+
+2010-06-14  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	Enhance the SL/MGSim interface.
 
 	The Microgrid simulator was recently modified to allow programs to

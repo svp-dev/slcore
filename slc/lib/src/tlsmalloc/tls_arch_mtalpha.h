@@ -5,20 +5,31 @@
 
 #include <stdlib.h>
 #include <stdint.h>
+#include <svp/mgsim.h>
 
 /* EXT_FREE(P): delegate to the external memory allocator */
-#define EXT_FREE fast_free
+#define EXT_FREE excl_dlfree
 /* EXT_MALLOC(P): delegate to the external memory allocator */
-#define EXT_MALLOC fast_malloc
+#define EXT_MALLOC excl_dlmalloc
 
 /* EXT_REALLOC(P): delegate to the external memory allocator */
-#define EXT_REALLOC fast_realloc
+#define EXT_REALLOC excl_dlrealloc
 
 /* MAP_STORAGE(P, Sz): map storage, return != 0 if successful */
-#define MAP_STORAGE(P, Sz)  1  /* always succeed here */
+#define MAP_STORAGE(P, Sz)  ({                                          \
+            unsigned __l2 = __builtin_ctz(Sz);                          \
+            assert((__l2 >= 12) && ((__l2 - 12) < 8));                  \
+            mgsim_control(P, MGSCTL_TYPE_MEM, MGSCTL_MEM_MAP, __l2-12); \
+            1;                                                          \
+        })
 #define MAP_STORAGE_FAIL 0
 
-#undef RELEASE_STORAGE /* define to release storage to the environment */
+#define RELEASE_STORAGE
+#define UNMAP_STORAGE(P, Sz) ({                                         \
+            unsigned __l2 = __builtin_ctz(Sz);                          \
+            assert((__l2 >= 12) && ((__l2 - 12) < 8));                  \
+            mgsim_control(P, MGSCTL_TYPE_MEM, MGSCTL_MEM_UNMAP, __l2-12); \
+        })
 
 
 static forceinline

@@ -60,25 +60,25 @@ extern void* dlrealloc(void*, size_t);
 
 #define malloc_place 0xf /* 8=suspend, 4|2=delegate, 1=exclusive (implicit core ID = 0) */
 
-#define fast_malloc(N) ({						\
+#define excl_dlmalloc(N) ({						\
       uint64_t __margs[3] = { (uint64_t)N, (uint64_t)&dlmalloc, 1 };	\
       CALL_WITH_INFO(((uint64_t*)__margs)+3, malloc_place);		\
       (void*)__margs[2];						\
     })
 
-#define fast_free(P) ({							\
+#define excl_dlfree(P) ({							\
       uint64_t __margs[3] = { (uint64_t)P, (uint64_t)&dlfree, 1 };	\
       CALL_WITH_INFO(((uint64_t*)__margs)+3, malloc_place);		\
       (void)0;								\
     })
 
-#define fast_realloc(P, N) ({						\
+#define excl_dlrealloc(P, N) ({						\
       uint64_t __margs[5] = { (uint64_t)N, 0, (uint64_t)P, (uint64_t)&dlrealloc, 2 }; \
       CALL_WITH_INFO(((uint64_t*)__margs)+5, malloc_place);		\
       (void*)__margs[4];						\
     })
 
-#define fast_calloc(N1, N2) ({						\
+#define excl_dlcalloc(N1, N2) ({						\
       uint64_t __margs[5] = { (uint64_t)N2, 0, (uint64_t)N1, (uint64_t)&dlcalloc, 2 }; \
       CALL_WITH_INFO(((uint64_t*)__margs)+5, malloc_place);		\
       (void*)__margs[4];						\

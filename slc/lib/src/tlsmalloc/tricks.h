@@ -16,7 +16,7 @@
 #else /* ! __GNUC__ */
 
 #ifndef forceinline
-#define forceinline static inline
+#define forceinline inline
 #endif
 
 #ifndef likely
