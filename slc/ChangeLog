@@ -1,5 +1,13 @@
 2010-06-14  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	Fix library build.
+	
+	* lib/src/getenv.c,
+	* lib/src/gdtoa/gdtoaimpl.h: Use `malloc' and `free' instead of
+	`fast_malloc' and `fast_free'.
+
+2010-06-14  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	Improve the TLS memory allocator.
 
 	* lib/src/tlsmalloc/tlsconfig.h,

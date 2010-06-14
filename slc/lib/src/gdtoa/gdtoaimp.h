@@ -203,8 +203,8 @@ THIS SOFTWARE.
 #define Char void
 #endif
 
-#define MALLOC fast_malloc
-#define free fast_free
+#define MALLOC malloc
+#define free free
 
 #define INFNAN_CHECK
 #define NO_FENV_H

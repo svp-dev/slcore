@@ -223,12 +223,12 @@ __clean_env(bool freeVars)
 					__remove_putenv(envNdx);
 			} else {
 				if (freeVars)
-					fast_free(envVars[envNdx].name);
+					free(envVars[envNdx].name);
 				else
 					envVars[envNdx].active = false;
 			}
 		if (freeVars) {
-			fast_free(envVars);
+			free(envVars);
 			envVars = NULL;
 		} else
 			envActive = 0;
@@ -237,7 +237,7 @@ __clean_env(bool freeVars)
 		if (origEnviron != NULL) {
 			if (environ == intEnviron)
 				environ = origEnviron;
-			fast_free(intEnviron);
+			free(intEnviron);
 			intEnviron = NULL;
 			environSize = 0;
 		}
@@ -262,7 +262,7 @@ __rebuild_environ(int newEnvironSize)
 	/* Resize environ. */
 	if (newEnvironSize > environSize) {
 		tmpEnvironSize = newEnvironSize * 2;
-		tmpEnviron = fast_realloc(intEnviron, sizeof (*intEnviron) *
+		tmpEnviron = realloc(intEnviron, sizeof (*intEnviron) *
 		    (tmpEnvironSize + 1));
 		if (tmpEnviron == NULL)
 			return (-1);
@@ -296,7 +296,7 @@ __enlarge_env(void)
 	envVarsTotal++;
 	if (envVarsTotal > envVarsSize) {
 		newEnvVarsSize = envVarsTotal * 2;
-		tmpEnvVars = fast_realloc(envVars, sizeof (*envVars) *
+		tmpEnvVars = realloc(envVars, sizeof (*envVars) *
 		    newEnvVarsSize);
 		if (tmpEnvVars == NULL) {
 			envVarsTotal--;
@@ -332,7 +332,7 @@ __build_env(void)
 	envVarsSize = envVarsTotal * 2;
 
 	/* Create new environment. */
-	envVars = fast_calloc(1, sizeof (*envVars) * envVarsSize);
+	envVars = calloc(1, sizeof (*envVars) * envVarsSize);
 	if (envVars == NULL)
 		goto Failure;
 
@@ -485,7 +485,7 @@ __setenv(const char *name, size_t nameLen, const char *value, int overwrite)
 			return (-1);
 
 		/* Create environment entry. */
-		envVars[envNdx].name = fast_malloc(nameLen + sizeof ("=") +
+		envVars[envNdx].name = malloc(nameLen + sizeof ("=") +
 		    valueLen);
 		if (envVars[envNdx].name == NULL) {
 			envVarsTotal--;
