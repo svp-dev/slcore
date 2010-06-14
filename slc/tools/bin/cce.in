@@ -255,9 +255,9 @@ case $slc_dialect-$slc_arch in
     *-x) slc_compiler=("$scu_helper" compile) ;;
     *-host)
 	case $slc_complang-$slc_os in
-            c-*hrt) slc_compiler=($PTHREAD_CC $PTHREAD_CFLAGS -std=gnu99) ;;
+            c-*hrt) slc_compiler=($PTHREAD_CC $PTHREAD_CFLAGS) ;;
 	    cpp-*) slc_compiler=($CXX_HOST) ;;
-	    c-*)   slc_compiler=($CC_HOST -std=gnu99) ;;
+	    c-*)   slc_compiler=($CC_HOST) ;;
 	    *) echo "$basename: warning: no compiler for $dialect-$arch" >&2 ;;
 	esac
 	slc_filter1=(cp)
