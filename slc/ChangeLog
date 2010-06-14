@@ -1,5 +1,12 @@
 2010-06-13  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	Configuration fix.
+
+	* build-aux/slc.m4: Move tests for environment compatibility to...
+	* configure.ac: ... here, because they are embedded in `cce' afterwards.
+
+2010-06-13  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	Remove `hrt' from default build.
 
 	The set of conditions that allow to build the `hrt' runtime is not

@@ -67,52 +67,30 @@ AC_DEFUN([SLC_CHECK_TARGETS],
                 [AC_HELP_STRING([--disable-ptl],
                                 [disable support for muTC-ptl compilation (default is try to enable)])],
                 [], [enable_ptl=yes])
-  if test "x$enable_ptl" = "xyes"; then
-    if test "x$GXX" != "xyes"; then
-       AC_MSG_WARN([not using the GNU C++ compiler. muTC-ptl support is disabled.])
-       enable_ptl=no
-    fi
-  fi
-  AM_CONDITIONAL([ENABLE_SLC_PTL], [test "x$enable_ptl" = "xyes"])
+
+  dnl Automake conditional is decided late, so that the surrounding configure script
+  dnl can change its mind about supporting this target.
+  AC_CONFIG_COMMANDS_PRE([AM_CONDITIONAL([ENABLE_SLC_PTL], [test "x$enable_ptl" = "xyes"])])
 
   AC_ARG_ENABLE([hrt],
                 [AC_HELP_STRING([--enable-hrt],
                                 [enable support for the Hydra runtime (default is disable)])],
                 [], [enable_hrt=no])
-  AM_CONDITIONAL([ENABLE_SLC_HRT], [test "x$enable_hrt" = "xyes"])               
-                  
+  AC_CONFIG_COMMANDS_PRE([AM_CONDITIONAL([ENABLE_SLC_HRT], [test "x$enable_hrt" = "xyes"])])
 
   AC_ARG_ENABLE([mtalpha], 
                 [AC_HELP_STRING([--disable-mtalpha], 
                                 [disable support for MT-Alpha compilation (default is try to enable)])],
                 [], [enable_mtalpha=yes])
 
-  if test "x$enable_mtalpha" = "xyes"; then
-    if test "x$UTCC_MTALPHA" = "xno" \
-       -o "x$CC_ALPHA" = "xno" \
-       -o "x$AR_MTALPHA" = "xno" \
-       -o "x$RANLIB_MTALPHA" = "xno"; then
-     AC_MSG_WARN([Some Alpha/MT-Alpha utilities are missing; MT-Alpha support disabled.])
-     enable_mtalpha=no
-    fi
-  fi
-  AM_CONDITIONAL([ENABLE_SLC_MTALPHA], [test "x$enable_mtalpha" = xyes])
+  AC_CONFIG_COMMANDS_PRE([AM_CONDITIONAL([ENABLE_SLC_MTALPHA], [test "x$enable_mtalpha" = xyes])])
 
   AC_ARG_ENABLE([mtsparc], 
                 [AC_HELP_STRING([--disable-mtsparc], 
                                 [disable support for MT-Sparc compilation (default is try to enable)])],
                 [], [enable_mtsparc=yes])
 
-  if test "x$enable_mtsparc" = "xyes"; then
-    if test "x$UTCC_MTSPARC" = "xno" \
-       -o "x$CC_SPARC" = "xno" \
-       -o "x$AR_MTSPARC" = "xno" \
-       -o "x$RANLIB_MTSPARC" = "xno"; then
-     AC_MSG_WARN([Some Sparc/MT-Sparc utilities are missing; MT-Sparc support disabled.])
-     enable_mtsparc=no
-    fi
-  fi
-  AM_CONDITIONAL([ENABLE_SLC_MTSPARC], [test "x$enable_mtsparc" = xyes])
+  AC_CONFIG_COMMANDS_PRE([AM_CONDITIONAL([ENABLE_SLC_MTSPARC], [test "x$enable_mtsparc" = xyes])])
 ])
 
 AC_DEFUN([AC_WITH_SLC],

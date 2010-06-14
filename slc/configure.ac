@@ -76,6 +76,40 @@ SLC_PATH_LOCAL([.])
 AC_WITH_SLC
 SLC_CHECK_TARGETS
 
+if test "x$enable_ptl" = "xyes"; then
+  if test "x$GXX" != "xyes"; then
+     AC_MSG_WARN([not using the GNU C++ compiler. muTC-ptl support is disabled.])
+     enable_ptl=no
+  fi
+fi
+
+if test "x$enable_hrt" = "xyes"; then
+  if test "x$ax_pthread_ok" != "xyes"; then
+     AC_MSG_WARN([POSIX threads not available. hrt support is disabled.])
+     enable_hrt=no
+  fi
+fi
+
+if test "x$enable_mtalpha" = "xyes"; then
+  if test "x$UTCC_MTALPHA" = "xno" \
+     -o "x$CC_ALPHA" = "xno" \
+     -o "x$AR_MTALPHA" = "xno" \
+     -o "x$RANLIB_MTALPHA" = "xno"; then
+   AC_MSG_WARN([Some Alpha/MT-Alpha utilities are missing; MT-Alpha support disabled.])
+   enable_mtalpha=no
+  fi
+fi
+
+if test "x$enable_mtsparc" = "xyes"; then
+  if test "x$UTCC_MTSPARC" = "xno" \
+     -o "x$CC_SPARC" = "xno" \
+     -o "x$AR_MTSPARC" = "xno" \
+     -o "x$RANLIB_MTSPARC" = "xno"; then
+   AC_MSG_WARN([Some Sparc/MT-Sparc utilities are missing; MT-Sparc support disabled.])
+   enable_mtsparc=no
+  fi
+fi
+
 if test "x$MGSIM_ALPHA" = "xno"; then
    AC_MSG_WARN([Cannot find the MT-Alpha Microgrid simulator. `slr' will not run MT-Alpha programs.])
 fi
