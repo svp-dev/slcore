@@ -1,3 +1,10 @@
+2010-06-14  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
+	New `tmalloc' demo for memory allocation.
+
+	* demo/tmalloc.c: New.
+	* demo/Makefile.am: Update accordingly.
+
 2010-06-13  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
 	Update check expectations.

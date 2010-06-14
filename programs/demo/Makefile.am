@@ -24,7 +24,8 @@ DEMOS = \
 	perf.c \
 	pi.c \
 	roman.c \
-	sep.c
+	sep.c \
+	tmalloc.c
 
 TESTS = $(DEMOS)
 
