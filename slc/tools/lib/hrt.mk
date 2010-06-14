@@ -17,7 +17,8 @@ nobase_pkglib_LIBRARIES += \
 	hrt_naked-host-host-hrt/libslc.a \
 	hrt_naked-host-host-hrt/libslmain.a 
 
-hrt_naked_host_host_hrt_libslc_a_SOURCES = host-host-hrt/tc.c
+hrt_naked_host_host_hrt_libslc_a_SOURCES = # empty for now
+hrt_naked_host_host_hrt_libslc_a_LIBADD = hrt_naked-host-host-hrt/tc.o
 hrt_naked_host_host_hrt_libslmain_a_SOURCES = # empty for now
 hrt_naked_host_host_hrt_libslmain_a_LIBADD = hrt_naked-host-host-hrt/main.o
 
@@ -29,13 +30,14 @@ SLC_HRT_N = $(SLC_RUN) -b hrt_n -nostdlib
 
 hrt_naked-host-host-hrt/%.o: $(srcdir)/host-host-hrt/%.c
 	$(AM_V_at)$(MKDIR_P) hrt_naked-host-host-hrt
-	$(slc_verbose)$(SLC_HRT_N) -c -o $@ $< $(AM_CXXFLAGS) $(CXXFLAGS)
+	$(slc_verbose)$(SLC_HRT_N) -c -o $@ $< $(AM_CFLAGS) $(CFLAGS)
 
 hrt_naked-host-host-hrt/%.o: $(srcdir)/%.c
 	$(AM_V_at)$(MKDIR_P) hrt_naked-host-host-hrt
-	$(slc_verbose)$(SLC_HRT_N) -c -o $@ $< $(AM_CXXFLAGS) $(CXXFLAGS)
+	$(slc_verbose)$(SLC_HRT_N) -c -o $@ $< $(AM_CFLAGS) $(CFLAGS)
 
 CLEANFILES += \
+	hrt_naked-host-host-hrt/tc.o \
 	hrt_naked-host-host-hrt/main.o \
 	hrt_naked-host-host-hrt/slrt.o
 

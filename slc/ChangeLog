@@ -1,5 +1,13 @@
 2010-06-13  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	Fix bug in build of `libslc' for `hrt' targets.
+
+	* tools/lib/hrt.mk: Use `CFLAGS' instead of `CXXFLAGS'. Use `slc'
+	to compile `tc.c' since it needs extra compiler flags known to
+	`cce' only.
+
+2010-06-13  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	Configuration fix.
 
 	* build-aux/slc.m4: Move tests for environment compatibility to...
