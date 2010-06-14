@@ -1,5 +1,11 @@
 2010-06-13  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	Fix `slr' for target `ptl'.
+
+	* tools/lib/host-host-ptl/slrt.c: Fix typo in long `cce' tag.
+
+2010-06-13  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	Enhance `ptl' target.
 
 	* configure.ac: Disable `ptl' target if POSIX threads are not
