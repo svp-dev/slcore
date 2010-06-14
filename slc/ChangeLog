@@ -1,3 +1,10 @@
+2010-06-13  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
+	Fix bug in `spr'.
+
+	* slc/tools/lib/slc/lower/lowercreate.py (AutoResolve): Insert
+	missing semicolon in generated code.
+
 2010-06-13  Raphael 'kena' Poss  <kena@coda.science.uva.nl>
 
 	Fix bugs in `hrt' compilation.

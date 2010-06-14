@@ -83,6 +83,6 @@ class AutoResolve(ScopedVisitor):
 
     def visit_lowcreate(self, lc):
         cr = self.cur_scope.creates[lc.label]
-        return lc + CGoto(loc = cr.loc_end, target = cr.target_resolved)
+        return lc + ';' + CGoto(loc = cr.loc_end, target = cr.target_resolved)
 
 __all__ = ["Create_2_LowCreate", "AutoResolve"]
