@@ -29,11 +29,11 @@ SLC_HRT_N = $(SLC_RUN) -b hrt_n -nostdlib
 
 hrt_naked-host-host-hrt/%.o: $(srcdir)/host-host-hrt/%.c
 	$(AM_V_at)$(MKDIR_P) hrt_naked-host-host-hrt
-	$(slc_verbose)$(SLC_PTL) -c -o $@ $< $(AM_CXXFLAGS) $(CXXFLAGS)
+	$(slc_verbose)$(SLC_HRT_N) -c -o $@ $< $(AM_CXXFLAGS) $(CXXFLAGS)
 
 hrt_naked-host-host-hrt/%.o: $(srcdir)/%.c
 	$(AM_V_at)$(MKDIR_P) hrt_naked-host-host-hrt
-	$(slc_verbose)$(SLC_PTL) -c -o $@ $< $(AM_CXXFLAGS) $(CXXFLAGS)
+	$(slc_verbose)$(SLC_HRT_N) -c -o $@ $< $(AM_CXXFLAGS) $(CXXFLAGS)
 
 CLEANFILES += \
 	hrt_naked-host-host-hrt/main.o \

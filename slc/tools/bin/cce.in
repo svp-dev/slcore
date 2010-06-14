@@ -297,8 +297,14 @@ esac
 # Assembler and linker selection
 case $slc_complang-$slc_arch in
     *-x)      slc_aslink=("$scu_helper" assemble/link);;
-    cpp-host) slc_aslink=(${CXX_HOST:-g++}) ;;
-    *-host)   slc_aslink=(${CC_HOST:-gcc}) ;;
+    *-host)
+	case $slc_complang-$slc_os in
+            c-*hrt) slc_aslink=($PTHREAD_CC $PTHREAD_CFLAGS $PTHREAD_LIBS) ;;
+	    cpp-*) slc_aslink=($CXX_HOST) ;;
+	    c-*)   slc_aslink=($CC_HOST) ;;
+	    *) echo "$basename: warning: no as/ld for $dialect-$arch" >&2 ;;
+	esac
+	;;
     cpp-*)    slc_aslink=($(eval "echo \${CXX_$archvar:-\"\$scu_helper\"}")) ;;
     *-*)      slc_aslink=($(eval "echo \${CC_$archvar:-\"\$scu_helper\"}")) ;;
 esac
@@ -342,23 +348,21 @@ case $slc_arch in
 esac
 slc_ppflags+=(-DUSE_C_DIVIDE)
 
+slc_debug_flags=(${slc_debug_flags:+$slc_debug_flags})
 case $slc_arch-$slc_os in
     mt*-sim)
         slc_ppflags+=(-D__mt_freestanding__ -D__WORDSIZE=64)
         # slc_cflags="$slc_cflags -D__mt_freestanding__ -D__WORDSIZE=64"
         # slc_cflags="$slc_cflags -nostdinc"
 	slc_ldflags+=(-Wl,-Ttext -Wl,0x1000000 -nostdlib)
-	if test -n "$slc_debug_flags"; then
-	    echo "$basename: warning: flags unsupported by $slc_arch-$slc_os: $slc_debug_flags" >&2
+	if test "x$slc_debug_flags" != "x"; then
+	    echo "$basename: warning: flags unsupported by $slc_arch-$slc_os: ${slc_debug_flags[*]}" >&2
 	fi
 	slc_debug_flags=()
 	;;
     host-host-hrt)
         slc_ldflags+=($PTHREAD_LIBS -static)
         ;;
-    *)
-	slc_debug_flags=(${slc_debug_flags:+$slc_debug_flags})
-	;;
 esac
 
 # OS selection

@@ -1,5 +1,16 @@
 2010-06-13  Raphael 'kena' Poss  <kena@coda.science.uva.nl>
 
+	Fix bugs in `hrt' compilation.
+
+	* tools/bin/cce.in: Use pthreads for `slc_aslink' when
+	necessary. Fix initialization of `slc_debug_flags'.
+
+	* tools/lib/hrt.mk: Use `$(SLC_HRT_N)'.
+
+	* tools/lib/slc/am/visitors.py: Use 0 instead of `NULL'.
+
+2010-06-13  Raphael 'kena' Poss  <kena@coda.science.uva.nl>
+
 	Try to provide some FreeBSD compatibility for `hrt'.
 
 	* tools/lib/host-host-hrt/tc.c (alloc_stack): Try to use

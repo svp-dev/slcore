@@ -109,7 +109,7 @@ class Create_2_HydraCall(ScopedVisitor):
         step = CVarUse(decl = cr.cvar_step)
         
         rrhs = flatten(cr.loc_end, 'map_fam(&') + gen_loop_fun_name(funvar) + ', (' + end_index \
-                       + ' - ' + start + '+ 1) / ' + step+ ', NULL)'
+                       + ' - ' + start + '+ 1) / ' + step+ ', 0)'
 
         mapping_call = CVarSet(decl = mapping_decision_var, rhs = rrhs)
         newbl.append(mapping_call + ';\n')
@@ -124,7 +124,7 @@ class Create_2_HydraCall(ScopedVisitor):
        
         rrhs = flatten(cr.loc_end, 'allocate_fam(&') + gen_loop_fun_name(funvar) + ', ' \
                 + no_shareds + ', ' +  no_globals + ', ' + start + ', ' \
-                + end_index + ', ' + step + ', NULL, &' + CVarUse(decl = mapping_decision_var) + ')'
+                + end_index + ', ' + step + ', 0, &' + CVarUse(decl = mapping_decision_var) + ')'
         allocate_call = CVarSet(decl = fam_context_var, 
                                rhs = rrhs)
         newbl.append(allocate_call + ';\n')
@@ -156,7 +156,7 @@ class Create_2_HydraCall(ScopedVisitor):
 
         #expand call to sync
         if not(self.__callist):
-            self.__callist.append(flatten(None, ", NULL"))
+            self.__callist.append(flatten(None, ", 0"))
 
 
         sync_call = flatten(cr.loc_end, "sync_fam(") + \
