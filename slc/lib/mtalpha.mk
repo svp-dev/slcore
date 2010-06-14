@@ -10,6 +10,7 @@ MTALIB_CSRC = \
 	src/ctype.c \
 	src/dtoa_simple.c \
 	src/errno.c \
+	src/ffs.c \
 	src/fprintf.c \
 	src/fputc.c \
 	src/fputs.c \
@@ -97,6 +98,8 @@ MALLOC_DEFS = -DLACKS_SYS_TYPES_H \
 	-DLACKS_ERRNO_H \
 	-DLACKS_STDLIB_H \
 	-DLACKS_STRING_H \
+	-DLACKS_STRINGS_H \
+	-DUSE_BUILTIN_FFS=1 -Dffs=__builtin_ffs \
 	-DLACKS_SYS_PARAM_H \
 	-DLACKS_TIME \
 	-DPAGESIZE=0x40000000U

@@ -315,7 +315,7 @@ esac
 # Extra defines
 case $slc_arch in
     mtalpha)
-        slc_cflags+=(-mcpu=ev6 -mfix -mcix -mmax -mbwx -fno-math-errno -fno-trapping-math)
+        slc_cflags+=(-mcpu=21264a -fno-math-errno -fno-trapping-math)
         ;;
     *)
 	;;

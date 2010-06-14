@@ -22,6 +22,9 @@
 void     bcopy(const void *, void *, size_t);                   /* LEGACY */
 void     bzero(void *, size_t);                                 /* LEGACY */
 
+int      ffs(int);
+#define  ffs(X) __builtin_ffs(X)
+
 #ifndef shutup_cstrings_h
 #warning this implementation of strings.h is incomplete.
 #endif
