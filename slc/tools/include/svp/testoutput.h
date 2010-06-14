@@ -18,19 +18,14 @@
 #ifdef __mt_freestanding__
 
 #include <svp/compiler.h>
+#include <svp/mgsim.h>
 
-# if defined(__alpha__) || defined(__mtalpha__)
-#  define output_float(F, Stream, Precision) __asm__ __volatile("printf %0, %1" : : "f"(F), \
-                                                                "r"((Stream) | (Precision << 4)))
+#define output_float(F, Stream, Precision) mgsim_outfloat(F, Stream, Precision)
 
-#  define output_uint(N, Stream) __asm__ __volatile__("print %0, %1" : : "r"(N), "rI"((Stream) | (0 << 6)))
-#  define output_hex(N, Stream) __asm__ __volatile__("print %0, %1" : : "r"(N), "rI"((Stream) | (1 << 6)))
-#  define output_int(N, Stream) __asm__ __volatile__("print %0, %1" : : "r"(N), "rI"((Stream) | (2 << 6)))
-#  define output_char(N, Stream) __asm__ __volatile__("print %0, %1" : : "r"(N), "rI"((Stream) | (3 << 6)))
-
-# else
-#  warning "Don't know how to define debug_int/debug_float on this platform."
-# endif
+#define output_uint(N, Stream) mgsim_control(N, MGSCTL_TYPE_PRINT, MGSCTL_PRINT_UDEC, Stream)
+#define output_hex(N, Stream)  mgsim_control(N, MGSCTL_TYPE_PRINT, MGSCTL_PRINT_HEX, Stream)
+#define output_int(N, Stream)  mgsim_control(N, MGSCTL_TYPE_PRINT, MGSCTL_PRINT_SDEC, Stream)
+#define output_char(N, Stream) mgsim_control(N, MGSCTL_TYPE_PRINT, MGSCTL_PRINT_BYTE, Stream)
 
 # define output_string(S, Stream)                                       \
     do {								\

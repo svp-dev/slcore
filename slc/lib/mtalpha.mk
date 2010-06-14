@@ -10,6 +10,7 @@ MTALIB_CSRC = \
 	src/ctype.c \
 	src/dtoa_simple.c \
 	src/errno.c \
+	src/exit.c \
 	src/ffs.c \
 	src/fprintf.c \
 	src/fputc.c \

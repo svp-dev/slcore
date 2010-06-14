@@ -88,7 +88,10 @@ extern void* dlrealloc(void*, size_t);
 
 void abort(void);
 
-/* missing: atexit, exit, _Exit */
+/* missing: atexit */
+void exit(int status);
+void _Exit(int status);
+
 
 extern char *getenv(const char *name);
 

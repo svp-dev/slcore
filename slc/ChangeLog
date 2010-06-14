@@ -1,3 +1,23 @@
+2010-06-14  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
+	Enhance the SL/MGSim interface.
+
+	The Microgrid simulator was recently modified to allow programs to
+	interact more with the simulation. With the increased functionality,
+	some extra encapsulation in the library becomes needed.
+
+	* tools/include/svp/mgsim.h: New. Encapsulates accesses to MGSim
+	control functions.
+	* tools/Makefile.am: List the new file.
+
+	* tools/include/svp/abort.h,
+	* tools/include/svp/testoutput.h,
+	* lib/include/svp/gfx.h: Use it.
+	
+	* lib/src/exit.c: New.
+	* lib/mtalpha.mk: List the new file.
+	* lib/mtalpha-sim/include/stdlib.h: Declare `exit' and `_Exit'.
+
 2010-06-13  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
 	Enhance TLS memory allocator.
