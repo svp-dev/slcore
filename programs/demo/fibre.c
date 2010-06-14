@@ -13,8 +13,8 @@
 //
 
 #include <svp/fibre.h>
-#include <cstdio.h>
-#include <cstddef.h>
+#include <stdio.h>
+#include <stddef.h>
 
 // SLT_RUN:
 // SLT_RUN: -f TEST.d1

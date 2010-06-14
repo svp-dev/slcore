@@ -219,8 +219,9 @@ def gencode(k):
 #include <svp/testoutput.h>
 #include "benchmark.h"
 #include <svp/fibre.h>
-#include <cassert.h>
-#include <cstdlib.h>
+#include <svp/fast_malloc.h>
+#include <assert.h>
+#include <stdlib.h>
 
 """
 

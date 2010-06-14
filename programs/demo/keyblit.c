@@ -45,8 +45,8 @@ unsigned long sprite[10] = {3, 11, 3, 22, 3, 3, 3, 33, 3, 3};
 
 #else //! SIMPLE_MAIN
 
-#include <cstdio.h>
-#include <cassert.h>
+#include <stdio.h>
+#include <assert.h>
 #include <svp/fibre.h>
 
 sl_def(printarray, void,

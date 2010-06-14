@@ -1,3 +1,34 @@
+2010-06-13  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
+	Use standard C header names in programs.
+
+	* benchmarks/blas/blasbench.h,
+	* benchmarks/blas/templates/xasum.c,
+	* benchmarks/blas/templates/xiamax.c,
+	* benchmarks/blas/templates/xnrm2.c,
+	* benchmarks/fft/fft-bench.c,
+	* benchmarks/lib/benchmark.c,
+	* benchmarks/livermore/kernel15.c,
+	* benchmarks/livermore/kernel2.c,
+	* benchmarks/livermore/kernel22.c,
+	* benchmarks/mandel/mandel.c,
+	* benchmarks/quicksort/am-quicksort-iterative.c,
+	* benchmarks/quicksort/am-quicksort.c,
+	* benchmarks/quicksort/sah-quicksort.c,
+	* benchmarks/sha/sha1.c,
+	* benchmarks/sha/sha1_alt.c,
+	* demo/10threads.c,
+	* demo/answer.c,
+	* demo/bitblt.c,
+	* demo/env.c,
+	* demo/fibonacci.c,
+	* demo/fibre.c,
+	* demo/helloworld.c,
+	* demo/keyblit.c,
+	* demo/pi.c,
+	* demo/sep.c,
+	* benchmarks/livermore/ll-generate.py (gencode): Do it.
+
 2010-05-31  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
 	Update check expectations.

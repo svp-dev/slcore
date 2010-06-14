@@ -15,9 +15,10 @@
 #include <svp/perf.h>
 #include <svp/slr.h>
 #include <svp/testoutput.h>
-#include <cstdlib.h>
-#include <cstdio.h>
-#include <cstdlib.h>
+#include <svp/fast_malloc.h>
+#include <stdlib.h>
+#include <stdio.h>
+#include <stdlib.h>
 #include "benchmark.h"
 
 #ifdef puts

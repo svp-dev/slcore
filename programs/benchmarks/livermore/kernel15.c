@@ -94,7 +94,7 @@
 //         }
 //---------------------------------
 
-#include <cmath.h>
+#include <math.h>
 
 #define NG 7
 #define SQRT sqrt

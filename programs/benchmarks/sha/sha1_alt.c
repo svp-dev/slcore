@@ -12,8 +12,8 @@
 // `COPYING' file in the root directory.
 //
 
-#include <cstdint.h>
-#include <cstddef.h>
+#include <stdint.h>
+#include <stddef.h>
 #include <svp/slr.h>
 #include <svp/assert.h>
 #include <svp/delegate.h>

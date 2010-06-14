@@ -83,7 +83,7 @@ sl_def(outerk2, void,
 }
 sl_enddef
 
-#include <cmath.h>
+#include <math.h>
 
 sl_def(kernel2, void,
        sl_glparm(size_t, ncores),

@@ -12,8 +12,8 @@
 // `COPYING' file in the root directory.
 //
 
-#include <cmath.h>
-#include <cstdio.h>
+#include <math.h>
+#include <stdio.h>
 #include <svp/slr.h>
 
 slr_decl(slr_var(double, C, "the constant (default pi)"));

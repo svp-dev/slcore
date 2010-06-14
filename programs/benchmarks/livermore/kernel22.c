@@ -38,7 +38,7 @@
 //         }
 //---------------------------------
 
-#include <cmath.h>
+#include <math.h>
 
 sl_def(innerk22, void,
        sl_glfparm(double, fw)

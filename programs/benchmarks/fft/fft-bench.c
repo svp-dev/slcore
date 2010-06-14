@@ -15,8 +15,8 @@
 #include <svp/testoutput.h>
 #include <svp/fibre.h>
 #include <svp/perf.h>
-#include <cassert.h>
-#include <cstdlib.h>
+#include <assert.h>
+#include <stdlib.h>
 
 #include "benchmark.h"
 

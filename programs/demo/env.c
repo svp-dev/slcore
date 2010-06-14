@@ -12,8 +12,8 @@
 // `COPYING' file in the root directory.
 //
 
-#include <cstdio.h>
-#include <cstdlib.h>
+#include <stdio.h>
+#include <stdlib.h>
 
 // XIGNORE: *:D
 sl_def(t_main, void)

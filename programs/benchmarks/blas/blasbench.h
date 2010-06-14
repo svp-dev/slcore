@@ -16,8 +16,8 @@
 # define SL_BENCHMARKS_BLAS_BLASBENCH_H
 
 #include <svp/testoutput.h>
-#include <cstdlib.h>
-#include <cassert.h>
+#include <stdlib.h>
+#include <assert.h>
 #include <svp/fibre.h>
 #include "benchmark.h"
 

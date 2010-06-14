@@ -12,8 +12,8 @@
 // `COPYING' file in the root directory.
 //
 
-#include <cstdio.h>
-#include <cassert.h>
+#include <stdio.h>
+#include <assert.h>
 #include <svp/slr.h>
 
 #define INT unsigned long

@@ -12,7 +12,7 @@
 // `COPYING' file in the root directory.
 //
 
-#include <cmath.h>
+#include <math.h>
 
 #define INT long
 

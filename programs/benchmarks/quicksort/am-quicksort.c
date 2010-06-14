@@ -12,7 +12,7 @@
 // `COPYING' file in the root directory.
 //
 
-#include <cstddef.h>
+#include <stddef.h>
 #include <svp/perf.h>
 #include <svp/iomacros.h>
 #include <svp/slr.h>

@@ -17,9 +17,9 @@
 #include <svp/fibre.h>
 #include <svp/gfx.h>
 #include <svp/sep.h>
-#include <cassert.h>
-#include <cstdlib.h>
-#include <cmath.h>
+#include <assert.h>
+#include <stdlib.h>
+#include <math.h>
 
 #include "benchmark.h"
 

@@ -12,7 +12,7 @@
 // `COPYING' file in the root directory.
 //
 
-#include <cstdio.h>
+#include <stdio.h>
 
 sl_def(foo, void, sl_shparm(int, a))
 {
