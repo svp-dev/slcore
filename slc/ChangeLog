@@ -1,5 +1,12 @@
 2010-06-14  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	Minor fixes to quiet compiler warnings.
+
+	* lib/src/strncmp.c,
+	* lib/src/vprintf.c: Use the standard C header names.
+
+2010-06-14  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	Make the TLS memory allocator the default allocator on MT-Alpha.
 
 	* lib/src/malloc_wrappers.c: Remove.
