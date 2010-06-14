@@ -394,15 +394,6 @@ class TFun_2_HydraCFunctions(DefaultVisitor):
         return flatten(et.loc, " return 0 ")
 
 
-    def visit_program(self, p):
-        # TODO: remove the absolute path below
-        p._items.insert(0, Opaque("#include <stdlib.h>"))
-        p._items.insert(0, Opaque("#include \"/home/amatei/src/thesis/trunk/runtime/rt.h\""))
-        super(TFun_2_HydraCFunctions, self).visit_program(p)  # TODO: do I need
-                                                              # this call?
-        return p
-
-
 __all__ = ["Create_2_HydraCall", "TFun_2_HydraCFunctions"]
 
 

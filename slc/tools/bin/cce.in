@@ -43,6 +43,9 @@ CC_MTSPARC=$UTCC_MTSPARC
 AR_MTSPARC=${AR_MTSPARC_OVERRIDE:-@AR_MTSPARC@}
 RANLIB_MTSPARC=${RANLIB_MTSPARC_OVERRIDE:-@RANLIB_MTSPARC@}
 
+PTHREAD_CC=${PTHREAD_CC_OVERRIDE:-@PTHREAD_CC@}
+PTHREAD_CFLAGS=${PTHREAD_CFLAGS_OVERRIDE:-@PTHREAD_CFLAGS@}
+PTHREAD_LIBS=${PTHREAD_LIBS_OVERRIDE:-@PTHREAD_LIBS@}
 
 version=@slc_version@
 bugreports=@bugreports@
@@ -251,10 +254,11 @@ case $slc_dialect-$slc_arch in
     utc-x) slc_compiler=($CC_HOST -E) ;;
     *-x) slc_compiler=("$scu_helper" compile) ;;
     *-host)
-	case $slc_complang in
-	    cpp) slc_compiler=($CXX_HOST) ;;
-	    c)   slc_compiler=($CC_HOST -std=gnu99) ;;
-	    utc) echo "$basename: warning: no compiler for $dialect-$arch" >&2 ;;
+	case $slc_complang-$slc_os in
+            c-*hrt) slc_compiler=($PTHREAD_CC $PTHREAD_CFLAGS -std=gnu99) ;;
+	    cpp-*) slc_compiler=($CXX_HOST) ;;
+	    c-*)   slc_compiler=($CC_HOST -std=gnu99) ;;
+	    *) echo "$basename: warning: no compiler for $dialect-$arch" >&2 ;;
 	esac
 	slc_filter1=(cp)
 	slc_filter2=(cp)
@@ -319,15 +323,6 @@ case $slc_arch in
 	      ;;
 esac
 
-# Extra defines
-case $slc_arch in
-    mtalpha)
-        slc_cflags+=(-mcpu=21264a -fno-math-errno -fno-trapping-math)
-        ;;
-    *)
-	;;
-esac
-slc_ppflags+=(-DUSE_C_DIVIDE)
 
 # Propagate selection to programs/libraries
 slc_ppflags+=( \
@@ -337,6 +332,16 @@ slc_ppflags+=( \
     -D__slc_os_${slc_os//[^a-zA-Z0-9]/_}__ )
 
 # Extra flag selection
+
+case $slc_arch in
+    mtalpha)
+        slc_cflags+=(-mcpu=21264a -fno-math-errno -fno-trapping-math)
+        ;;
+    *)
+	;;
+esac
+slc_ppflags+=(-DUSE_C_DIVIDE)
+
 case $slc_arch-$slc_os in
     mt*-sim)
         slc_ppflags+=(-D__mt_freestanding__ -D__WORDSIZE=64)
@@ -349,7 +354,8 @@ case $slc_arch-$slc_os in
 	slc_debug_flags=()
 	;;
     host-host-hrt)
-        slc_cflags+=(-static -pthread)
+        slc_ppflags+=(-D_XOPEN_SOURCE) # for ucontext
+        slc_ldflags+=($PTHREAD_LIBS -static)
         ;;
     *)
 	slc_debug_flags=(${slc_debug_flags:+$slc_debug_flags})

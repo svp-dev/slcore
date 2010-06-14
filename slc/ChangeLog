@@ -1,5 +1,32 @@
 2010-06-11  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	Extend build process for `hrt' targets.
+
+	* build-aux/slc.m4: New conditional ENABLE_SLC_HRT.
+
+	* build-aux/ax_pthread.m4: Import from the Autoconf archive.
+	* configure.ac: Use it.
+
+	* tools/bin/Makefile.am,
+	* tools/bin/cce.in: Propagate compiler/flags for pthreads to use
+	with `hrt' targets.
+
+	* tools/lib/host-host-hrt/include/sl_hrt.h,
+	* tools/lib/host-host-hrt/tc.c: New (placeholders).
+
+	* tools/lib/host-host-hrt/slrt.c,
+	* tools/lib/hrt.mk: New.
+
+	* tools/lib/Makefile.am: Use `hrt.mk' too.
+
+	* tools/lib/t-spr/include/sl_support.h: Include `sl_hrt.h' when
+	appropriate.
+
+	* tools/lib/slc/am/visitors.py: Remove `visit_programs', since the
+	runtime header is now included automatically.
+
+2010-06-11  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	Merge contribution from Andrei Matei: new `hrt' back-end.
 
 	* tools/lib/slc/am/__init__.py,

@@ -63,6 +63,7 @@ AC_PROG_CC
 AC_PROG_CXX
 AC_PROG_RANLIB
 AC_PROG_LN_S
+AX_PTHREAD
 
 ######### Options #########
 

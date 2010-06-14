@@ -39,6 +39,9 @@ edit_scripts = $(SED) \
 	       -e 's|@UTCC_MTSPARC[@]|$(UTCC_MTSPARC)|g' \
 	       -e 's|@AR_MTSPARC[@]|$(AR_MTSPARC)|g' \
 	       -e 's|@RANLIB_MTSPARC[@]|$(RANLIB_MTSPARC)|g' \
+	       -e 's|@PTHREAD_CC[@]|$(PTHREAD_CC)|g' \
+	       -e 's|@PTHREAD_CFLAGS[@]|$(PTHREAD_CFLAGS)|g' \
+	       -e 's|@PTHREAD_LIBS[@]|$(PTHREAD_LIBS)|g' \
 	       -e 's|@python[@]|$(PYTHON)|g' \
 	       -e 's|@slc_libdir[@]|$(pkglibdir)|g' \
 	       -e 's|@slc_incdir[@]|$(pkgdatadir)/include|g' \
