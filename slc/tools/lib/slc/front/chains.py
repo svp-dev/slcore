@@ -14,6 +14,7 @@ from ..lower.flavorseta import *
 from ..lower.rename import *
 from ..lower.remflavors import *
 from ..mtalpha.visitors import *
+from ..am.visitors import *
 
 _common_prefix = [
     ('walk', DefaultVisitor()),
@@ -38,6 +39,13 @@ _chains = {
         ('flattencr',Create_2_Loop()),
         ('flattenfun',TFun_2_CFun()),
         ] + _common_suffix,
+    'hrt' : _common_prefix + [
+        ('lseta', LinkSetA()),
+        ('autores', AutoResolve()),
+        ('flattencr',Create_2_HydraCall()),
+        ('flattenfun',TFun_2_HydraCFunctions()),
+        ] + _common_suffix,
+    # FIXME: support hrt+seq here
     'mta' : _common_prefix + [
         ('lseta', LinkSetA()),
         ('autores', AutoResolve()),

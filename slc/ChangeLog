@@ -1,5 +1,14 @@
 2010-06-11  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	Merge contribution from Andrei Matei: new `hrt' back-end.
+
+	* tools/lib/slc/am/__init__.py,
+	* tools/lib/slc/am/visitors.py: New.
+
+	* tools/lib/slc/front/chains.py: Define new chain `hrt'.
+
+2010-06-11  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	Introduce new `hrt' targets.
 
 	* tools/bin/cce.in: Recognize aliases `hrt', `hrt_n' and
