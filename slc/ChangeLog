@@ -1,5 +1,17 @@
 2010-06-13  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	Enhance TLS memory allocator.
+
+	* lib/src/tlsmalloc/Makefile.am,
+	* lib/src/tlsmalloc/tls_arch_mtalpha.h,
+	* lib/src/tlsmalloc/tls_arch_pthread.h,
+	* lib/src/tlsmalloc/tlsconfig.h,
+	* lib/src/tlsmalloc/tlsmalloc.c,
+	* lib/src/tlsmalloc/tlsmalloc.h,
+	* lib/src/tlsmalloc/tlsmcheck.c: Improve.
+
+2010-06-13  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	Initial implementation of TLS memory allocator.
 
 	* lib/src/tlsmalloc/Makefile.am,

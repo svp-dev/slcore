@@ -11,8 +11,15 @@
 /* EXT_MALLOC(P): delegate to the external memory allocator */
 #define EXT_MALLOC fast_malloc
 
+/* EXT_REALLOC(P): delegate to the external memory allocator */
+#define EXT_REALLOC fast_realloc
+
 /* MAP_STORAGE(P, Sz): map storage, return != 0 if successful */
 #define MAP_STORAGE(P, Sz)  1  /* always succeed here */
+#define MAP_STORAGE_FAIL 0
+
+#undef RELEASE_STORAGE /* define to release storage to the environment */
+
 
 static forceinline
 void *TLS_BOTTOM(void) {
@@ -27,6 +34,26 @@ void *TLS_TOP(void) {
     asm("ldfp %0" : "=r"(ret));
     return ret;
 }
+
+/* TLS_BASE(): return base address of all TLS spaces */
+static forceinline
+void *TLS_BASE(void)
+{
+    return (void*)(1ULL << 63);
+}
+
+/* TLS_NEXT(P): return address of space after P, 0 if no more space */
+static forceinline
+void *TLS_NEXT(void *p)
+{
+    uintptr_t tls_size = (uintptr_t)TLS_TOP() - (uintptr_t)TLS_BOTTOM();
+    char *next = ((char*)p) + tls_size;
+    if (!(((uintptr_t)next >= (uintptr_t)TLS_BASE()) &&
+          ((uintptr_t)next <= ~(uintptr_t)0)))
+        return 0;
+    return next;
+}
+
 
 /* IS_TLS_PTR(P): true if P is managed by this heap allocator */
 static forceinline
