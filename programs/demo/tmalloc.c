@@ -27,7 +27,7 @@ sl_def(dofree, void)
 }
 sl_enddef
 
-slr_decl(slr_var(int, mallinfo, "set to print malloc info between alloc and free"),
+slr_decl(slr_var(int, mstat, "set to print malloc info between alloc and free"),
          slr_var(size_t, N, "number of alloc/free pairs to run"),
          slr_var(long, B,   "block size for creates"));
 
@@ -49,15 +49,15 @@ sl_def(t_main, void)
     long B = 0;
     if (slr_len(B)) B = slr_get(B)[0];
 
-    int mallinfo = 0;
-    if (slr_len(mallinfo)) mallinfo = 1;
+    int mstat = 0;
+    if (slr_len(mstat)) mstat = 1;
 
     mtperf_start_interval(a, 0, 0, "alloc");
     sl_create(,,,N,,B,,doalloc); sl_sync();
     mtperf_finish_interval(a, 0);
 
 #ifdef __mt_freestanding__
-    if (mallinfo) tls_malloc_stats();
+    if (mstat) tls_malloc_stats();
 #endif
 
     mtperf_start_interval(a, 1, 0, "free");

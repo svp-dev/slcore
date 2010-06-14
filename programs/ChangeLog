@@ -1,5 +1,11 @@
 2010-06-14  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	Enhance the `tmalloc' demo.
+
+	* demo/tmalloc.c: `mallinfo' -> `mstat' (more accurate).
+
+2010-06-14  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	Minor fixes to quiet compiler warnings.
 
 	* programs/benchmarks/sha/sha1.c,
