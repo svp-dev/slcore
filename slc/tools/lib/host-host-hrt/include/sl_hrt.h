@@ -1,10 +1,14 @@
-#ifndef RT_H
-#define RT_H
+#ifndef SL_HRT_H
+#define SL_HRT_H
 
+#ifndef _XOPEN_SOURCE
+#define _XOPEN_SOURCE /* for ucontext */
+#endif
 #include <ucontext.h>
 #include <pthread.h>
 #include <signal.h>
 #include <assert.h>
+
 void exit(int);
 
 struct tc_t;

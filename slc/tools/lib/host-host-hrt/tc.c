@@ -1,3 +1,4 @@
+#include "sl_hrt.h"
 #include <ucontext.h>
 #include <stdio.h>
 #include <unistd.h>
@@ -8,7 +9,6 @@
 #include <string.h>
 #include <stdarg.h>
 #include <signal.h>
-#include "rt.h"
 
 
 #define CACHE_LINE_SIZE 128  // in bytes

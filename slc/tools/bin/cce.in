@@ -354,7 +354,6 @@ case $slc_arch-$slc_os in
 	slc_debug_flags=()
 	;;
     host-host-hrt)
-        slc_ppflags+=(-D_XOPEN_SOURCE) # for ucontext
         slc_ldflags+=($PTHREAD_LIBS -static)
         ;;
     *)
