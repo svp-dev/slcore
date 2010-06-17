@@ -42,6 +42,7 @@ m4_define([[sl_glparm_mutable]], [[_sl_doparm([[glparm_mutable]],[[$1]],[[$2]])]
 
 m4_define([[sl__static]], [[[[""", {'type':'attr', 'name':'static'}, r"""]]]])
 m4_define([[sl__naked]], [[[[""", {'type':'attr', 'name':'naked', 'flavor':r""" $1 """}, r"""]]]])
+m4_define([[sl__exclusive]], [[[[""", {'type':'attr', 'name':'exclusive'}, r"""]]]])
 
 m4_define([[sl_def]],[[m4_dnl
 m4_ifdef([[_sl_increate]],[[m4_fatal(missing sync after create)]])m4_dnl

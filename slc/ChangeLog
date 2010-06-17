@@ -1,5 +1,18 @@
 2010-06-17  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	Extend language for exclusive creates.
+
+	* tools/lib/t-spr/slimpl.m4: New attribute ``sl__exclusive``.
+
+	* tools/lib/slc/lower/split.py (SplitCreates.visit_lowcreate):
+	Avoid generating alternative when delegating exclusively.
+
+	* tools/lib/slc/mtalpha/visitors.py
+	(Create_2_MTACreate.visit_lowcreate): Do not warn when delegating
+	exclusively and no alternative is available.
+
+2010-06-17  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	Enhance the place allocator.
 
 	* lib/include/svp/sep.h: Define new policies for exclusive places

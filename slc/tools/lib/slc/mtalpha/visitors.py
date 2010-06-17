@@ -75,8 +75,8 @@ class Create_2_MTACreate(ScopedVisitor):
                   usefvar + ') : "rI"(' + CVarUse(decl = cr.cvar_place) + '));')
         
         if lc.target_next is None:
-            # FIXME: ignore warning if the create is guaranteed to wait
-            warn("this create may fail and no alternative is available", cr)
+            if cr.extras.get_attr('exclusive', None) is None:
+                warn("this create may fail and no alternative is available", cr)
         else:
             newbl += (flatten(cr.loc, ' if (!__builtin_expect(!!(') + 
                       usefvar + '), 1)) ' + 

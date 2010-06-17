@@ -17,6 +17,9 @@ class ExampleOracle(object):
             else:
                 die("unsupported naked specifier: %s" % n.flavor, cr)
         
+        if cr.extras.get_attr('exclusive', None):
+            return ['cmta']
+
         return ['cmta', 'cseq']
 
     def flavors_for_fun(self, fd):
