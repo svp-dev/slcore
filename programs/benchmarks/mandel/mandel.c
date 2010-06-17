@@ -118,12 +118,12 @@ sl_def(initialize, void,
 
 #if SVP_HAS_SEP
   unsigned ncores_wanted = sl_getp(st)->place->ncores;
-  sl_create(,root_sep->sep_place|1,,,,,, *root_sep->sep_alloc,
+  sl_create(,root_sep->sep_place,,,,,sl__exclusive, *root_sep->sep_alloc,
 	    sl_glarg(struct SEP*, , root_sep),
 	    sl_glarg(unsigned long, , SAL_EXACT|ncores_wanted),
 	    sl_sharg(struct placeinfo*, p1, 0));
   sl_sync();
-  sl_create(,root_sep->sep_place|1,,,,,, *root_sep->sep_alloc,
+  sl_create(,root_sep->sep_place,,,,,sl__exclusive, *root_sep->sep_alloc,
 	    sl_glarg(struct SEP*, , root_sep),
 	    sl_glarg(unsigned long, , SAL_DONTCARE),
 	    sl_sharg(struct placeinfo*, p2, 0));
@@ -247,7 +247,7 @@ sl_def(mandel, void,
 #endif
 #ifdef DISPLAY_DURING_COMPUTE
 #ifndef PARALLEL_DISPLAY
-  sl_create(,excl_place,,,,,,
+  sl_create(,excl_place,,,,,sl__exclusive,
 	    displayPoint,
 	    sl_glarg(uint16_t, , dx),
 	    sl_glarg(uint16_t, , dy),
@@ -326,11 +326,11 @@ sl_def(teardown, void,
   free(bdata->colors);
 #endif
 #if SVP_HAS_SEP
-  sl_create(,root_sep->sep_place|1,,,,,, *root_sep->sep_free,
+  sl_create(,root_sep->sep_place,,,,,sl__exclusive, *root_sep->sep_free,
 	    sl_glarg(struct SEP*, , root_sep),
 	    sl_glarg(struct placeinfo*, , bdata->p1));
   sl_sync();
-  sl_create(,root_sep->sep_place|1,,,,,, *root_sep->sep_free,
+  sl_create(,root_sep->sep_place,,,,,sl__exclusive, *root_sep->sep_free,
 	    sl_glarg(struct SEP*, , root_sep),
 	    sl_glarg(struct placeinfo*, , bdata->p2));
   sl_sync();

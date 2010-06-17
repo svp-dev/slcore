@@ -1,5 +1,12 @@
 2010-06-17  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	Use exclusive creates in benchmarks.
+
+	* benchmarks/lib/benchmark.c,
+	* benchmarks/mandel/mandel.c: Do it.
+
+2010-06-17  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	Enhance the `sep' demo.
 
 	* demo/sep.c: Test more combinations of policies. Also test

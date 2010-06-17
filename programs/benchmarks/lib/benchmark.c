@@ -90,7 +90,7 @@ sl_def(run_benchmark, void, sl_glparm(struct benchmark*, b))
 #if SVP_HAS_SEP
   {
     mtperf_start_interval(intervals, p, -1, "sep_alloc");
-    sl_create(,root_sep->sep_place|1,,,,,, *root_sep->sep_alloc,
+    sl_create(,root_sep->sep_place,,,,,sl__exclusive, *root_sep->sep_alloc,
 	      sl_glarg(struct SEP*, , root_sep),
 	      sl_glarg(unsigned long, , SAL_EXACT|ncores),
 	      sl_sharg(struct placeinfo*, p, 0));
@@ -106,7 +106,7 @@ sl_def(run_benchmark, void, sl_glparm(struct benchmark*, b))
 
     if (sep_dump) {
       puts("done\n# SEP status dump after initial allocation:\n");
-      sl_create(,root_sep->sep_place|1,,,,,, *root_sep->sep_dump_info,
+      sl_create(,root_sep->sep_place,,,,,, *root_sep->sep_dump_info,
 		sl_glarg(struct SEP*, , root_sep));
       sl_sync();
     }
