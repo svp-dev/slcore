@@ -22,6 +22,7 @@
 
 #include <stddef.h>
 #include <stdint.h>
+#include <stdbool.h>
 
 // information returned by sep_alloc etc.
 struct placeinfo {
@@ -35,6 +36,10 @@ struct placeinfo {
     uint16_t nfamilies_per_core;
     // number of thread table entries per core
     uint16_t nthreads_per_core;
+    // whether the place is shared or not
+    bool shared;
+    // whether the place is exclusive or not
+    bool exclusive;
 };
 
 // place where all the sep_alloc calls should
@@ -48,6 +53,8 @@ enum sep_alloc_policy {
   SAL_MIN = 1UL << 62,        // at least specified #cores avail
   SAL_MAX = 2UL << 62,        // at most specified #cores avail
   SAL_EXACT = SAL_MIN | SAL_MAX,   // exactly specified #cores
+  SAL_EXCLUSIVE = 1UL << 61,   // whether creates will be exclusive
+  SAL_SHARED = 1UL << 60,      // whether the place can be shared between clients
 };
 
 struct SEP {

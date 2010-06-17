@@ -1,5 +1,16 @@
 2010-06-17  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	Enhance the place allocator.
+
+	* lib/include/svp/sep.h: Define new policies for exclusive places
+	and sharing.
+	
+	* lib/src/mtsep.c: Support allocation of exclusive and shared
+	places. Generate separate place identifiers for both. Properly
+	indicate that the root place is shared.
+
+2010-06-17  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	Whitespace.
 
 	* lib/src/mtsep.c: Re-indent. 

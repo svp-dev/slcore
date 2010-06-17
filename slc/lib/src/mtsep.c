@@ -12,8 +12,10 @@
 // `COPYING' file in the root directory.
 //
 
+#include <stdio.h>
 #include <stdint.h>
 #include <stdlib.h>
+#include <limits.h>
 #include <svp/sep.h>
 #include <svp/compiler.h>
 #include <svp/testoutput.h>
@@ -25,8 +27,10 @@
 struct listnode {
     struct placeinfo pi;
     struct listnode *next;
-    unsigned long l2_ncores;
-    int allocated;
+    size_t l2_ncores;
+    size_t sharecount;
+    sl_place_t pid;
+    sl_place_t soft_pid;
 };
 
 struct sep_data_t {
@@ -34,38 +38,280 @@ struct sep_data_t {
     size_t last_nonempty_pool;
     struct listnode  allplaces[MAX_NCORES];
     struct listnode* pools[L2_MAX_NCORES+1];
-    int irregular;
+    struct listnode* shared_pools[L2_MAX_NCORES+1];
+    struct listnode* shared_pools_excl[L2_MAX_NCORES+1];
+    bool irregular;
 };
 
 extern const struct placeinfo * __main_placeinfo;
 extern sl_place_t __main_place_id;
 
-__attribute__((always_inline))
 static
-unsigned long fast_log2(unsigned long ncores) {
-    /*
-      switch(ncores) {
-      case 0 ... 1: return 0;
-      case 2 ... 3: return 1;
-      case 4 ... 7: return 2;
-      case 8 ... 15: return 3;
-      default:
-      return 4;
-      }
-    */
-    
-    if (ncores >= 128) return 7;
-    if (ncores >= 64) return 6;
-    if (ncores >= 32) return 5;
-    if (ncores >= 16) return 4;
-    if (ncores >= 8) return 3;
-    if (ncores >= 4) return 2;
-    if (ncores >= 2) return 1;
-    return 0; 
-    //  register unsigned l = 0;
-    //  while (ncores >>= 1) ++l;
-    // return l;
+size_t fast_log2(size_t ncores) {
+    ncores |= 1;
+    ncores -= 1;
+    size_t l2 = __builtin_clzl(ncores);
+    l2 = sizeof(size_t)*CHAR_BIT - l2 - 1;
+    return (l2 < L2_MAX_NCORES) ? l2 : L2_MAX_NCORES ;
 }
+
+static
+struct listnode *try_get_dontcare(struct listnode **pools, 
+                                  bool remove_from_pool,
+                                  size_t lp)
+{
+    size_t i;
+    struct listnode *p;
+    for (i = 0; i <= lp; ++i) {
+        p = pools[i]; 
+        if (p) {
+            if (likely(remove_from_pool)) pools[i] = p->next;
+            return p;
+        }
+    }
+    return 0;
+}
+
+static
+struct listnode *try_get_exact(struct listnode **pools, 
+                               bool remove_from_pool,
+                               size_t lp,
+                               size_t l2_pa,
+                               size_t ncores,
+                               bool irregular)
+{
+    struct listnode **lprev;
+    struct listnode *p;
+
+    if (likely(l2_pa <= lp)) {
+        if (likely(!irregular)) {
+            if (unlikely(ncores != (1 << l2_pa))) 
+                return 0;
+            p = pools[l2_pa];
+            if (likely(remove_from_pool)) { 
+                pools[l2_pa] = p->next;
+            }
+            return p;
+        } else {
+            for (lprev = &pools[l2_pa], p = pools[l2_pa]; p; lprev = &p->next, p = p->next)
+                if (p->pi.ncores == ncores) {
+                    if (likely(remove_from_pool)) { *lprev = p->next; }
+                    return p;
+                }
+        }
+    }
+    return 0;
+}
+
+static
+struct listnode *try_get_min(struct listnode **pools, 
+                             bool remove_from_pool,
+                             size_t lp,
+                             size_t l2_pa,
+                             size_t ncores,
+                             bool irregular)
+{
+    struct listnode *p;
+    struct listnode **lprev;
+    size_t i;
+
+    if (likely(!irregular)) {
+        if (unlikely(ncores != (1 << l2_pa))) ++l2_pa;
+
+        for (i = l2_pa; i <= lp; ++i) {
+            p = pools[i]; 
+            if (p) {
+                if (likely(remove_from_pool)) { pools[i] = p->next; }
+                return p;
+            }
+        }
+    } else {
+        for (i = l2_pa; i <= lp; ++i)
+            for (lprev = &pools[i], p = pools[i]; p; lprev = &p->next, p = p->next)
+                if (p->pi.ncores >= ncores)
+                {
+                    if (likely(remove_from_pool)) { *lprev = p->next; }
+                    return p;
+                }
+    }
+    return 0;
+}
+
+static
+struct listnode *try_get_max(struct listnode **pools, 
+                             bool remove_from_pool,
+                             size_t lp,
+                             size_t l2_pa,
+                             size_t ncores,
+                             bool irregular)
+{
+    struct listnode **lprev;
+    struct listnode *p;
+    size_t i;
+
+    if (likely(l2_pa <= lp)) {
+        i = l2_pa;
+        if (likely(!irregular)) {
+            do {
+                p = pools[i]; 
+                if (p) {
+                    if (likely(remove_from_pool)) { pools[i] = p->next; }
+                    return p;
+                }
+            } while(i--);
+        }
+        else {
+            do {
+                for (lprev = &pools[i], p = pools[i]; p; lprev = &p->next, p = p->next)
+                    if (p->pi.ncores <= ncores) {
+                        if (likely(remove_from_pool)) { *lprev = p->next; }
+                        return p;
+                    }
+            } while(i--);
+        }
+    }
+    return 0;
+}
+
+static
+struct listnode* try_get_policy(struct listnode **pools, 
+                                bool remove_from_pool,
+                                size_t lp,
+                                size_t l2_pa,
+                                size_t ncores,
+                                bool irregular,
+                                enum sep_alloc_policy policy)
+{
+    struct listnode *p = 0;
+    switch(policy) {
+    case SAL_EXACT:
+        p = try_get_exact(pools, remove_from_pool, lp, l2_pa, ncores, irregular);
+        break;
+    case SAL_MIN:
+        p = try_get_min(pools, remove_from_pool, lp, l2_pa, ncores, irregular);
+        break;
+    case SAL_MAX:
+        p = try_get_max(pools, remove_from_pool, lp, l2_pa, ncores, irregular);
+        break;
+    }
+    return p;
+}
+
+static
+void makeexcl(struct listnode *p)
+{
+    if (!p->pi.exclusive) {
+        p->pi.pid = p->pid | 8 /* suspend */ | 6 /* delegate */ | 1 /* exclusive */;
+        p->pi.soft_pid = 0;
+        p->pi.exclusive = true;
+    }
+}
+
+static
+void makenormal(struct listnode *p)
+{
+    p->pi.pid = p->pid | 8 /* suspend */ | 6 /* delegate */;
+    p->pi.soft_pid = p->pid | 6 /* delegate */;
+    p->pi.exclusive = false;
+}
+
+static
+void makeshared(struct listnode **pools, struct listnode *p)
+{
+    if (!p->pi.shared) {
+        p->pi.shared = true;
+        p->next = pools[p->l2_ncores];
+        pools[p->l2_ncores] = p;
+    }
+}
+
+static
+struct listnode *alloc_policy(struct sep_data_t *sd,
+                              enum sep_alloc_policy policy,
+                              size_t lp,
+                              size_t l2_pa,
+                              size_t ncores,
+                              bool irregular,
+                              bool exclusive, bool canshare)
+{
+    struct listnode *p = 0;
+    if (unlikely(exclusive)) {
+        if (likely(canshare)) {
+            p = try_get_policy(sd->shared_pools_excl, false, lp, l2_pa, ncores, irregular, policy);
+            if (!p) p = try_get_policy(sd->pools, true, lp, l2_pa, ncores, irregular, policy);
+            if (likely(p)) { 
+                makeexcl(p);
+                makeshared(sd->shared_pools_excl, p);
+            }
+        }
+        else {
+            p = try_get_policy(sd->pools, true, lp, l2_pa, ncores, irregular, policy);
+            if (likely(p)) { 
+                makeexcl(p);
+            }
+        }
+    } 
+    else {
+        if (likely(canshare)) {
+            p = try_get_policy(sd->shared_pools, false, lp, l2_pa, ncores, irregular, policy);
+            if (!p) p = try_get_policy(sd->pools, true, lp, l2_pa, ncores, irregular, policy);
+            if (likely(p)) { 
+                makenormal(p);
+                makeshared(sd->shared_pools, p);
+            }
+        }
+        else {
+            p = try_get_policy(sd->pools, true, lp, l2_pa, ncores, irregular, policy);
+            if (likely(p)) { 
+                makenormal(p);
+            }
+        }
+    }
+    return p;
+}                              
+
+static
+struct listnode *alloc_dontcare(struct sep_data_t *sd,
+                                size_t lp,
+                                bool exclusive, 
+                                bool canshare)
+{
+    struct listnode *p = 0;
+    if (unlikely(exclusive)) {
+        if (likely(canshare)) {
+            p = try_get_dontcare(sd->shared_pools_excl, false, lp);
+            if (!p) p = try_get_dontcare(sd->pools, true, lp);
+            if (likely(p)) { 
+                makeexcl(p);
+                makeshared(sd->shared_pools_excl, p);
+            }
+        }
+        else {
+            p = try_get_dontcare(sd->pools, true, lp);
+            if (likely(p)) { 
+                makeexcl(p);
+            }
+        }
+    } 
+    else {
+        if (likely(canshare)) {
+            p = try_get_dontcare(sd->shared_pools, false, lp);
+            if (!p) p = try_get_dontcare(sd->pools, true, lp);
+            if (likely(p)) { 
+                makenormal(p);
+                makeshared(sd->shared_pools, p);
+            }
+        }
+        else {
+            p = try_get_dontcare(sd->pools, true, lp);
+            if (likely(p)) { 
+                makenormal(p);
+            }
+        }
+    }
+    return p;
+}
+
 
 
 sl_def(sep_alloc,
@@ -77,68 +323,26 @@ sl_def(sep_alloc,
     struct sep_data_t* sd = (struct sep_data_t*)(void*)sl_getp(sep);
     int i;
     struct listnode *p = 0;
-    struct listnode **prev = 0;
-    unsigned long policy = sl_getp(policy) & SAL_EXACT;
-    unsigned long policy_arg = sl_getp(policy) & 0x3ff;
+    size_t policy = sl_getp(policy) & SAL_EXACT;
+    size_t ncores = sl_getp(policy) & 0x3ff;
+    bool canshare = sl_getp(policy) & SAL_SHARED;
+    bool exclusive = sl_getp(policy) & SAL_EXCLUSIVE;
 
     size_t lp = sd->last_nonempty_pool;
     if (policy == SAL_DONTCARE) {
-        for (i = 0; i <= lp; ++i) {
-            prev = &sd->pools[i];
-            p = sd->pools[i]; 
-            if (p) goto done_yes;
-        }
+        p = alloc_dontcare(sd, lp, exclusive, canshare);
     } else {
-        unsigned long l2_pa = fast_log2(policy_arg);
-        int irregular = sd->irregular;
-
-        if (policy == SAL_EXACT) {
-            if (unlikely(l2_pa > lp)) goto done_no;
-            if (likely(!irregular)) {
-                if (unlikely(policy_arg != (1 << l2_pa))) goto done_no;
-                prev = &sd->pools[l2_pa];
-                p = sd->pools[l2_pa]; 
-                if (p) goto done_yes;
-            } else {
-                for (prev = &sd->pools[l2_pa], p = sd->pools[l2_pa]; p; prev = &p->next, p = p->next)
-                    if (p->pi.ncores == policy_arg) goto done_yes;
-            }
-        } else if (policy == SAL_MIN) {
-            if (likely(!irregular)) {
-                if (unlikely(policy_arg != (1 << l2_pa))) ++l2_pa;
-                for (i = l2_pa; i <= lp; ++i) {
-                    prev = &sd->pools[i];
-                    p = sd->pools[i]; 
-                    if (p) goto done_yes;
-                }
-            } else {
-                for (i = l2_pa; i <= lp; ++i)
-                    for (prev = &sd->pools[i], p = sd->pools[i]; p; prev = &p->next, p = p->next)
-                        if (p->pi.ncores >= policy_arg) goto done_yes;
-            }
-        } else if (policy == SAL_MAX) {
-            if (unlikely(l2_pa > lp)) goto done_no;
-            if (likely(!irregular))
-                for (i = l2_pa; i >= 0; --i) {
-                    prev = &sd->pools[i];
-                    p = sd->pools[i]; 
-                    if (p) goto done_yes;
-                }
-            else 
-                for (i = l2_pa; i >= 0; --i)
-                    for (prev = &sd->pools[i], p = sd->pools[i]; p; prev = &p->next, p = p->next)
-                        if (p->pi.ncores <= policy_arg) goto done_yes;
-        }
+        size_t l2_pa = fast_log2(ncores);
+        bool irregular = sd->irregular;
+        p = alloc_policy(sd, policy, lp, l2_pa, ncores, irregular, exclusive, canshare);
     }
 
-done_no:
-    sl_setp(result, (void*)0);  
-    sl_end_thread;
-done_yes:
-    p->allocated = 1;
-    *prev = p->next;
-  
-    sl_setp(result, &p->pi);
+    if (likely(p)) {
+        ++(p->sharecount);
+        sl_setp(result, &p->pi);
+    }
+    else
+        sl_setp(result, 0);
 }
 sl_enddef
 
@@ -150,9 +354,25 @@ sl_def(sep_free, void,
     struct listnode* n = (struct listnode*)(void*)sl_getp(p);
 
     size_t l2_ncores = n->l2_ncores;
-    n->next = sd->pools[l2_ncores];
-    sd->pools[l2_ncores] = n; 
-    n->allocated = 0;
+    --(n->sharecount);
+    if (n->sharecount == 0)
+    {
+        if (n->pi.shared)
+        {
+            // was shared, need to remove from shared pool
+            struct listnode **spools = n->pi.exclusive ? sd->shared_pools_excl : sd->shared_pools;
+            struct listnode **prev;
+            struct listnode *p;
+            for (prev = &spools[n->l2_ncores], p = spools[n->l2_ncores]; 
+                 p; prev = &p->next, p = p->next)
+                if (p == n) { *prev = p->next; break; }
+        }
+
+        n->pi.shared = false;
+        n->pi.exclusive = false;
+        n->next = sd->pools[l2_ncores];
+        sd->pools[l2_ncores] = n; 
+    }
 }
 sl_enddef
 
@@ -161,17 +381,15 @@ sl_def(sep_dump_info, void,
 {
     int i;
     struct sep_data_t* sd = (struct sep_data_t*)(void*)sl_getp(sep);
-    output_string("PID\t#cores\tallocated\n", 1);
-    for (i = 0; i < MAX_NCORES; ++i)
-        if (sd->allplaces[i].pi.pid) {
-            output_char('0', 1); output_char('x', 1);
-            output_hex(sd->allplaces[i].pi.pid, 1);
-            output_char('\t', 1);
-            output_uint(sd->allplaces[i].pi.ncores, 1);
-            output_char('\t', 1);
-            output_int(sd->allplaces[i].allocated, 1);
-            output_char('\n', 1);
+    printf("loc\t#cores\tshared\texcl\t#users\tpid\tspid\n");
+    for (i = 0; i < MAX_NCORES; ++i) {
+        struct listnode *p = &sd->allplaces[i];
+        if (p->sharecount) {
+            printf("%#lx\t%zu\t%d\t%d\t%zu\t%#lx\t%#lx\n",
+                   p->pid, p->pi.ncores, p->pi.shared, p->pi.exclusive, p->sharecount,
+                   p->pi.pid, p->pi.soft_pid);
         }
+    }
 }
 sl_enddef
 
@@ -182,7 +400,10 @@ static struct sep_data_t root_sep_data = {
       &sep_dump_info, },
     0,
     { 0 },
-    { 0 }
+    { 0 },
+    { 0 },
+    { 0 },
+    0
 };
 
 struct SEP *root_sep = &root_sep_data.sep_info;
@@ -222,7 +443,7 @@ void sys_sep_init(void* init_parameters)
                 /* yes, add it to its pool */
                 struct listnode* n = &root_sep_data.allplaces[current_ring_id];
                 size_t ncores = n->pi.ncores;
-                unsigned long l2_nc = fast_log2(ncores);
+                size_t l2_nc = fast_log2(ncores);
                 n->l2_ncores = l2_nc;
                 n->next = root_sep_data.pools[l2_nc];
                 root_sep_data.pools[l2_nc] = n;
@@ -234,22 +455,32 @@ void sys_sep_init(void* init_parameters)
             current_ring_id = pc->core_info[i][1];
 
             /* start configuring the place */
-            sl_place_t the_pid = (pc->core_info[i][0] << 4) /* core id */
-                | 6 /* delegate, non-exclusive */;
+            sl_place_t the_pid = (pc->core_info[i][0] << 4) /* core id */;
 
-            root_sep_data.allplaces[current_ring_id].pi.pid = the_pid | 8 /* suspend */;
-            root_sep_data.allplaces[current_ring_id].pi.soft_pid = the_pid; 
+            root_sep_data.allplaces[current_ring_id].pid = the_pid;
 
             root_sep_data.allplaces[current_ring_id].pi.ncores = 1;
             root_sep_data.allplaces[current_ring_id].pi.nfamilies_per_core = *mgconf_ftes_per_core;
             root_sep_data.allplaces[current_ring_id].pi.nthreads_per_core = *mgconf_ttes_per_core;
 
             if (!root_sep_data.sep_info.sep_place) {
-                // first ring
-                // FIXME: if running on first core, pid = 0 so this may be reached multiple times.
-                root_sep_data.allplaces[current_ring_id].allocated = 1;
-                __main_place_id = root_sep_data.sep_info.sep_place = root_sep_data.allplaces[current_ring_id].pi.pid;
-                __main_placeinfo = &root_sep_data.allplaces[current_ring_id].pi;
+                // first time here
+                struct listnode *p = &root_sep_data.allplaces[current_ring_id];
+
+                p->sharecount = 1;
+                p->pi.pid = p->pid|8|6;
+                p->pi.soft_pid = p->soft_pid|6;
+                p->pi.shared = true;
+                p->pi.exclusive = false;
+                
+                // make shared: remove from normal pool, add to shared pool
+                root_sep_data.pools[p->l2_ncores] = p->next;
+                root_sep_data.shared_pools[p->l2_ncores] = p;
+                    
+                // share the first place with the SEP.
+                root_sep_data.sep_info.sep_place = p->pi.pid|8|6|1;
+                __main_place_id = p->pi.pid;
+                __main_placeinfo = &p->pi;
             }
         }
 
@@ -262,7 +493,7 @@ void sys_sep_init(void* init_parameters)
     /* add the last item to its pool */
     struct listnode* n = &root_sep_data.allplaces[current_ring_id];
     size_t ncores = n->pi.ncores;
-    unsigned long l2_nc = fast_log2(ncores);
+    size_t l2_nc = fast_log2(ncores);
     n->l2_ncores = l2_nc;
     n->next = root_sep_data.pools[l2_nc];
     root_sep_data.pools[l2_nc] = n;
