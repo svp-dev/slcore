@@ -1,5 +1,11 @@
 2010-06-17  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	Use exclusive create to allocate initial place.
+
+	* lib/src/mtinit.c: Do it.
+
+2010-06-17  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	Extend language for exclusive creates.
 
 	* tools/lib/t-spr/slimpl.m4: New attribute ``sl__exclusive``.

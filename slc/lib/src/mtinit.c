@@ -74,7 +74,7 @@ static noinline
 void sys_set_main_pid(unsigned req_ncores)
 {
     if (verbose_boot) output_string(" -> request to SEP...", 2);
-    sl_create(,PLACE_LOCAL,,,,,, *root_sep->sep_alloc,
+    sl_create(,PLACE_LOCAL,,,,, sl__exclusive, *root_sep->sep_alloc,
               sl_glarg(struct SEP*, , root_sep),
               sl_glarg(unsigned long, , SAL_EXACT | req_ncores),
               sl_sharg(struct placeinfo*, p, 0));
