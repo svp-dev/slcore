@@ -1,3 +1,9 @@
+2010-06-17  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
+	Whitespace.
+
+	* lib/src/mtsep.c: Re-indent. 
+
 2010-06-14  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
 	* doc/NEWS.txt: Initialize for 3.1.x.
