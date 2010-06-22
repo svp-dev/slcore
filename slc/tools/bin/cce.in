@@ -395,6 +395,10 @@ case $slc_os in
             if test -r $ldir; then
 	        slc_ldflags+=("-L$ldir")
             fi
+            ldir=$d/$slc_arch-$slc_os
+            if test -r $ldir; then
+	        slc_ldflags+=("-L$ldir")
+            fi
         done
 	if test "$slc_use_libsl" != "no"; then
             slc_ldflags+=("-lsl")

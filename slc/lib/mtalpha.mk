@@ -52,6 +52,7 @@ MTALIB_CSRC = \
 	src/strtoul.c \
 	src/strtoull.c \
 	src/sys_errlist.c \
+	src/tlstack_malloc.c \
 	src/vfprintf.c \
 	src/vprintf.c \
 	src/vsnprintf.c
@@ -67,6 +68,7 @@ MTALIB_EXTRA = \
 	src/floatio.h \
 	src/fpmath.h \
 	src/heap.h \
+	src/malloc_wrappers.c \
 	src/missing_uclibc_math.c \
 	src/mtconf.h \
 	src/mtstdio.h \
@@ -195,12 +197,37 @@ mta_malloc_debug.o: $(srcdir)/src/malloc.c
 
 # enddef
 
+### Target-neutral libraries
+
+nobase_pkglib_DATA += \
+   mtalpha-sim/libm.a \
+   mtalpha-sim/libmalloc_notls.a
+
+mtalpha_sim_libm_a_CONTENTS = \
+	$(MTAMATHOBJS) \
+	mta_missing_uclibc_math.o
+
+mtalpha_sim_libmalloc_notls_a_CONTENTS = \
+	mta_malloc_wrappers.o
+
+CLEANFILES += \
+	mta_hybrid-mtalpha-sim/missing_uclibc_math.o \
+	mta_hybrid-mtalpha-sim/libm.a
+
+mtalpha-sim/%.a:
+	$(AM_V_at)rm -f $@
+	$(AM_V_at)$(MKDIR_P) mtalpha-sim
+	$(AM_V_AR)$(AR_MTALPHA) cru $@ $^
+	$(AM_V_at)$(RANLIB_MTALPHA) $@
+
+mtalpha-sim/libm.a: $(mtalpha_sim_libm_a_CONTENTS)
+mtalpha-sim/libmalloc_notls.a: $(mtalpha_sim_libmalloc_notls_a_CONTENTS)
+
 ### MT-hybrid targets
 
 #$(eval $(call MTA_TEMPLATE,mta,mta_hybrid-mtalpha-sim,mta_hybrid_mtalpha_sim)
 
 nobase_pkglib_DATA += \
-   mta_hybrid-mtalpha-sim/libm.a \
    mta_hybrid-mtalpha-sim/libsl.a
 
 mta_hybrid_mtalpha_sim_libsl_a_CONTENTS = \
@@ -210,14 +237,6 @@ mta_hybrid_mtalpha_sim_libsl_a_CONTENTS = \
 CLEANFILES += \
 	$(mta_hybrid_mtalpha_sim_libsl_a_CONTENTS) \
 	mta_hybrid-mtalpha-sim/libsl.a
-
-mta_hybrid_mtalpha_sim_libm_a_CONTENTS = \
-	$(MTAMATHOBJS) \
-	mta_hybrid-mtalpha-sim/missing_uclibc_math.o
-
-CLEANFILES += \
-	mta_hybrid-mtalpha-sim/missing_uclibc_math.o \
-	mta_hybrid-mtalpha-sim/libm.a
 
 mta_hybrid-mtalpha-sim/%.o: $(srcdir)/src/%.c
 	$(AM_V_at)$(MKDIR_P) mta_hybrid-mtalpha-sim
@@ -229,14 +248,12 @@ mta_hybrid-mtalpha-sim/%.a:
 	$(AM_V_at)$(RANLIB_MTALPHA) $@
 
 mta_hybrid-mtalpha-sim/libsl.a: $(mta_hybrid_mtalpha_sim_libsl_a_CONTENTS)
-mta_hybrid-mtalpha-sim/libm.a: $(mta_hybrid_mtalpha_sim_libm_a_CONTENTS)
 
 ### seq-naked targets
 
 #$(eval $(call MTA_TEMPLATE,mta_s,seq_naked-mtalpha-sim,seq_naked_mtalpha_sim)
 
 nobase_pkglib_DATA += \
-   seq_naked-mtalpha-sim/libm.a \
    seq_naked-mtalpha-sim/libsl.a
 
 seq_naked_mtalpha_sim_libsl_a_CONTENTS = \
@@ -246,14 +263,6 @@ seq_naked_mtalpha_sim_libsl_a_CONTENTS = \
 CLEANFILES += \
 	$(seq_naked_mtalpha_sim_libsl_a_CONTENTS) \
 	seq_naked-mtalpha-sim/libsl.a
-
-seq_naked_mtalpha_sim_libm_a_CONTENTS = \
-	$(MTAMATHOBJS) \
-	seq_naked-mtalpha-sim/missing_uclibc_math.o
-
-CLEANFILES += \
-	seq_naked-mtalpha-sim/missing_uclibc_math.o \
-	seq_naked-mtalpha-sim/libm.a
 
 SLC_MTA_S = $(SLC_RUN) -b mta_s $(SHUTUP)
 
@@ -267,14 +276,12 @@ seq_naked-mtalpha-sim/%.a:
 	$(AM_V_at)$(RANLIB_MTALPHA) $@
 
 seq_naked-mtalpha-sim/libsl.a: $(seq_naked_mtalpha_sim_libsl_a_CONTENTS)
-seq_naked-mtalpha-sim/libm.a: $(seq_naked_mtalpha_sim_libm_a_CONTENTS)
 
 ### MT-naked targets
 
 #$(eval $(call MTA_TEMPLATE,mta_n,mta_naked-mtalpha-sim,mta_naked_mtalpha_sim)
 
 nobase_pkglib_DATA += \
-   mta_naked-mtalpha-sim/libm.a \
    mta_naked-mtalpha-sim/libsl.a
 
 mta_naked_mtalpha_sim_libsl_a_CONTENTS = \
@@ -284,14 +291,6 @@ mta_naked_mtalpha_sim_libsl_a_CONTENTS = \
 CLEANFILES += \
 	$(mta_naked_mtalpha_sim_libsl_a_CONTENTS) \
 	mta_naked-mtalpha-sim/libsl.a
-
-mta_naked_mtalpha_sim_libm_a_CONTENTS = \
-	$(MTAMATHOBJS) \
-	mta_naked-mtalpha-sim/missing_uclibc_math.o
-
-CLEANFILES += \
-	mta_naked-mtalpha-sim/missing_uclibc_math.o \
-	mta_naked-mtalpha-sim/libm.a
 
 SLC_MTA_N = $(SLC_RUN) -b mta_n $(SHUTUP)
 
@@ -305,7 +304,6 @@ mta_naked-mtalpha-sim/%.a:
 	$(AM_V_at)$(RANLIB_MTALPHA) $@
 
 mta_naked-mtalpha-sim/libsl.a: $(mta_naked_mtalpha_sim_libsl_a_CONTENTS)
-mta_naked-mtalpha-sim/libm.a: $(mta_naked_mtalpha_sim_libm_a_CONTENTS)
 
 
 endif

@@ -1,3 +1,24 @@
+2010-06-22  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
+	More diversity with memory allocators.
+
+	Requested by UH: it should be possible to disable the TLS-based
+	heap allocator. Also, the stack-like TLS-based allocator should
+	work side-by-side with the TLS-based heap allocator.
+
+	* lib/src/tlstack_malloc.c: New. This implement stack-like
+	allocation at the bottom of the TLS stack space.
+	* lib/src/mtalpha.mk: Update accordingly.
+
+	* lib/src/malloc_wrappers.c: New.
+	* lib/src/mtalpha.mk: New target `libmalloc_notls.a' which can
+	disable the TLS-based heap allocator when linked against a
+	program. Place this target and `libm.a' in variant-independent
+	directories.
+
+	* tools/bin/cce.in: Use variant-independent directories in the
+	library search path.
+
 2010-06-21  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
 	Fix bug in MT-Alpha code generation.
