@@ -29,7 +29,13 @@
 
 
 #ifdef USE_EXTERNAL_PTL
+
+#ifdef EXTERNAL_PTL_HEADER
+#include EXTERNAL_PTL_HEADER
+#else
 #include <uTC.h>
+#endif
+
 #else
 #include "ptl_svp.h"
 #endif

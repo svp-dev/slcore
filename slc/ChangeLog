@@ -1,5 +1,12 @@
 2010-06-22  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	Extend the `ptl' back-end.
+
+	* tools/lib/t-ptl/include/sl_support.h: Allow to change the
+	µTC-ptl that gets included when using a custom runtime.
+
+2010-06-22  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	Minor fix.
 	
 	* lib/src/tlstack_malloc.c: Fix typo in comment.
