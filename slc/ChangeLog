@@ -1,5 +1,11 @@
 2010-06-22  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	Minor fix.
+	
+	* lib/src/tlstack_malloc.c: Fix typo in comment.
+
+2010-06-22  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	More diversity with memory allocators.
 
 	Requested by UH: it should be possible to disable the TLS-based

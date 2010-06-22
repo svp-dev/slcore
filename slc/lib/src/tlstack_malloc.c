@@ -1,4 +1,4 @@
-/
+//
 // tlstack_malloc.c: this file is part of the SL toolchain.
 //
 // Copyright (C) 2010 The SL project.
