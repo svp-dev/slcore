@@ -1,3 +1,9 @@
+2010-06-21  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
+	Extend the test suite.
+
+	* 0_slc/3_index/clobber.c: New. (sl_index after function call)
+
 2010-06-13  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
 	Use standard C header names in tests.
