@@ -100,9 +100,10 @@
 [[#]]define __sl_prologue(Name, GI, SI, GF, SF, IDXREG, LN) \
   extern void Name(void);						\
   void __slf_ ## Name (void) {						\
-    register long __sl_index __asm__(IDXREG);			\
-    __asm__ ("# MT: index starts in %0 (must be =" IDXREG ")" : "=r"(__sl_index)); \
-    __asm__ __volatile__(".registers " # GI " " # SI " 19 " # GF " " # SF " 19\n");
+      register long __sl_index_ __asm__(IDXREG);			\
+      __asm__ ("# MT: index starts in %0 (must be =" IDXREG ")" : "=r"(__sl_index_)); \
+      register const long __sl_index = __sl_index_;                     \
+      __asm__ __volatile__(".registers " # GI " " # SI " 19 " # GF " " # SF " 19\n");
 
 [[#]]define __sl_epilogue(Name, ArgSpec)		\
     __sl_end_thread: __asm__ __volatile__("# MT: end follows"); }

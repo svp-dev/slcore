@@ -1,3 +1,17 @@
+2010-06-21  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
+	Fix bug in MT-Alpha code generation.
+
+	The thread index would not be set properly if the `sl_index'
+	declaration was placed later than the start of the thread function
+	body (e.g. after a function call). Reported by M. Hicks and
+	M. Lankamp.
+
+	* tools/lib/slc/mtalpha/visitors.py (TFun_2_MTATFun.visit_fundef),
+	* tools/lib/t-sppalpha/include/sl_support.h (__sl_declindex):
+	Force a dependency on the `asm' construct to avoid (erroneous)
+	elision by the code generator.
+
 2010-06-17  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
 	Use exclusive create to allocate initial place.

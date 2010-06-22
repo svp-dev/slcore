@@ -257,9 +257,10 @@ class TFun_2_MTATFun(DefaultVisitor):
         newitems.append(flatten(fundef.loc,
                                 ' extern void %(name)s(void); '
                                 'void __slf_%(name)s(void) {'
-                                ' register long __slI __asm__("%(idxreg)s");'
+                                ' register long __slI_ __asm__("%(idxreg)s");'
                                 ' __asm__("# MT: index in %%0 (must be %(idxreg)s)"'
-                                '   : "=r"(__slI));'
+                                '   : "=r"(__slI_));'
+                                ' register const long __slI = __slI_;'
                                 ' __asm__ __volatile__("%(regdir)s");'
                                 % { 'name': fundef.name, 
                                     'regdir' : regdir,
