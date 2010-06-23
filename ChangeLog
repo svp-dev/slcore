@@ -2,6 +2,12 @@
 
 	Minor installer update.
 
+	* deploy/installer/configure.ac: Use Automake silent rules.
+
+2010-06-24  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
+	Minor installer update.
+
 	* deploy/installer/slenv.in: Extend PYTHONPATH. 
 
 2010-06-23  Raphael 'kena' Poss  <r.c.poss@uva.nl>

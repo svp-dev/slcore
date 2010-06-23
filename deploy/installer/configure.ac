@@ -74,7 +74,7 @@ AC_SUBST([MAKE], [$ac_cv_path_MAKE])
 
 # The following should appear *after* checking for GNU make above.
 AM_INIT_AUTOMAKE([1.11 foreign dist-bzip2 silent-rules])
-
+AM_SILENT_RULES([yes])
 
 AC_PROG_CC
 AC_PROG_CXX
