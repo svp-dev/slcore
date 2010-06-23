@@ -1,3 +1,9 @@
+2010-06-24  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
+	Minor installer update.
+
+	* deploy/installer/slenv.in: Extend PYTHONPATH. 
+
 2010-06-23  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
 	Update installer version to suggest upgrading.

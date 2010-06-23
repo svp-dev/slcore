@@ -90,7 +90,7 @@ cat <<EOF
 : Tool locations ;
 export SL_TAG=$sl_sel;
 export SLREQS_TAG=$slreq_sel;
-export PYTHONPATH=$sl_base/lib/python2.6/site-packages;
+export PYTHONPATH=$sl_base/lib/sl-core:$sl_base/lib/python2.6/site-packages;
 export PATH=$sl_base/bin:$slreq_base/bin:\$PATH;
 export MANPATH=$sl_base/share/man:$slreq_base/share/man:\$MANPATH;
 export CC_ALPHA_OVERRIDE=$slreq_base/bin/alpha-linux-gnu-gcc;
