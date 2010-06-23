@@ -1,5 +1,13 @@
 2010-06-24  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	Fix packaging.
+
+	* tools/lib/Makefile.am (pythondir, install-data-hook): Let the
+	Python files be installed to the regular Python lib dir. Make a
+	symbolic link in $pkglibdir instead of a copy.
+
+2010-06-24  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	Change installation directory for the Python library.
 
 	* tools/lib/Makefile.am (pythondir): Force install Python files to
