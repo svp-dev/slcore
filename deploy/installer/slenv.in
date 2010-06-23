@@ -1,4 +1,4 @@
-#! /bin/sh
+#! @BASH@
 set -e
 prefix=$(dirname "$0")
 prefix=$(cd "$prefix"; pwd)
@@ -7,7 +7,8 @@ case $1 in
   -h|--help)
 	cat >&2 <<EOF
 Usage: $0
-   or: $0 [SL-REQS-VER] [SL-VER]
+   or: $0 [TAG]
+   or: $0 [SL-REQS-DIR] [SL-DIR]
 
 Display environment variables settings for use with a specified SL
 environment. If no arguments are provided, an interactive selection is
@@ -24,6 +25,7 @@ esac
 cd "$prefix"
 
 if test $# -ge 2; then
+  tag=
   case $1 in
     slreqs-*) slreq_sel=$1 ;;
     *)        slreq_sel=slreqs-$1 ;;
@@ -33,29 +35,24 @@ if test $# -ge 2; then
     *)       sl_sel=sl-$2 ;;
   esac
 else
-  cat >&2 <<EOF
+  if test $# -ge 1; then
+     tag=$1
+  else
+     cat >&2 <<EOF
 
    Welcome to the SL toolchain selection tool!
 
 Multiple versions of the toolchain and its dependencies are installed
-on this system. To set up a work environment, select a combination of
-the following:
+on this system. 
 
-1) a set of dependencies; this determines the binutils and core
-   compilers;
-
-2) the set of SL tools; this determines the SL compiler, runner and MG
-   simulator.
-
-Select the set of dependencies:
+Select the installation tag:
 EOF
-  select slreq_sel in slreqs-*; do
-     if test -n "$slreq_sel"; then break; fi
-  done
-  echo "Select the SL tools:" >&2
-  select sl_sel in sl-*; do
-     if test -n "$sl_sel"; then break; fi
-  done
+    select tag in $(cd tags && echo *); do
+       if test -n "$tag"; then break; fi
+    done
+  fi
+  slreq_sel=slreqs-`grep reqtag <tags/"$tag"|cut -d: -f2-`
+  sl_sel=sl-`grep sltag <tags/"$tag"|cut -d: -f2-`
 fi
 
 if ! test -d $slreq_sel/; then
@@ -68,13 +65,16 @@ if ! test -d $sl_sel/; then
   exit 1
 fi
 
+echo >&2
+echo >&2
+echo "Next time the following command can be used:" >&2
 
-cat >&2 <<EOF
-
-Next time the following command can be used:
-      $0 $slreq_sel $sl_sel
-
-EOF
+if test -n "$tag"; then
+   echo "   $0 $tag" >&2
+else
+   echo"    $0 $slreq_sel $sl_sel" >&2
+fi
+echo >&2
 
 slreq_base=$prefix/$slreq_sel
 sl_base=$prefix/$sl_sel
@@ -87,20 +87,10 @@ EOF
 if test -r slenv_local; then cat slenv_local; fi
 
 cat <<EOF
-: Goodies for Bash ;
-if test -n "\$BASH_VERSION"; then
-PS1='(slreqs:\$(basename \$(cd $slreq_base;/bin/pwd)|cut -d- -f2-)) (sl:\$(basename \$(cd $sl_base;/bin/pwd)|cut -d- -f2-))\n[\u@\h] \w\$ '; 
-fi;
-: ;
-: Goodies for Zsh ;
-if test -n "\$ZSH_VERSION"; then 
-setopt PROMPT_SUBST;
-PROMPT=\$(printf '%%{\033[01m%%}%%n@%%m %%{\033[36m%%}%%32<...<%%~%%{\033[0m%%} %%# ');
-PROMPT=\$(printf '%s\n%s' '(slreqs:%B\$(basename \$(cd $slreq_base;/bin/pwd)|cut -d- -f2-)%b) (sl:%B\$(basename \$(cd $sl_base;/bin/pwd)|cut -d- -f2-)%b)' "\$PROMPT"); 
-fi;
-: ;
 : Tool locations ;
-export PYTHONPATH=$sl_base/lib/python2.6/site-packages:$sl_base/lib/python2.5/site-packages:\$PYTHONPATH;
+export SL_TAG=$sl_sel;
+export SLREQS_TAG=$slreq_sel;
+export PYTHONPATH=$sl_base/lib/python2.6/site-packages;
 export PATH=$sl_base/bin:$slreq_base/bin:\$PATH;
 export MANPATH=$sl_base/share/man:$slreq_base/share/man:\$MANPATH;
 export CC_ALPHA_OVERRIDE=$slreq_base/bin/alpha-linux-gnu-gcc;

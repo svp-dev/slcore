@@ -31,7 +31,8 @@ if test -z "$FETCH"; then
 fi
 
 case $FETCH in
-     *curl*) FETCH="$FETCH -O" ;;
+     *curl*) FETCH="$FETCH -s ";;
+     *wget*) FETCH="$FETCH -q -O - " ;;
 esac
 
 #
@@ -41,6 +42,15 @@ AC_ARG_VAR([DIST_SITE], [base URL to retrieve source archives])
 default_site=https://mac-chris.science.uva.nl/csa/dist/deploy
 if test "x$DIST_SITE" = "x"; then
    DIST_SITE=$default_site
+   case $FETCH in
+      *wget*) FETCH="$FETCH --no-check-certificate" ;;
+      *curl*) FETCH="$FETCH -k" ;;
+   esac
+fi
+AC_ARG_VAR([TAGS_SITE], [base URL to retrieve version number database])
+default_tags_site=https://mac-chris.science.uva.nl/csa/dist/sl-tags
+if test "x$TAGS_SITE" = "x"; then
+   TAGS_SITE=$default_tags_site
    case $FETCH in
       *wget*) FETCH="$FETCH --no-check-certificate" ;;
       *curl*) FETCH="$FETCH -k" ;;
@@ -63,11 +73,18 @@ fi
 AC_SUBST([MAKE], [$ac_cv_path_MAKE])
 
 # The following should appear *after* checking for GNU make above.
-AM_INIT_AUTOMAKE([1.11 foreign dist-bzip2])
+AM_INIT_AUTOMAKE([1.11 foreign dist-bzip2 silent-rules])
 
 
 AC_PROG_CC
 AC_PROG_CXX
+
+AC_CACHE_CHECK([for Bourne-Again shell], [ac_cv_path_BASH],
+	[AC_PATH_PROGS_FEATURE_CHECK([BASH], [bash3 bash sh],
+	[[$ac_path_BASH -c 'test "x$BASH_VERSION" != "x"' \
+             && ac_cv_path_BASH=$ac_path_BASH ac_path_BASH_found=:]],
+	[AC_MSG_ERROR([could not find bash])])])
+AC_SUBST([BASH], [$ac_cv_path_BASH])
 
 #
 # If MacPorts is installed, assume it should be used.
@@ -98,13 +115,48 @@ case $build in
     ;;
 esac
 
-m4_include([versions.m4])
+AC_ARG_WITH([tagfile],
+            [AC_HELP_STRING([--with-tagfile=NAME],
+                            [use version information from tag NAME (download if necessary, default "latest")])],
+            [], [with_tagfile=latest])
+
+if ! test -r "$with_tagfile"; then
+   # tag file not really there yet, try to fetch
+   tagsource=$TAGS_SITE/$with_tagfile
+   $MKDIR_P tags
+   rm -f tags/"$with_tagfile"
+   AC_MSG_NOTICE([trying to download $tagsource...])
+   if ! ($FETCH "$tagsource" >tags/"$with_tagfile"); then
+      rm -f tags/"$with_tagfile"
+      AC_MSG_WARN([could not fetch $tagsource, trying local file...])
+      if test -r "$with_tagfile.dist"; then
+         AC_MSG_NOTICE([$with_tagfile.dist -> tags/$with_tagfile])
+         cp "$with_tagfile.dist" tags/"$with_tagfile"
+      elif test -r "$srcdir/$with_tagfile.dist"; then
+         AC_MSG_NOTICE([$srcdir/$with_tagfile.dist -> tags/$with_tagfile])
+         cp "$srcdir/$with_tagfile.dist" tags/"$with_tagfile"
+      else
+         AC_MSG_ERROR([cannot find provider $tagsource, consider using --with-tagfile])
+      fi
+   fi
+else
+   AC_MSG_NOTICE([$with_tagfile -> tags/$with_tagfile])
+   cp -f "$with_tagfile" tags/"$with_tagfile"
+fi
+
+# here the tagfile exists, extract the information
+AC_MSG_NOTICE([using version information from "tags/$with_tagfile"])
+for x in `grep -v "^\#" < "tags/$with_tagfile"`; do
+   var=`echo "$x"|cut -d: -f1`
+   val=`echo "$x"|cut -d: -f2-`
+   eval "def_${var}_ver='$val'"
+done
 
 m4_define([handle_package],[
 AC_ARG_WITH([$1-version], 
             [AC_HELP_STRING([--with-$1-version=VVV], 
                             [use version VVV for $1 (default: ]def_$1_ver[)])],
-            [], [with_$1_version=def_$1_ver])
+            [], [with_$1_version=$def_$1_ver])
 AC_ARG_WITH([$1-archive],
             [AC_HELP_STRING([--with-$1-archive=ARCH],
                             [use file ARCH for $1 (default: distfiles/]m4_ifblank([$2],[$1],[$2])[-VVV.tar.bz2)])],
@@ -131,26 +183,26 @@ handle_package([slc], [sl-core])
 handle_package([sc], [systemc])
 handle_package([m4])
 
-AC_CONFIG_FILES([Makefile])
+AC_CONFIG_FILES([Makefile slenv deslenv])
 AC_OUTPUT
 
 echo "*"
 echo "* Configuration done."
 echo "*"
-echo "* Destination dir:   $prefix"
-echo "* Remote repository: $DIST_SITE"
-echo "* URL fetch cmd:     $FETCH"
-echo "* GNU make:          $MAKE"
-echo "* C compiler:        $CC $CPPFLAGS $CFLAGS $LDFLAGS"
-echo "* C++ compiler:      $CXX $CPPFLAGS $CXXFLAGS $LDFLAGS"
+echo "* Destination dir:    $prefix"
+echo "* Archive repository: $DIST_SITE"
+echo "* URL fetch cmd:      $FETCH"
+echo "* GNU make:           $MAKE"
+echo "* C compiler:         $CC $CPPFLAGS $CFLAGS $LDFLAGS"
+echo "* C++ compiler:       $CXX $CPPFLAGS $CXXFLAGS $LDFLAGS"
 echo "*"
-echo "* mg-binutils:       $BINUTILS_ARCHIVE ($BINUTILS_VERSION)"
-echo "* uTC core compiler: $MGGCC_ARCHIVE ($MGGCC_VERSION)"
-echo "* GCC (patched):     $GCC_ARCHIVE ($GCC_VERSION)"
-echo "* m4 (patched):      $M4_ARCHIVE ($M4_VERSION)"
-echo "* SystemC (patched): $SC_ARCHIVE ($SC_VERSION)"
-echo "* mgsim:             $MGSIM_ARCHIVE ($MGSIM_VERSION)"
-echo "* slc:               $SLC_ARCHIVE ($SLC_VERSION)"
+echo "* mg-binutils:        $BINUTILS_ARCHIVE ($BINUTILS_VERSION)"
+echo "* uTC core compiler:  $MGGCC_ARCHIVE ($MGGCC_VERSION)"
+echo "* GCC (patched):      $GCC_ARCHIVE ($GCC_VERSION)"
+echo "* m4 (patched):       $M4_ARCHIVE ($M4_VERSION)"
+echo "* SystemC (patched):  $SC_ARCHIVE ($SC_VERSION)"
+echo "* mgsim:              $MGSIM_ARCHIVE ($MGSIM_VERSION)"
+echo "* slc:                $SLC_ARCHIVE ($SLC_VERSION)"
 echo "*"
 echo "Now run:"
 echo 

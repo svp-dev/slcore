@@ -1,3 +1,25 @@
+2010-06-23  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
+	Extend the tool chain installer.
+
+	* deploy/installer/configure.ac: Detect `bash', make fetch command
+	silent and produce its output to stdout. Fetch and use tag files
+	to determine version numbers automatically.
+	* deploy/installer/Makefile.am: Use tags. New target `moretags' to
+	fetch all tags available centrally. Clean up better on `make
+	uninstall'.
+	
+	* deploy/installer/slenv,
+	* deploy/installer/deslenv: Rename to...
+	* deploy/installer/slenv.in,
+	* deploy/installer/deslenv.in: ...here. Use @BASH@. Use tags.
+
+	* deploy/installer/configure.ac: Generate `slenv' and `deslenv'.
+	* deploy/installer/rules/slenv.mk: Do not distribute them.
+
+	* deploy/installer/rules/mgsim.mk: Avoid creating `sl-current'
+	since the shortcut is now provided by tag files.
+
 2010-06-13  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
 	Minor packaging fix.

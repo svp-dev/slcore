@@ -41,6 +41,5 @@ $(MGSIM_BUILD)/build_done: $(MGSIM_BUILD)/configure_done
 $(SLDIR)/.mgsim-installed: $(MGSIM_BUILD)/build_done
 	rm -f $@
 	cd $(MGSIM_BUILD) && $(MAKE) install
-	cd $(DSTBASE) && rm -f sl-current && $(LN_S) $(SLNAME) sl-current
 	touch $@
 

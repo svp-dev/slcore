@@ -1,4 +1,3 @@
-EXTRA_DIST += slenv deslenv
 
 $(DSTBASE)/slenv: slenv
 	rm -f $@
