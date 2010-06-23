@@ -151,7 +151,7 @@ AC_DEFUN([AC_WITH_SLC],
     SLC_LIBDIR=$SLC_BASE/lib/sl-core
     SLC_INCDIR=$SLC_BASE/share/sl-core/include
     SLC_DATADIR=$SLC_BASE/share/sl-core
-    PYTHONPATH=$SLC_BASE/tools/lib:$SLC_BASE/tools/lib
+    PYTHONPATH=$SLC_BASE/lib/sl-core:$SLC_BASE/lib/python2.6/site-packages
     SPP=$SLC_BASE/bin/spp
     SPR=$SLC_BASE/bin/spr
     SCU=$SLC_BASE/bin/scu

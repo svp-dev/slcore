@@ -1,3 +1,13 @@
+2010-06-24  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
+	Change installation directory for the Python library.
+
+	* tools/lib/Makefile.am (pythondir): Force install Python files to
+	$pkglibdir, so that the path to the Python library is not
+	dependent on the Python version.
+
+	* build-aux/slc.m4: Update settings for `$PYTHONPATH' accordingly.
+
 2010-06-22  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
 	Extend the `ptl' back-end.
