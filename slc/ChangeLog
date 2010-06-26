@@ -1,6 +1,18 @@
 2010-06-26  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
-	Enhance portability.
+	Optimize `slr' for the `ptl' target.
+
+	Data layout for `ptl' and `seqc' are the same since they both use
+	the host data layout. Acknowledge that and optimize the former by
+	using the same `slr' tag as the latter.
+
+	* tools/lib/host-host-ptl/slrt.c: Remove.
+	* tools/lib/host-host-seqc/slrt.c: Copy to...
+	* tools/lib/host-host-ptl/slrt.c: ...here.
+
+2010-06-26  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
+	Enhance portability. 
 
 	* tools/lib/load.c: Do not try to use `argv' from the environment,
 	since this is non-portable.
