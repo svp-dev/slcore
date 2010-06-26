@@ -1,3 +1,10 @@
+2010-06-26  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
+	Enhance portability.
+
+	* tools/lib/load.c: Do not try to use `argv' from the environment,
+	since this is non-portable.
+
 2010-06-24  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
 	Fix packaging.
