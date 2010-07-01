@@ -104,7 +104,8 @@ def parse_block(items):
 
 def parse_argparm(p, cat, item):
       #print "parse argparm %x: item %x: %r" % (id(p), id(item), item)
-      if not item['type'].endswith(cat):
+      t = item['type'].replace('_mutable','')
+      if not t.endswith(cat):
             unexpected(item)
       p.loc = item['loc']
       p.type = item['type']

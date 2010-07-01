@@ -39,6 +39,7 @@ m4_define([[sl_glfparm]], [[_sl_doparm([[glfparm]],[[$1]],[[$2]])]])
 m4_define([[sl_shparm]], [[_sl_doparm([[shparm]],[[$1]],[[$2]])]])
 m4_define([[sl_shfparm]], [[_sl_doparm([[shfparm]],[[$1]],[[$2]])]])
 m4_define([[sl_glparm_mutable]], [[_sl_doparm([[glparm_mutable]],[[$1]],[[$2]])]])
+m4_define([[sl_glfparm_mutable]], [[_sl_doparm([[glfparm_mutable]],[[$1]],[[$2]])]])
 
 m4_define([[sl__static]], [[[[""", {'type':'attr', 'name':'static'}, r"""]]]])
 m4_define([[sl__naked]], [[[[""", {'type':'attr', 'name':'naked', 'flavor':r""" $1 """}, r"""]]]])

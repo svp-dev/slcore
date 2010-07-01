@@ -334,7 +334,7 @@ class TFun_2_MTATFun(DefaultVisitor):
                 if p.name in self.gllist_mem:
                     orig = "__slPgm->%s" % p.name
                 else:
-                    orig = "__slPg_%s" % p.aname
+                    orig = "__slPg_%s" % p.name
                 newitems.append(flatten(p.loc,'') + p.ctype + 
                                 " __slPwg_%s = %s;" % (p.name, orig))
 

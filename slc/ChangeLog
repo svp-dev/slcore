@@ -1,3 +1,17 @@
+2010-07-01  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
+	Fix support for `_mutable' parameter definitions.
+
+	* tools/lib/t-spr/slimpl.m4,
+	* tools/lib/t-sppalpha/slimpl.m4: Fix definitions of
+	`sl_glparm_mutable' and `sl_glfparm_mutable'.
+
+	* tools/lib/slc/input/parse.py (parse_argparm): Tolerate parameter
+	types ending with `_parm'.
+
+	* tools/lib/slc/mtalpha/visitors.py (TFun_2_MTATFun.visit_fundef):
+	Fix typo `aname' -> `name'.
+
 2010-06-26  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
 	Optimize `slr' for the `ptl' target.
