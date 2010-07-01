@@ -72,7 +72,7 @@ echo "Next time the following command can be used:" >&2
 if test -n "$tag"; then
    echo "   $0 $tag" >&2
 else
-   echo"    $0 $slreq_sel $sl_sel" >&2
+   echo "   $0 $slreq_sel $sl_sel" >&2
 fi
 echo >&2
 

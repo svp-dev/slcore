@@ -1,3 +1,9 @@
+2010-06-30  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
+	Fix `slenv'.
+
+	* deploy/installer/slenv.in: Fix typo.
+
 2010-06-24  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
 	Minor installer update.
