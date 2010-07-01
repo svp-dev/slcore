@@ -14,7 +14,9 @@
 #ifndef SLC_UNDOCUMENTED_H
 # define SLC_UNDOCUMENTED_H
 
-#include <cstdlib.h>
+#warning "This header should really not be used."
+
+#include <stdlib.h>
 
 /* TLS allocation/free */
 #ifdef __mt_freestanding__

@@ -1,5 +1,13 @@
 2010-07-01  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	Enhance undocumented headers.
+
+	* lib/include/undocumented.h: Emit warning on use (should not be
+	used).
+	* lib/include/sac_helpers.h: Use standard header names.
+
+2010-07-01  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	Fix support for `_mutable' parameter definitions.
 
 	* tools/lib/t-spr/slimpl.m4,

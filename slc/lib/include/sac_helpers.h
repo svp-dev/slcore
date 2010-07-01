@@ -15,9 +15,11 @@
 #ifndef SLC_SAC_HELPERS_H
 # define SLC_SAC_HELPERS_H
 
-#include <cstdlib.h>
-#include <cstring.h>
-#include <calloca.h>
+#warning "You can replace uses of this header by #include <stdlib.h>, <string.h>, <alloca.h>."
+
+#include <stdlib.h>
+#include <string.h>
+#include <alloca.h>
 #include <undocumented.h>
 
 #endif // ! SLC_SAC_HELPERS_H
