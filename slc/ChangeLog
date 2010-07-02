@@ -1,5 +1,14 @@
 2010-07-02  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	Allow `return' to terminate the current thread.
+
+	* tools/lib/t-sppalpha/slimpl.m4,
+	* tools/lib/t-spr/slimpl.m4,
+	* tools/lib/t-utc0/slimpl.m4 (sl_def, sl_enddef): Alias `return'
+	to `sl_end_thread'. (Syntax sugar)
+
+2010-07-02  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	Allow the `utc0' target to run again.
 
 	* tools/bin/spp (main): Allow module `utc0'. 

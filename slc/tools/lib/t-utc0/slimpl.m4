@@ -17,6 +17,7 @@
 
 # Pass transparently thread definitions.
 m4_define([[sl_def]],[[m4_dnl
+m4_pushdef([[return]],[[sl_end_thread]])m4_dnl
 m4_define([[_sl_crcnt]],0)m4_dnl
 m4_define([[sl_thparms]],[[m4_shiftn(2,$@)]])m4_dnl
 thread [[$2]] [[$1]]m4_if((sl_thparms),(),(void),(sl_thparms))m4_dnl
@@ -30,6 +31,7 @@ m4_define([[sl_end_thread]], [[goto __sl_end_thread]])
 m4_define([[sl_enddef]],[[m4_dnl
 m4_ifdef([[_sl_increate]],[[m4_fatal(missing sync after create)]])m4_dnl
 __sl_end_thread: (void)0;  }m4_dnl
+m4_popdef([[return]])
 ]])
 
 # With the corecc syntax, a declaration looks the same as a definition.

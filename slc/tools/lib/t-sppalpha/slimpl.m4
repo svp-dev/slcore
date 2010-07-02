@@ -34,6 +34,7 @@ m4_define([[m4_sh_escape]],[['m4_bpatsubst([[$1]],[[[']]],[['"'"']])']])
 m4_define([[sl_def]],[[
 m4_define([[__sl_funcname]], [[$1]])
 m4_define([[__sl_breaktype]], [[$2]])
+m4_pushdef([[return]], [[sl_end_thread]])
 m4_step([[__sl_dispcount]])
 m4_define([[__sl_thparms]],"m4_join([[" "]],m4_shiftn(2,$@))")
 m4_esyscmd(m4_quote(PYTHON SPP_PY sppalpha fundef m4_sh_escape(__sl_funcname) __sl_dispcount __sl_thparms))
@@ -46,6 +47,7 @@ m4_undefine([[__sl_getp_]]__sl_parmname)
 m4_undefine([[__sl_setp_]]__sl_parmname)
 ]])
 __sl_epilogue(__sl_funcname, __sl_parmspec)
+m4_popdef([[return]])
 ]])
 
 # end of thread
