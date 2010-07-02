@@ -1,5 +1,11 @@
 2010-07-02  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	Allow the `utc0' target to run again.
+
+	* tools/bin/spp (main): Allow module `utc0'. 
+
+2010-07-02  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	Fix bug in MT-Alpha code generation.
 
 	When a program of the following form is compiled:
