@@ -1,3 +1,41 @@
+2010-07-02  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
+	Fix bug in MT-Alpha code generation.
+
+	When a program of the following form is compiled:
+
+	{
+	   foo();
+	   p[...] = ...;
+	}
+
+	Then the instruction sequence becomes:
+
+	   jsr
+	   ldah $gp.... !gpdisp!... # gp reload 1st half
+	   stq ...
+	   ...
+	   lda $gp, ... !gpdisp!... # gp reload 2nd half
+	   ...
+	   ret
+
+	As an optimization, we remove all the load instructions that
+	precede "ret" (end thread) because they are not necessary. However
+	when doing so we may remove half of a GP reload. This makes the
+	other half invalid (cannot be assembled on its own).
+
+	This is fixed in this changeset by removing both halves of an
+	unneeded GP reload.
+
+	* tools/lib/slc/mtalpha/asmproc/base.py (munchret): Keep track of
+	the deleted `lda' instructions that correspond to GP reloads.
+
+	* tools/lib/slc/mtalpha/asmproc/base.py (killgpdisp): New. Remove
+	the `ldah' instructions corresponding to killed GP reloads.
+
+	* tools/lib/slc/mtalpha/asmproc/base.py (_filter_inner): Register
+	the new phase.
+
 2010-07-01  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
 	Enhance undocumented headers.

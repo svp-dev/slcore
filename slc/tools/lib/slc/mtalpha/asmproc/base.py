@@ -168,14 +168,17 @@ def replaceret(fundata, items):
             yield (type, content, comment)
 
 _re_munchret = re.compile(r'(ld.|ldah|mov|nop|fnop|unop)\s+|(bis|cpys)\s+\$lf?31,\$lf?31,\$lf?31')
+_re_gpdisp = re.compile(r'(?:ldah?)\s+\$l\d+,.*\s+!gpdisp!(\d+)$') 
 
 def munchret(fundata, items):
     """
     Remove possible frame adjustments before 'end'.
     """
     rekill = _re_munchret
+    regpdisp = _re_gpdisp
 
     queue = []
+    s = fundata.get('killed_gpdisp', set())
     for (type, content, comment) in items:
         if type == 'other' and content == 'end':
             hello = 1
@@ -198,15 +201,35 @@ def munchret(fundata, items):
                         queue.pop()
                     else:
                         hello = 0
-            for r in qkill:
-                queue.append(('empty','','MT: killed cleanup: %s' % r[1]))
+            for (type, content, comment) in qkill:
+                m = regpdisp.match(content)
+                if m is not None:
+                    gpd = int(m.group(1))
+                    s.add(gpd)
+                queue.append(('empty','','MT: killed cleanup: %s' % content))
             for r in qpreserve:
                 queue.append(r)
             queue.append(('other','end','MT: end thread'))
         else:
             queue.append((type, content, comment))
 
+    fundata['killed_gpdisp'] = s
     return queue
+
+def killgpdisp(fundata, items):
+    """
+    Remove all GP reloads previously tagged by munchret.
+    """
+
+    regpdisp = _re_gpdisp
+    s = fundata["killed_gpdisp"]
+    for (type, content, comment) in items:
+        if type == 'other':
+            m = regpdisp.match(content)
+            if m is not None and int(m.group(1)) in s:
+                yield ('empty', '', 'MT: killed gpreload: %s' % content)
+                continue
+        yield (type, content, comment)
 
 def xsplit(fundata, items):
     """
@@ -861,6 +884,7 @@ _filter_inner = [
                 detectregs,
                 replaceret,
                 munchret,
+                killgpdisp,
                 
                 xsplit,
                 
@@ -890,6 +914,7 @@ _filter_inner = [
                 xjoin2,
                 
                 munchret,
+                killgpdisp,
                 #makeprotectspecial('hasjumps','fp'),
                 makedetectload('hasraload','ra'),
                 makecompleteload('hasraload','ra'),
