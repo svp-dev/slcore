@@ -1,3 +1,19 @@
+2010-07-05  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
+	Fix bug in `spr'.
+
+	A large inefficiency would cause exponential space complexity
+	during transformation in the depth of C scope nesting. This would
+	cause exceedingly large compilation times and/or stack blowouts
+	for large programs.
+
+	* tools/lib/slc/visitors.py (ScopedVisitor): Remember the current
+	stack of C scopes.
+
+	* tools/lib/slc/lower/split.py (SplitCreates.visit_lowcreate):
+	Also memoize the stack of current scopes, so that they are not
+	duplicated when duplicating the `Create' objects.
+
 2010-07-02  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
 	Allow `return' to terminate the current thread.

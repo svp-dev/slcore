@@ -235,14 +235,17 @@ class ScopedVisitor(DefaultVisitor):
 
       def __init__(self, *args, **kwargs):
             super(ScopedVisitor, self).__init__(*args, **kwargs)
+            self.scope_stack = []
             self.cur_scope = None
 
       def visit_scope(self, sc):
             old = self.cur_scope
             self.cur_scope = sc
+            self.scope_stack.append(sc)
             # print "IN SCOPE (v = %x, d = %x, sc = %x, %r)" % (id(self), id(self.__dict__), id(sc), dir(sc))
             sc = super(ScopedVisitor, self).visit_scope(sc)
             self.cur_scope = old
+            self.scope_stack.pop()
             return sc
 
 #### Printer visitor: reprint SL code ####

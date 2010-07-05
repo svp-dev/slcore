@@ -88,6 +88,8 @@ class SplitCreates(ScopedVisitor):
         # we need to remember declarations to avoid
         # deep copying of cvaruses/cvarsets
         memo = {}
+        for s in self.scope_stack:
+            memo[id(s)] = s
         for d in self.cur_scope.decls:
             memo[id(d)] = d
 
@@ -97,8 +99,10 @@ class SplitCreates(ScopedVisitor):
         newbl = []
 
         next = None
+        #import sys, pprint
         for f in flavors:
             newmemo = copy.copy(memo)
+            #pprint.pprint(lc, stream=sys.stderr)
             newlc = copy.deepcopy(lc, newmemo)
             newlc.target_next = next
             newlc.flavor = f
@@ -117,7 +121,6 @@ class SplitCreates(ScopedVisitor):
         newbl.insert(0, CGoto(loc = cr.loc, target = next) + ';')
             
         return newbl
-
 
 class SplitFuns(DefaultVisitor):
 
