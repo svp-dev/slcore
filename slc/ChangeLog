@@ -1,3 +1,11 @@
+2010-07-06  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
+	Enhance support for `_mutable' global thread parameters.
+
+	* tools/lib/slc/lower/seq.py (TFun_2_CFun.visit_funparm): Do not
+	declare `_mutable' parameters with the `register' qualifier, since
+	they should have an address.
+
 2010-07-05  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
 	Fix bug in `spr'.

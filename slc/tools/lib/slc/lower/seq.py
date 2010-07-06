@@ -142,10 +142,12 @@ class TFun_2_CFun(DefaultVisitor):
         else:
             self.__gllist.append(parm.name)
             if parm.type.endswith('_mutable'):
+                reg = ""
                 const = ""
             else:
+                reg = "register"
                 const = "const"
-            self.__buffer += (Opaque(', register ') + parm.ctype + 
+            self.__buffer += (Opaque(', %s ' % reg) + parm.ctype + 
                               ' %s __slP_%s ' % (const, parm.name))
         return parm
 
