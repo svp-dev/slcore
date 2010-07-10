@@ -1,3 +1,10 @@
+2010-07-11  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
+	Fix bug in `spr'.
+
+	* tools/lib/slc/lower/seq.py (TFun_2_CFun): Fix support for thread
+	function pointer declarations.
+
 2010-07-06  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
 	Enhance support for `_mutable' global thread parameters.
