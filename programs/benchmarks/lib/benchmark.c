@@ -36,6 +36,23 @@ slr_decl(slr_var(unsigned, ncores, "number of cores (default 1)"),
 	 slr_var(int, results, "output computation results (default 0=no)"),
 	 slr_var(int, sep_dump, "output initial place configuration (default 0=no)"));
 
+sl_def(do_work, sl__static,
+       sl_glparm(size_t, p),
+       sl_glparm(int, i),
+       sl_glparm(struct benchmark *, b),
+       sl_glparm(struct s_interval*, intervals),
+       sl_glparm(struct benchmark_state*, bs))
+{
+    sl_decl_fptr(work, void, sl_glparm(struct benchmark_state*, st));
+    work = sl_getp(b)->work;
+
+    mtperf_start_interval(sl_getp(intervals), sl_getp(p), sl_getp(i), "work");
+    sl_create(,,,,,,, *work, sl_glarg(struct benchmark_state*, , sl_getp(bs)));
+    sl_sync();
+    mtperf_finish_interval(sl_getp(intervals), sl_getp(p));
+}
+sl_enddef
+
 sl_def(run_benchmark, void, sl_glparm(struct benchmark*, b))
 {
   /* configuration from environment */
@@ -55,12 +72,10 @@ sl_def(run_benchmark, void, sl_glparm(struct benchmark*, b))
   struct benchmark *b = sl_getp(b);
   sl_decl_fptr(initialize, void, sl_glparm(struct benchmark_state*, state));
   sl_decl_fptr(prepare, void, sl_glparm(struct benchmark_state*, state));
-  sl_decl_fptr(work, void, sl_glparm(struct benchmark_state*, state));
   sl_decl_fptr(output, void, sl_glparm(struct benchmark_state*, state));
   sl_decl_fptr(teardown, void, sl_glparm(struct benchmark_state*, state));
   initialize = b->initialize;
   prepare = b->prepare;
-  work = b->work;
   output = b->output;
   teardown = b->teardown;
 
@@ -145,10 +160,13 @@ sl_def(run_benchmark, void, sl_glparm(struct benchmark*, b))
     printf("# 3.%u work...", i+1);
     wl.current_interval = p+1;
     wl.current_iter = i;
-    mtperf_start_interval(intervals, p, i, "work");
-    sl_create(, pid,,,,,, *work, sl_glarg(struct benchmark_state*, , &bs));
+    sl_create(, pid,,,,,, do_work, 
+              sl_glarg(size_t, , p),
+              sl_glarg(int, , i),
+              sl_glarg(struct benchmark*, , b),
+              sl_glarg(struct s_interval*, , intervals),
+              sl_glarg(struct benchmark_state*, , &bs));
     sl_sync();
-    mtperf_finish_interval(intervals, p);
     p = wl.current_interval;
     puts("ok\n");
   }
