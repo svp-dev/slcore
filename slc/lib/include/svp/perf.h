@@ -35,7 +35,10 @@ typedef long counter_t;
 #define MTPERF_CORE_STORED_BYTES 6
 #define MTPERF_EXTMEM_COMPLETED_LOADS 7
 #define MTPERF_EXTMEM_COMPLETED_STORES 8
-#define MTPERF_NCOUNTERS 9
+#define MTPERF_PLACE_SIZE 9
+#define MTPERF_CUMUL_TT_OCCUPANCY 10
+#define MTPERF_CUMUL_FT_OCCUPANCY 11
+#define MTPERF_NCOUNTERS 12
 typedef struct { counter_t ct[MTPERF_NCOUNTERS]; } __counters_t;
 
 extern const char *mtpef_counter_names[];
@@ -59,6 +62,9 @@ extern const char *mtpef_counter_names[];
         __read_cnt(6);                                                  \
         __read_cnt(7);                                                  \
         __read_cnt(8);                                                  \
+        __read_cnt(9);                                                  \
+        __read_cnt(10);                                                 \
+        __read_cnt(11);                                                 \
         __asm__ __volatile__("# sample ends");                          \
   } while(0)
 
