@@ -54,16 +54,16 @@
 
 sl_def(innerk10, void,
        sl_glparm(const double*restrict, CX)
-       , sl_glparm(size_t, CX_dim0)
+       , sl_glparm(size_t, CX_dim1)
        , sl_glparm(double*restrict, PX)
-       , sl_glparm(size_t, PX_dim0))
+       , sl_glparm(size_t, PX_dim1))
 {
     sl_index(k);
 
-    const size_t CX_dim0 = sl_getp(CX_dim0);
-    const size_t PX_dim0 = sl_getp(PX_dim0);
-    const double (*restrict cx)[][CX_dim0] = (const double (*)[][CX_dim0])(const double*restrict)sl_getp(CX);
-    double (*restrict px)[][PX_dim0] = (double (*)[][PX_dim0])(double*restrict)sl_getp(PX);
+    const size_t CX_dim1 = sl_getp(CX_dim1);
+    const size_t PX_dim1 = sl_getp(PX_dim1);
+    const double (*restrict cx)[][CX_dim1] = (const double (*)[][CX_dim1])(const double*restrict)sl_getp(CX);
+    double (*restrict px)[][PX_dim1] = (double (*)[][PX_dim1])(double*restrict)sl_getp(PX);
 
 #define CX(a, b) (*cx)[b][a]
 #define PX(a, b) (*px)[b][a]
@@ -106,9 +106,9 @@ sl_def(kernel10,void,
 {
     sl_create(,, ,sl_getp(n),,0,,innerk10,
               sl_glarg(const double*, , sl_getp(CX)),
-              sl_glarg(size_t, , sl_getp(CX_dim0)),
+              sl_glarg(size_t, , sl_getp(CX_dim1)),
               sl_glarg(double*, , sl_getp(PX)),
-              sl_glarg(size_t, , sl_getp(PX_dim0)));
+              sl_glarg(size_t, , sl_getp(PX_dim1)));
     sl_sync();
 }
 sl_enddef

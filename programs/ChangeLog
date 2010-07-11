@@ -1,5 +1,14 @@
 2010-07-11  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	Fix LL10 benchmark.
+
+	* benchmarks/livermore/kernel10.c: Properly use `dim1' for the 2nd
+	array dimension.
+	* benchmarks/livermore/ll-bounds.ods,
+	* benchmarks/livermore/ll-bounds.csv: Fix upper bound for PX.
+
+2010-07-11  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	Update handling of statistics.
 
 	* benchmarks/lib/benchmark.c: Ensure that measurements for the
