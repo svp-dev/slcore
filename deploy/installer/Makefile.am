@@ -90,7 +90,12 @@ install-data-local: fetch tags/.installed
 	$(MAKE) $(foreach P,$(PARTS),$(P)-install)
 	$(MAKE) moretags
 	$(MKDIR_P) $(DSTBASE)/tags
-	$(INSTALL_DATA) tags/* $(DSTBASE)/tags/
+	for tf in tags/*; do \
+	   tag=`basename "$$tf"`; \
+	   if test -r $(DSTBASE)/tags/"$$tag" && cmp -s "$$tf" $(DSTBASE)/tags/"$$tag"; then continue; fi; \
+	   echo "$$tf -> $(DSTBASE)/tags/$$tag"; \
+	   $(INSTALL_DATA) "$$tf" $(DSTBASE)/tags/; \
+	done
 	$(INSTALL_DATA) tags/.installed $(DSTBASE)/tags/installed-`date +%Y%m%d%H%M%S`
 	$(INSTALL_DATA) tags/.installed $(DSTBASE)/tags/last-installed
 	$(RULE_DONE)
@@ -98,7 +103,7 @@ install-data-local: fetch tags/.installed
 tags/.installed: Makefile
 	$(AM_V_at)$(MKDIR_P) tags
 	$(AM_V_at)rm -f $@
-	$(AM_V_GEN)(echo "# `date +'%Y-%m%d %H:%M:%S'`"; \
+	$(AM_V_GEN)(echo "# `date +'%Y-%m-%d %H:%M:%S'`"; \
 	 echo "sc:$(SC_VERSION)"; \
 	 echo "m4:$(M4_VERSION)"; \
 	 echo "gcc:$(GCC_VERSION)"; \

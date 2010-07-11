@@ -1,3 +1,10 @@
+2010-07-11  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
+	Minor installation fix.
+
+	* deploy/installer/Makefile.am (install-data-local): Do not
+	overwrite already installed tags, to preserve timestamps.
+
 2010-06-30  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
 	Fix `slenv'.
