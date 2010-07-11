@@ -19,9 +19,10 @@
 
 typedef long sl_place_t;
 
-#define PLACE_LOCAL   0xC /* 4 = local, 8 = suspend */
-#define PLACE_DEFAULT 0x8 /* 8 = suspend */
-#define PLACE_GROUP   0xA /* 2 = local, 8 = suspend */
+/* see mgsim/src/simtypes.h */
+#define PLACE_LOCAL   0x4 /* 2 << 1 = local */
+#define PLACE_DEFAULT 0
+#define PLACE_GROUP   0x2 /* 1 << 1 = group */
 
 #else
 

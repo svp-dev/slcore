@@ -69,15 +69,21 @@ class Create_2_MTACreate(ScopedVisitor):
         self.cur_scope.decls += fidvar
         
         usefvar = CVarUse(decl = fidvar)
-        newbl += (flatten(cr.loc,
-                          '__asm__ __volatile__("allocate %%1, %%0\\t# MT: CREATE %s"'
-                          ' : "=r"(' % lbl) + 
-                  usefvar + ') : "rI"(' + CVarUse(decl = cr.cvar_place) + '));')
-        
+
         if lc.target_next is None:
             if cr.extras.get_attr('exclusive', None) is None:
                 warn("this create may fail and no alternative is available", cr)
+            forcesuspend = '|8'
         else:
+            forcesuspend = ''
+
+        newbl += (flatten(cr.loc,
+                          '__asm__ __volatile__("allocate %%1, %%0\\t# MT: CREATE %s"'
+                          ' : "=r"(' % lbl) + 
+                  usefvar + ') : "rI"(' + CVarUse(decl = cr.cvar_place) + 
+                  '%s));' % forcesuspend)
+        
+        if lc.target_next is not None:
             newbl += (flatten(cr.loc, ' if (!__builtin_expect(!!(') + 
                       usefvar + '), 1)) ' + 
                       CGoto(target = lc.target_next)) + ';'

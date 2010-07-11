@@ -1,5 +1,15 @@
 2010-07-11  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	More resource deadlock prevention.
+
+	* tools/include/svp/delegate.h: Make the default place identifier
+	`soft' to prevent resource deadlocks.
+	* tools/lib/slc/mtalpha/visitors.py
+	(Create_2_MTACreate.visit_lowcreate): Force suspend bit when
+	creating with no `seq' alternative.
+
+2010-07-11  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	Add support for new performance counters.
 
 	* lib/include/svp/perf.h: New counters for TT and FT occupancy.
