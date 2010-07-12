@@ -65,8 +65,7 @@ class Create_2_MTACreate(ScopedVisitor):
         lbl = cr.label
 
         # generate allocate + test for alternative
-        fidvar = CVarDecl(loc = cr.loc, name = "C$mtF$%s" % lbl, ctype = 'long')
-        self.cur_scope.decls += fidvar
+        fidvar = cr.cvar_fid
         
         usefvar = CVarUse(decl = fidvar)
 

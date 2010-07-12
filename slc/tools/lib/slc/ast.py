@@ -455,7 +455,7 @@ class Create(Item):
     FUN_VAR = 1
     FUN_OPAQUE = 2
 
-    def __init__(self, label = None, place = None, 
+    def __init__(self, label = None, fid_lvalue = None, place = None, 
                  start = None, step = None, limit = None, block = None,
                  sync_type = None, fun = None, body = None,
                  result_lvalue = None, extras = None,
@@ -463,6 +463,7 @@ class Create(Item):
                  *a, **kwargs):
         super(Create, self).__init__(*a, **kwargs)
         self.label = label
+        self.fid_lvalue = fid_lvalue
         self.place = place
         self.start = start
         self.step = step

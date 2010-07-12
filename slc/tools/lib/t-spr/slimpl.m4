@@ -98,6 +98,7 @@ m4_pushdef([[_sl_lbl]],F[[]]_sl_crcnt)m4_dnl
 [[""",]]m4_dnl
 [[{'type':'create',]]m4_dnl
 [['loc':r"""]]__file__:__line__[[""",]]m4_dnl
+[['fid':[r""" $1 """],]]m4_dnl
 [['extras':[r""" $7 """],]]m4_dnl
 [['fun':[r""" $8 """],]]m4_dnl
 [['lbl':']]_sl_lbl[[',]]m4_dnl

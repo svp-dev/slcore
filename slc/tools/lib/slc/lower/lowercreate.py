@@ -16,6 +16,8 @@ class Create_2_LowCreate(DefaultVisitor):
 
         cr.cvar_exitcode = CVarDecl(loc = cr.loc_end, name = 'C$R$%s' % cr.label, ctype = 'long')
         decls += cr.cvar_exitcode
+        cr.cvar_fid = CVarDecl(loc = cr.loc, name = 'C$F$%s' % cr.label, ctype = 'long')
+        decls += cr.cvar_fid
 
         for item in ('place', 'start', 'limit', 'step', 'block'):
             var = CVarDecl(loc = cr.loc, name = 'C$%s$%s' % (item, cr.label), ctype = 'long')
@@ -61,6 +63,9 @@ class Create_2_LowCreate(DefaultVisitor):
                 
                 newbody += (Opaque(';') + seta)
 
+        if cr.fid_lvalue is not None:
+            newbody += (flatten(cr.loc, "; (") + cr.fid_lvalue.accept(self) + ') = ' +
+                        CVarUse(loc = cr.loc, decl = cr.cvar_fid))
 
         lc.body = newbody
         lc.body += cr.body.accept(self)

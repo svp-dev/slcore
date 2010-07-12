@@ -30,6 +30,8 @@ def parse_create(item):
       for p in item['args']:
             c.args.append(parse_argparm(CreateArg(), 'arg', p))
 
+      if 'fid' in item and item['fid']:
+            c.fid_lvalue = parse_block(item['fid'])
       if 'result' in item and item['result']:
             c.result_lvalue = parse_block(item['result'])
 

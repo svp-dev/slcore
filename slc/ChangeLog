@@ -1,3 +1,18 @@
+2010-07-12  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
+	Reinstate support for MT family IDs.
+
+	* tools/lib/t-spr/slimpl.m4 (sl_create),
+	* tools/lib/slc/ast.py (Create.__init__),
+	* tools/lib/slc/input/parse.py (parse_create): Propagate the FID lvalue.
+
+	* tools/lib/slc/lower/lowercreate.py
+	(Create_2_LowCreate.visit_create): Define the FID temporary here
+	and assign the FID lvalue in the body always.
+
+	* tools/lib/slc/mtalpha/visitors.py
+	(Create_2_MTACreate.visit_lowcreate): Use it.
+
 2010-07-11  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
 	More resource deadlock prevention.
