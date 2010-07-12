@@ -1,3 +1,10 @@
+2010-07-12  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
+	Extend the test suite.
+
+	* 0_slc/1_create/fiduse.c,
+	* 0_slc/1_create/fiduse2.c: New.
+
 2010-07-02  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
 	Extend the test suite.
