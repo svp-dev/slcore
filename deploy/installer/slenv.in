@@ -47,9 +47,10 @@ on this system.
 
 Select the installation tag:
 EOF
-    select tag in $(cd tags && echo *); do
+    select tag in $(cd tags && ls -rt *); do
        if test -n "$tag"; then break; fi
     done
+    if test -z "$tag"; then exit 0; fi
   fi
   slreq_sel=slreqs-`grep reqtag <tags/"$tag"|cut -d: -f2-`
   sl_sel=sl-`grep sltag <tags/"$tag"|cut -d: -f2-`

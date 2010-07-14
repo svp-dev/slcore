@@ -1,3 +1,16 @@
+2010-07-14  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
+	Enhance the installer.
+
+	* deploy/installer/slversion.in: New.
+	* deploy/installer/configure.ac: Generate `slversion'.
+	* deploy/installer/rules/slenv.mk: Install it.
+
+	* deploy/installer/slenv.in: Sort the tags by mtime. Gracefully
+	exit if no selection is made.
+
+	* deploy/installer/README: Explain `deslenv' and `slversion'.
+
 2010-07-11  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
 	Minor installation fix.

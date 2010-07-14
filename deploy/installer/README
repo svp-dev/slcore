@@ -12,7 +12,11 @@ versions can be installed side-by-side.
 
 The script "slenv" is also installed and provides an interactive menu
 to select one of the installed versions and setup environment
-variables accordingly.
+variables accordingly. 
+
+The script "slversion" prints the configuration selected by "slenv"
+(or manually). The script "deslenv" removes the configuration set by
+"slenv".
 
 When new versions of the tools are available, download a new installer
 archive or use the ``--with`` command line parameters to the

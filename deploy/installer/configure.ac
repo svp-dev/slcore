@@ -183,7 +183,7 @@ handle_package([slc], [sl-core])
 handle_package([sc], [systemc])
 handle_package([m4])
 
-AC_CONFIG_FILES([Makefile slenv deslenv])
+AC_CONFIG_FILES([Makefile slenv deslenv slversion])
 AC_OUTPUT
 
 echo "*"

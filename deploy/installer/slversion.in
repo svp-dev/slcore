@@ -1,0 +1,42 @@
+#! @BASH@
+set -e
+
+for v in PATH PYTHONPATH MANPATH SLREQS_TAG SL_TAG; do
+   if test -z "$(eval echo \$$v)"; then
+        echo "$v is not set"
+   else
+        eval echo "$v=\$$v" 
+   fi
+   echo
+done
+
+for i in CC_ALPHA_OVERRIDE:alpha-linux-gnu-gcc \
+         UTCC_ALPHA_OVERRIDE:mtalpha-linux-gnu-gcc \
+         AR_MTALPHA_OVERRIDE:mtalpha-linux-gnu-ar \
+         RANLIB_MTALPHA_OVERRIDE:mtalpha-linux-gnu-ranlib \
+         MGSIM_ALPHA:mgsim-alpha \
+         SIMX_ALPHA:simx-alpha M4:m4 \
+         SLC:slc SLT:slt SPP:spp CM4:cm4 SCU:scu SPR:spr SLR:slr \
+         ; do
+         var=${i%:*}
+         default=${i#*:}
+  
+         bare=$(which "$default")
+         if test -z "$(eval echo \$$var)"; then 
+             echo "$var" is not set
+             val=$default
+         else 
+             eval echo "$var=\$$var"
+             eval "val=\$$var"
+         fi
+         resolved=$(which "$val")
+         if test "x$resolved" != "x$val"; then
+            echo "$val found: $resolved" 
+            val=$resolved
+         fi
+         if test "x$bare" != "x$val"; then
+            echo "warning: location $bare (from \$PATH) is overridden"
+         fi
+         echo "$val version " $($val --version 2>/dev/null|head -n1)
+         echo
+done
