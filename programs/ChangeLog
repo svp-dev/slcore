@@ -1,3 +1,13 @@
+2010-07-16  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
+	Fix the `mandel' benchmark.
+
+	* benchmarks/mandel/mandel.c: Allocate the exclusive place using
+	the new interface. Fix support for `DISPLAY_DURING_COMPUTE &&
+	!PARALLEL_DISPLAY'. Use a continuation create. Indirect the
+	creation of work through an intermediary function to work around
+	the delegated-family-becomes-local feature of the Microgrid.
+
 2010-07-11  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
 	Fix LL10 benchmark.

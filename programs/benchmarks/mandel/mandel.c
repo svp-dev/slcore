@@ -20,6 +20,7 @@
 #include <assert.h>
 #include <stdlib.h>
 #include <math.h>
+// #include <stdio.h>
 
 #include "benchmark.h"
 
@@ -125,7 +126,7 @@ sl_def(initialize, void,
   sl_sync();
   sl_create(,root_sep->sep_place,,,,,sl__exclusive, *root_sep->sep_alloc,
 	    sl_glarg(struct SEP*, , root_sep),
-	    sl_glarg(unsigned long, , SAL_DONTCARE),
+	    sl_glarg(unsigned long, , SAL_DONTCARE|SAL_EXCLUSIVE),
 	    sl_sharg(struct placeinfo*, p2, 0));
   sl_sync();
   assert(sl_geta(p1) != 0 && sl_geta(p2) != 0);
@@ -133,7 +134,13 @@ sl_def(initialize, void,
   bdata->p1 = sl_geta(p1);
   bdata->p2 = sl_geta(p2);
   bdata->par_place = sl_geta(p1)->pid;
-  bdata->excl_place = sl_geta(p2)->pid|1; // FIXME: manual exclusion bit
+  bdata->excl_place = sl_geta(p2)->pid;
+
+/*
+  fprintf(stderr, "Allocated compute place, pid = 0x%lx, ncores = %d\n", sl_geta(p1)->pid, sl_geta(p1)->ncores);
+  fprintf(stderr, "Allocated exclusive place, pid = 0x%lx, ncores = %d\n", sl_geta(p2)->pid, sl_geta(p2)->ncores);
+*/
+
 #else
   bdata->par_place = bdata->excl_place = PLACE_DEFAULT;
 #endif
@@ -207,6 +214,11 @@ sl_def(mandel, void,
 #ifndef SKIP_MEM
        , sl_glparm(struct point*restrict, mem)
 #endif
+#ifdef DISPLAY_DURING_COMPUTE
+#ifndef PARALLEL_DISPLAY
+       , sl_glparm(sl_place_t, excl_place)
+#endif
+#endif
 )
 {
   sl_index(i);
@@ -247,12 +259,12 @@ sl_def(mandel, void,
 #endif
 #ifdef DISPLAY_DURING_COMPUTE
 #ifndef PARALLEL_DISPLAY
-  sl_create(,excl_place,,,,,sl__exclusive,
+  sl_create(,sl_getp(excl_place),,,,,sl__exclusive,
 	    displayPoint,
 	    sl_glarg(uint16_t, , dx),
 	    sl_glarg(uint16_t, , dy),
 	    sl_glarg(uint32_t, , v));
-  sl_sync();
+  sl_detach();
 #else
   do_display(dx, dy, v);
 #endif
@@ -260,13 +272,13 @@ sl_def(mandel, void,
 }
 sl_enddef
 
-sl_def(work, void, sl_glparm(struct benchmark_state*, st))
+sl_def(do_mwork, sl__static, sl_glparm(struct benchmark_state*, st))
 {
   struct work_lapses * wl = sl_getp(st)->wl;
   struct bdata *bdata = (struct bdata*)sl_getp(st)->data;
 
   start_interval(wl, "compute");
-  sl_create(,bdata->par_place,,bdata->N,,bdata->blocksize,,
+  sl_create(,,,bdata->N,,bdata->blocksize,,
 	    mandel,
             sl_glfarg(double, , 4.0),
 	    sl_glfarg(double, , bdata->xmin),
@@ -280,6 +292,11 @@ sl_def(work, void, sl_glparm(struct benchmark_state*, st))
 #endif
 #ifndef SKIP_MEM
 	    , sl_glarg(struct point*restrict, , bdata->pixeldata)
+#endif
+#ifdef DISPLAY_DURING_COMPUTE
+#ifndef PARALLEL_DISPLAY
+            , sl_glarg(sl_place_t, , bdata->excl_place)
+#endif
 #endif
 	    );
   sl_sync();
@@ -302,6 +319,16 @@ sl_def(work, void, sl_glparm(struct benchmark_state*, st))
   finish_interval(wl);
 
 #endif
+} 
+sl_enddef
+
+sl_def(work, void, sl_glparm(struct benchmark_state*, st))
+{
+  // we need an indirect create because
+  // families delegated to a place are started local
+  struct bdata *bdata = (struct bdata*)sl_getp(st)->data;
+  sl_create(,bdata->par_place,,,,,, do_mwork, sl_glarg(struct benchmark_state*, , sl_getp(st))); 
+  sl_sync();
 }
 sl_enddef
 
