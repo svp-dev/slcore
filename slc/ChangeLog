@@ -1,3 +1,11 @@
+2010-07-16  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
+	Add support for new performance counters.
+
+	* lib/include/svp/perf.h: New counter for exclusive allocate queue
+	size.
+	* lib/src/perf.c: Name the new counter. Also compute average.
+
 2010-07-12  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
 	Reinstate support for MT family IDs.

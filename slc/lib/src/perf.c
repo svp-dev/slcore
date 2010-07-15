@@ -36,10 +36,12 @@ const char* mtperf_counter_names[] = {
   "notused",
   "tt_total",
   "ft_total",
+  "xq_total",
 // computed columns
   "pl_eff",
   "tt_occp",
-  "ft_occp"
+  "ft_occp",
+  "xq_avg",
 #endif
 };
 
@@ -98,7 +100,15 @@ float mtperf_compute_extra(const counter_t* before, const counter_t* after, unsi
         ttotal /= elapsed;
         return ttotal;
     }
-#define N_EXTRA_COLUMNS 3
+    case 3:
+    {
+        // exclusive allocate queue size
+        float ttotal = after[MTPERF_CUMUL_ALLOC_EX_QSIZE] - before[MTPERF_CUMUL_ALLOC_EX_QSIZE];
+        ttotal /= ncores;
+        ttotal /= elapsed;
+        return ttotal;
+    }
+#define N_EXTRA_COLUMNS 4
     }
 #else
 #define N_EXTRA_COLUMNS 0
