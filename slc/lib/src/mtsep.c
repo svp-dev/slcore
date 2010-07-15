@@ -394,7 +394,7 @@ sl_def(sep_dump_info, void,
 sl_enddef
 
 static struct sep_data_t root_sep_data = { 
-    { 0, 
+    { 0,
       &sep_alloc,
       &sep_free,
       &sep_dump_info, },
@@ -421,7 +421,7 @@ void sys_sep_init(void* init_parameters)
     if (verbose_boot) {
         output_string("* SEP init: parsing layout for ", 2);
         output_uint(pc->ncores, 2);
-        output_string(" cores...", 2);
+        output_string(" cores...\n  ", 2);
     }
     // can't use assert() before places have been defined
     if (!(pc->ncores <= MAX_NCORES)) {
@@ -435,6 +435,7 @@ void sys_sep_init(void* init_parameters)
     int irregular = 0;
 
     for (i = 0; i < pc->ncores; ++i) {
+        if (verbose_boot) output_char('.', 2);
         if (pc->core_info[i][1] != current_ring_id) {
             /* starting a new ring */
 
@@ -449,13 +450,14 @@ void sys_sep_init(void* init_parameters)
                 root_sep_data.pools[l2_nc] = n;
                 if (ncores != (1 << l2_nc)) irregular = 1;
                 if (max_l2 < l2_nc) max_l2 = l2_nc;
+                if (verbose_boot) output_char(' ', 2);
             }
 
             /* restart a new ring */
             current_ring_id = pc->core_info[i][1];
 
             /* start configuring the place */
-            sl_place_t the_pid = (pc->core_info[i][0] << 4) /* core id */;
+            sl_place_t the_pid = pc->core_info[i][0] << 4;
 
             root_sep_data.allplaces[current_ring_id].pid = the_pid;
 
@@ -474,13 +476,15 @@ void sys_sep_init(void* init_parameters)
                 p->pi.exclusive = false;
                 
                 // make shared: remove from normal pool, add to shared pool
-                root_sep_data.pools[p->l2_ncores] = p->next;
+                // root_sep_data.pools[p->l2_ncores] = p->next;
+                p->next = root_sep_data.shared_pools[p->l2_ncores];
                 root_sep_data.shared_pools[p->l2_ncores] = p;
                     
                 // share the first place with the SEP.
                 root_sep_data.sep_info.sep_place = p->pi.pid|8|6|1;
                 __main_place_id = p->pi.pid;
                 __main_placeinfo = &p->pi;
+                if (verbose_boot) output_char(' ', 2);
             }
         }
 
@@ -506,11 +510,11 @@ void sys_sep_init(void* init_parameters)
     if (verbose_boot) {
         output_string(" done.\n  places:", 2);
         for (i = 0; i < MAX_NCORES; ++i)
-            if (root_sep_data.allplaces[i].pi.pid) {
+            if (!i || root_sep_data.allplaces[i].pid) {
                 output_char(' ', 2);
                 output_uint(root_sep_data.allplaces[i].pi.ncores, 2);
                 output_char('(', 2);
-                output_hex(root_sep_data.allplaces[i].pi.pid, 2);
+                output_hex(root_sep_data.allplaces[i].pid, 2);
                 output_char(')', 2);
             }
         output_char('\n', 2);

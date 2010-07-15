@@ -1,5 +1,12 @@
 2010-07-16  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	Minor SEP initialization updates.
+
+	* lib/src/mtsep.c: Notify progress for each core. Properly report
+	the existence of the first place.
+
+2010-07-16  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	Add support for new performance counters.
 
 	* lib/include/svp/perf.h: New counter for exclusive allocate queue
