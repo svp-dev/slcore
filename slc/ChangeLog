@@ -1,3 +1,11 @@
+2010-07-20  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
+	Fix support for `break' in MT-Alpha code generation.
+
+	* tools/lib/slc/mtalpha/visitors.py (TFun_2_MTATFun.visit_break):
+	Do not use `__builtin_unreachable' since we are not yet using GCC
+	4.5.
+
 2010-07-16  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
 	Minor SEP initialization updates.
