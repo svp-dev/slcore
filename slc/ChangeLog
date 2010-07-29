@@ -1,3 +1,10 @@
+2010-07-29  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
+	Minor `slr' enhancement.
+
+	* tools/lib/r-mt-sim.sh.in: Unset `SIMARGS' during the recursive
+	run.
+
 2010-07-20  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
 	Fix bug in MT-Alpha code generation.
