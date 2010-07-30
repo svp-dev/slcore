@@ -1,5 +1,12 @@
 2010-07-30  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	Minor fix in `slr'.
+
+	* tools/bin/slr.in: Do not set monitor variable pattern if `-Mv'
+	is not specified.
+
+2010-07-30  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	Add support for Microgrid monitoring in `slr'.
 
 	* tools/bin/slr.in: Add support for options `-M', `-Md',
