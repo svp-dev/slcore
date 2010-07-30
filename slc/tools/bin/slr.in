@@ -92,6 +92,19 @@ Microgrid simulation options:
   
   -Xr RATE             Set gfx update rate to RATE (cycles/frame). Implies -X.
 
+  -M                   Enable monitoring.
+
+  -Mv list             List available monitoring variables.
+
+  -Mv PATTERNS         Monitor the variables matching the specified PATTERNS. 
+                       (comma-separated)
+
+  -Md FILE             Output the monitoring metadata to FILE (default mgtrace.md).
+
+  -Mo FILE             Output the monitoring records to FILE (default mgtrace.out).
+
+  -Mr RATE             Set monitor sampling period to RATE (secs, default 0.001).
+
 Debugging options:
   -t                   Trace: print commands before running them.
 
@@ -204,6 +217,11 @@ VERBOSE=${VERBOSE:-}
 DEBUG=${DEBUG:-}
 SIMPROFILE=${SIMPROFILE:-default}
 SLR_NCORES=${SLR_NCORES:-}
+monpats=
+monmdfile=
+mondatafile=
+monrate=
+monenable=
 arglist="$*"
 for arg in "$@"; do
   # if the previous option needs an argument, assign it
@@ -238,6 +256,11 @@ for arg in "$@"; do
       -wf)  prev_arg=wfdatafile; shift;;
       -wo)  preponly=1; shift;;
       -m)   prev_arg=SIMPROFILE; shift;;
+      -M)   monenable=1; shift;;
+      -Mv)  monenable=1; prev_arg=monpats; shift;;
+      -Md)  monenable=1; prev_arg=monmdfile; shift;;
+      -Mo)  monenable=1; prev_arg=mondatafile; shift;;
+      -Mr)  monenable=1; prev_arg=monrate; shift;;
       -X)   SIMGFX=1; shift;;
       -Xs)  SIMGFX=1; prev_arg=gfx_scale; shift;;
       -Xr)  SIMGFX=1; prev_arg=gfx_refresh; shift;;
@@ -284,6 +307,24 @@ if test "x$SIMPROFILE" = "xlist"; then
     done     
   done
   exit 0
+fi
+
+if test -n "$monenable" -o -n "$monpats" -o -n "$monmdfile" -o -n "$mondatafile"; then
+  SIMARGS+=" -m"
+  if test "x$monpats" = "xlist"; then
+     SIMARGS+=" -n -D"
+  else 
+     SIMARGS+=" -o MonitorSampleVariables=$monpats"
+  fi
+  if test -n "$monrate"; then
+     SIMARGS+=" -o MonitorSampleDelay=$monrate"
+  fi
+  if test -n "$monmdfile"; then
+     SIMARGS+=" -o MonitorMetadataFile=$monmdfile"
+  fi
+  if test -n "$mondatafile"; then
+     SIMARGS+=" -o MonitorTraceFile=$mondatafile"
+  fi
 fi
 
 if test -n "$VERBOSE"; then
