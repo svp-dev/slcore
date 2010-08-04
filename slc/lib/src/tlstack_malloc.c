@@ -44,7 +44,11 @@ void* tls_malloc(size_t sz)
     // The "stack" area of TLS starts from the middle. Everything
     // below is "thread heap" and is not automatically deallocated
     // when the thread terminates.
-    uintptr_t stack_base = tls_top/2 + tls_bottom/2; 
+
+    // the computation of stack_base should deal with
+    // 1) the highest bit is set (overflow occurs)
+    // 2) for the last thread on the last core, tls_top = 0
+    uintptr_t stack_base = tls_bottom + (tls_top-tls_bottom)/2;
 
     char **stack_heap_ptr = (char**)stack_base;
 

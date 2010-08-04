@@ -1,3 +1,13 @@
+2010-08-04  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
+	Minor MT-Alpha library fixes.
+
+	* lib/src/tlstack_malloc.c (tls_malloc): Fix middle address
+	computation for the last thread on the last core (tls_top = 0).
+
+	* lib/mtalpha-sim/include/stdbool.h: Avoid defining bool/true/false
+	if `__bool_true_false_are_defined' is defined.
+
 2010-07-30  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
 	Minor fix in `slr'.
