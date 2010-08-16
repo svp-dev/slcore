@@ -21,9 +21,8 @@ endif
 
 if ENABLE_CHECK_PPP
 EXTRA_TEST_IMPL += mta_on
-if ENABLE_CHECK_COMA
+if ENABLE_CHECK_COMA_ZL
 EXTRA_TEST_IMPL += mta_on::-m~lzcoma_default
-EXTRA_TEST_IMPL += mta_on::-m~mlcoma_default
 endif
 endif
 
@@ -32,13 +31,10 @@ if ENABLE_CHECK_SPR_MTA
 EXTRA_TEST_IMPL += mta
 EXTRA_TEST_IMPL += mta_n
 EXTRA_TEST_IMPL += mta_s
-if ENABLE_CHECK_COMA
+if ENABLE_CHECK_COMA_ZL
 EXTRA_TEST_IMPL += mta::-m~lzcoma_default
-EXTRA_TEST_IMPL += mta::-m~mlcoma_default
 EXTRA_TEST_IMPL += mta_n::-m~lzcoma_default
-EXTRA_TEST_IMPL += mta_n::-m~mlcoma_default
 EXTRA_TEST_IMPL += mta_s::-m~lzcoma_default
-EXTRA_TEST_IMPL += mta_s::-m~mlcoma_default
 endif
 endif
 # add extra implementations here when they become available

@@ -28,15 +28,6 @@ AC_ARG_ENABLE([check-ppp],
  fi], [enable_check_ppp=$enable_mtalpha])
 AM_CONDITIONAL([ENABLE_CHECK_PPP], [test "x$enable_check_ppp" = "xyes"])
 
-AC_ARG_ENABLE([check-coma],
-[AC_HELP_STRING([--disable-check-coma], [do not check COMA simulation (default is to check)])],
-[enable_check_coma=no
- if test "x$enableval" = xyes; then
-   enable_check_coma=$enable_mtalpha
- fi], [enable_check_coma=$enable_mtalpha])
-
-AM_CONDITIONAL([ENABLE_CHECK_COMA], [test "x$enable_check_ppp" = "xyes" -a "x$SIMX_ALPHA" != "xno" -a "x$enable_check_coma" = "xyes"])
-
 AC_ARG_ENABLE([check-ptl],
 [AC_HELP_STRING([--disable-check-ptl], [do not check muTC-ptl (default is to check)])],
 [enable_check_ptl=no
@@ -50,5 +41,15 @@ AC_ARG_ENABLE([check-spr],
 [enable_check_spr=$enableval], [enable_check_spr=yes])
 AM_CONDITIONAL([ENABLE_CHECK_SPR], [test "x$enable_check_spr" = "xyes"])
 AM_CONDITIONAL([ENABLE_CHECK_SPR_MTA], [test "x$enable_check_spr" = "xyes" -a "x$enable_mtalpha" = "xyes"])
+
+
+AC_ARG_ENABLE([check-coma-zl],
+[AC_HELP_STRING([--disable-check-coma-zl], [do not check ZLs COMA simulation (default is to check)])],
+[enable_check_zlcoma=no
+ if test "x$enableval" = xyes; then
+   enable_check_zlcoma=$enable_mtalpha
+ fi], [enable_check_zlcoma=$enable_mtalpha])
+
+AM_CONDITIONAL([ENABLE_CHECK_COMA_ZL], [test "x$enable_check_ppp" = "xyes" -o "x$enable_check_spr" = "xyes" && test "x$SIMX_ALPHA" != "xno" -a "x$enable_check_zlcoma" = "xyes"])
 
 ])

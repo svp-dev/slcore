@@ -1,5 +1,13 @@
 2010-08-16  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	Isolate checks for the ZL COMA memory simulation.
+
+	* build-aux/slctests.m4,
+	* build-aux/slctests.mk: Rename `--disable-check-coma' into
+	`--disable-check-coma-zl'. Use it accordingly.
+
+2010-08-16  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	Cleanup MT simulator profiles.
 
 	* tools/lib/mt-profiles/coma256,
