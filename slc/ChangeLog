@@ -1,3 +1,28 @@
+2010-08-16  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
+	Cleanup MT simulator profiles.
+
+	* tools/lib/mt-profiles/coma256,
+	* tools/lib/mt-profiles/simple,
+	* tools/lib/mt-profiles/rbm4: Remove unused profiles.
+	
+	* tools/lib/mt-profiles/rbm8: Replace by...
+	* tools/lib/mt-profiles/rbm16: ...this.
+
+	* tools/lib/mt-profiles/mlcoma128_1chan,
+	* tools/lib/mt-profiles/lzcoma128_1chan: Use default DDR timings
+	(suitable for DDR3-1600).
+
+	* tools/lib/mt-profiles/mlcoma256_1chan,
+	* tools/lib/mt-profiles/lzcoma256_1chan,
+	* tools/lib/mt-profiles/lzcoma256_4chan: Use newer DDR3-2400
+	timings.
+
+	* tools/lib/mt-profiles/coma128: Use ML's COMA simulation.
+	* tools/lib/mt-profiles/default: Use `coma128' as default profile.
+
+	* tools/lib/Makefile.am: Update accordingly.
+	
 2010-08-04  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
 	Minor MT-Alpha library fixes.
