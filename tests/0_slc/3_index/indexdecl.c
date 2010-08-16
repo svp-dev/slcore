@@ -1,7 +1,7 @@
 //
-// neg5.sl: this file is part of the slc project.
+// indexdecl.c: this file is part of the slc project.
 //
-// Copyright (C) 2009 The SL project.
+// Copyright (C) 2009,2010 The SL project.
 //
 // This program is free software; you can redistribute it and/or
 // modify it under the terms of the GNU General Public License
@@ -14,5 +14,10 @@
 // $Id$
 //
 
-m4_define(test_index_params,[[10,0,-1]])
-m4_include(common.slh)
+sl_def(foo, void)
+{
+  sl_index(i);
+}
+sl_enddef
+
+sl_def(t_main, void) {} sl_enddef

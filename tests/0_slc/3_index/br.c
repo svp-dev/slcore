@@ -1,7 +1,7 @@
 //
-// inf5.sl: this file is part of the slc project.
+// br.c: this file is part of the SL toolchain.
 //
-// Copyright (C) 2009 The SL project.
+// Copyright (C) 2009,2010 The SL project.
 //
 // This program is free software; you can redistribute it and/or
 // modify it under the terms of the GNU General Public License
@@ -11,8 +11,15 @@
 // The complete GNU General Public Licence Notice can be found as the
 // `COPYING' file in the root directory.
 //
-// $Id$
-//
 
-m4_define(test_index_params,[[-10,1,0]])
-m4_include(common.slh)
+sl_def(foo, void)
+{
+  sl_break ;
+}
+sl_enddef
+
+sl_def(t_main, void)
+{
+  // do nothing
+}
+sl_enddef

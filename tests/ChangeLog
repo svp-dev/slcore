@@ -1,3 +1,75 @@
+2010-08-09  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
+	The Microgrid now supports `break'. Test it.
+
+	* 0_slc/3_index/defaults.sl.disabled,
+	* 0_slc/3_break/brk_ctrl_flow.ut.c,
+	* 0_slc/3_break/brk_floats.ut.c,
+	* 0_slc/3_break/brk_imm.ut.c,
+	* 0_slc/3_break/brk_imm2.ut.c,
+	* 0_slc/3_break/x_invbreak.ut.c,
+	* 0_slc/3_break/x_invbreak2.ut.c,
+	* 0_slc/3_break/x_invbreak3.ut.c,
+	* 0_slc/3_break/x_invbreak4.ut.c,
+	* 0_slc/3_break/x_invbreak5.ut.c: Remove obsolete tests.
+	
+	* 0_slc/3_break/br.ut.c: Rename to...
+	* 0_slc/3_index/br.c: ...here.
+
+	* 0_slc/3_index/common.slh,
+	* 0_slc/3_index/indexdecl.sl.disabled,
+	* 0_slc/3_index/inf1.sl.disabled,
+	* 0_slc/3_index/inf2.sl.disabled,
+	* 0_slc/3_index/inf3.sl.disabled,
+	* 0_slc/3_index/inf4.sl.disabled,
+	* 0_slc/3_index/inf5.sl.disabled,
+	* 0_slc/3_index/neg1.sl.disabled,
+	* 0_slc/3_index/neg2.sl.disabled,
+	* 0_slc/3_index/neg3.sl.disabled,
+	* 0_slc/3_index/neg4.sl.disabled,
+	* 0_slc/3_index/neg5.sl.disabled,
+	* 0_slc/3_index/neg6.sl.disabled,
+	* 0_slc/3_index/neg7.sl.disabled,
+	* 0_slc/3_index/neg8.sl.disabled,
+	* 0_slc/3_index/neg9.sl.disabled,
+	* 0_slc/3_index/pos1.sl.disabled,
+	* 0_slc/3_index/pos2.sl.disabled,
+	* 0_slc/3_index/pos3.sl.disabled,
+	* 0_slc/3_index/pos4.sl.disabled,
+	* 0_slc/3_index/pos5.sl.disabled,
+	* 0_slc/3_index/pos6.sl.disabled,
+	* 0_slc/3_index/pos7.sl.disabled,
+	* 0_slc/3_index/pos8.sl.disabled,
+	* 0_slc/3_index/pos9.sl.disabled: Rename to...
+
+	* 0_slc/3_index/common.h,
+	* 0_slc/3_index/indexdecl.c,
+	* 0_slc/3_index/inf1.c,
+	* 0_slc/3_index/inf2.c,
+	* 0_slc/3_index/inf3.c,
+	* 0_slc/3_index/inf4.c,
+	* 0_slc/3_index/inf5.c,
+	* 0_slc/3_index/neg1.c,
+	* 0_slc/3_index/neg2.c,
+	* 0_slc/3_index/neg3.c,
+	* 0_slc/3_index/neg4.c,
+	* 0_slc/3_index/neg5.c,
+	* 0_slc/3_index/neg6.c,
+	* 0_slc/3_index/neg7.c,
+	* 0_slc/3_index/neg8.c,
+	* 0_slc/3_index/neg9.c,
+	* 0_slc/3_index/pos1.c,
+	* 0_slc/3_index/pos2.c,
+	* 0_slc/3_index/pos3.c,
+	* 0_slc/3_index/pos4.c,
+	* 0_slc/3_index/pos5.c,
+	* 0_slc/3_index/pos6.c,
+	* 0_slc/3_index/pos7.c,
+	* 0_slc/3_index/pos8.c,
+	* 0_slc/3_index/pos9.c: ...here. Use new syntax.
+
+	* 0_slc/3_index/clobber.c: Add copyright header.
+	
 2010-07-20  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
 	Extend the test suite.
