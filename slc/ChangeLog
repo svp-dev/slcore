@@ -1,5 +1,12 @@
 2010-08-17  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	Fix `slr'.
+
+	* tools/lib/mt-profiles/simple: Reinstate as this is used by
+	`slr'.
+
+2010-08-17  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	Change default MGSim profile.
 
 	* tools/lib/mt-profiles/default: Use `coma128' as default profile.
