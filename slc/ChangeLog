@@ -1,3 +1,9 @@
+2010-08-17  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
+	Change default MGSim profile.
+
+	* tools/lib/mt-profiles/default: Use `coma128' as default profile.
+
 2010-08-16  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
 	Isolate checks for the ZL COMA memory simulation.
