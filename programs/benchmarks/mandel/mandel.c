@@ -16,11 +16,10 @@
 #include <svp/testoutput.h>
 #include <svp/fibre.h>
 #include <svp/gfx.h>
-#include <svp/sep.h>
 #include <assert.h>
 #include <stdlib.h>
 #include <math.h>
-// #include <stdio.h>
+#include <svp/sep.h>
 
 #include "benchmark.h"
 
@@ -45,8 +44,7 @@ struct bdata {
   struct point * restrict pixeldata;
 #endif
 #if SVP_HAS_SEP
-  struct placeinfo *p1;
-  struct placeinfo *p2;
+  struct placeinfo *pex;
 #endif
 };
 
@@ -117,32 +115,23 @@ sl_def(initialize, void,
   sl_sync();
 #endif
 
-#if SVP_HAS_SEP
-  unsigned ncores_wanted = sl_getp(st)->place->ncores;
-  sl_create(,root_sep->sep_place,,,,,sl__exclusive, *root_sep->sep_alloc,
-	    sl_glarg(struct SEP*, , root_sep),
-	    sl_glarg(unsigned long, , SAL_EXACT|ncores_wanted),
-	    sl_sharg(struct placeinfo*, p1, 0));
-  sl_sync();
+#if SVP_HAS_SEP && defined(DISPLAY_DURING_COMPUTE) && !defined(PARALLEL_DISPLAY)
   sl_create(,root_sep->sep_place,,,,,sl__exclusive, *root_sep->sep_alloc,
 	    sl_glarg(struct SEP*, , root_sep),
 	    sl_glarg(unsigned long, , SAL_DONTCARE|SAL_EXCLUSIVE),
-	    sl_sharg(struct placeinfo*, p2, 0));
+	    sl_sharg(struct placeinfo*, pex, 0));
   sl_sync();
-  assert(sl_geta(p1) != 0 && sl_geta(p2) != 0);
+  assert(sl_geta(pex) != 0);
 
-  bdata->p1 = sl_geta(p1);
-  bdata->p2 = sl_geta(p2);
-  bdata->par_place = sl_geta(p1)->pid;
-  bdata->excl_place = sl_geta(p2)->pid;
+  bdata->pex = sl_geta(pex);
+  bdata->excl_place = sl_geta(pex)->pid;
 
 /*
-  fprintf(stderr, "Allocated compute place, pid = 0x%lx, ncores = %d\n", sl_geta(p1)->pid, sl_geta(p1)->ncores);
-  fprintf(stderr, "Allocated exclusive place, pid = 0x%lx, ncores = %d\n", sl_geta(p2)->pid, sl_geta(p2)->ncores);
+  fprintf(stderr, "Allocated exclusive place, pid = 0x%lx, ncores = %d\n", sl_geta(pex)->pid, sl_geta(pex)->ncores);
 */
 
 #else
-  bdata->par_place = bdata->excl_place = PLACE_DEFAULT;
+  bdata->excl_place = PLACE_DEFAULT;
 #endif
 
   /* initialize graphics output */
@@ -214,10 +203,8 @@ sl_def(mandel, void,
 #ifndef SKIP_MEM
        , sl_glparm(struct point*restrict, mem)
 #endif
-#ifdef DISPLAY_DURING_COMPUTE
-#ifndef PARALLEL_DISPLAY
+#if defined(DISPLAY_DURING_COMPUTE) && !defined(PARALLEL_DISPLAY)
        , sl_glparm(sl_place_t, excl_place)
-#endif
 #endif
 )
 {
@@ -272,7 +259,7 @@ sl_def(mandel, void,
 }
 sl_enddef
 
-sl_def(do_mwork, sl__static, sl_glparm(struct benchmark_state*, st))
+sl_def(work, void, sl_glparm(struct benchmark_state*, st))
 {
   struct work_lapses * wl = sl_getp(st)->wl;
   struct bdata *bdata = (struct bdata*)sl_getp(st)->data;
@@ -305,12 +292,12 @@ sl_def(do_mwork, sl__static, sl_glparm(struct benchmark_state*, st))
 #ifndef DISPLAY_DURING_COMPUTE
   start_interval(wl, "display");
 #ifdef PARALLEL_DISPLAY
-  sl_create(,bdata->par_place,,bdata->N,,bdata->blocksize,,
+  sl_create(,,,bdata->N,,bdata->blocksize,,
 	    displayAfter,
 	    sl_glarg(struct point*restrict, , bdata->pixeldata));
   sl_sync();
 #else
-  sl_create(,bdata->par_place,,bdata->N,,bdata->blocksize,,
+  sl_create(,,,bdata->N,,bdata->blocksize,,
 	    displayAfter,
 	    sl_glarg(struct point*restrict, , bdata->pixeldata),
 	    sl_sharg(int, tok, 0));
@@ -320,16 +307,6 @@ sl_def(do_mwork, sl__static, sl_glparm(struct benchmark_state*, st))
 
 #endif
 } 
-sl_enddef
-
-sl_def(work, void, sl_glparm(struct benchmark_state*, st))
-{
-  // we need an indirect create because
-  // families delegated to a place are started local
-  struct bdata *bdata = (struct bdata*)sl_getp(st)->data;
-  sl_create(,bdata->par_place,,,,,, do_mwork, sl_glarg(struct benchmark_state*, , sl_getp(st))); 
-  sl_sync();
-}
 sl_enddef
 
 sl_def(output, void,
@@ -352,14 +329,10 @@ sl_def(teardown, void,
 #ifdef MANY_COLORS
   free(bdata->colors);
 #endif
-#if SVP_HAS_SEP
+#if SVP_HAS_SEP && defined(DISPLAY_DURING_COMPUTE) && !defined(PARALLEL_DISPLAY)
   sl_create(,root_sep->sep_place,,,,,sl__exclusive, *root_sep->sep_free,
 	    sl_glarg(struct SEP*, , root_sep),
-	    sl_glarg(struct placeinfo*, , bdata->p1));
-  sl_sync();
-  sl_create(,root_sep->sep_place,,,,,sl__exclusive, *root_sep->sep_free,
-	    sl_glarg(struct SEP*, , root_sep),
-	    sl_glarg(struct placeinfo*, , bdata->p2));
+	    sl_glarg(struct placeinfo*, , bdata->pex));
   sl_sync();
 #endif
   free(bdata);

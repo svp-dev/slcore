@@ -1,3 +1,10 @@
+2010-08-17  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
+	Simplify the `mandel' benchmark.
+
+	* benchmarks/mandel/mandel.c: Remove use of extra compute place to
+	simplify code and place requirements.
+
 2010-07-16  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
 	Fix the `mandel' benchmark.
