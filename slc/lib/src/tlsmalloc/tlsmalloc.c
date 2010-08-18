@@ -9,6 +9,11 @@
 #include "tricks.h"
 #include ARCH_TLS_SERVICES
 
+#ifdef DEBUG_MGSIM
+#include <svp/mgsim.h>
+#include <svp/testoutput.h>
+#endif
+
 /*** Data structures ***/
 
 struct superblock;
@@ -459,6 +464,10 @@ size_t get_blocksize(size_t bin)
 
 void* tls_malloc(size_t sz)
 {
+#ifdef DEBUG_MGSIM
+//    mgsim_control(0x6d616c6c6f6300ULL, MGSCTL_TYPE_STATACTION, MGSCTL_SA_CONTINUE, MGSCTL_CHAN_DEBUG);
+    output_uint(sz, 0);
+#endif
     size_t ubin = find_bin(sz);
     if (unlikely(ubin >= NR_OF_BINS))
         goto fallback;
@@ -506,6 +515,9 @@ void* tls_malloc(size_t sz)
             sb, ret, ret + blocksize - sizeof(BLOCK_TAG_T),
             sz, blocksize - sizeof(BLOCK_TAG_T));
 #endif
+#ifdef DEBUG_MGSIM
+    output_hex(ret, 0);
+#endif
     return ret;
 
 new_needed:
@@ -521,12 +533,18 @@ new_needed:
             sb, ret, ret + blocksize - sizeof(BLOCK_TAG_T),
             sz, blocksize - sizeof(BLOCK_TAG_T));
 #endif
+#ifdef DEBUG_MGSIM
+    output_hex(ret, 0);
+#endif
     return ret;
 
 fallback:
     ret = EXT_MALLOC(sz);
 #ifdef DEBUG_MALLOC
     fprintf(stderr, "malloc fallback %p (%zu)\n", ret, sz);
+#endif
+#ifdef DEBUG_MGSIM
+    output_hex(ret, 0);
 #endif
     return ret;
     
@@ -542,6 +560,9 @@ void *tls_calloc(size_t cnt, size_t sz)
 
 void tls_free(void *ptr)
 {
+#ifdef DEBUG_MGSIM
+    output_hex(ptr, 0);
+#endif
 #ifdef DEBUG_MALLOC
     fprintf(stderr, "free %p\n", ptr);
 #endif    
@@ -592,7 +613,10 @@ void tls_free(void *ptr)
 void *tls_realloc(void *ptr, size_t ns)
 {
     // FIXME: optimize this.
-
+#ifdef DEBUG_MGSIM
+    output_hex(ptr, 0);
+    output_uint(ns, 0);    
+#endif
 #ifdef DEBUG_MALLOC
     fprintf(stderr, "realloc: %p %zu\n", ptr, ns);
 #endif
@@ -613,11 +637,17 @@ void *tls_realloc(void *ptr, size_t ns)
         fprintf(stderr, "realloc reuse %p (%zu -> %zu)\n", 
                 ptr, osz, ns);
 #endif
+#ifdef DEBUG_MGSIM
+        mgsim_control(0x726575736500ULL, MGSCTL_TYPE_STATACTION, MGSCTL_SA_CONTINUE, MGSCTL_CHAN_DEBUG);
+#endif        
         // nothing to do
         return ptr;
     }
 
     void * p = tls_malloc(ns);
+#ifdef DEBUG_MGSIM
+    output_hex(p, 0);
+#endif
     if (unlikely(!p)) return p;
 
 #ifdef DEBUG_MALLOC

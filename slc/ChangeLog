@@ -1,5 +1,15 @@
 2010-08-18  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	Add malloc debugging for the Microgrid.
+
+	* lib/src/tlsmalloc/tlsmalloc.c,
+	* lib/src/tlstack_malloc.c: Print information when `DEBUG_MGSIM'
+	is defined.
+
+	* lib/mtalpha.mk: New targets for debugging objects.
+
+2010-08-18  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	Fix `slr' some more.
 
 	* tools/lib/Makefile.am (nobase_dist_pkgdata_DATA): Also

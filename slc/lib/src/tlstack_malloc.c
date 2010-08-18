@@ -14,6 +14,7 @@
 #include <stddef.h>
 #include <stdint.h>
 #include <svp/compiler.h>
+#include <svp/testoutput.h>
 #include <stdio.h>
 
 /*
@@ -37,6 +38,9 @@ void tls_malloc_cleanup(void)
 
 void* tls_malloc(size_t sz)
 {
+#ifdef DEBUG_MGSIM
+    output_uint(sz, 0);
+#endif
     uintptr_t tls_top, tls_bottom;
     __asm__("ldfp %0" : "=r"(tls_top));
     __asm__("ldbp %0" : "=r"(tls_bottom));
@@ -64,5 +68,8 @@ void* tls_malloc(size_t sz)
 
     /* allocate */
     *stack_heap_ptr = lptr + sz;
+#ifdef DEBUG_MGSIM
+    output_hex(lptr, 0);
+#endif
     return (void*)lptr;
 }

@@ -146,6 +146,15 @@ mta_gdtoa_%.o: $(srcdir)/src/gdtoa/%.c
 mta_tlsmalloc.o: $(srcdir)/src/tlsmalloc/tlsmalloc.c
 	$(slc_verbose)$(SLC_MTA) -c -o $@ $< $(TLSMALLOC_DEFS)
 
+mta_tlsmalloc_debug.o: $(srcdir)/src/tlsmalloc/tlsmalloc.c
+	$(slc_verbose)$(SLC_MTA) -c -o $@ $< $(TLSMALLOC_DEFS) -DDEBUG_MALLOC
+
+mta_tlsmalloc_mgdebug.o: $(srcdir)/src/tlsmalloc/tlsmalloc.c
+	$(slc_verbose)$(SLC_MTA) -c -o $@ $< $(TLSMALLOC_DEFS) -DDEBUG_MGSIM
+
+mta_tlstack_malloc_mgdebug.o: $(srcdir)/src/tlstack_malloc.c
+	$(slc_verbose)$(SLC_MTA) -c -o $@ $< -DDEBUG_MGSIM
+
 mta_malloc.o: $(srcdir)/src/malloc.c
 	$(slc_verbose)$(SLC_MTA) -c -o $@ $< $(MALLOC_DEFS)
 
