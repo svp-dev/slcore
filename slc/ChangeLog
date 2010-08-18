@@ -1,3 +1,10 @@
+2010-08-18  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
+	Fix `slr' some more.
+
+	* tools/lib/Makefile.am (nobase_dist_pkgdata_DATA): Also
+	distribute/install the `simple' MT profile.
+
 2010-08-17  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
 	Fix `slr'.
