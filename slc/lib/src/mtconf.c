@@ -179,9 +179,13 @@ void sys_conf_init(void *init_parameters)
                 output_string(", ", 2); output_int(size, 2);
                 output_string(" words: ", 2);
             }
-            if (tag > (sizeof(parsers) / sizeof(parsers[0])) || !parsers[tag])
+            if (tag >= (sizeof(parsers) / sizeof(parsers[0])) || !parsers[tag])
             {
-                if (verbose_boot) output_string("unknown tag\n", 2);
+                if (verbose_boot) { 
+                    output_string("unknown tag", 2);
+                    output_int(tag, 2);
+                    output_char('\n', 2);
+                }
             }
             else 
                 parsers[tag](data);

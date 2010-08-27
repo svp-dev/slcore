@@ -1,5 +1,12 @@
 2010-08-27  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	Fix bug in Microgrid initialization code.
+
+	* lib/src/mtconf.c (sys_conf_init): Fix recognition of unknown
+	configuration tags.
+
+2010-08-27  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	Fix `break' support for target `mta_on', fake for `ptl'.
 	
 	* tools/lib/t-ptl/slimpl.m4: Fake availability of `break'
