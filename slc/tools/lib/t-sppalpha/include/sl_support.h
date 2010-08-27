@@ -167,16 +167,9 @@
 [[#]]define __sl_release(Tag) \
   __asm__ __volatile__("release %0" : : "r"(__sl_fid_ ## Tag));
 
-
-
 [[#]]define __sl_dobreak(Val) do {			    \
-    __asm__ __volatile__("break %0" : : "rI"(Val)); \
-    while(1) __nop();                               \
-  } while(0)
-
-[[#]]define __sl_dobreakf(Val) do {			    \
-    __asm__ __volatile__("breakf %0" : : "f"(Val)); \
-    while(1) __nop();                               \
+    __asm__ __volatile__("break; end\t#MT: break");         \
+    while(1);                                               \
   } while(0)
 
 [[#]]define __sl_dokill(Val) __asm__ __volatile__("kill %0" : : "r"(Val))

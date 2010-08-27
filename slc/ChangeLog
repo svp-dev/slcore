@@ -1,3 +1,14 @@
+2010-08-27  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
+	Fix `break' support for target `mta_on', fake for `ptl'.
+	
+	* tools/lib/t-ptl/slimpl.m4: Fake availability of `break'
+	(although it still hasn't the right semantics).
+
+	* tools/lib/t-sppalpha/slimpl.m4 (sl_break),
+	* tools/lib/t-sppalpha/include/sl_support.h (__sl_dobreak): Use
+	the new `break' semantics.
+
 2010-08-18  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
 	Add malloc debugging for the Microgrid.

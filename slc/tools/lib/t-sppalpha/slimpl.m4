@@ -33,7 +33,6 @@ m4_define([[m4_sh_escape]],[['m4_bpatsubst([[$1]],[[[']]],[['"'"']])']])
 
 m4_define([[sl_def]],[[
 m4_define([[__sl_funcname]], [[$1]])
-m4_define([[__sl_breaktype]], [[$2]])
 m4_pushdef([[return]], [[sl_end_thread]])
 m4_step([[__sl_dispcount]])
 m4_define([[__sl_thparms]],"m4_join([[" "]],m4_shiftn(2,$@))")
@@ -101,14 +100,7 @@ m4_popdef([[__sl_atsync]]) m4_dnl
 m4_undefine([[_sl_increate]]) m4_dnl
 ]])
 
-m4_define([[sl_break]],[[
-m4_if(__sl_breaktype,
-int,[[__sl_dobreak([[$1]])]],
-float,[[__sl_dobreakf([[$1]])]],
-,[[
-#error cannot break in this function
-]])
-]])
+m4_define([[sl_break]],[[__sl_dobreak()]])
 
 m4_define([[sl_kill]],[[__sl_dokill([[$1]])]])
 
