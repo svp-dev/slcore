@@ -1,3 +1,11 @@
+2010-08-24  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
+	Update the installer after UvA move.
+
+	* deploy/installer/configure.ac: Allow users to override the FETCH
+	command. Use updated default site (dist.svp-home.org) for tags and
+	distfiles.
+
 2010-07-14  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
 	Enhance the installer.

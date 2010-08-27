@@ -24,7 +24,10 @@ AC_CANONICAL_BUILD
 # Find a known URL retrieve program.
 #
 AC_ARG_VAR([FETCH], [URL retrieve command])
-AC_PATH_PROGS([FETCH], [wget curl])
+if test -z "$FETCH"; then 
+  # not provided by user, try to figure out
+  AC_PATH_PROGS([FETCH], [wget curl])
+fi
 if test -z "$FETCH"; then
   AC_MSG_WARN([Cannot find a URL retrieve command. Archive files must be placed manually into distfiles/.])
   FETCH="${am_missing_run}wget"
@@ -39,7 +42,7 @@ esac
 # If using the default URL, do not check SSL certificate.
 #
 AC_ARG_VAR([DIST_SITE], [base URL to retrieve source archives])
-default_site=https://mac-chris.science.uva.nl/csa/dist/deploy
+default_site=https://dist.svp-home.org/csa/dist/deploy
 if test "x$DIST_SITE" = "x"; then
    DIST_SITE=$default_site
    case $FETCH in
@@ -48,7 +51,7 @@ if test "x$DIST_SITE" = "x"; then
    esac
 fi
 AC_ARG_VAR([TAGS_SITE], [base URL to retrieve version number database])
-default_tags_site=https://mac-chris.science.uva.nl/csa/dist/sl-tags
+default_tags_site=https://dist.svp-home.org/csa/dist/sl-tags
 if test "x$TAGS_SITE" = "x"; then
    TAGS_SITE=$default_tags_site
    case $FETCH in
