@@ -25,3 +25,4 @@
 // SLT_RUN: -dN=200 -dB=5
 // SLT_RUN: -dN=200 -dB=20
 // SLT_RUN: -dN=200 -dB=100
+// XIGNORE: ptl*:*
