@@ -71,6 +71,29 @@ void parse_timings_v1(confword_t* data)
 }
 
 static
+void parse_timings_v2(confword_t* data)
+{
+    mgconf_core_freq = &data[1];
+
+    if (!verbose_boot)
+        return;
+
+    output_string("timings\n"
+                  "   master frequency: ", 2);
+    output_uint(data[0], 2);
+    output_string("MHz\n"
+                  "   core frequency: ", 2);
+    output_uint(data[1], 2);
+    output_string("MHz\n"
+                  "   memory frequency: ", 2);
+    output_uint(data[2], 2);
+    output_string("MHz\n"
+                  "   DDR frequency: ", 2);
+    output_uint(data[3], 2);
+    output_string("MHz\n", 2);
+}
+
+static
 void parse_cache_v1(confword_t* data)
 {
     if (!verbose_boot)

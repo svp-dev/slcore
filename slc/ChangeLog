@@ -1,3 +1,10 @@
+2010-09-02  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
+	Update MG initialization code.
+
+	* lib/src/mtconf.c (parse_timings_v2): Recognize new timings
+	configuration block.
+
 2010-08-27  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
 	Fix bug in Microgrid initialization code.
