@@ -2,6 +2,12 @@
 
 	Update MG initialization code.
 
+	* lib/src/mtconf.c (parsers): Add `parse_timings_v2'.
+
+2010-09-02  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
+	Update MG initialization code.
+
 	* lib/src/mtconf.c (parse_timings_v2): Recognize new timings
 	configuration block.
 

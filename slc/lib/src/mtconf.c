@@ -164,7 +164,8 @@ static parserfunc parsers[] =
     &parse_timings_v1,
     &parse_cache_v1,
     &parse_conc_v1,
-    &parse_layout_v1
+    &parse_layout_v1,
+    &parse_timings_v2
 };
 
 
