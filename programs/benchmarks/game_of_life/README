@@ -1,0 +1,21 @@
+Game of Life
+============
+
+This directory contains an implementation of Conway's Game of Life in
+SVP. 
+
+Acknowledgements
+----------------
+
+The initial implementation was provided by Thorben Krueger, Marten
+Lohstroh, and Vasco Visser, MSc students at the University of
+Amsterdam following the Concurrent Systems course in 2010. 
+
+This implementation uses the C hash table code from Christopher Clark
+(christopher.clark-at-cl.cam.ac.uk,
+http://www.cl.cam.ac.uk/~cwc22/hashtable/), available under the terms
+of the BSD license.
+
+The entire source tree was then integrated to the SL benchmark suite
+by Q. Yang.
+

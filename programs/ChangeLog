@@ -1,3 +1,46 @@
+2010-10-04  Qiang Yang <q.yang@uva.nl>
+
+	Import the Game of Life code from UvA MSc students.
+
+	* benchmarks/game_of_life/gol.h,
+	* benchmarks/game_of_life/gol.c,
+	* benchmarks/game_of_life/worker.c,
+	* benchmarks/game_of_life/worker.h,
+	* benchmarks/game_of_life/data/hershel,
+	* benchmarks/game_of_life/data/rabbits,
+	* benchmarks/game_of_life/data/thunderbird,
+	* benchmarks/game_of_life/hashtable/hashtable.h,
+	* benchmarks/game_of_life/hashtable/hashtable.c,
+	* benchmarks/game_of_life/hashtable/hashtable_itr.h,
+	* benchmarks/game_of_life/hashtable/hashtable_itr.c,
+	* benchmarks/game_of_life/hashtable/hashtable_private.h,
+	* benchmarks/game_of_life/hashtable/hashtable_utility.h,
+	* benchmarks/game_of_life/hashtable/hashtable_utility.c: Import
+	contribution from Thorben Krueger, Marten Lohstroh, and Vasco
+	Visser.
+
+	* benchmarks/game_of_life/README: Acknowledge the contributors.
+
+	* benchmarks/game_of_life/data/benchmark_property,
+	* benchmarks/game_of_life/benchscripts/balance.sh
+	* benchmarks/game_of_life/benchscripts/cycle_block.sh
+	* benchmarks/game_of_life/benchscripts/cycle_chunk.sh
+	* benchmarks/game_of_life/benchscripts/cycle_core.sh
+	* benchmarks/game_of_life/benchscripts/drawbalance.sh
+	* benchmarks/game_of_life/benchscripts/drawbenchmark.sh
+	* benchmarks/game_of_life/benchscripts/drawcycle_block.sh
+	* benchmarks/game_of_life/benchscripts/drawcycle_chunk.sh
+	* benchmarks/game_of_life/benchscripts/drawcycle_core.sh
+	* benchmarks/game_of_life/benchscripts/drawspeedup_block.sh
+	* benchmarks/game_of_life/benchscripts/drawspeedup_chunk.sh
+	* benchmarks/game_of_life/benchscripts/drawspeedup_core.sh
+	* benchmarks/game_of_life/benchscripts/process.py
+	* benchmarks/game_of_life/benchscripts/run_benchmark.sh
+	* benchmarks/game_of_life/benchscripts/speed_block.sh
+	* benchmarks/game_of_life/benchscripts/speed_chunk.sh
+	* benchmarks/game_of_life/benchscripts/speed_core.sh: Provide
+	scripts for benchmarking and result analysis.
+
 2010-08-17  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
 	Simplify the `mandel' benchmark.
