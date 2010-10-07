@@ -19,6 +19,8 @@
 #include "mtconf.h"
 #endif
 
+#include <stdio.h>
+
 // the ordering in the following
 // table should match the counter
 // indices in perf.h.
@@ -79,8 +81,8 @@ float mtperf_compute_extra(const counter_t* before, const counter_t* after, unsi
     {
         float itotal = after[MTPERF_EXECUTED_INSNS] - before[MTPERF_EXECUTED_INSNS];
         itotal /= ncores;
-        itotal /= elapsed;
-        return itotal;
+        if (elapsed) return itotal / elapsed;
+        break;
     }
     case 1:
     {
@@ -88,8 +90,8 @@ float mtperf_compute_extra(const counter_t* before, const counter_t* after, unsi
         float ttotal = after[MTPERF_CUMUL_TT_OCCUPANCY] - before[MTPERF_CUMUL_TT_OCCUPANCY];
         ttotal /= ncores;
         ttotal /= *mgconf_ttes_per_core;
-        ttotal /= elapsed;
-        return ttotal;
+        if (elapsed) return ttotal /= elapsed;
+        break;
     }
     case 2:
     {
@@ -97,16 +99,16 @@ float mtperf_compute_extra(const counter_t* before, const counter_t* after, unsi
         float ttotal = after[MTPERF_CUMUL_FT_OCCUPANCY] - before[MTPERF_CUMUL_FT_OCCUPANCY];
         ttotal /= ncores;
         ttotal /= *mgconf_ftes_per_core;
-        ttotal /= elapsed;
-        return ttotal;
+        if (elapsed) return ttotal /= elapsed;
+        break;
     }
     case 3:
     {
         // exclusive allocate queue size
         float ttotal = after[MTPERF_CUMUL_ALLOC_EX_QSIZE] - before[MTPERF_CUMUL_ALLOC_EX_QSIZE];
         ttotal /= ncores;
-        ttotal /= elapsed;
-        return ttotal;
+        if (elapsed) return ttotal /= elapsed;
+        break;
     }
 #define N_EXTRA_COLUMNS 4
     }
