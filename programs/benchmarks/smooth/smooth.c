@@ -46,6 +46,9 @@ void print2d_square(double * a, size_t N)
 
 }
 
+#define A(i) a[i] // *(double*restrict)(((char*)a) + (i))
+#define B(i) b[i] // *(double*restrict)(((char*)b) + (i))
+#define one 1
 
 sl_def(convo_inner, (sl__naked(native), sl__static),
        sl_glparm(size_t, w), 
@@ -58,9 +61,10 @@ sl_def(convo_inner, (sl__naked(native), sl__static),
     double *restrict a = sl_getp(a);
     double *restrict b = sl_getp(b);
 
-    b[i] = (a[i-w-1] + a[i-w  ] + a[i-w+1] +
-            a[i  -1]            + a[i  +1] +
-            a[i+w-1] + a[i+w  ] + a[i+w+1]) / sl_getp(c8);
+
+    B(i) = (A(i-w-one) + A(i-w  ) + A(i-w+one) +
+            A(i  -one)            + A(i  +one) +
+            A(i+w-one) + A(i+w  ) + A(i+w+one)) * sl_getp(c8);
 }
 sl_enddef
 
@@ -72,19 +76,35 @@ sl_def(convo_outer, sl__static,
 {
     sl_index(i);
 
-    sl_create(,PLACE_LOCAL, i+1, i+sl_getp(w)-1, 1, ,sl__naked(native), convo_inner, 
+    size_t m = i + sl_getp(w) - one;
+
+    sl_create(,PLACE_LOCAL, i+one, m, one, ,sl__naked(native), convo_inner, 
               sl_glarg(size_t,,sl_getp(w)), 
               sl_glarg(double*restrict,,sl_getp(a)), 
               sl_glarg(double*restrict,,sl_getp(b)), 
-              sl_glfarg(double,,sl_getp(c8)));
+              sl_glfarg(double,c8));
+    sl_seta(c8, sl_getp(c8));
+#ifdef __mt_freestanding__
+    asm("":::"memory");
+#endif
+    sl_getp(b)[i/one] = sl_getp(a)[i/one];
+    sl_getp(b)[m/one] = sl_getp(a)[m/one];
     sl_sync();
+}
+sl_enddef
+
+sl_def(copy, sl__static,
+       sl_glparm(double*restrict, a),
+       sl_glparm(double*restrict, b))
+{
+    sl_index(i);
+    sl_getp(b)[i] = sl_getp(a)[i];
 }
 sl_enddef
 
 
 struct bdata {
     size_t N; // problem size
-    size_t L; // number of iterations
     double *restrict a;
     double *restrict b;
 };
@@ -123,11 +143,6 @@ sl_def(initialize, void, sl_glparm(struct benchmark_state*, st))
     for (i = 0; i < data_size; ++i)
         bdata->b[i] = bdata->a[i];
 
-#ifndef ITERS
-#define ITERS 1
-#endif
-    bdata->L = ITERS;
-    
     sl_getp(st)->data = bdata;
 }
 sl_enddef
@@ -141,24 +156,37 @@ sl_def(work, void, sl_glparm(struct benchmark_state*, st))
   size_t N = bdata->N, data_size = N * N;
   double *restrict a = bdata->a;
   double *restrict b = bdata->b;
+
+#ifdef ITERS
   size_t i;
 
-    for (i = 0; i < bdata->L; ++i)
-    {
-        start_interval(wl, "convolution");
-        sl_create(,,N, data_size-N, N, 2,, convo_outer, 
-                  sl_glarg(size_t,, N), 
-                  sl_glarg(double*restrict,,a), 
-                  sl_glarg(double*restrict,,b), 
-                  sl_glfarg(double, , 8.0));
-        sl_sync();
-        finish_interval(wl);
-        double *t = a;
-        a = b;
-        b = t;
-    }
-    bdata->a = a;
-    bdata->b = b;
+  for (i = 0; i < ITERS; ++i)
+  {
+      start_interval(wl, "convolution");
+#endif
+      sl_create(,,N, (data_size-N), N, 2,, convo_outer, 
+                sl_glarg(size_t,, N), 
+                sl_glarg(double*restrict,,a), 
+                sl_glarg(double*restrict,,b), 
+                sl_glfarg(double, , 1.0/8.0));
+      sl_create(,,0, N, 1, 4,, copy,
+                sl_glarg(double*restrict,,a),
+                sl_glarg(double*restrict,,b));
+      sl_create(,,(data_size-N), data_size, 1, 4,, copy,
+                sl_glarg(double*restrict,,a),
+                sl_glarg(double*restrict,,b));
+      sl_sync();
+      sl_sync();
+      sl_sync();
+#ifdef ITERS
+      finish_interval(wl);
+      double *t = a;
+      a = b;
+      b = t;
+  }
+  bdata->a = a;
+  bdata->b = b;
+#endif
 }
 sl_enddef
 
