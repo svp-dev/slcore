@@ -1,3 +1,14 @@
+2010-10-06  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
+	New benchmark `smooth' implementing a simple convolution.
+
+	* benchmarks/smooth/smooth.c,
+	* benchmarks/smooth/Makefile.am,
+	* benchmarks/smooth/smooth.d1: New.
+
+	* benchmarks/Makefile.am,
+	* configure.ac: Update accordingly.
+
 2010-10-04  Qiang Yang <q.yang@uva.nl>
 
 	Import the Game of Life code from UvA MSc students.

@@ -51,6 +51,7 @@ AC_CONFIG_FILES([
 	benchmarks/nas/is/Makefile
 	benchmarks/sha/Makefile
 	benchmarks/livermore/Makefile
+	benchmarks/smooth/Makefile
 ])
 
 AC_OUTPUT
