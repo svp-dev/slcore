@@ -1,3 +1,24 @@
+2010-11-05  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
+	Update the Microgrid machine profiles.
+
+	* tools/lib/mt-profiles/mlcoma128_2chan,
+	* tools/lib/mt-profiles/mlcoma256_4chan: New profiles, made
+	possible by recent support in MGSim for multiple root directories
+	and DDR channels.
+
+	* tools/lib/mt-profiles/mlcoma_default,
+	* tools/lib/mt-profiles/lzcoma_default,
+	* tools/lib/mt-profiles/coma128,
+	* tools/lib/mt-profiles/default: Change defaults to use the
+	2-channel configuration.
+
+	* tools/lib/mt-profiles/mlcoma256_1chan,
+	* tools/lib/mt-profiles/lzcoma256_1chan,
+	* tools/lib/mt-profiles/lzcoma256_4chan: Also set `MemoryFreq'
+	which is now a separate setting from `CoreFreq' and
+	`DDRMemoryFreq'.
+
 2010-10-07  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
 	Simplify the benchmarking output.

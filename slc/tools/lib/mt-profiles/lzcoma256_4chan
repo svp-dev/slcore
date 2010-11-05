@@ -5,7 +5,7 @@ simargs_base+=(-o NumRootDirectories=4)
 
 # DDR Timings, in bus clock cycles, as per 
 # mgsim/config.ini
-simargs_base+=(-o DDRMemoryFreq=1200 -o CoreFreq=1200)
+simargs_base+=(-o DDRMemoryFreq=1200 -o CoreFreq=1200 -o MemoryFreq=1200)
 
 simargs_base+=(-o DDR_tCL=9)
 simargs_base+=(-o DDR_tRCD=11)
