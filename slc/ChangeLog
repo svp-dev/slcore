@@ -1,3 +1,10 @@
+2010-11-11  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
+	Minor packaging fix.
+	
+	* tools/lib/Makefile.am (nobase_dist_pkgdata_DATA): Also
+	distribute and install the new profiles.
+
 2010-11-05  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
 	Update the Microgrid machine profiles.
