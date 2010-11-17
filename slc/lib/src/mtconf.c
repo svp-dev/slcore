@@ -64,10 +64,13 @@ void parse_timings_v1(confword_t* data)
     output_string("timings\n"
                   "   core frequency: ", 2);
     output_uint(data[0], 2);
-    output_string("MHz\n"
+    output_string("MHz\n", 2);
+
+/*
                   "   external memory bandwidth: ", 2);
     output_uint(data[1], 2);
     output_string(" x 1E6 bytes/s\n", 2);
+*/
 }
 
 static
@@ -90,7 +93,45 @@ void parse_timings_v2(confword_t* data)
     output_string("MHz\n"
                   "   DDR frequency: ", 2);
     output_uint(data[3], 2);
-    output_string("MHz\n", 2);
+    output_string("MHz\n"
+                  "   internal memory bandwidth: ", 2);
+    output_uint(data[2]*64, 2); // 1 cache line per cycle
+    output_string(" x 1E6 bytes/s\n"
+                  "   external memory bandwidth: ", 2);
+    output_uint(data[3]*16, 2); // two (double-rate) 64-bit transfers per cycle. 
+    output_string(" x 1E6 bytes/s\n", 2);
+}
+
+static
+void parse_timings_v3(confword_t* data)
+{
+    mgconf_core_freq = &data[1];
+
+    if (!verbose_boot)
+        return;
+
+    output_string("timings\n"
+                  "   master frequency: ", 2);
+    output_uint(data[0], 2);
+    output_string("MHz\n"
+                  "   core frequency: ", 2);
+    output_uint(data[1], 2);
+    output_string("MHz\n"
+                  "   memory frequency: ", 2);
+    output_uint(data[2], 2);
+    output_string("MHz\n"
+                  "   DDR frequency: ", 2);
+    output_uint(data[3], 2);
+    output_string("MHz\n"
+                  "   number of DDR chanels: ", 2);
+    output_uint(data[4], 2);
+    output_string("\n"
+                  "   internal memory bandwidth: ", 2);
+    output_uint(data[2]*64, 2); // 1 cache line per cycle
+    output_string(" x 1E6 bytes/s\n"
+                  "   external memory bandwidth: ", 2);
+    output_uint(data[3]*16*data[4], 2); // two (double-rate) 64-bit transfers per cycle, per channel. 
+    output_string(" x 1E6 bytes/s\n", 2);
 }
 
 static
@@ -165,7 +206,8 @@ static parserfunc parsers[] =
     &parse_cache_v1,
     &parse_conc_v1,
     &parse_layout_v1,
-    &parse_timings_v2
+    &parse_timings_v2,
+    &parse_timings_v3
 };
 
 

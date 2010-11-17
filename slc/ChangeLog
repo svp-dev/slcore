@@ -1,3 +1,14 @@
+2010-11-17  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
+	Improve reporting of the Microgrid configuration information.
+
+	* lib/src/mtconf.c (parse_timings_v1): Remove information about
+	memory bandwidth, as this was computed erroneously by the
+	simulator.
+
+	* lib/src/mtconf.c (parse_timings_v3): Add to support the new
+	timings format, with proper memory bandwidth computation.
+
 2010-11-11  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
 	Minor packaging fix.
