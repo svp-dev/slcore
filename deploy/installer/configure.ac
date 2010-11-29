@@ -42,7 +42,7 @@ esac
 # If using the default URL, do not check SSL certificate.
 #
 AC_ARG_VAR([DIST_SITE], [base URL to retrieve source archives])
-default_site=https://dist.svp-home.org/csa/dist/deploy
+default_site=https://dist.svp-home.org/deploy
 if test "x$DIST_SITE" = "x"; then
    DIST_SITE=$default_site
    case $FETCH in
@@ -51,7 +51,7 @@ if test "x$DIST_SITE" = "x"; then
    esac
 fi
 AC_ARG_VAR([TAGS_SITE], [base URL to retrieve version number database])
-default_tags_site=https://dist.svp-home.org/csa/dist/sl-tags
+default_tags_site=https://dist.svp-home.org/sl-tags
 if test "x$TAGS_SITE" = "x"; then
    TAGS_SITE=$default_tags_site
    case $FETCH in

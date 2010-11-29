@@ -1,3 +1,10 @@
+2010-11-29  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
+	Update after CSA server migration.
+
+	* deploy/installer/configure.ac: Adjust default URLs after the CSA
+	server migration.
+
 2010-08-24  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
 	Update the installer after UvA move.
