@@ -1,3 +1,18 @@
+2010-12-01  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
+	Initial support for SPARC targets.
+
+	* tools/bin/cce.in: Recognize `mts' targets.
+
+	* tools/lib/mtsparc.mk,
+	* tools/lib/r-mtsparc-fpga.sh.in: New.
+
+	* tools/lib/Makefile.am: Stop generating `r-mtsparc-sim.sh' as
+	this is an unsupported target anyway. Generate `r-mtsparc-fpga.sh' instead.
+
+	* build-aux/slctests.mk,
+	* build-aux/sl.mk: Also build for `mts'.
+
 2011-03-13  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
 	Minor tree cleanup.

@@ -29,6 +29,12 @@ else
 slc_ifmtalpha = :
 endif
 
+if ENABLE_SLC_MTSPARC
+slc_ifmtsparc = 
+else
+slc_ifmtsparc = :
+endif
+
 if ENABLE_SLC_PTL
 slc_ifptl =
 else
@@ -56,6 +62,15 @@ SLC_BEFORE = function slc_compile() { \
 	$(slc_ifmtalpha) echo "  SLC    $$SLC_OUT".mta_s && \
         $(slc_ifmtalpha) $(SLC_LOCAL) $${SLC_OUT:+-o "$$SLC_OUT".mta_s} -b mta_s "$$@" \
 	      -I$(srcdir) -I$(builddir) -lm $(SLFLAGS) $(SLFLAGS_MTALPHA) $(SLFLAGS_MTA_S) && \
+	$(slc_ifmtsparc) echo "  SLC    $$SLC_OUT".mts_n && \
+        $(slc_ifmtsparc) $(SLC_LOCAL) $${SLC_OUT:+-o "$$SLC_OUT".mts_n} -b mts_n "$$@" \
+	      -I$(srcdir) -I$(builddir) -lm $(SLFLAGS) $(SLFLAGS_MTSPARC) $(SLFLAGS_MTS_N) && \
+	$(slc_ifmtsparc) echo "  SLC    $$SLC_OUT".mts_s && \
+        $(slc_ifmtsparc) $(SLC_LOCAL) $${SLC_OUT:+-o "$$SLC_OUT".mts_s} -b mts_s "$$@" \
+	      -I$(srcdir) -I$(builddir) -lm $(SLFLAGS) $(SLFLAGS_MTSPARC) $(SLFLAGS_MTS_S) && \
+	$(slc_ifmtsparc) echo "  SLC    $$SLC_OUT".mts && \
+        $(slc_ifmtsparc) $(SLC_LOCAL) $${SLC_OUT:+-o "$$SLC_OUT".mts} -b mts "$$@" \
+	      -I$(srcdir) -I$(builddir) -lm $(SLFLAGS) $(SLFLAGS_MTSPARC) $(SLFLAGS_MTS) && \
 	if test -n "$$SLC_OUT"; then \
 	  printf '\#! /bin/sh\n' >"$@" && \
 	  printf 'echo "This script is only a stub. Run the actual program with:"\n' >>"$@" && \

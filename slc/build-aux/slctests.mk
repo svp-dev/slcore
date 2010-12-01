@@ -37,6 +37,10 @@ EXTRA_TEST_IMPL += mta_n::-m~lzcoma_default
 EXTRA_TEST_IMPL += mta_s::-m~lzcoma_default
 endif
 endif
+
+if ENABLE_CHECK_SPR_MTS
+EXTRA_TEST_IMPL += mts_n
+endif
 # add extra implementations here when they become available
 endif
 

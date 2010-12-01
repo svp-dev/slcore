@@ -1,0 +1,49 @@
+#! @BASH@
+# Run script for MT binaries.
+PS4='+ r-mtsparc-fpga($$): '
+if test -n "${TRACE:-}"; then set -x; fi
+set -eu
+basename=${0##*/}
+program=${1:?}
+datafile=${2:?}
+fdatafile=${3:?}
+shift
+shift
+shift
+
+slc_datadir=${SLC_DATADIR:-@slc_datadir@}
+SIMARGS=${SIMARGS:-}
+python=${PYTHON:-@python@}
+simargs_base=()
+
+
+b=${program##*/}
+d=$(dirname "$program")
+if test -z "${SLR_RDIR:-}"; then d=$(cd "$d" && pwd -P); fi
+
+envfile=${SLR_RDIR:-${TMPDIR:-/tmp}}/$b.$$.envdata
+if test -n "${VERBOSE:-}"; then echo "$basename: dumping environment to: $envfile" >&2; fi
+$python -c "import os, sys; sys.stdout.write('\0'.join(('%s=%s' % x for x in os.environ.items()))+'\0'*8)" >"$envfile"
+
+### FIXME: replace "echo" below with the target FPGA simulation script
+runner_cmdline=(echo data="$datafile" fdata="$fdatafile" envdata="$envfile" ${1+"$@"} "$d/$b")
+
+first=${runner_cmdline[0]}
+unset runner_cmdline[0]
+if test -n "${SLR_RDIR:-}"; then
+  cat >"$SLR_RDIR"/run.sh <<EOF
+#! /bin/bash
+d=\$(dirname "\$0")
+cd "\$d"
+$thevar=\${$thevar:-$first}
+EOF
+  set | grep '^runner_cmdline=' >>"$SLR_RDIR"/run.sh
+  echo "exec ${RUNNER_PREFIX:-} $do_debug \"\$$thevar\" \"\${runner_cmdline[@]}\"" >>"$SLR_RDIR"/run.sh
+  chmod +x run.sh
+fi
+
+if test -n "${VERBOSE:-}"; then
+    echo "$basename: cwd=$PWD" >&2
+    echo "$basename: running: ${RUNNER_PREFIX:-} $do_debug $first ${runner_cmdline[*]}" >&2
+fi  
+exec ${RUNNER_PREFIX:-} $do_debug "$first" "${runner_cmdline[@]}"

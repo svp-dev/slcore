@@ -79,7 +79,9 @@ Example one-word implementation aliases:
 
   ptl           muTC-ptl (pthreads / C++)
 
-  mtalpha       MT-Alpha / Microgrid simulator
+  mta           MT-Alpha / Microgrid simulator
+
+  mts           MT-SPARC / FPGA LEON3
 
 Example "long" aliases:
 
@@ -142,6 +144,10 @@ case $alias in
     mta_on)       alias=spp-mta_naked-mtalpha-sim ;;
     mta_s)        alias=spr-seq_naked-mtalpha-sim ;;
 
+    mtsparc|mts)  alias=spr-mts_hybrid-mtsparc-fpga ;;
+    mts_n)        alias=spr-mts_naked-mtsparc-fpga ;;
+    mts_s)        alias=spr-seq_naked-mtsparc-fpga ;;
+
     hrt)          alias=spr-hrt_hybrid-host-host-hrt ;;
     hrt_n)        alias=spr-hrt_naked-host-host-hrt ;;
     hrt_s)        alias=spr-seq_naked-host-host-hrt ;;
@@ -200,6 +206,7 @@ case $slc_dialect in
             seq_naked) target=seq ;;
             mta_naked) target=mta ;;
             mta_hybrid) target=mta+seq ;;
+            mts_naked) target=mts ;;
             hrt_naked)  target=hrt ;;
             hrt_hybrid) target=hrt+seq ;;
             *) echo "unknown variant: $slc_dialect-$slc_variant" >&2 ;;
@@ -345,6 +352,9 @@ case $slc_arch in
     mtalpha)
         slc_cflags+=(-mcpu=21264a -fno-math-errno -fno-trapping-math)
         ;;
+    mtsparc)
+        slc_cflags+=(-mcpu=v8 -fno-math-errno -fno-trapping-math -mno-fpu)
+        ;;
     *)
 	;;
 esac
@@ -352,18 +362,25 @@ slc_ppflags+=(-DUSE_C_DIVIDE)
 
 slc_debug_flags=(${slc_debug_flags:+$slc_debug_flags})
 case $slc_arch-$slc_os in
-    mt*-sim)
+    mtalpha-sim)
         slc_ppflags+=(-D__mt_freestanding__ -D__WORDSIZE=64)
-        # slc_cflags="$slc_cflags -D__mt_freestanding__ -D__WORDSIZE=64"
-        # slc_cflags="$slc_cflags -nostdinc"
 	slc_ldflags+=(-Wl,-Ttext -Wl,0x1000000 -nostdlib)
+	;;
+    mtsparc-fpga)
+        slc_ppflags+=(-D__mt_freestanding__ -D__WORDSIZE=32)
+	slc_ldflags+=(-nostdlib)
+	;;
+    host-host-hrt)
+        slc_ldflags+=($PTHREAD_LIBS -static)
+        ;;
+esac
+
+case $slc_arch in
+    mt*)
 	if test "x$slc_debug_flags" != "x"; then
 	    echo "$basename: warning: flags unsupported by $slc_arch-$slc_os: ${slc_debug_flags[*]}" >&2
 	fi
 	slc_debug_flags=()
-	;;
-    host-host-hrt)
-        slc_ldflags+=($PTHREAD_LIBS -static)
         ;;
 esac
 

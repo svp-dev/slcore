@@ -16,7 +16,7 @@
 RUNSCRIPTS = \
 	r-host.sh \
 	r-mtalpha-sim.sh \
-	r-mtsparc-sim.sh
+	r-mtsparc-fpga.sh 
 pkglib_SCRIPTS = $(RUNSCRIPTS)
 CLEANFILES = $(RUNSCRIPTS)
 
@@ -40,7 +40,7 @@ r-mtalpha-sim.sh: r-mt-sim.sh.in Makefile
 	$(AM_V_at)chmod +x,a-w $@.out
 	$(AM_V_at)mv -f $@.out $@
 
-r-mtsparc-sim.sh: r-mt-sim.sh.in Makefile
+r-mtsparc-fpga.sh: r-mtsparc-fpga.sh.in Makefile
 	$(AM_V_at)rm -f $@ $@.out
 	$(AM_V_GEN)$(SED) <$< >$@.out \
 	 -e 's|@slc_datadir[@]|$(pkgdatadir)|g' \
@@ -133,6 +133,7 @@ nobase_pkglib_DATA =
 nobase_pkglib_LIBRARIES = 
 
 EXTRA_DIST = \
+	r-mtsparc-fpga.sh.in \
 	r-mt-sim.sh.in \
 	r-host.sh.in \
 	fibre.c \
@@ -146,4 +147,5 @@ BUILT_SOURCES =
 include $(srcdir)/seqc.mk
 include $(srcdir)/ptl.mk
 include $(srcdir)/mtalpha.mk
+include $(srcdir)/mtsparc.mk
 include $(srcdir)/hrt.mk
