@@ -1,5 +1,16 @@
 2010-12-14  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	Improve the documentation.
+
+	* doc/HACKING.txt: Update to reflect the latest practices.
+
+	* doc/README.txt,
+	* doc/requirements.txt,
+	* doc/sl_deps.graffle,
+	* doc/sl_deps.png: Update to reflect the latest requirements.
+
+2010-12-14  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	Improve documentation for `cce'.
 
 	* tools/bin/cce.in: Document the environment variables.

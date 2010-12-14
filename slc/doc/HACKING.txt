@@ -13,14 +13,14 @@ Getting started
 1. Obtain the top-level source tree (``sys``) from a public Git branch
    or the CSA Subversion repository.
 
-1. Read ``slc/doc/README.txt`` and ``slc/doc/HACKING.txt`` thoroughly.
+2. Read ``slc/doc/README.txt`` and ``slc/doc/HACKING.txt`` thoroughly.
 
-2. Ensure you did #1, really. 
+3. Ensure you did #2, really. 
 
-3. Check all the requirements are available, install/upgrade as
+4. Check all the requirements are available, install/upgrade as
    needed. Use the Makefile in ``deploy`` if possible.
 
-4. Run::
+5. Run::
 
      ./bootstrap
      mkdir build
@@ -29,7 +29,7 @@ Getting started
      make
      make check
 
-5. Enjoy!
+6. Enjoy!
 
 Special requirements
 --------------------
@@ -37,11 +37,11 @@ Special requirements
 When working from the SCM repository, the following *additional*
 requirements apply:
 
-- Autoconf 2.61 or later
+- Autoconf 2.68 or later
 
 - Automake 1.11 or later
 
-- Docutils 0.5 or later
+- Docutils 0.6 or later
 
 - GNU Texinfo 4.13 or later
 
@@ -72,24 +72,25 @@ install``, e.g.::
 Committing work
 ===============
 
-When committing to the ``trunk`` branch of the repository:
+When pushing your changes to a remote directory:
 
 1. ensure that ``make distcheck`` succeeds.
 
-2. update the appropriate ``ChangeLog`` with a detailed description of
-   your changes. [#]_
+2. ensure that the appropriate ``ChangeLog`` contains a detailed
+   description of your changes for each commit step you are
+   sending. [#]_
 
    .. [#] Emacs users: use ``C-x 4 a`` from an edited file to get the
       entry automatically generated. Vim users: see
       http://www.vim.org/scripts/script.php?script_id=1631
 
-   .. note:: There are 4 change logs, pick the one recursively nearest
-      to each change to document them. Strip the beginning of the path
-      to each modified file relative to the location of the
+   .. note:: There may be several change logs, pick the one recursively
+      nearest to each change to document them. Strip the beginning of
+      the path to each modified file relative to the location of the
       ChangeLog. (see previous ChangeLog entries and follow the
       pattern).
 
-3. save the output of ``svn diff`` to a file.
+3. save the output of ``svn diff`` or ``git format-patch`` to a file.
 
 4. commit your set(s) of changes, one per software package. The
    content of the commit message should be the latest ``ChangeLog``

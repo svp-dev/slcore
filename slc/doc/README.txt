@@ -1,5 +1,5 @@
 slc, a SVP language compiler.
-Copyright (C) 2008, 2009 the CSA group, The SL project.
+Copyright (C) 2008, 2009, 2010 the CSA group, The SL project.
 
 =====================
  Introduction to SLC
@@ -42,20 +42,19 @@ The following tools are used by slc:
 - the POSIX thread library
 
 The following tools are also required, but can be installed using the
-automated deployment Makefile in the separate ``deploy`` package:
+automated installer in the separate ``deploy`` package:
 
 - GNU m4 1.4.x (1.4.6 or later), with patches to allow resetting the
   line counter and file name for error messages;
 
-- µTC MT-Alpha core compiler (v4.1.x) with mtalpha binutils
+- GNU binutils 2.18+ modified with Microthreading extensions, supporting
+  ``mtalpha`` and ``mtsparc`` targets;
 
-- GCC 4.3.x (or later) configured as cross-compiler for
-  alpha-gnu-linux with alpha binutils, with patches to recognize a new
-  divide instruction for the DEC-Alpha.
+- GCC 4.5+ modified to target Microthreaded architectures.
 
-For more details about how to obtain and install the required tools,
-check out the document ``doc/requirements.pdf`` or
-``doc/requirements.txt`` in the source directory.
+For more details about prerequisites, check out the document
+``doc/requirements.pdf`` or ``doc/requirements.txt`` in the source
+directory.
 
 Using slc
 =========

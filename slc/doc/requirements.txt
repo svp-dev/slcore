@@ -2,7 +2,7 @@
  Prerequisites for the SL compiler
 ===================================
 
-:Date: 2009-08-30
+:Date: 2010-12-14
 
 :Abstract: This document explains what are the prerequisites for the
   SL compiler and how to install them.
@@ -13,7 +13,7 @@ Introduction
 The SL "compiler" is actually a front-end that drives the execution of
 other tools, the actual compilers. For each possible SVP target a
 different set of compilation tools is driven by the SL compiler. For
-example the µTC-PTL target uses the host C++ compiler; the Microgrids
+example the µTC-PTL target uses the host C++ compiler; the Microgrid
 target uses an Alpha cross-compiler, etc.
 
 As the intent of the SL compiler is to support all these targets at
@@ -51,14 +51,9 @@ Overall installation strategy:
 
   - install the (modified) binutils for target ``mtalpha-linux-gnu``;
 
-  - install the binutils for target ``alpha-linux-gnu``;
-
 - phase 2:
 
-  - install the µTC core compiler (target ``mtalpha-linux-gnu``);
-
-  - install a "stock" GCC 4.4 Alpha cross-compiler (target
-    ``alpha-linux-gnu``);
+  - install the modified GCC compiler (target ``mtalpha-linux-gnu``);
 
 - phase 3
 
@@ -90,11 +85,12 @@ require the following:
 - svn client (v1.4 or later)
 - wget / fetch
 - GNU tar (v1.14 or later)
-- GNU GMP (v4.1 or later)
-- GNU MPFR (v2.3.2 or later)
+- GNU GMP (v4.3 or later)
+- GNU MPFR (v3 or later)
+- GNU MPC (v0.8 or later)
 - GNU make (v3.80 or later)
-- GNU Autoconf (v2.63 or later)
-- GNU Automake (v1.10 or later)
+- GNU Autoconf (v2.65 or later)
+- GNU Automake (v1.11 or later)
 - GNU Texinfo (v4.13 or later)
 
 As we expect all the systems where ``slc`` will be used to have a
@@ -122,367 +118,16 @@ Automated installation of prerequisites
 =======================================
 
 For convenience, all the steps described in the rest of this document
-have been collected into a single ``make`` rule file named
-``deploy/Makefile``.
-
-This can be configured by copying the accompanying ``.mk.default``
-files to ``.mk`` and editing the make variables appropriately. Open
-the files and read the comments for instructions.
-
-
-Prerequisites for the sequential C implementation
-=================================================
-
-Required:
-
-- C compiler generating executable code for the host architecture.
-- Native ``ar`` and ``ranlib`` utilities.
-
-For this target any C99 compiler recognized by slc's ``configure``
-script *should* work with its accompanying ``ar`` and ``ranlib``
-utilities, although the GNU C compiler and GNU binutils package are
-recommended.
-
-As we assume that ``slc`` will be used predominantly in environments
-where a native GNU development suite is already available, this
-document does not detail how to find and install that.
-
-Prerequisites for the µTC-PTL implementation
-============================================
-
-Required:
-
-- C++ compiler generating executable code for the host architecture.
-- POSIX Threads library that can be linked with C++ programs.
-
-For this target any ISO C++ compiler recognized by slc's ``configure``
-script *should* work.
-
-The µTC-PTL code itself is included with the ``slc`` sources, so it is
-not required to install µTC-PTL separately.
-
-SL programs compiled via µTC-PTL are linked using the C++ compiler and
-``-lpthread``. This should be sufficient to link against the POSIX
-threads library on all systems where it is supported.
-
-.. note:: Please report any systems where that is not the case;
-   e.g. systems where µTC-PTL compilation succeeds but where linking
-   fails with pthread-related errors.
-
-As we assume that ``slc`` will be used predominantly in POSIX
-environments where POSIX threads are supported and a native GNU
-development suite is already available, this document does not detail
-how to find and install that.
-
-Prerequisites for the core µTC implementation
-=============================================
-
-Required:
-
-- µTC core compiler for the MT-Alpha architecture.
-- ``ar`` and ``ranlib`` utilities for the MT-Alpha binary format.
-
-More specifically, slc's ``configure`` script looks for [#]_ the
-following programs:
-
-- ``mtalpha-linux-gnu-gcc``
-- ``mtalpha-linux-gnu-ar``
-- ``mtalpha-linux-gnu-ranlib``
-
-.. [#] in the directories listed in the ``PATH`` environment variable
-   or the directory specified as installation root with ``--prefix``.
-
-While these requirements seem "simple" the µTC core compiler itself is
-will need the MT-Alpha assembler (``mtalpha-linux-gnu-as``) and linker
-(``mtalpha-linux-gnu-ld``).  These items come from the **modified
-binutils** that we provide. See below for details.
-
-MT-Alpha binutils
------------------
-
-The MT-Alpha binutils is a derived version of the GNU binutils that
-contain modified utilities to deal with the MT-Alpha assembly language
-and binary executable format.
-
-The modified version is available from the CSA repository at the
-following location: https://svn.svp-home.org/sw/svp/mg/binutils/trunk
-
-Once this is downloaded the standard GNU sequence ``configure``,
-``make``, ``make install`` can be used as follows:
-
-1. ``configure --prefix=... --target=mtalpha-linux-gnu``
-
-   - for ``--prefix`` indicate a target installation directory that
-     will be shared throughout the installation procedure by all the
-     other utilities; for example ``$HOME/svp``. 
-
-2. ``make`` (optionally ``-jNN`` to speed up) 
-
-3. ``make install``
-
-
-Example sequence of commands::
-
-   mkdir -p ~/src/binutils
-   cd ~/src/binutils
-   svn co https://svn.svp-home.org/sw/svp/mg/binutils/trunk
-   mkdir build-mtalpha
-   cd build-mtalpha
-   ../trunk/configure --target=mtalpha-linux-gnu --prefix=$HOME/svp 
-   make -j4
-   make install
-
-
-Installation of the µTC core compiler
--------------------------------------
-
-The µTC core compiler requires that the binutils for
-``mtalpha-linux-gnu`` are already installed.
-
-Installation goes as follows:
-
-1. get the µTC core compiler sources from the CSA repository:
-   https://svn.svp-home.org/sw/svp/mg/mg-gcc/trunk
-
-2. ``configure --prefix=...  (some other flags, see below)``
-
-3. ``make`` (optionally ``-jNN`` to speed up)
-
-4. ``make install``
-
-The following command line arguments should be passed to
-``configure``:
-
-``--prefix=...``
-   Directory where the core compiler will be installed. We recommend
-   the same prefix as the binutils, e.g. ``--prefix=$HOME/svp``.
- 
-``--target=mtalpha-linux-gnu``
-   This selects the target architecture.
-
-``--disable-libmudflap``
-   Disable support for the code instrumentation ``libmudflap``
-   library, which is unsupported on MT-Alpha.
-
-``--disable-libssp``
-   Disable support for the stack protection ``libssp`` library, which
-   is unsupported on MT-Alpha.
-
-``--disable-coverage``
-   Disable support for code instrumentation extensions to measure code
-   coverage, which are unsupported on MT-Alpha.
-
-``--disable-multilib``
-   Disables a replacement library for basic C library functions which
-   is not usde in SL programs anyways.
-
-``--enable-gdb``
-   Compile the cross-compiler with debugging options, to allow running
-   the GNU debugger on the compiler itself afterwards.
-
-``--disable-nls``
-   Disable support for multiple languages in GCC, in order to avoid
-   extra dependencies.
-
-``--enable-languages=c``
-   Only build the C (µTC) compiler.
-
-``--disable-bootstrap``
-   Do not try to build the compiler in two stages.
-
-Example sequence of commands::
-
-   mkdir -p ~/src/utc-gcc
-   cd ~/src/utc-gcc
-   svn co https://svn.svp-home.org/sw/svp/mg/mg-gcc/trunk
-   mkdir build
-   cd build
-   ../trunk/configure --target=mtalpha-linux-gnu --prefix=$HOME/svp \
-       --disable-libmudflap --disable-libssp --disable-coverage \
-       --enable-gdb --disable-nls \
-       --enable-languages=c --disable-bootstrap
-   make -j4
-   make install
-
-
-Prerequisites for the alternate MT-Alpha implementation
-=======================================================
-
-Required: "stock" GCC 4.4 cross-compiler for Linux/Alpha with patches
-to support a new divide instruction on the Alpha ISA.
-
-More specifically, slc's ``configure`` script looks for [#]_ the
-following program: ``alpha-linux-gnu-gcc``.
-
-.. [#] in the directories listed in the ``PATH`` environment variable
-   or the directory specified as installation root with ``--prefix``.
-
-While this requirement seems "simple" the GCC 4.4 compiler itself is
-non-trivial to install:
-
-1. it requires itself the Linux/Alpha assembler
-   (``alpha-linux-gnu-as``) and linker (``alpha-linux-gnu-ld``);
-
-2. it requires some additional libraries on the host, namely GMP and MPFR.
-
-3. it requires patches (in ``deploy/patches``) to apply to the source
-   tree before building).
-
-Item #1 can be installed from any GNU binutils distribution; we
-recommend using the same tree as for the MT-Alpha target (see below).
-
-Item #2 is not described in this document. See the latest GCC
-installation documentation for details.
-
-Item #3 adds support for a new divide instruction, this is required
-for direct support for C's divide operator in SL.
-
-Linux/Alpha binutils
---------------------
-
-Required:
-
-- binutils source code (we recommend the same as for MT-Alpha);
-- C compiler.
-
-The Linux/Alpha binutils are installed in pretty much the same way as
-the MT/Alpha binutils:
-
-1. ``configure --prefix=... --target=alpha-linux-gnu``
-
-   - for ``--prefix`` indicate a target installation directory, that
-     should be the same as for the other tools; for example
-     ``$HOME/svp``.
-
-2. ``make`` (optionally ``-jNN`` to speed up) 
-
-3. ``make install``
-
-Example sequence of commands::
-
-   mkdir -p ~/src/binutils/build-alpha
-   cd ~/src/binutils/build-alpha
-   svn co https://svn.svp-home.org/sw/svp/mg/binutils/trunk
-   mkdir build-alpha
-   cd build-alpha
-   ../trunk/configure --target=alpha-linux-gnu --prefix=$HOME/svp
-   make -j4
-   make install
-
-Installation of the GCC 4.4 cross-compiler
-------------------------------------------
-
-Required:
-
-- source code for GCC 4.4.x;
-
-- binutils for ``alpha-linux-gnu`` already installed;
-
-- MPFR and GMP libraries already installed on the host system.
-
-- patches from ``deploy/patches``.
-
-Installation goes as follows:
-
-1. get the GCC source code from one of GNU's download sites.
-
-2. apply the patches.
-
-3. ``configure --prefix=... (some other flags, see below)``
-
-4. patch up the generated ``Makefile`` to prevent building libraries
-   we do not use;
-
-5. ``make`` (optionally ``-jNN`` to speed up)
-
-6. ``make install``
-
-The following command line arguments should be used:
-
-``--target=alpha-linux-gnu``
-   This selects the target architecture.
-
-All the lines in the generated ``Makefile`` matching the regular
-expression ``maybe-[a-z]*-target-lib(iberty|gomp|gcc)`` must be
-removed.
-
-All the following command line arguments used for the µTC core
-compiler should be passed as well here::
-
-  --prefix=...
-  --disable-libmudflap
-  --disable-libssp
-  --disable-coverage
-  --disable-multilib
-  --enable-gdb
-  --disable-nls
-  --enable-languages=c
-  --disable-bootstrap
-
-Example sequence of commands::
-
-   mkdir -p ~/src/gcc
-   cd ~/src/gcc
-   wget http://gcc.cybermirror.org/releases/gcc-4.4.0/gcc-core-4.4.0.tar.bz2
-   tar -xjf gcc-core-4.4.0.tar.bz2
-   mkdir build
-   cd build
-   ../gcc-4.4.0/configure --target=alpha-linux-gnu --prefix=$HOME/svp \
-       --disable-libmudflap --disable-libssp --disable-coverage \
-       --enable-gdb --disable-nls \
-       --enable-languages=c --disable-bootstrap --disable-multilib
-   grep -v 'maybe-[a-z]*-target-\(libgcc\|libiberty\|libgomp\)' <Makefile >Makefile.tmp
-   mv Makefile.tmp Makefile
-   make -j4
-   make install
-
-.. note:: On MacOS X systems using MacPorts, compilation during
-   ``make`` may fail with a link error related to ``iconv``. If this
-   happens, proceed as follows:
-
-   1. replace "``LIBICONV = -liconv``" present in ``gcc/Makefile`` by::
-
-        LIBICONV = -L/usr/lib -liconv
-
-   2. run ``make`` again.
-
-
-The Microgrids simulator
-========================
-
-Although it is not required to *compile* programs, ``slc`` comes with
-a companion script ``slr`` which is able to run a Microgrid program
-inside the Microgrid simulator.
-
-This requires the Microgrids simulator to be installed as a
-prerequisite. Specifically slc's ``configure`` script will look for
-``mgsim-alpha``.
-
-To install the simulator proceed as follows:
-
-1. get the simulator sources from the CSA repository:
-   https://svn.svp-home.org/sw/svp/mg/mgsim/trunk
-
-2. Generate the ``configure`` script by running ``bootstrap``.
-
-3. ``configure --prefix=... && make && make install`` 
-
-.. note:: For ease of use, indicate the same installation prefix as
-   for the other utilities.
+have been collected into an installer package available in a separate
+``deploy`` repository.
 
 
 Conclusion
 ==========
 
-This document describes in detail the various prerequisites for the SL
-compiler, and how to get and install them.
+This document describes the various prerequisites for the SL compiler,
+and how to get and install them.
 
-Obviously these steps can be automated and both a ``Makefile`` (see
-`Automated installation of prerequisites`_ above) and an installer
-script (courtesy of Michael Hicks) are available to perform the work
-with minimum user interaction.
+These steps are automated in an installer (see `Automated installation
+of prerequisites`_ above) that can be obtained separately.
 
-Despite the existence of the automated tools this document can serve
-as a reference in cases "things go wrong" or if there is a need to
-manually tweak the installation for new environments that we haven't
-tested yet.
