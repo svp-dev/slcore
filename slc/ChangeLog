@@ -1,3 +1,10 @@
+2010-12-14  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
+	Adjust heap parameters after back-end compiler update.
+
+	* lib/src/heap.c: Lower the page size, as the compiler is now
+	complaining that the alignment is too large.
+
 2010-11-17  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
 	Improve reporting of the Microgrid configuration information.

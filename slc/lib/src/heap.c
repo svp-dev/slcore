@@ -16,7 +16,7 @@
 #include "heap.h"
 
 #ifndef PAGESIZE
-#define PAGESIZE 1024*1024*1024
+#define PAGESIZE 256*1024*1024
 #endif
 
 #ifndef HEAP_SIZE
@@ -24,7 +24,7 @@
 #endif
 
 #ifndef PAGE_BITS
-#define PAGE_BITS 30
+#define PAGE_BITS 28
 #endif
 
 char HEAP[HEAP_SIZE] __attribute__ ((aligned(PAGESIZE)));
