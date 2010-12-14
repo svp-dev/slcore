@@ -65,9 +65,13 @@ Options:
   -v, --version      print version number, then exit
 
 Environment variables:
-  CC_HOST_OVERRIDE CXX_HOST_OVERRIDE
-  CC_ALPHA_OVERRIDE UTCC_MTALPHA_OVERRIDE
-  CC_SPARC_OVERRIDE UTCC_MTSPARC_OVERRIDE
+  xx_HOST_OVERRIDE xx_HOST_OVERRIDE
+  xx_MTALPHA_OVERRIDE xx_MTSPARC_OVERRIDE
+  
+  (with 'xx' either CC, AR, CXX, RANLIB)
+
+  PTHREAD_CC_OVERRIDE PTHREAD_CFLAGS_OVERRIDE
+  PTHREAD_LIBS_OVERRIDE
 
 Example one-word implementation aliases:
 
@@ -79,7 +83,9 @@ Example one-word implementation aliases:
 
 Example "long" aliases:
 
-  spp--mtalpha-sim utc0--mtalpha-sim ptl--host-host-ptl
+  spr-seq_naked-host-host-seqc 
+  ptl-ptl-host-host-ptl  
+  spr-mta_hybrid-mtalpha-sim
 
 Report bugs and patches to $bugreports.
 EOF

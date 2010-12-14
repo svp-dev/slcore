@@ -1,5 +1,11 @@
 2010-12-14  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	Improve documentation for `cce'.
+
+	* tools/bin/cce.in: Document the environment variables.
+
+2010-12-14  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	Adjust usage of back-end tools.
 
 	The custom GCC patch was recently integrated as a `mtalpha' target
