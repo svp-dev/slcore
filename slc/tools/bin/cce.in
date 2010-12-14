@@ -31,15 +31,11 @@ CXX_HOST=${CXX_HOST_OVERRIDE:-@CXX_HOST@}
 AR_HOST=${AR_HOST_OVERRIDE:-@AR_HOST@}
 RANLIB_HOST=${RANLIB_HOST_OVERRIDE:-@RANLIB_HOST@}
 
-CC_ALPHA=${CC_ALPHA_OVERRIDE:-@CC_ALPHA@}
-UTCC_MTALPHA=${UTCC_ALPHA_OVERRIDE:-@UTCC_MTALPHA@}
-CC_MTALPHA=$UTCC_MTALPHA
+CC_MTALPHA=${CC_MTALPHA_OVERRIDE:-@CC_MTALPHA@}
 AR_MTALPHA=${AR_MTALPHA_OVERRIDE:-@AR_MTALPHA@}
 RANLIB_MTALPHA=${RANLIB_MTALPHA_OVERRIDE:-@RANLIB_MTALPHA@}
 
-CC_SPARC=${CC_SPARC_OVERRIDE:-@CC_SPARC@}
-UTCC_MTSPARC=${UTCC_SPARC_OVERRIDE:-@UTCC_MTSPARC@}
-CC_MTSPARC=$UTCC_MTSPARC
+CC_MTSPARC=${CC_MTSPARC_OVERRIDE:-@CC_MTSPARC@}
 AR_MTSPARC=${AR_MTSPARC_OVERRIDE:-@AR_MTSPARC@}
 RANLIB_MTSPARC=${RANLIB_MTSPARC_OVERRIDE:-@RANLIB_MTSPARC@}
 
@@ -264,16 +260,16 @@ case $slc_dialect-$slc_arch in
 	slc_filter2=(cp)
 	;;
     spr-*|spp-*)
-        archcomp=$(eval "echo \${CC_$basearchvar:-\"\$scu_helper\"} -std=gnu99")
+        archcomp=$(eval "echo \${CC_$archvar:-\"\$scu_helper\"} -std=gnu99")
 	slc_compiler=("$python" "$spp_helper" "$slc_transbase" compile $archcomp)
 	slc_filter1=("$python" "$spp_helper" "$slc_transbase" filter)
 	slc_filter2=("$python" "$spp_helper" "$slc_transbase" filter2)
 	;;
     *-*)
 	case $slc_complang in
-	    cpp) slc_compiler=($(eval "echo \${CXX_$basearchvar:-$scu_helper}")) ;;
-	    c)   slc_compiler=($(eval "echo \${CC_$basearchvar:-$scu_helper} -std=gnu99")) ;;
-	    utc) slc_compiler=($(eval "echo \${UTCC_$archvar:-$scu_helper} -std=utc")) ;;
+	    cpp) slc_compiler=($(eval "echo \${CXX_$archvar:-$scu_helper}")) ;;
+	    c)   slc_compiler=($(eval "echo \${CC_$archvar:-$scu_helper} -std=gnu99")) ;;
+	    utc) slc_compiler=($(eval "echo \${CC_$archvar:-$scu_helper} -std=utc")) ;;
 	esac
 	slc_filter1=(cp)
 	slc_filter2=("$python" "$spp_helper" "$slc_transbase" filter2)

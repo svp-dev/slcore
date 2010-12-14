@@ -1,5 +1,30 @@
 2010-12-14  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	Adjust usage of back-end tools.
+
+	The custom GCC patch was recently integrated as a `mtalpha' target
+	on a dedicated Microthreaded-enabled GCC tree. This drops the
+	requirement for both the muTC core compiler and the
+	`alpha-linux-gnu' binutils/GCC targets. Also the SPARC target is
+	renamed to `mtsparc-linux-gnu'.
+
+	* build-aux/mgbinutils.m4: Use the new SPARC target name.
+
+	* build-aux/slc.m4: Detect `CC_MTALPHA' and `CC_MTSPARC' instead
+	of `CC_ALPHA' and `CC_MTSPARC'. Use the new SPARC target name. Do
+	not detect the muTC core compiler any more.
+
+	* tools/bin/Makefile.am: Substitute only `CC_MTALPHA' and
+	`CC_MTSPARC'.
+	* tools/bin/cce.in: Use them.
+
+	* build-aux/mggcc.m4: Remove.
+	* build-aux/Makefile.am,
+	* build-aux/sl-init-autoconf: Do not distribute or install
+	mggcc.m4 any more.
+
+2010-12-14  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	Adjust MT-Alpha compilation scheme after back-end compiler update.
 
 	* tools/lib/t-sppalpha/include/sl_support.h,

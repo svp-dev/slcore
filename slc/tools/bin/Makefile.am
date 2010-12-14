@@ -31,12 +31,10 @@ edit_scripts = $(SED) \
 	       -e 's|@AR_HOST[@]|$(AR)|g' \
 	       -e 's|@RANLIB_HOST[@]|$(RANLIB)|g' \
 	       -e 's|@M4[@]|$(M4)|g' \
-	       -e 's|@CC_ALPHA[@]|$(CC_ALPHA)|g' \
-	       -e 's|@UTCC_MTALPHA[@]|$(UTCC_MTALPHA)|g' \
+	       -e 's|@CC_MTALPHA[@]|$(CC_MTALPHA)|g' \
 	       -e 's|@AR_MTALPHA[@]|$(AR_MTALPHA)|g' \
 	       -e 's|@RANLIB_MTALPHA[@]|$(RANLIB_MTALPHA)|g' \
-	       -e 's|@CC_SPARC[@]|$(CC_SPARC)|g' \
-	       -e 's|@UTCC_MTSPARC[@]|$(UTCC_MTSPARC)|g' \
+	       -e 's|@CC_MTSPARC[@]|$(CC_MTSPARC)|g' \
 	       -e 's|@AR_MTSPARC[@]|$(AR_MTSPARC)|g' \
 	       -e 's|@RANLIB_MTSPARC[@]|$(RANLIB_MTSPARC)|g' \
 	       -e 's|@PTHREAD_CC[@]|$(PTHREAD_CC)|g' \

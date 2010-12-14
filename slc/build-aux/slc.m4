@@ -45,11 +45,11 @@ AC_DEFUN([SLC_PATH_USER],
 
 AC_DEFUN([_SLC_WITH_CROSS_GCC],
 [dnl
- AC_ARG_VAR([CC_ALPHA], [Location of the GCC/Alpha cross-compiler.])
- AC_PATH_PROG([CC_ALPHA], [alpha-linux-gnu-gcc], [no], [$prefix/bin$PATH_SEPARATOR$PATH])
+ AC_ARG_VAR([CC_MTALPHA], [Location of the GCC/Alpha cross-compiler.])
+ AC_PATH_PROG([CC_MTALPHA], [mtalpha-linux-gnu-gcc], [no], [$prefix/bin$PATH_SEPARATOR$PATH])
 
- AC_ARG_VAR([CC_SPARC], [Location of the GCC/Sparc cross-compiler.])
- AC_PATH_PROG([CC_SPARC], [sparc-leon-linux-gcc], [no], [$prefix/bin$PATH_SEPARATOR$PATH])
+ AC_ARG_VAR([CC_MTSPARC], [Location of the GCC/Sparc cross-compiler.])
+ AC_PATH_PROG([CC_MTSPARC], [mtsparc-linux-gnu-gcc], [no], [$prefix/bin$PATH_SEPARATOR$PATH])
 ])
 
 # SLC_CHECK_TARGETS
@@ -59,7 +59,6 @@ AC_DEFUN([SLC_CHECK_TARGETS],
 [dnl
   AC_REQUIRE([AC_PROG_CXX])
   AC_REQUIRE([AC_WITH_MG_BINUTILS])
-  AC_REQUIRE([AC_WITH_MG_GCC])
   AC_REQUIRE([AC_WITH_MGSIM])
   AC_REQUIRE([_SLC_WITH_CROSS_GCC])
 
