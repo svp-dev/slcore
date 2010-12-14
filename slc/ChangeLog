@@ -1,5 +1,18 @@
 2010-12-14  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	Adjust MT-Alpha compilation scheme after back-end compiler update.
+
+	* tools/lib/t-sppalpha/include/sl_support.h,
+	* tools/lib/slc/mtalpha/visitors.py (TFun_2_MTATFun.visit_fundef):
+	Force clobber input registers for global thread parameters,
+	otherwise the code generator thinks they are uninitialized and
+	removes the data dependency chain.
+
+	* tools/lib/t-sppalpha/include/sl_support.h: Add an extra level of
+	backslashes as the new CPP removes one level outside of macros.
+
+2010-12-14  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	Adjust heap parameters after back-end compiler update.
 
 	* lib/src/heap.c: Lower the page size, as the compiler is now

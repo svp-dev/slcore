@@ -323,12 +323,20 @@ class TFun_2_MTATFun(DefaultVisitor):
                             self.gllist.append(name)                              
                             if species == "f":
                                 reg = "gf%d" % regnr
+                                regtype = "f"
                             else:
                                 reg = "g%d" % regnr
+                                regtype = "r"
                             reg = regmagic.vname_to_legacy(reg)
+                            igname = '__slPgi_%s' % name
+                            gname = '__slPg_%s' % name
                             newitems.append(flatten(a['loc'], 'register ') + 
                                             ctype + 
-                                            ' const __slPg_%(name)s __asm__("%(reg)s"); ' % locals())
+                                            ' %(igname)s __asm__("%(reg)s"); ' 
+                                            ' __asm__ __volatile__("# MT: global init %%0"'
+                                            ' : "=%(regtype)s"(%(igname)s)); '
+                                            ' register ' % locals() + 
+                                            ctype + ' const %(gname)s = %(igname)s; ' % locals())
 
         # For every global parameter which is also declared
         # mutable, we have to create a "regular" variable for it
