@@ -1,5 +1,13 @@
 2010-12-14  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	Improve the compilation of `break' for MT-Alpha.
+
+	* tools/lib/slc/mtalpha/visitors.py (TFun_2_MTATFun.visit_break):
+	Use `__builtin_unreachable()' as this is now supported by the
+	back-end compiler.
+
+2010-12-14  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	Update bugreport address.
 
 	* configure.ac: do it.

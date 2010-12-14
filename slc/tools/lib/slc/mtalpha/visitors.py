@@ -423,6 +423,7 @@ class TFun_2_MTATFun(DefaultVisitor):
         return flatten(br.loc, 
                        ' do {'
                        ' __asm__ __volatile__("break; end\\t# MT: break");'
+                       ' __builtin_unreachable();'
                        ' while(1);'
                        '} while(0)')
     
