@@ -1,5 +1,12 @@
 2010-12-14  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	Minor packaging fix.
+
+	* lib/mtalpha.mk (CLEANFILES): Also clean the target-neutral
+	libraries.
+
+2010-12-14  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	Improve the documentation.
 
 	* doc/HACKING.txt: Update to reflect the latest practices.

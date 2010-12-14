@@ -220,8 +220,10 @@ mtalpha_sim_libmalloc_notls_a_CONTENTS = \
 	mta_malloc_wrappers.o
 
 CLEANFILES += \
-	mta_hybrid-mtalpha-sim/missing_uclibc_math.o \
-	mta_hybrid-mtalpha-sim/libm.a
+	$(mtalpha_sim_libm_a_CONTENTS) \
+	$(mtalpha_sim_libmalloc_notls_a_CONTENTS) \
+	mtalpha-sim/libm.a \
+	mtalpha-sim/libmalloc_notls.a
 
 mtalpha-sim/%.a:
 	$(AM_V_at)rm -f $@
