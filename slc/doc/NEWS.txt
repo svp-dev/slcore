@@ -4,15 +4,90 @@
 
 This document describes major updates to the SL toolchain.
 
-Version 3.1.x
-=============
-
-Development version only.
+Version 3.2, December 2010
+==========================
 
 Changes since 3.1
 -----------------
 
-...
+Language and library
+````````````````````
+
+- The SL language was extended with specifiers for thread function
+  definitions, declarations and creates. Notably the specifier
+  ``sl__native`` for thread functions indicates that only the "pure"
+  code must be generated (without alternatives, for targets that
+  support alternative) and the specifier ``sl__exclusive`` for creates
+  indicates exclusivity.
+
+- The C keyword ``return`` is allowed to terminate (sequential)
+  execution in a thread function body.
+
+- The semantics of the SVP *break* operation have been updated to only
+  stop execution of the current thread and let other threads in the
+  family run to completion. This is supported for the sequential and
+  Microthreading targets.
+
+Changes related to the Microgrid targets
+````````````````````````````````````````
+
+- SVP's *break* operation is supported (see above).
+
+- The SEP code is updated to allow sharing of exclusive places between
+  requesters.
+
+- The asynchronous monitoring facility from the Microgrid simulator is
+  now supported in ``slr``.
+
+- New performance counters were added.
+
+- The Microgrid machine profiles were updated to reflect the recent
+  availability of multiple DDR channels in the new COMA memory system.
+
+- The back-end compiler was updated to GCC 4.5.
+
+Bug fixes since 3.1
+-------------------
+
+- A bug with thread function pointer declarations was fixed. This
+  would otherwise cause compilation issues.
+
+- A large inefficiency would cause exponential space complexity during
+  transformation in the depth of C scope nesting. This would cause
+  exceedingly large compilation times and/or stack blowouts for large
+  programs. This was optimized to a quadratic algorithm in the depth
+  of create nesting (i.e. not blocks).
+
+- A bug in the handling of floating-point shared thread parameters for
+  MT-Alpha was fixed. This would otherwise cause invalid results or
+  errors during execution.
+
+- A bug with assembly fixups on MT-Alpha was fixed. This would
+  otherwise cause memory access errors or invalid results during
+  execution.
+
+- A bug with thread index declarations on MT-Alpha was fixed. This
+  would otherwise cause invalid index values to be used during
+  execution.
+
+Known limitations
+-----------------
+
+- Support for the C99 standard library is incomplete.
+
+- C's ``long double`` type is not supported.
+
+- The C ``tgamma`` function is less accurate than required by the
+  specification.
+
+- SVP's *kill* operation is inconsistently supported across targets
+  (or not at all). No known programs are affected.
+
+- Due to both software and hardware limitations, Microgrid code is
+  much less efficient in several key places than the architecture
+  would allow it to be (poor register management due to conservative
+  assumptions about unknown use in C function calls). This will be
+  investigated and optimized in future versions of the tool chain.
 
 Version 3.1, June 2010
 ======================

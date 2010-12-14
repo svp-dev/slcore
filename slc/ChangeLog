@@ -1,5 +1,13 @@
 2010-12-14  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	Release version 3.2.
+
+	* build-aux/package_version: Update to 3.2.
+
+	* doc/NEWS.txt: Document recent changes.
+
+2010-12-14  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	Improve the compilation of `break' for MT-Alpha.
 
 	* tools/lib/slc/mtalpha/visitors.py (TFun_2_MTATFun.visit_break):
