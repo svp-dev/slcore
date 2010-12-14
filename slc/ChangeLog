@@ -1,5 +1,11 @@
 2010-12-14  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	Update bugreport address.
+
+	* configure.ac: do it.
+
+2010-12-14  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	Minor packaging fix.
 
 	* lib/mtalpha.mk (CLEANFILES): Also clean the target-neutral
