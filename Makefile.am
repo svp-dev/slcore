@@ -13,25 +13,7 @@
 
 # 
 
-EXTRA_DIST = \
-	deploy/README \
-	deploy/patches/gcc.patch \
-	deploy/patches/m4.patch \
-	deploy/patches/sysc.patch \
-	deploy/sysc/do_diff.sh \
-	deploy/sysc/bootstrap \
-	deploy/sysc/README \
-	deploy/dist/binutils-dist.mk \
-	deploy/dist/mggcc-dist.mk \
-	deploy/dist/gcc-dist.mk \
-	deploy/dist/mgsim-dist.mk \
-	deploy/dist/m4-dist.mk \
-	deploy/dist/slc-dist.mk \
-	deploy/dist/sc-dist.mk \
-	deploy/dist/dist-common.mk \
-	deploy/dist/common.mk
-
-SUBDIRS = . slc tests programs deploy
+SUBDIRS = . slc tests programs
 
 # run `slt' on the console (eye candy, for more intensive CPU
 # usage and faster results, use `make check')

@@ -1,3 +1,14 @@
+2010-12-14  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
+	Split deployment and installation tools to a separate repository.
+
+	* deploy/: Remove. This is now hosted elsewhere.
+	(https://git.svp-home.org/deploy.git)
+
+	* bootstrap,
+	* configure.ac,
+	* Makefile.am: Update accordingly.
+
 2010-11-29  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
 	Update after CSA server migration.
