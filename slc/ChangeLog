@@ -1,3 +1,11 @@
+2010-12-19  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
+	Minor improvement in `spr'.
+
+	* tools/lib/slc/visitors.py:
+	(DefaultVisitor.visit_create, PrintVisitor.visit_create): Also
+	visit the FID, if present.
+
 2010-12-15  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
 	* doc/NEWS.txt: Initialize for 3.3.x

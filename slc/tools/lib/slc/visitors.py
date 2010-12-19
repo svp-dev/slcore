@@ -138,6 +138,8 @@ class DefaultVisitor(BaseVisitor):
             return seta
 
       def visit_create(self, create):
+            if create.fid_lvalue is not None:
+                  create.fid_lvalue.accept(self)
             create.place.accept(self)
             create.start.accept(self)
             create.step.accept(self)
@@ -365,6 +367,9 @@ class PrintVisitor(DefaultVisitor):
 
     def visit_create(self, c):
         self.__out.write(' sl_create(')
+
+        if c.fid_lvalue is not None:
+              c.fid_lvalue.accept(self)
 
         for b in (c.place, c.start, c.step, c.limit, c.block):
             self.__out.write(',')
