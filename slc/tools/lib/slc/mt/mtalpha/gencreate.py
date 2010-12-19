@@ -216,10 +216,12 @@ class Create_2_MTACreate(ScopedVisitor):
                               CVarUse(decl = argvar) + ') : "0"(' + usefvar + '));')
     
                           
-        # in call cases (sync and detach), release resources.
-        newbl += (flatten(cr.loc_end, 
-                         ' __asm__ __volatile__("release %%0\\t#MT: SYNC %s"' % lbl) +
-                  ' : : "r"(' + usefvar + '));')
+        if cr.sync_type != 'spawn':
+            # for normal sync and detach, release resources.
+            # spawn will sync+release later.
+            newbl += (flatten(cr.loc_end, 
+                              ' __asm__ __volatile__("release %%0\\t#MT: SYNC %s"' % lbl) +
+                      ' : : "r"(' + usefvar + '));')
 
         return newbl
 

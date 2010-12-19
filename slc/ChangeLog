@@ -1,5 +1,38 @@
 2011-03-25  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	Initial implementation for `spawn'.
+
+	* tools/lib/t-spr/slimpl.m4: New syntax `sl_spawndecl', `sl_spawn'
+	and `sl_spawnsync'.
+
+	* tools/lib/slc/ast.py: Create IR nodes for the new constructs.
+	* tools/lib/slc/input/parse.py: Parse them.
+	* tools/lib/slc/visitors.py: Visit them (DefaultVisitor,
+	PrintVisitor).
+
+	* tools/lib/slc/lower/lowerspawnsync.py,
+	* tools/lib/slc/lower/spawndecl.py: New. 
+
+	* tools/lib/slc/mt/mtalpha/genssync.py,	
+	* tools/lib/slc/mt/mtalpha/gencreate.py: Compile them to
+	MT-Alpha. `sl_spawn' is equivalent to `sl_create();sl_detach()'
+	without code in between, and without the actual
+	`detach'. `sl_spawnsync' performs `sync' then `release'.
+
+	* tools/lib/Makefile.am: List the new files.
+
+	* tools/lib/slc/lower/seq.py: Compile them as a sequential
+	schedule. Ensure that the FID is set to 0 so that `spawnsync' with
+	MT stays a no-op.
+
+	* tools/lib/slc/lower/split.py: Also support splitting
+	`spawnsync'.
+
+	* tools/lib/slc/front/chains.py: Extend the chains with the new
+	visitors.
+
+2011-03-25  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	Fix reporting bug in benchmarking framework.
 
 	* lib/src/perf.c (mtperf_compute_extra): Use the ratio between

@@ -92,6 +92,14 @@ m4_define([[sl_index]], [[m4_dnl
 [[""", {'loc':r"""]]__file__:__line__[[""",'type':'indexdecl','name':"""$1"""}, r"""]]m4_dnl
 ]])
 
+m4_define([[sl_spawndecl]], [[m4_dnl
+[[""",{'loc':r"""]]__file__:__line__[[""",'type':'spawndecl','name':"""$1"""},r"""]]m4_dnl
+]])
+
+m4_define([[sl_spawn]], [[m4_dnl
+do sl_lbr sl_create($@); sl_forcespawn([[$1]]); sl_rbr while(0)
+]])
+
 m4_define([[sl_create]], [[m4_dnl
 m4_pushdef([[_sl_increate]],1)m4_dnl
 m4_step([[_sl_crcnt]])m4_dnl
@@ -128,7 +136,7 @@ m4_define([[sl_shfarg]], [[_sl_doarg([[shfarg]],[[$1]],[[$2]],[[$3]])]])
 m4_define([[sl_sync]],[[m4_dnl
 m4_ifndef([[_sl_increate]],[[m4_fatal(sync without create)]])m4_dnl
 [["""],'loc_end':r"""]]__file__:__line__[[""",'sync':'normal',]]m4_dnl
-[['result':[r""" $1 """]}, r"""]]
+[['result':[r""" $1 """]}, r"""]]m4_dnl
 m4_popdef([[_sl_increate]])m4_dnl
 m4_popdef([[_sl_lbl]])m4_dnl
 ]])
@@ -138,6 +146,18 @@ m4_ifndef([[_sl_increate]],[[m4_fatal(sync without create)]])m4_dnl
 [["""],'loc_end':r"""]]__file__:__line__[[""",'sync':'detach'}, r"""]]m4_dnl
 m4_popdef([[_sl_increate]])m4_dnl
 m4_popdef([[_sl_lbl]])m4_dnl
+]])
+
+m4_define([[sl_forcespawn]],[[m4_dnl
+m4_ifndef([[_sl_increate]],[[m4_fatal(sync without create)]])m4_dnl
+[["""],'loc_end':r"""]]__file__:__line__[[""",'sync':'spawn'}, r"""]]m4_dnl
+m4_popdef([[_sl_increate]])m4_dnl
+m4_popdef([[_sl_lbl]])m4_dnl
+]])
+
+m4_define([[sl_spawnsync]], [[m4_dnl
+[[(]]sl_lbr[[""", {'loc':r"""]]__file__:__line__[[""",]]m4_dnl
+[['type':'spawnsync','rhs':[r""" $1 """]}, r"""]]sl_rbr[[)]]m4_dnl
 ]])
 
 m4_define([[_sl_doget]],[[m4_dnl

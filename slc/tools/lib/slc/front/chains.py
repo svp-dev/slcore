@@ -15,14 +15,19 @@ from ..lower.rename import *
 from ..lower.remflavors import *
 from ..mt.mtalpha.gentfun import *
 from ..mt.mtalpha.gencreate import *
+from ..mt.mtalpha.genssync import *
 from ..mt.mtsparc.gentfun import *
 from ..mt.mtsparc.gencreate import *
+from ..lower.spawndecl import *
+from ..lower.lowerspawnsync import *
 from ..am.visitors import *
 
 _common_prefix = [
     ('walk', DefaultVisitor()),
     ('check', CheckVisitor()),
     ('cr2lc', Create_2_LowCreate()),
+    ('lss', LowerSpawnSync()),
+    ('lsd', LowerSpawnDecl()),
     ]
 
 _common_suffix = [
@@ -39,24 +44,31 @@ _chains = {
     'seq' : _common_prefix + [
         ('lseta', LinkSetA()),
         ('autores', AutoResolve()),
+        ('autoresss', AutoResolveSpawnSync()),
         ('flattencr',Create_2_Loop()),
         ('flattenfun',TFun_2_CFun()),
+        ('flattenss',SSync_2_CSSync()),
         ] + _common_suffix,
     'hrt' : _common_prefix + [
         ('lseta', LinkSetA()),
         ('autores', AutoResolve()),
+        ('autoresss', AutoResolveSpawnSync()),
         ('flattencr',Create_2_HydraCall()),
         ('flattenfun',TFun_2_HydraCFunctions()),
+        # ('flattenss',SSync_2_HydraSSync()),
         ] + _common_suffix,
     # FIXME: support hrt+seq here
     'mta' : _common_prefix + [
         ('lseta', LinkSetA()),
         ('autores', AutoResolve()),
+        ('autoresss', AutoResolveSpawnSync()),
         ('flattencr', Create_2_MTACreate()), 
         ('flattenfun',TFun_2_MTATFun()),
+        ('flattenss',SSync_2_MTASSync()),
         ] + _common_suffix,
     'mta+seq' : _common_prefix + [
         ('splitcr', SplitCreates(oracle=make_mt_oracle('mta'))),
+        ('splitss', SplitSpawnSync(oracle=make_mt_oracle('mta'))),
         ('lseta', LinkSetA()),
         ('flseta', FlavorSetA()),
         ('splitfun', SplitFuns(oracle=make_mt_oracle('mta'))),
@@ -64,15 +76,20 @@ _chains = {
                                                 'cseq':Create_2_Loop()}))),
         ('flattenfun', DefaultVisitor(Dispatcher({'fmta':TFun_2_MTATFun(),
                                                   'fseq':TFun_2_CFun()}))),
+        ('flattenss', DefaultVisitor(Dispatcher({'smta':SSync_2_MTASSync(),
+                                                 'sseq':SSync_2_CSSync()}))),
         ] + _common_suffix,
     'mts' : _common_prefix + [
         ('lseta', LinkSetA()),
         ('autores', AutoResolve()),
+#        ('autoresss', AutoResolveSpawnSync()),
         ('flattencr', Create_2_MTSCreate()), 
         ('flattenfun',TFun_2_MTSTFun()),
+#        ('flattenss',SSync_2_MTSSSync()),
         ] + _common_suffix,
     'mts+seq' : _common_prefix + [
         ('splitcr', SplitCreates(oracle=make_mt_oracle('mts'))),
+#        ('splitss', SplitSpawnSync(oracle=make_mt_oracle('mts'))),
         ('lseta', LinkSetA()),
         ('flseta', FlavorSetA()),
         ('splitfun', SplitFuns(oracle=make_mt_oracle('mts'))),
@@ -80,15 +97,20 @@ _chains = {
                                                 'cseq':Create_2_Loop()}))),
         ('flattenfun', DefaultVisitor(Dispatcher({'fmts':TFun_2_MTSTFun(),
                                                   'fseq':TFun_2_CFun()}))),
+#        ('flattenss', DefaultVisitor(Dispatcher({'smta':SSync_2_MTSSSync(),
+#                                                 'sseq':SSync_2_CSSync()}))),
         ] + _common_suffix,
     'mtsn' : _common_prefix + [
         ('lseta', LinkSetA()),
         ('autores', AutoResolve()),
+#        ('autoresss', AutoResolveSpawnSync()),
         ('flattencr', Create_2_MTSCreate(newisa=True)), 
         ('flattenfun',TFun_2_MTSTFun()),
+#        ('flattenss',SSync_2_MTSSSync()),
         ] + _common_suffix,
     'mtsn+seq' : _common_prefix + [
         ('splitcr', SplitCreates(oracle=make_mt_oracle('mts'))),
+#        ('splitss', SplitSpawnSync(oracle=make_mt_oracle('mts'))),
         ('lseta', LinkSetA()),
         ('flseta', FlavorSetA()),
         ('splitfun', SplitFuns(oracle=make_mt_oracle('mts'))),
@@ -96,6 +118,8 @@ _chains = {
                                                 'cseq':Create_2_Loop()}))),
         ('flattenfun', DefaultVisitor(Dispatcher({'fmts':TFun_2_MTSTFun(),
                                                   'fseq':TFun_2_CFun()}))),
+#        ('flattenss', DefaultVisitor(Dispatcher({'smts':SSync_2_MTSSSync(),
+#                                                 'sseq':SSync_2_CSSync()}))),
         ] + _common_suffix
 }
 

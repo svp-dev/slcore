@@ -9,6 +9,9 @@ class ExampleOracle(object):
         self.archname = archname
         self.mapping = {'c'+archname:(0,'f'+archname), 'cseq':(1,'fseq')}
 
+    def flavors_for_spawnsync(self, ss):
+        return ['smta']
+
     def flavors_for_create(self, cr):
         s = cr.extras.get_attr('forceseq', None)
         if s is not None:
@@ -65,10 +68,52 @@ class ExampleOracle(object):
                                        expr = CVarUse(decl = cr.fun)),
                           index = Opaque("%d" % ix))
 
+
 def make_mt_oracle(archname):
 
     return ExampleOracle(archname)
         
+    
+
+class SplitSpawnSync(ScopedVisitor):
+    def __init__(self, oracle, *args, **kwargs):
+        super(SplitSpawnSync, self).__init__(*args, **kwargs)
+        self.oracle = oracle
+
+    def visit_spawnsync(self, ss):
+
+        # first split recursively
+        ss.rhs.accept(self)
+
+
+        memo = {}
+        for s in self.scope_stack:
+            memo[id(s)] = s
+        for d in self.cur_scope.decls:
+            memo[id(d)] = d
+
+        flavors = self.oracle.flavors_for_spawnsync(ss)
+
+        flavors.reverse()
+        newbl = []
+
+        next = None
+        for f in flavors:
+            newmemo = copy.copy(memo)
+            newss = copy.deepcopy(ss, newmemo)
+            newss.target_next = next
+            newss.flavor = f
+            
+            thisalt = []
+            next = CLabel(loc = ss.loc, name = 'Sn$%s' % ss.label)
+            thisalt.append(next)
+            thisalt.append(Flavor(f, items = newss))
+            thisalt.append(Opaque(';') + CGoto(loc = ss.loc, target = ss.target_resolved) + ';')
+            newbl = thisalt + newbl
+
+        newbl.insert(0, CGoto(loc = ss.loc, target = next) + ';')
+        return newbl
+
 
 class SplitCreates(ScopedVisitor):
 
@@ -238,6 +283,7 @@ class SplitFuns(DefaultVisitor):
         return newbl
                 
 
-__all__ = ['SplitFuns', 'SplitCreates', 'make_mt_oracle']
+__all__ = ['SplitFuns', 'SplitCreates', 'make_mt_oracle', 'SplitSpawnSync']
+
 
 

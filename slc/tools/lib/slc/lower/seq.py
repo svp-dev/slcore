@@ -4,6 +4,11 @@ from ..msg import warn
 
 #### Sequential transforms ####
 
+class SSync_2_CSSync(DefaultVisitor):
+
+    def visit_spawnsync(self, ss):
+        return []
+
 class Create_2_Loop(ScopedVisitor):
 
     def visit_seta(self, seta):
@@ -41,6 +46,7 @@ class Create_2_Loop(ScopedVisitor):
 
         newbl = []
         lbl = cr.label
+        fidvar = cr.cvar_fid
 
         # generate the function pointer
         if cr.funtype == cr.FUN_ID:
@@ -76,6 +82,9 @@ class Create_2_Loop(ScopedVisitor):
                                              expr = thefun)))
 
             funvar = CVarUse(decl = funvar)
+
+        # generate pseudo-FID
+        newbl.append(Opaque(';') + CVarSet(decl = fidvar, rhs = Opaque('0')))
 
         # consume body
         newbl.append(lc.body.accept(self))
@@ -217,4 +226,4 @@ class TFun_2_CFun(DefaultVisitor):
         return flatten(et.loc, " return 0 ")
 
 
-__all__ = ['Create_2_Loop', 'TFun_2_CFun']
+__all__ = ['Create_2_Loop', 'TFun_2_CFun', 'SSync_2_CSSync']

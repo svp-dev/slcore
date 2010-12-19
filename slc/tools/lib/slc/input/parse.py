@@ -41,6 +41,14 @@ def parse_indexdecl(item):
       return IndexDecl(loc = item['loc'],
                        indexname = item['name'].strip())
 
+def parse_spawndecl(item):
+      return SpawnDecl(loc = item['loc'],
+                       spawnname = item['name'].strip())
+
+def parse_spawnsync(item):
+      return SpawnSync(loc = item['loc'],
+                       rhs = parse_block(item['rhs']))
+
 def parse_scope(item):
       s = Scope(loc = item['loc'],
                 loc_end = item['loc_end'])
@@ -93,6 +101,8 @@ def parse_block(items):
                   elif t == 'end_thread': b += parse_end_thread(item)
                   elif t == 'decl_funptr': b += parse_funptrdecl(item)
                   elif t == 'scope': b += parse_scope(item)
+                  elif t == 'spawndecl': b += parse_spawndecl(item)
+                  elif t == 'spawnsync': b += parse_spawnsync(item)
                   else: unexpected(item)
             else: 
                   assert isinstance(item, str)

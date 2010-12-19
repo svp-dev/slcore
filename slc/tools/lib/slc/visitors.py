@@ -231,6 +231,13 @@ class DefaultVisitor(BaseVisitor):
             ctd.ctype.accept(self)
             return ctd
 
+      def visit_spawndecl(self, sd):
+            return sd
+
+      def visit_spawnsync(self, ss):
+            ss.rhs.accept(self)
+            return ss
+
 #### Scoped visitor: keep track of scopes ####
 
 class ScopedVisitor(DefaultVisitor):
@@ -361,6 +368,10 @@ class PrintVisitor(DefaultVisitor):
           self.__out.write(' sl_index(%s)' % idecl.indexname)
           return idecl
 
+    def visit_spawndecl(self, sd):
+          self.__out.write(' sl_spawndecl(%s)' % sd.spawnname)
+          return sd
+
     def visit_endthread(self, et):
         self.__out.write(' sl_end_thread ')
         return et
@@ -478,5 +489,11 @@ class PrintVisitor(DefaultVisitor):
           ci.index.accept(self)
           self.__out.write('])')
           return ci
+
+    def visit_spawnsync(self, ss):
+          self.__out.write(' sl_spawnsync(')
+          ss.rhs.accept(self)
+          self.__out.write(')')
+          return ss
 
 __all__ = ['flatten', 'BaseVisitor', 'Dispatcher', 'DefaultVisitor', 'ScopedVisitor', 'PrintVisitor']

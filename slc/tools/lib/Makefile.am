@@ -104,6 +104,7 @@ nobase_python_PYTHON = \
 	slc/mt/mtalpha/compile.py \
 	slc/mt/mtalpha/gentfun.py \
 	slc/mt/mtalpha/gencreate.py \
+	slc/mt/mtalpha/genssync.py \
 	slc/mt/mtalpha/asmproc/__init__.py \
 	slc/mt/mtalpha/asmproc/base.py \
 	slc/mt/mtalpha/asmproc/common.py \
@@ -130,6 +131,8 @@ nobase_python_PYTHON = \
 	slc/lower/lowcvars.py \
 	slc/lower/remflavors.py \
 	slc/lower/rename.py \
+	slc/lower/spawndecl.py \
+	slc/lower/lowerspawnsync.py \
 	slc/input/__init__.py \
 	slc/input/read.py \
 	slc/input/parse.py \

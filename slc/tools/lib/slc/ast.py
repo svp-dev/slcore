@@ -549,3 +549,15 @@ class IndexDecl(Item):
         super(IndexDecl, self).__init__(*args, **kwargs)
         self.indexname = indexname
 
+class SpawnDecl(Item):
+    def __init__(self, spawnname = None, *args, **kwargs):
+        super(SpawnDecl, self).__init__(*args, **kwargs)
+        self.spawnname = spawnname
+
+
+class SpawnSync(Item):
+    def __init__(self, rhs = None, *args, **kwargs):
+        super(SpawnSync, self).__init__(*args, **kwargs)
+        if not isinstance(rhs, Block):
+            rhs = Block(items = rhs)
+        self.rhs = rhs
