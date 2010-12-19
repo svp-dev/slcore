@@ -1,5 +1,13 @@
 2010-12-19  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	Minor refactoring in `spr'.
+
+	* tools/lib/slc/lower/seq.py,
+	* tools/lib/slc/mtalpha/visitors.py: Do not define the constructor
+	as this can be inherited.
+
+2010-12-19  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	Minor improvement in `spr'.
 
 	* tools/lib/slc/visitors.py:

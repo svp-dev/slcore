@@ -5,8 +5,6 @@ import regmagic
 
 
 class Create_2_MTACreate(ScopedVisitor):
-    def __init__(self, *args, **kwargs):
-        super(Create_2_MTACreate, self).__init__(*args, **kwargs)
 
     def visit_seta(self, seta):
         b = seta.rhs.accept(self)
