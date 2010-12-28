@@ -16,8 +16,6 @@
 import pprint
 import sys
 from slc.mt.mtalpha.regdefs import regmagic
-from slc.mt.mtalpha import compile
-from slc.mt.mtalpha.asmproc import base, opt
 
 def fundef(funcname, counter, *args):
 
@@ -175,20 +173,26 @@ def create(funcname, tag, br, *args):
 
 
 if __name__ == "__main__":
-   module = sys.argv[1]
-   function = sys.argv[2]
-   rest = sys.argv[3:]
-   assert module in ['utc0','sppalpha', 'spr']
-   assert function in ['fundef', 'create', 'compile','filter','filter2']
-   if function == 'fundef':
-      fundef(*rest)
-   elif function == 'create':
-      create(*rest)
-   elif function == 'compile':
-      compile.compile(*rest)
-   elif function == 'filter':
-      base.filter(*rest)
-   elif function == 'filter2':
-      opt.filter(*rest)
+   arch = sys.argv[1]
+   module = sys.argv[2]
+   function = sys.argv[3]
+   rest = sys.argv[4:]
+   if module == 'sppalpha':
+      assert function in ['fundef', 'create']
+      if function == 'fundef':
+         fundef(*rest)
+      elif function == 'create':
+         create(*rest)
+   elif module in ['utc0', 'spr']:
+      assert function in ['compile','filter','filter2']
+      if function == 'compile':
+         n = 'slc.mt.%s.compile' % arch; __import__(n)
+         sys.modules[n].compile(*rest)
+      elif function == 'filter':
+         n = 'slc.mt.%s.asmproc.base' % arch; __import__(n)
+         sys.modules[n].filter(*rest)
+      elif function == 'filter2':
+         n = 'slc.mt.%s.asmproc.opt' % arch; __import__(n)
+         sys.modules[n].filter(*rest)
 
 

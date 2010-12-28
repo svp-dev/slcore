@@ -275,9 +275,9 @@ case $slc_dialect-$slc_arch in
 	;;
     spr-*|spp-*)
         archcomp=$(eval "echo \${CC_$archvar:-\"\$scu_helper\"} -std=gnu99")
-	slc_compiler=("$python" "$spp_helper" "$slc_transbase" compile $archcomp)
-	slc_filter1=("$python" "$spp_helper" "$slc_transbase" filter)
-	slc_filter2=("$python" "$spp_helper" "$slc_transbase" filter2)
+	slc_compiler=("$python" "$spp_helper" "$slc_arch" "$slc_transbase" compile $archcomp)
+        slc_filter1=("$python" "$spp_helper" "$slc_arch" "$slc_transbase" filter)
+	slc_filter2=("$python" "$spp_helper" "$slc_arch" "$slc_transbase" filter2)
 	;;
     *-*)
 	case $slc_complang in

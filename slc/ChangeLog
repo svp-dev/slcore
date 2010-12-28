@@ -1,5 +1,15 @@
 2010-12-28  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	Make `spp' sensitive to the target architecture.
+	
+	* tools/lib/t-sppalpha/slimpl.m4,
+	* tools/bin/cce.in: Provide the architecture tag to `spp'.
+	
+	* tools/bin/spp: Select implementation based on architecture name.
+
+
+2010-12-28  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	Split MT-Alpha code into common and architecture-specific sources.
 
 	* tools/lib/slc/mt/__init__.py: New.
