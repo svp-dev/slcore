@@ -187,9 +187,9 @@ class RegMagic:
         a given legacy register alias.
         """
         if legname.startswith('f'):
-            return '$f%d' % self.rd.legacy_fregs[legname]
+            return '%sf%d' % (self.rd.regprefix, self.rd.legacy_fregs[legname])
         else:
-            return '$%d' % self.rd.legacy_regs[legname]
+            return '%s%d' % (self.rd.regprefix, self.rd.legacy_regs[legname])
 
     def vreg_to_legacy(self, vreg):
         """
@@ -197,16 +197,16 @@ class RegMagic:
         for a given virtual register.
         """
         if vreg['species'] == 'f':
-            return "$f%d" % vreg['legnr']
+            return "%sf%d" % (self.rd.regprefix, vreg['legnr'])
         else:
-            return "$%d" % vreg['legnr']
+            return "%s%d" % (self.rd.regprefix, vreg['legnr'])
 
     def get_vreg(self,vname):
         """
         Return the virtual register for a given
         (virtual) alias.
         """
-        vname = vname.lstrip('$')
+        vname = vname.lstrip(self.rd.regprefix)
         return self._aliases[vname]
 
     def vname_to_legacy(self,vname):
@@ -214,18 +214,18 @@ class RegMagic:
         Return the legacy canonical register name
         for a given virtual register alias.
         """
-        return vreg_to_legacy(get_vreg(vname))
+        return self.vreg_to_legacy(self.get_vreg(vname))
 
     def get_vregs_for_legacy(self,legname):
         """
         Return the list of virtual registers that
         can overlap for the given legacy register alias.
         """
-        if legname.startswith('$f'):
+        if legname.startswith('%sf' % self.rd.regprefix):
             return self._freg_inv[int(legname[2:])]
         elif legname.startswith('f'):
             return self._freg_inv[self.rd.legacy_fregs[legname]]
-        elif legname.startswith('$'):
+        elif legname.startswith(self.rd.regprefix):
             return self._reg_inv[int(legname[1:])]
         else:
             return self._reg_inv[self.rd.legacy_regs[legname]]
@@ -235,7 +235,7 @@ class RegMagic:
         Return the canonical virtual register name
         for a given (virtual) alias.
         """
-        return '$' + self._reg_aliases[alias]
+        return self.rd.regprefix + self._reg_aliases[alias]
 
     def makecrepl(self,funname):
         """
@@ -248,9 +248,9 @@ class RegMagic:
         regs = self._regs
         for (spec, pref) in [('i',''),('f','f')]:
             for r in (r for r in regs[spec]['l'] if r is not None):
-                key = "$%s%d" % (pref,r['legnr'])
+                key = "%s%s%d" % (self.rd.regprefix, pref,r['legnr'])
                 assert not subst.has_key(key)
-                subst[key] = '$' + r['name'][1:]
+                subst[key] = self.rd.regprefix + r['name'][1:]
         import sys
         #print >>sys.stderr, "XXX", subst
         def repl(match):
@@ -268,6 +268,7 @@ class RegMagic:
 
         subst = {}
         regs = self._regs
+        pr = self.rd.regprefix
         for (spec, cat, nr, pref) in [('i','d',shi, ''),
                                       ('i','s',shi, ''),
                                       ('i','g',gli, ''),
@@ -278,16 +279,16 @@ class RegMagic:
                 r = regs[spec][cat][i]
                 key = "%s%d" % (pref,r['legnr'])
                 assert not subst.has_key(key)
-                subst[key] = '$' + r['name']
+                subst[key] = pr + r['name']
         for (spec, pref) in [('i',''),('f','f')]:
             for r in (r for r in regs[spec]['l'] if r is not None):
                 key = "%s%d" % (pref,r['legnr'])
                 assert not subst.has_key(key)
-                subst[key] = '$' + r['name']
+                subst[key] = pr + r['name']
         #print "MAKEREPL: ", subst
         def repl(match):
             r = match.group(1)
-            #if r == "$31" or r == "$f31":
+            #if r == pr+"31" or r == pr+"f31":
             #   return r
             return subst.get(r[1:], r)
 

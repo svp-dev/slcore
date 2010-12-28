@@ -8,6 +8,9 @@ class RegDefs:
     ilocalregs = 19
     flocalregs = 19
 
+    regprefix = '$'
+    regprefix_fmt = '$'
+
     legacy_fregs = {
        # Scratch registers
        'ft0' : 10,

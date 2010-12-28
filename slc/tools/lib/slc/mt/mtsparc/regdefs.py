@@ -5,6 +5,14 @@ class RegDefs:
     iargregs = 8
     ilocalregs = 24
 
+    # There is not FP support for now, but we define this to keep the
+    # common implementation happy.
+    fargregs = 8
+    flocalregs = 24
+
+    regprefix = '%'
+    regprefix_fmt = '%%'
+
     legacy_regs = {
         # globals
         'g1' : 1, # always tmp

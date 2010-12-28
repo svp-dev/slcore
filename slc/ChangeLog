@@ -1,5 +1,19 @@
 2010-12-28  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	Fix factoring of register magic in `spr'.
+
+	* tools/lib/slc/mt/common/regmagic.py: Use a variable register
+	prefix instead of `$'.
+
+	* tools/lib/slc/mt/mtalpha/regdefs.py,
+	* tools/lib/slc/mt/mtsparc/regdefs.py: Define the prefix.
+
+	* tools/lib/slc/mt/mtsparc/regdefs.py: Define float register
+	counts, in order to allow initialization of the call mapping
+	engine (even if float params are not supported).
+
+2010-12-28  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	Support visitor inheritance with `spr'.
 
 	* tools/lib/slc/visitors.py (Dispatcher.dispatch): Use `getattr'
