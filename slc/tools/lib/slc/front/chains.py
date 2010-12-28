@@ -14,6 +14,7 @@ from ..lower.flavorseta import *
 from ..lower.rename import *
 from ..lower.remflavors import *
 from ..mt.mtalpha.visitors import *
+from ..mt.mtsparc.visitors import *
 from ..am.visitors import *
 
 _common_prefix = [
@@ -60,6 +61,22 @@ _chains = {
         ('flattencr', ScopedVisitor(Dispatcher({'cmta':Create_2_MTACreate(),
                                                 'cseq':Create_2_Loop()}))),
         ('flattenfun', DefaultVisitor(Dispatcher({'fmta':TFun_2_MTATFun(),
+                                                  'fseq':TFun_2_CFun()}))),
+        ] + _common_suffix,
+    'mts' : _common_prefix + [
+        ('lseta', LinkSetA()),
+        ('autores', AutoResolve()),
+        ('flattencr', Create_2_MTSCreate()), 
+        ('flattenfun',TFun_2_MTSTFun()),
+        ] + _common_suffix,
+    'mts+seq' : _common_prefix + [
+        ('splitcr', SplitCreates()),
+        ('lseta', LinkSetA()),
+        ('flseta', FlavorSetA()),
+        ('splitfun', SplitFuns()),
+        ('flattencr', ScopedVisitor(Dispatcher({'cmts':Create_2_MTSCreate(),
+                                                'cseq':Create_2_Loop()}))),
+        ('flattenfun', DefaultVisitor(Dispatcher({'fmts':TFun_2_MTSTFun(),
                                                   'fseq':TFun_2_CFun()}))),
         ] + _common_suffix
 }

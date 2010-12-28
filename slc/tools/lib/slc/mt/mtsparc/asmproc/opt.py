@@ -1,0 +1,4 @@
+
+def filter(*args):
+	pass
+

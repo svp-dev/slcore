@@ -80,6 +80,14 @@ nobase_python_PYTHON = \
 	slc/mt/mtalpha/asmproc/base.py \
 	slc/mt/mtalpha/asmproc/common.py \
 	slc/mt/mtalpha/asmproc/opt.py \
+	slc/mt/mtsparc/__init__.py \
+	slc/mt/mtsparc/regdefs.py \
+	slc/mt/mtsparc/compile.py \
+	slc/mt/mtsparc/visitors.py \
+	slc/mt/mtsparc/asmproc/__init__.py \
+	slc/mt/mtsparc/asmproc/base.py \
+	slc/mt/mtsparc/asmproc/common.py \
+	slc/mt/mtsparc/asmproc/opt.py \
 	slc/am/__init__.py \
 	slc/am/visitors.py \
 	slc/lower/__init__.py \
