@@ -207,6 +207,7 @@ case $slc_dialect in
             mta_naked) target=mta ;;
             mta_hybrid) target=mta+seq ;;
             mts_naked) target=mts ;;
+            mts_hybrid) target=mts+seq ;;
             hrt_naked)  target=hrt ;;
             hrt_hybrid) target=hrt+seq ;;
             *) echo "unknown variant: $slc_dialect-$slc_variant" >&2 ;;
