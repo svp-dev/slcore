@@ -1,5 +1,26 @@
 2010-12-28  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	Factor common thread function code generation.
+
+	* tools/lib/slc/mt/mtalpha/visitors.py: Extract common TFun
+	visitor to...
+	* tools/lib/slc/mt/common/gentfun.py: ...here.
+
+	* tools/lib/slc/mt/mtalpha/gentfun.py,
+	* tools/lib/slc/mt/mtsparc/gentfun.py: Use it.
+
+	* tools/lib/slc/mt/mtsparc/visitors.py,
+	* tools/lib/slc/mt/mtalpha/visitors.py: Rename to...
+	* tools/lib/slc/mt/mtsparc/gencreate.py,
+	* tools/lib/slc/mt/mtalpha/gencreate.py: ... here.
+
+	* tools/lib/slc/front/chains.py: Update import paths.
+
+	* tools/lib/Makefile.am (nobase_python_PYTHON): List the new
+	files.
+
+2010-12-28  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	Initial support for MT-Sparc in `spr'.
 
 	* tools/lib/slc/mt/mtsparc/__init__.py,

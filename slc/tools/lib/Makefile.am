@@ -72,10 +72,12 @@ nobase_python_PYTHON = \
 	slc/mt/common/__init__.py \
 	slc/mt/common/regmagic.py \
 	slc/mt/common/compile.py \
+	slc/mt/common/gentfun.py \
 	slc/mt/mtalpha/__init__.py \
 	slc/mt/mtalpha/regdefs.py \
 	slc/mt/mtalpha/compile.py \
-	slc/mt/mtalpha/visitors.py \
+	slc/mt/mtalpha/gentfun.py \
+	slc/mt/mtalpha/gencreate.py \
 	slc/mt/mtalpha/asmproc/__init__.py \
 	slc/mt/mtalpha/asmproc/base.py \
 	slc/mt/mtalpha/asmproc/common.py \
@@ -83,7 +85,8 @@ nobase_python_PYTHON = \
 	slc/mt/mtsparc/__init__.py \
 	slc/mt/mtsparc/regdefs.py \
 	slc/mt/mtsparc/compile.py \
-	slc/mt/mtsparc/visitors.py \
+	slc/mt/mtsparc/gentfun.py \
+	slc/mt/mtsparc/gencreate.py \
 	slc/mt/mtsparc/asmproc/__init__.py \
 	slc/mt/mtsparc/asmproc/base.py \
 	slc/mt/mtsparc/asmproc/common.py \
