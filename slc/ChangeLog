@@ -1,5 +1,46 @@
 2010-12-28  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	Split MT-Alpha code into common and architecture-specific sources.
+
+	* tools/lib/slc/mt/__init__.py: New.
+	
+	* tools/lib/slc/mtalpha/__init__.py,
+	* tools/lib/slc/mtalpha/regmagic.py,
+	* tools/lib/slc/mtalpha/compile.py,
+	* tools/lib/slc/mtalpha/visitors.py,
+	* tools/lib/slc/mtalpha/asmproc/__init__.py,
+	* tools/lib/slc/mtalpha/asmproc/base.py,
+	* tools/lib/slc/mtalpha/asmproc/common.py,
+	* tools/lib/slc/mtalpha/asmproc/opt.py: Rename to...
+
+	* tools/lib/slc/mt/mtalpha/__init__.py,
+	* tools/lib/slc/mt/mtalpha/regmagic.py,
+	* tools/lib/slc/mt/mtalpha/compile.py,
+	* tools/lib/slc/mt/mtalpha/visitors.py,
+	* tools/lib/slc/mt/mtalpha/asmproc/__init__.py,
+	* tools/lib/slc/mt/mtalpha/asmproc/base.py,
+	* tools/lib/slc/mt/mtalpha/asmproc/common.py,
+	* tools/lib/slc/mt/mtalpha/asmproc/opt.py: ... here.
+
+	* tools/lib/slc/front/chains.py,
+	* tools/lib/slc/mt/mtalpha/asmproc/base.py,
+	* tools/lib/slc/mt/mtalpha/asmproc/common.py,	
+	* tools/lib/slc/mt/mtalpha/asmproc/opt.py: Adjust import paths
+	accordingly.
+
+	* tools/lib/slc/mt/common/__init__.py: New.
+
+	* tools/lib/slc/mt/mtalpha/regmagic.py: Split into...
+	* tools/lib/slc/mt/common/regmagic.py: ... this, and ...
+	* tools/lib/slc/mt/mtalpha/regdefs.py: ... this.
+
+	* tools/lib/slc/mt/mtalpha/compile.py: Extra common code to...
+	* tools/lib/slc/mt/common/compile.py: ... this.
+
+	* tools/lib/Makefile.am (nobase_python_PYTHON): Update accordingly.
+
+2010-12-28  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	Minor fix to build rules.
 
 	* tools/lib/mtalpha.mk: Rename `SLC_CMD' to `SLC_MTA_N'.

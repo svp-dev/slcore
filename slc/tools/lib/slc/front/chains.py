@@ -13,7 +13,7 @@ from ..lower.lowclabels import *
 from ..lower.flavorseta import *
 from ..lower.rename import *
 from ..lower.remflavors import *
-from ..mtalpha.visitors import *
+from ..mt.mtalpha.visitors import *
 from ..am.visitors import *
 
 _common_prefix = [

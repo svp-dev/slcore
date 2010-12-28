@@ -1,6 +1,6 @@
 import re
-from .. import regmagic
-from ...front import opts, dump
+from ..regdefs import regmagic
+from ....front import opts, dump
 
 _presets = set(["$l0"])
 def grouper(items):

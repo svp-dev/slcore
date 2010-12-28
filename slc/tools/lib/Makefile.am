@@ -68,14 +68,18 @@ nobase_python_PYTHON = \
 	slc/ast.py \
 	slc/lex.py \
 	slc/visitors.py \
-	slc/mtalpha/__init__.py \
-	slc/mtalpha/regmagic.py \
-	slc/mtalpha/compile.py \
-	slc/mtalpha/visitors.py \
-	slc/mtalpha/asmproc/__init__.py \
-	slc/mtalpha/asmproc/base.py \
-	slc/mtalpha/asmproc/common.py \
-	slc/mtalpha/asmproc/opt.py \
+	slc/mt/__init__.py \
+	slc/mt/common/__init__.py \
+	slc/mt/common/regmagic.py \
+	slc/mt/common/compile.py \
+	slc/mt/mtalpha/__init__.py \
+	slc/mt/mtalpha/regdefs.py \
+	slc/mt/mtalpha/compile.py \
+	slc/mt/mtalpha/visitors.py \
+	slc/mt/mtalpha/asmproc/__init__.py \
+	slc/mt/mtalpha/asmproc/base.py \
+	slc/mt/mtalpha/asmproc/common.py \
+	slc/mt/mtalpha/asmproc/opt.py \
 	slc/am/__init__.py \
 	slc/am/visitors.py \
 	slc/lower/__init__.py \

@@ -1,9 +1,9 @@
 import re
 import base
 import os
-from ...msg import die, log
-from .. import regmagic
-from ...front import opts, dump
+from ....msg import die, log
+from ..regdefs import regmagic
+from ....front import opts, dump
 import  common
 
 _default_presets = set(("$%d" % x for x in xrange(31)))

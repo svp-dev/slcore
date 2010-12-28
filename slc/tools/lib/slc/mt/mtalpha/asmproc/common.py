@@ -3,7 +3,7 @@
 ### asmproc stages
 ###
 
-from ...msg import die
+from ....msg import die
 import re
 
 def reader(inname):

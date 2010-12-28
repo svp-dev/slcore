@@ -1,7 +1,7 @@
-from ..visitors import DefaultVisitor, ScopedVisitor, flatten
-from ..ast import *
-from ..msg import warn
-import regmagic
+from ...visitors import DefaultVisitor, ScopedVisitor, flatten
+from ...ast import *
+from ...msg import warn
+from regdefs import regmagic
 
 
 class Create_2_MTACreate(ScopedVisitor):
