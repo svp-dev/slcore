@@ -155,15 +155,15 @@ mts_naked-mtsparc-fpga/%.a:
 mts_naked-mtsparc-fpga/libslc.a: $(mts_naked_mtsparc_fpga_libslc_a_CONTENTS)
 mts_naked-mtsparc-fpga/libslmain.a: $(mts_naked_mtsparc_fpga_libslmain_a_CONTENTS)
 
-SLC_CMD := $(SLC_RUN) -b mts_n -nostdlib
+SLC_MTS_N := $(SLC_RUN) -b mts_n -nostdlib
 
 mts_naked-mtsparc-fpga/%.o: $(srcdir)/mtsparc-fpga/%.s
 	$(AM_V_at)$(MKDIR_P) mts_naked-mtsparc-fpga
-	$(slc_verbose)$(SLC_CMD) -c -o $@ $<
+	$(slc_verbose)$(SLC_MTS_N) -c -o $@ $<
 
 mts_naked-mtsparc-fpga/%.o: $(srcdir)/%.c
 	$(AM_V_at)$(MKDIR_P) mts_naked-mtsparc-fpga
-	$(slc_verbose)$(SLC_CMD) -c -o $@ $<
+	$(slc_verbose)$(SLC_MTS_N) -c -o $@ $<
 
 CLEANFILES += \
 	mts_naked-mtsparc-fpga/main.o \

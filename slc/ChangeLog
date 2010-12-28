@@ -1,5 +1,12 @@
 2010-12-28  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	Minor fix to build rules.
+
+	* tools/lib/mtalpha.mk: Rename `SLC_CMD' to `SLC_MTA_N'.
+	* tools/lib/mtsparc.mk: Rename `SLC_CMD' to `SLC_MTS_N'.
+
+2010-12-28  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	Fix detection of `mts' in `cce'.
 	
 	* tools/bin/cce.in: Match `mts_hybrid'. 
