@@ -1,5 +1,12 @@
 2010-12-28  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	Support visitor inheritance with `spr'.
+
+	* tools/lib/slc/visitors.py (Dispatcher.dispatch): Use `getattr'
+	to look up methods in parent classes too.
+
+2010-12-28  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	Factor common thread function code generation.
 
 	* tools/lib/slc/mt/mtalpha/visitors.py: Extract common TFun

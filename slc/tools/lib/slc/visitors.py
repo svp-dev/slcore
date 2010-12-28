@@ -73,7 +73,7 @@ class Dispatcher(object):
             for f in self.current_flavors:
                   v = self.flavored_visitors.get(f, None)
                   if v is not None:
-                        if methname in v.__class__.__dict__:
+                        if hasattr(v, methname):
                               m = getattr(v, methname)
                               return m(item, *args, **kwargs)
             # here, no visitor is found
