@@ -38,6 +38,8 @@ class ReduceCVars(DefaultVisitor):
         self.cur_ctypename = vd.name;
         vd.ctype.accept(self)
         t = decapsulate_ctype(vd.ctype)
+        if vd.reg is not None:
+            t = Opaque(text = ' register ') + t
 
         if self.cur_ctypename is not None:
             # no head, append name
@@ -45,6 +47,9 @@ class ReduceCVars(DefaultVisitor):
             self.cur_ctypename = None
 
         newbl = flatten(vd.loc, ' ') + t
+
+        if vd.reg is not None:
+            newbl += Opaque(text = ' __asm__("%s")' % vd.reg)
 
         vd.init.accept(self)       
         if len(vd.init) > 0:

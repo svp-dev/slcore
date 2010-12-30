@@ -1,3 +1,16 @@
+2010-12-30  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
+	Add support for fixed-register C variable declarations in `spr'.
+
+	* tools/lib/slc/ast.py (CVarDecl): New attribute `reg', maybe
+	None.
+
+	* tools/lib/slc/visitors.py (PrintVisitor.visit_cvardecl): Print
+	it.	
+	* tools/lib/slc/lower/lowcvars.py (ReduceCVars.visit_cvardecl):
+	Lower it.
+
+	
 2010-12-28  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
 	Fix factoring of register magic in `spr'.

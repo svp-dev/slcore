@@ -427,6 +427,8 @@ class PrintVisitor(DefaultVisitor):
           if len(vd.init):
                 self.__out.write(', ')
                 vd.init.accept(self)
+          if vd.reg is not None:
+                self.__out.write(', %s' % vd.reg)
           self.__out.write(') /* 0x%x */\n' % id(vd))
           return vd
 
