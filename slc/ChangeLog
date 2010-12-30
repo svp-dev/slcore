@@ -1,5 +1,12 @@
 2010-12-30  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	Reduce whitespace in the C output from `spr'.
+
+	* tools/lib/slc/visitors.py: Do not emit newlines in `flatten'
+	when no location is specified.
+
+2010-12-30  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	Fix packaging.
 
 	* lib/src/mtalpha.mk (CLEANFILE): avoid listing all `libm'

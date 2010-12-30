@@ -9,7 +9,7 @@ def flatten(loc, opaquetext):
       if loc is not None and opts.resolved.synclines:
             o = Opaque('\n%s\n' % loc.ppline()) + o
       else:
-            o = Opaque('\n') + o
+            o = Opaque(' ') + o
       return o
 
 #### Base visitor and dispatch ####
