@@ -185,26 +185,37 @@ class RegMagic:
     def makecom(self, com):
         return '%s %s' % (self.rd.comprefix, com)
 
+    def makecanon(self, spec, nr, legname_hint = None):
+        if self.rd.canon_is_numeric:
+            p = ''
+            if spec == 'f': p = 'f'
+            return '%s%s%d' % (self.rd.regprefix, p, nr)
+        else:
+            if legname_hint is not None:
+                return legname_hint
+            if spec == 'f':
+                d = self._freg_inv
+            else:
+                d = self._reg_inv
+            return '%s%s' % (self.rd.regprefix, d[nr][0]['legname'])
+
     def get_legacy(self, legname):
         """
         Return the legacy canonical register name for
         a given legacy register alias.
         """
         if legname.startswith('f'):
-            return '%sf%d' % (self.rd.regprefix, self.rd.legacy_fregs[legname])
+            return self.makecanon('f', self.rd.legacy_fregs[legname], legname_hint = legname)
         else:
-            return '%s%d' % (self.rd.regprefix, self.rd.legacy_regs[legname])
+            return self.makecanon('i', self.rd.legacy_regs[legname], legname_hint = legname)
 
     def vreg_to_legacy(self, vreg):
         """
         Return the legacy canonical register name
         for a given virtual register.
         """
-        if vreg['species'] == 'f':
-            return "%sf%d" % (self.rd.regprefix, vreg['legnr'])
-        else:
-            return "%s%d" % (self.rd.regprefix, vreg['legnr'])
-
+        return self.makecanon(vreg['species'], vreg['legnr'])
+ 
     def get_vreg(self,vname):
         """
         Return the virtual register for a given

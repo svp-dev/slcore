@@ -13,6 +13,7 @@ class RegDefs:
     regprefix = '%'
     regprefix_fmt = '%%'
 
+    canon_is_numeric = False
     comprefix = '!'
 
     legacy_regs = {

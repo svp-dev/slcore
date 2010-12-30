@@ -1,5 +1,22 @@
 2010-12-30  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	Support non-numeric register naming in `spr'.
+
+	* tools/lib/slc/mt/mtalpha/regdefs.py, 
+	* tools/lib/slc/mt/mtalpha/regdefs.py: New attribute
+	`canon_is_numeric'.
+
+	* tools/lib/slc/mt/common/regmagic.py: New method `makecanon' to
+	find the canonical legacy register name by numeric offset.	
+	* tools/lib/slc/mt/common/regmagic.py (get_legacy,
+	vreg_to_legacy): Use it.
+
+	* tools/lib/slc/mt/common/regmagic.py (get_vregs_for_legacy):
+	Always indirect through legacy_*regs[] to ensure non-numeric
+	legacy names are recognized.
+
+2010-12-30  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	Minor code cleanup.
 
 	* tools/lib/slc/mt/mtalpha/asmproc/base.py (crenameregs):

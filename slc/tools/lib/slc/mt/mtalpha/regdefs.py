@@ -11,6 +11,7 @@ class RegDefs:
     regprefix = '$'
     regprefix_fmt = '$'
 
+    canon_is_numeric = True
     comprefix = '#'
 
     legacy_fregs = {
