@@ -1,5 +1,12 @@
 2010-12-30  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	Fix packaging.
+
+	* lib/src/mtalpha.mk (CLEANFILE): avoid listing all `libm'
+	objects, because some are precious.
+
+2010-12-30  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	Support architecture-specific assembly comment syntax.
 
 	* tools/lib/slc/mt/mtalpha/regdefs.py,	
