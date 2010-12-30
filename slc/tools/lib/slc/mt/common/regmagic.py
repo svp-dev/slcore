@@ -14,6 +14,7 @@ class RegMagic:
         self._aliases = {}
         
         self.rd = rd
+        self.comprefix = rd.comprefix
         aliases = self._aliases
 
         for r,t in rd.reg_mapping.items():
@@ -180,6 +181,9 @@ class RegMagic:
         #pprint.pprint(ret)
 
         return ret
+
+    def makecom(self, com):
+        return '%s %s' % (self.rd.comprefix, com)
 
     def get_legacy(self, legname):
         """

@@ -11,6 +11,8 @@ class RegDefs:
     regprefix = '$'
     regprefix_fmt = '$'
 
+    comprefix = '#'
+
     legacy_fregs = {
        # Scratch registers
        'ft0' : 10,

@@ -23,6 +23,7 @@ class TFun_2_MTFun(DefaultVisitor):
     def visit_fundef(self, fundef):
         newitems = []
         regmagic = self.regmagic
+        cp = regmagic.comprefix
 
         # first compute the call convention
         c = regmagic.mapcall(fundef.parms, 
@@ -41,11 +42,12 @@ class TFun_2_MTFun(DefaultVisitor):
                                 ' extern void %(name)s(void); '
                                 'void __slf_%(name)s(void) {'
                                 ' register long __slI_ __asm__("%(idxreg)s");'
-                                ' __asm__("# MT: index in %%0"'
+                                ' __asm__("%(cp)s MT: index in %%0"'
                                 '   : "=r"(__slI_));'
                                 ' register const long __slI = __slI_;'
                                 ' __asm__ __volatile__("%(regdir)s");'
-                                % { 'name': fundef.name, 
+                                % { 'cp' : cp, 
+                                    'name': fundef.name, 
                                     'regdir' : regdir,
                                     'idxreg' : idxreg }))
         
@@ -111,7 +113,7 @@ class TFun_2_MTFun(DefaultVisitor):
                             newitems.append(flatten(a['loc'], 'register ') + 
                                             ctype + 
                                             ' %(igname)s __asm__("%(reg)s"); ' 
-                                            ' __asm__ __volatile__("# MT: global init %%0"'
+                                            ' __asm__ __volatile__("%(cp)s MT: global init %%0"'
                                             ' : "=%(regtype)s"(%(igname)s)); '
                                             ' register ' % locals() + 
                                             ctype + ' const %(gname)s = %(igname)s; ' % locals())
@@ -137,7 +139,7 @@ class TFun_2_MTFun(DefaultVisitor):
         # close the body definition with a target label for sl_end_thread
         newitems.append(CGoto(loc = fundef.loc_end, target = fundef.lbl_end) + ';' 
                         + fundef.lbl_end 
-                        + ' __asm__ __volatile__("# MT: end follows"); }')
+                        + ' __asm__ __volatile__("%s MT: end follows"); }' % cp)
         return newitems
 
     def visit_getp(self, getp):
@@ -147,9 +149,10 @@ class TFun_2_MTFun(DefaultVisitor):
                 regtype = 'f'
             else:
                 regtype = 'r'
+            cp = self.regmagic.comprefix
             return flatten(getp.loc, 
                            '({'
-                           '__asm__ __volatile__("# MT: read shared %(name)s (%%0)"'
+                           '__asm__ __volatile__("%(cp)s MT: read shared %(name)s (%%0)"'
                            '  : "=%(regtype)s"(__slPsin_%(name)s)'
                            '  : "0"(__slPsin_%(name)s));'
                            '__slPsin_%(name)s;'
@@ -174,9 +177,10 @@ class TFun_2_MTFun(DefaultVisitor):
                 regtype = 'r'
                 itype = ''
             b = []
+            cp = self.regmagic.comprefix
             b.append(flatten(setp.loc, 
                              'do {'
-                             ' __asm__ __volatile__("# MT: clobber incoming %(name)s (%%0)"'
+                             ' __asm__ __volatile__("%(cp)s MT: clobber incoming %(name)s (%%0)"'
                              ' : "=%(regtype)s"(__slPsin_%(name)s) '
                              ' : "0"(__slPsin_%(name)s));'
                              ' __typeof__(__slPsout_%(name)s) __tmp_set_%(name)s = ('
@@ -184,9 +188,9 @@ class TFun_2_MTFun(DefaultVisitor):
             b.append(rhs)
             b.append(flatten(setp.loc, 
                              ');'
-                             ' __asm__ __volatile__("# MT: start write shared %(name)s (%%0)"'
+                             ' __asm__ __volatile__("%(cp)s MT: start write shared %(name)s (%%0)"'
                              ' : "=%(regtype)s"(__slPsout_%(name)s) : "0"(__slPsout_%(name)s));'
-                             ' __asm__ __volatile__("%(itype)smov %%4, %%0\\t# MT: write shared %(name)s (%%0)"'
+                             ' __asm__ __volatile__("%(itype)smov %%4, %%0\\t%(cp)s MT: write shared %(name)s (%%0)"'
                              ' : "=%(regtype)s" (__slPsout_%(name)s), "=%(regtype)s" (__slPsin_%(name)s)'
                              ' : "0"(__slPsout_%(name)s), "1" (__slPsin_%(name)s), '
                              '   "%(regtype)s" (__tmp_set_%(name)s));'
@@ -200,10 +204,10 @@ class TFun_2_MTFun(DefaultVisitor):
     def visit_break(self, br):
         return flatten(br.loc, 
                        ' do {'
-                       ' __asm__ __volatile__("break; end\\t# MT: break");'
+                       ' __asm__ __volatile__("break; end\\t%s MT: break");'
                        ' __builtin_unreachable();'
                        ' while(1);'
-                       '} while(0)')
+                       '} while(0)' % self.regmagic.comprefix)
     
     def visit_endthread(self, et):
         return CGoto(loc = et.loc, target = self.cur_fun.lbl_end)

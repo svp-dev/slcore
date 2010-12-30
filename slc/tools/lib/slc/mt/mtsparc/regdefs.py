@@ -13,6 +13,8 @@ class RegDefs:
     regprefix = '%'
     regprefix_fmt = '%%'
 
+    comprefix = '!'
+
     legacy_regs = {
         # globals
         'g1' : 1, # always tmp
