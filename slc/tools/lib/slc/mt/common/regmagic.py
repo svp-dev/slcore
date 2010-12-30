@@ -107,6 +107,10 @@ class RegMagic:
 
         islots_avail = self.rd.iargregs - escape
         fslots_avail = self.rd.fargregs
+        sislots = []
+        sfslots = []
+        gislots = []
+        gfslots = []
 
         # Allocate shareds first
         if len(dic['i']['sh']) * 2 > islots_avail:
@@ -118,6 +122,7 @@ class RegMagic:
             s['regnr'] = shc
             shc += 1
             islots_avail -= 2
+            sislots.append(s)
         nrishareds = shc
 
         if len(dic['f']['sh']) > fslots_avail:
@@ -129,6 +134,7 @@ class RegMagic:
             s['regnr'] = shc
             shc += 1
             fslots_avail -= 2
+            sfslots.append(s)
         nrfshareds = shc
 
         # Allocate fp globals
@@ -141,6 +147,7 @@ class RegMagic:
                 s['regnr'] = glc
                 glc += 1
                 fslots_avail -= 1
+                gfslots.append(s)
             else:
                 s['mode'] = 'mem'
                 s['offset'] = offset
@@ -155,6 +162,7 @@ class RegMagic:
                 s['regnr'] = glc
                 glc += 1
                 islots_avail -= 1
+                gislots.append(s)
             else:
                 s['mode'] = 'mem'
                 s['offset'] = offset
@@ -177,6 +185,10 @@ class RegMagic:
         ret['args'] = dic
         ret['nargs'] = anames
         ret['memlayout'] = memlayout
+        ret['sislots'] = sislots
+        ret['sfslots'] = sfslots
+        ret['gislots'] = gislots
+        ret['gfslots'] = gfslots
 
         #pprint.pprint(ret)
 
@@ -237,11 +249,11 @@ class RegMagic:
         can overlap for the given legacy register alias.
         """
         if legname.startswith('%sf' % self.rd.regprefix):
-            return self._freg_inv[int(legname[2:])]
+            return self._freg_inv[self.rd.legacy_fregs[legname[1:]]]
         elif legname.startswith('f'):
             return self._freg_inv[self.rd.legacy_fregs[legname]]
         elif legname.startswith(self.rd.regprefix):
-            return self._reg_inv[int(legname[1:])]
+            return self._reg_inv[self.rd.legacy_regs[legname[1:]]]
         else:
             return self._reg_inv[self.rd.legacy_regs[legname]]
 

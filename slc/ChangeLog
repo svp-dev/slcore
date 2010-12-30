@@ -1,5 +1,12 @@
 2010-12-30  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	Extend the MT calling convention computation.
+
+	* tools/lib/slc/mt/common/regmagic.py (mapcall): Preserve the slot
+	layout in the return object.
+
+2010-12-30  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	Adjust the MT-Sparc local register window.
 
 	* tools/lib/slc/mt/mtsparc/regdefs.py: Change the locals so that
