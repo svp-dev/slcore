@@ -1,5 +1,11 @@
 2010-12-30  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	Initial support for `create' for MT-Sparc.
+
+	* tools/lib/slc/mt/mtsparc/gencreate.py: Do it.
+
+2010-12-30  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	Extend the MT calling convention computation.
 
 	* tools/lib/slc/mt/common/regmagic.py (mapcall): Preserve the slot
