@@ -1,5 +1,13 @@
 2010-12-30  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	Adjust the MT-Sparc local register window.
+
+	* tools/lib/slc/mt/mtsparc/regdefs.py: Change the locals so that
+	`l0' is a usable register (i.e. start assigning with `g1'). Push
+	`sp' and `g0' at the end of the local window.
+
+2010-12-30  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	Support non-numeric register naming in `spr'.
 
 	* tools/lib/slc/mt/mtalpha/regdefs.py, 

@@ -274,37 +274,37 @@ class RegDefs:
         's3' : 'l6',
         'd3' : 'l7',
         # Special locals
-        'l0' : 'g0', # zero
-        'l1' : 'g1', # temp
-        'l2' : 'g2', # app reg
-        'l3' : 'g3', # app reg
-        'l4' : 'g4', # app reg
-        'l5' : 'g5', # OS reg
-        'l6' : 'g6', # OS reg
-        'l7' : 'g7', # OS reg
-        'l8' : 'o5',
-        'l9' : 'o4',
-        'l10' : 'o3',
-        'l11' : 'o2',
-        'l12' : 'o1',
-        'l13' : 'o0',
-        'l14' : 'sp',
+        'l0' : 'g1', # temp
+        'l1' : 'g2', # app reg
+        'l2' : 'g3', # app reg
+        'l3' : 'g4', # app reg
+        'l4' : 'g5', # OS reg
+        'l5' : 'g6', # OS reg
+        'l6' : 'g7', # OS reg
+        'l7' : 'o5',
+        'l8' : 'o4',
+        'l9' : 'o3',
+        'l10' : 'o2',
+        'l11' : 'o1',
+        'l12' : 'o0',
+        'l13' : 'i5',
+        'l14' : 'i4',
         'l15' : 'o7', # HARD-WIRED INTO CALL: l15 must assemble to %r15 = %o7!
-        'l16' : 'i5',
-        'l17' : 'i4',
-        'l18' : 'i3',
-        'l19' : 'i2',
-        'l20' : 'i1',
-        'l21' : 'i0',
-        'l22' : 'i7', # RA - 8
-        'l23' : 'fp'
+        'l16' : 'i3',
+        'l17' : 'i2',
+        'l18' : 'i1',
+        'l19' : 'i0',
+        'l20' : 'i7', # RA - 8
+        'l21' : 'sp',
+        'l22' : 'fp',
+        'l31' : 'g0' # ZERO
     }
 
     reg_aliases = {
-        'tlsp' : 'l14',
-        'fp' : 'l23',
-        'idx_init' : 'l1',
-        'zero' : 'l0',
+        'tlsp' : 'l21',
+        'fp' : 'l22',
+        'idx_init' : 'l0',
+        'zero' : 'l31',
     }
 
     def post_init_regmagic(self, rm):
