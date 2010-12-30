@@ -119,8 +119,7 @@ def crenameregs(fundata, items):
     Collate legacy register names in regular C function
     bodies to the beginning of the register window.
     """
-    repl = regmagic.makecrepl(fundata['name']
-)
+    repl = regmagic.makecrepl(fundata['name'])
     for (type, content, comment) in items:
         content = _re_rr1reg.sub(repl, content)
         comment = _re_rr1reg.sub(repl, comment)
