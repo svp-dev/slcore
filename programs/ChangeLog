@@ -1,5 +1,11 @@
 2011-01-05  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	Update contact information.
+	
+	* configure.ac: Update `PACKAGE_BUGREPORT'.
+
+2011-01-05  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	Synchronize the Livermore benchmark interfaces with Apple-CORE.
 
 	* benchmarks/livermore/ll-generate.py: Order input arguments
