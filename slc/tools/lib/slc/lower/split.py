@@ -5,7 +5,9 @@ from ..msg import die
 
 class ExampleOracle(object):
 
-    mapping = {'cmta':(0,'fmta'), 'cseq':(1,'fseq')}
+    def __init__(self, archname):
+        self.archname = archname
+        self.mapping = {'c'+archname:(0,'f'+archname), 'cseq':(1,'fseq')}
 
     def flavors_for_create(self, cr):
         s = cr.extras.get_attr('forceseq', None)
@@ -15,28 +17,28 @@ class ExampleOracle(object):
         n = cr.extras.get_attr('naked', None)
         if n is not None:
             if n.flavor == 'native':
-                return ['cmta']
+                return ['c'+self.archname]
             elif n.flavor == 'seq':
                 return ['cseq']
             else:
                 die("unsupported naked specifier: %s" % n.flavor, cr)
-        
-        if cr.extras.get_attr('exclusive', None):
-            return ['cmta']
 
-        return ['cmta', 'cseq']
+        if cr.extras.get_attr('exclusive', None):
+            return ['c'+self.archname]
+
+        return ['c'+self.archname, 'cseq']
 
     def flavors_for_fun(self, fd):
         n = fd.extras.get_attr('naked', None)
         if n is not None:
             if n.flavor == 'native':
-                return (True, ['fmta'])
+                return (True, ['f'+self.archname])
             elif n.flavor == 'seq':
                 return (True, ['fseq'])
             else:
                 die("unsupported naked specifier: %s" % n.flavor, fn)
-                
-        return (False, ['fmta', 'fseq'])
+
+        return (False, ['f'+self.archname, 'fseq'])
 
     def flavored_funsym(self, name, flavor):
         return "__slF%s_%s" % (flavor, name)
@@ -62,11 +64,15 @@ class ExampleOracle(object):
             return CIndex(expr = CCast(ctype = 'void**', 
                                        expr = CVarUse(decl = cr.fun)),
                           index = Opaque("%d" % ix))
+
+def make_mt_oracle(archname):
+
+    return ExampleOracle(archname)
         
 
 class SplitCreates(ScopedVisitor):
 
-    def __init__(self, oracle = ExampleOracle(), *args, **kwargs):
+    def __init__(self, oracle, *args, **kwargs):
         super(SplitCreates, self).__init__(*args, **kwargs)
         self.oracle = oracle
 
@@ -128,7 +134,7 @@ class SplitCreates(ScopedVisitor):
 
 class SplitFuns(DefaultVisitor):
 
-    def __init__(self, oracle = ExampleOracle(), *args, **kwargs):
+    def __init__(self, oracle, *args, **kwargs):
         super(SplitFuns, self).__init__(*args, **kwargs)
         self.oracle = oracle
 
@@ -232,6 +238,6 @@ class SplitFuns(DefaultVisitor):
         return newbl
                 
 
-__all__ = ['SplitFuns', 'SplitCreates']
+__all__ = ['SplitFuns', 'SplitCreates', 'make_mt_oracle']
 
 

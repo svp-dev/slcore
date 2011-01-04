@@ -1,3 +1,14 @@
+2011-01-04  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
+	Make MT `split' for dual compilation work across targets.
+
+	* tools/lib/slc/lower/split.py: Make the architecture name a
+	parameter in the oracle. Make the oracle a mandatory constructor
+	parameter for the splitters.
+
+	* tools/lib/slc/front/chains.py: Provide separate oracles for the
+	`mta' and `mts' targets.
+
 2010-12-30  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
 	Initial support for `create' for MT-Sparc.
