@@ -1,3 +1,36 @@
+2011-01-05  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
+	Synchronize the Livermore benchmark interfaces with Apple-CORE.
+
+	* benchmarks/livermore/ll-generate.py: Order input arguments
+	according to an externally-specified order.
+
+	* benchmarks/livermore/sacorder1.txt
+	* benchmarks/livermore/sacorder2.txt
+	* benchmarks/livermore/sacorder3.txt
+	* benchmarks/livermore/sacorder4.txt
+	* benchmarks/livermore/sacorder5.txt
+	* benchmarks/livermore/sacorder6.txt
+	* benchmarks/livermore/sacorder7.txt
+	* benchmarks/livermore/sacorder8.txt
+	* benchmarks/livermore/sacorder9.txt
+	* benchmarks/livermore/sacorder10.txt
+	* benchmarks/livermore/sacorder11.txt
+	* benchmarks/livermore/sacorder12.txt
+	* benchmarks/livermore/sacorder13.txt
+	* benchmarks/livermore/sacorder14.txt
+	* benchmarks/livermore/sacorder15.txt
+	* benchmarks/livermore/sacorder16.txt
+	* benchmarks/livermore/sacorder17.txt
+	* benchmarks/livermore/sacorder18.txt
+	* benchmarks/livermore/sacorder19.txt
+	* benchmarks/livermore/sacorder20.txt
+	* benchmarks/livermore/sacorder21.txt
+	* benchmarks/livermore/sacorder22.txt	
+	* benchmarks/livermore/sacorder23.txt: New (Specifications for
+	input order from Unibench / Apple-CORE).
+	
+
 2010-10-07  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
 	Enhance the `smooth' benchmark.

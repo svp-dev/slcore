@@ -15,11 +15,13 @@ def genstatestruct(f, k):
     for (name, spec) in k['args'].items():
         if spec['type'] == 'scalar':
             if 'w' in spec['mode']:
-                print >>f, "   double %s_orig;" % name;
+                if 'r' in spec['mode']:
+                    print >>f, "   double %s_orig;" % name;
             print >>f, "   double %s;" % name;
         else:
             if 'w' in spec['mode']:
-                print >>f, "   const double * restrict %s_orig;" % name;
+                if 'r' in spec['mode']:
+                    print >>f, "   const double * restrict %s_orig;" % name;
                 print >>f, "   double * restrict %s;" % name
             else:
                 print >>f, "   const double * restrict %s;" % name;
@@ -44,11 +46,11 @@ sl_def(initialize, void,
    bdata->n = *(unsigned long*)fibre_data(f); ++f;
 """
 
-    l = k['args'].keys()
-    l.sort()
+    l = k['args_order']
     for (name, spec) in ((v, k['args'][v]) for v in l):
-        if 'r' not in spec['mode']:
+        if spec['type'] == 'scalar' and 'r' not in spec['mode']:
             continue
+                
         print >>f, '   output_string("#  reading data for %s...\\n", 1);' % name
         print >>f, "   assert(fibre_tag(f) == 2);"
         if spec['type'] == 'scalar':
@@ -65,6 +67,8 @@ sl_def(initialize, void,
             sspec = " * ".join(("bdata->%s_dim%d" % (name,i) for i in xrange(len(spec['size']))))
             if 'w' not in spec['mode']:
                 print >>f, "   bdata->%s = (const double*)fibre_data(f);" % name
+            elif 'r' not in spec['mode']:
+                print >>f, "   bdata->%s = (double*)fibre_data(f);" % name
             else:
                 print >>f, "   bdata->%s_orig = (const double*)fibre_data(f);" % name
                 print >>f, "   bdata->%s = (double*)fast_malloc(sizeof(double) * %s);" % (name, sspec)
@@ -87,10 +91,10 @@ sl_def(prepare, void,
    
     for (name, spec) in k['args'].items():
         if spec['type'] == 'scalar':
-            if 'w' in spec['mode']:
+            if 'w' in spec['mode'] and 'r' in spec['mode']:
                 print >>f, "   bdata->%s = bdata->%s_orig;" % (name, name);
         else:
-            if 'w' in spec['mode']:
+            if 'r' in spec['mode'] and 'w' in spec['mode']:
                 print >>f, "   for (i = 0; i < bdata->%s_size; ++i) bdata->%s[i] = bdata->%s_orig[i];" % (name, name, name)
 
     print >>f, """
@@ -107,8 +111,7 @@ sl_def(output, void,
    struct bdata *bdata = (struct bdata*)sl_getp(st)->data;
 """
    
-    l = k['args'].keys()
-    l.sort()
+    l = k['args_order']
     for (name, spec) in ((v, k['args'][v]) for v in l):
         if spec['type'] == 'scalar':
             if 'w' in spec['mode']:
@@ -133,7 +136,7 @@ sl_def(teardown, void,
 """
    
     for (name, spec) in k['args'].items():
-        if spec['type'] == 'array' and 'w' in spec['mode']:
+        if spec['type'] == 'array' and 'w' in spec['mode'] and 'r' in spec['mode']:
             print >>f, "   fast_free(bdata->%s);" % name
     print >>f, """
    fast_free(bdata);
@@ -273,10 +276,9 @@ def geninputs(k):
         f = file(df,'w')
         print >>f, "# n (problem size)"
         print >>f, n
-        l = k['args'].keys()
-        l.sort()
+        l = k['args_order']
         for aname,aspec in ((v, k['args'][v]) for v in l):
-            if 'r' not in aspec['mode']:
+            if aspec['type'] == 'scalar' and 'r' not in aspec['mode']:
                 continue
             print >>f, "# %s" % aname 
             if aspec['type'] == 'scalar':
@@ -363,12 +365,53 @@ def read(rows):
                 'args' : dict((eval(x) for x in row[5:] if x != ""))
                 }
 
+
+def getsacorder(k):
+    try:
+        f = file('sacorder%d.txt' % k['idx'])
+    except:
+        k['args_order'] = k['args'].keys()
+        return
+
+    print "Expecting: ", ' '.join(k['args'].keys())
+
+    order = []
+    for var in f:
+        var = var.strip().rstrip('=').rstrip()
+        if var[-2:] == 'in':
+            var = var[:-2]
+        var = var.upper()
+
+        if var == 'N' or var == '' or var == 'REP':
+            continue
+        print "Found var :%s:" % var
+        if var not in k['args']:
+            print "Not expected???"
+            k['args_order'] = k['args'].keys()
+            return
+
+        order.append(var)
+
+    l = k['args'].keys()
+    l.sort()
+    for var in l:
+        if var not in order:
+            k['args'][var]['mode'] = 'wo'
+            order.append(var)
+
+    print "New input order: ", order
+    k['args_order'] = order
+    
+
 if __name__ == "__main__":
     csvread = csv.reader(sys.stdin, delimiter=',', quotechar='"')
     bread = read(csvread)        
     file('extradist.mk','w').close()
     for kernel in bread:
         print kernel
+        print "Loading SAC order for kernel %d..." % kernel['idx']
+        getsacorder(kernel)
+
         print "Generating code for kernel %d ('%s', %d args)..." % (kernel['idx'], kernel['key'], len(kernel['args']))
         gencode(kernel)
         geninputs(kernel)
