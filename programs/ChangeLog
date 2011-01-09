@@ -1,3 +1,17 @@
+2011-01-09  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
+	Introduce a cellular automaton simulation as demo.
+
+	* demo/ca1d.c,
+	* demo/ca1d.h,
+	* demo/ca1d_main.c,
+	* demo/ca1d_demo.c,
+	* demo/ca1d_demo2.c: New.
+
+	* demo/Makefile.am (DEMOS): Extend with `ca1d_demo' and
+	`ca1d_demo2'.	
+	* demo/Makefile.am (EXTRA_DIST): Also mention the included files.
+
 2011-01-05  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
 	Update contact information.

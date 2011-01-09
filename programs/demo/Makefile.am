@@ -25,7 +25,9 @@ DEMOS = \
 	pi.c \
 	roman.c \
 	sep.c \
-	tmalloc.c
+	tmalloc.c \
+	ca1d_demo.c \
+	ca1d_demo2.c
 
 TESTS = $(DEMOS)
 
@@ -33,6 +35,7 @@ include $(top_srcdir)/build-aux/slctests.mk
 
 EXTRA_DIST = $(DEMOS)
 EXTRA_DIST += fibre.c.d1 fibre.c.d2 fibre.c.d3 fibre.c.d4 bitblt.c.d keyblit.c.d
+EXTRA_DIST += ca1d.h ca1d.c ca1d_main.c
 
 if ENABLE_DEMOS
 noinst_DATA = $(DEMOS:.c=.x)
