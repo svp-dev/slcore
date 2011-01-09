@@ -1,5 +1,29 @@
 2011-01-09  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	New 2D cellular automaton benchmark.
+
+	* benchmarks/ca/ca2d.c,
+	* benchmarks/ca/ca2d.h,
+	* benchmarks/ca/makerule2d.c,
+	* benchmarks/ca/benchca.c,
+	* benchmarks/ca/benchca_gfx.c,
+	* benchmarks/ca/glider.d9000,
+	* benchmarks/ca/rpent.d9000,
+	* benchmarks/ca/rabbits.d9000,
+	* benchmarks/ca/herschel.d9000,
+	* benchmarks/ca/lidka.d9000,
+	* benchmarks/ca/lidka.d37200,
+	* benchmarks/ca/lidka.d768800,
+	* benchmarks/ca/one.d9000,
+	* benchmarks/ca/benchca.inputs,
+	* benchmarks/ca/Makefile.am: New.
+
+	* benchmarks/Makefile.am: New subdirectory `ca'.
+
+	* configure.ac: New sub-Makefile.
+
+2011-01-09  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	Introduce a cellular automaton simulation as demo.
 
 	* demo/ca1d.c,
