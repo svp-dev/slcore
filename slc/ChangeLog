@@ -1,5 +1,15 @@
 2011-01-14  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	Factor common assembly fixup code (mt.base).
+
+	* tools/lib/slc/mt/mtalpha/asmproc/base.py (filter): Move common
+	code to...	
+	* tools/lib/slc/mt/common/asmproc/fixup.py: ... here.
+
+	* tools/lib/Makefile.am (nobase_python_PYTHON): List the new file.
+
+2011-01-14  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	Fix breakage in register magic.
 
 	* tools/lib/slc/mt/mtsparc/regdefs.py,
