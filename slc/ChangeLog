@@ -1,3 +1,10 @@
+2011-01-14  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
+	Restore support for `mta_on'.
+
+	* tools/bin/spp: Allow the `compile', `filter' and `filter2'
+	functions for the `sppalpha' module.
+
 2011-01-04  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
 	Make MT `split' for dual compilation work across targets.

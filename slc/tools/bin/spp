@@ -177,22 +177,21 @@ if __name__ == "__main__":
    module = sys.argv[2]
    function = sys.argv[3]
    rest = sys.argv[4:]
-   if module == 'sppalpha':
-      assert function in ['fundef', 'create']
-      if function == 'fundef':
-         fundef(*rest)
-      elif function == 'create':
-         create(*rest)
-   elif module in ['utc0', 'spr']:
-      assert function in ['compile','filter','filter2']
-      if function == 'compile':
-         n = 'slc.mt.%s.compile' % arch; __import__(n)
-         sys.modules[n].compile(*rest)
-      elif function == 'filter':
-         n = 'slc.mt.%s.asmproc.base' % arch; __import__(n)
-         sys.modules[n].filter(*rest)
-      elif function == 'filter2':
-         n = 'slc.mt.%s.asmproc.opt' % arch; __import__(n)
-         sys.modules[n].filter(*rest)
+
+   if function == 'fundef':
+      assert module == 'sppalpha'
+      fundef(*rest)
+   elif function == 'create':
+      assert module == 'sppalpha'
+      create(*rest)
+   elif function == 'compile':
+      n = 'slc.mt.%s.compile' % arch; __import__(n)
+      sys.modules[n].compile(*rest)
+   elif function == 'filter':
+      n = 'slc.mt.%s.asmproc.base' % arch; __import__(n)
+      sys.modules[n].filter(*rest)
+   elif function == 'filter2':
+      n = 'slc.mt.%s.asmproc.opt' % arch; __import__(n)
+      sys.modules[n].filter(*rest)
 
 
