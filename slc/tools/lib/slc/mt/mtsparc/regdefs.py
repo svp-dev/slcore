@@ -324,6 +324,11 @@ class RegDefs:
             for r in fixed:
                 rm.fixed_registers.append('%%%s%d' % (v, r))
 
+### Retain the numeric aliases for all registers
+for i in xrange(0, 32):
+    RegDefs.legacy_regs['r%d' % i] = i
+
+
 
 regmagic = RegMagic(RegDefs())
 __all__ = ['regmagic']

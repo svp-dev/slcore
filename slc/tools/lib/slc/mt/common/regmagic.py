@@ -262,7 +262,7 @@ class RegMagic:
         Return the canonical virtual register name
         for a given (virtual) alias.
         """
-        return self.rd.regprefix + self._reg_aliases[alias]
+        return self.rd.regprefix + self.rd.reg_aliases[alias]
 
     def makecrepl(self,funname):
         """

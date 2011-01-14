@@ -273,6 +273,11 @@ class RegDefs:
         for i in xrange(6):
             rm.call_arg_registers.append('$f%d' % self.legacy_fregs['fa%d' % i])
 
+### Retain the numeric aliases for all registers
+for i in xrange(0, 32):
+    RegDefs.legacy_fregs['f%d' % i] = i
+    RegDefs.legacy_regs['%d' % i] = i
+        
 
 regmagic = RegMagic(RegDefs())
 __all__ = ['regmagic']
