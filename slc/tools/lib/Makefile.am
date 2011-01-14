@@ -73,6 +73,10 @@ nobase_python_PYTHON = \
 	slc/mt/common/regmagic.py \
 	slc/mt/common/compile.py \
 	slc/mt/common/gentfun.py \
+	slc/mt/common/asmproc/__init__.py \
+	slc/mt/common/asmproc/input.py \
+	slc/mt/common/asmproc/output.py \
+	slc/mt/common/asmproc/filter.py \
 	slc/mt/mtalpha/__init__.py \
 	slc/mt/mtalpha/regdefs.py \
 	slc/mt/mtalpha/compile.py \

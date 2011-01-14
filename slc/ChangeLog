@@ -1,5 +1,20 @@
 2011-01-14  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	Factor common assembly fixup code (mt.common).
+
+	* tools/lib/slc/mt/common/asmproc/__init__.py: New.
+
+	* tools/lib/slc/mt/mtalpha/asmproc/common.py: Extract shared
+	implementation to...	
+	* tools/lib/slc/mt/common/asmproc/input.py,
+	* tools/lib/slc/mt/common/asmproc/output.py,
+	* tools/lib/slc/mt/common/asmproc/filter.py: ... here.
+
+	* tools/lib/Makefile.am (nobase_python_PYTHON): List the new
+	files.
+
+2011-01-14  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	Fix code generation for MT-Alpha.
 
 	* tools/lib/slc/mt/mtalpha/gentfun.py: Properly include
