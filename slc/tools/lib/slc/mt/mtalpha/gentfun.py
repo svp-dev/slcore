@@ -1,5 +1,5 @@
 from regdefs import regmagic
-from ..common.lowtfun import TFun_2_MTFun
+from ..common.gentfun import TFun_2_MTFun
 
 class TFun_2_MTATFun(TFun_2_MTFun):
 

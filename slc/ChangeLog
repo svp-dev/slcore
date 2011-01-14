@@ -1,5 +1,12 @@
 2011-01-14  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	Fix code generation for MT-Alpha.
+
+	* tools/lib/slc/mt/mtalpha/gentfun.py: Properly include
+	`common.gentfun'.
+
+2011-01-14  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	Restore support for `mta_on'.
 
 	* tools/bin/spp: Allow the `compile', `filter' and `filter2'
