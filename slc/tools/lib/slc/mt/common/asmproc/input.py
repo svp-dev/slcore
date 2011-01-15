@@ -19,6 +19,8 @@ def lexer(lines, re_codecom):
     Split code from comments, produce a generator of (code, comment).
     """
     for line in lines:
+        if line in ['#APP','#NO_APP']:
+            continue
         m = re_codecom.match(line)
         asm = m.group(1)
         comment = m.group(2)

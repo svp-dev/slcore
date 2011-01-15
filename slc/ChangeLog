@@ -1,3 +1,14 @@
+2011-01-15  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
+	Extend the fixup code for MT-Sparc assembly.
+	
+	* tools/lib/slc/mt/mtsparc/asmproc/base.py (grouper): New function
+	grouper code, similar to the code for MT-Alpha.
+
+	* tools/lib/slc/mt/common/asmproc/input.py (lexer): Ignore lines
+	containing `#APP' and `#NO_APP', since the fixup input must
+	already be preprocessed.
+
 2011-01-14  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
 	Factor common assembly fixup code (mt.base).
