@@ -1,3 +1,11 @@
+2011-01-16  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
+	New register use convention for MT-Sparc.
+
+	* tools/lib/slc/mt/mtsparc/regdefs.py (RegDefs): New local window
+	layout, to ensure the 'i' locals are next to each other aligned on
+	even-numbered physical reg slots.
+
 2011-01-15  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
 	Extend the fixup code for MT-Sparc assembly.

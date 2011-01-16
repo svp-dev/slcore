@@ -274,35 +274,73 @@ class RegDefs:
         's3' : 'l6',
         'd3' : 'l7',
         # Special locals
-        'l0' : 'g1', # temp
-        'l1' : 'g2', # app reg
-        'l2' : 'g3', # app reg
-        'l3' : 'g4', # app reg
-        'l4' : 'g5', # OS reg
-        'l5' : 'g6', # OS reg
-        'l6' : 'g7', # OS reg
-        'l7' : 'o5',
-        'l8' : 'o4',
-        'l9' : 'o3',
-        'l10' : 'o2',
-        'l11' : 'o1',
-        'l12' : 'o0',
-        'l13' : 'i5',
-        'l14' : 'i4',
-        'l15' : 'o7', # HARD-WIRED INTO CALL: l15 must assemble to %r15 = %o7!
-        'l16' : 'i3',
-        'l17' : 'i2',
-        'l18' : 'i1',
-        'l19' : 'i0',
-        'l20' : 'i7', # RA - 8
-        'l21' : 'sp',
-        'l22' : 'fp',
-        'l31' : 'g0' # ZERO
+        'l0' : 'g1', # temp          phy 1
+        'l1' : 'g2', # app reg       phy 2
+        'l2' : 'g3', # app reg       phy 3
+        'l3' : 'g4', # app reg       phy 4
+        'l4' : 'g5', # OS reg        phy 5
+        'l5' : 'g6', # OS reg        phy 6
+        'l6' : 'g7', # OS reg        phy 7
+        'l7' : 'o0', #               phy 8
+        'l8' : 'o1', #               phy 9
+        'l9' : 'o2', #               phy 10
+        'l10' : 'o3', #              phy 11
+        'l11' : 'o4', #              phy 12
+        'l12' : 'o5', #              phy 13
+        'l13' : 'sp', # o6           phy 14
+        'l14' : 'o7', # CALL HWIRED  phy 15
+        'l15' : 'i0', #              phy 16
+        'l16' : 'i1', #              phy 17
+        'l17' : 'i2', #              phy 18
+        'l18' : 'i3', #              phy 19
+        'l19' : 'i4', #              phy 20
+        'l20' : 'i5', #              phy 21
+        'l21' : 'fp', # i6           phy 22
+        'l22' : 'i7', # RA-8         phy 23
+        'l31' : 'g0', # ZERO
     }
 
+## FIRST IDEA FOR MAPPING
+## BASED ON GCC ALLOC ORDER
+## -> problem: save/restore uses std/ldd,
+##    requires "i" locals to lie next to each other
+##    at even-numbered register slots.
+#         'l7' : 'o5',
+#         'l8' : 'o4',
+#         'l9' : 'o3',
+#         'l10' : 'o2',
+#         'l11' : 'o1',
+#         'l12' : 'o0',
+#         'l13' : 'i5',
+#         'l14' : 'i4',
+#         'l15' : 'o7', # HARD-WIRED INTO CALL: l15 must assemble to %r15 = %o7!
+#         'l16' : 'i3',
+#         'l17' : 'i2',
+#         'l18' : 'i1',
+#         'l19' : 'i0',
+#         'l20' : 'i7', # RA - 8
+#         'l21' : 'sp',
+#         'l22' : 'fp',
+
+#     def __init__(self):
+#         import sys
+#         print >>sys.stderr, "---snip here---\n#! /usr/bin/sed -f"
+#         rm = self.reg_mapping
+#         leg = set([rm[k] for k in rm])
+#         m = {}
+#         for r in leg:
+#             m[r] = [k for k in rm if rm[k] == r]
+#             if m[r][0].startswith('l'):
+#                 m[r][0] += '_' + r
+
+#         for k,v in m.items():
+#             print >>sys.stderr, 's/%%%s/%%t%s/g;' % (k,''.join(v))
+#         print >>sys.stderr,'s/%tl31/%g0/g;'
+#         print >>sys.stderr, "---snip here---"
+
     reg_aliases = {
-        'tlsp' : 'l21',
-        'fp' : 'l22',
+        'tlsp' : 'l13',
+        'fp' : 'l21',
         'idx_init' : 'l0',
         'zero' : 'l31',
     }
