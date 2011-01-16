@@ -62,16 +62,36 @@ def grouper(items):
         state = 0
         yield (type, content, comment)
 
+
 from common import *
+from ...common.asmproc.regextract import *
+from ...common.asmproc.renameregs import *
 
-def dumper(items):
-    for item in items:
-        print item
-        yield item
+def crenameregs(fundata, items):
+    return crenameregs_gen(fundata, items, regmagic)
+def renameregs(fundata, items):
+    return renameregs_gen(fundata, items, regmagic)
 
-_filter_begin = [reader, lexer, splitsemi, parser, grouper, dumper]
-_cfilter_inner = []
-_filter_inner = []
+
+def zerog0(fundata, items):
+    for (type, content, comment) in items:
+        content = content.replace('$31','%r0').replace('$l31','%r0')
+        yield (type, content, comment)
+
+
+_filter_begin = [reader, lexer, splitsemi, parser, grouper]
+_cfilter_inner = [canonregs,
+                  crenameregs,
+
+                  zerog0,
+                  cphyregs]
+_filter_inner = [canonregs,
+                 regextract,
+                 renameregs,
+
+
+                 zerog0,
+                 phyregs]
 _filter_end = [flattener, printer]
 
 

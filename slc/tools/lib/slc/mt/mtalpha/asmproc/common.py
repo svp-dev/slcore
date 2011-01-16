@@ -32,3 +32,9 @@ def printer(items):
     return output.printer(items, '#')
 
 flattener = output.flattener
+
+from ..regdefs  import regmagic
+from ...common.asmproc import canon
+
+def canonregs(fundata, items):
+    return canon.canonregs(items, regmagic)

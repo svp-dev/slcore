@@ -71,35 +71,7 @@ def grouper(items):
         state = 0
         yield (type, content, comment)
 
-_re_regs = re.compile(r'.registers (\d+) (\d+) (\d+) (\d+) (\d+) (\d+)')
-def regextract(fundata, items):
-    """
-    Find the '.registers' directive in the function body,
-    remove it from the code and cache the values for future stages.
 
-    (the '.registers' directive is re-generated later by xjoin2)
-    """
-    for (type, content, comment) in items:
-        m = _re_regs.match(content)
-        if m is not None:
-            assert not fundata.has_key('regs')
-            fundata['regs'] = [int(x) for x in m.groups()]
-            continue
-
-        yield (type, content, comment)
-
-_re_rr1reg = re.compile('(\$f?\d+)')
-def renameregs(fundata, items):
-    """
-    Convert all legacy register names to their virtual
-    counterparts. 
-    """
-    rd = fundata['regs']
-    repl = regmagic.makerepl(rd[0],rd[1],rd[3],rd[4])
-    for (type, content, comment) in items:
-        content = _re_rr1reg.sub(repl, content)
-        comment = _re_rr1reg.sub(repl, comment)
-        yield (type, content, comment)
 
 def stripmask(fundata, items):
     """
@@ -112,17 +84,12 @@ def stripmask(fundata, items):
         else:
             yield (type, content, comment)
             
+from ...common.asmproc.renameregs import *
 
+def renameregs(fundata, items):
+    return renameregs_gen(fundata, items, regmagic)
 def crenameregs(fundata, items):
-    """
-    Collate legacy register names in regular C function
-    bodies to the beginning of the register window.
-    """
-    repl = regmagic.makecrepl(fundata['name'])
-    for (type, content, comment) in items:
-        content = _re_rr1reg.sub(repl, content)
-        comment = _re_rr1reg.sub(repl, comment)
-        yield (type, content, comment)
+    return crenameregs_gen(fundata, items, regmagic)
 
 _re_jsr = re.compile(r'jsr\s|bs?r\s.*!samegp')
 def detectregs(fundata, items):
@@ -873,10 +840,13 @@ def protectcallsave(fundata, items):
     return items
     
 from common import *
+from ...common.asmproc.regextract import *
+from ...common.asmproc.renameregs import *
 
 _filter_begin = [reader, lexer, splitsemi, parser, grouper]
-_cfilter_inner = [crenameregs, stripmask]
+_cfilter_inner = [canonregs, crenameregs, stripmask]
 _filter_inner = [
+                canonregs,
                 regextract,
                 renameregs,
                 detectregs,

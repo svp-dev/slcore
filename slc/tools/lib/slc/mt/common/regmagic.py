@@ -1,4 +1,5 @@
 from ...msg import die, warn
+import re
 
 class RegMagic:
 
@@ -262,7 +263,7 @@ class RegMagic:
         Return the canonical virtual register name
         for a given (virtual) alias.
         """
-        return self.rd.regprefix + self.rd.reg_aliases[alias]
+        return '$' + self.rd.reg_aliases[alias]
 
     def makecrepl(self,funname):
         """
@@ -273,13 +274,28 @@ class RegMagic:
 
         subst = {}
         regs = self._regs
+        lo = self.rd.mt_locals_offset
         for (spec, pref) in [('i',''),('f','f')]:
             for r in (r for r in regs[spec]['l'] if r is not None):
-                key = "%s%s%d" % (self.rd.regprefix, pref,r['legnr'])
+                key = "$%s%d" % (pref,r['legnr'])
                 assert not subst.has_key(key)
-                subst[key] = self.rd.regprefix + r['name'][1:]
+                rname = r['name'][1:]
+                v = '$'
+                isfloat = False
+                if rname[0] == 'f':
+                    v += 'f'
+                    rname = rname[1:]
+                    isfloat = True
+
+                # all registers shifted by offset, except $31 (zero)
+                rl = int(rname)
+                if isfloat or rl != 31:
+                    rl += lo
+
+                v = '%s%d' % (v, rl)
+                subst[key] = v
         import sys
-        #print >>sys.stderr, "XXX", subst
+        print >>sys.stderr, "XXX", subst
         def repl(match):
             k = match.group(1)
             if k not in subst:
@@ -295,7 +311,6 @@ class RegMagic:
 
         subst = {}
         regs = self._regs
-        pr = self.rd.regprefix
         for (spec, cat, nr, pref) in [('i','d',shi, ''),
                                       ('i','s',shi, ''),
                                       ('i','g',gli, ''),
@@ -306,21 +321,69 @@ class RegMagic:
                 r = regs[spec][cat][i]
                 key = "%s%d" % (pref,r['legnr'])
                 assert not subst.has_key(key)
-                subst[key] = pr + r['name']
+                subst[key] = '$' + r['name']
         for (spec, pref) in [('i',''),('f','f')]:
             for r in (r for r in regs[spec]['l'] if r is not None):
                 key = "%s%d" % (pref,r['legnr'])
                 assert not subst.has_key(key)
-                subst[key] = pr + r['name']
+                subst[key] = '$' + r['name']
         #print "MAKEREPL: ", subst
         def repl(match):
             r = match.group(1)
-            #if r == pr+"31" or r == pr+"f31":
-            #   return r
             return subst.get(r[1:], r)
 
         return repl
 
+    def makelegre(self):
+        """
+        Create a regexp that matches all legacy
+        register names.
+        """
+        
+        pats = set()
+        r = self.rd.legacy_regs
+        rf = self.rd.legacy_fregs
+        p = self.rd.regprefix
+        for k in r.keys() + rf.keys():
+            # find whether there is a numerical suffix
+            num = False
+            if k[-1:] in "0123456789":
+                k = k[:-1]
+                num = True
+            if k[-1:] in "0123456789":
+                k = k[:-1]
+            if len(k) == 0:
+                continue
+            # gen one pattern
+            if num is True:
+                k += r'\d+'
+            pats.add(k)
+        restr = r'(\%s(?:%s))' % (p, '|'.join(pats))
+        #print "XXX", restr
+        return re.compile(restr)
+
+    def makelegcanonrepl(self):
+        """
+        Create a subsitution function suitable for re.sub,
+        to replace all legacy register aliases by
+        a $N/$fN equivalent.
+        """
+        
+        subst = {}
+        r = self.rd.legacy_regs
+        rf = self.rd.legacy_fregs
+        for (k,v) in r.items():
+            subst[k] = '$%d' % v
+        for (k,v) in rf.items():
+            subst[k] = '$%d' % v
+
+        #print "YYY", subst
+
+        def repl(match):
+            r = match.group(1)
+            return subst.get(r[1:], r)
+
+        return repl
 
     def get_dot_registers(self, gli, shi, glf, shf):
         return ".registers %d %d %d %d %d %d" % (gli, shi, self.rd.ilocalregs,

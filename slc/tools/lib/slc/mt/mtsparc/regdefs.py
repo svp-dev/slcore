@@ -16,6 +16,10 @@ class RegDefs:
     canon_is_numeric = False
     comprefix = '!'
 
+    # offset in register window of
+    # first local register
+    mt_locals_offset = 1
+
     legacy_regs = {
         # globals
         'g1' : 1, # always tmp
@@ -56,9 +60,13 @@ class RegDefs:
         'g0' : 0,
         # stack pointer
         'sp' : 14,
+        'o6' : 14,
         # frame pointer
-        'fp' : 30
+        'fp' : 30,
+        'i6' : 30
     }
+
+    legacy_fregs = dict((('f%d' % i, i) for i in xrange(0,32)))
 
     ######################
     # GCC Allocation order

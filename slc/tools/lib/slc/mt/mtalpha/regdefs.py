@@ -1,4 +1,5 @@
 from ..common.regmagic import RegMagic
+import re
 
 class RegDefs:
 
@@ -13,6 +14,10 @@ class RegDefs:
 
     canon_is_numeric = True
     comprefix = '#'
+
+    # offset in register window of
+    # first local register
+    mt_locals_offset = 0
 
     legacy_fregs = {
        # Scratch registers
@@ -277,6 +282,7 @@ class RegDefs:
 for i in xrange(0, 32):
     RegDefs.legacy_fregs['f%d' % i] = i
     RegDefs.legacy_regs['%d' % i] = i
+    RegDefs.legacy_regs['r%d' % i] = i
         
 
 regmagic = RegMagic(RegDefs())

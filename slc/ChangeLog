@@ -1,5 +1,57 @@
 2011-01-16  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	Implement register renaming for MT-Sparc.
+
+	* tools/lib/slc/mt/mtalpha/asmproc/base.py: Move the common
+	definition of `renameregs', `crenameregs' and `regextract' to...
+
+	* tools/lib/slc/mt/common/asmproc/renameregs.py,
+	* tools/lib/slc/mt/common/asmproc/regextract.py: ...here.
+
+	* tools/lib/slc/mt/mtalpha/asmproc/base.py,
+	* tools/lib/slc/mt/mtsparc/asmproc/base.py: Use them.
+
+	* tools/lib/slc/mt/mtsparc/regdefs.py,	
+	* tools/lib/slc/mt/mtalpha/regdefs.py (mt_local_offset): New
+	attribute to indicate where the MT locals start wrt the
+	architectural register window.
+
+	* tools/lib/slc/mt/common/regmagic.py (makerepl, makecrepl): Use
+	it.
+	
+	* tools/lib/slc/mt/common/asmproc/canon.py: New pass to transform
+	regiser aliases to canonical form.
+
+	* tools/lib/slc/mt/common/regmagic.py (makelegre,
+	makelegcanonrepl): Support it.
+
+	* tools/lib/slc/mt/mtsparc/regdefs.py (legacy_regs, legacy_fregs):
+	Also recognize `o6' and `i6' as aliases. Define aliases for float
+	regs (although they are not used).
+	* tools/lib/slc/mt/mtalpha/regdefs.py: Populate `legacy_regs' with
+	all the 'rN' forms.
+
+	* tools/lib/slc/mt/mtalpha/asmproc/common.py,
+	* tools/lib/slc/mt/mtalpha/asmproc/base.py,
+	* tools/lib/slc/mt/mtsparc/asmproc/common.py,
+	* tools/lib/slc/mt/mtsparc/asmproc/base.py: Use it.
+	
+	* tools/lib/slc/mt/common/regmagic.py (makelegre,
+	makelegcanonrepl): Support it.
+
+	* tools/lib/slc/mt/mtsparc/asmproc/common.py: New passes `phyregs'
+	and `cphyregs' to translate canonical register names to
+	architectural register names.
+	* tools/lib/slc/mt/mtsparc/amsproc/base.py: Use them.
+
+	* tools/lib/slc/mt/mtsparc/amsproc/base.py (zerog0): New pass to
+	rename `$l31'/`$31' to `g0'. Use it.
+	
+	* tools/lib/Makefile.am (nobase_python_PYTHON): List the new
+	files.
+	
+2011-01-16  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	New register use convention for MT-Sparc.
 
 	* tools/lib/slc/mt/mtsparc/regdefs.py (RegDefs): New local window
