@@ -81,6 +81,9 @@ nobase_python_PYTHON = \
 	slc/mt/common/asmproc/canon.py \
 	slc/mt/common/asmproc/renameregs.py \
 	slc/mt/common/asmproc/regextract.py \
+	slc/mt/common/asmproc/markused.py \
+	slc/mt/common/asmproc/labels.py \
+	slc/mt/common/asmproc/compress.py \
 	slc/mt/mtalpha/__init__.py \
 	slc/mt/mtalpha/regdefs.py \
 	slc/mt/mtalpha/compile.py \

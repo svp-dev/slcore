@@ -1,5 +1,24 @@
 2011-01-19  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	Factor common assembly fixup code (mt.base, mt.opt).
+
+	* tools/lib/slc/mt/mtalpha/asmproc/opt.py (findlabels,
+	killunusedlabels): Extract label detection and removal to...	
+	* tools/lib/slc/mt/common/asmproc/labels.py: ...here.
+
+	* tools/lib/slc/mt/mtalpha/asmproc/base.py (markused): Move
+	register use detection to...
+	* tools/lib/slc/mt/common/asmproc/markused.py: ...here.
+
+	* tools/lib/slc/mt/mtalpha/asmproc/base.py (makespecialtransform,
+	compress): Move register window compression to...
+	* tools/lib/slc/mt/common/asmproc/compress.py: ...here.
+
+	* tools/lib/Makefile.am (nobase_python_PYTHON): List the new
+	files.
+	
+2011-01-19  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	Attempt to fix the visibility of functions in objects (MT-Alpha).
 
 	* tools/lib/slc/mt/mtalpha/asmproc/base.py (xjoin2): Do not emit
