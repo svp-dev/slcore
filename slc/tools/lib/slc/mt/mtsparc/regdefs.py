@@ -308,6 +308,17 @@ class RegDefs:
         'l31' : 'g0', # ZERO
     }
 
+    reg_aliases = {
+        'tlsp' : 'l13',
+        'fp' : 'l21',
+        'idx_init' : 'l0',
+        'zero' : 'l31',
+        'ra' : 'l22',
+        'ra_leaf' : 'l14',
+        'callreg' : 'l14'
+    }
+
+
 ## FIRST IDEA FOR MAPPING
 ## BASED ON GCC ALLOC ORDER
 ## -> problem: save/restore uses std/ldd,
@@ -345,13 +356,6 @@ class RegDefs:
 #             print >>sys.stderr, 's/%%%s/%%t%s/g;' % (k,''.join(v))
 #         print >>sys.stderr,'s/%tl31/%g0/g;'
 #         print >>sys.stderr, "---snip here---"
-
-    reg_aliases = {
-        'tlsp' : 'l13',
-        'fp' : 'l21',
-        'idx_init' : 'l0',
-        'zero' : 'l31',
-    }
 
     def post_init_regmagic(self, rm):
         # all virtual register names
