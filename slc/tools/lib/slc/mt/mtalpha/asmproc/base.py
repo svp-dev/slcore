@@ -216,6 +216,10 @@ def xsplit(fundata, items):
     name = fundata['name']
     inprologue = 0
     inpprologue = 0
+
+    lblng = '$__slf_%s..ng:' % name
+    lbl = '__slf_%s:' % name
+
     for (type, content, comment) in items:
         if content.startswith('.frame ') \
                  or content.startswith('.mask ') \
@@ -224,12 +228,12 @@ def xsplit(fundata, items):
                  or content.startswith('.ent ') \
                  or content.startswith('.end '):
             continue
-        elif type == 'label' and content == ('$__slf_%s..ng:' % name):
+        elif type == 'label' and content == lblng:
             inpprologue = 0
             inprologue = 1
             continue
         elif inprologue == 1:
-            if type == 'label' and content == ('__slf_%s:' % name):
+            if type == 'label' and content == lbl:
                 continue
             elif content.startswith('.prologue'):
                 fundata['prologuen'] = int(content.split(' ')[1])
@@ -237,7 +241,7 @@ def xsplit(fundata, items):
                 continue
             fundata['prologue'].append((type, content, comment))
             continue
-        elif type == 'label' and content == ('__slf_%s:' % name):
+        elif type == 'label' and content == lbl:
             inpprologue = 1
             continue
         elif inpprologue == 1:

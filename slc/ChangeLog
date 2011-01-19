@@ -1,3 +1,10 @@
+2011-01-19  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
+	Minor optimization in `spr'.
+	
+	* tools/lib/slc/mt/mtalpha/asmproc/base.py (xsplit): Precompute
+	the label names.
+
 2011-01-16  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
 	Implement register renaming for MT-Sparc.
