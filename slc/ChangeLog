@@ -1,5 +1,12 @@
 2011-01-19  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	Attempt to fix the visibility of functions in objects (MT-Alpha).
+
+	* tools/lib/slc/mt/mtalpha/asmproc/base.py (xjoin2): Do not emit
+	`.globl' if it was not there in the first place.
+
+2011-01-19  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	Minor optimization in `spr'.
 	
 	* tools/lib/slc/mt/mtalpha/asmproc/base.py (xsplit): Precompute

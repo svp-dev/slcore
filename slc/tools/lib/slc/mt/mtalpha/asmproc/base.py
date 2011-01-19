@@ -636,7 +636,8 @@ def xjoin2(fundata, items):
     """
     name = fundata['name']
     regs = fundata['regs']
-    yield ('directive', '.globl %s' % name, '')
+    if fundata['global']:
+        yield ('directive', '.globl %s' % name, '')
     yield ('directive', '.ent %s' % name, '')
     yield ('directive', '.registers %d %d %d %d %d %d' % tuple(regs), '')
     yield ('label', '%s:' % name, '')
