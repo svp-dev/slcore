@@ -39,11 +39,16 @@ const char* mtperf_counter_names[] = {
   "tt_total",
   "ft_total",
   "xq_total",
+  "unixtime",
+  "localdate",
+  "localtime",
 // computed columns
   "pl_eff",
   "tt_occp",
   "ft_occp",
   "xq_avg",
+#else
+  "unixtime",
 #endif
 };
 

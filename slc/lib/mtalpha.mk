@@ -52,6 +52,7 @@ MTALIB_CSRC = \
 	src/strtoul.c \
 	src/strtoull.c \
 	src/sys_errlist.c \
+	src/time.c \
 	src/tlstack_malloc.c \
 	src/vfprintf.c \
 	src/vprintf.c \

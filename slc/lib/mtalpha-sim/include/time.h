@@ -19,6 +19,7 @@
 
 #define CLOCKS_PER_SEC 1000000000
 
+extern time_t time(time_t*);
 extern clock_t clock(void);
 
 #if defined(__alpha__) || defined(__mtalpha__)

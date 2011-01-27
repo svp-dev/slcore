@@ -39,7 +39,10 @@ typedef long counter_t;
 #define MTPERF_CUMUL_TT_OCCUPANCY 10
 #define MTPERF_CUMUL_FT_OCCUPANCY 11
 #define MTPERF_CUMUL_ALLOC_EX_QSIZE 12
-#define MTPERF_NCOUNTERS 13
+#define MTPERF_UNIX_TIME 13
+#define MTPERF_LOCAL_DATE 14
+#define MTPERF_LOCAL_TIME 15
+#define MTPERF_NCOUNTERS 16
 typedef struct { counter_t ct[MTPERF_NCOUNTERS]; } __counters_t;
 
 extern const char *mtpef_counter_names[];
@@ -74,10 +77,23 @@ extern const char *mtpef_counter_names[];
 
 #else
 
-#define MTPERF_NCOUNTERS 1
 #define MTPERF_CLOCKS 0
-#define mtperf_sample(Array) do { (Array)[0] = (counter_t)clock(); } while(0)
-#define mtperf_sample1(Counter) (((Counter) == 0) ? clock() : -1)
+#define MTPERF_UNIX_TIME 1
+#define MTPERF_NCOUNTERS 2
+#define mtperf_sample(Array) do { \
+        (Array)[0] = (counter_t)clock(); \
+        (Array)[1] = (counter_t)time(0); \
+    } while(0)
+#define mtperf_sample1(Counter) ({              \
+            size_t __cnt = (Counter);           \
+            counter_t val;                      \
+            switch(__cnt) {                     \
+            case 0: val = clock(); break;       \
+            case 1: val = time(0); break;       \
+            default: val = 0; break;            \
+            }                                   \
+            val;                                \
+        })
 
 #endif
 

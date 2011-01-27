@@ -28,6 +28,7 @@ typedef volatile char *v_caddr_t;     /* core address, pointer to volatile */
 typedef int64_t  off_t;
 
 typedef long clock_t;
+typedef long time_t;
 
 #if defined(__alpha__) || defined(__mtalpha__)
 typedef long ssize_t;

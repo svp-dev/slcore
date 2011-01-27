@@ -1,3 +1,17 @@
+2011-01-27  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
+	Add support for C's standard time().
+
+	* lib/include/svp/perf.h: New counter `MTPERF_UNIXTIME'.
+
+	* lib/src/perf.c,
+	* lib/src/time.c: Use it.
+
+	* lib/mtalpha-sim/include/sys/types.h,
+	* lib/mtalpha-sim/include/time.h: Declare C's time().
+	
+	* lib/mtalpha.mk (MTALIB_CSRC): List the new file.
+
 2010-12-19  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
 	Minor refactoring in `spr'.
