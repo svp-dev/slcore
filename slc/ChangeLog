@@ -1,3 +1,9 @@
+2011-01-28  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
+	Optimize `memcpy', `memmove' and `bcopy'.
+
+	* lib/src/bcopy.c: Use `long' instead of `int' as the copy unit.
+
 2011-01-27  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
 	Add support for C's standard time().
