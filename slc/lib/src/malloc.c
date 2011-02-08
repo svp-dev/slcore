@@ -488,6 +488,33 @@ MAX_RELEASE_CHECK_RATE   default: 4095 unless not HAVE_MMAP
 #include <stddef.h>
 #include <svp/testoutput.h>
 
+#define CORRUPTION_ERROR_ACTION(m)              \
+    __cea(m, __FILE__, __LINE__)
+#define __cea(m, f, l) do {                             \
+        output_string(f,2);                             \
+        output_char(':',2);                             \
+        output_int(l,2);                                \
+        output_string(": malloc corruption: ",2);       \
+        output_hex(m,2);                                \
+        output_char('\n',2);                            \
+        abort();                                        \
+    } while(0)
+
+#define USAGE_ERROR_ACTION(m,p) __uea(m,p,__FILE__,__LINE__)
+#define __uea(m, p, f, l) do {                          \
+        output_string(f,2);                             \
+        output_char(':',2);                             \
+        output_int(l,2);                                \
+        output_string(": malloc usage error: ",2);      \
+        output_hex(m,2);                                \
+        output_char(',',2);                             \
+        output_hex(p,2);                                \
+        output_char('\n',2);                            \
+        abort();                                        \
+    } while(0)
+
+
+
 #ifndef WIN32
 #ifdef _WIN32
 #define WIN32 1

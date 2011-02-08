@@ -160,7 +160,7 @@ mta_malloc.o: $(srcdir)/src/malloc.c
 	$(slc_verbose)$(SLC_MTA) -c -o $@ $< $(MALLOC_DEFS)
 
 mta_malloc_debug.o: $(srcdir)/src/malloc.c
-	$(slc_verbose)$(SLC_MTA) -c -o $@ $< $(MALLOC_DEFS) -DDEBUG -DABORT_ON_ASSERT_FAILURE=0
+	$(slc_verbose)$(SLC_MTA) -c -o $@ $< $(MALLOC_DEFS) -DDEBUG=1 -DABORT_ON_ASSERT_FAILURE=0 -DFOOTERS=1
 
 
 ### Common rules ###

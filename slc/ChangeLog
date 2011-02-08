@@ -1,3 +1,12 @@
+2011-02-08  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
+	More debugging for DLMalloc.
+
+	* lib/mtalpha.mk: 
+	(mta_malloc_debug.o): Enable footers. 
+
+	* lib/src/malloc.c: Implement custom error actions with messages.
+
 2011-01-28  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
 	Optimize `memcpy', `memmove' and `bcopy'.
