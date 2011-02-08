@@ -1,5 +1,22 @@
 2011-02-08  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	Ensure that `sl_proccall' always runs locally with `spr'.
+
+	This introduces a new create attribute `sl__forceseq' which always
+	select the `seq' variant for creation. This only works for the spr
+	target in split mode, ie mt+hybrid -- not mt+naked nor other
+	targets. Requested by CAJ for testing the FFT.
+
+	* tools/lib/t-spr/slimpl.m4,
+	* tools/lib/slc/lower/split.py: Recognize the new attribute.
+	
+	* tools/include/slc.m4,	
+	* tools/lib/t-spr/include/sl_support.h: Make `sl_proccall' use it.
+
+	Ensure that `sl_proccall' always runs in the local context.
+
+2011-02-08  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	More debugging for DLMalloc.
 
 	* lib/mtalpha.mk: 

@@ -44,6 +44,7 @@ m4_define([[sl_glfparm_mutable]], [[_sl_doparm([[glfparm_mutable]],[[$1]],[[$2]]
 m4_define([[sl__static]], [[[[""", {'type':'attr', 'name':'static'}, r"""]]]])
 m4_define([[sl__naked]], [[[[""", {'type':'attr', 'name':'naked', 'flavor':r""" $1 """}, r"""]]]])
 m4_define([[sl__exclusive]], [[[[""", {'type':'attr', 'name':'exclusive'}, r"""]]]])
+m4_define([[sl__forceseq]], [[[[""", {'type':'attr', 'name':'forceseq'}, r"""]]]])
 
 m4_define([[sl_def]],[[m4_dnl
 m4_pushdef([[return]],[[sl_end_thread]])m4_dnl

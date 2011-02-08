@@ -27,7 +27,7 @@ m4_define([[sl_breakable]],[[m4_case(m4_normalize([[$1]]),[[void]],0,[[]],0,1)]]
 m4_include([[slimpl.m4]])
 
 # sl_proccall() - helper macro, encapsulate a singleton create
-m4_define([[sl_proccall]],[[do { sl_create(,,,,,,,$@); sl_sync(); } while(0)]])
+m4_define([[sl_proccall]],[[do { sl_create(,,,,,,sl__forceseq,$@); sl_sync(); } while(0)]])
 
 # Provide a helper M4 macro that defeats
 # extra quoting after preprocessing

@@ -8,6 +8,10 @@ class ExampleOracle(object):
     mapping = {'cmta':(0,'fmta'), 'cseq':(1,'fseq')}
 
     def flavors_for_create(self, cr):
+        s = cr.extras.get_attr('forceseq', None)
+        if s is not None:
+            return ['cseq']
+
         n = cr.extras.get_attr('naked', None)
         if n is not None:
             if n.flavor == 'native':
