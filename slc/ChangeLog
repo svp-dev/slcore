@@ -1,3 +1,11 @@
+2011-02-21  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
+	Fix deadlock bug on MT-Alpha.
+
+	* tools/lib/mtalpha-sim/callgate.s (__sl_callgate): Also
+	initialize $1 (RV) to avoid deadlock on return from void
+	functions (e.g. C's `free').
+
 2011-02-08  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
 	Ensure that `sl_proccall' always runs locally with `spr'.

@@ -70,11 +70,14 @@ $do_callgate:
 	ldq $13, -8($16)  # load call protocol
 	ldq $14, -16($16) # load PV
 
+        clr $1  # init int return reg (RV)
         clr $8  # flush callee-save reg
         clr $9  # flush callee-save reg
 	clr $10 # flush callee-save reg
 	clr $11 # flush callee-save reg
 	clr $12 # flush callee-save reg
+	fclr $f3 # init FP return reg
+	fclr $f4 # init FP return reg
 	fclr $f11 # flush callee-save reg
 	fclr $f12 # flush callee-save reg
 	fclr $f13 # flush callee-save reg
@@ -83,8 +86,6 @@ $do_callgate:
 	fclr $f16 # flush callee-save reg
 	fclr $f17 # flush callee-save reg
 	fclr $f18 # flush callee-save reg
-	fclr $f3 # init FP return reg
-	fclr $f4 # init FP return reg
 
 	beq $13, $docall_a0
 	ldq $7, -24($16)
