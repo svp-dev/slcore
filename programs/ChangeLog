@@ -1,5 +1,12 @@
 2011-02-21  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	Extend the `mandel' benchmark.
+
+	* benchmarks/mandel/mandel.c: New predicate `INNER_THREAD' to
+	enable computing the inner iteration in a separate family.
+
+2011-02-21  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	Fix distribution of the `fft' benchmark.
 
 	* benchmarks/fft/Makefile.am (BUILT_SOURCES): List the headers

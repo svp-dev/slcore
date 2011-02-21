@@ -189,6 +189,37 @@ sl_def(displayAfter, void,
 }
 sl_enddef
 
+#ifdef INNER_THREAD
+sl_def(mandel_loop, void,
+       sl_shparm(size_t, v),
+       sl_shfparm(double, zx),
+       sl_shfparm(double, zy),
+       sl_glfparm(double, cx),
+       sl_glfparm(double, cy),
+       sl_glfparm(double, four))
+{
+    double q1 = sl_getp(zx) * sl_getp(zx);
+    double q2 = sl_getp(zy) * sl_getp(zy);
+    if (unlikely((q1 + q2) >= sl_getp(four)))
+    {
+        sl_setp(zx, sl_getp(zx));
+        sl_setp(zy, sl_getp(zy));
+        sl_setp(v, sl_getp(v));
+        sl_break;
+    }
+    else 
+    {
+        double t = q1 - q2 + sl_getp(cx);
+        double q3 = sl_getp(zx) * sl_getp(zy);
+        sl_setp(zy, q3 + q3 + sl_getp(cy));
+        sl_setp(zx, t);
+        sl_setp(v, 1+sl_getp(v));
+    }
+}
+sl_enddef
+#endif
+
+
 sl_def(mandel, void,
        sl_glfparm(double, four),
        sl_glfparm(double, xstart),
@@ -221,6 +252,7 @@ sl_def(mandel, void,
   gfx_putpixel(dx, dy, 0xff0000);
 #endif
 
+#ifndef INNER_THREAD
   double zx = cx, zy = cy;
   size_t v;
   // size_t ic = sl_getp(icount);
@@ -235,6 +267,18 @@ sl_def(mandel, void,
         zy = q3 + q3 + cy;
         zx = t;
     }
+#else
+  sl_create(,,, sl_getp(icount),,,,
+            mandel_loop,
+            sl_sharg(size_t, va, 0),
+            sl_shfarg(double, , cx),
+            sl_shfarg(double, , cy),
+            sl_glfarg(double, , cx),
+            sl_glfarg(double, , cy),
+            sl_glfarg(double, , sl_getp(four)));
+  sl_sync();
+  size_t v = sl_geta(va);
+#endif
 
 #ifdef MANY_COLORS
   v = sl_getp(colors)[v];
