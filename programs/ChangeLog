@@ -1,3 +1,10 @@
+2011-02-21  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
+	Fix Unibench distribution.
+
+	* build-aux/benchmarks.mk (.c.tar): Ensure that the Unibench
+	Makefiles link benchmarks with the math library.
+
 2011-01-14  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
 	Improve the `mandel' benchmark.

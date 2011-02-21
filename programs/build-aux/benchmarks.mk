@@ -222,7 +222,7 @@ BENCHLIB = $(abs_top_srcdir)/benchmarks/lib/benchmark.c \
 	    $(MKDIR_P) $$bn/$$dn && \
 	    cp `test -r $$f || echo $(srcdir)/`$$f $$bn/$$dn/; \
 	  done && \
-	  echo "a.out: $$bn.c benchmark.c; "'$$'"(COMPILER) "'$$'"(FLAGS) -I. -o "'$$'"@ "'$$'"^" \
+	  echo "a.out: $$bn.c benchmark.c; "'$$'"(COMPILER) "'$$'"(FLAGS) -I. -o "'$$'"@ "'$$'"^ -lm" \
 	     >$$bn/Makefile && \
 	  tardir=$$bn && $(am__tar) >$@.tmp && \
 	  rm -rf $$bn
