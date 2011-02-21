@@ -52,6 +52,8 @@ gen_table_1_8_CPPFLAGS = -DTABLE_SIZE=8
 gen_table_1_8_CFLAGS = -O1 -fno-fast-math -ffloat-store
 gen_table_1_8_LDFLAGS = -lm
 
+BUILT_SOURCES += fft_table2_16_data.h fft_table2_8_data.h fft_table1_8_data.h fft_table1_16_data.h
+
 fft_table2_16_data.h: $(srcdir)/gen_table_2.sh
 	$(AM_V_at) rm -f "$@"
 	$(AM_V_GEN) TABLE_SIZE=16 $(SHELL) $(srcdir)/gen_table_2.sh >"$@"

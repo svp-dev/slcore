@@ -1,5 +1,12 @@
 2011-02-21  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	Fix distribution of the `fft' benchmark.
+
+	* benchmarks/fft/Makefile.am (BUILT_SOURCES): List the headers
+	containing the precomputed tables.
+
+2011-02-21  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	Fix Unibench distribution.
 
 	* build-aux/benchmarks.mk (.c.tar): Ensure that the Unibench
