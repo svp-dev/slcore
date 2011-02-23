@@ -109,8 +109,4 @@ extern const char * const sys_errlist[];
 extern const int sys_nerr;
 
 
-#ifndef shutup_cstdio_h
-#warning this implementation of stdio.h is incomplete.
-#endif
-
 #endif // ! SLC_MTA_STDIO_H

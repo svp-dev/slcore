@@ -1,3 +1,17 @@
+2011-02-23  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
+	Remove warnings in headers.
+
+	Do not warn about incomplete implementations any more. This was
+	requested by caj@herts.
+
+	* tools/include/svp/delegate.h,
+	* lib/mtalpha-sim/include/stdio.h,
+	* lib/mtalpha-sim/include/stdlib.h,
+	* lib/mtalpha-sim/include/string.h,
+	* lib/mtalpha-sim/include/strings.h,	
+	* lib/mtalpha-sim/include/time.h: Remove `#warning'.
+	
 2011-02-21  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
 	Fix deadlock bug on MT-Alpha.

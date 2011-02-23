@@ -106,9 +106,4 @@ extern int unsetenv(const char *name);
 /* missing: div, ldiv, lldiv */
 /* missing: mblen, mbtowc, wctomb, mbstowcs, wcstombs */
 
-#ifndef shutup_cstdlib_h
-#warning this implementation of stdlib.h is incomplete.
-#endif
-
-
 #endif

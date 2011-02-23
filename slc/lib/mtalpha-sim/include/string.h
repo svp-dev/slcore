@@ -67,8 +67,4 @@ size_t strnlen(const char*, size_t);
 size_t strlcpy(char * restrict dst, const char * restrict src, size_t len);
 size_t strlcat(char * restrict dst, const char * restrict src, size_t len);
 
-#ifndef shutup_cstring_h
-#warning this implementation of string.h is incomplete.
-#endif
-
 #endif

@@ -30,15 +30,8 @@ static clock_t __inline_clock(void)
     __asm__ __volatile__ ("rpcc %0" : "=r"(c) : : "memory");
     return c;
 }
-#else
-#warning Reading the time stamp counter is not defined on your system.
-#define __inline_clock() ((clock_t)-1)
-#endif
-
 #define clock() __inline_clock()
-
-#ifndef shutup_ctime_h
-#warning this implementation of time.h is incomplete.
 #endif
+
 
 #endif // ! SLC_MTA_TIME_H

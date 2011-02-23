@@ -36,7 +36,6 @@ static const sl_place_t PLACE_DEFAULT = uTC::PLACE_GROUP;
 
 #else
 
-#warning delegation not defined for this target.
 typedef int sl_place_t;
 #define PLACE_LOCAL 0
 #define PLACE_DEFAULT 0
