@@ -220,8 +220,10 @@ mtalpha_sim_libm_a_CONTENTS = \
 mtalpha_sim_libmalloc_notls_a_CONTENTS = \
 	mta_malloc_wrappers.o
 
+# we do not use mtalpha_sim_libm_a_CONTENTS in CLEANFILES below
+# because we want to preserve the MTAMATHOBJS
 CLEANFILES += \
-	$(mtalpha_sim_libm_a_CONTENTS) \
+	mta_missing_uclibc_math.o \
 	$(mtalpha_sim_libmalloc_notls_a_CONTENTS) \
 	mtalpha-sim/libm.a \
 	mtalpha-sim/libmalloc_notls.a
