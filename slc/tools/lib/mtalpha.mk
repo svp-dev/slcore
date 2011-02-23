@@ -161,15 +161,15 @@ mta_naked-mtalpha-sim/%.a:
 mta_naked-mtalpha-sim/libslc.a: $(mta_naked_mtalpha_sim_libslc_a_CONTENTS)
 mta_naked-mtalpha-sim/libslmain.a: $(mta_naked_mtalpha_sim_libslmain_a_CONTENTS)
 
-SLC_CMD := $(SLC_RUN) -b mta_n -nostdlib
+SLC_MTA_N := $(SLC_RUN) -b mta_n -nostdlib
 
 mta_naked-mtalpha-sim/%.o: $(srcdir)/mtalpha-sim/%.s
 	$(AM_V_at)$(MKDIR_P) mta_naked-mtalpha-sim
-	$(slc_verbose)$(SLC_CMD) -c -o $@ $<
+	$(slc_verbose)$(SLC_MTA_N) -c -o $@ $<
 
 mta_naked-mtalpha-sim/%.o: $(srcdir)/%.c
 	$(AM_V_at)$(MKDIR_P) mta_naked-mtalpha-sim
-	$(slc_verbose)$(SLC_CMD) -c -o $@ $<
+	$(slc_verbose)$(SLC_MTA_N) -c -o $@ $<
 
 CLEANFILES += \
 	mta_naked-mtalpha-sim/callgate.o \

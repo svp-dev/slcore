@@ -1,5 +1,11 @@
 2011-02-23  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	Minor fix to build rules.
+	
+	* tools/lib/mtalpha.mk: Rename `SLC_CMD' to `SLC_MTA_N'.
+
+2011-02-23  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	Remove warnings in headers.
 
 	Do not warn about incomplete implementations any more. This was
