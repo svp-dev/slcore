@@ -54,7 +54,7 @@ sl_def(cell, void,
 
     double (*restrict PX)[n][25] = (double (*)[n][25])(double*)sl_getp(PX);
     const double (*restrict CX)[n][25] = (const double (*)[n][25])(const double*)sl_getp(CX);
-    const double (*restrict VY)[25][n] = (const double (*)[25][n])(const double*)sl_getp(VY);
+    const double (*restrict VY)[25][25] = (const double (*)[25][25])(const double*)sl_getp(VY);
 
     long i = ij % 25;
     long j = ij / 25;
@@ -87,6 +87,7 @@ sl_def(kernel21, void,
     assert(sl_getp(PX_dim1) == 25);
     assert(sl_getp(CX_dim1) == 25);
     assert(sl_getp(VY_dim0) == 25);
+    assert(sl_getp(VY_dim1) == 25);
 
     //create the family of the appropriate size
     //specified in the 'inner' array

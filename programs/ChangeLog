@@ -1,3 +1,9 @@
+2011-03-03  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
+	Fix the livermore loop 21.
+
+	* benchmarks/livermore/kernel21.c (cell): Fix array bounds on VY.
+
 2011-02-21  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
 	Extend the `mandel' benchmark.
