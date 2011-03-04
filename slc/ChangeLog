@@ -1,3 +1,9 @@
+2011-03-04  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
+	Enable the `show-vars' target at the top-level dir.
+
+	* Makefile.am: Do it.
+
 2011-02-23  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
 	Fix packaging.

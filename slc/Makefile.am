@@ -25,6 +25,17 @@ NEWS: $(srcdir)/doc/NEWS.txt
 	$(AM_V_GEN)cp $(srcdir)/doc/NEWS.txt $@
 	$(AM_V_at)chmod -w $@
 
+include $(srcdir)/build-aux/slcvars.mk
+show-vars:
+	@echo
+	@echo ": Set the following to work from the source directory;"
+	@echo
+	@for n in $(SLC_VARS); do \
+	   echo "export $$n;"; \
+	done
+	@echo "export PATH=$(abs_top_builddir)/slc/tools/bin:$$PATH;"
+
+
 ACLOCAL_AMFLAGS = -I build-aux -I m4
 
 include $(srcdir)/build-aux/version.mk
