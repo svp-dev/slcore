@@ -45,7 +45,7 @@ d=\$(dirname "\$0")
 cd "\$d"
 EOF
   set | grep '^runner_cmdline=' >>"$SLR_RDIR"/run.sh
-  echo "exec \"\${runner_cmdline[@]}\"" >>"$SLR_RDIR"/run.sh
+  echo "exec \"\${runner_cmdline[@]}\" \"\$@\" " >>"$SLR_RDIR"/run.sh
   chmod +x run.sh
 fi
 

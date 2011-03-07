@@ -1,3 +1,16 @@
+2011-03-07  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
+	Minor enhancement to `slr'.
+
+	With `slr -p' a script `run.sh' is generated to capture the
+	command line. This script is extended so that extra arguments can
+	be passed to `run.sh' to be appended on the command line. To be
+	used e.g. with `run.sh -i' to trigger interactive mode with MGSim.
+
+	* tools/lib/r-host.sh.in,	
+	* tools/lib/r-mt-sim.sh: Append the command-line arguments given
+	to `run.sh' to the command.
+
 2011-03-04  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
 	Enable the `show-vars' target at the top-level dir.
