@@ -50,6 +50,6 @@ AC_ARG_ENABLE([check-coma-zl],
    enable_check_zlcoma=$enable_mtalpha
  fi], [enable_check_zlcoma=$enable_mtalpha])
 
-AM_CONDITIONAL([ENABLE_CHECK_COMA_ZL], [test "x$enable_check_ppp" = "xyes" -o "x$enable_check_spr" = "xyes" && test "x$SIMX_ALPHA" != "xno" -a "x$enable_check_zlcoma" = "xyes"])
+AM_CONDITIONAL([ENABLE_CHECK_COMA_ZL], [test "x$enable_check_ppp" = "xyes" -o "x$enable_check_spr" = "xyes" && test "x$enable_check_zlcoma" = "xyes"])
 
 ])

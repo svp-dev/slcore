@@ -32,7 +32,6 @@ r-mtalpha-sim.sh: r-mt-sim.sh.in Makefile
 	$(AM_V_GEN)$(SED) <$< >$@.out \
 	 -e 's|@slc_datadir[@]|$(pkgdatadir)|g' \
 	 -e 's|@MGSIM_ARCH[@]|$(MGSIM_ALPHA)|g' \
-	 -e 's|@SIMX_ARCH[@]|$(SIMX_ALPHA)|g' \
 	 -e 's|@NM_ARCH[@]|$(NM_MTALPHA)|g' \
 	 -e 's|@ARCH[@]|ALPHA|g' \
 	 -e 's|@arch[@]|alpha|g' \
@@ -46,7 +45,6 @@ r-mtsparc-sim.sh: r-mt-sim.sh.in Makefile
 	$(AM_V_GEN)$(SED) <$< >$@.out \
 	 -e 's|@slc_datadir[@]|$(pkgdatadir)|g' \
 	 -e 's|@MGSIM_ARCH[@]|$(MGSIM_SPARC)|g' \
-	 -e 's|@SIMX_ARCH[@]|$(SIMX_SPARC)|g' \
 	 -e 's|@NM_ARCH[@]|$(NM_MTSPARC)|g' \
 	 -e 's|@ARCH[@]|SPARC|g' \
 	 -e 's|@arch[@]|sparc|g' \

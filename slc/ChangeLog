@@ -1,5 +1,36 @@
 2011-03-07  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	Simplify the interface with MGSim.
+
+	The Microgrid simulator was recently modified to provide a single
+	binary for both COMA memory simulations. This drops the need for
+	separate support for `simx-alpha'.
+
+	* build-aux/mgsim.m4: Do not detect the separate executable.	
+	* build-aux/slctests.m4: Do not require the separate executable
+	for ENABLE_CHECK_COMA_ZL.
+
+	* tools/lib/Makefile.am: Do not substitute the separate program.
+	
+	* tools/lib/r-mt-sim.sh.in: Simplify.
+
+	* tools/lib/mt-profiles/lzcoma128_1chan,
+	* tools/lib/mt-profiles/lzcoma128_2chan,
+	* tools/lib/mt-profiles/lzcoma256_1chan,
+	* tools/lib/mt-profiles/lzcoma256_4chan,
+	* tools/lib/mt-profiles/ml-npcrypt-p1,
+	* tools/lib/mt-profiles/ml-npcrypt-p2,
+	* tools/lib/mt-profiles/ml-npcrypt-p4,
+	* tools/lib/mt-profiles/ml-npcrypt-p8,
+	* tools/lib/mt-profiles/mlcoma256_1chan,
+	* tools/lib/mt-profiles/mlcoma256_4chan,
+	* tools/lib/mt-profiles/rbm1,
+	* tools/lib/mt-profiles/rbm128,
+	* tools/lib/mt-profiles/rbm16,
+	* tools/lib/mt-profiles/rbm256: Update accordingly.
+	
+2011-03-07  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	Minor enhancement to `slr'.
 
 	With `slr -p' a script `run.sh' is generated to capture the
