@@ -20,10 +20,7 @@ else
 fi
 
 slc/build-aux/sl-init-autoconf tests/build-aux
-slc/build-aux/sl-init-autoconf programs/build-aux
 (cd tests && ./build-aux/mkalltests.sh)
-(cd programs/benchmarks/livermore && mkdir -p data && python ./ll-generate.py <ll-bounds.csv)
-(cd programs/benchmarks/blas && ./gendata.sh)
 $AUTORECONF -v -f -i
 
 echo "Reconfiguration done."

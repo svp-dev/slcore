@@ -1,7 +1,0 @@
-n
-r
-s
-t
-d
-plan
-zone

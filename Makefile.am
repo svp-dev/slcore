@@ -13,7 +13,7 @@
 
 # 
 
-SUBDIRS = . slc tests programs
+SUBDIRS = . slc tests
 
 # run `slt' on the console (eye candy, for more intensive CPU
 # usage and faster results, use `make check')
@@ -53,5 +53,5 @@ show-vars:
 	@echo "export PATH=$(abs_top_builddir)/slc/tools/bin:$$PATH;"
 
 ACLOCAL_AMFLAGS = -I slc/build-aux
-DISTCHECK_CONFIGURE_FLAGS = --enable-testsuite --disable-build-programs
+DISTCHECK_CONFIGURE_FLAGS = --enable-testsuite
 

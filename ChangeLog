@@ -1,3 +1,14 @@
+2011-03-08  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
+	Split programs, demos and benchmarks to a separate repository.
+
+	* programs/: Remove. This is now hosted elsewhere.
+	(https://git.svp-home.org/slprogs.git)
+
+	* bootstrap,
+	* configure.ac,
+	* Makefile.am: Update accordingly.
+
 2010-12-14  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
 	Split deployment and installation tools to a separate repository.
