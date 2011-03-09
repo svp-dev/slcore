@@ -1,5 +1,11 @@
 2011-03-09  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	Fix visibility of inline functions.
+	
+	* tools/include/svp/compiler.h (alwaysinline): Use `static'.
+
+2011-03-09  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	Minor packaging fix.
 
 	* tools/lib/Makefile.am: ensure that the installed symbolic links
