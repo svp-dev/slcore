@@ -1,17 +1,19 @@
 #ifndef SVP_MGSIM_H
 #define SVP_MGSIM_H
 
-
-#ifndef __mt_freestanding__
-#warning nothing to see here.
+void mgsim_outfloat(double val, unsigned int stream, unsigned int prec);
+#if !defined(__AVOID_INLINABLE_PRIMITIVES)
+#define __inline_mgsim_outfloat(F, Stream, Precision) __asm__ __volatile("printf %0, %1" : : "f"(F), \
+                                                                         "r"((Stream) | (Precision << 4)))
+#define mgsim_outfloat(F, Stream, Precision) __inline_mgsim_outfloat(F, Stream, Precision)
 #endif
 
-
-#define mgsim_outfloat(F, Stream, Precision) __asm__ __volatile("printf %0, %1" : : "f"(F), \
-                                                                "r"((Stream) | (Precision << 4)))
-
-#define mgsim_control(Value, Type, Command, Flags)      \
+void mgsim_control(unsigned long val, unsigned int type, unsigned int command, unsigned int flags);
+#if !defined(__AVOID_INLINABLE_PRIMITIVES)
+#define __inline_mgsim_control(Value, Type, Command, Flags)      \
     __asm__ __volatile__("print %0, %1" : : "r"(Value), "rI"(((Command)<<6) | (Type) | (Flags)))
+#define mgsim_control(Value, Type, Command, Flags) __inline_mgsim_control(Value, Type, Command, Flags)
+#endif
 
 #define MGSCTL_TYPE_GFX     0x20
 #define MGSCTL_GFX_PUTPIXEL 0

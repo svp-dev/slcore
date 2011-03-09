@@ -1,5 +1,18 @@
 2011-03-09  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	Implement Microgrid output primitives as C functions.
+
+	* tools/include/svp/mgsim.h: Also declare C function prototypes
+	for MG output primitives alongside the inlinable macros.
+	
+	* tools/lib/mgsim.c: Implement them.
+
+	* tools/lib/mtalpha.mk: Compile them.
+
+	* tools/lib/Makefile.am: Distribute them.
+
+2011-03-09  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	Implement Fibre input primitives as C functions.
 
 	* tools/include/svp/fibre.h: Also declare C function prototypes

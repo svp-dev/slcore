@@ -68,6 +68,7 @@ nobase_pkglib_DATA += \
 	mta_hybrid-mtalpha-sim/libslmain.a 
 
 mta_hybrid_mtalpha_sim_libslc_a_CONTENTS = \
+	mta_hybrid-mtalpha-sim/mgsim.o \
 	mta_hybrid-mtalpha-sim/fibre.o \
 	mta_hybrid-mtalpha-sim/callgate.o 
 
@@ -93,6 +94,7 @@ mta_hybrid-mtalpha-sim/%.o: $(srcdir)/%.c
 	$(slc_verbose)$(SLC_MTA) -c -o $@ $<
 
 CLEANFILES += \
+	mta_hybrid-mtalpha-sim/mgsim.o \
 	mta_hybrid-mtalpha-sim/fibre.o \
 	mta_hybrid-mtalpha-sim/callgate.o \
 	mta_hybrid-mtalpha-sim/main.o \
@@ -110,6 +112,7 @@ nobase_pkglib_DATA += \
 	seq_naked-mtalpha-sim/libslmain.a 
 
 seq_naked_mtalpha_sim_libslc_a_CONTENTS = \
+	seq_naked-mtalpha-sim/mgsim.o \
 	seq_naked-mtalpha-sim/fibre.o \
 	seq_naked-mtalpha-sim/callgate.o 
 
@@ -135,6 +138,7 @@ seq_naked-mtalpha-sim/%.o: $(srcdir)/%.c
 	$(slc_verbose)$(SLC_MTA_S) -c -o $@ $<
 
 CLEANFILES += \
+	seq_naked-mtalpha-sim/mgsim.o \
 	seq_naked-mtalpha-sim/fibre.o \
 	seq_naked-mtalpha-sim/callgate.o \
 	seq_naked-mtalpha-sim/main.o \
@@ -152,6 +156,7 @@ nobase_pkglib_DATA += \
 	mta_naked-mtalpha-sim/libslmain.a 
 
 mta_naked_mtalpha_sim_libslc_a_CONTENTS = \
+	mta_naked-mtalpha-sim/mgsim.o \
 	mta_naked-mtalpha-sim/fibre.o \
 	mta_naked-mtalpha-sim/callgate.o 
 
@@ -177,6 +182,7 @@ mta_naked-mtalpha-sim/%.o: $(srcdir)/%.c
 	$(slc_verbose)$(SLC_MTA_N) -c -o $@ $<
 
 CLEANFILES += \
+	mta_naked-mtalpha-sim/mgsim.o \
 	mta_naked-mtalpha-sim/fibre.o \
 	mta_naked-mtalpha-sim/callgate.o \
 	mta_naked-mtalpha-sim/main.o \
