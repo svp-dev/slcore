@@ -8,6 +8,7 @@ ptl_host_host_ptl_libsl_a_BUILTOBJS = \
 	ptl-host-host-ptl/io.o \
 	ptl-host-host-ptl/roman.o \
 	ptl-host-host-ptl/perf.o \
+	ptl-host-host-ptl/perf_wrappers.o \
 	ptl-host-host-ptl/gfx.o \
 	ptl-host-host-ptl/div.o
 

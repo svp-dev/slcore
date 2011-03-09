@@ -26,6 +26,7 @@ MTALIB_CSRC = \
 	src/mtconf.c \
 	src/mtstdio.c \
 	src/perf.c \
+	src/perf_wrappers.c \
 	src/printf.c \
 	src/printf-pos.c \
 	src/putc.c \

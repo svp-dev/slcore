@@ -18,6 +18,7 @@ EXTRA_DIST = \
 	src/io.c \
 	src/gfx.c \
 	src/perf.c \
+	src/perf_wrappers.c \
 	src/roman.c \
 	src/mtinit.c \
 	src/mtclock.c \

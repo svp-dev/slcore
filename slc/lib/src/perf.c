@@ -321,36 +321,4 @@ void mtperf_report_intervals(const struct s_interval* ivs,
   
 }
 
-struct s_interval* mtperf_alloc_intervals(size_t n) 
-{ 
-  return (struct s_interval*)fast_calloc(n, sizeof(struct s_interval)); 
-}
-
-void mtperf_free_intervals(struct s_interval* ivs)
-{
-  free(ivs);
-}
-
-#undef mtperf_start_interval
-void mtperf_start_interval(struct s_interval* ivs, size_t p,
-			   int numarg,
-			   const char *tag)
-{
-  mtperf_start_interval_(ivs, p, numarg, tag);
-}
-
-#undef mtperf_empty_interval
-void mtperf_empty_interval(struct s_interval* ivs, size_t p,
-			   int numarg,
-			   const char *tag)
-{
-  mtperf_empty_interval_(ivs, p, numarg, tag);
-}
-
-#undef mtperf_finish_interval
-void mtperf_finish_interval(struct s_interval* ivs, size_t p)
-{
-  mtperf_finish_interval_(ivs, p);
-}
-
 

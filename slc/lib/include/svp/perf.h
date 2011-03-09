@@ -15,13 +15,9 @@
 #ifndef SLC_SVP_PERF_H
 # define SLC_SVP_PERF_H
 
-#ifndef shutup_ctime_h
-#define shutup_ctime_h
-#endif
-#include <time.h>
-#undef shutup_ctime_h
+#include <stddef.h>
 
-#define get_cycles() m4_warning("get_cycles() is deprecated. use clock() and CLOCKS_PER_SEC instead.") clock()
+/**************** low-level interface ***************/
 
 typedef long counter_t;
 
@@ -43,62 +39,23 @@ typedef long counter_t;
 #define MTPERF_LOCAL_DATE 14
 #define MTPERF_LOCAL_TIME 15
 #define MTPERF_NCOUNTERS 16
-typedef struct { counter_t ct[MTPERF_NCOUNTERS]; } __counters_t;
-
-extern const char *mtpef_counter_names[];
-
-#define __read_cnt(i)                                                   \
-    counter_t __ct ## i;                                                \
-    __asm__("# touch counter %0" : "=r"(__ct ## i) : "0"(__src->ct[i])); \
-    __dst->ct[i] = __ct ## i;                                                    
-
-
-#define mtperf_sample(Array) do {					\
-        __asm__ __volatile__("# sample begins");                        \
-        __counters_t* restrict __dst = (__counters_t*)(void*)(Array);   \
-        volatile __counters_t* restrict __src = (volatile __counters_t*)(void*)8; \
-        __read_cnt(0);                                                  \
-        __read_cnt(1);                                                  \
-        __read_cnt(2);                                                  \
-        __read_cnt(3);                                                  \
-        __read_cnt(4);                                                  \
-        __read_cnt(5);                                                  \
-        __read_cnt(6);                                                  \
-        __read_cnt(7);                                                  \
-        __read_cnt(8);                                                  \
-        __read_cnt(9);                                                  \
-        __read_cnt(10);                                                 \
-        __read_cnt(11);                                                 \
-        __read_cnt(12);                                                 \
-        __asm__ __volatile__("# sample ends");                          \
-  } while(0)
-
-#define mtperf_sample1(Counter) (((volatile __counters_t*restrict)(void*)8)->ct[Counter])
-
 #else
-
 #define MTPERF_CLOCKS 0
 #define MTPERF_UNIX_TIME 1
 #define MTPERF_NCOUNTERS 2
-#define mtperf_sample(Array) do { \
-        (Array)[0] = (counter_t)clock(); \
-        (Array)[1] = (counter_t)time(0); \
-    } while(0)
-#define mtperf_sample1(Counter) ({              \
-            size_t __cnt = (Counter);           \
-            counter_t val;                      \
-            switch(__cnt) {                     \
-            case 0: val = clock(); break;       \
-            case 1: val = time(0); break;       \
-            default: val = 0; break;            \
-            }                                   \
-            val;                                \
-        })
-
 #endif
 
-extern void mtperf_report_diffs(const counter_t *before, const counter_t* after, int flags);
+// get the current value for the specified counter
+counter_t mtperf_sample1(int thecounter);
 
+// sample all counters into an array (must be large enough for MTPERF_NCOUNTERS values)
+void mtperf_sample(counter_t* where);
+
+// print out the pair-wise differences between counters using the specified
+// flags and format (see below)
+void mtperf_report_diffs(const counter_t *before, const counter_t* after, int flags);
+
+// formats for report_diffs
 #define CSV_SEP(C) ((((int)(C))<<16)|2)
 #define CSV_INCLUDE_HEADER 1
 #define REPORT_NOLF 4
@@ -108,6 +65,10 @@ extern void mtperf_report_diffs(const counter_t *before, const counter_t* after,
 #define REPORT_STREAM(N) ((N)<<24)
 #define FIBRE_PAD(N) (((int)(N))<<16)
 
+
+/**************** higher-level interface ***************/
+
+// A structure for a named interval.
 struct s_interval {
   counter_t before[MTPERF_NCOUNTERS];
   counter_t after[MTPERF_NCOUNTERS];
@@ -115,35 +76,156 @@ struct s_interval {
   int num;
 };
 
+// allocate multiple intervals.
+struct s_interval* mtperf_alloc_intervals(size_t n);
+
+// free an array of intervals.
+void mtperf_free_intervals(struct s_interval* p);
+
+// clear the p-th interval in the array
+// This define the interval as if the start and finish events were simultaneous.
 void mtperf_empty_interval(struct s_interval* ivs, size_t p,
 			   int numarg, const char *tag);
-#define mtperf_empty_interval_(Ivs, P, Numarg, Tag) do {	  \
-    struct s_interval __init = { { 0 }, { 0 }, (Tag), (Numarg) }; \
-    (Ivs)[P] = __init;						  \
-  } while(0)
-#define mtperf_empty_interval mtperf_empty_interval_
 
+// sample the start event for the p-th interval in array ivs
 void mtperf_start_interval(struct s_interval* ivs, size_t p,
 			   int numarg,
 			   const char *tag);
-#define mtperf_start_interval_(Ivs, P, Numarg, Tag) do {		\
-    struct s_interval* __ivs = (Ivs);					\
-    size_t __p = (P);							\
-    __ivs[__p].tag = (Tag);						\
-    __ivs[__p].num = (Numarg);						\
-    mtperf_sample(__ivs[__p].before);					\
-  } while(0)
-#define mtperf_start_interval mtperf_start_interval_
 
+// sample the finish event for the p-th interval in array ivs
 void mtperf_finish_interval(struct s_interval* ivs, size_t p);
-#define mtperf_finish_interval_(Ivs, P) mtperf_sample((Ivs)[P].after)
-#define mtperf_finish_interval mtperf_finish_interval_
 
+// report the data for all intervals.
+// this uses the same flags and format as mtperf_report_diffs above.
 void mtperf_report_intervals(const struct s_interval* ivs, size_t n, int flags);
 
-// The following is simply an alias to calloc(n, sizeof(struct s_interval))
-struct s_interval* mtperf_alloc_intervals(size_t n);
-// The following is simply an alias to free(p)
-void mtperf_free_intervals(struct s_interval* p);
+
+/**************** inlinable primitives **************/
+
+#if !defined(_AVOID_INLINABLE_PRIMITIVES)
+
+#include <stdlib.h>
+#include <svp/compiler.h>
+
+alwaysinline
+struct s_interval* __inline_mtperf_alloc_intervals(size_t n)
+{
+    return (struct s_interval*)calloc(n, sizeof(struct s_interval));
+}
+#define mtperf_alloc_intervals(N) __inline_mtperf_alloc_intervals(N)
+
+alwaysinline
+void __inline_mtperf_free_intervals(struct s_interval* p)
+{
+    free(p);
+}
+#define mtperf_free_intervals(P) __inline_mtperf_free_intervals(P)
+
+
+#ifdef __mt_freestanding__
+
+typedef struct { counter_t ct[MTPERF_NCOUNTERS]; } __counters_t;
+
+#if defined(__GNUC__) && !defined(__AVOID_GNUISMS)
+
+alwaysinline
+void __inline_mtperf_sample(counter_t * restrict array)
+{
+        __asm__ __volatile__("# sample begins");
+        __counters_t* restrict __dst = (__counters_t*)(void*)(array);
+        volatile __counters_t* restrict __src = (volatile __counters_t*)(void*)8;
+#define __read_cnt(i)                                                   \
+    counter_t __ct ## i;                                                \
+    __asm__("# touch counter %0" : "=r"(__ct ## i) : "0"(__src->ct[i])); \
+    __dst->ct[i] = __ct ## i;
+
+        __read_cnt(0);
+        __read_cnt(1);
+        __read_cnt(2);
+        __read_cnt(3);
+        __read_cnt(4);
+        __read_cnt(5);
+        __read_cnt(6);
+        __read_cnt(7);
+        __read_cnt(8);
+        __read_cnt(9);
+        __read_cnt(10);
+        __read_cnt(11);
+        __read_cnt(12);
+        __read_cnt(13);
+        __read_cnt(14);
+        __read_cnt(15);
+        __read_cnt(16);
+#undef __read_cnt
+        __asm__ __volatile__("# sample ends");
+}
+#define mtperf_sample(Array) __inline_mtperf_sample(Array)
+
+#endif /* __GNUC__ && !__AVOID_GNUISMS */
+
+alwaysinline
+counter_t __inline_mtperf_sample1(int counter)
+{
+    return ((volatile __counters_t*restrict)(void*)8)->ct[counter];
+}
+#define mtperf_sample1(Counter) __inline_mtperf_sample1(Counter)
+
+#else /* !__mt_freestanding__ */
+
+#include <time.h>
+
+alwaysinline
+void __inline_mtperf_sample(counter_t* array)
+{
+    array[0] = (counter_t)clock();
+    array[1] = (counter_t)time(0);
+}
+#define mtperf_sample(Array) __inline_mtperf_sample(Array)
+
+alwaysinline
+counter_t __inline_mtperf_sample1(int counter)
+{
+    counter_t val;
+    switch(counter) {
+    case 0: val = clock(); break;
+    case 1: val = time(0); break;
+    default: val = 0; break;
+    }
+    return val;
+}
+#define mtperf_sample1(Counter) __inline_mtperf_sample1(Counter)
+
+#endif /* !__mt_freestanding__ */
+
+alwaysinline
+void __inline_mtperf_empty_interval(struct s_interval *ivs, size_t p,
+                                    int numarg, const char *tag)
+{
+    struct s_interval init = { { 0 }, { 0 }, tag, numarg };
+    ivs[p] = init;
+}
+
+#define mtperf_empty_interval(Ivs, P, Numarg, Tag)      \
+    __inline_mtperf_empty_interval(Ivs, P, Numarg, Tag)
+
+alwaysinline
+void __inline_mtperf_start_interval(struct s_interval *ivs, size_t p,
+                                    int numarg, const char *tag)
+{
+    ivs[p].tag = tag;
+    ivs[p].num = numarg;
+    mtperf_sample(ivs[p].before);
+}
+#define mtperf_start_interval(Ivs, P, Numarg, Tag) \
+    __inline_mtperf_start_interval(Ivs, P, Numarg, Tag)
+
+alwaysinline
+void __inline_mtperf_finish_interval(struct s_interval *ivs, size_t p)
+{
+    mtperf_sample(ivs[p].after);
+}
+#define mtperf_finish_interval(Ivs, P) __inline_mtperf_finish_interval(Ivs, P)
+
+#endif /* !defined(__AVOID_INLINABLE_PRIMITIVES) */
 
 #endif // ! SLC_SVP_PERF_H

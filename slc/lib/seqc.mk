@@ -11,6 +11,7 @@
 # 	$(2)/div.o \
 # 	$(2)/roman.o \
 # 	$(2)/perf.o \
+#	$(2)/perf_wrappers.o \
 # 	$(2)/gfx.o \
 # 	$(2)/io.o
 
@@ -38,6 +39,7 @@ seqc_o_host_host_seqc_libsl_a_BUILTOBJS = \
 	seqc_o-host-host-seqc/div.o \
 	seqc_o-host-host-seqc/roman.o \
 	seqc_o-host-host-seqc/perf.o \
+	seqc_o-host-host-seqc/perf_wrappers.o \
 	seqc_o-host-host-seqc/gfx.o \
 	seqc_o-host-host-seqc/io.o
 
@@ -64,6 +66,7 @@ seq_naked_host_host_seqc_libsl_a_BUILTOBJS = \
 	seq_naked-host-host-seqc/div.o \
 	seq_naked-host-host-seqc/roman.o \
 	seq_naked-host-host-seqc/perf.o \
+	seq_naked-host-host-seqc/perf_wrappers.o \
 	seq_naked-host-host-seqc/gfx.o \
 	seq_naked-host-host-seqc/io.o
 
