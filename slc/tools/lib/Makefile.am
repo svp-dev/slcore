@@ -54,7 +54,9 @@ r-mtsparc-sim.sh: r-mt-sim.sh.in Makefile
 	$(AM_V_at)mv -f $@.out $@
 
 install-data-hook:
+	rm -f "$(DESTDIR)$(pkglibdir)/"slc_config*
 	$(LN_S) "$(DESTDIR)$(pythondir)/slc_config"* "$(DESTDIR)$(pkglibdir)/"
+	rm -f "$(DESTDIR)$(pkglibdir)/slc"
 	$(LN_S) "$(DESTDIR)$(pythondir)/slc" "$(DESTDIR)$(pkglibdir)/"
 
 nobase_nodist_python_PYTHON = slc_config.py

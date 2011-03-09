@@ -1,5 +1,13 @@
 2011-03-09  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	Minor packaging fix.
+
+	* tools/lib/Makefile.am: ensure that the installed symbolic links
+	are erased before they are created to avoid errors during
+	re-installation.
+
+2011-03-09  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	Clean up more headers.
 	
 	* lib/mtalpha-sim/include/stdarg.h: Test for GNU C properly. Also
