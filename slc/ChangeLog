@@ -1,5 +1,11 @@
 2011-03-10  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	Allow `bool' with `slr' variables.
+
+	* tools/lib/arggen.c: Include `stdbool.h'.
+
+2011-03-10  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	Fix bug with performance counters sampling.
 
 	* lib/include/svp/perf.h (__inline_mtperf_sample): Do not read too

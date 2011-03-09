@@ -13,6 +13,7 @@
 //
 
 #include <stddef.h>
+#include <stdbool.h>
 #include <svp/testoutput.h>
 
 #ifdef FIBRE_DATA
