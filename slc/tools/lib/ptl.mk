@@ -35,6 +35,8 @@ ptl_host_host_ptl_libslc_a_SOURCES = \
 	host-host-ptl/ptl_debug.cc \
 	host-host-ptl/ptl_vars.cc \
 	host-host-ptl/ptl_svp.cc
+ptl_host_host_ptl_libslc_a_LIBADD = \
+	ptl-host-host-ptl/fibre.o
 
 ptl_host_host_ptl_libslmain_a_SOURCES = 
 ptl_host_host_ptl_libslmain_a_LIBADD = ptl-host-host-ptl/main.o
@@ -56,6 +58,7 @@ ptl-host-host-ptl/%.o: $(srcdir)/%.c
 endif
 
 CLEANFILES += \
+	ptl-host-host-ptl/fibre.o \
 	ptl-host-host-ptl/main.o \
 	ptl-host-host-ptl/slrt.o
 

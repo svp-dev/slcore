@@ -1,7 +1,7 @@
 //
 // fibre.h: this file is part of the SL toolchain.
 //
-// Copyright (C) 2009 The SL project.
+// Copyright (C) 2009,2011 The SL project.
 //
 // This program is free software; you can redistribute it and/or
 // modify it under the terms of the GNU General Public License
@@ -24,12 +24,20 @@ extern struct fibre_base_t {
        ptrdiff_t data_offset;
 } *__fibre_base;
 
-#define fibre_tag(N) __fibre_base[N].tag
+int fibre_tag(size_t pos);
+#define __inline_fibre_tag(N) __fibre_base[N].tag
+#define fibre_tag(N) __inline_fibre_tag(N)
 
-#define fibre_rank(N) __fibre_base[N].rank
+size_t fibre_rank(size_t pos);
+#define __inline_fibre_rank(N) __fibre_base[N].rank
+#define fibre_rank(N) __inline_fibre_rank(N)
 
-#define fibre_shape(N) ((size_t*)(void*)((char*)(void*)__fibre_base + __fibre_base[N].shape_offset))
+size_t* fibre_shape(size_t pos);
+#define __inline_fibre_shape(N) ((size_t*)(void*)((char*)(void*)__fibre_base + __fibre_base[N].shape_offset))
+#define fibre_shape(N) __inline_fibre_shape(N)
 
-#define fibre_data(N) (void*)((char*)(void*)__fibre_base + __fibre_base[N].data_offset)
+void* fibre_data(size_t pos);
+#define __inline_fibre_data(N) (void*)((char*)(void*)__fibre_base + __fibre_base[N].data_offset)
+#define fibre_data(N) __inline_fibre_data(N)
 
 #endif // ! SLC_SVP_FIBRE_H

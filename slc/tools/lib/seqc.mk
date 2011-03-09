@@ -19,7 +19,7 @@ EXTRA_DIST += \
 # 	$(2)/libslc.a \
 # 	$(2)/libslmain.a
 
-# $(3)_libslc_a_SOURCES = empty.c # empty for now
+# $(3)_libslc_a_SOURCES = fibre.c
 # $(3)_libslmain_a_SOURCES = # empty for now
 # $(3)_libslmain_a_LIBADD = $(2)/main.o
 
@@ -35,6 +35,7 @@ EXTRA_DIST += \
 
 # CLEANFILES += \
 # 	$(2)/main.o \
+# 	$(2)/fibre.o \
 # 	$(2)/slrt.o 
 
 # endef
@@ -54,7 +55,8 @@ nobase_pkglib_LIBRARIES += \
 	seqc_o-host-host-seqc/libslc.a \
 	seqc_o-host-host-seqc/libslmain.a
 
-seqc_o_host_host_seqc_libslc_a_SOURCES = empty.c # empty for now
+seqc_o_host_host_seqc_libslc_a_SOURCES = # empty for now
+seqc_o_host_host_seqc_libslc_a_LIBADD = seqc_o-host-host-seqc/fibre.o
 seqc_o_host_host_seqc_libslmain_a_SOURCES = # empty for now
 seqc_o_host_host_seqc_libslmain_a_LIBADD = seqc_o-host-host-seqc/main.o
 
@@ -69,6 +71,7 @@ seqc_o-host-host-seqc/%.o: $(srcdir)/%.c
 	$(slc_verbose)$(SLC_SEQC_O) -c -o $@ $< $(AM_CFLAGS) $(CFLAGS)
 
 CLEANFILES += \
+	seqc_o-host-host-seqc/fibre.o \
 	seqc_o-host-host-seqc/main.o \
 	seqc_o-host-host-seqc/slrt.o 
 
@@ -85,7 +88,8 @@ nobase_pkglib_LIBRARIES += \
 	seq_naked-host-host-seqc/libslc.a \
 	seq_naked-host-host-seqc/libslmain.a
 
-seq_naked_host_host_seqc_libslc_a_SOURCES = empty.c # empty for now
+seq_naked_host_host_seqc_libslc_a_SOURCES = # empty for now
+seq_naked_host_host_seqc_libslc_a_LIBADD = seq_naked-host-host-seqc/fibre.o
 seq_naked_host_host_seqc_libslmain_a_SOURCES = # empty for now
 seq_naked_host_host_seqc_libslmain_a_LIBADD = seq_naked-host-host-seqc/main.o
 
@@ -100,6 +104,7 @@ seq_naked-host-host-seqc/%.o: $(srcdir)/%.c
 	$(slc_verbose)$(SLC_SEQC) -c -o $@ $< $(AM_CFLAGS) $(CFLAGS)
 
 CLEANFILES += \
+	seq_naked-host-host-seqc/fibre.o \
 	seq_naked-host-host-seqc/main.o \
 	seq_naked-host-host-seqc/slrt.o 
 
