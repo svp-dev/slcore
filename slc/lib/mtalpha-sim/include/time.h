@@ -22,7 +22,9 @@
 extern time_t time(time_t*);
 extern clock_t clock(void);
 
-#if defined(__alpha__) || defined(__mtalpha__)
+#if !defined(__AVOID_INLINABLE_PRIMITIVES) && (defined(__alpha__) || defined(__mtalpha__)) && \
+    defined(__GNUC__) && !defined(__AVOID_GNUISMS)
+
 __attribute__((__always_inline__))
 static clock_t __inline_clock(void)
 {
@@ -30,7 +32,9 @@ static clock_t __inline_clock(void)
     __asm__ __volatile__ ("rpcc %0" : "=r"(c) : : "memory");
     return c;
 }
+
 #define clock() __inline_clock()
+
 #endif
 
 

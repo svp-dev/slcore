@@ -292,7 +292,7 @@ struct superblock* get_new_superblock(struct control_block *cb,  size_t bin)
 #ifdef DEBUG_MALLOC_STORAGE
         fprintf(stderr, "map sb %p\n", (struct superblock*)base);
 #endif
-        if (MAP_STORAGE(base, SLOT_SIZE) == MAP_STORAGE_FAIL)
+        if (MAP_STORAGE((void*)base, SLOT_SIZE) == MAP_STORAGE_FAIL)
             /* no storage, abandon */
             return 0;
 

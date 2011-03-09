@@ -16,7 +16,7 @@
 #include <svp/sep.h>
 #include <svp/fibre.h>
 #include <svp/slr.h>
-#include <svp/gomt.h>
+#include <svp/mtmalloc.h>
 #include <stdlib.h>
 #include <string.h>
 #include <time.h>

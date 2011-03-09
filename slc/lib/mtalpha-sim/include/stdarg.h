@@ -14,10 +14,26 @@
 #ifndef SLC_MTA_STDARG_H
 #define SLC_MTA_STDARG_H
 
+#if defined(__GNUC__) && !defined(__AVOID_GNUISMS)
 typedef __builtin_va_list va_list;
 #define va_start(v,l)   __builtin_va_start(v,l)
 #define va_end(v)       __builtin_va_end(v)
 #define va_arg(v,l)     __builtin_va_arg(v,l)
 #define va_copy(d,s)    __builtin_va_copy(d,s)
+#define __va_list_available
+#else
+# if defined(__COSY_COMPILER)
+typedef void **va_list;
+[[#]]pragma ckf __builtin_va_start va_start f
+extern void **__builtin_va_start(void);
+#  define va_start(ap, lastfixed) \
+    ((void)((ap) = __builtin_va_start()))
+#  define va_arg(ap, type) (*(type*)*(ap)++)
+#  define va_end(ap)       ((void)(ap))
+#  define __va_list_available
+#else
+# warning "Cannot define va_ primitives for this target."
+#endif
+#endif
 
 #endif

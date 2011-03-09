@@ -13,6 +13,7 @@
 //
 
 #include <stdlib.h>
+#include <svp/mtmalloc.h>
 
 void* malloc(size_t sz)
 {

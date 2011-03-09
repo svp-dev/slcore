@@ -1,7 +1,7 @@
 //
 // stdlib.h: this file is part of the SL toolchain.
 //
-// Copyright (C) 2010 The SL project.
+// Copyright (C) 2010,2011 The SL project.
 //
 // This program is free software; you can redistribute it and/or
 // modify it under the terms of the GNU General Public License
@@ -27,64 +27,24 @@
 
 /* missing: MB_CUR_MAX, */
 
-extern int atoi(const char *);
-extern long atol(const char *);
-extern long long atoll(const char *); 
+int atoi(const char *);
+long atol(const char *);
+long long atoll(const char *); 
 
-/* missing: atof, strtold */
+/* missing: atof */
 
 double strtold(const char*restrict, char **restrict);
 float strtof(const char*restrict, char**restrict);
 
-extern long strtol(const char *restrict, char **restrict, int);
-extern long long strtoll(const char *restrict, char **restrict, int);
-extern unsigned long strtoul(const char *restrict, char **restrict, int);
-extern unsigned long long strtoull(const char *restrict, char **restrict, int);
+long strtol(const char *restrict, char **restrict, int);
+long long strtoll(const char *restrict, char **restrict, int);
+unsigned long strtoul(const char *restrict, char **restrict, int);
+unsigned long long strtoull(const char *restrict, char **restrict, int);
 
-extern void* malloc(size_t);
-extern void free(void*);
-extern void* calloc(size_t, size_t);
-extern void* realloc(void*, size_t);
-
-/* low-level, thread-unsafe implementations */
-extern void* dlmalloc(size_t);
-extern void dlfree(void*);
-extern void* dlcalloc(size_t, size_t);
-extern void* dlrealloc(void*, size_t);
-
-/* "fast" aliases */
-#if defined(__alpha__) || defined(__mtalpha__)
-
-#include <stdint.h>
-#include <svp/callgate.h>
-
-#define malloc_place 0xf /* 8=suspend, 4|2=delegate, 1=exclusive (implicit core ID = 0) */
-
-#define excl_dlmalloc(N) ({						\
-      uint64_t __margs[3] = { (uint64_t)N, (uint64_t)&dlmalloc, 1 };	\
-      CALL_WITH_INFO(((uint64_t*)__margs)+3, malloc_place);		\
-      (void*)__margs[2];						\
-    })
-
-#define excl_dlfree(P) ({							\
-      uint64_t __margs[3] = { (uint64_t)P, (uint64_t)&dlfree, 1 };	\
-      CALL_WITH_INFO(((uint64_t*)__margs)+3, malloc_place);		\
-      (void)0;								\
-    })
-
-#define excl_dlrealloc(P, N) ({						\
-      uint64_t __margs[5] = { (uint64_t)N, 0, (uint64_t)P, (uint64_t)&dlrealloc, 2 }; \
-      CALL_WITH_INFO(((uint64_t*)__margs)+5, malloc_place);		\
-      (void*)__margs[4];						\
-    })
-
-#define excl_dlcalloc(N1, N2) ({						\
-      uint64_t __margs[5] = { (uint64_t)N2, 0, (uint64_t)N1, (uint64_t)&dlcalloc, 2 }; \
-      CALL_WITH_INFO(((uint64_t*)__margs)+5, malloc_place);		\
-      (void*)__margs[4];						\
-    })
-
-#endif
+void* malloc(size_t);
+void free(void*);
+void* calloc(size_t, size_t);
+void* realloc(void*, size_t);
 
 void abort(void);
 
@@ -93,12 +53,12 @@ void exit(int status);
 void _Exit(int status);
 
 
-extern char *getenv(const char *name);
+char *getenv(const char *name);
 
 /* BSD/SysV env extensions: */
-extern int putenv(char *string);
-extern int setenv(const char *name, const char *value, int overwrite);
-extern int unsetenv(const char *name);
+int putenv(char *string);
+int setenv(const char *name, const char *value, int overwrite);
+int unsetenv(const char *name);
 
 /* missing: system, bsearch, qsort */
 

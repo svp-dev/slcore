@@ -17,6 +17,12 @@
 
 #include <stddef.h>
 
+int fibre_tag(size_t pos);
+size_t fibre_rank(size_t pos);
+size_t* fibre_shape(size_t pos);
+void* fibre_data(size_t pos);
+
+#if !defined(__AVOID_INLINABLE_PRIMITIVES)
 extern struct fibre_base_t {
        int tag;
        size_t rank;
@@ -24,20 +30,14 @@ extern struct fibre_base_t {
        ptrdiff_t data_offset;
 } *__fibre_base;
 
-int fibre_tag(size_t pos);
 #define __inline_fibre_tag(N) __fibre_base[N].tag
 #define fibre_tag(N) __inline_fibre_tag(N)
-
-size_t fibre_rank(size_t pos);
 #define __inline_fibre_rank(N) __fibre_base[N].rank
 #define fibre_rank(N) __inline_fibre_rank(N)
-
-size_t* fibre_shape(size_t pos);
 #define __inline_fibre_shape(N) ((size_t*)(void*)((char*)(void*)__fibre_base + __fibre_base[N].shape_offset))
 #define fibre_shape(N) __inline_fibre_shape(N)
-
-void* fibre_data(size_t pos);
 #define __inline_fibre_data(N) (void*)((char*)(void*)__fibre_base + __fibre_base[N].data_offset)
 #define fibre_data(N) __inline_fibre_data(N)
+#endif
 
 #endif // ! SLC_SVP_FIBRE_H

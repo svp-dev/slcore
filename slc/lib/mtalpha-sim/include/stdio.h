@@ -56,7 +56,11 @@ extern FILE* stddebug;
 
 // 7.19.6
 
+#if defined(__GNUC__) && !defined(__AVOID_GNUISMS)
 #define LIKE_PRINTF(N, M) __attribute__ ((__format__ (__printf__, N, M)));
+#else
+#define LIKE_PRINTF(N, M) /* nothing */
+#endif
 
 int fprintf(FILE*restrict, const char*restrict, ...) LIKE_PRINTF(2, 3);
 int printf(const char*restrict, ...) LIKE_PRINTF(1, 2);
@@ -68,10 +72,12 @@ int sprintf(char*restrict, const char*restrict, ...) LIKE_PRINTF(2, 3);
 
 // missing: sscanf, vfscanf, vscanf, vsscanf
 
+#ifdef __va_list_available
 int vfprintf(FILE*restrict, const char*restrict, va_list);
 int vprintf(const char*restrict, va_list);
 int vsnprintf(char*restrict, size_t, const char*restrict, va_list);
 int vsprintf(char*restrict, const char*restrict, va_list);
+#endif
 
 // 7.19.7
 

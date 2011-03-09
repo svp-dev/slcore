@@ -15,44 +15,56 @@
 #ifndef SLC_SVP_COMPILER_H
 # define SLC_SVP_COMPILER_H
 
-#ifndef __GNUC__
-# warn __GNUC__ is not defined. Some macros here may not work.
-#endif
-
-/* The following code is inspired from <linux/compiler.h> */
-
 /* Definition for a memory barrier primitive */
-#define barrier() __asm__ __volatile__("#MB" : : : "memory")
 
-#ifdef __INTEL_COMPILER
-# undef barrier
-# define barrier() __memory_barrier()
+#if defined(__GNUC__) && !defined(__AVOID_GNUISMS)
+# define barrier() __asm__ __volatile__("#MB" : : : "memory")
+#else
+# ifdef __INTEL_COMPILER
+#  define barrier() __memory_barrier()
+# else
+#  warning "No definition for barrier()"
+#  define barrier() /* nothing */
+# endif
 #endif
 
 /* Branch optimization */
 
-#define likely(X) __builtin_expect(!!(X), 1)
-#define unlikely(X) __builtin_expect(!!(X), 0)
+#if defined(__GNUC__) && !defined(__AVOID_GNUISMS)
+# define likely(X) __builtin_expect(!!(X), 1)
+# define unlikely(X) __builtin_expect(!!(X), 0)
+#else
+# define likely(X) (X)
+# define unlikely(X) (X)
+#endif
 
 /* No operation instruction */
 
-#ifdef __mt_freestanding__
-# define nop() __asm__ __volatile__("nop\n\tswch");
+#if defined(__GNUC__) && !defined(__AVOID_GNUISMS)
+# ifdef __mt_freestanding__
+#  define nop() __asm__ __volatile__("nop\n\tswch")
+# else
+#  define nop() __asm__ __volatile__("nop")
+# endif
 #else
-# define nop() __asm__ __volatile__("nop");
+# define nop() do { } while(0)
 #endif
 
 /* inlining words */
 
-#define noinline __attribute__((__noinline__))
-#define alwaysinline __attribute__((__always_inline__))
-
-/* force sequence/reordering */
-
-#ifdef __mt_freestanding__
-#define use(X) __asm__ __volatile__("#USE %0" : "=rf"(X) : "0"(X))
+#if defined (__GNUC__) && !defined(__AVOID_GNUISMS)
+# define noinline __attribute__((__noinline__))
+# define alwaysinline __attribute__((__always_inline__))
 #else
-#define use(X) do { (X) = (X); } while(0)
+# warning "No definition for noinline/alwaysinline on this target."
+# define noinline /* nothing */
+# define alwaysinline static inline
+#endif
+
+#if defined(__mt_freestanding__) && defined(__GNUC__) && !defined(__AVOID_GNUISMS)
+# define use(X) __asm__ __volatile__("#USE %0" : "=rf"(X) : "0"(X))
+#else
+# define use(X) do { (X) = (X); } while(0)
 #endif
 
 #endif // ! SLC_SVP_COMPILER_H

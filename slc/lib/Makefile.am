@@ -51,6 +51,7 @@ nobase_dist_pkgdata_DATA = \
 	include/svp/callgate.h \
 	include/svp/div.h \
 	include/svp/fast_malloc.h \
+	include/svp/mtmalloc.h \
 	include/svp/gfx.h \
 	include/svp/io.h \
 	include/svp/iomacros.h \

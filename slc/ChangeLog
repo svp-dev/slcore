@@ -1,5 +1,45 @@
 2011-03-09  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	Clean up more headers.
+	
+	* lib/mtalpha-sim/include/stdarg.h: Test for GNU C properly. Also
+	support CoSy varargs.
+	
+	* lib/mtalpha-sim/include/stdio.h: Check printf-like formats only
+	with GNU C. Only define `v' variants (using `va_list') if
+	`stdarg.h' defines `__va_list_available'.
+
+	* lib/mtalpha-sim/include/stdlib.h: Do not use `extern'. Move
+	`excl_' variants of malloc calls to...
+
+	* lib/include/svp/mtmalloc.h: ... here.
+
+	* lib/Makefile.am: List the new file.
+
+	* lib/src/tlsmalloc/tls_arch_mtalpha.h,
+	* lib/src/mtinit.c,
+	* lib/src/malloc_wrappers.c: Use the new file.
+
+	* lib/src/tlsmalloc/tls_arch_mtalpha.h: Use inline functions instead
+	of macros where relevant.
+
+	* lib/src/tlsmalloc/tlsmalloc.c (get_new_superblock): Properly
+	type the argument to `MAP_STORAGE'.
+	
+	* lib/mtalpha-sim/include/time.h: Test for GNU C properly.	
+	* lib/src/time.c: Include `time.h' to get a proper declaration of
+	`clock_t' since `perf.h' does not include `time.h' any more.
+
+	* tools/include/svp/compiler.h: Test for GNU C properly.
+	
+	* tools/include/svp/fibre.h: Conditionalize the definition of
+	inlinable primitives.
+
+	* lib/src/_hdtoa.c: Include `stdint.h', since it is not indirectly
+	included any more.
+	
+2011-03-09  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	Implement counter sampling as C functions.
 
 	* lib/include/svp/perf.h: Also declare C function prototypes for
