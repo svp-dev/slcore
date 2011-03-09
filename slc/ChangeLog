@@ -1,3 +1,10 @@
+2011-03-10  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
+	Fix bug with performance counters sampling.
+
+	* lib/include/svp/perf.h (__inline_mtperf_sample): Do not read too
+	many counters.
+
 2011-03-09  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
 	Fix visibility of inline functions.

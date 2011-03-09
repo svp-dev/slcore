@@ -129,7 +129,7 @@ typedef struct { counter_t ct[MTPERF_NCOUNTERS]; } __counters_t;
 #if defined(__GNUC__) && !defined(__AVOID_GNUISMS)
 
 alwaysinline
-void __inline_mtperf_sample(counter_t * restrict array)
+void __inline_mtperf_sample(counter_t * array)
 {
         __asm__ __volatile__("# sample begins");
         __counters_t* restrict __dst = (__counters_t*)(void*)(array);
@@ -155,7 +155,6 @@ void __inline_mtperf_sample(counter_t * restrict array)
         __read_cnt(13);
         __read_cnt(14);
         __read_cnt(15);
-        __read_cnt(16);
 #undef __read_cnt
         __asm__ __volatile__("# sample ends");
 }
