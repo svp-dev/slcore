@@ -1,8 +1,15 @@
 2011-03-13  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	Initialize the MT-Sparc assembly optimization stage.
+	
+	* tools/lib/slc/mt/mtsparc/asmproc/opt.py (filter): Use the common
+	enhance code.
+
+2011-03-13  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	Factor some assembly optimization code.
 
-	* tools/lib/slc/mt/mtalpha/asmproc/opt.py (filter): Move the
+	* tools/lib/slc/mt/mtalpha/asmproc/opt.py (filter): Moave the
 	common code to...
 	* tools/lib/slc/mt/common/asmproc/enhance.py: ...here.
 
