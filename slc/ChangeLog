@@ -1,3 +1,12 @@
+2011-03-13  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
+	Minor tree cleanup.
+
+	* m4/m4.m4: Rename to...
+	* build-aux/m4.m4: ...here.
+
+	* Makefile.am: Simplify accordingly.
+
 2011-03-10  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
 	Allow `bool' with `slr' variables.

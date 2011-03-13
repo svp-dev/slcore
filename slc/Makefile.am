@@ -36,6 +36,6 @@ show-vars:
 	@echo "export PATH=$(abs_top_builddir)/slc/tools/bin:$$PATH;"
 
 
-ACLOCAL_AMFLAGS = -I build-aux -I m4
+ACLOCAL_AMFLAGS = -I build-aux
 
 include $(srcdir)/build-aux/version.mk
