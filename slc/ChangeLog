@@ -1,3 +1,10 @@
+2011-03-13  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
+	Fix the register canonicalization code.
+	
+	* tools/lib/slc/mt/common/regmagic.py (RegMagic.makelegcanonrepl):
+	Use `f' in target register name for FP registers.
+
 2011-01-19  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
 	Extend the MT-Sparc fixup code.
@@ -5077,3 +5084,6 @@
 	* ChangeLog: initialize.
 
 See `ChangeLog.1' for earlier changes.
+
+	 LocalWords:  canonicalization
+	

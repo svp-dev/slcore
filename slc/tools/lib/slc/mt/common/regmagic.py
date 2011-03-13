@@ -375,7 +375,7 @@ class RegMagic:
         for (k,v) in r.items():
             subst[k] = '$%d' % v
         for (k,v) in rf.items():
-            subst[k] = '$%d' % v
+            subst[k] = '$f%d' % v
 
         #print "YYY", subst
 
