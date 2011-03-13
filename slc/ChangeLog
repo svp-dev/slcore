@@ -1,5 +1,15 @@
 2011-03-13  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	Factor some assembly optimization code.
+
+	* tools/lib/slc/mt/mtalpha/asmproc/opt.py (filter): Move the
+	common code to...
+	* tools/lib/slc/mt/common/asmproc/enhance.py: ...here.
+
+	* tools/lib/Makefile.am: List the new file.
+	
+2011-03-13  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	Factor option handling for MT assembly fixups.
 
 	* tools/lib/slc/mt/mtalpha/asmproc/opt.py (filter),	

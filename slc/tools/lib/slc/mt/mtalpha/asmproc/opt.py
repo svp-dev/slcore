@@ -391,71 +391,13 @@ _filter_stages = [adjustmov,
                   
                   prunenopend, 
                   protectend]
-_filter_stagenames = [s.__name__ for s in _filter_stages]
+
 _filter_end = [common.flattener,
                common.forcezero,
                common.printer]
 
-from ...common.asmproc.stageopts import makestageopts
+from ...common.asmproc import enhance
 
 def filter(*args):
-    """
-    Enhance already valid assembly.
-    """
-
-    opts = makestageopts([_filter_begin, _filter_stages, _filter_end], args)
-
-    # parse flags
-    sel = dict(((s,True) for s in _filter_stagenames))
-    
-    for f in opts.resolved.selection:
-        if f == 'no-all' or f == 'none':
-            for k in sel.keys(): sel[k] = False
-        elif f == 'all':
-            for k in sel.keys(): sel[k] = True
-        else:
-            if f.startswith('no-'):
-                name = f[3:]
-                value = False
-            else:
-                name = f
-                value = True
-            if name not in _filter_stagenames:
-                die('error: unrecognized command line option "-f%s-%s"' %
-                     (value and "asmopt" or "no-asmopt", name))
-            sel[name] = value
-
-    verbose = opts.resolved.verbose
-
-    if verbose: log('asmsel: %r' % sel)
-
-    fname = opts.resolved.output
-    if fname == "-":
-        outf = sys.stdout
-    else:
-        try:
-            outf = file(fname, "w")
-        except Exception, e:
-            die('%s: %r' % (fname, e))
-
-    for inname in opts.inputs:
-        items = inname
-        for t in _filter_begin:
-            items = t(items)
-            items = dump.dump_gen(t.__name__, items)
-        for t in _filter_stages:
-            if sel[t.__name__]:
-                #if verbose: log('asmopt: %s' % t.__name__)
-                items = common.funfilter(t, items)
-                items = dump.dump_gen(t.__name__, items)
-        for t in _filter_end:
-            items = t(items)
-            items = dump.dump_gen(t.__name__, items)
-        lines = items
-        for line in lines:
-            # print "YOO:", line,
-            outf.write(line)
-    outf.flush()
-    if fname != "-": outf.close()
-
+    return enhance.filter(_filter_begin, _filter_stages, _filter_end, *args)
 

@@ -76,6 +76,7 @@ nobase_python_PYTHON = \
 	slc/mt/common/asmproc/__init__.py \
 	slc/mt/common/asmproc/input.py \
 	slc/mt/common/asmproc/output.py \
+	slc/mt/common/asmproc/enhance.py \
 	slc/mt/common/asmproc/filter.py \
 	slc/mt/common/asmproc/fixup.py \
 	slc/mt/common/asmproc/canon.py \
