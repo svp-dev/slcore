@@ -1,10 +1,6 @@
-from ....front import opts, dump
+from ....front import dump
 
-opts.register_arg('-e', action = "append", dest = "selection",
-                  metavar = "STAGE", nargs = 1,
-                  default = [],
-                  help = 'Select ("STAGE") or unselect ("no-STAGE") the specified pass.')
-
+from stageopts import makestageopts
 from filter import funfilter, cfunfilter
 
 def filter(fbegin, finner, fcinner, fend, *args):
@@ -13,11 +9,7 @@ def filter(fbegin, finner, fcinner, fend, *args):
     .s files that can be assembled by an external assembler.
     """
 
-    for e in [fbegin, finner, fcinner, fend]:
-        for s in e:
-            opts.register_dump_stage(s.__name__)
-    opts.parse_args(list(args))
-
+    opts = makestageopts([fbegin, finner, fcinner, fend], args)
     fname = opts.resolved.output
     if fname == "-":
         outf = sys.stdout

@@ -1,5 +1,17 @@
 2011-03-13  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	Factor option handling for MT assembly fixups.
+
+	* tools/lib/slc/mt/mtalpha/asmproc/opt.py (filter),	
+	* tools/lib/slc/mt/common/asmproc/fixup.py: Factor option handling
+	into...
+	
+	* tools/lib/slc/mt/common/asmproc/stageopts.py: ...here.
+
+	* tools/lib/Makefile.am: List the new file.
+
+2011-03-13  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	Fix the register canonicalization code.
 	
 	* tools/lib/slc/mt/common/regmagic.py (RegMagic.makelegcanonrepl):

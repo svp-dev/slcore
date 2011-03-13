@@ -396,15 +396,14 @@ _filter_end = [common.flattener,
                common.forcezero,
                common.printer]
 
+from ...common.asmproc.stageopts import makestageopts
+
 def filter(*args):
     """
     Enhance already valid assembly.
     """
 
-    for e in [_filter_begin, _filter_stages, _filter_end]:
-        for s in e:
-            opts.register_dump_stage(s.__name__)
-    opts.parse_args(list(args))
+    opts = makestageopts([_filter_begin, _filter_stages, _filter_end], args)
 
     # parse flags
     sel = dict(((s,True) for s in _filter_stagenames))
