@@ -1,8 +1,13 @@
 from ...visitors import DefaultVisitor, ScopedVisitor, flatten
 from ...ast import *
+from ...msg import warn
 from regdefs import regmagic
 
 class Create_2_MTSCreate(ScopedVisitor):
+
+    def __init__(self, newisa = False, *args, **kwargs):
+        self.newisa = newisa
+        super(Create_2_MTSCreate, self).__init__(*args, **kwargs)
     
     def visit_seta(self, seta):
         b = seta.rhs.accept(self)
@@ -97,17 +102,28 @@ class Create_2_MTSCreate(ScopedVisitor):
         
         usefvar = CVarUse(decl = fidvar)
 
-        #if lc.target_next is None:
-        #    if cr.extras.get_attr('exclusive', None) is None:
-        #        warn("this create may fail and no alternative is available", cr)
-        #    forcesuspend = '|8'
-        #else:
-        #    forcesuspend = ''
 
-        newbl += (flatten(cr.loc,
-                          '__asm__ __volatile__("allocate %%0\\t! MT: CREATE %s"'
-                          ' : "=r"(' % lbl) + 
-                  usefvar + '));')
+        if self.newisa:
+            prepsuffix = 'ng'
+            immfmt = 'I'
+            if lc.target_next is None:
+                if cr.extras.get_attr('exclusive', None) is None:
+                    warn("this create may fail and no alternative is available", cr)
+                    forcesuspend = '|8'
+                else:
+                    forcesuspend = ''
+            newbl += (flatten(cr.loc,
+                              '__asm__ __volatile__("allocateng %%1, %%0\\t! MT: CREATE %s"'
+                              ' : "=r"(' % lbl) + 
+                      usefvar + ') : "rI"(' + CVarUse(decl = cr.cvar_place) +
+                      '%s));' % forcesuspend)
+        else: # OLD ISA
+            prepsuffix = ''
+            immfmt = 'P'
+            newbl += (flatten(cr.loc,
+                              '__asm__ __volatile__("allocate %%0\\t! MT: CREATE %s"'
+                              ' : "=r"(' % lbl) + 
+                      usefvar + '));')
         
         if lc.target_next is not None:
             newbl += (flatten(cr.loc, ' if (!__builtin_expect(!!(') + 
@@ -118,26 +134,21 @@ class Create_2_MTSCreate(ScopedVisitor):
         limit = CVarUse(decl = cr.cvar_limit)
         step = CVarUse(decl = cr.cvar_step)
         block = CVarUse(decl = cr.cvar_block)
+        
         newbl += (flatten(cr.loc, 
-                         '__asm__ ("setstart %%0, %%2\\t! MT: CREATE %s"'
-                         ' : "=r"(' % lbl) +
-                  usefvar + ') : "0"(' + usefvar + '), "rP"(' + start + ')); ' +
-                  '__asm__ ("setlimit %%0, %%2\\t! MT: CREATE %s"' % lbl +
-                  ' : "=r"(' + usefvar + ') : "0"(' + usefvar  + '), "rP"(' + limit + ')); ' +
-                  '__asm__ ("setstep %%0, %%2\\t! MT: CREATE %s"' % lbl +
-                  ' : "=r"(' + usefvar + ') : "0"(' + usefvar + '), "rP"(' + step + ')); ' +
-                  '__asm__ ("setblock %%0, %%2\\t! MT: CREATE %s"' % lbl +
-                  ' : "=r"(' + usefvar + ') : "0"(' + usefvar + '), "rP"(' + block + ')); ' +
-                  '__asm__ ("setthread %%0, %%2\\t! MT: CREATE %s"' % lbl +
-                  ' : "=r"(' + usefvar + ') : "0"(' + usefvar + '), "rP"(' + funvar + ')); ')
+                         '__asm__ ("setstart%s %%0, %%2\\t! MT: CREATE %s"'
+                         ' : "=r"(' % (prepsuffix, lbl)) +
+                  usefvar + ') : "0"(' + usefvar + '), "r%s"(' % immfmt + start + ')); ' +
+                  '__asm__ ("setlimit%s %%0, %%2\\t! MT: CREATE %s"' % (prepsuffix, lbl) +
+                  ' : "=r"(' + usefvar + ') : "0"(' + usefvar  + '), "r%s"(' % immfmt + limit + ')); ' +
+                  '__asm__ ("setstep%s %%0, %%2\\t! MT: CREATE %s"' % (prepsuffix, lbl) +
+                  ' : "=r"(' + usefvar + ') : "0"(' + usefvar + '), "r%s"(' % immfmt + step + ')); ' +
+                  '__asm__ ("setblock%s %%0, %%2\\t! MT: CREATE %s"' % (prepsuffix, lbl) +
+                  ' : "=r"(' + usefvar + ') : "0"(' + usefvar + '), "r%s"(' % immfmt + block + ')); ')
+        if not self.newisa:
+            newbl += Opaque('__asm__ ("setthread %%0, %%2\\t! MT: CREATE %s"' % lbl) + \
+                ' : "=r"(' + usefvar + ') : "0"(' + usefvar + '), "r%s"(' % immfmt + funvar + ')); '
 
-        # FIXME: emit create+sync here
-        # example:
-        # {
-        #     register X a1 reg("%l0") = arg1_val;
-        #     ...
-        #     asm("create ...; sync ..." : "=r"(a1) ... : "0"(a1) ...)
-        #  }
 
         crc = Scope()
         aregn = 0
@@ -183,24 +194,73 @@ class Create_2_MTSCreate(ScopedVisitor):
             collect += CVarSet(decl = arg_cvar, rhs = CVarUse(decl = var)) + Opaque(';')
             aregn += 1
 
-        # build reg arg lists
-        # start with fidvar/shareds first, as these need to reference each other
-        # and gcc has a limit on the number of back references
-        olist = Opaque('"=r"(') + usefvar + ')'
-        ilist = Opaque('"0"(') + usefvar + ')'
-        roff = 1
-        for v in sargs:
-            olist +=  Opaque(', "=r"(') + v + ')'
-            ilist +=  Opaque(', "%d"(' % roff) + v + ')'
-            roff += 1
-        for v in gargs:
-            ilist +=  Opaque(', "r"(') + v + ')'
+        if not self.newisa:
+            # build reg arg lists
+            # start with fidvar/shareds first, as these need to reference each other
+            # and gcc has a limit on the number of back references
+            olist = Opaque('"=r"(') + usefvar + ')'
+            ilist = Opaque('"0"(') + usefvar + ')'
+            roff = 1
+            for v in sargs:
+                olist +=  Opaque(', "=r"(') + v + ')'
+                ilist +=  Opaque(', "%d"(' % roff) + v + ')'
+                roff += 1
+            for v in gargs:
+                ilist +=  Opaque(', "r"(') + v + ')'
 
-        crc += (flatten(cr.loc, 
-                        '__asm__ __volatile__("create %%0, %%0\\t! MT: CREATE %s'
-                        '\\n\\tmov %%0, %%0\\t! MT: SYNC %s" : ' % (lbl, lbl)) +
-                olist + ' : ' + ilist + ' : "memory");')
-        crc += collect
+            crc += (flatten(cr.loc, 
+                            ' __asm__ __volatile__("create %%0, %%0\\t! MT: CREATE %s'
+                            '\\n\\tmov %%0, %%0\\t! MT: SYNC %s" : ' % (lbl, lbl)) +
+                    olist + ' : ' + ilist + ' : "memory");')
+            crc += collect
+
+            if cr.sync_type != 'normal':
+                warn('detached create not supported on this target, using normal sync instead', cr)
+
+        else:
+            crc += (flatten(cr.loc_end,
+                            ' __asm__ __volatile__("crei %%2, %%0\\t! MT: CREATE %s"' % lbl) +
+                    ' : "=r"(' + usefvar + ') : "0"(' + usefvar + '),' + 
+                    '   "r"(' + funvar + ') : "memory");')
+
+            aoff = 0
+            for a in gargs:
+                crc += (flatten(cr.loc_end,
+                                ' __asm__("putg %%2, %%0, %d\\t! MT: set sarg"'
+                                ' : "=r"(' % aoff) +
+                        usefvar + ') : "0"(' + usefvar + 
+                        '), "r"(' + a + '));')
+                aoff += 1
+            aoff = 0
+            for a in sargs:
+                crc += (flatten(cr.loc_end,
+                                ' __asm__("puts %%2, %%0, %d\\t! MT: set shared"'
+                                ' : "=r"(' % aoff) +
+                        usefvar + ') : "0"(' + usefvar + 
+                        '), "r"(' + a + '));')
+                aoff += 1
+                           
+            if cr.sync_type == 'normal':
+                crc += (flatten(cr.loc_end,
+                                ' __asm__ __volatile__("sync %%0, %%1; '
+                                ' mov %%1, %%1\\t! MT: SYNC %s"' % lbl) +
+                        ' : "=r"(' + usefvar + '), "=r"(' + 
+                        CVarUse(decl = cr.cvar_exitcode) +
+                        ') : "0"(' + usefvar + ') : "memory");')
+                        
+                aoff = 0
+                for a in sargs:
+                    crc += (flatten(cr.loc_end,
+                                    ' __asm__("gets %%0, %d, %%1; '
+                                    ' mov %%1, %%1\\t! MT get shared"' % aoff) +
+                            ' : "=r"(' + usefvar + '), "=r"(' + a + 
+                            ') : "0"(' + usefvar + '));')
+            
+            crc += (flatten(cr.loc_end,
+                            ' __asm__ __volatile__("release %%0\\t! MT: SYNC %s"' % lbl) +
+                    ' : : "r"(' + usefvar + '));')
+            
+                
 
         newbl += crc
 

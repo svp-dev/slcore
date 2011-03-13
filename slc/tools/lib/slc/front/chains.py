@@ -80,6 +80,22 @@ _chains = {
                                                 'cseq':Create_2_Loop()}))),
         ('flattenfun', DefaultVisitor(Dispatcher({'fmts':TFun_2_MTSTFun(),
                                                   'fseq':TFun_2_CFun()}))),
+        ] + _common_suffix,
+    'mtsn' : _common_prefix + [
+        ('lseta', LinkSetA()),
+        ('autores', AutoResolve()),
+        ('flattencr', Create_2_MTSCreate(newisa=True)), 
+        ('flattenfun',TFun_2_MTSTFun()),
+        ] + _common_suffix,
+    'mtsn+seq' : _common_prefix + [
+        ('splitcr', SplitCreates(oracle=make_mt_oracle('mts'))),
+        ('lseta', LinkSetA()),
+        ('flseta', FlavorSetA()),
+        ('splitfun', SplitFuns(oracle=make_mt_oracle('mts'))),
+        ('flattencr', ScopedVisitor(Dispatcher({'cmts':Create_2_MTSCreate(newisa=True),
+                                                'cseq':Create_2_Loop()}))),
+        ('flattenfun', DefaultVisitor(Dispatcher({'fmts':TFun_2_MTSTFun(),
+                                                  'fseq':TFun_2_CFun()}))),
         ] + _common_suffix
 }
 

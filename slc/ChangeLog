@@ -1,5 +1,20 @@
 2011-03-13  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	Support both MGSim and FPGA back-ends for MT-Sparc.
+
+	* tools/bin/cce.in: New target machine `mtsparc-sim' and aliases
+	`mtsn_*'.
+
+	* tools/lib/slc/mt/mtsparc/gencreate.py: New class attribute
+	`newisa' to use the ISA from MGSim. Modify the visitor to support
+	both ISAs.
+
+	* tools/lib/slc/front/chains.py: Recognize the new chains, using
+	appropriate variants of Create_2_MTSCreate.
+	
+
+2011-03-13  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	Initialize the MT-Sparc assembly optimization stage.
 	
 	* tools/lib/slc/mt/mtsparc/asmproc/opt.py (filter): Use the common

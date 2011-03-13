@@ -148,6 +148,10 @@ case $alias in
     mts_n)        alias=spr-mts_naked-mtsparc-fpga ;;
     mts_s)        alias=spr-seq_naked-mtsparc-fpga ;;
 
+    mtsparc|mtsn)  alias=spr-mtsn_hybrid-mtsparc-sim ;;
+    mtsn_n)        alias=spr-mtsn_naked-mtsparc-sim ;;
+    mtsn_s)        alias=spr-seq_naked-mtsparc-sim ;;
+
     hrt)          alias=spr-hrt_hybrid-host-host-hrt ;;
     hrt_n)        alias=spr-hrt_naked-host-host-hrt ;;
     hrt_s)        alias=spr-seq_naked-host-host-hrt ;;
@@ -208,6 +212,8 @@ case $slc_dialect in
             mta_hybrid) target=mta+seq ;;
             mts_naked) target=mts ;;
             mts_hybrid) target=mts+seq ;;
+            mtsn_naked) target=mtsn ;;
+            mtsn_hybrid) target=mtsn+seq ;;
             hrt_naked)  target=hrt ;;
             hrt_hybrid) target=hrt+seq ;;
             *) echo "unknown variant: $slc_dialect-$slc_variant" >&2 ;;
@@ -354,7 +360,7 @@ case $slc_arch in
         slc_cflags+=(-mcpu=21264a -fno-math-errno -fno-trapping-math)
         ;;
     mtsparc)
-        slc_cflags+=(-mcpu=v8 -fno-math-errno -fno-trapping-math -mno-fpu)
+        slc_cflags+=(-mcpu=v8 -fno-math-errno -fno-trapping-math -mno-fpu -fshort-double -fno-delayed-branch)
         ;;
     *)
 	;;
@@ -362,19 +368,26 @@ esac
 slc_ppflags+=(-DUSE_C_DIVIDE)
 
 slc_debug_flags=(${slc_debug_flags:+$slc_debug_flags})
-case $slc_arch-$slc_os in
-    mtalpha-sim)
+case $slc_arch in
+    mtalpha)
         slc_ppflags+=(-D__mt_freestanding__ -D__WORDSIZE=64)
+	;;
+    mtsparc)
+        slc_ppflags+=(-D__mt_freestanding__ -D__WORDSIZE=32)
+	;;
+esac
+case $slc_arch-$slc_os in
+    *-sim)
 	slc_ldflags+=(-Wl,-Ttext -Wl,0x1000000 -nostdlib)
 	;;
-    mtsparc-fpga)
-        slc_ppflags+=(-D__mt_freestanding__ -D__WORDSIZE=32)
-	slc_ldflags+=(-nostdlib)
+    *-fpga)
+	slc_ldflags+=(-Wl,-Ttext -Wl,0 -nostdlib)
 	;;
     host-host-hrt)
         slc_ldflags+=($PTHREAD_LIBS -static)
         ;;
 esac
+
 
 case $slc_arch in
     mt*)
