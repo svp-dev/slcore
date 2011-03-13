@@ -391,8 +391,8 @@ class PrintVisitor(DefaultVisitor):
 
         c.body.accept(self)
           
-        if c.sync_type == 'release':
-            self.__out.write(' sl_release()')
+        if c.sync_type == 'detach':
+            self.__out.write(' sl_detach()')
         else:
             self.__out.write(' sl_sync(')
             if c.result_lvalue is not None:

@@ -1,5 +1,14 @@
 2011-03-13  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	Minor fixes.
+
+	* tools/lib/slc/visitors.py (PrintVisitor.visit_create): Spell
+	`detach' not `release'.
+
+	* tools/lib/slc/mt/common/asmproc/fixup.py: Import `sys'.	
+
+2011-03-13  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	Support both MGSim and FPGA back-ends for MT-Sparc.
 
 	* tools/bin/cce.in: New target machine `mtsparc-sim' and aliases

@@ -3,6 +3,8 @@ from ....front import dump
 from stageopts import makestageopts
 from filter import funfilter, cfunfilter
 
+import sys
+
 def filter(fbegin, finner, fcinner, fend, *args):
     """ 
     Transform compiler output (invalid, raw asm) to good-looking
