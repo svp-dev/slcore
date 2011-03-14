@@ -1,5 +1,13 @@
 2011-03-14  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	Optimize save/restore for MT-Sparc.
+
+	* tools/lib/slc/mt/mtsparc/asmproc/base.py (creplrestore,
+	creplsave): Use `st' and `ld' if only one register per pair needs
+	to be saved/restored.
+
+2011-03-14  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	Initial support for save/restore for MT-Sparc.
 
 	* tools/lib/slc/mt/common/asmproc/regmagic.py: New method

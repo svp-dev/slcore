@@ -322,11 +322,13 @@ def creplsave(fundata, items):
                 yield ('other', '%s %s, %s, %s' % (addinsn, A, B, _g1reg), 'MT: save')
             for i in xrange(0, 8, 2):
                 ireg = _iregs[i]
-                #oreg = _oregs[i]
                 ireg2 = _iregs[i+1]
-                #oreg2 = _oregs[i+1]
-                if ireg in riset or ireg2 in riset: # or oreg in roset or oreg2 in roset:
+                if ireg in riset and ireg2 in riset: # or oreg in roset or oreg2 in roset:
                     yield ('other', 'std %s, [%s + %d]' % (ireg, _spreg, i*4 + 32), 'MT: save')
+                elif ireg in riset:
+                    yield ('other', 'st %s, [%s + %d]' % (ireg, _spreg, i*4 + 32), 'MT: save')
+                elif ireg2 in riset:
+                    yield ('other', 'st %s, [%s + %d]' % (ireg2, _spreg, (i+1)*4 + 32), 'MT: save')
             for i in xrange(0, 8):
                 ireg = _iregs[i]
                 if ireg in riset:
@@ -371,8 +373,12 @@ def creplrestore(fundata, items):
                     yield ('other', 'mov %s, %s' % (ireg, _oregs[i]), 'MT: restore')
                 if i % 2 == 0:
                     ireg2 = _iregs[i+1]
-                    if ireg in riset or ireg2 in riset:
+                    if ireg in riset and ireg2 in riset:
                         yield ('other', 'ldd [%s + %d], %s' % (_spreg, i * 4 + 32, ireg), 'MT: restore')
+                    elif ireg in riset:
+                        yield ('other', 'ld [%s + %d], %s' % (_spreg, i * 4 + 32, ireg), 'MT: restore')
+                    elif ireg2 in riset:
+                        yield ('other', 'ld [%s + %d], %s' % (_spreg, (i+1) * 4 + 32, ireg2), 'MT: restore')
             if A is not None:
                 yield ('other', 'mov %s, %s' % (_g1regs, C), 'MT: restore')
         else:
