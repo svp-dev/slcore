@@ -47,19 +47,32 @@ def detectregs(fundata, items):
 #         yield (type, content, comment)
 #     fundata['isleaf'] = isleaf
 
-def killsaverestore(fundata, items):
+def killrestore(fundata, items):
     for (type, content, comment) in items:
-        if type == 'other' and (content.startswith('save') or content.startswith('restore')):
+        if type == 'other' and content.startswith('restore'):
             yield ('empty','','MT: killed ' + content)
             continue
         yield (type, content, comment)
+
+def replsave(fundata, items):
+    for (type, content, comment) in items:
+        if type == 'other' and content.startswith('save'):
+            rest = content[4:].strip()
+            if ',' in rest:
+                yield ('other', 'add ' + rest, 'MT: save')
+            else:
+                yield ('emty','','MT: killed ' + content)
+            continue
+        yield (type, content, comment)
+                
 
 
 def renamelocals(fundata, items):
     """
     On the SPARC the MT locals are not mapped in allocation order, to
     preserve some ins/reg semantics in save/restore and calls.
-    However if there are no calls, anything above the first 8 can be renamed.
+    However if there are no calls, anything above the first 8 (the first 8 are used for MT arg passing)
+    can be renamed.
     """
 
     rmask = fundata['usedregs']
@@ -246,6 +259,136 @@ def grouper(items):
         yield (type, content, comment)
 
 
+
+_g1reg = regmagic.legacy_to_canon('g1')
+_spreg = regmagic.legacy_to_canon('sp')
+_iregs = [regmagic.legacy_to_canon('i%d' % i) for i in xrange(0,8)]
+_oregs = [regmagic.legacy_to_canon('o%d' % i) for i in xrange(0,8)]
+
+_re_canon = re.compile(r'(\$\d+)')
+def cmarkused(fundata, items):
+    """
+    Collect which canonical registers are currently in use
+    the function body.
+    """
+    riset = set()
+    #roset = set()
+    for (type, content, comment) in items:
+        if type == 'other':
+            for rm in _re_canon.finditer(content):
+                r = rm.group(1)
+                if r in _iregs:
+                    riset.add(r)
+                #if r in _oregs:
+                #    roset.add(r)
+        yield (type, content, comment)
+    fundata['usediregs'] = riset
+    #fundata['usedoregs'] = roset
+
+_trivsave = re.compile(r'save\s*$')
+_save = re.compile(r'save\s+([^,]+),([^,]+),([^,]+)$')
+_trivrestore = re.compile(r'restore\s*$')
+_restore = re.compile(r'restore\s+([^,]+),([^,]+),([^,]+)$')
+
+
+def creplsave(fundata, items):
+
+    riset = fundata['usediregs']
+    #roset = fundata['usedoregs']
+
+    for (type, content, comment) in items:
+        found = False
+        m = _save.match(content)
+        if m is not None:
+            found = True
+            A = m.group(1).strip()
+            B = m.group(2).strip()
+            C = m.group(3).strip()
+
+            if B.startswith('-'):
+                addinsn = 'sub'
+                B = B[1:]
+            else:
+                addinsn = 'add'
+
+        elif _trivsave.match(content) is not None:
+            found = True
+            A = B = C = None
+            addinsn = None
+
+        if found:
+            # found a save, replace
+            if A is not None:
+                yield ('other', '%s %s, %s, %s' % (addinsn, A, B, _g1reg), 'MT: save')
+            for i in xrange(0, 8, 2):
+                ireg = _iregs[i]
+                #oreg = _oregs[i]
+                ireg2 = _iregs[i+1]
+                #oreg2 = _oregs[i+1]
+                if ireg in riset or ireg2 in riset: # or oreg in roset or oreg2 in roset:
+                    yield ('other', 'std %s, [%s + %d]' % (ireg, _spreg, i*4 + 32), 'MT: save')
+            for i in xrange(0, 8):
+                ireg = _iregs[i]
+                if ireg in riset:
+                    yield ('other','mov %s, %s' % (_oregs[i], ireg), 'MT: save')
+            if A is not None:
+                yield ('other', 'mov %s, %s' % (_g1reg, C), 'MT: save')
+        else:
+            yield (type, content, comment)
+
+
+def creplrestore(fundata, items):
+
+    riset = fundata['usediregs']
+
+    for (type, content, comment) in items:
+        found = False
+        m = _restore.match(content)
+        if m is not None:
+            found = True
+            A = m.group(1).strip()
+            B = m.group(2).strip()
+            C = m.group(3).strip()
+
+            if B.startswith('-'):
+                addinsn = 'sub'
+                B = B[1:]
+            else:
+                addinsn = 'add'
+
+        elif _trivrestore.match(content) is not None:
+            found = True
+            A = B = C = None
+            addinsn = None
+
+        if found:
+            # found a save, replace# FIXME: restore
+            if A is not None:
+                yield ('other', '%s %s, %s, %s' % (addinsn, A, B, _g1reg), 'MT: restore')
+            for i in xrange(7, -1, -1):
+                ireg = _iregs[i]
+                if ireg in riset:
+                    yield ('other', 'mov %s, %s' % (ireg, _oregs[i]), 'MT: restore')
+                if i % 2 == 0:
+                    ireg2 = _iregs[i+1]
+                    if ireg in riset or ireg2 in riset:
+                        yield ('other', 'ldd [%s + %d], %s' % (_spreg, i * 4 + 32, ireg), 'MT: restore')
+            if A is not None:
+                yield ('other', 'mov %s, %s' % (_g1regs, C), 'MT: restore')
+        else:
+            yield (type, content, comment)
+
+_ivregs = [regmagic.get_vregs_for_legacy('i%d' % i)[0] for i in xrange(0,8)]
+
+def protectallcallregs(fundata, items):
+    if fundata['hasjumps']:
+        for i in xrange(0, 8):
+            if i != 6: # avoid setting SP here
+                fundata['prologue'].append(('other', 'clr $%s' % _ivregs[i]['name'], 'maybe used in call'))
+    return items
+
+
+
 from common import *
 from ...common.asmproc.regextract import *
 from ...common.asmproc.renameregs import *
@@ -269,6 +412,11 @@ _filter_begin = [reader, lexer, splitsemi, parser, grouper]
 _cfilter_inner = [canonregs,
                   crenameregs,
 
+                  cmarkused,
+                  creplsave,
+                  creplrestore,
+
+
                   zerog0,
                   cphyregs]
 _filter_inner = [canonregs,
@@ -276,7 +424,8 @@ _filter_inner = [canonregs,
                  renameregs,
 
                  replaceret,
-                 killsaverestore,
+                 killrestore,
+                 replsave,
 
                  detectregs,
                  
@@ -285,12 +434,14 @@ _filter_inner = [canonregs,
 
                  xsplit,
 
+                 protectallcallregs,
                  initspecial,
 
 
                  xjoin1,
 
                  markused,
+
                  makespecialtransform('tlsp', regmagic),
                  makespecialtransform('fp', regmagic),
                  makespecialtransform('ra', regmagic),

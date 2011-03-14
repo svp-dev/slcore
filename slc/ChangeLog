@@ -1,5 +1,23 @@
 2011-03-14  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	Initial support for save/restore for MT-Sparc.
+
+	* tools/lib/slc/mt/common/asmproc/regmagic.py: New method
+	`legacy_to_canon' to retrieve the canonicalized register names
+	corresponding to special roles in a plain C function body.
+
+	* tools/lib/slc/mt/mtsparc/asmproc/base.py: Rename
+	`killsaverestore' to `killrestore'. New function `replsave' since
+	`save' may perform a useful adjustment on the stack pointer. New
+	function `protectallcallregs' to prime the callee-save registers
+	in case a call exists.
+
+	* tools/lib/slc/mt/mtsparc/asmproc/base.py (cmarkused, creplsave,
+	creplrestore): Expand save/restore in plain C functions by
+	explicit save/restore instruction sequences.
+
+2011-03-14  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	Minor fix in MT register magic.
 
 	* tools/lib/slc/mt/common/asmproc/regmagic.py (get_vregs_for_legacy,

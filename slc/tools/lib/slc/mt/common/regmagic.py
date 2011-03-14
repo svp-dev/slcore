@@ -265,6 +265,22 @@ class RegMagic:
         """
         return '$' + self.rd.reg_aliases[alias]
 
+    def legacy_to_canon(self, legname):
+        """
+        Returnt the canonical virtual register name
+        for a given legacy alias.
+        """
+        lo = self.rd.mt_locals_offset
+        if legname.startswith('f') and legname != 'fp':
+            r = self._freg_inv[self.rd.legacy_fregs[legname[1:]]]
+            pref = 'f'
+        else:
+            r = self._reg_inv[self.rd.legacy_regs[legname]]
+            pref = ''
+        assert len(r) == 1
+        assert r[0]['cat'] == 'l'
+        return '$%s%d' % (pref, r[0]['nr'] + lo)
+
     def makecrepl(self,funname):
         """
         Create a substitution function suitable for re.sub,
