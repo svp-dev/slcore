@@ -1,3 +1,10 @@
+2011-03-14  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
+	Minor fix in MT register magic.
+
+	* tools/lib/slc/mt/common/asmproc/regmagic.py (get_vregs_for_legacy,
+	get_legacy): Treat `fp' as an integer register, not float.
+
 2011-03-13  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
 	Minor fixes.

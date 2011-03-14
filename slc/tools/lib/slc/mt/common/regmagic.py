@@ -217,7 +217,7 @@ class RegMagic:
         Return the legacy canonical register name for
         a given legacy register alias.
         """
-        if legname.startswith('f'):
+        if legname.startswith('f') and legname != 'fp':
             return self.makecanon('f', self.rd.legacy_fregs[legname], legname_hint = legname)
         else:
             return self.makecanon('i', self.rd.legacy_regs[legname], legname_hint = legname)
@@ -249,9 +249,9 @@ class RegMagic:
         Return the list of virtual registers that
         can overlap for the given legacy register alias.
         """
-        if legname.startswith('%sf' % self.rd.regprefix):
+        if legname.startswith('%sf' % self.rd.regprefix) and legname != '%sfp' % self.rd.regprefix:
             return self._freg_inv[self.rd.legacy_fregs[legname[1:]]]
-        elif legname.startswith('f'):
+        elif legname.startswith('f') and legname != 'fp':
             return self._freg_inv[self.rd.legacy_fregs[legname]]
         elif legname.startswith(self.rd.regprefix):
             return self._reg_inv[self.rd.legacy_regs[legname[1:]]]
