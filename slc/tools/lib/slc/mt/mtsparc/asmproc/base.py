@@ -1,8 +1,12 @@
 import re
 from ..regdefs import regmagic
+from ....msg import die
 
+_spreg = regmagic.legacy_to_canon('sp')
+_fpreg = regmagic.legacy_to_canon('fp')
 
 _re_call = re.compile(r'call\s')
+_re_saverest = re.compile(r'(save|restore)\s')
 def detectregs(fundata, items):
     """
     Check if FP/SP are used and whether there are calls.
@@ -18,7 +22,7 @@ def detectregs(fundata, items):
     fpreg = regmagic.alias_to_vname('fp')
     for (type, content, comment) in items:
         if type == 'other':
-            if _re_call.match(content):
+            if _re_call.match(content) is not None:
                 hasjumps = True
                 use_sp = True
             if spreg in content:
@@ -28,6 +32,22 @@ def detectregs(fundata, items):
         yield (type, content, comment)
     fundata['use_sp'] = use_sp
     fundata['use_fp'] = use_fp
+    fundata['hasjumps'] = hasjumps
+
+def cdetectregs(fundata, items):
+    """
+    Check if save/restore is used and whether there are calls.
+    """
+    use_saverestore = True
+    hasjumps = False
+    for (type, content, comment) in items:
+        if type == 'other':
+            if _re_saverest.match(content) is not None:
+                use_saverestore = True
+            elif _re_call.match(content) is not None:
+                hasjumps = True
+        yield (type, content, comment)
+    fundata['use_saverestore'] = use_saverestore
     fundata['hasjumps'] = hasjumps
 
 # _re_sr = re.compile(r'(?:save|restore)\s')
@@ -105,7 +125,7 @@ def replaceret(fundata, items):
     ra1 = regmagic.alias_to_vname('ra')
     ra2 = regmagic.alias_to_vname('ra_leaf')
     restr = r'retl?|jmpl?\s+(?:\$%s|\$%s)\s*\+\s*8' % (ra1[1:], ra2[1:])
-    print 'YYY', ra1, ra2, restr
+    #print 'YYY', ra1, ra2, restr
     retre = re.compile(restr)
     skipnext = False
     for (type, content, comment) in items:
@@ -175,7 +195,7 @@ def xjoin2(fundata, items):
 
     name = fundata['name']
     regs = fundata['regs']
-    
+
     if fundata['global']:
         yield ('directive', '.globl\t%s' % name, '')
     yield ('directive', '.type\t%s, #function' % name, '')
@@ -261,7 +281,6 @@ def grouper(items):
 
 
 _g1reg = regmagic.legacy_to_canon('g1')
-_spreg = regmagic.legacy_to_canon('sp')
 _iregs = [regmagic.legacy_to_canon('i%d' % i) for i in xrange(0,8)]
 _oregs = [regmagic.legacy_to_canon('o%d' % i) for i in xrange(0,8)]
 
@@ -272,18 +291,19 @@ def cmarkused(fundata, items):
     the function body.
     """
     riset = set()
-    #roset = set()
+
+    if fundata['use_saverestore']:
+        riset.add(_iregs[6])
+        riset.add(_iregs[7])
+
     for (type, content, comment) in items:
         if type == 'other':
             for rm in _re_canon.finditer(content):
                 r = rm.group(1)
                 if r in _iregs:
                     riset.add(r)
-                #if r in _oregs:
-                #    roset.add(r)
         yield (type, content, comment)
     fundata['usediregs'] = riset
-    #fundata['usedoregs'] = roset
 
 _trivsave = re.compile(r'save\s*$')
 _save = re.compile(r'save\s+([^,]+),([^,]+),([^,]+)$')
@@ -294,7 +314,6 @@ _restore = re.compile(r'restore\s+([^,]+),([^,]+),([^,]+)$')
 def creplsave(fundata, items):
 
     riset = fundata['usediregs']
-    #roset = fundata['usedoregs']
 
     for (type, content, comment) in items:
         found = False
@@ -385,14 +404,63 @@ def creplrestore(fundata, items):
             yield (type, content, comment)
 
 _ivregs = [regmagic.get_vregs_for_legacy('i%d' % i)[0] for i in xrange(0,8)]
+_ovregs = [regmagic.get_vregs_for_legacy('o%d' % i)[0] for i in xrange(0,8)]
 
 def protectallcallregs(fundata, items):
+    """
+    Prime the i/o registers in presence of a call (they
+    may be read by the callee)
+    """
     if fundata['hasjumps']:
         for i in xrange(0, 8):
-            if i != 6: # avoid setting SP here
+            if i != 6: # avoid setting FP/SP here
                 fundata['prologue'].append(('other', 'clr $%s' % _ivregs[i]['name'], 'maybe used in call'))
+        for i in xrange(0, 6):
+            fundata['prologue'].append(('other', 'clr $%s' % _ovregs[i]['name'], 'maybe used in call'))
     return items
 
+_delayed = re.compile(r'(ret[lt]?|call|jmpl|b([anegl]|[nlg]e|gu|leu|cc|cs|pos|neg|vc|vs))\s')
+
+def markdelay(fundata, items):
+    """
+    Mark delayed instructions and delay slots.
+    """
+    indelayslot = 0
+    for (type, content, comment) in items:
+        if type == 'directive':
+            indelayslot = 0
+        elif type == 'other':
+            if _delayed.match(content) is not None:
+                if indelayslot == 1: die("%s: delayed instruction in delay slot is not supported" % fundata['name'])
+                indelayslot = 1
+                comment = comment + ' DELAYED'
+            else:
+                if indelayslot == 1:
+                    # this is the delay slot itself
+                    comment = comment + ' DELAYSLOT'
+                    indelayslot = 2
+                elif indelayslot == 2:
+                    # this is the instruction just after the delay slot
+                    indelayslot = 0
+        yield (type, content, comment)
+
+def protectend(fundata, items):
+    """
+    Insert a nop before "end" if end is placed after
+    a delayed instruction.
+    """
+    indelayslot = False
+    for (type, content, comment) in items:
+        if type == 'other':
+            if 'DELAYSLOT' in comment:
+                indelayslot = True
+            else:
+                if indelayslot == True and content == 'end':
+                    yield ('other', 'nop', 'MT: end after delay slot')
+                indelayslot = False
+        yield (type, content, comment)
+        
+    
 
 
 from common import *
@@ -418,6 +486,7 @@ _filter_begin = [reader, lexer, splitsemi, parser, grouper]
 _cfilter_inner = [canonregs,
                   crenameregs,
 
+                  cdetectregs,
                   cmarkused,
                   creplsave,
                   creplrestore,
@@ -457,6 +526,9 @@ _filter_inner = [canonregs,
                  compress,
 
                  xjoin2,
+
+                 markdelay,
+                 protectend,
 
                  zerog0,
                  phyregs]

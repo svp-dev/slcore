@@ -1,3 +1,11 @@
+2011-03-17  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
+	Enhance the MT-Sparc assembly fixups.
+
+	* tools/lib/slc/mt/mtsparc/asmproc/base.py: Properly handle both
+	FP/SP and RA when replacing save/restore. Insert "nop" before
+	"end" after a delay slot.
+
 2011-03-14  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
 	Optimize save/restore for MT-Sparc.
