@@ -29,8 +29,8 @@ typedef long counter_t;
 #define MTPERF_COMPLETED_STORE_INSNS 4
 #define MTPERF_CORE_LOADED_BYTES 5
 #define MTPERF_CORE_STORED_BYTES 6
-#define MTPERF_EXTMEM_COMPLETED_LOADS 7
-#define MTPERF_EXTMEM_COMPLETED_STORES 8
+#define MTPERF_L2_LOADS 7
+#define MTPERF_L2_STORES 8
 #define MTPERF_PLACE_SIZE 9
 #define MTPERF_CUMUL_TT_OCCUPANCY 10
 #define MTPERF_CUMUL_FT_OCCUPANCY 11
@@ -38,7 +38,9 @@ typedef long counter_t;
 #define MTPERF_UNIX_TIME 13
 #define MTPERF_LOCAL_DATE 14
 #define MTPERF_LOCAL_TIME 15
-#define MTPERF_NCOUNTERS 16
+#define MTPERF_EXTMEM_LOADS 16
+#define MTPERF_EXTMEM_STORES 17
+#define MTPERF_NCOUNTERS 18
 #else
 #define MTPERF_CLOCKS 0
 #define MTPERF_UNIX_TIME 1
@@ -155,6 +157,8 @@ void __inline_mtperf_sample(counter_t * array)
         __read_cnt(13);
         __read_cnt(14);
         __read_cnt(15);
+        __read_cnt(16);
+        __read_cnt(17);
 #undef __read_cnt
         __asm__ __volatile__("# sample ends");
 }
