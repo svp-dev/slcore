@@ -1,5 +1,11 @@
 2011-03-17  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	Generate run scripts for both the FPGA and MGSim targets.
+
+	* tools/lib/Makefile.am: Generate `r-mtsparc-sim.sh' and `r-mtsparc-fpga.sh'. 
+
+2011-03-17  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	Preliminary support for bootstrapping MT-Sparc programs.
 
 	* tools/lib/mtsparc-fpga/slrt.s,
