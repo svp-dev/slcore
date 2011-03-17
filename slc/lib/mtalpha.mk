@@ -122,16 +122,20 @@ MALLOC_DEFS = -DLACKS_SYS_TYPES_H \
 	-DLACKS_UNISTD_H \
 	-DUSE_BUILTIN_FFS=1 \
 	-DLACKS_SYS_PARAM_H \
-	-DLACKS_TIME \
+	-DLACKS_TIME
+
+MALLOC_DEFS_MTA = \
 	-DPAGESIZE=0x40000000U
 
 TLSMALLOC_DEFS = \
 	-DNDEBUG \
-	-DARCH_TLS_SERVICES=\"tls_arch_mtalpha.h\" \
 	-Dtls_malloc=malloc \
 	-Dtls_free=free \
 	-Dtls_realloc=realloc \
 	-Dtls_calloc=calloc
+
+TLSMALLOC_DEFS_MTA = \
+	-DARCH_TLS_SERVICES=\"tls_arch_mtalpha.h\" 
 
 MTALIB_COBJS = \
 	$(addprefix mta_,$(addsuffix .o,$(notdir $(basename $(MTALIB_CSRC))))) \
@@ -147,22 +151,22 @@ mta_gdtoa_%.o: $(srcdir)/src/gdtoa/%.c
 	$(slc_verbose)$(SLC_MTA) -c -o $@ $<
 
 mta_tlsmalloc.o: $(srcdir)/src/tlsmalloc/tlsmalloc.c
-	$(slc_verbose)$(SLC_MTA) -c -o $@ $< $(TLSMALLOC_DEFS)
+	$(slc_verbose)$(SLC_MTA) -c -o $@ $< $(TLSMALLOC_DEFS) $(TLSMALLOC_DEFS_MTA)
 
 mta_tlsmalloc_debug.o: $(srcdir)/src/tlsmalloc/tlsmalloc.c
-	$(slc_verbose)$(SLC_MTA) -c -o $@ $< $(TLSMALLOC_DEFS) -DDEBUG_MALLOC
+	$(slc_verbose)$(SLC_MTA) -c -o $@ $< $(TLSMALLOC_DEFS) $(TLSMALLOC_DEFS_MTA) -DDEBUG_MALLOC
 
 mta_tlsmalloc_mgdebug.o: $(srcdir)/src/tlsmalloc/tlsmalloc.c
-	$(slc_verbose)$(SLC_MTA) -c -o $@ $< $(TLSMALLOC_DEFS) -DDEBUG_MGSIM
+	$(slc_verbose)$(SLC_MTA) -c -o $@ $< $(TLSMALLOC_DEFS) $(TLSMALLOC_DEFS_MTA) -DDEBUG_MGSIM
 
 mta_tlstack_malloc_mgdebug.o: $(srcdir)/src/tlstack_malloc.c
 	$(slc_verbose)$(SLC_MTA) -c -o $@ $< -DDEBUG_MGSIM
 
 mta_malloc.o: $(srcdir)/src/malloc.c
-	$(slc_verbose)$(SLC_MTA) -c -o $@ $< $(MALLOC_DEFS)
+	$(slc_verbose)$(SLC_MTA) -c -o $@ $< $(MALLOC_DEFS) $(MALLOC_DEFS_MTA)
 
 mta_malloc_debug.o: $(srcdir)/src/malloc.c
-	$(slc_verbose)$(SLC_MTA) -c -o $@ $< $(MALLOC_DEFS) -DDEBUG=1 -DABORT_ON_ASSERT_FAILURE=0 -DFOOTERS=1
+	$(slc_verbose)$(SLC_MTA) -c -o $@ $< $(MALLOC_DEFS) $(MALLOC_DEFS_MTA) -DDEBUG=1 -DABORT_ON_ASSERT_FAILURE=0 -DFOOTERS=1
 
 
 ### Common rules ###

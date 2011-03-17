@@ -1,5 +1,5 @@
 
-EXTRA_DIST = tls_arch_mtalpha.h tls_arch_pthreads.h
+EXTRA_DIST = tls_arch_mtalpha.h tls_arch_pthreads.h tls_arch_mtsparc.h
 
 CC = $(PTHREAD_CC)
 

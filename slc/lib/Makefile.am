@@ -69,4 +69,5 @@ BUILT_SOURCES =
 include $(srcdir)/seqc.mk
 include $(srcdir)/ptl.mk
 include $(srcdir)/mtalpha.mk
+include $(srcdir)/mtsparc.mk
 

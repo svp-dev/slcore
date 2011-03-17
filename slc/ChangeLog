@@ -1,5 +1,20 @@
 2011-03-17  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	Preliminary library support for MT-Sparc.
+
+	* lib/mtalpha.mk: Split preprocessor defines specific to MT-Alpha
+	to their own Make variables.
+
+	* lib/src/tlsmalloc/tls_arch_mtsparc.h: New.
+	* lib/src/tlsmalloc/Makefile.am: List the new file.
+	
+	* lib/mtsparc.mk: New. Use the common definitions from
+	`mtalpha.mk'.
+
+	* lib/Makefile.am: Use it.
+
+2011-03-17  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	Make the exclusive malloc wrappers compatible with MT-Sparc.
 
 	* lib/include/svp/mtmalloc.h: Also recognize `__mtsparc__'.
