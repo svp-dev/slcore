@@ -1,5 +1,13 @@
 2011-03-17  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	Release version 3.3.
+
+	* build-aux/package-version: Update to 3.3.
+
+	* doc/NEWS.txt: Document recent changes.
+
+2011-03-17  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	Minor fix to allow to build for MT-Sparc without MT-Alpha.
 
 	* lib/mtalpha.mk (MALLOC_DEFS, TLSMALLOC_DEFS): Move the common

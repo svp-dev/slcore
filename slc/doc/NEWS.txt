@@ -4,15 +4,52 @@
 
 This document describes major updates to the SL toolchain.
 
-Version 3.3.x
-=============
-
-Development version only.
+Version 3.3, March 2011
+=======================
 
 Changes since 3.2
 -----------------
 
-...
+Language and library
+````````````````````
+
+- Several primitives previously defined only as C macros are now also
+  implemented as C functions as well (macros are used unless
+  undefined). For example ``clock``, ``mtperf_sample``, etc.
+
+- Add support for C's function ``time``.
+
+Change related to the MT targets
+````````````````````````````````
+
+- Preliminary support for 32-bit SPARC ISAs has been added. The target
+  prefixes are ``mts`` (for uT-LEON3) and ``mtsn`` (for MGSim).
+
+  Known limitations: the standard C library is not supported, nor is
+  floating-point nor 64-bit integer types. Some C string handling
+  functions might work.
+
+Known limitations
+-----------------
+
+- Support for the C99 standard library is incomplete.
+
+- C's ``long double`` type is not supported.
+
+- The C ``tgamma`` function is less accurate than required by the
+  specification.
+
+- SVP's *kill* operation is inconsistently supported across targets
+  (or not at all). No known programs are affected.
+
+- Due to both software and hardware limitations, Microgrid code is
+  much less efficient in several key places than the architecture
+  would allow it to be (poor register management due to conservative
+  assumptions about unknown use in C function calls). This will be
+  investigated and optimized in future versions of the tool chain.
+
+- The SPARC support code is largely untested and *will* break valid
+  programs.
 
 Version 3.2, December 2010
 ==========================
