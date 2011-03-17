@@ -1,5 +1,15 @@
 2011-03-17  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	Make the standard C headers more compatible with MT-Sparc.
+
+	* lib/mtalpha-sim/include/limits.h,
+	* lib/mtalpha-sim/include/stddef.h,
+	* lib/mtalpha-sim/include/stdint.h: Also recognize `__mtsparc__'. 
+
+	* lib/mtalpha-sim/include/sys/types.h: Define `ssize_t' always.
+
+2011-03-17  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	Disable the 64-bit legacy SL divide routines on 32-bit MT-Sparc.
 
 	* lib/src/div.c: Do it.
