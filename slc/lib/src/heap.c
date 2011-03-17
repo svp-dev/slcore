@@ -15,6 +15,21 @@
 #include <svp/testoutput.h>
 #include "heap.h"
 
+#if defined(__mtsparc__)
+
+#ifndef PAGESIZE
+#define PAGESIZE 4*1024*1024
+#endif
+
+#ifndef HEAP_SIZE
+#define HEAP_SIZE 40*1024*1024
+#endif
+
+#ifndef PAGE_BITS
+#define PAGE_BITS 22
+#endif
+
+#else
 #ifndef PAGESIZE
 #define PAGESIZE 256*1024*1024
 #endif
@@ -25,6 +40,7 @@
 
 #ifndef PAGE_BITS
 #define PAGE_BITS 28
+#endif
 #endif
 
 char HEAP[HEAP_SIZE] __attribute__ ((aligned(PAGESIZE)));

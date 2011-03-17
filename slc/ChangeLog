@@ -1,5 +1,11 @@
 2011-03-17  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	Reduce the heap size for MT-Sparc to fit the address space.
+
+	* lib/src/heap.c: Use 4MB pages and 40MB heap on MT-Sparc.
+
+2011-03-17  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	Improve the legacy SL text output interface.
 
 	* lib/include/svp/io.h,	
