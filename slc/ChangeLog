@@ -1,5 +1,11 @@
 2011-03-17  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	Make the exclusive malloc wrappers compatible with MT-Sparc.
+
+	* lib/include/svp/mtmalloc.h: Also recognize `__mtsparc__'.
+
+2011-03-17  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	Avoid using the call gate to delegate exclusive calls to dlmalloc.
 
 	* lib/include/svp/mtmalloc.h: Use plain exclusive creates to
