@@ -96,11 +96,11 @@ seq_naked_host_host_seqc_libslmain_a_LIBADD = seq_naked-host-host-seqc/main.o
 SLC_SEQC = $(SLC_RUN) -b seqc -nostdlib
 
 seq_naked-host-host-seqc/%.o: $(srcdir)/host-host-seqc/%.c
-	$(AM_V_at)$(MKDIR_P) seqc_o-host-host-seqc
+	$(AM_V_at)$(MKDIR_P) seq_naked-host-host-seqc
 	$(slc_verbose)$(SLC_SEQC) -c -o $@ $< $(AM_CFLAGS) $(CFLAGS)
 
 seq_naked-host-host-seqc/%.o: $(srcdir)/%.c
-	$(AM_V_at)$(MKDIR_P) seqc_o-host-host-seqc
+	$(AM_V_at)$(MKDIR_P) seq_naked-host-host-seqc
 	$(slc_verbose)$(SLC_SEQC) -c -o $@ $< $(AM_CFLAGS) $(CFLAGS)
 
 CLEANFILES += \

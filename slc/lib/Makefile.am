@@ -15,6 +15,7 @@
 SUBDIRS = src/tlsmalloc
  
 EXTRA_DIST = \
+	src/empty.c \
 	src/io.c \
 	src/gfx.c \
 	src/perf.c \

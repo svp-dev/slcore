@@ -2,7 +2,9 @@
 
 EXTRA_DIST += \
 	mtsparc-fpga/slrt.s \
-	mtsparc-fpga/empty.s
+	mtsparc-fpga/callgate.s \
+	mtsparc-sim/slrt.s \
+	mtsparc-sim/callgate.s
 
 if ENABLE_SLC_MTSPARC
 
@@ -168,6 +170,7 @@ mts_naked-mtsparc-fpga/%.o: $(srcdir)/%.c
 CLEANFILES += \
 	mts_naked-mtsparc-fpga/main.o \
 	mts_naked-mtsparc-fpga/slrt.o \
+	mts_naked-mtsparc-fpga/callgate.o \
 	mts_naked-mtsparc-fpga/libslc.a \
 	mts_naked-mtsparc-fpga/libslmain.a
 
@@ -288,6 +291,7 @@ mtsn_naked-mtsparc-sim/%.o: $(srcdir)/%.c
 CLEANFILES += \
 	mtsn_naked-mtsparc-sim/main.o \
 	mtsn_naked-mtsparc-sim/slrt.o \
+	mtsn_naked-mtsparc-sim/callgate.o \
 	mtsn_naked-mtsparc-sim/libslc.a \
 	mtsn_naked-mtsparc-sim/libslmain.a
 
