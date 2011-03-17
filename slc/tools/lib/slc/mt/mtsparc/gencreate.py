@@ -109,9 +109,10 @@ class Create_2_MTSCreate(ScopedVisitor):
             if lc.target_next is None:
                 if cr.extras.get_attr('exclusive', None) is None:
                     warn("this create may fail and no alternative is available", cr)
-                    forcesuspend = '|8'
-                else:
-                    forcesuspend = ''
+                forcesuspend = '|8'
+            else:
+                forcesuspend = ''
+
             newbl += (flatten(cr.loc,
                               '__asm__ __volatile__("allocateng %%1, %%0\\t! MT: CREATE %s"'
                               ' : "=r"(' % lbl) + 

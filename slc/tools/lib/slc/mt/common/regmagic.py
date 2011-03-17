@@ -310,8 +310,8 @@ class RegMagic:
 
                 v = '%s%d' % (v, rl)
                 subst[key] = v
-        import sys
-        print >>sys.stderr, "XXX", subst
+        #import sys
+        #print >>sys.stderr, "XXX", subst
         def repl(match):
             k = match.group(1)
             if k not in subst:

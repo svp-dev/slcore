@@ -1,5 +1,15 @@
 2011-03-17  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	Minor MT-Sparc code generation fixups.
+
+	* tools/lib/slc/mt/common/regmagic.py: Remove a spurious debugging
+	print.
+
+	* tools/lib/slc/mt/mtsparc/gencreate.py (Create_2_MTSCreate):
+	Properly handle `forcesuspend'.
+
+2011-03-17  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	Generate run scripts for both the FPGA and MGSim targets.
 
 	* tools/lib/Makefile.am: Generate `r-mtsparc-sim.sh' and `r-mtsparc-fpga.sh'. 
