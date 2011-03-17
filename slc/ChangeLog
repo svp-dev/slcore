@@ -1,5 +1,17 @@
 2011-03-17  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	Preliminary support for soft floats on MT-Sparc.
+
+	* tools/bin/cce.in: Define `__slc_soft_float__' when compiling for
+	MT-Sparc.
+
+	* tools/include/svp/mgsim.h: Use it to define `mgsim_outfloat'.	
+
+	* tools/lib/t-spr/include/sl_support.h: Alias
+	`sl_(sh|gl)f(parm|arg)' to the matching non-f variant.
+	
+2011-03-17  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	Enhance the MT-Sparc assembly fixups.
 
 	* tools/lib/slc/mt/mtsparc/asmproc/base.py: Properly handle both

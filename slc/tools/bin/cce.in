@@ -360,7 +360,8 @@ case $slc_arch in
         slc_cflags+=(-mcpu=21264a -fno-math-errno -fno-trapping-math)
         ;;
     mtsparc)
-        slc_cflags+=(-mcpu=v8 -fno-math-errno -fno-trapping-math -mno-fpu -fshort-double -fno-delayed-branch)
+        slc_ppflags+=(-D__slc_soft_float__)
+        slc_cflags+=(-mcpu=v8 -fno-math-errno -fno-trapping-math -mno-fpu -fshort-double -fno-delayed-branch -falign-functions=64)
         ;;
     *)
 	;;
