@@ -1,5 +1,13 @@
 2011-03-17  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	Improve the legacy SL text output interface.
+
+	* lib/include/svp/io.h,	
+	* lib/src/io.c: Use `long' as the wide type for integer
+	output. This allows the code to be used with the 32-bit MT-Sparc.
+
+2011-03-17  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	Minor MT-Sparc code generation fixups.
 
 	* tools/lib/slc/mt/common/regmagic.py: Remove a spurious debugging
