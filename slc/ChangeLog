@@ -1,5 +1,11 @@
 2011-03-17  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	Disable the 64-bit legacy SL divide routines on 32-bit MT-Sparc.
+
+	* lib/src/div.c: Do it.
+
+2011-03-17  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	Reduce the heap size for MT-Sparc to fit the address space.
 
 	* lib/src/heap.c: Use 4MB pages and 40MB heap on MT-Sparc.

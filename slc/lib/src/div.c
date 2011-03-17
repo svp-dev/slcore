@@ -90,7 +90,10 @@
   }								\
   sl_enddef
 
-DIVFUNCU(__divmodqu, uint64_t)
 DIVFUNCU(__divmodlu, uint32_t)
-DIVFUNCS(__divmodqs, int64_t)
 DIVFUNCS(__divmodls, int32_t)
+
+#if defined(__alpha__)||defined(__mtalpha__)
+DIVFUNCU(__divmodqu, uint64_t)
+DIVFUNCS(__divmodqs, int64_t)
+#endif
