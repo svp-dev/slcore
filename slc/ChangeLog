@@ -1,5 +1,12 @@
 2011-03-17  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	Minor fix to allow to build for MT-Sparc without MT-Alpha.
+
+	* lib/mtalpha.mk (MALLOC_DEFS, TLSMALLOC_DEFS): Move the common
+	defines outside of the conditional.
+
+2011-03-17  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	Fix support for measuring external memory requests.
 
 	* lib/include/svp/perf.h: Counters 7 and 8 are actually L2

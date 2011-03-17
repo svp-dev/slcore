@@ -80,6 +80,23 @@ MTALIB_EXTRA = \
 
 EXTRA_DIST += $(MTALIB_CSRC) $(MTALIB_SRC) $(MTALIB_EXTRA)
 
+MALLOC_DEFS = -DLACKS_SYS_TYPES_H \
+	-DUSE_DL_PREFIX \
+	-DHAVE_MMAP=0 \
+	-DMORECORE_CANNOT_TRIM \
+	-DMALLOC_FAILURE_ACTION="" \
+	-DLACKS_UNISTD_H \
+	-DUSE_BUILTIN_FFS=1 \
+	-DLACKS_SYS_PARAM_H \
+	-DLACKS_TIME
+
+TLSMALLOC_DEFS = \
+	-DNDEBUG \
+	-Dtls_malloc=malloc \
+	-Dtls_free=free \
+	-Dtls_realloc=realloc \
+	-Dtls_calloc=calloc
+
 include $(srcdir)/gdtoa.mk
 
 include $(srcdir)/src/mtamathobjs.mk
@@ -114,25 +131,8 @@ SHUTUP = \
 	-Dshutup_cstrings_h \
 	-Dshutup_ctime_h
 
-MALLOC_DEFS = -DLACKS_SYS_TYPES_H \
-	-DUSE_DL_PREFIX \
-	-DHAVE_MMAP=0 \
-	-DMORECORE_CANNOT_TRIM \
-	-DMALLOC_FAILURE_ACTION="" \
-	-DLACKS_UNISTD_H \
-	-DUSE_BUILTIN_FFS=1 \
-	-DLACKS_SYS_PARAM_H \
-	-DLACKS_TIME
-
 MALLOC_DEFS_MTA = \
 	-DPAGESIZE=0x40000000U
-
-TLSMALLOC_DEFS = \
-	-DNDEBUG \
-	-Dtls_malloc=malloc \
-	-Dtls_free=free \
-	-Dtls_realloc=realloc \
-	-Dtls_calloc=calloc
 
 TLSMALLOC_DEFS_MTA = \
 	-DARCH_TLS_SERVICES=\"tls_arch_mtalpha.h\" 
