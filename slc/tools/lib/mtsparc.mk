@@ -20,7 +20,7 @@ if ENABLE_SLC_MTSPARC
 # 	$(2)/libslmain.a 
 
 # $(3)_libslc_a_CONTENTS = \
-# 	$(2)/empty.o 
+# 	$(2)/callgate.o 
 
 # $(3)_libslmain_a_CONTENTS = \
 # 	$(2)/main.o 
@@ -44,7 +44,7 @@ if ENABLE_SLC_MTSPARC
 # 	$(slc_verbose)$(SLC_CMD) -c -o $@ $<
 
 # CLEANFILES += \
-# 	$(2)/empty.o \
+# 	$(2)/callgate.o \
 # 	$(2)/main.o \
 # 	$(2)/slrt.o \
 # 	$(2)/libslc.a \
@@ -62,7 +62,7 @@ nobase_pkglib_DATA += \
 	mts_hybrid-mtsparc-fpga/libslmain.a 
 
 mts_hybrid_mtsparc_fpga_libslc_a_CONTENTS = \
-	mts_hybrid-mtsparc-fpga/empty.o 
+	mts_hybrid-mtsparc-fpga/callgate.o 
 
 mts_hybrid_mtsparc_fpga_libslmain_a_CONTENTS = \
 	mts_hybrid-mtsparc-fpga/main.o 
@@ -86,7 +86,7 @@ mts_hybrid-mtsparc-fpga/%.o: $(srcdir)/%.c
 	$(slc_verbose)$(SLC_MTS) -c -o $@ $<
 
 CLEANFILES += \
-	mts_hybrid-mtsparc-fpga/empty.o \
+	mts_hybrid-mtsparc-fpga/callgate.o \
 	mts_hybrid-mtsparc-fpga/main.o \
 	mts_hybrid-mtsparc-fpga/slrt.o \
 	mts_hybrid-mtsparc-fpga/libslc.a \
@@ -102,7 +102,7 @@ nobase_pkglib_DATA += \
 	seq_naked-mtsparc-fpga/libslmain.a 
 
 seq_naked_mtsparc_fpga_libslc_a_CONTENTS = \
-	seq_naked-mtsparc-fpga/empty.o 
+	seq_naked-mtsparc-fpga/callgate.o 
 
 seq_naked_mtsparc_fpga_libslmain_a_CONTENTS = \
 	seq_naked-mtsparc-fpga/main.o 
@@ -126,7 +126,7 @@ seq_naked-mtsparc-fpga/%.o: $(srcdir)/%.c
 	$(slc_verbose)$(SLC_MTS_S) -c -o $@ $<
 
 CLEANFILES += \
-	seq_naked-mtsparc-fpga/empty.o \
+	seq_naked-mtsparc-fpga/callgate.o \
 	seq_naked-mtsparc-fpga/main.o \
 	seq_naked-mtsparc-fpga/slrt.o \
 	seq_naked-mtsparc-fpga/libslc.a \
@@ -142,7 +142,7 @@ nobase_pkglib_DATA += \
 	mts_naked-mtsparc-fpga/libslmain.a 
 
 mts_naked_mtsparc_fpga_libslc_a_CONTENTS = \
-	mts_naked-mtsparc-fpga/empty.o 
+	mts_naked-mtsparc-fpga/callgate.o 
 
 mts_naked_mtsparc_fpga_libslmain_a_CONTENTS = \
 	mts_naked-mtsparc-fpga/main.o 
@@ -171,6 +171,125 @@ CLEANFILES += \
 	mts_naked-mtsparc-fpga/libslc.a \
 	mts_naked-mtsparc-fpga/libslmain.a
 
+
+### MT-hybrid targets
+
+#$(eval $(call MTSN_TEMPLATE,mts,mtsn_hybrid-mtsparc-sim,mtsn_hybrid_mtsparc_sim)
+
+nobase_pkglib_DATA += \
+	mtsn_hybrid-mtsparc-sim/slrt.o \
+	mtsn_hybrid-mtsparc-sim/libslc.a \
+	mtsn_hybrid-mtsparc-sim/libslmain.a 
+
+mtsn_hybrid_mtsparc_sim_libslc_a_CONTENTS = \
+	mtsn_hybrid-mtsparc-sim/callgate.o 
+
+mtsn_hybrid_mtsparc_sim_libslmain_a_CONTENTS = \
+	mtsn_hybrid-mtsparc-sim/main.o 
+
+mtsn_hybrid-mtsparc-sim/%.a:
+	$(AM_V_at)rm -f $@
+	$(AM_V_AR)$(AR_MTSPARC) cru $@ $^
+	$(AM_V_at)$(RANLIB_MTSPARC) $@
+
+mtsn_hybrid-mtsparc-sim/libslc.a: $(mtsn_hybrid_mtsparc_sim_libslc_a_CONTENTS)
+mtsn_hybrid-mtsparc-sim/libslmain.a: $(mtsn_hybrid_mtsparc_sim_libslmain_a_CONTENTS)
+
+SLC_MTSN := $(SLC_RUN) -b mtsn -nostdlib
+
+mtsn_hybrid-mtsparc-sim/%.o: $(srcdir)/mtsparc-sim/%.s
+	$(AM_V_at)$(MKDIR_P) mtsn_hybrid-mtsparc-sim
+	$(slc_verbose)$(SLC_MTS) -c -o $@ $<
+
+mtsn_hybrid-mtsparc-sim/%.o: $(srcdir)/%.c
+	$(AM_V_at)$(MKDIR_P) mtsn_hybrid-mtsparc-sim
+	$(slc_verbose)$(SLC_MTS) -c -o $@ $<
+
+CLEANFILES += \
+	mtsn_hybrid-mtsparc-sim/callgate.o \
+	mtsn_hybrid-mtsparc-sim/main.o \
+	mtsn_hybrid-mtsparc-sim/slrt.o \
+	mtsn_hybrid-mtsparc-sim/libslc.a \
+	mtsn_hybrid-mtsparc-sim/libslmain.a
+
+### seq-naked targets
+
+#$(eval $(call MTSN_TEMPLATE,mtsn_s,seq_naked-mtsparc-sim,seq_naked_mtsparc_sim)
+
+nobase_pkglib_DATA += \
+	seq_naked-mtsparc-sim/slrt.o \
+	seq_naked-mtsparc-sim/libslc.a \
+	seq_naked-mtsparc-sim/libslmain.a 
+
+seq_naked_mtsparc_sim_libslc_a_CONTENTS = \
+	seq_naked-mtsparc-sim/callgate.o 
+
+seq_naked_mtsparc_sim_libslmain_a_CONTENTS = \
+	seq_naked-mtsparc-sim/main.o 
+
+seq_naked-mtsparc-sim/%.a:
+	$(AM_V_at)rm -f $@
+	$(AM_V_AR)$(AR_MTSPARC) cru $@ $^
+	$(AM_V_at)$(RANLIB_MTSPARC) $@
+
+seq_naked-mtsparc-sim/libslc.a: $(seq_naked_mtsparc_sim_libslc_a_CONTENTS)
+seq_naked-mtsparc-sim/libslmain.a: $(seq_naked_mtsparc_sim_libslmain_a_CONTENTS)
+
+SLC_MTSN_S := $(SLC_RUN) -b mtsn_s -nostdlib
+
+seq_naked-mtsparc-sim/%.o: $(srcdir)/mtsparc-sim/%.s
+	$(AM_V_at)$(MKDIR_P) seq_naked-mtsparc-sim
+	$(slc_verbose)$(SLC_MTSN_S) -c -o $@ $<
+
+seq_naked-mtsparc-sim/%.o: $(srcdir)/%.c
+	$(AM_V_at)$(MKDIR_P) seq_naked-mtsparc-sim
+	$(slc_verbose)$(SLC_MTSN_S) -c -o $@ $<
+
+CLEANFILES += \
+	seq_naked-mtsparc-sim/callgate.o \
+	seq_naked-mtsparc-sim/main.o \
+	seq_naked-mtsparc-sim/slrt.o \
+	seq_naked-mtsparc-sim/libslc.a \
+	seq_naked-mtsparc-sim/libslmain.a
+
+### MT-naked targets
+
+#$(eval $(call MTSN_TEMPLATE,mtsn_n,mtsn_naked-mtsparc-sim,mtsn_naked_mtsparc_sim)
+
+nobase_pkglib_DATA += \
+	mtsn_naked-mtsparc-sim/slrt.o \
+	mtsn_naked-mtsparc-sim/libslc.a \
+	mtsn_naked-mtsparc-sim/libslmain.a 
+
+mtsn_naked_mtsparc_sim_libslc_a_CONTENTS = \
+	mtsn_naked-mtsparc-sim/callgate.o 
+
+mtsn_naked_mtsparc_sim_libslmain_a_CONTENTS = \
+	mtsn_naked-mtsparc-sim/main.o 
+
+mtsn_naked-mtsparc-sim/%.a:
+	$(AM_V_at)rm -f $@
+	$(AM_V_AR)$(AR_MTSPARC) cru $@ $^
+	$(AM_V_at)$(RANLIB_MTSPARC) $@
+
+mtsn_naked-mtsparc-sim/libslc.a: $(mtsn_naked_mtsparc_sim_libslc_a_CONTENTS)
+mtsn_naked-mtsparc-sim/libslmain.a: $(mtsn_naked_mtsparc_sim_libslmain_a_CONTENTS)
+
+SLC_MTSN_N := $(SLC_RUN) -b mtsn_n -nostdlib
+
+mtsn_naked-mtsparc-sim/%.o: $(srcdir)/mtsparc-sim/%.s
+	$(AM_V_at)$(MKDIR_P) mtsn_naked-mtsparc-sim
+	$(slc_verbose)$(SLC_MTSN_N) -c -o $@ $<
+
+mtsn_naked-mtsparc-sim/%.o: $(srcdir)/%.c
+	$(AM_V_at)$(MKDIR_P) mtsn_naked-mtsparc-sim
+	$(slc_verbose)$(SLC_MTSN_N) -c -o $@ $<
+
+CLEANFILES += \
+	mtsn_naked-mtsparc-sim/main.o \
+	mtsn_naked-mtsparc-sim/slrt.o \
+	mtsn_naked-mtsparc-sim/libslc.a \
+	mtsn_naked-mtsparc-sim/libslmain.a
 
 
 endif

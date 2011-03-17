@@ -1,5 +1,18 @@
 2011-03-17  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	Preliminary support for bootstrapping MT-Sparc programs.
+
+	* tools/lib/mtsparc-fpga/slrt.s,
+	* tools/lib/mtsparc-fpga/callgate.s: New.
+
+	* tools/lib/mtsparc-sim: Link to...
+	* tools/lib/mtsparc-fpga: ...here.
+
+	* tools/lib/mtsparc.mk: Assemble them. Also create library
+	variants for the `mtsn' targets.
+
+2011-03-17  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	Preliminary support for soft floats on MT-Sparc.
 
 	* tools/bin/cce.in: Define `__slc_soft_float__' when compiling for
