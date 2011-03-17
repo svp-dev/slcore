@@ -20,6 +20,7 @@ MTALIB_CSRC = \
 	src/_hdtoa.c \
 	src/heap.c \
 	src/malloc.c \
+	src/malloc_excl.c \
 	src/memcpy.c \
 	src/memmove.c \
 	src/memset.c \

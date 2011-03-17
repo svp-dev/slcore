@@ -25,34 +25,48 @@ void* dlrealloc(void*, size_t);
 /* "fast" aliases */
 #if defined(__mt_freestanding__) && (defined(__alpha__) || defined(__mtalpha__))
 
-#include <stdint.h>
-#include <svp/callgate.h>
+#include <svp/compiler.h>
 
 #define malloc_place 0xf /* 8=suspend, 4|2=delegate, 1=exclusive (implicit core ID = 0) */
 
-#define excl_dlmalloc(N) ({						\
-      uint64_t __margs[3] = { (uint64_t)N, (uint64_t)&dlmalloc, 1 };	\
-      CALL_WITH_INFO(((uint64_t*)__margs)+3, malloc_place);		\
-      (void*)__margs[2];						\
-    })
+sl_decl(t_dlmalloc,,sl_shparm(void*, szret));
 
-#define excl_dlfree(P) ({							\
-      uint64_t __margs[3] = { (uint64_t)P, (uint64_t)&dlfree, 1 };	\
-      CALL_WITH_INFO(((uint64_t*)__margs)+3, malloc_place);		\
-      (void)0;								\
-    })
+alwaysinline
+void* excl_dlmalloc(size_t sz)
+{
+    sl_create(,malloc_place,,,,,sl__exclusive,t_dlmalloc,sl_sharg(void*,szret,(void*)sz));
+    sl_sync();
+    return (void*)sl_geta(szret);
+}
 
-#define excl_dlrealloc(P, N) ({						\
-      uint64_t __margs[5] = { (uint64_t)N, 0, (uint64_t)P, (uint64_t)&dlrealloc, 2 }; \
-      CALL_WITH_INFO(((uint64_t*)__margs)+5, malloc_place);		\
-      (void*)__margs[4];						\
-    })
+sl_decl(t_dlfree,,sl_glparm(void*, ptr));
 
-#define excl_dlcalloc(N1, N2) ({						\
-      uint64_t __margs[5] = { (uint64_t)N2, 0, (uint64_t)N1, (uint64_t)&dlcalloc, 2 }; \
-      CALL_WITH_INFO(((uint64_t*)__margs)+5, malloc_place);		\
-      (void*)__margs[4];						\
-    })
+alwaysinline
+void excl_dlfree(void* ptr)
+{
+    sl_create(,malloc_place,,,,,sl__exclusive,t_dlfree,sl_glarg(void*,,ptr));
+    sl_sync();
+}
+
+sl_decl(t_dlrealloc,,sl_glparm(void*, ptr), sl_shparm(void*, szret));
+
+alwaysinline
+void* excl_dlrealloc(void* ptr, size_t sz)
+{
+    sl_create(,malloc_place,,,,,sl__exclusive,t_dlrealloc,sl_glarg(void*,,ptr), sl_sharg(void*,szret,(void*)sz));
+    sl_sync();
+    return (void*)sl_geta(szret);
+}
+
+sl_decl(t_dlcalloc,,sl_glparm(size_t, cnt), sl_shparm(void*, szret));
+
+alwaysinline
+void* excl_dlcalloc(size_t cnt, size_t sz)
+{
+    sl_create(,malloc_place,,,,,sl__exclusive,t_dlcalloc,sl_glarg(size_t,,cnt), sl_sharg(void*,szret,(void*)sz));
+    sl_sync();
+    return (void*)sl_geta(szret);
+}
 
 #endif
 

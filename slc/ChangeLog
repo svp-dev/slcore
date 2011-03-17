@@ -1,5 +1,16 @@
 2011-03-17  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	Avoid using the call gate to delegate exclusive calls to dlmalloc.
+
+	* lib/include/svp/mtmalloc.h: Use plain exclusive creates to
+	wrapper functions.
+
+	* lib/src/malloc_excl.c: Implement the wrappers.
+
+	* lib/mtalpha.mk: List and compile them.
+	
+2011-03-17  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	Make the standard C headers more compatible with MT-Sparc.
 
 	* lib/mtalpha-sim/include/limits.h,
