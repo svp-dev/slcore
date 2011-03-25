@@ -41,3 +41,4 @@ fdata
 gfx.*.*.ppm
 *.orig
 *.rej
+slc/tools/lib/slc_config.py
