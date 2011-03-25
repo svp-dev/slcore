@@ -14,7 +14,7 @@ class Create_2_LowCreate(DefaultVisitor):
         newbl = []
         decls = cr.scope.decls
 
-        cr.cvar_exitcode = CVarDecl(loc = cr.loc_end, name = 'C$R$%s' % cr.label, ctype = 'long')
+        cr.cvar_exitcode = CVarDecl(loc = cr.loc_end, name = 'C$R$%s' % cr.label, ctype = 'long', attrs=['unused'])
         decls += cr.cvar_exitcode
         cr.cvar_fid = CVarDecl(loc = cr.loc, name = 'C$F$%s' % cr.label, ctype = 'long')
         decls += cr.cvar_fid

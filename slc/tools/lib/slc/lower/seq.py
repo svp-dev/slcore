@@ -158,7 +158,7 @@ class TFun_2_CFun(DefaultVisitor):
         if fundecl.extras.get_attr('static', None) is not None:
             qual = "static"
         elif infundef:
-            iattr = " __attribute__((__unused__))"
+            iattr = " __attribute__((unused))"
         else:
             qual = "extern"
         self.__buffer = flatten(fundecl.loc, 

@@ -44,7 +44,7 @@ class TFun_2_MTFun(DefaultVisitor):
                                 ' register long __slI_ __asm__("%(idxreg)s");'
                                 ' __asm__("%(cp)s MT: index in %%0"'
                                 '   : "=r"(__slI_));'
-                                ' register const long __slI = __slI_;'
+                                ' register const long __slI __attribute__((unused)) = __slI_;'
                                 ' __asm__ __volatile__("%(regdir)s");'
                                 % { 'cp' : cp, 
                                     'name': fundef.name, 

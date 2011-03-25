@@ -1,3 +1,20 @@
+2011-03-25  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
+	Reduce compiler warnings about unused variables.
+	
+	* tools/lib/slc/ast.py (CVarDecl.__init__),
+	* tools/lib/slc/visitors.py (PrintVisitor.visit_cvardecl),	
+	* tools/lib/slc/lower/lowcvars.py (ReduceCVars.visit_cvardecl):
+	New attribute `attrs' on C variable declarations. Generate
+	`__attribute__' when it is specified.
+
+	* tools/lib/slc/lower/lowercreate.py (Create_2_LowCreate.visit_create):
+	Use it for the variable holding the family exit code.
+
+	* tools/lib/slc/mt/common/gentfun.py (TFun_2_MTFun.visit_fundef), 
+	* tools/lib/slc/lower/seq.py (TFun_2_CFun.visit_fundecl): Use
+	`__attribute__((unused))' for the index declaration.
+
 2011-03-17  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
 	Release version 3.3.

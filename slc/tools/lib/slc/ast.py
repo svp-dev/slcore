@@ -141,7 +141,7 @@ class CVarDecl(Item):
     A C variable declaration.
     """
 
-    def __init__(self, name = None, ctype = None, init = None, reg = None, *args, **kwargs):
+    def __init__(self, name = None, ctype = None, init = None, reg = None, attrs = None, *args, **kwargs):
         super(CVarDecl, self).__init__(*args, **kwargs)
         self.name = name
         if not isinstance(ctype, CType):
@@ -151,6 +151,7 @@ class CVarDecl(Item):
             init = Block(items = init)
         self.init = init
         self.reg = reg
+        self.attrs = attrs
 
 class CTypeUse(Item):
     """

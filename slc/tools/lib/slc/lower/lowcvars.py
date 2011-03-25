@@ -51,6 +51,9 @@ class ReduceCVars(DefaultVisitor):
         if vd.reg is not None:
             newbl += Opaque(text = ' __asm__("%s")' % vd.reg)
 
+        if vd.attrs is not None:
+            newbl += Opaque(text = ' __attribute__((%s))' % ','.join(vd.attrs))
+
         vd.init.accept(self)       
         if len(vd.init) > 0:
             newbl += Opaque(text = ' = (') + vd.init + ')'
