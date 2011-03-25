@@ -1,5 +1,15 @@
 2011-03-25  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	Fix reporting bug in benchmarking framework.
+
+	* lib/src/perf.c (mtperf_compute_extra): Use the ratio between
+	master and core frequency to compute the pipeline efficiency.
+
+	* lib/src/mtconf.h,
+	* lib/src/mtconf.c: Save the master frequency.
+	
+2011-03-25  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	Reduce compiler warnings about unused variables.
 	
 	* tools/lib/slc/ast.py (CVarDecl.__init__),

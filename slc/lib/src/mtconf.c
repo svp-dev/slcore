@@ -52,11 +52,13 @@ void parse_arch_v1(confword_t* data)
 
 static const confword_t one_ghz = 1000;
 const confword_t * mgconf_core_freq = &one_ghz;
+const confword_t * mgconf_master_freq = &one_ghz;
 
 static
 void parse_timings_v1(confword_t* data)
 {
     mgconf_core_freq = &data[0];
+    mgconf_master_freq = &data[0];
 
     if (!verbose_boot)
         return;
@@ -76,6 +78,7 @@ void parse_timings_v1(confword_t* data)
 static
 void parse_timings_v2(confword_t* data)
 {
+    mgconf_master_freq = &data[0];
     mgconf_core_freq = &data[1];
 
     if (!verbose_boot)
@@ -105,6 +108,7 @@ void parse_timings_v2(confword_t* data)
 static
 void parse_timings_v3(confword_t* data)
 {
+    mgconf_master_freq = &data[0];
     mgconf_core_freq = &data[1];
 
     if (!verbose_boot)

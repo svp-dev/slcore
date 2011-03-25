@@ -5,6 +5,7 @@
 
 typedef uint32_t confword_t;
 
+extern const confword_t * mgconf_master_freq;
 extern const confword_t * mgconf_core_freq;
 extern const confword_t * mgconf_ftes_per_core;
 extern const confword_t * mgconf_ttes_per_core;

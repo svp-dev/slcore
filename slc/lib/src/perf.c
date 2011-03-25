@@ -80,6 +80,7 @@ static
 float mtperf_compute_extra(const counter_t* before, const counter_t* after, unsigned extra)
 {
 #ifdef __mt_freestanding__    
+    long core_rate = *mgconf_master_freq / *mgconf_core_freq;
     counter_t ncores = after[MTPERF_PLACE_SIZE];
     counter_t elapsed = after[MTPERF_CLOCKS] - before[MTPERF_CLOCKS];
 
@@ -88,7 +89,7 @@ float mtperf_compute_extra(const counter_t* before, const counter_t* after, unsi
     {
         float itotal = after[MTPERF_EXECUTED_INSNS] - before[MTPERF_EXECUTED_INSNS];
         itotal /= ncores;
-        if (elapsed) return itotal / elapsed;
+        if (elapsed) return itotal * core_rate / elapsed;
         break;
     }
     case 1:
