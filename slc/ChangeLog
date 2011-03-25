@@ -1,5 +1,12 @@
 2011-03-25  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	Target MGSim when testing for MT-Sparc.
+
+	* build-aux/sl.mk: Use the `mtsn' targets when compiling for
+	MT-Sparc.
+
+2011-03-25  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	Enable tests for MT-Sparc when applicable.
 
 	* build-aux/slctests.m4: New Automake conditional

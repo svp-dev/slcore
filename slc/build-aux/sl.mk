@@ -62,14 +62,14 @@ SLC_BEFORE = function slc_compile() { \
 	$(slc_ifmtalpha) echo "  SLC    $$SLC_OUT".mta_s && \
         $(slc_ifmtalpha) $(SLC_LOCAL) $${SLC_OUT:+-o "$$SLC_OUT".mta_s} -b mta_s "$$@" \
 	      -I$(srcdir) -I$(builddir) -lm $(SLFLAGS) $(SLFLAGS_MTALPHA) $(SLFLAGS_MTA_S) && \
-	$(slc_ifmtsparc) echo "  SLC    $$SLC_OUT".mts_n && \
-        $(slc_ifmtsparc) $(SLC_LOCAL) $${SLC_OUT:+-o "$$SLC_OUT".mts_n} -b mts_n "$$@" \
+	$(slc_ifmtsparc) echo "  SLC    $$SLC_OUT".mtsn_n && \
+        $(slc_ifmtsparc) $(SLC_LOCAL) $${SLC_OUT:+-o "$$SLC_OUT".mtsn_n} -b mtsn_n "$$@" \
 	      -I$(srcdir) -I$(builddir) -lm $(SLFLAGS) $(SLFLAGS_MTSPARC) $(SLFLAGS_MTS_N) && \
-	$(slc_ifmtsparc) echo "  SLC    $$SLC_OUT".mts_s && \
-        $(slc_ifmtsparc) $(SLC_LOCAL) $${SLC_OUT:+-o "$$SLC_OUT".mts_s} -b mts_s "$$@" \
+	$(slc_ifmtsparc) echo "  SLC    $$SLC_OUT".mtsn_s && \
+        $(slc_ifmtsparc) $(SLC_LOCAL) $${SLC_OUT:+-o "$$SLC_OUT".mtsn_s} -b mtsn_s "$$@" \
 	      -I$(srcdir) -I$(builddir) -lm $(SLFLAGS) $(SLFLAGS_MTSPARC) $(SLFLAGS_MTS_S) && \
-	$(slc_ifmtsparc) echo "  SLC    $$SLC_OUT".mts && \
-        $(slc_ifmtsparc) $(SLC_LOCAL) $${SLC_OUT:+-o "$$SLC_OUT".mts} -b mts "$$@" \
+	$(slc_ifmtsparc) echo "  SLC    $$SLC_OUT".mtsn && \
+        $(slc_ifmtsparc) $(SLC_LOCAL) $${SLC_OUT:+-o "$$SLC_OUT".mtsn} -b mtsn "$$@" \
 	      -I$(srcdir) -I$(builddir) -lm $(SLFLAGS) $(SLFLAGS_MTSPARC) $(SLFLAGS_MTS) && \
 	if test -n "$$SLC_OUT"; then \
 	  printf '\#! /bin/sh\n' >"$@" && \
