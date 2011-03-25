@@ -1,5 +1,11 @@
 2011-03-25  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	Extend the test suite.
+
+	* 0_slc/1_create/sp1.c: New.
+
+2011-03-25  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	Fix some tests for the `ptl' target.
 
 	* 0_slc/1_create/fiduse.c,	
