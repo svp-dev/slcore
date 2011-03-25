@@ -2,7 +2,7 @@
 ## Version number management
 ##
 
-EXTRA_DIST = .version build-aux/version-gen build-aux/package-version
+EXTRA_DIST = .version build-aux/git-version-gen
 BUILT_SOURCES = $(top_srcdir)/.version
 
 $(top_srcdir)/.version:
@@ -13,8 +13,8 @@ dist-hook: check-version
 
 install-recursive install-exec-recursive install-data-recursive installcheck-recursive: check-version
 
-VERSION_GEN = (cd $(top_srcdir); pre=; if test -d ../.git -a ! -d .git; then pre=$$PWD/; cd ..; fi; \
-	$${pre}build-aux/version-gen $${pre}build-aux/tarball-version $${pre}build-aux/package-version)
+VERSION_GEN = (cd $(top_srcdir) \
+	       && build-aux/git-version-gen build-aux/tarball-version s/$(PACKAGE_NAME)-/v/ $(PACKAGE_NAME))
 
 .PHONY: check-version _version
 check-version:

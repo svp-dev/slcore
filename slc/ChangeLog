@@ -1,5 +1,26 @@
 2011-03-25  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	Fix the version numbering.
+
+	To this point version numbering used an explicit version number in
+	a file (`build-aux/package-version') to work around issues with
+	broken VCS installs. Now that the source is hosted with git proper
+	git tags can be used instead.
+	
+	* build-aux/version-gen: Rename to...
+	* build-aux/version-gen.old: ...this.
+	* build-aux/package-version: Remove.
+	
+	* build-aux/git-version-gen: New (import from gnulib).
+
+	* build-aux/version.mk,
+	* configure.ac: Use it.
+
+	* build-aux/Makefile.am: Distribute it.
+	* build-aux/sl-init-autoconf: Copy it.
+
+2011-03-25  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	Support `spawn' for all compilation targets.
 
 	* tools/lib/t-ptl/slimpl.m4,

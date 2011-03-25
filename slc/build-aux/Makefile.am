@@ -7,7 +7,7 @@ dist_m4data_DATA = \
 	slctests.m4
 
 dist_pkgdata_DATA = sl.mk slctests.mk slcvars.mk version.mk
-dist_pkgdata_SCRIPTS = version-gen
+dist_pkgdata_SCRIPTS = git-version-gen
 dist_bin_SCRIPTS = sl-init-autoconf
 
 

@@ -1,6 +1,6 @@
 ## configure.ac: this file is part of the SL toolchain.
 ## 
-## Copyright (C) 2009 The SL project
+## Copyright (C) 2009,2011 The SL project
 ##
 ## This program is free software; you can redistribute it and/or
 ## modify it under the terms of the GNU General Public License
@@ -13,8 +13,7 @@
 
 AC_PREREQ([2.65])
 AC_INIT([sl-core], 
-        m4_esyscmd([(pre=; if test -d ../.git -a ! -d .git; then pre=$PWD/; cd ..; fi; \
-                    ${pre}build-aux/version-gen ${pre}build-aux/tarball-version ${pre}build-aux/package-version)]), 
+        m4_esyscmd([build-aux/git-version-gen build-aux/tarball-version s/sl-core-/v/ sl-core]), 
         [sl-users@svp-home.org])
 AC_CONFIG_AUX_DIR([build-aux])
 
