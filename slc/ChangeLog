@@ -1,5 +1,12 @@
 2011-03-25  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	Enable tests for MT-Sparc when applicable.
+
+	* build-aux/slctests.m4: New Automake conditional
+	`ENABLE_CHECK_SPR_MTS'.
+
+2011-03-25  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	Fix the version numbering.
 
 	To this point version numbering used an explicit version number in
