@@ -102,5 +102,15 @@ m4_define([[sl_setp]],[[__p_[[$1]] = [[$2]]]])
 m4_define([[sl_break]],[[uTC::Break(0)]])
 m4_define([[sl_kill]],[[uTC::kill([[$1]])]])
 
+# Spawn stuff 
+m4_define([[sl_spawndecl]], [[m4_dnl
+[[void* $1 __attribute__((unused))]]m4_dnl
+]])
+m4_define([[sl_spawnsync]], [[(void)0]])
+
+m4_define([[sl_spawn]], [[m4_dnl
+do { sl_create($@); sl_sync(); } while(0)m4_dnl
+]])
+
 
 

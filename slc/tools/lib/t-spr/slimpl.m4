@@ -97,7 +97,7 @@ m4_define([[sl_spawndecl]], [[m4_dnl
 ]])
 
 m4_define([[sl_spawn]], [[m4_dnl
-do sl_lbr sl_create($@); sl_forcespawn([[$1]]); sl_rbr while(0)
+do sl_lbr sl_create($@); sl_forcespawn([[$1]]); sl_rbr while(0)m4_dnl
 ]])
 
 m4_define([[sl_create]], [[m4_dnl

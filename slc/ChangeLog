@@ -1,5 +1,18 @@
 2011-03-25  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	Support `spawn' for all compilation targets.
+
+	* tools/lib/t-ptl/slimpl.m4,
+	* tools/lib/t-seqc/slimpl.m4,
+	* tools/lib/t-sppalpha/slimpl.m4,
+	* tools/lib/t-utc/slimpl.m4,
+	* tools/lib/t-utc0/slimpl.m4: Do it.
+
+	* tools/lib/t-spr/slimpl.m4: Avoid newline in the expansion of
+	`sl_spawn'.
+
+2011-03-25  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	Initial implementation for `spawn'.
 
 	* tools/lib/t-spr/slimpl.m4: New syntax `sl_spawndecl', `sl_spawn'

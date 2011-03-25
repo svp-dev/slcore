@@ -106,6 +106,18 @@ m4_define([[sl_kill]],[[__sl_dokill([[$1]])]])
 
 m4_define([[sl_index]],[[__sl_declindex([[$1]])]])
 
+# Spawn stuff
+m4_define([[sl_spawndecl]], [[m4_dnl
+[[long $1 __attribute__((unused))]]m4_dnl
+]])
+m4_define([[sl_spawnsync]], [[(void)0]])
+
+m4_define([[sl_spawn]], [[m4_dnl
+do { sl_create($@); sl_sync([[$1]]); } while(0)m4_dnl
+]])
+
+
+
 
 
 
