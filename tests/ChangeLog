@@ -1,3 +1,11 @@
+2011-03-25  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
+	Fix some tests for the `ptl' target.
+
+	* 0_slc/1_create/fiduse.c,	
+	* 0_slc/1_create/fiduse2.c: Use `void*' instead of `long' to
+	define the family identifier.
+
 2010-08-27  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
 	Do not test `break' for the `ptl' target.
