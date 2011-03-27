@@ -68,32 +68,22 @@ void sys_environ_init(char *initenv)
 }
 
 extern sl_place_t __main_place_id;
-extern struct placeinfo *__main_placeinfo;
 
 static noinline
 void sys_set_main_pid(unsigned req_ncores)
 {
     if (verbose_boot) output_string(" -> request to SEP...", 2);
-    sl_create(,PLACE_LOCAL,,,,, sl__exclusive, *root_sep->sep_alloc,
-              sl_glarg(struct SEP*, , root_sep),
-              sl_glarg(unsigned long, , SAL_EXACT | req_ncores),
-              sl_sharg(struct placeinfo*, p, 0));
-    sl_sync();
-    if (sl_geta(p)) {
-        __main_place_id = sl_geta(p)->pid;
-        __main_placeinfo = sl_geta(p);
-        if (verbose_boot) 
-            output_string(" success", 2);
-    } else {
-        if (verbose_boot) output_string(" failed", 2);
+    int r = sep_alloc(root_sep, &__main_place_id, SAL_EXACT, req_ncores);
+    if (r == -1) 
+    {
+        if (verbose_boot)
+            output_string(" failed", 2);
         abort();
     }
     if (verbose_boot) 
     {
-        output_string(", t_main goes to pid=0x", 2);
+        output_string(" success, t_main goes to pid=0x", 2);
         output_hex(__main_place_id, 2);
-        output_string(", ncores=", 2);
-        output_int(__main_placeinfo->ncores, 2);
         output_char('\n', 2);
     }
 }
@@ -130,6 +120,8 @@ void sys_vars_init(void *slrbase_init, void *fibrebase_init)
   __slr_base = (struct __slr_base_t*) slrbase_init;
   __fibre_base = (struct fibre_base_t*) fibrebase_init;
 }
+
+extern void sys_sep_init(void*);
 
 void sys_init(void* slrbase_init, 
               void* fibrebase_init, 

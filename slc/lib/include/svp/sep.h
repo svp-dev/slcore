@@ -1,7 +1,7 @@
 //
 // sep.h: this file is part of the SL toolchain.
 //
-// Copyright (C) 2009,2010 The SL project.
+// Copyright (C) 2009,2010,2011 The SL project.
 //
 // This program is free software; you can redistribute it and/or
 // modify it under the terms of the GNU General Public License
@@ -15,77 +15,72 @@
 #ifndef SLC_SVP_SEP_H
 # define SLC_SVP_SEP_H
 
-#include <svp/delegate.h>
-
-#ifdef __mt_freestanding__
-#define SVP_HAS_SEP 1
-
 #include <stddef.h>
 #include <stdint.h>
 #include <stdbool.h>
 
-// information returned by sep_alloc etc.
-struct placeinfo {
-    // identifier for the create() statement, waits until place become free
-    sl_place_t  pid;
-    // identifier for the create() statement, may fail
-    sl_place_t  soft_pid;
-    // number of cores in the place
-    uint16_t ncores;
-    // number of family table entries per core
-    uint16_t nfamilies_per_core;
-    // number of thread table entries per core
-    uint16_t nthreads_per_core;
-    // whether the place is shared or not
-    bool shared;
-    // whether the place is exclusive or not
-    bool exclusive;
-};
+#include <svp/delegate.h>
 
-// place where all the sep_alloc calls should
-// be delegated to.
-extern sl_place_t sep_place;
-
-// allocation policies
-enum sep_alloc_policy {
-  /* flags that select the number of cores */
-  SAL_DONTCARE = 0,   // any #cores will do
-  SAL_MIN = 1UL << 62,        // at least specified #cores avail
-  SAL_MAX = 2UL << 62,        // at most specified #cores avail
-  SAL_EXACT = SAL_MIN | SAL_MAX,   // exactly specified #cores
-  SAL_EXCLUSIVE = 1UL << 61,   // whether creates will be exclusive
-  SAL_SHARED = 1UL << 60,      // whether the place can be shared between clients
-};
+#define SVP_HAS_SEP 1
 
 struct SEP {
-  sl_place_t sep_place;
-
-  // allocation routine
-  sl_decl_fptr(sep_alloc,
-               void,
-               sl_glparm(struct SEP*, sep),
-               sl_glparm(unsigned long, policy),
-               sl_shparm(struct placeinfo*, result));
-
-  // deallocation routine
-  sl_decl_fptr(sep_free, 
-               void, 
-               sl_glparm(struct SEP*, sep),
-               sl_glparm(struct placeinfo*, p));
-
-  // status routine
-  sl_decl_fptr(sep_dump_info,
-               void,
-               sl_glparm(struct SEP*, sep));
+    // SEP interface: returns -1 on error
+    int   (*ctl)(struct SEP* self, unsigned long request, void* a, void *b);
 };
 
 extern struct SEP* root_sep;
 
-// to be called once (in the init routine)
-void sys_sep_init(void* init_parameters);
+// Place allocation and deallocation
+//
+#define SEP_ALLOC     1  /* a: policy arg, b: sl_place_t* */
+#define SEP_FREE      2  /* a: sl_place_t* */
+#define SEP_QUERY     3  /* a: sl_place_t*, b: union placeinfo* */ 
 
-#else
-#define SVP_HAS_SEP 0
-#endif
+// Allocation policy: ORed with SEP_ALLOC
+#define SAL_DONTCARE  0
+#define SAL_NCORES    0x00010000
+#define SAL_MAX       (1UL<<30|SAL_NCORES) 
+#define SAL_MIN       (2UL<<30|SAL_NCORES)
+#define SAL_EXACT     (SAL_MAX|SAL_MIN)
+
+union placeinfo {
+    unsigned long      flags;
+
+    struct {
+        unsigned long  flags;
+        size_t         arity;
+    }                  c;
+
+    struct {
+        unsigned long  flags;
+        struct {
+            size_t     family_capacity;
+            size_t     thread_capacity;
+            size_t     rate;
+        }              p;
+    }                  a;
+};
+
+#define SP_IS_HARDWARE(PI)         ((PI)->flags & 0x1)
+
+//      For hardware places:
+#define   SP_IS_ATOMIC(PI)           ((PI)->flags & 0x2)
+#define   SP_IS_COMPOUND(PI)         (!SQP_IS_ATOMIC(PI))
+
+//        For atomic places:
+#define     SP_IS_PROGRAMMABLE(PI)     ((PI)->flags & 0x4)
+
+//        For compound places:
+#define     SP_IS_HOMOGENEOUS(PI)      ((PI)->flags & 0x4)
+
+
+// Helper macros:
+#define sep_alloc(SEP, PlacePtr, Policy, Arg) \
+    (SEP)->ctl((SEP), SEP_ALLOC|(Policy), (void*)(long)(Arg), PlacePtr)
+#define sep_free(SEP, PlacePtr) \
+    (SEP)->ctl((SEP), SEP_FREE, PlacePtr, 0)
+#define sep_query(SEP, PlacePtr, Arg) \
+    (SEP)->ctl((SEP), SEP_QUERY, PlacePtr, (void*)(Arg))
+
 
 #endif // ! SLC_SVP_SEP_H

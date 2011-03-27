@@ -131,7 +131,6 @@ __pseudo_argv:
 ! PSEUDO PLACE IDENTIFIERS
         .section ".data"
         .common __main_place_id,4,4
-        .common __main_place_info,4,4
 
         
 ! PSEUDO ENVIRON       

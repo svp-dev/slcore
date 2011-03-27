@@ -5,6 +5,7 @@ if ENABLE_SLC_PTL
 nobase_pkglib_LIBRARIES += ptl-host-host-ptl/libsl.a 
 
 ptl_host_host_ptl_libsl_a_BUILTOBJS = \
+	ptl-host-host-ptl/dummysep.o \
 	ptl-host-host-ptl/io.o \
 	ptl-host-host-ptl/roman.o \
 	ptl-host-host-ptl/perf.o \

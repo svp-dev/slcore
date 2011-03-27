@@ -103,13 +103,6 @@ $msg:
 __main_place_id:
         .long 0
 
-        .globl __main_placeinfo
-        .type __main_placeinfo, @object
-        .size __main_placeinfo, 8
-        .align 3
-__main_placeinfo:
-        .long 0
-
         .globl environ
         .type environ, @object
         .size environ, 8

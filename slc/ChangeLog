@@ -1,3 +1,22 @@
+2011-03-27  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
+	Redesign the SEP interface.
+
+	* lib/include/svp/sep.h: Do it.
+	* lib/src/mtsep.c: Implement it.
+
+	* lib/src/dummysep.c: New. This guarantees the interface is
+	available on all targets.
+
+	* lib/ptl.mk,
+	* lib/seqc.mk: Compile and link in `dummysep'.
+
+	* lib/src/mtinit.c: Use the new SEP interface.
+
+	* tools/lib/mtalpha-sim/slrt.s,		
+	* tools/lib/mtsparc-fpga/slrt.s: Do not declare
+	`__main_placeinfo', as this is not needed any more.
+
 2011-03-25  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
 	Target MGSim when testing for MT-Sparc.

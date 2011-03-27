@@ -36,6 +36,7 @@ nobase_pkglib_LIBRARIES += \
 	seqc_o-host-host-seqc/libsl.a
 
 seqc_o_host_host_seqc_libsl_a_BUILTOBJS = \
+	seqc_o-host-host-seqc/dummysep.o \
 	seqc_o-host-host-seqc/div.o \
 	seqc_o-host-host-seqc/roman.o \
 	seqc_o-host-host-seqc/perf.o \
@@ -63,6 +64,7 @@ nobase_pkglib_LIBRARIES += \
 	seq_naked-host-host-seqc/libsl.a
 
 seq_naked_host_host_seqc_libsl_a_BUILTOBJS = \
+	seq_naked-host-host-seqc/dummysep.o \
 	seq_naked-host-host-seqc/div.o \
 	seq_naked-host-host-seqc/roman.o \
 	seq_naked-host-host-seqc/perf.o \
