@@ -1,5 +1,12 @@
 2011-03-27  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	Minor library enhancement.
+
+	* lib/mtalpha-sim/include/time.h (__inline_clock): Use
+	`alwaysinline' from <compiler.h>.
+
+2011-03-27  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	Minor packaging fix.
 
 	* lib/Makefile.am: Also distribute `dummysep.c'.

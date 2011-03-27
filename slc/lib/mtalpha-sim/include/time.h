@@ -25,8 +25,10 @@ extern clock_t clock(void);
 #if !defined(__AVOID_INLINABLE_PRIMITIVES) && (defined(__alpha__) || defined(__mtalpha__)) && \
     defined(__GNUC__) && !defined(__AVOID_GNUISMS)
 
-__attribute__((__always_inline__))
-static clock_t __inline_clock(void)
+#include <svp/compiler.h>
+
+alwaysinline
+clock_t __inline_clock(void)
 {
     clock_t c;                                               
     __asm__ __volatile__ ("rpcc %0" : "=r"(c) : : "memory");
