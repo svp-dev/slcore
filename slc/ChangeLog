@@ -1,5 +1,12 @@
 2011-03-27  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	Minor enhancement to `slt'.
+
+	* tools/bin/slt.in: Also substitute occurrences of `SRCDIR' in
+	SLT_RUN specifications.
+
+2011-03-27  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	Minor library enhancement.
 
 	* lib/mtalpha-sim/include/time.h (__inline_clock): Use
