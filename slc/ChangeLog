@@ -1,5 +1,11 @@
 2011-03-27  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	Minor packaging fix.
+
+	* lib/Makefile.am: Also distribute `dummysep.c'.
+
+2011-03-27  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	Fix a small SEP bug.
 
 	* lib/src/mtsep.c (root_sep_ctl): Return -1 if an invalid place id
