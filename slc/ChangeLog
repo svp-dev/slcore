@@ -1,5 +1,12 @@
 2011-03-27  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	Fix support for target `mta_on'.
+
+	* tools/lib/t-sppalpha/include/sl_support.h: Set the "suspend" bit
+	on creation since an alternate behavior is not available.
+
+2011-03-27  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	Minor enhancement to `slt'.
 
 	* tools/bin/slt.in: Also substitute occurrences of `SRCDIR' in

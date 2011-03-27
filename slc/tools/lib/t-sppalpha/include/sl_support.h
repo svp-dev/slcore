@@ -112,7 +112,7 @@
   register long __sl_fid_ ## Tag;					\\
   __asm__ __volatile__ ("allocate %1, %0\t# MT: CREATE" #Tag	\\
 			: "=r"(__sl_fid_ ## Tag)			\\
-			: "rI"(Place))
+			: "rI"((Place)|8))
 
 [[#]]define __sl_setstart(Tag, Start) \\
   __asm__ ("setstart %0, %2\t# MT: CREATE " #Tag		\\
