@@ -4,6 +4,20 @@
 
 This document describes major updates to the SL toolchain.
 
+Version 3.4, March 2011
+=======================
+
+Changes since 3.3
+-----------------
+
+- A new construct ``sl_spawn`` is introduced in the language, together
+  with the accompanying ``sl_spawndecl`` and ``sl_spawnsync``. This
+  experimental language feature allows to decouple creation from
+  synchronization.
+
+- The SEP interface has been re-designed and simplified. See the CSA 
+  note [sl16] for more details.
+
 Version 3.3, March 2011
 =======================
 

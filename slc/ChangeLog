@@ -1,3 +1,9 @@
+2011-03-28  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
+	Update the documentation.
+	
+	* doc/NEWS.txt: Update for version 3.4.
+
 2011-03-27  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
 	Minor packaging fix.
