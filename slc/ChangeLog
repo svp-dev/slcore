@@ -1,5 +1,12 @@
 2011-03-27  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	Minor packaging fix.
+
+	* build-aux/git-version-gen: Do not test for dirtiness if a
+	`package-version' file is available.
+
+2011-03-27  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	Fix support for target `mta_on'.
 
 	* tools/lib/t-sppalpha/include/sl_support.h: Set the "suspend" bit

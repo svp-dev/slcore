@@ -1,6 +1,6 @@
 #!/bin/sh
 # Print a version string.
-scriptversion=2011-03-25.21; # UTC
+scriptversion=2011-03-27.17; # UTC
 
 # Copyright (C) 2007-2011 Free Software Foundation, Inc.
 #
@@ -128,24 +128,26 @@ then
     # Change the first '-' to a '.', so version-comparing tools work properly.
     # Remove the "g" in git describe's output string, to save a byte.
     v=`echo "$v" | sed 's/-/./;s/\(.*\)-g/\1-/'`;
+    
+    # Don't declare a version "dirty" merely because a time stamp has changed.
+    git update-index --refresh > /dev/null 2>&1
+    
+    dirty=`sh -c 'git diff-index --name-only HEAD' 2>/dev/null` || dirty=
+    case "$dirty" in
+        '') ;;
+        *) # Append the suffix only if there isn't one already.
+	    case $v in
+	        *-dirty) ;;
+	        *) v="$v-dirty" ;;
+	    esac ;;
+    esac
+
 else
     v=UNKNOWN
 fi
 
 v=`echo "$v" |sed 's/^v//'`
 
-# Don't declare a version "dirty" merely because a time stamp has changed.
-git update-index --refresh > /dev/null 2>&1
-
-dirty=`sh -c 'git diff-index --name-only HEAD' 2>/dev/null` || dirty=
-case "$dirty" in
-    '') ;;
-    *) # Append the suffix only if there isn't one already.
-	case $v in
-	  *-dirty) ;;
-	  *) v="$v-dirty" ;;
-	esac ;;
-esac
 
 # Omit the trailing newline, so that m4_esyscmd can use the result directly.
 echo "$v" | tr -d "$nl"
