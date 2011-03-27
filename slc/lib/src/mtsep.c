@@ -344,11 +344,9 @@ int root_sep_ctl(struct SEP* sep, unsigned long request, void *a, void *b)
     case SEP_QUERY:
     {
         sl_place_t p = *(sl_place_t*)a;
-        unsigned core = (p >> 4) & 0xffff;
-        struct listnode *ln = sd->allcores[core];
         union placeinfo *ret = (union placeinfo*)b;
         
-        if (p == 0)
+        if (p == PLACE_LOCAL)
         {
             ret->flags = 4|2|1; /* hardware, atomic, programmable */
             ret->a.p.family_capacity = *mgconf_ftes_per_core;
@@ -357,6 +355,10 @@ int root_sep_ctl(struct SEP* sep, unsigned long request, void *a, void *b)
         }
         else
         {
+            unsigned core = (p >> 4) & 0xffff;
+            struct listnode *ln = sd->allcores[core];
+            if (!ln)
+                return -1;
             ret->flags = 4|1; /* hardware, compound, homogeneous */
             ret->c.arity = ln->pi.ncores;
         }

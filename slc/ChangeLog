@@ -1,5 +1,12 @@
 2011-03-27  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	Fix a small SEP bug.
+
+	* lib/src/mtsep.c (root_sep_ctl): Return -1 if an invalid place id
+	is provided to query.
+
+2011-03-27  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	Redesign the SEP interface.
 
 	* lib/include/svp/sep.h: Do it.
