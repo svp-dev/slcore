@@ -1,5 +1,23 @@
 2011-03-28  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	Add primitives to manipulate place identifiers.
+
+	* tools/include/svp/delegate.h: Introduce `get_current_place',
+	`get_core_id', `get_local_place'. Use them to define `PLACE_LOCAL'
+	and `PLACE_DEFAULT'.
+
+	* tools/lib/mtplaces.c,	
+	* tools/lib/dummyplaces.c: New. This implements the primitives
+	when inline assembly from `delegate.h' is not desired.
+
+	* tools/lib/Makefile.am: List the new files.
+	* tools/lib/mtalpha.mk,
+	* tools/lib/mtsparc.mk,
+	* tools/lib/ptl.ml,
+	* tools/lib/seqc.ml: Compile and link them.
+	
+2011-03-28  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	Document changes for 3.5b.
 
 	* doc/NEWS.txt: Explain create attributes and refer to the new

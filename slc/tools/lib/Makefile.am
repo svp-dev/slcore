@@ -177,6 +177,8 @@ EXTRA_DIST = \
 	r-mt-sim.sh.in \
 	r-host.sh.in \
 	fibre.c \
+	mtplaces.c \
+	dummyplaces.c \
 	mgsim.c \
 	main.c \
 	load.c

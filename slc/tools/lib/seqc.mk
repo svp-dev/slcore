@@ -56,7 +56,9 @@ nobase_pkglib_LIBRARIES += \
 	seqc_o-host-host-seqc/libslmain.a
 
 seqc_o_host_host_seqc_libslc_a_SOURCES = # empty for now
-seqc_o_host_host_seqc_libslc_a_LIBADD = seqc_o-host-host-seqc/fibre.o
+seqc_o_host_host_seqc_libslc_a_LIBADD = \
+	seqc_o-host-host-seqc/dummyplaces.o \
+	seqc_o-host-host-seqc/fibre.o
 seqc_o_host_host_seqc_libslmain_a_SOURCES = # empty for now
 seqc_o_host_host_seqc_libslmain_a_LIBADD = seqc_o-host-host-seqc/main.o
 
@@ -71,6 +73,7 @@ seqc_o-host-host-seqc/%.o: $(srcdir)/%.c
 	$(slc_verbose)$(SLC_SEQC_O) -c -o $@ $< $(AM_CFLAGS) $(CFLAGS)
 
 CLEANFILES += \
+	seqc_o-host-host-seqc/dummyplaces.o \
 	seqc_o-host-host-seqc/fibre.o \
 	seqc_o-host-host-seqc/main.o \
 	seqc_o-host-host-seqc/slrt.o 
@@ -89,7 +92,9 @@ nobase_pkglib_LIBRARIES += \
 	seq_naked-host-host-seqc/libslmain.a
 
 seq_naked_host_host_seqc_libslc_a_SOURCES = # empty for now
-seq_naked_host_host_seqc_libslc_a_LIBADD = seq_naked-host-host-seqc/fibre.o
+seq_naked_host_host_seqc_libslc_a_LIBADD = \
+	seq_naked-host-host-seqc/dummyplaces.o \
+	seq_naked-host-host-seqc/fibre.o
 seq_naked_host_host_seqc_libslmain_a_SOURCES = # empty for now
 seq_naked_host_host_seqc_libslmain_a_LIBADD = seq_naked-host-host-seqc/main.o
 
@@ -104,6 +109,7 @@ seq_naked-host-host-seqc/%.o: $(srcdir)/%.c
 	$(slc_verbose)$(SLC_SEQC) -c -o $@ $< $(AM_CFLAGS) $(CFLAGS)
 
 CLEANFILES += \
+	seq_naked-host-host-seqc/dummyplaces.o \
 	seq_naked-host-host-seqc/fibre.o \
 	seq_naked-host-host-seqc/main.o \
 	seq_naked-host-host-seqc/slrt.o 

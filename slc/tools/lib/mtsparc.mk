@@ -64,6 +64,7 @@ nobase_pkglib_DATA += \
 	mts_hybrid-mtsparc-fpga/libslmain.a 
 
 mts_hybrid_mtsparc_fpga_libslc_a_CONTENTS = \
+	mts_hybrid-mtsparc-fpga/dummyplaces.o \
 	mts_hybrid-mtsparc-fpga/callgate.o 
 
 mts_hybrid_mtsparc_fpga_libslmain_a_CONTENTS = \
@@ -88,6 +89,7 @@ mts_hybrid-mtsparc-fpga/%.o: $(srcdir)/%.c
 	$(slc_verbose)$(SLC_MTS) -c -o $@ $<
 
 CLEANFILES += \
+	mts_hybrid-mtsparc-fpga/dummyplaces.o \
 	mts_hybrid-mtsparc-fpga/callgate.o \
 	mts_hybrid-mtsparc-fpga/main.o \
 	mts_hybrid-mtsparc-fpga/slrt.o \
@@ -104,6 +106,7 @@ nobase_pkglib_DATA += \
 	seq_naked-mtsparc-fpga/libslmain.a 
 
 seq_naked_mtsparc_fpga_libslc_a_CONTENTS = \
+	seq_naked-mtsparc-fpga/dummyplaces.o \
 	seq_naked-mtsparc-fpga/callgate.o 
 
 seq_naked_mtsparc_fpga_libslmain_a_CONTENTS = \
@@ -128,6 +131,7 @@ seq_naked-mtsparc-fpga/%.o: $(srcdir)/%.c
 	$(slc_verbose)$(SLC_MTS_S) -c -o $@ $<
 
 CLEANFILES += \
+	seq_naked-mtsparc-fpga/dummyplaces.o \
 	seq_naked-mtsparc-fpga/callgate.o \
 	seq_naked-mtsparc-fpga/main.o \
 	seq_naked-mtsparc-fpga/slrt.o \
@@ -144,6 +148,7 @@ nobase_pkglib_DATA += \
 	mts_naked-mtsparc-fpga/libslmain.a 
 
 mts_naked_mtsparc_fpga_libslc_a_CONTENTS = \
+	mts_naked-mtsparc-fpga/dummyplaces.o \
 	mts_naked-mtsparc-fpga/callgate.o 
 
 mts_naked_mtsparc_fpga_libslmain_a_CONTENTS = \
@@ -168,6 +173,7 @@ mts_naked-mtsparc-fpga/%.o: $(srcdir)/%.c
 	$(slc_verbose)$(SLC_MTS_N) -c -o $@ $<
 
 CLEANFILES += \
+	mts_naked-mtsparc-fpga/dummyplaces.o \
 	mts_naked-mtsparc-fpga/main.o \
 	mts_naked-mtsparc-fpga/slrt.o \
 	mts_naked-mtsparc-fpga/callgate.o \
@@ -185,6 +191,9 @@ nobase_pkglib_DATA += \
 	mtsn_hybrid-mtsparc-sim/libslmain.a 
 
 mtsn_hybrid_mtsparc_sim_libslc_a_CONTENTS = \
+	mtsn_hybrid-mtsparc-sim/mtplaces.o \
+	mtsn_hybrid-mtsparc-sim/mgsim.o \
+	mtsn_hybrid-mtsparc-sim/fibre.o \
 	mtsn_hybrid-mtsparc-sim/callgate.o 
 
 mtsn_hybrid_mtsparc_sim_libslmain_a_CONTENTS = \
@@ -209,6 +218,9 @@ mtsn_hybrid-mtsparc-sim/%.o: $(srcdir)/%.c
 	$(slc_verbose)$(SLC_MTS) -c -o $@ $<
 
 CLEANFILES += \
+	mtsn_hybrid-mtsparc-sim/mtplaces.o \
+	mtsn_hybrid-mtsparc-sim/mgsim.o \
+	mtsn_hybrid-mtsparc-sim/fibre.o \
 	mtsn_hybrid-mtsparc-sim/callgate.o \
 	mtsn_hybrid-mtsparc-sim/main.o \
 	mtsn_hybrid-mtsparc-sim/slrt.o \
@@ -225,6 +237,9 @@ nobase_pkglib_DATA += \
 	seq_naked-mtsparc-sim/libslmain.a 
 
 seq_naked_mtsparc_sim_libslc_a_CONTENTS = \
+	seq_naked-mtsparc-sim/mtplaces.o \
+	seq_naked-mtsparc-sim/mgsim.o \
+	seq_naked-mtsparc-sim/fibre.o \
 	seq_naked-mtsparc-sim/callgate.o 
 
 seq_naked_mtsparc_sim_libslmain_a_CONTENTS = \
@@ -249,6 +264,9 @@ seq_naked-mtsparc-sim/%.o: $(srcdir)/%.c
 	$(slc_verbose)$(SLC_MTSN_S) -c -o $@ $<
 
 CLEANFILES += \
+	seq_naked-mtsparc-sim/mtplaces.o \
+	seq_naked-mtsparc-sim/mgsim.o \
+	seq_naked-mtsparc-sim/fibre.o \
 	seq_naked-mtsparc-sim/callgate.o \
 	seq_naked-mtsparc-sim/main.o \
 	seq_naked-mtsparc-sim/slrt.o \
@@ -265,6 +283,9 @@ nobase_pkglib_DATA += \
 	mtsn_naked-mtsparc-sim/libslmain.a 
 
 mtsn_naked_mtsparc_sim_libslc_a_CONTENTS = \
+	mtsn_naked-mtsparc-sim/mtplaces.o \
+	mtsn_naked-mtsparc-sim/mgsim.o \
+	mtsn_naked-mtsparc-sim/fibre.o \
 	mtsn_naked-mtsparc-sim/callgate.o 
 
 mtsn_naked_mtsparc_sim_libslmain_a_CONTENTS = \
@@ -289,6 +310,9 @@ mtsn_naked-mtsparc-sim/%.o: $(srcdir)/%.c
 	$(slc_verbose)$(SLC_MTSN_N) -c -o $@ $<
 
 CLEANFILES += \
+	mtsn_naked-mtsparc-sim/mtplaces.o \
+	mtsn_naked-mtsparc-sim/mgsim.o \
+	mtsn_naked-mtsparc-sim/fibre.o \
 	mtsn_naked-mtsparc-sim/main.o \
 	mtsn_naked-mtsparc-sim/slrt.o \
 	mtsn_naked-mtsparc-sim/callgate.o \
