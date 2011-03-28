@@ -1,3 +1,17 @@
+//
+// mtconf.c: this file is part of the SL toolchain.
+//
+// Copyright (C) 2010,2011 Universiteit van Amsterdam.
+//
+// This program is free software; you can redistribute it and/or
+// modify it under the terms of the GNU General Public License
+// as published by the Free Software Foundation; either version 3
+// of the License, or (at your option) any later version.
+//
+// The complete GNU General Public Licence Notice can be found as the
+// `COPYING' file in the root directory.
+//
+
 #include "mtconf.h"
 #include <svp/sep.h>
 #include <svp/testoutput.h>
@@ -193,7 +207,7 @@ void parse_conc_v1(confword_t* data)
 void * mgconf_layout_data;
 
 static
-void parse_layout_v1(confword_t* data)
+void parse_layout_v12(confword_t* data)
 {
     mgconf_layout_data = &data[0];
     if (!verbose_boot)
@@ -209,9 +223,10 @@ static parserfunc parsers[] =
     &parse_timings_v1,
     &parse_cache_v1,
     &parse_conc_v1,
-    &parse_layout_v1,
+    &parse_layout_v12,
     &parse_timings_v2,
-    &parse_timings_v3
+    &parse_timings_v3,
+    &parse_layout_v12,
 };
 
 

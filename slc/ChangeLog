@@ -1,5 +1,13 @@
 2011-03-28  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	Re-implement the root SEP for the new Microgrid place format.
+
+	* lib/src/mtconf.c: Recognize the new place layout.
+
+	* lib/src/mtsep.c: New SEP, courtesy of Mike Lankamp.
+
+2011-03-28  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	Adapt code generation for `create' to the new MT ISAs.
 
 	* tools/lib/slc/lower/split.py: Avoid dual behavior when

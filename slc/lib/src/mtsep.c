@@ -1,7 +1,7 @@
 //
 // mtsep.c: this file is part of the SL toolchain.
 //
-// Copyright (C) 2009,2010 The SL project.
+// Copyright (C) 2009,2010,2011 Universiteit van Amsterdam.
 //
 // This program is free software; you can redistribute it and/or
 // modify it under the terms of the GNU General Public License
@@ -21,472 +21,364 @@
 #include <svp/testoutput.h>
 #include "mtconf.h"
 
-#define MAX_NCORES 1024
+// log2 of the maximum number of cores that are supported
 #define L2_MAX_NCORES 10
+#define MAX_NCORES (1 << L2_MAX_NCORES)
 
-struct sep_pi {
-    sl_place_t pid;
-    size_t     ncores;
-};
-
-struct listnode {
-    struct sep_pi pi;
-    struct listnode *next;
-    size_t l2_ncores;
-    size_t sharecount;
-    sl_place_t pid;
+struct range_t {
+    // Size of the range, if free. 0 if used.
+    unsigned int size;
+    
+    // Links for doubly-linked lists
+    struct range_t* next;
+    struct range_t* prev;
 };
 
 struct sep_data_t {
-    struct SEP sep_info;  
-    sl_place_t sep_pid;
-    size_t last_nonempty_pool;
-    struct listnode  allplaces[MAX_NCORES];
-    struct listnode* pools[L2_MAX_NCORES+1];
-    struct listnode* allcores[MAX_NCORES];
-    bool irregular;
+    // Public SEP info
+    struct SEP sep_info;
+    
+    // Place where the SEP runs
+    sl_place_t sep_place;
+    
+    // Number of bits for an core address. To construct Place IDs.
+    unsigned int pid_bits;
+    
+    // Total number of cores on the grid.
+    size_t num_cores;
+    
+    // Storage for all possible ranges (worst case: 1 core per range)
+    struct range_t ranges[MAX_NCORES];
+    
+    // Doubly linked list of free range per (power of two) size
+    struct range_t* free_by_size[L2_MAX_NCORES + 1];
 };
 
-extern sl_place_t __main_place_id;
-
 static
-size_t fast_log2(size_t ncores) {
-    ncores |= 1;
-    ncores -= 1;
-    size_t l2 = __builtin_clzl(ncores);
-    l2 = sizeof(size_t)*CHAR_BIT - l2 - 1;
-    return (l2 < L2_MAX_NCORES) ? l2 : L2_MAX_NCORES ;
+size_t fast_log2(size_t x) {
+    return sizeof(size_t)*CHAR_BIT - __builtin_clzl(x) - 1;
 }
 
 static
-struct listnode *try_get_dontcare(struct listnode **pools, 
-                                  size_t lp)
+bool is_pow2(size_t x) {
+    return (x & (x - 1)) == 0;
+}
+
+#define MAKE_PLACE_ID(sep, id, size, caps) \
+    ((size) | ((id) << 1) | ((caps) << ((sep)->pid_bits + 1)))
+
+// Allocate a range of specified (power of two) size from the free ranges, if possible.
+static
+struct range_t* alloc_range(struct sep_data_t* sep,
+                            size_t l2_size)
 {
+    // find a range of desired size, or larger
     size_t i;
-    struct listnode *p;
-    for (i = 0; i <= lp; ++i) {
-        p = pools[i]; 
-        if (p) {
-            pools[i] = p->next;
-            return p;
-        }
-    }
-    return 0;
-}
-
-static
-struct listnode *try_get_exact(struct listnode **pools, 
-                               size_t lp,
-                               size_t l2_pa,
-                               size_t ncores,
-                               bool irregular)
-{
-    struct listnode **lprev;
-    struct listnode *p;
-
-    if (likely(l2_pa <= lp)) {
-        if (likely(!irregular)) {
-            if (unlikely(ncores != (1 << l2_pa))) 
-                return 0;
-            p = pools[l2_pa];
-            if (likely(p)) pools[l2_pa] = p->next;
-            return p;
-        } else {
-            for (lprev = &pools[l2_pa], p = pools[l2_pa]; p; lprev = &p->next, p = p->next)
-                if (p->pi.ncores == ncores) {
-                    *lprev = p->next; 
-                    return p;
-                }
-        }
-    }
-    return 0;
-}
-
-static
-struct listnode *try_get_min(struct listnode **pools, 
-                             size_t lp,
-                             size_t l2_pa,
-                             size_t ncores,
-                             bool irregular)
-{
-    struct listnode *p;
-    struct listnode **lprev;
-    size_t i;
-
-    if (likely(!irregular)) {
-        if (unlikely(ncores != (1 << l2_pa))) ++l2_pa;
-
-        for (i = l2_pa; i <= lp; ++i) {
-            p = pools[i]; 
-            if (p) {
-                pools[i] = p->next; 
-                return p;
+    for (i = l2_size; i <= L2_MAX_NCORES; ++i) {
+        struct range_t* r = sep->free_by_size[i];
+        if (r) {
+            // found a suitable range, mark as used
+            r->size = 0;
+            
+            // remove the range from its index
+            sep->free_by_size[i] = r->next;
+            
+            // split the range until we get the desired size
+            while (i > l2_size) {
+                --i;
+                    
+                // add the second half to the free list for its size.
+                // also mark the size of the free range so we can merge during free.
+                size_t size = 1 << i;
+                struct range_t* r2 = r + size;
+                    
+                r2->size  = size;
+                r2->prev  = 0;
+                r2->next  = sep->free_by_size[i];
+                sep->free_by_size[i] = r2;
             }
-        }
-    } else {
-        for (i = l2_pa; i <= lp; ++i)
-            for (lprev = &pools[i], p = pools[i]; p; lprev = &p->next, p = p->next)
-                if (p->pi.ncores >= ncores)
-                {
-                    *lprev = p->next;
-                    return p;
-                }
-    }
-    return 0;
-}
-
-static
-struct listnode *try_get_max(struct listnode **pools, 
-                             size_t lp,
-                             size_t l2_pa,
-                             size_t ncores,
-                             bool irregular)
-{
-    struct listnode **lprev;
-    struct listnode *p;
-    size_t i;
-
-    if (likely(l2_pa <= lp)) {
-        i = l2_pa;
-        if (likely(!irregular)) {
-            do {
-                p = pools[i]; 
-                if (p) {
-                    pools[i] = p->next; 
-                    return p;
-                }
-            } while(i--);
-        }
-        else {
-            do {
-                for (lprev = &pools[i], p = pools[i]; p; lprev = &p->next, p = p->next)
-                    if (p->pi.ncores <= ncores) {
-                        *lprev = p->next; 
-                        return p;
-                    }
-            } while(i--);
+            
+            // return the core address
+            return r;
         }
     }
     return 0;
 }
 
-static
-struct listnode* try_get_policy(struct listnode **pools, 
-                                size_t lp,
-                                size_t l2_pa,
-                                size_t ncores,
-                                bool irregular,
-                                long policy)
+static sl_place_t do_sep_alloc(struct sep_data_t* sep, size_t ncores, unsigned long policy)   
 {
-    struct listnode *p = 0;
+    /*
+     Note about allocation policies:
+     
+     SAL_MIN is actually SAL_EXACT with the number of cores rounded up to a
+     power of two. When we find a free range that's larger than than desired,
+     the architecture allows up to keep splitting that range into two until
+     we get the a range of the desired size, thus SAL_MIN and SAL_EXACT share
+     the same allocation process.
+     
+     SAL_DONTCARE right now is a naive implementation that returns just one
+     core, since we can always keep splitting available ranges down to one.
+     In the future, this might be a smarter strategy that takes topology or
+     load into account. It's therefore the same as SAL_EXACT with 1 core.
+     
+     SAL_MAX tries to allocate its limit and if that fails, tries to allocate
+     a smaller range, all the way down to one core.
+     */
+    struct range_t* r = 0;
+    
     switch(policy) {
-    case SAL_EXACT:
-        p = try_get_exact(pools, lp, l2_pa, ncores, irregular);
-        break;
+    case SAL_DONTCARE:
+        ncores = 1;
+        // fall-through to SAL_MIN
+        
     case SAL_MIN:
-        p = try_get_min(pools,   lp, l2_pa, ncores, irregular);
+        // hardware only supports powers of two, so round request up to
+        // a power of two
+        ncores = 1U << fast_log2(2 * ncores - 1);
+        // fall-through to SAL_EXACT
+        
+    case SAL_EXACT:
+        // hardware only supports powers of two, so if there's a request
+        // for something else, tough luck.
+        if (likely(is_pow2(ncores))) {
+            r = alloc_range(sep, fast_log2(ncores));
+        }
         break;
-    case SAL_MAX:
-        p = try_get_max(pools,   lp, l2_pa, ncores, irregular);
+
+    case SAL_MAX: {
+        // hardware only supports powers of two, so round request down to
+        // a power of two
+        size_t i = fast_log2(ncores);
+        do {
+            r = alloc_range(sep, i);
+        } while (!r && i--);
+        ncores = (1 << i);
         break;
     }
-    return p;
+    }
+
+    return r ? MAKE_PLACE_ID(sep, r - sep->ranges, ncores, 0) : 0;
 }
 
-
-static
-void makenormal(struct listnode *p)
+// Performs place allocation
+sl_def(sep_alloc, void,
+    sl_glparm(struct sep_data_t*, sep),
+    sl_glparm(size_t, ncores),
+    sl_glparm(unsigned long, policy),
+    sl_shparm(sl_place_t, result) )
 {
-    p->pi.pid = p->pid | 8 /* suspend */ | 6 /* delegate */;
-}
-
-static
-struct listnode *alloc_policy(struct sep_data_t *sd,
-                              long policy,
-                              size_t lp,
-                              size_t l2_pa,
-                              size_t ncores,
-                              bool irregular)
-{
-    struct listnode *p = 0;
-    p = try_get_policy(sd->pools, lp, l2_pa, ncores, irregular, policy);
-    if (likely(p)) { 
-        makenormal(p);
-    }
-    return p;
-}                              
-
-static
-struct listnode *alloc_dontcare(struct sep_data_t *sd,
-                                size_t lp)
-{
-    struct listnode *p = 0;
-    p = try_get_dontcare(sd->pools, lp);
-    if (likely(p)) { 
-        makenormal(p);
-    }
-    return p;
-}
-
-
-
-sl_def(sep_alloc,
-       void,
-       sl_glparm(struct sep_data_t*, sd),
-       sl_glparm(long, policy),
-       sl_glparm(size_t, ncores),
-       sl_shparm(struct sep_pi*, result))
-{
-    struct sep_data_t* sd = sl_getp(sd);
-    int i;
-    struct listnode *p = 0;
-    size_t policy = sl_getp(policy);
-    size_t ncores = sl_getp(ncores);
-    bool canshare = false;
-
-    size_t lp = sd->last_nonempty_pool;
-    if (policy == SAL_DONTCARE) {
-        p = alloc_dontcare(sd, lp);
-    } else {
-        size_t l2_pa = fast_log2(ncores);
-        bool irregular = sd->irregular;
-        p = alloc_policy(sd, policy, lp, l2_pa, ncores, irregular);
-    }
-
-    if (likely(p)) {
-        ++(p->sharecount);
-        sl_setp(result, &p->pi);
-    }
-    else
-        sl_setp(result, 0);
+    sl_place_t p = do_sep_alloc(sl_getp(sep), sl_getp(ncores), sl_getp(policy));
+    sl_setp(result, p);
 }
 sl_enddef
 
-sl_def(sep_free, void, 
-       sl_glparm(struct sep_data_t*, sd),
-       sl_glparm(struct listnode*, n));
+// Frees a (possibly shared) range
+static
+void free_range(struct sep_data_t* sep,
+                struct range_t* r,
+                unsigned int l2_size)
 {
-    struct sep_data_t* sd = sl_getp(sd);
-    struct listnode* n = sl_getp(n);
+    size_t size = 1 << l2_size;
 
-    if (n->sharecount == 0)
+    // keep checking if we can merge with an adjacent range.
+    for (; l2_size < L2_MAX_NCORES; ++l2_size, size *= 2)
+    {
+        // if the range is located on an odd multiple of its size,
+        // we merge with left, otherwise, with right.
+        bool merge_left = (((r - &sep->ranges[0]) >> l2_size) & 1) != 0;
+        struct range_t* r2 = merge_left ? (r - size) : (r + size);
+        if (r2->size != size)
+            // can't merge
+            break;
+            
+        // remove merged range from its free index
+        if (r2->prev)
+            r2->prev->next = r2->next;
+        else
+            sep->free_by_size[l2_size] = r2->next;
+        
+        if (r2->next)
+            r2->next->prev = r2->prev;
+
+        if (merge_left)
+            r = r2;
+    }
+
+    // add the final free range to its appropriate index.
+    // also mark the size of the free range so we can merge during free.
+    r->size  = size;
+    r->prev  = 0;
+    r->next  = sep->free_by_size[l2_size];
+    sep->free_by_size[l2_size] = r;
+}
+
+sl_def(sep_free, void,
+    sl_glparm(struct sep_data_t*, sep),
+    sl_glparm(sl_place_t, p) )
+{
+    // extract the address/size field from the place's PID
+    struct sep_data_t* sep = sl_getp(sep);
+    sl_place_t p = sl_getp(p);
+    
+    sl_place_t pid = p & ((1 << (sep->pid_bits + 1)) - 1);
+    unsigned int l2_size = __builtin_ctz(pid);
+    size_t index = (pid - (1 << l2_size)) / 2;
+    
+    struct range_t* r = &sep->ranges[index];
+    if (r->size != 0)
+        // Place is unused, do nothing.
         return;
 
-    size_t l2_ncores = n->l2_ncores;
-    --(n->sharecount);
-    
-    n->next = sd->pools[l2_ncores];
-    sd->pools[l2_ncores] = n; 
+    free_range(sep, r, l2_size);
 }
 sl_enddef
-
-void sep_dump_info(struct SEP* sep)
-{
-    int i;
-    struct sep_data_t* sd = (struct sep_data_t*)(void*)sep;
-    printf("loc\t#cores\tpid\n");
-    for (i = 0; i < MAX_NCORES; ++i) {
-        struct listnode *p = &sd->allplaces[i];
-        if (p->sharecount) {
-            printf("%#lx\t%zu\t%#lx\n",
-                   p->pid, p->pi.ncores, p->pi.pid);
-        }
-    }
-    for (i = 0; i < L2_MAX_NCORES+1; ++i)
-    {
-        printf("pool %d", i);
-        struct listnode *p = sd->pools[i];
-        if(!p)
-            printf(" (empty)");
-        while(p) {
-            printf(" -> (%#lx, %zu)", p->pid, p->pi.ncores);
-            p = p->next;
-        };
-        putchar('\n');
-    }
-}
 
 static
 int root_sep_ctl(struct SEP* sep, unsigned long request, void *a, void *b)
 {
     struct sep_data_t* sd = (struct sep_data_t*)(void*)sep;
-    
-    switch(request & 0xffff)
+
+    switch (request & 0xffff)
     {
     case SEP_ALLOC:
     {
-        sl_create(,sd->sep_pid,,,,,sl__exclusive, sep_alloc,
-                  sl_glarg(struct sep_data_t*,, sd),
-                  sl_glarg(long,, (request & ~0xffff)),
-                  sl_glarg(size_t,, (long)a),
-                  sl_sharg(struct sep_pi*, result, 0));
+        size_t ncores = (size_t)(long)a;
+        size_t policy = request & SAL_EXACT;
+    
+        sl_create(,sd->sep_place,,,,,sl__exclusive, sep_alloc,
+            sl_glarg(struct sep_data_t*,,sd),
+            sl_glarg(size_t,,ncores),
+            sl_glarg(unsigned long,,policy),
+            sl_sharg(sl_place_t, result, 0));
         sl_sync();
-        if (sl_geta(result))
-        {
-            *(sl_place_t*)b = sl_geta(result)->pid;
+        
+        sl_place_t p = sl_geta(result);
+        if (p) {
+            *(sl_place_t*)b = p;
             return 0;
         }
-        else
-            return -1;
-    }   
-                  
+        break;
+    }
+    
     case SEP_FREE:
     {
         sl_place_t p = *(sl_place_t*)a;
-        unsigned core = (p >> 4) & 0xffff;
-        sl_create(,sd->sep_pid,,,,,sl_exclusive, sep_free,
-                  sl_glarg(struct sep_data_t*,, sd),
-                  sl_glarg(struct listnode*, , sd->allcores[core]));
-        sl_sync();
+        
+        sl_create(,sd->sep_place,,,,,sl__exclusive, sep_free,
+            sl_glarg(struct sep_data_t*,,sd),
+            sl_glarg(sl_place_t,,p));
+        sl_sync();        
         return 0;
     }
-        
+    
     case SEP_QUERY:
     {
         sl_place_t p = *(sl_place_t*)a;
         union placeinfo *ret = (union placeinfo*)b;
         
-        if (p == PLACE_LOCAL)
+        if (p == 0)
+            // Invalid place ID
+            break;
+
+        // extract the address/size field from the place's PID
+        sl_place_t pid = p & ((1 << (sd->pid_bits + 1)) - 1);
+        size_t size = pid & -pid;
+        size_t index = (pid & ~size) / 2;
+        
+        if (size >= sd->num_cores || index > sd->num_cores - size)
+            // Place lies outside grid
+            break;
+        
+        if (size == 1)
         {
-            ret->flags = 4|2|1; /* hardware, atomic, programmable */
+            // One core-place: atomic, programmable
+            ret->flags = 2|4|1;
             ret->a.p.family_capacity = *mgconf_ftes_per_core;
             ret->a.p.thread_capacity = *mgconf_ttes_per_core;
             ret->a.p.rate            = *mgconf_core_freq;
         }
         else
         {
-            unsigned core = (p >> 4) & 0xffff;
-            struct listnode *ln = sd->allcores[core];
-            if (!ln)
-                return -1;
-            ret->flags = 4|1; /* hardware, compound, homogeneous */
-            ret->c.arity = ln->pi.ncores;
+            // Multi-core place: compound, homogenous
+            ret->flags = 4|1;
+            ret->c.arity = size;
         }
         return 0;
     }
+    
     default:
-        return -1;
+        // Unimplemented
+        break;
     }
+    return -1;
 }
 
 static struct sep_data_t root_sep_data = { 
     { &root_sep_ctl },
-    0,
-    0,
-    { 0 },
-    { 0 },
-    { 0 },
-    0
 };
 
 struct SEP *root_sep = &root_sep_data.sep_info;
 
 extern int verbose_boot;
 
+extern sl_place_t __main_place_id;
+
 void sys_sep_init(void* init_parameters)
 {
-    struct placeconf {
-        uint32_t   ncores;
-        uint16_t core_info[][2];
+    struct gridconf_t {
+        uint32_t ncores;
+        uint8_t  core_info[][4];
     };
-    struct placeconf * restrict pc = (struct placeconf*) init_parameters;
+    struct gridconf_t * gc = (struct gridconf_t*) init_parameters;
+    sl_place_t p;
+    unsigned int i, size;
 
     if (verbose_boot) {
         output_string("* SEP init: parsing layout for ", 2);
-        output_uint(pc->ncores, 2);
-        output_string(" cores...\n  ", 2);
+        output_uint(gc->ncores, 2);
+        output_string(" cores...  ", 2);
     }
+    
     // can't use assert() before places have been defined
-    if (!(pc->ncores <= MAX_NCORES)) {
+    if (unlikely(gc->ncores > MAX_NCORES)) {
         output_string("SEP init fail: ncores > MAX_NCORES\n", 2);
         abort();
     }
 
-    size_t i;
-    int current_ring_id = -1;
-    size_t max_l2 = 0;
-    int irregular = 0;
-
-    for (i = 0; i < pc->ncores; ++i) {
-        if (verbose_boot) output_char('.', 2);
-
-        root_sep_data.allcores[i] = &root_sep_data.allplaces[pc->core_info[i][1]];
-
-        if (pc->core_info[i][1] != current_ring_id) {
-            /* starting a new ring */
-
-            /* first check if we were looking at a ring before */
-            if (current_ring_id > 0) {
-                /* yes, add it to its pool */
-                struct listnode* n = &root_sep_data.allplaces[current_ring_id];
-                size_t ncores = n->pi.ncores;
-                size_t l2_nc = fast_log2(ncores);
-                n->l2_ncores = l2_nc;
-                n->next = root_sep_data.pools[l2_nc];
-                root_sep_data.pools[l2_nc] = n;
-                if (ncores != (1 << l2_nc)) irregular = 1;
-                if (max_l2 < l2_nc) max_l2 = l2_nc;
-                if (verbose_boot) output_char(' ', 2);
-            }
-
-            /* restart a new ring */
-            current_ring_id = pc->core_info[i][1];
-
-            /* start configuring the place */
-            sl_place_t the_pid = pc->core_info[i][0] << 4;
-
-            struct listnode *current = &root_sep_data.allplaces[current_ring_id];
-            current->pid = the_pid;
-            current->pi.ncores = 1;
-
-            if (!root_sep_data.sep_pid) {
-                // first time here
-
-                current->sharecount = 1;
-                current->pi.pid = current->pid|8|6;
-                
-                // make shared: remove from normal pool, add to shared pool
-                // root_sep_data.pools[current->l2_ncores] = current->next;
-                    
-                root_sep_data.sep_pid = current->pi.pid|8|6|1;
-                __main_place_id = current->pi.pid;
-                if (verbose_boot) output_char(' ', 2);
-            }
+    // right now we only support a homogenous grid, and don't use the topology
+    for (i = 0; i < gc->ncores; ++i) {
+        if (unlikely(gc->core_info[i][0] != 0)) {
+            output_string("SEP init fail: unknown core type in grid\n", 2);
+            abort();
         }
-
-        else {
-            /* already started the ring, increase the number of cores */
-            root_sep_data.allplaces[current_ring_id].pi.ncores += 1;
-        }
-    }
-
-    struct listnode* n = &root_sep_data.allplaces[current_ring_id];
-    size_t ncores = n->pi.ncores;
-    size_t l2_nc = fast_log2(ncores);
-    if (ncores != (1 << l2_nc)) irregular = 1;
-    if (max_l2 < l2_nc) max_l2 = l2_nc;
-
-    /* if more than one ring, add the last item to its pool */
-    if (current_ring_id > 0)
-    {
-        n->l2_ncores = l2_nc;
-        n->next = root_sep_data.pools[l2_nc];
-        root_sep_data.pools[l2_nc] = n;
     }
     
-    root_sep_data.last_nonempty_pool = max_l2;
-    root_sep_data.irregular = irregular;
+    // Get the number of bits needed for an address: ceil(log2(gc->ncores))
+    root_sep_data.num_cores = gc->ncores;
+    root_sep_data.pid_bits = fast_log2(gc->ncores * 2 - 1);
+
+    // add the available cores to the free pool
+    for (i = 0, size = gc->ncores; size != 0; )
+    {
+        unsigned int l2_size = fast_log2(gc->ncores);
+        free_range(&root_sep_data, &root_sep_data.ranges[0], l2_size);
+        i    += (1 << l2_size);
+        size -= (1 << l2_size);
+    }
+        
+    // Grab a core for the single shared place for the root SEP.
+    // Must be core 0.
+    p = do_sep_alloc(&root_sep_data, 1, SAL_EXACT);
+    if (unlikely(!p)) {
+        output_string("SEP init fail: unable to reserve core for root SEP\n", 2);
+        abort();
+    }
+    root_sep_data.sep_place = p;
+    
+    // share the first place with the root SEP
+    __main_place_id = p;
 
     if (verbose_boot) {
-        output_string(" done.\n  places:", 2);
-        for (i = 0; i < MAX_NCORES; ++i)
-            if (!i || root_sep_data.allplaces[i].pid) {
-                output_char(' ', 2);
-                output_uint(root_sep_data.allplaces[i].pi.ncores, 2);
-                output_char('(', 2);
-                output_hex(root_sep_data.allplaces[i].pid, 2);
-                output_char(')', 2);
-            }
-        output_char('\n', 2);
+        output_string("done.\n", 2);
     }
 }
