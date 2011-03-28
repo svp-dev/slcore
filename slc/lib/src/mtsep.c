@@ -323,6 +323,24 @@ extern int verbose_boot;
 
 extern sl_place_t __main_place_id;
 
+void sep_dump_info(struct SEP* p)
+{
+    struct sep_data_t *s = (struct sep_data_t*)(void*)p;
+    size_t i;
+
+    printf("handling %zu cores, pid_bits = %u\n", s->num_cores, s->pid_bits);
+    for (i = 0; i < L2_MAX_NCORES + 1; ++i)
+    {
+        struct range_t* r;
+        printf("free list %zu ", i);
+        for (r = s->free_by_size[i]; r; r = r->next)
+            printf(" -> (sz:%u,off:%u)",
+                   r->size,
+                   (unsigned)(r - &(s->ranges[0])));
+        putchar('\n');
+    }
+}
+
 void sys_sep_init(void* init_parameters)
 {
     struct gridconf_t {

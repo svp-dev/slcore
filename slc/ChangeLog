@@ -1,5 +1,11 @@
 2011-03-28  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	Extend the SEP implementation.
+
+	* lib/src/mtsep.c (sep_dump_info):  New debugging function.
+
+2011-03-28  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	Update the MT profiles to match the new Microgrid place handling.
 
 	* tools/lib/mt-profiles/lzcoma128_1chan,
