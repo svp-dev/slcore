@@ -1,3 +1,14 @@
+2011-03-28  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
+	Reduce the test suite.
+
+	* tests/0_slc/3_index/inf1.c,
+	* tests/0_slc/3_index/inf2.c,
+	* tests/0_slc/3_index/inf3.c,
+	* tests/0_slc/3_index/inf4.c,	
+	* tests/0_slc/3_index/inf5.c: Remove. Families with unbounded
+	index sequences are now malformed.
+
 2011-03-25  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
 	Fix the version numbering.
