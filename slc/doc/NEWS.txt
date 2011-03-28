@@ -4,6 +4,41 @@
 
 This document describes major updates to the SL toolchain.
 
+Version 3.5b (Development)
+==========================
+
+Changes since 3.4
+-----------------
+
+Language and library
+````````````````````
+
+- New create specifiers are introduced in the language:
+
+  - ``sl__nowait``: creation fails if a context cannot be allocated
+    right away.
+
+  - ``sl__forcewait``: family creation always occurs; no fall-back
+    to run the work sequentially is generated.
+
+  - ``sl__allcores``: family creation is forced to use all cores in
+    the target place. If a context cannot be allocated on all cores,
+    either the code falls back, suspends or fails depending on the
+    other attributes.
+
+  For now these are only supported for the Microgrid targets.
+
+Microgrid-specific changes
+``````````````````````````
+
+- Code generation for MT targets was updated as a result of a major
+  redesign of the Microgrid delegation protocol (MGSim version 3.0). In
+  the new design, places are configurable and there are no fixed size
+  clusters any more. For more details see the CSA note [mgsim11].
+
+- The root SEP code in the SL library was updated to handle the new
+  handling of place layouts.
+
 Version 3.4, March 2011
 =======================
 
@@ -31,7 +66,7 @@ Language and library
   implemented as C functions as well (macros are used unless
   undefined). For example ``clock``, ``mtperf_sample``, etc.
 
-- Add support for C's function ``time``.
+- Added support for C's function ``time``.
 
 Change related to the MT targets
 ````````````````````````````````

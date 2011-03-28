@@ -1,5 +1,12 @@
 2011-03-28  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	Document changes for 3.5b.
+
+	* doc/NEWS.txt: Explain create attributes and refer to the new
+	place semantics documentation.
+
+2011-03-28  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	Minor fix in the SEP interface header.
 
 	* lib/include/svp/sep.h (SP_IS_COMPOUND): Fix typo.
