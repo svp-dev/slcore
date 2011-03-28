@@ -280,6 +280,19 @@ class CheckVisitor(DefaultVisitor):
 
         if c.result_lvalue is not None:
             c.result_lvalue.accept(self)
+            
+        if c.extras.has_attr('exclusive'):
+            if c.extras.has_attr('forceseq'):
+                self.err("cannot use both attributes 'exclusive' and 'forceseq'")
+            if c.extras.has_attr('nowait'):
+                warn("dangerous combination of 'exclusive' and 'nowait'")
+
+        if c.extras.has_attr('forceseq'):
+            if c.extras.has_attr('nowait') or c.extras.has_attr('forcewait'):
+                warn("attributes 'nowait' and 'forcewait' have no effect with 'forceseq'")
+
+        if c.extras.has_attr('nowait') and c.extras.has_attr('forcewait'):
+            self.err("cannot use both attributes 'nowait' and 'forcewait'")
 
         return c
 

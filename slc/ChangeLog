@@ -1,5 +1,20 @@
 2011-03-28  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	Add some create attributes to the language.
+
+	* tools/lib/t-spr/slimpl.m4: New attributes `forcewait', `nowait',
+	`allcores'.
+
+	* tools/lib/slc/ast.py (Extras): New method `has_attr'.
+
+	* tools/lib/slc/input/check.py (CheckVisitor.visit_create): Check
+	for consistent use of create attributes.
+
+	* tools/lib/slc/visitors.py (PrintVisitor.visit_create): Also
+	print create attributes.
+
+2011-03-28  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	Update the documentation.
 	
 	* doc/NEWS.txt: Update for version 3.4.

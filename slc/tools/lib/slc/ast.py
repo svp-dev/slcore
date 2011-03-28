@@ -274,6 +274,12 @@ class Extras(Block):
             raise KeyError, name
         return default
 
+    def has_attr(self, name):
+        for a in self:
+            if isinstance(a, Attr) and a.name == name:
+                return True
+        return False
+
 class Attr(Item):
     """
     some attribute in the extra annotations

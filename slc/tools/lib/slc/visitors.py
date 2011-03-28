@@ -386,7 +386,7 @@ class PrintVisitor(DefaultVisitor):
             self.__out.write(',')
             b.accept(self)
 
-        self.__out.write(', ,')
+        self.__out.write(', %r,' % [a.name for a in c.extras if isinstance(a, Attr)])
 
         if c.funtype == c.FUN_ID:
             self.__out.write(c.fun)
