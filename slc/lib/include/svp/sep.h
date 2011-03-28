@@ -65,7 +65,7 @@ union placeinfo {
 
 //      For hardware places:
 #define   SP_IS_ATOMIC(PI)           ((PI)->flags & 0x2)
-#define   SP_IS_COMPOUND(PI)         (!SQP_IS_ATOMIC(PI))
+#define   SP_IS_COMPOUND(PI)         (!SP_IS_ATOMIC(PI))
 
 //        For atomic places:
 #define     SP_IS_PROGRAMMABLE(PI)     ((PI)->flags & 0x4)
