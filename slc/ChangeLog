@@ -1,5 +1,31 @@
 2011-03-28  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	Update the MT profiles to match the new Microgrid place handling.
+
+	* tools/lib/mt-profiles/lzcoma128_1chan,
+	* tools/lib/mt-profiles/lzcoma128_2chan,
+	* tools/lib/mt-profiles/lzcoma256_1chan,
+	* tools/lib/mt-profiles/lzcoma256_4chan,
+	* tools/lib/mt-profiles/mlcoma128_1chan,
+	* tools/lib/mt-profiles/mlcoma128_2chan,
+	* tools/lib/mt-profiles/mlcoma256_1chan,
+	* tools/lib/mt-profiles/mlcoma256_4chan,
+	* tools/lib/mt-profiles/rbm1,
+	* tools/lib/mt-profiles/rbm128,
+	* tools/lib/mt-profiles/rbm16,	
+	* tools/lib/mt-profiles/rbm256: Use a single core count since the
+	SEP can now carve new places itself.
+	
+	* tools/lib/mt-profiles/ml-npcrypt-p1,
+	* tools/lib/mt-profiles/ml-npcrypt-p2,
+	* tools/lib/mt-profiles/ml-npcrypt-p4,	
+	* tools/lib/mt-profiles/ml-npcrypt-p8: Delete, since these are
+	meaningless with the new place handling.
+
+	* tools/lib/Makefile.am: Update accordingly.
+
+2011-03-28  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	Re-implement the root SEP for the new Microgrid place format.
 
 	* lib/src/mtconf.c: Recognize the new place layout.

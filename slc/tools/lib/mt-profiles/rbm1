@@ -1,4 +1,4 @@
-DESCRIPTION="1-core, RB memory for tests, quick runs etc."
+DESCRIPTION="1-core, random banked memory for tests, quick runs etc."
 
 simargs_base+=(-o MemoryType=RandomBanked)
 simargs_base+=(-o NumProcessors=1 -o NumProcessorsPerFPU=1)
