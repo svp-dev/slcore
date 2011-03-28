@@ -110,9 +110,9 @@
 
 [[#]]define __sl_allocate(Tag, Place)			\\
   register long __sl_fid_ ## Tag;					\\
-  __asm__ __volatile__ ("allocate %1, %0\t# MT: CREATE" #Tag	\\
+  __asm__ __volatile__ ("allocate/s %1, 0, %0\t# MT: CREATE" #Tag	\\
 			: "=r"(__sl_fid_ ## Tag)			\\
-			: "rI"((Place)|8))
+			: "r"(Place))
 
 [[#]]define __sl_setstart(Tag, Start) \\
   __asm__ ("setstart %0, %2\t# MT: CREATE " #Tag		\\
@@ -206,18 +206,6 @@
 [[#]]define __sl_declsha(Type, Name, Reg, Init)		\\
   register Type __sl_arg_ ## Name __asm__(Reg) = (Init)
 
-[[#]]define __sl_setbreak(Tag, BRI) \\
-  __asm__ ("setbreak %0, %1\t# CREATE " # Tag \\
-	   : "=r"(__sl_fid_ ## Tag) \\
-	   : "0"(__sl_fid_ ## Tag) : "I"(BRI))
-
-[[#]]define __sl_setbreakf(Tag, BRI) \\
-  __asm__ ("setbreakf %0, %1\t# CREATE " # Tag \\
-	   : "=r"(__sl_fid_ ## Tag) \\
-	   : "0"(__sl_fid_ ## Tag) : "I"(BRI))
-
-[[#]]define __sl_declbr(Tag, Type, Reg)		\\
-  register Type const __sl_br_ ## Tag __asm__(Reg)
 
 extern void _sl_callgate(void);
 

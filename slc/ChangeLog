@@ -1,5 +1,19 @@
 2011-03-28  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	Adapt code generation for `create' to the new MT ISAs.
+
+	* tools/lib/slc/lower/split.py: Avoid dual behavior when
+	`forcewait' is set.
+
+	* tools/lib/slc/mt/mtalpha/gencreate.py,	
+	* tools/lib/slc/mt/mtsparc/gencreate.py: Generate different
+	`allocate' instructions depending on which attributes are set.
+
+	* tools/lib/t-sppalpha/include/sl_support.h: Use `allocate/s'
+	always.
+	
+2011-03-28  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	Add some create attributes to the language.
 
 	* tools/lib/t-spr/slimpl.m4: New attributes `forcewait', `nowait',

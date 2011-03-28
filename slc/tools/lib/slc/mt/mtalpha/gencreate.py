@@ -66,18 +66,29 @@ class Create_2_MTACreate(ScopedVisitor):
         
         usefvar = CVarUse(decl = fidvar)
 
-        if lc.target_next is None:
-            if cr.extras.get_attr('exclusive', None) is None:
+        if cr.extras.has_attr('exclusive'):
+            allocinsn = 'allocate/x'
+        elif lc.target_next is None:
+            if cr.extras.has_attr('nowait'):
                 warn("this create may fail and no alternative is available", cr)
-            forcesuspend = '|8'
+                allocinsn = 'allocate'
+            else:
+                allocinsn = 'allocate/s'
         else:
-            forcesuspend = ''
+            if cr.extras.has_attr('forcewait'):
+                allocinsn = 'allocate/s'
+            else:
+                allocinsn = 'allocate'
+
+        if cr.extras.has_attr('allcores'):
+            exactbit = '1'
+        else:
+            exactbit = '0'
 
         newbl += (flatten(cr.loc,
-                          '__asm__ __volatile__("allocate %%1, %%0\\t# MT: CREATE %s"'
-                          ' : "=r"(' % lbl) + 
-                  usefvar + ') : "rI"(' + CVarUse(decl = cr.cvar_place) + 
-                  '%s));' % forcesuspend)
+                          '__asm__ __volatile__("%s %%2, %%1, %%0\\t# MT: CREATE %s"'
+                          ' : "=r"(' % (allocinsn, lbl)) + 
+                  usefvar + ') : "rI"(' + exactbit + '), "r"(' + CVarUse(decl = cr.cvar_place) + '));')
         
         if lc.target_next is not None:
             newbl += (flatten(cr.loc, ' if (!__builtin_expect(!!(') + 

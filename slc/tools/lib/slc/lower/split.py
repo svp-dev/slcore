@@ -13,9 +13,11 @@ class ExampleOracle(object):
         return ['smta']
 
     def flavors_for_create(self, cr):
-        s = cr.extras.get_attr('forceseq', None)
-        if s is not None:
+        if cr.extras.has_attr('forceseq'):
             return ['cseq']
+
+        if cr.extras.has_attr('forcewait') or cr.extras.has_attr('exclusive'):
+            return ['c'+self.archname]
 
         n = cr.extras.get_attr('naked', None)
         if n is not None:
@@ -25,9 +27,6 @@ class ExampleOracle(object):
                 return ['cseq']
             else:
                 die("unsupported naked specifier: %s" % n.flavor, cr)
-
-        if cr.extras.get_attr('exclusive', None):
-            return ['c'+self.archname]
 
         return ['c'+self.archname, 'cseq']
 

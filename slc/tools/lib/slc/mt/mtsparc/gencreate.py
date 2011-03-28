@@ -102,29 +102,40 @@ class Create_2_MTSCreate(ScopedVisitor):
         
         usefvar = CVarUse(decl = fidvar)
 
-
-        if self.newisa:
-            prepsuffix = 'ng'
-            immfmt = 'I'
-            if lc.target_next is None:
-                if cr.extras.get_attr('exclusive', None) is None:
-                    warn("this create may fail and no alternative is available", cr)
-                forcesuspend = '|8'
+        if cr.extras.has_attr('exclusive'):
+            if not self.newisa:
+                warn("exclusive create not supported on this target")
+            allocinsn = 'allocatex'
+        elif lc.target_next is None:
+            if cr.extras.has_attr('nowait'):
+                warn("this create may fail and no alternative is available", cr)
+                allocinsn = 'allocate'
             else:
-                forcesuspend = ''
+                allocinsn = 'allocates'
+        else:
+            if cr.extras.has_attr('forcewait'):
+                allocinsn = 'allocates'
+            else:
+                allocinsn = 'allocate'
+        
+        if allocinsn == 'allocate' and not self.newisa:
+                warn("non-suspending create may not be supported on this target")
+        if allocinsn == 'allocates' and not self.newisa:
+                warn("suspending create may not be supported on this target")
 
-            newbl += (flatten(cr.loc,
-                              '__asm__ __volatile__("allocateng %%1, %%0\\t! MT: CREATE %s"'
-                              ' : "=r"(' % lbl) + 
-                      usefvar + ') : "rI"(' + CVarUse(decl = cr.cvar_place) +
-                      '%s));' % forcesuspend)
-        else: # OLD ISA
-            prepsuffix = ''
-            immfmt = 'P'
-            newbl += (flatten(cr.loc,
-                              '__asm__ __volatile__("allocate %%0\\t! MT: CREATE %s"'
-                              ' : "=r"(' % lbl) + 
-                      usefvar + '));')
+        if cr.extras.has_attr('allcores'):
+            if not self.newisa:
+                warn("attribute 'allcores' has no effect on this target")
+            exactbit = '1'
+        else:
+            exactbit = '0'
+
+
+        newbl += (flatten(cr.loc,
+                          '__asm__ __volatile__("%s %%2, %%0\\t! MT: CREATE %s"'
+                          ' : "=r"(' % (allocinsn,lbl)) + 
+                  usefvar + ') : "0"(' + CVarUse(decl = cr.cvar_place) + 
+                  '), "rP"(' + exactbit + '));')
         
         if lc.target_next is not None:
             newbl += (flatten(cr.loc, ' if (!__builtin_expect(!!(') + 
@@ -137,18 +148,18 @@ class Create_2_MTSCreate(ScopedVisitor):
         block = CVarUse(decl = cr.cvar_block)
         
         newbl += (flatten(cr.loc, 
-                         '__asm__ ("setstart%s %%0, %%2\\t! MT: CREATE %s"'
-                         ' : "=r"(' % (prepsuffix, lbl)) +
-                  usefvar + ') : "0"(' + usefvar + '), "r%s"(' % immfmt + start + ')); ' +
-                  '__asm__ ("setlimit%s %%0, %%2\\t! MT: CREATE %s"' % (prepsuffix, lbl) +
-                  ' : "=r"(' + usefvar + ') : "0"(' + usefvar  + '), "r%s"(' % immfmt + limit + ')); ' +
-                  '__asm__ ("setstep%s %%0, %%2\\t! MT: CREATE %s"' % (prepsuffix, lbl) +
-                  ' : "=r"(' + usefvar + ') : "0"(' + usefvar + '), "r%s"(' % immfmt + step + ')); ' +
-                  '__asm__ ("setblock%s %%0, %%2\\t! MT: CREATE %s"' % (prepsuffix, lbl) +
-                  ' : "=r"(' + usefvar + ') : "0"(' + usefvar + '), "r%s"(' % immfmt + block + ')); ')
+                         '__asm__ ("setstart %%0, %%2\\t! MT: CREATE %s"'
+                         ' : "=r"(' % lbl) +
+                  usefvar + ') : "0"(' + usefvar + '), "rP"(' + start + ')); ' +
+                  '__asm__ ("setlimit %%0, %%2\\t! MT: CREATE %s"' % lbl +
+                  ' : "=r"(' + usefvar + ') : "0"(' + usefvar  + '), "rP"(' + limit + ')); ' +
+                  '__asm__ ("setstep %%0, %%2\\t! MT: CREATE %s"' % lbl +
+                  ' : "=r"(' + usefvar + ') : "0"(' + usefvar + '), "rP"(' + step + ')); ' +
+                  '__asm__ ("setblock %%0, %%2\\t! MT: CREATE %s"' % lbl +
+                  ' : "=r"(' + usefvar + ') : "0"(' + usefvar + '), "rP"(' + block + ')); ')
         if not self.newisa:
             newbl += Opaque('__asm__ ("setthread %%0, %%2\\t! MT: CREATE %s"' % lbl) + \
-                ' : "=r"(' + usefvar + ') : "0"(' + usefvar + '), "r%s"(' % immfmt + funvar + ')); '
+                ' : "=r"(' + usefvar + ') : "0"(' + usefvar + '), "rP"(' + funvar + ')); '
 
 
         crc = Scope()
