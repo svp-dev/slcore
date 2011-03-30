@@ -180,22 +180,36 @@ class TFun_2_MTFun(DefaultVisitor):
             cp = self.regmagic.comprefix
             b.append(flatten(setp.loc, 
                              'do {'
-                             ' __asm__ __volatile__("%(cp)s MT: clobber incoming %(name)s (%%0)"'
-                             ' : "=%(regtype)s"(__slPsin_%(name)s) '
-                             ' : "0"(__slPsin_%(name)s));'
-                             ' __typeof__(__slPsout_%(name)s) __tmp_set_%(name)s = ('
-                             % locals()))
+                             ' __typeof__(__slPsout_%(name)s) __tmp_set_%(name)s = (' % locals()))
             b.append(rhs)
-            b.append(flatten(setp.loc, 
-                             ');'
-                             ' __asm__ __volatile__("%(cp)s MT: start write shared %(name)s (%%0)"'
-                             ' : "=%(regtype)s"(__slPsout_%(name)s) : "0"(__slPsout_%(name)s));'
-                             ' __asm__ __volatile__("%(itype)smov %%4, %%0\\t%(cp)s MT: write shared %(name)s (%%0)"'
-                             ' : "=%(regtype)s" (__slPsout_%(name)s), "=%(regtype)s" (__slPsin_%(name)s)'
-                             ' : "0"(__slPsout_%(name)s), "1" (__slPsin_%(name)s), '
-                             '   "%(regtype)s" (__tmp_set_%(name)s));'
+            b.append(flatten(setp.loc,
+                             ' ); __asm__ __volatile__("%(cp)s MT: clobber incoming %(name)s (%%0)"'
+                             ' : "=%(regtype)s"(__slPsout_%(name)s) ' # : "=%(regtype)s"(__slPsin_%(name)s) '
+                             ' : "0"(__slPsout_%(name)s));'
+                             ' __slPsout_%(name)s = __tmp_set_%(name)s;'
+                             ' __asm__ __volatile__("%(cp)s MT: end write shared %(name)s (%%0)"'
+                             ' : "=%(regtype)s" (__slPsout_%(name)s), "=%(regtype)s"(__slPsin_%(name)s) '
+                             ' : "0"(__slPsout_%(name)s));'
                              '} while(0)'
                              % locals()))
+#             b.append(flatten(setp.loc, 
+#                              'do {'
+#                              ' __asm__ __volatile__("%(cp)s MT: clobber incoming %(name)s (%%0)"'
+#                              ' : "=%(regtype)s"(__slPsin_%(name)s) '
+#                              ' : "0"(__slPsin_%(name)s));'
+#                              ' __typeof__(__slPsout_%(name)s) __tmp_set_%(name)s = ('
+#                              % locals()))
+#             b.append(rhs)
+#             b.append(flatten(setp.loc, 
+#                              ');'
+#                              ' __asm__ __volatile__("%(cp)s MT: start write shared %(name)s (%%0)"'
+#                              ' : "=%(regtype)s"(__slPsout_%(name)s) : "0"(__slPsout_%(name)s));'
+#                              ' __asm__ __volatile__("%(itype)smov %%4, %%0\\t%(cp)s MT: write shared %(name)s (%%0)"'
+#                              ' : "=%(regtype)s" (__slPsout_%(name)s), "=%(regtype)s" (__slPsin_%(name)s)'
+#                              ' : "0"(__slPsout_%(name)s), "1" (__slPsin_%(name)s), '
+#                              '   "%(regtype)s" (__tmp_set_%(name)s));'
+#                              '} while(0)'
+#                              % locals()))
             return b
         else:
             assert name in self.gllist_mem or name in self.gllist
