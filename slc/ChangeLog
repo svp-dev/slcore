@@ -1,5 +1,13 @@
 2011-03-30  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	Small codegen optimization for MT-Sparc
+	
+	* tools/lib/slc/mt/mtsparc/asmproc/base.py (replsave): skip the
+	`save' instruction in thread functions when it was spuriously
+	generated because of some shared/global parameter being used.
+
+2011-03-30  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	Fix a thread creation bug on MT-Sparc.
 
 	* tools/lib/slc/mt/mtsparc/gencreate.py (Create_2_MTSCreate.visit_lowcreate):

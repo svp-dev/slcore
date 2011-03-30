@@ -25,9 +25,9 @@ def detectregs(fundata, items):
             if _re_call.match(content) is not None:
                 hasjumps = True
                 use_sp = True
-            if spreg in content:
+            if spreg in content and not content.startswith('save') and not content.startswith('restore'):
                 use_sp = True
-            if fpreg in content:
+            if fpreg in content and not content.startswith('save') and not content.startswith('restore'):
                 use_fp = True
         yield (type, content, comment)
     fundata['use_sp'] = use_sp
@@ -75,8 +75,15 @@ def killrestore(fundata, items):
         yield (type, content, comment)
 
 def replsave(fundata, items):
+    spreg = regmagic.alias_to_vname('tlsp')
     for (type, content, comment) in items:
         if type == 'other' and content.startswith('save'):
+            if not fundata['use_sp'] and spreg in content:
+                # SP is not used in the body other than this save
+                # (it was generated because of some shared argument using a local register)
+                # so just kill it
+                yield ('emty','','MT: killed ' + content)
+                continue
             rest = content[4:].strip()
             if ',' in rest:
                 yield ('other', 'add ' + rest, 'MT: save')
@@ -500,9 +507,9 @@ _filter_inner = [canonregs,
 
                  replaceret,
                  killrestore,
-                 replsave,
-
                  detectregs,
+
+                 replsave,
                  
                  findlabels,
                  killunusedlabels,
