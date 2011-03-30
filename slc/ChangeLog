@@ -1,3 +1,11 @@
+2011-03-30  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
+	Fix a thread creation bug on MT-Sparc.
+
+	* tools/lib/slc/mt/mtsparc/gencreate.py (Create_2_MTSCreate.visit_lowcreate):
+	Avoid setting register names for arguments if compiling for the
+	new ISA. Collect the shared arguments after sync in all cases.
+
 2011-03-28  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
 	Add primitives to manipulate place identifiers.

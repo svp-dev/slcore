@@ -172,7 +172,7 @@ class Create_2_MTSCreate(ScopedVisitor):
                            name = 'C$aR$%s$%s' % (cr.label, name), 
                            ctype = g['ctype'],
                            init = CVarUse(decl = cr.arg_dic[name].cvar),
-                           reg = r)
+                           reg = (not self.newisa) and r or None)
             crc.decls += var
             gargs.append(CVarUse(decl = var))
             aregn += 1
@@ -184,7 +184,7 @@ class Create_2_MTSCreate(ScopedVisitor):
                            name = 'C$aR$%s$%s' % (cr.label, name), 
                            ctype = mat + '*',
                            init = Opaque(text = '&') + mavar,
-                           reg = r)
+                           reg = (not self.newisa) and r or None)
             crc.decls += var
             gargs.append(CVarUse(decl = var))
             aregn += 1
@@ -200,7 +200,7 @@ class Create_2_MTSCreate(ScopedVisitor):
                            name = 'C$aR$%s$%s' % (cr.label, name), 
                            ctype = s['ctype'],
                            init = CVarUse(decl = arg_cvar),
-                           reg = r)
+                           reg = (not self.newisa) and r or None)
             crc.decls += var
             sargs.append(CVarUse(decl = var))
             collect += CVarSet(decl = arg_cvar, rhs = CVarUse(decl = var)) + Opaque(';')
@@ -224,7 +224,6 @@ class Create_2_MTSCreate(ScopedVisitor):
                             ' __asm__ __volatile__("create %%0, %%0\\t! MT: CREATE %s'
                             '\\n\\tmov %%0, %%0\\t! MT: SYNC %s" : ' % (lbl, lbl)) +
                     olist + ' : ' + ilist + ' : "memory");')
-            crc += collect
 
             if cr.sync_type != 'normal':
                 warn('detached create not supported on this target, using normal sync instead', cr)
@@ -272,7 +271,8 @@ class Create_2_MTSCreate(ScopedVisitor):
                             ' __asm__ __volatile__("release %%0\\t! MT: SYNC %s"' % lbl) +
                     ' : : "r"(' + usefvar + '));')
             
-                
+        # Alias the shared arguments back
+        crc += collect
 
         newbl += crc
 
