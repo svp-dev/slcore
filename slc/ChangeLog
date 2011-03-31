@@ -1,5 +1,12 @@
 2011-03-31  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	Minor fix in codegen for MT-Sparc.
+
+	* tools/lib/slc/mt/mtsparc/asmproc/base.py: Use `.global' not
+	`.globl'.
+
+2011-03-31  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	More assembly enhance code for MT-Sparc.
 
 	* tools/lib/slc/mt/mtalpha/asmproc/opt.py: Move common code to...
