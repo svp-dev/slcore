@@ -97,6 +97,9 @@ nobase_python_PYTHON = \
 	slc/mt/common/asmproc/regextract.py \
 	slc/mt/common/asmproc/markused.py \
 	slc/mt/common/asmproc/labels.py \
+	slc/mt/common/asmproc/swch.py \
+	slc/mt/common/asmproc/end.py \
+	slc/mt/common/asmproc/remdefaults.py \
 	slc/mt/common/asmproc/compress.py \
 	slc/mt/common/asmproc/stageopts.py \
 	slc/mt/mtalpha/__init__.py \

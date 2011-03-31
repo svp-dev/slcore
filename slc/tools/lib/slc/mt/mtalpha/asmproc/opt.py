@@ -57,33 +57,8 @@ def adjustmov(fundata, items):
                 continue
         yield (type, content, comment)
 
-_re_sb = re.compile(r'setstart \$l?\d+,\s*0\s*$')
-_re_sl = re.compile(r'setlimit \$l?\d+,\s*1\s*$')
-_re_ss = re.compile(r'setstep \$l?\d+,\s*1\s*$')
-_re_sbl = re.compile(r'setblock \$l?\d+,\s*0\s*$')
-def remdefaults(fundata, items):
-    """
-    Remove MT control instructions that configure default
-    values.
-    """
-    justignored = False
-    for (type, content, comment) in items:
-        if type == 'other' and \
-                 (_re_sb.match(content) is not None \
-                     or _re_sl.match(content) is not None \
-                     or _re_ss.match(content) is not None \
-                     or _re_sbl.match(content) is not None):
-                # default setting, ignore
-            yield ('empty','','MT: "%s" ignored (uses default) # %s' % (content,comment))
-            justignored = True
-            continue
-        elif type == 'other' and justignored and content == 'swch':
-            yield ('empty','','MT: swch ignored too # %s' % comment)
-            continue
-        justignored = False
-        yield (type, content, comment)
 
-
+from ...common.asmproc.remdefaults import *
 from ...common.asmproc.labels import *
 
 
@@ -265,67 +240,10 @@ def addswchbr(fundata, items):
             yield ('other','swch','MT: sbranch')
 
 
-def rmdupswch(fundata, items):
-    """
-    Remove duplicate "swch" annotations.
-    """
-    seeswch = 0
-    for (type, content, comment) in items:
-        if type == 'other':
-            if content.startswith('swch'):
-                if seeswch == 0:
-                    seeswch = 1
-                    yield (type, content, comment)
-            else:
-                seeswch = 0
-                yield (type, content, comment)
-        else:
-            yield (type, content, comment)
+from ...common.asmproc.swch import *
 
+from ...common.asmproc.end import *
 
-def rmswchbegin(fundata, items):
-    """
-    Remove "swch" annotations immediately following a label.
-    (including at the very start of a function, where it is invalid!)
-    """
-    seeother = False
-    for (type, content, comment) in items:
-        if type == 'label':
-            seeother = False
-        elif type == 'other':
-            if content.startswith('swch') and seeother == False:
-                continue
-            seeother = True
-        yield (type, content, comment)
-
-
-def prunenopend(fundata, items):
-    """
-    Remove "nop" and "fnop" instructions and "swch" annotations that
-    immediately precede "end".
-    """
-    queue = []
-    for (type, content, comment) in items:
-        if type == 'empty':
-            #pprint.pprint((type, content, comment, queue))
-            yield (type, content, comment)
-            continue
-        elif type in ['other','directive']:
-            #pprint.pprint((type, content, comment, queue))
-            if content in ['nop', 'fnop', 'swch']: # and comment != 'MT: branch':
-                queue.append((type, content, comment))
-                continue
-            elif content == 'end':
-                if len(queue)>0:
-                    yield ('empty','','MT: killed cleanup: %s' % ','.join((c[1] for c in queue)))
-                queue = []
-        for q in queue:
-            yield q
-        queue = []
-        yield (type, content, comment)
-
-    for q in queue:
-        yield q
 
 def protectend(fundata, items):
     """
