@@ -1,5 +1,23 @@
 2011-03-31  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	Fixes to codegen for MT-Sparc.
+
+	For uT-LEON3 the allocation failure is -1, not 0. Test that. 
+
+	As of this writing the index limit on uT-LEON3 is inclusive, so
+	add -1 to the value provided in SL code. This breaks the
+	"remdefaults" optimization which will now improperly remove
+	"setlimit" for families of 2 threads. Hopefully the hardware
+	design will be changed soon so we can avoid adding -1 to the
+	limit.
+
+	The uT-LEON3 does not support allocate/x and allocate/s. Fail when
+	they are used.
+
+	* tools/lib/slc/mt/mtsparc/gencreate.py (Create_2_MTSCreate.visit_lowcreate): Do it.
+
+2011-03-31  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	Minor fix in codegen for MT-Sparc.
 
 	* tools/lib/slc/mt/mtsparc/asmproc/base.py: Use `.global' not

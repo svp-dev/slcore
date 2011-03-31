@@ -1,6 +1,6 @@
 from ...visitors import DefaultVisitor, ScopedVisitor, flatten
 from ...ast import *
-from ...msg import warn
+from ...msg import warn,die
 from regdefs import regmagic
 
 class Create_2_MTSCreate(ScopedVisitor):
@@ -104,7 +104,7 @@ class Create_2_MTSCreate(ScopedVisitor):
 
         if cr.extras.has_attr('exclusive'):
             if not self.newisa:
-                warn("exclusive create not supported on this target")
+                die("exclusive create not supported on this target", cr)
             allocinsn = 'allocatex'
         elif lc.target_next is None:
             if cr.extras.has_attr('nowait'):
@@ -118,14 +118,12 @@ class Create_2_MTSCreate(ScopedVisitor):
             else:
                 allocinsn = 'allocate'
         
-        if allocinsn == 'allocate' and not self.newisa:
-                warn("non-suspending create may not be supported on this target")
         if allocinsn == 'allocates' and not self.newisa:
-                warn("suspending create may not be supported on this target")
+                die("suspending create is not supported on this target", cr)
 
         if cr.extras.has_attr('allcores'):
             if not self.newisa:
-                warn("attribute 'allcores' has no effect on this target")
+                warn("attribute 'allcores' has no effect on this target", cr)
             exactbit = '1'
         else:
             exactbit = '0'
@@ -138,9 +136,14 @@ class Create_2_MTSCreate(ScopedVisitor):
                   '), "rP"(' + exactbit + '));')
         
         if lc.target_next is not None:
-            newbl += (flatten(cr.loc, ' if (!__builtin_expect(!!(') + 
-                      usefvar + '), 1)) ' + 
-                      CGoto(target = lc.target_next)) + ';'
+            if self.newisa:
+                failval = 0
+            else:
+                failval = -1
+
+            newbl += (flatten(cr.loc, ' if (__builtin_expect(%d == (' % failval) + 
+                          usefvar + '), 0)) ' + 
+                          CGoto(target = lc.target_next)) + ';'
         
         start = CVarUse(decl = cr.cvar_start)
         limit = CVarUse(decl = cr.cvar_limit)
@@ -150,16 +153,21 @@ class Create_2_MTSCreate(ScopedVisitor):
         newbl += (flatten(cr.loc, 
                          '__asm__ ("setstart %%0, %%2\\t! MT: CREATE %s"'
                          ' : "=r"(' % lbl) +
-                  usefvar + ') : "0"(' + usefvar + '), "rP"(' + start + ')); ' +
-                  '__asm__ ("setlimit %%0, %%2\\t! MT: CREATE %s"' % lbl +
-                  ' : "=r"(' + usefvar + ') : "0"(' + usefvar  + '), "rP"(' + limit + ')); ' +
+                  usefvar + ') : "0"(' + usefvar + '), "rP"(' + start + ')); '
                   '__asm__ ("setstep %%0, %%2\\t! MT: CREATE %s"' % lbl +
-                  ' : "=r"(' + usefvar + ') : "0"(' + usefvar + '), "rP"(' + step + ')); ' +
+                  ' : "=r"(' + usefvar + ') : "0"(' + usefvar + '), "rP"(' + step + ')); ' 
                   '__asm__ ("setblock %%0, %%2\\t! MT: CREATE %s"' % lbl +
                   ' : "=r"(' + usefvar + ') : "0"(' + usefvar + '), "rP"(' + block + ')); ')
-        if not self.newisa:
-            newbl += Opaque('__asm__ ("setthread %%0, %%2\\t! MT: CREATE %s"' % lbl) + \
-                ' : "=r"(' + usefvar + ') : "0"(' + usefvar + '), "rP"(' + funvar + ')); '
+        if self.newisa:
+              newbl += (Opaque('__asm__ ("setlimit %%0, %%2\\t! MT: CREATE %s"' % lbl) +
+                  ' : "=r"(' + usefvar + ') : "0"(' + usefvar  + '), "rP"(' + limit + ')); ')
+        else: # not self.newisa:
+            # FIXME: this "-1" business is an ugly hack : uT-LEON3 was based on a screwed up
+            # simulator source which used inclusive limits.
+            newbl += (Opaque('__asm__ ("setlimit %%0, %%2\\t! MT: CREATE %s"' % lbl) +
+                      ' : "=r"(' + usefvar + ') : "0"(' + usefvar  + '), "rP"((' + limit + ')-1)); '
+                      '__asm__ ("setthread %%0, %%2\\t! MT: CREATE %s"' % lbl +
+                      ' : "=r"(' + usefvar + ') : "0"(' + usefvar + '), "rP"(' + funvar + ')); ')
 
 
         crc = Scope()
