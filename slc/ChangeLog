@@ -1,5 +1,12 @@
 2011-04-01  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	Add precision digits to the efficiency computation on uT-LEON3.
+
+	* lib/src/perf.c (mtperf_compute_extra): Set `core_rate' to 100
+	to get 2 digits precision
+
+2011-04-01  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	Increase compatibility with the FPGA environment.
 
 	* tools/lib/mtalpha-fpga/slrt.s: Allocate some space for TLS

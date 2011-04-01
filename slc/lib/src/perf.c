@@ -45,6 +45,11 @@ const char* mtperf_counter_names[] = {
   "localtime",
   "n_cl_loads_ext",
   "n_cl_stores_ext",
+// computed columns
+  "pl_eff",
+  "tt_occp",
+  "ft_occp",
+  "xq_avg",
 #endif
 #if defined(__slc_os_fpga__)
   "ic_holdn",
@@ -65,13 +70,8 @@ const char* mtperf_counter_names[] = {
   "dc_miss",
   "s_holdn",
   "rf_holdn",
-#endif
 // computed columns
-  "pl_eff",
-#if defined(__slc_os_sim)
-  "tt_occp",
-  "ft_occp",
-  "xq_avg",
+  "pl_eff_x100",
 #endif
 #else
   "unixtime",
@@ -119,7 +119,7 @@ ARITH mtperf_compute_extra(const counter_t* before, const counter_t* after, unsi
     long core_rate = *mgconf_master_freq / *mgconf_core_freq;
 #else
     counter_t ncores = 1;
-    long core_rate = 1;
+    long core_rate = 100;
 #endif
 
     counter_t elapsed = after[MTPERF_CLOCKS] - before[MTPERF_CLOCKS];
