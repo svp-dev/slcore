@@ -174,13 +174,21 @@ def xsplit(fundata, items):
     fundata['prologue'] = []
 
 
-def initspecial(fundata, items):
+def initsp(fundata, items):
     """
     If SP is needed, initialize it in the prologue.
     """
     spreg = regmagic.alias_to_vname("tlsp")
     if fundata['use_sp']:
-        fundata['prologue'].insert(0, ('other', 'ldfp %s' % spreg, 'MT: init SP'))
+        if not 'tls-via-gettid' in initsp.extra_options:
+            fundata['prologue'].insert(0, ('other', 'ldfp %s' % spreg, 'MT: init SP'))
+        else:
+            fundata['prologue'] = [
+                ('other', 'gettid %s' % spreg, 'MT: init SP'),
+                ('other', 'sethi %hi(__first_tls_top), $l1', 'MT: init SP'),
+                ('other', 'sll %s,10,%s' % (spreg,spreg), 'MT: init SP'),
+                ('other', 'add %s,$l1,%s' % (spreg,spreg), 'MT: init SP'),
+                ] + fundata['prologue']
 
     return items
 
@@ -517,7 +525,7 @@ _filter_inner = [canonregs,
                  xsplit,
 
                  protectallcallregs,
-                 initspecial,
+                 initsp,
 
 
                  xjoin1,

@@ -1,5 +1,17 @@
 2011-04-01  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	Implement TLS access using `gettid' on MT-Sparc.
+
+	* tools/lib/slc/mt/mtsparc/asmproc/base.py: Rename `initspecial'
+	to `initsp'. Use option `tls-via-gettid' to decide which scheme to
+	use. Implement the scheme using `gettid' when selected, using
+	`__first_tls_top' as an indicator where to start addressing.
+
+	* tools/bin/cce.in: Enable `tls-via-gettid' for uT-LEON3 by
+	default.
+
+2011-04-01  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	New assembly enhance option `no-swch-before-ll-use'.
 
 	* tools/lib/slc/mt/mtalpha/asmproc/opt.py (addswchll): Do it.

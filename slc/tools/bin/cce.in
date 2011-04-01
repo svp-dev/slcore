@@ -382,6 +382,7 @@ case $slc_arch-$slc_os in
 	slc_ldflags+=(-Wl,-Ttext -Wl,0x1000000 -nostdlib)
 	;;
     *-fpga)
+        extra_f1flags+=(-x tls-via-gettid)
 	slc_ldflags+=(-Wl,-Ttext -Wl,0 -nostdlib)
 	;;
     host-host-hrt)
@@ -451,6 +452,7 @@ case $slc_os in
 esac
 
 set | grep '^slc_'
+set | grep '^extra_'
 
 
 
