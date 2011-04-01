@@ -1,3 +1,19 @@
+2011-04-01  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
+	Create a mechanism to parameterize the assembly stages.
+
+	* tools/lib/slc/mt/common/asmproc/stageopts.py (makestageopts):
+	Recognize a new command-line argument `-x'. Store the names
+	provided in an `extras' array.
+
+	* tools/lib/slc/mt/common/asmproc/fixup.py (filter),	
+	* tools/lib/slc/mt/common/asmproc/enhance.py (filter): provide the
+	extra options to the individual stages.
+	
+	* tools/bin/slc.in: New command-line arguments `-fasmfix-arg-XXX'
+	and `-fasmopt-arg-XXX'. This provides `-x XXX' to the underlying
+	filter.
+
 2011-03-31  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
 	Fixes to codegen for MT-Sparc.

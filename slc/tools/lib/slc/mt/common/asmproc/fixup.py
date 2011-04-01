@@ -21,18 +21,23 @@ def filter(fbegin, finner, fcinner, fend, *args):
         except Exception, e:
             die('%s: %r' % (fname, e))
 
+    extras = opts.resolved.extras
     for inname in opts.inputs:
         items = inname
         for t in fbegin:
+            t.extra_options = extras
             items = t(items)
             items = dump.dump_gen(t.__name__, items)
         for t in finner:
+            t.extra_options = extras
             items = funfilter(t, items)
             items = dump.dump_gen(t.__name__, items)
         for t in fcinner:
+            t.extra_options = extras
             items = cfunfilter(t, items)
             items = dump.dump_gen(t.__name__, items)
         for t in fend:
+            t.extra_options = extras
             items = t(items)
             items = dump.dump_gen(t.__name__, items)
         lines = items

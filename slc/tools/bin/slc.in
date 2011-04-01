@@ -191,6 +191,9 @@ for arg in "$@"; do
           slc_debug_flags+=("$arg");;
       -g*|-p|-pg) slc_debug_flags+=("$arg");;
 
+      -fasmfix-arg-*)     extra_f1flags+=(-x "${arg#-fasmfix-arg-}");;
+      -fasmopt-arg-*)     extra_f2flags+=(-x "${arg#-fasmopt-arg-}");;
+
       -fasmopt)      do_filt2=yes ;;
       -fno-asmopt)   do_filt2= ;;
       -fasmopt-*)    extra_f2flags+=(-e "${arg#-fasmopt-}");;

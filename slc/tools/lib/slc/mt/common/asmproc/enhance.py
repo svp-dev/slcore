@@ -45,17 +45,21 @@ def filter(fbegin, fstages, fend, *args):
         except Exception, e:
             die('%s: %r' % (fname, e))
 
+    extras = opts.resolved.extras
     for inname in opts.inputs:
         items = inname
         for t in fbegin:
+            t.extra_options = extras
             items = t(items)
             items = dump.dump_gen(t.__name__, items)
         for t in fstages:
             if sel[t.__name__]:
                 #if verbose: log('asmopt: %s' % t.__name__)
+                t.extra_options = extras
                 items = funfilter(t, items)
                 items = dump.dump_gen(t.__name__, items)
         for t in fend:
+            t.extra_options = extras
             items = t(items)
             items = dump.dump_gen(t.__name__, items)
         lines = items
