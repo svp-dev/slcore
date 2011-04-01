@@ -1,5 +1,11 @@
 2011-04-01  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	New assembly enhance option `no-swch-before-ll-use'.
+
+	* tools/lib/slc/mt/mtalpha/asmproc/opt.py (addswchll): Do it.
+
+2011-04-01  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	Create a mechanism to parameterize the assembly stages.
 
 	* tools/lib/slc/mt/common/asmproc/stageopts.py (makestageopts):

@@ -98,6 +98,8 @@ def addswchll(fundata, items):
 
     allregs = regmagic.allregs
         
+    swchbeforell = not 'no-swch-before-ll-use' in addswchll.extra_options
+
     # initially exclude index
     maybell = allregs.copy()
     for (type, content, comment) in items:
@@ -201,7 +203,7 @@ def addswchll(fundata, items):
                     if seereg(rx,r):
                         test = 1
                         q.add(rx)
-            if test == 1:
+            if test == 1 and swchbeforell:
                 yield ('other','swch','MT: before-ll: %s' % ','.join(q))
             yield (type, content, comment)
             if test == 1:
