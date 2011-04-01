@@ -16,6 +16,7 @@
 #define SLC_MTA_ASSERT_H
 
 #include <svp/compiler.h>
+#include <svp/testoutput.h>
 
 #undef assert
 
@@ -25,12 +26,15 @@
 
 // forward decl, we avoid including stdio/stdlib
 void abort(void);
-int  printf(const char * restrict, ...);
 
 #define assert(e)  \
     ((void) (likely(e) ? 0 : __assert (#e, __FILE__, __LINE__)))
-#define __assert(e, file, line) \
-    ((void)printf ("%s:%u: failed assertion `%s'\n", file, line, e), abort())
+#define __assert(e, file, line)                                         \
+    ((void)({                                                           \
+            output_string(file ":", 2);                                 \
+            output_uint(line, 2);                                       \
+            output_string(": failed assertion `" e "'\n", 2);           \
+        }), abort())
 
 #endif
 

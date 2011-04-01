@@ -14,7 +14,7 @@
 
 #include <svp/perf.h>
 #include <svp/testoutput.h>
-#include <svp/fast_malloc.h>
+
 #ifdef __mt_freestanding__
 #include "mtconf.h"
 #endif
@@ -26,7 +26,8 @@
 // indices in perf.h.
 const char* mtperf_counter_names[] = {
   "clocks",
-#ifdef __mt_freestanding__
+#if defined(__mt_freestanding__)
+#if defined(__slc_os_sim__)
   "n_exec_insns",
   "n_issued_flops",
   "n_compl_core_loads",
@@ -44,11 +45,34 @@ const char* mtperf_counter_names[] = {
   "localtime",
   "n_cl_loads_ext",
   "n_cl_stores_ext",
+#endif
+#if defined(__slc_os_fpga__)
+  "ic_holdn",
+  "dc_holdn",
+  "fp_holdn",
+  "force_nop",
+  "holdn",
+  "iu_sch_bus",
+  "sch_iu_bus",
+  "committed",
+  "ic_grant",
+  "dc_grant",
+  "rf_syn_wr",
+  "rf_asyn_wr",
+  "rf_conc_wr",
+  "rau_rls",
+  "rau_alloc",
+  "dc_miss",
+  "s_holdn",
+  "rf_holdn",
+#endif
 // computed columns
   "pl_eff",
+#if defined(__slc_os_sim)
   "tt_occp",
   "ft_occp",
   "xq_avg",
+#endif
 #else
   "unixtime",
 #endif
@@ -57,8 +81,17 @@ const char* mtperf_counter_names[] = {
 #define pc(Ch) output_char((Ch), stream)
 #define ps(Str) output_string((Str), stream)
 #define pn(Num) output_int((Num), stream)
-#define pf(Num) output_float((Num), stream, 6)
 #define pnl  output_char('\n', stream);
+
+#if defined(__mt_freestanding__) && defined(__slc_os_fpga__)
+#define ARITH long
+#define pf(Num) output_int((Num), stream)
+#else
+#define ARITH float
+#define pf(Num) output_float((Num), stream, 6)
+#endif
+
+
 
 #define bfibre(N) do { \
     output_char('[', stream); \
@@ -76,26 +109,34 @@ const char* mtperf_counter_names[] = {
 #endif
 #define max(a,b) ((a) > (b) ? (a) : (b))
 
+
 static 
-float mtperf_compute_extra(const counter_t* before, const counter_t* after, unsigned extra)
+ARITH mtperf_compute_extra(const counter_t* before, const counter_t* after, unsigned extra)
 {
-#ifdef __mt_freestanding__    
-    long core_rate = *mgconf_master_freq / *mgconf_core_freq;
+#if defined(__mt_freestanding__)
+#if defined(__slc_os_sim__)
     counter_t ncores = after[MTPERF_PLACE_SIZE];
+    long core_rate = *mgconf_master_freq / *mgconf_core_freq;
+#else
+    counter_t ncores = 1;
+    long core_rate = 1;
+#endif
+
     counter_t elapsed = after[MTPERF_CLOCKS] - before[MTPERF_CLOCKS];
 
     switch (extra) {
     case 0:
     {
-        float itotal = after[MTPERF_EXECUTED_INSNS] - before[MTPERF_EXECUTED_INSNS];
+        ARITH itotal = after[MTPERF_EXECUTED_INSNS] - before[MTPERF_EXECUTED_INSNS];
         itotal /= ncores;
         if (elapsed) return itotal * core_rate / elapsed;
         break;
     }
+#if defined(__slc_os_sim__)
     case 1:
     {
         // thread table occupancy
-        float ttotal = after[MTPERF_CUMUL_TT_OCCUPANCY] - before[MTPERF_CUMUL_TT_OCCUPANCY];
+        ARITH ttotal = after[MTPERF_CUMUL_TT_OCCUPANCY] - before[MTPERF_CUMUL_TT_OCCUPANCY];
         ttotal /= ncores;
         ttotal /= *mgconf_ttes_per_core;
         if (elapsed) return ttotal /= elapsed;
@@ -104,7 +145,7 @@ float mtperf_compute_extra(const counter_t* before, const counter_t* after, unsi
     case 2:
     {
         // family table occupancy
-        float ttotal = after[MTPERF_CUMUL_FT_OCCUPANCY] - before[MTPERF_CUMUL_FT_OCCUPANCY];
+        ARITH ttotal = after[MTPERF_CUMUL_FT_OCCUPANCY] - before[MTPERF_CUMUL_FT_OCCUPANCY];
         ttotal /= ncores;
         ttotal /= *mgconf_ftes_per_core;
         if (elapsed) return ttotal /= elapsed;
@@ -113,12 +154,15 @@ float mtperf_compute_extra(const counter_t* before, const counter_t* after, unsi
     case 3:
     {
         // exclusive allocate queue size
-        float ttotal = after[MTPERF_CUMUL_ALLOC_EX_QSIZE] - before[MTPERF_CUMUL_ALLOC_EX_QSIZE];
+        ARITH ttotal = after[MTPERF_CUMUL_ALLOC_EX_QSIZE] - before[MTPERF_CUMUL_ALLOC_EX_QSIZE];
         ttotal /= ncores;
         if (elapsed) return ttotal /= elapsed;
         break;
     }
 #define N_EXTRA_COLUMNS 4
+#else
+#define N_EXTRA_COLUMNS 1
+#endif
     }
 #else
 #define N_EXTRA_COLUMNS 0

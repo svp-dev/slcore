@@ -1,6 +1,7 @@
 ########### MT-Alpha components ###########
 
 MTALIB_CSRC = \
+	src/mtinput.c \
 	src/abort.c \
 	src/atoi.c \
 	src/atol.c \
@@ -20,11 +21,9 @@ MTALIB_CSRC = \
 	src/_hdtoa.c \
 	src/heap.c \
 	src/malloc.c \
-	src/malloc_excl.c \
 	src/memcpy.c \
 	src/memmove.c \
 	src/memset.c \
-	src/mtconf.c \
 	src/mtstdio.c \
 	src/perf.c \
 	src/perf_wrappers.c \
@@ -61,9 +60,13 @@ MTALIB_CSRC = \
 	src/vsnprintf.c
 
 MTALIB_SRC = \
+	src/malloc_excl.c \
 	src/div.c \
 	src/roman.c \
-	src/io.c \
+	src/io.c
+
+MTALIB_SIM_SRC = \
+	src/mtconf.c \
 	src/mtinit.c \
 	src/mtsep.c
 
@@ -78,7 +81,7 @@ MTALIB_EXTRA = \
 	src/printfcommon.h \
 	src/printflocal.h
 
-EXTRA_DIST += $(MTALIB_CSRC) $(MTALIB_SRC) $(MTALIB_EXTRA)
+EXTRA_DIST += $(MTALIB_CSRC) $(MTALIB_SRC) $(MTALIB_SIM_SRC) $(MTALIB_EXTRA)
 
 MALLOC_DEFS = -DLACKS_SYS_TYPES_H \
 	-DUSE_DL_PREFIX \
@@ -140,7 +143,8 @@ TLSMALLOC_DEFS_MTA = \
 MTALIB_COBJS = \
 	$(addprefix mta_,$(addsuffix .o,$(notdir $(basename $(MTALIB_CSRC))))) \
 	$(addprefix mta_gdtoa_,$(addsuffix .o,$(notdir $(basename $(GDTOA_SRC))))) \
-	mta_tlsmalloc.o
+	mta_tlsmalloc.o \
+	mta_malloc_excl.o
 
 SLC_MTA = $(SLC_RUN) -b mta $(SHUTUP)
 
@@ -183,7 +187,8 @@ mta_malloc_debug.o: $(srcdir)/src/malloc.c
 
 # $(3)_libsl_a_CONTENTS = \
 #	$(MTALIB_COBJS) \
-# 	$(addprefix $(2)/,$(addsuffix .o,$(notdir $(basename $(MTALIB_SRC)))))
+# 	$(addprefix $(2)/,$(addsuffix .o,$(notdir $(basename $(MTALIB_SRC))))) \
+# 	$(addprefix $(2)/,$(addsuffix .o,$(notdir $(basename $(MTALIB_SIM_SRC))))) 
 
 # CLEANFILES += \
 # 	$($(3)_libsl_a_CONTENTS) \
@@ -252,7 +257,8 @@ nobase_pkglib_DATA += \
 
 mta_hybrid_mtalpha_sim_libsl_a_CONTENTS = \
 	$(MTALIB_COBJS) \
-	$(addprefix mta_hybrid-mtalpha-sim/,$(addsuffix .o,$(notdir $(basename $(MTALIB_SRC)))))
+	$(addprefix mta_hybrid-mtalpha-sim/,$(addsuffix .o,$(notdir $(basename $(MTALIB_SRC))))) \
+	$(addprefix mta_hybrid-mtalpha-sim/,$(addsuffix .o,$(notdir $(basename $(MTALIB_SIM_SRC)))))
 
 CLEANFILES += \
 	$(mta_hybrid_mtalpha_sim_libsl_a_CONTENTS) \
@@ -278,7 +284,8 @@ nobase_pkglib_DATA += \
 
 seq_naked_mtalpha_sim_libsl_a_CONTENTS = \
 	$(MTALIB_COBJS) \
-	$(addprefix seq_naked-mtalpha-sim/,$(addsuffix .o,$(notdir $(basename $(MTALIB_SRC)))))
+	$(addprefix seq_naked-mtalpha-sim/,$(addsuffix .o,$(notdir $(basename $(MTALIB_SRC))))) \
+	$(addprefix seq_naked-mtalpha-sim/,$(addsuffix .o,$(notdir $(basename $(MTALIB_SIM_SRC)))))
 
 CLEANFILES += \
 	$(seq_naked_mtalpha_sim_libsl_a_CONTENTS) \
@@ -306,7 +313,8 @@ nobase_pkglib_DATA += \
 
 mta_naked_mtalpha_sim_libsl_a_CONTENTS = \
 	$(MTALIB_COBJS) \
-	$(addprefix mta_naked-mtalpha-sim/,$(addsuffix .o,$(notdir $(basename $(MTALIB_SRC))))) 
+	$(addprefix mta_naked-mtalpha-sim/,$(addsuffix .o,$(notdir $(basename $(MTALIB_SRC))))) \
+	$(addprefix mta_naked-mtalpha-sim/,$(addsuffix .o,$(notdir $(basename $(MTALIB_SIM_SRC)))))
 
 CLEANFILES += \
 	$(mta_naked_mtalpha_sim_libsl_a_CONTENTS) \

@@ -23,7 +23,7 @@ void* dlcalloc(size_t, size_t);
 void* dlrealloc(void*, size_t);
 
 /* "fast" aliases */
-#if defined(__mt_freestanding__) && (defined(__alpha__) || defined(__mtalpha__) || defined(__mtsparc__))
+#if defined(__mt_freestanding__) && defined(__slc_os_sim__)
 
 #include <svp/compiler.h>
 

@@ -5,8 +5,11 @@
 
 /*** Configuration ***/
 
+#if defined(__slc_os_fpga__)
+#define SLOT_SIZE 256
+#else
 #define SLOT_SIZE 8192
-
+#endif
 
 #define BITMAP_LIMB_T unsigned long
 #define CTZ __builtin_ctzl

@@ -1,5 +1,45 @@
 2011-04-01  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	Increase compatibility with the FPGA environment.
+
+	* tools/lib/mtalpha-fpga/slrt.s: Allocate some space for TLS
+	stacks.
+
+	* tools/lib/mtsparc.mk: Also link in `fibre.o' for the FPGA
+	environment.
+
+	* lib/src/tlsmalloc/tlsconfig.h: Use a small slot size on the
+	FPGA (256 bytes).
+	* lib/src/tlsmalloc/tls_arch_mtsparc.h: Rename to...
+	* lib/src/tlsmalloc/tls_arch_mtsparc_sim.h: ...this.
+	* lib/src/tlsmalloc/tls_arch_mtsparc_fpga.h: New. (broken for now)
+	
+	* lib/src/tlsmalloc/Makefile.am: Update the file list.
+
+	* lib/include/svp/mtmalloc.h: Disable the exclusive delegations
+	for now, since exclusive creates are not yet supported on FPGA.
+
+	* lib/include/svp/perf.h,	
+	* lib/src/perf.c: Support the uT-LEON3 performance counters.
+
+	* lib/src/time.c: Stub implementation for the FPGA environment.
+
+	* lib/mtalpha-sim/include/assert.h: Avoid using `printf' as this
+	may not be supported yet.
+
+	* lib/src/mtinit.c: Move the definition of `__fibre_base' and `__slr_base'...
+	* lib/src/mtinput.c: ...here.
+	* lib/Makefile.am: List the new file.
+
+	* lib/mtalpha.mk: Separate the MGSim-specific sources into a
+	distinct list.	
+	* lib/mtsparc.mk: Use it.
+	
+	* lib/mtsparc2.mk: New.
+	* lib/Makefile.am: Include the new file.
+
+2011-04-01  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	Implement TLS access using `gettid' on MT-Sparc.
 
 	* tools/lib/slc/mt/mtsparc/asmproc/base.py: Rename `initspecial'

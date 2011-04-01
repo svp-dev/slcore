@@ -22,11 +22,11 @@ nobase_dist_pkgdata_DATA += \
 	mtsparc-sim/include/strings.h \
 	mtsparc-sim/include/time.h 
 
-MALLOC_DEFS_MTS = \
+MALLOC_DEFS_MTSN = \
 	-DPAGESIZE=0x400000U
 
-TLSMALLOC_DEFS_MTS = \
-	-DARCH_TLS_SERVICES=\"tls_arch_mtsparc.h\"
+TLSMALLOC_DEFS_MTSN = \
+	-DARCH_TLS_SERVICES=\"tls_arch_mtsparc_sim.h\"
 
 MTSNLIB_COBJS = \
 	$(addprefix mtsn_,$(addsuffix .o,$(notdir $(basename $(MTALIB_CSRC))))) \
@@ -39,19 +39,19 @@ mtsn_%.o: $(srcdir)/src/%.c
 	$(slc_verbose)$(SLC_MTSN) -c -o $@ $<
 
 mtsn_tlsmalloc.o: $(srcdir)/src/tlsmalloc/tlsmalloc.c
-	$(slc_verbose)$(SLC_MTSN) -c -o $@ $< $(TLSMALLOC_DEFS) $(TLSMALLOC_DEFS_MTS)
+	$(slc_verbose)$(SLC_MTSN) -c -o $@ $< $(TLSMALLOC_DEFS) $(TLSMALLOC_DEFS_MTSN)
 
 mtsn_tlsmalloc_debug.o: $(srcdir)/src/tlsmalloc/tlsmalloc.c
-	$(slc_verbose)$(SLC_MTSN) -c -o $@ $< $(TLSMALLOC_DEFS) $(TLSMALLOC_DEFS_MTS) -DDEBUG_MALLOC
+	$(slc_verbose)$(SLC_MTSN) -c -o $@ $< $(TLSMALLOC_DEFS) $(TLSMALLOC_DEFS_MTSN) -DDEBUG_MALLOC
 
 mtsn_tlsmalloc_mgdebug.o: $(srcdir)/src/tlsmalloc/tlsmalloc.c
-	$(slc_verbose)$(SLC_MTSN) -c -o $@ $< $(TLSMALLOC_DEFS) $(TLSMALLOC_DEFS_MTS) -DDEBUG_MGSIM
+	$(slc_verbose)$(SLC_MTSN) -c -o $@ $< $(TLSMALLOC_DEFS) $(TLSMALLOC_DEFS_MTSN) -DDEBUG_MGSIM
 
 mtsn_tlstack_malloc_mgdebug.o: $(srcdir)/src/tlstack_malloc.c
 	$(slc_verbose)$(SLC_MTSN) -c -o $@ $< -DDEBUG_MGSIM
 
 mtsn_malloc.o: $(srcdir)/src/malloc.c
-	$(slc_verbose)$(SLC_MTSN) -c -o $@ $< $(MALLOC_DEFS) $(MALLOC_DEFS_MTS)
+	$(slc_verbose)$(SLC_MTSN) -c -o $@ $< $(MALLOC_DEFS) $(MALLOC_DEFS_MTSN)
 
 mtsn_malloc_debug.o: $(srcdir)/src/malloc.c
 	$(slc_verbose)$(SLC_MTSN) -c -o $@ $< $(MALLOC_DEFS) -DDEBUG=1 -DABORT_ON_ASSERT_FAILURE=0 -DFOOTERS=1
@@ -72,6 +72,7 @@ mtsn_malloc_debug.o: $(srcdir)/src/malloc.c
 # $(3)_libsl_a_CONTENTS = \
 #	$(MTALIB_COBJS) \
 # 	$(addprefix $(2)/,$(addsuffix .o,$(notdir $(basename $(MTALIB_SRC)))))
+# 	$(addprefix $(2)/,$(addsuffix .o,$(notdir $(basename $(MTALIB_SIM_SRC)))))
 
 # CLEANFILES += \
 # 	$($(3)_libsl_a_CONTENTS) \
@@ -110,9 +111,9 @@ nobase_pkglib_DATA += \
 mtsparc_sim_libm_a_CONTENTS = \
    mtsn_empty.o 
 
-
 mtsparc_sim_libmalloc_notls_a_CONTENTS = \
-   mtsn_malloc_wrappers.o
+   mtsn_malloc_wrappers.o 
+
 
 # we do not use mtsparc_sim_libm_a_CONTENTS in CLEANFILES below
 # because we want to preserve the MTAMATHOBJS
@@ -140,7 +141,8 @@ nobase_pkglib_DATA += \
 
 mtsn_hybrid_mtsparc_sim_libsl_a_CONTENTS = \
 	$(MTSNLIB_COBJS) \
-	$(addprefix mtsn_hybrid-mtsparc-sim/,$(addsuffix .o,$(notdir $(basename $(MTALIB_SRC)))))
+	$(addprefix mtsn_hybrid-mtsparc-sim/,$(addsuffix .o,$(notdir $(basename $(MTALIB_SRC))))) \
+	$(addprefix mtsn_hybrid-mtsparc-sim/,$(addsuffix .o,$(notdir $(basename $(MTALIB_SIM_SRC)))))
 
 CLEANFILES += \
 	$(mtsn_hybrid_mtsparc_sim_libsl_a_CONTENTS) \
@@ -166,7 +168,8 @@ nobase_pkglib_DATA += \
 
 seq_naked_mtsparc_sim_libsl_a_CONTENTS = \
 	$(MTSNLIB_COBJS) \
-	$(addprefix seq_naked-mtsparc-sim/,$(addsuffix .o,$(notdir $(basename $(MTALIB_SRC)))))
+	$(addprefix seq_naked-mtsparc-sim/,$(addsuffix .o,$(notdir $(basename $(MTALIB_SRC))))) \
+	$(addprefix seq_naked-mtsparc-sim/,$(addsuffix .o,$(notdir $(basename $(MTALIB_SIM_SRC)))))
 
 CLEANFILES += \
 	$(seq_naked_mtsparc_sim_libsl_a_CONTENTS) \
@@ -194,7 +197,8 @@ nobase_pkglib_DATA += \
 
 mtsn_naked_mtsparc_sim_libsl_a_CONTENTS = \
 	$(MTSNLIB_COBJS) \
-	$(addprefix mtsn_naked-mtsparc-sim/,$(addsuffix .o,$(notdir $(basename $(MTALIB_SRC))))) 
+	$(addprefix mtsn_naked-mtsparc-sim/,$(addsuffix .o,$(notdir $(basename $(MTALIB_SRC)))))  \
+	$(addprefix mtsn_naked-mtsparc-sim/,$(addsuffix .o,$(notdir $(basename $(MTALIB_SIM_SRC)))))
 
 CLEANFILES += \
 	$(mtsn_naked_mtsparc_sim_libsl_a_CONTENTS) \
@@ -212,6 +216,8 @@ mtsn_naked-mtsparc-sim/%.a:
 	$(AM_V_at)$(RANLIB_MTSPARC) $@
 
 mtsn_naked-mtsparc-sim/libsl.a: $(mtsn_naked_mtsparc_sim_libsl_a_CONTENTS)
+
+
 
 
 endif

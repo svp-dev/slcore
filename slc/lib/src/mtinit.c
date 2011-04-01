@@ -1,7 +1,7 @@
 //
 // mtinit.c: this file is part of the SL toolchain.
 //
-// Copyright (C) 2009,2010 The SL project.
+// Copyright (C) 2009,2010,2011 The SL project.
 //
 // This program is free software; you can redistribute it and/or
 // modify it under the terms of the GNU General Public License
@@ -22,10 +22,6 @@
 #include <time.h>
 #include "mtconf.h"
 #include "heap.h"
-
-/* some global variables used by programs */
-struct fibre_base_t *__fibre_base;
-struct __slr_base_t *__slr_base;
 
 int verbose_boot;
 

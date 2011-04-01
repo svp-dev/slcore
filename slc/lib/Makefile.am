@@ -25,6 +25,7 @@ EXTRA_DIST = \
 	src/mtinit.c \
 	src/mtclock.c \
 	src/mtsep.c \
+	src/mtinput.c \
 	src/div.c
 
 nobase_dist_pkgdata_DATA = \
@@ -72,4 +73,5 @@ include $(srcdir)/seqc.mk
 include $(srcdir)/ptl.mk
 include $(srcdir)/mtalpha.mk
 include $(srcdir)/mtsparc.mk
+include $(srcdir)/mtsparc2.mk
 

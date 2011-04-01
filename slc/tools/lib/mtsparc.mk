@@ -65,6 +65,7 @@ nobase_pkglib_DATA += \
 
 mts_hybrid_mtsparc_fpga_libslc_a_CONTENTS = \
 	mts_hybrid-mtsparc-fpga/dummyplaces.o \
+	mts_hybrid-mtsparc-fpga/fibre.o \
 	mts_hybrid-mtsparc-fpga/callgate.o 
 
 mts_hybrid_mtsparc_fpga_libslmain_a_CONTENTS = \
@@ -91,6 +92,7 @@ mts_hybrid-mtsparc-fpga/%.o: $(srcdir)/%.c
 CLEANFILES += \
 	mts_hybrid-mtsparc-fpga/dummyplaces.o \
 	mts_hybrid-mtsparc-fpga/callgate.o \
+	mts_hybrid-mtsparc-fpga/fibre.o \
 	mts_hybrid-mtsparc-fpga/main.o \
 	mts_hybrid-mtsparc-fpga/slrt.o \
 	mts_hybrid-mtsparc-fpga/libslc.a \
@@ -107,6 +109,7 @@ nobase_pkglib_DATA += \
 
 seq_naked_mtsparc_fpga_libslc_a_CONTENTS = \
 	seq_naked-mtsparc-fpga/dummyplaces.o \
+	seq_naked-mtsparc-fpga/fibre.o \
 	seq_naked-mtsparc-fpga/callgate.o 
 
 seq_naked_mtsparc_fpga_libslmain_a_CONTENTS = \
@@ -133,52 +136,12 @@ seq_naked-mtsparc-fpga/%.o: $(srcdir)/%.c
 CLEANFILES += \
 	seq_naked-mtsparc-fpga/dummyplaces.o \
 	seq_naked-mtsparc-fpga/callgate.o \
+	seq_naked-mtsparc-fpga/fibre.o \
 	seq_naked-mtsparc-fpga/main.o \
 	seq_naked-mtsparc-fpga/slrt.o \
 	seq_naked-mtsparc-fpga/libslc.a \
 	seq_naked-mtsparc-fpga/libslmain.a
 
-### MT-naked targets
-
-#$(eval $(call MTS_TEMPLATE,mts_n,mts_naked-mtsparc-fpga,mts_naked_mtsparc_fpga)
-
-nobase_pkglib_DATA += \
-	mts_naked-mtsparc-fpga/slrt.o \
-	mts_naked-mtsparc-fpga/libslc.a \
-	mts_naked-mtsparc-fpga/libslmain.a 
-
-mts_naked_mtsparc_fpga_libslc_a_CONTENTS = \
-	mts_naked-mtsparc-fpga/dummyplaces.o \
-	mts_naked-mtsparc-fpga/callgate.o 
-
-mts_naked_mtsparc_fpga_libslmain_a_CONTENTS = \
-	mts_naked-mtsparc-fpga/main.o 
-
-mts_naked-mtsparc-fpga/%.a:
-	$(AM_V_at)rm -f $@
-	$(AM_V_AR)$(AR_MTSPARC) cru $@ $^
-	$(AM_V_at)$(RANLIB_MTSPARC) $@
-
-mts_naked-mtsparc-fpga/libslc.a: $(mts_naked_mtsparc_fpga_libslc_a_CONTENTS)
-mts_naked-mtsparc-fpga/libslmain.a: $(mts_naked_mtsparc_fpga_libslmain_a_CONTENTS)
-
-SLC_MTS_N := $(SLC_RUN) -b mts_n -nostdlib
-
-mts_naked-mtsparc-fpga/%.o: $(srcdir)/mtsparc-fpga/%.s
-	$(AM_V_at)$(MKDIR_P) mts_naked-mtsparc-fpga
-	$(slc_verbose)$(SLC_MTS_N) -c -o $@ $<
-
-mts_naked-mtsparc-fpga/%.o: $(srcdir)/%.c
-	$(AM_V_at)$(MKDIR_P) mts_naked-mtsparc-fpga
-	$(slc_verbose)$(SLC_MTS_N) -c -o $@ $<
-
-CLEANFILES += \
-	mts_naked-mtsparc-fpga/dummyplaces.o \
-	mts_naked-mtsparc-fpga/main.o \
-	mts_naked-mtsparc-fpga/slrt.o \
-	mts_naked-mtsparc-fpga/callgate.o \
-	mts_naked-mtsparc-fpga/libslc.a \
-	mts_naked-mtsparc-fpga/libslmain.a
 
 
 ### MT-hybrid targets

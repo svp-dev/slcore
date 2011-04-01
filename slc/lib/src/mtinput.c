@@ -1,5 +1,5 @@
 //
-// time.c: this file is part of the SL toolchain.
+// mtinput.c: this file is part of the SL toolchain.
 //
 // Copyright (C) 2011 The SL project.
 //
@@ -11,17 +11,9 @@
 // The complete GNU General Public Licence Notice can be found as the
 // `COPYING' file in the root directory.
 //
-#include <svp/perf.h>
-#include <time.h>
 
-time_t time(time_t *p)
-{
-#ifdef MTPERF_UNIX_TIME
-    time_t c = mtperf_sample1(MTPERF_UNIX_TIME);
-#else
-    time_t c = 1;
-#endif
-    if (p)
-        *p = c;
-    return c;
-}
+#include <svp/fibre.h>
+#include <svp/slr.h>
+
+struct fibre_base_t *__fibre_base;
+struct __slr_base_t *__slr_base;

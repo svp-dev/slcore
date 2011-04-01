@@ -11,13 +11,28 @@
 # `COPYING' file in the root directory.
 #
 
+! TLS RESERVATION AREA
+        .section ".bss"
+        .global __tls_base
+        .global __first_tls_top
+        .lcomm __tls_base,1024
+        .lcomm __first_tls_top,261120
+
+! PROGRAM ENTRY POINT
+! enter with b,a _start in a thread function
+! declared with 24 local registers.
 	.section ".text"
         .align 64
         .global _start
         .type _start, #function
         .proc 010
 _start:
-        ldfp    %o6
+        ! make SP from TLS reservation
+        gettid  %o6
+        sethi %hi(__first_tls_top), %g1
+        sll     %o6,10,%o6
+        add     %o6,%g1,%o6
+        
         sub     %o6, 64, %o6
         clr     %r16
         clr     %r17
@@ -38,9 +53,14 @@ _start:
         or      %o2, %lo(environ), %o2
         call    main, 0
          nop
+
+        ! did main terminate with code 0?
         cmp     %o0, 0
         be      .Lsuccess
          nop
+
+        ! otherwise, save the code
+        ! and print a message
         sethi   %hi(__exit_code), %o5
         sethi   %hi(__pseudo_stderr), %o3
         st      %o0, [%o5+%lo(__exit_code)]
@@ -99,7 +119,7 @@ slrt_hex:
         
         
 ! PSEUDO OUTPUT DEVICES
-        .section ".data"
+        .section ".bss"
         .common __pseudo_stdout,4,4
         .common __pseudo_stderr,4,4
         .common __exit_code,4,4
@@ -129,12 +149,11 @@ __pseudo_argv:
         
         
 ! PSEUDO PLACE IDENTIFIERS
-        .section ".data"
+        .section ".bss"
         .common __main_place_id,4,4
-
         
 ! PSEUDO ENVIRON       
-        .section ".data"
+        .section ".bss"
         .common environ,4,4
         
 

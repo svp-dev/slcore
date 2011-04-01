@@ -21,7 +21,9 @@
 
 typedef long counter_t;
 
-#ifdef __mt_freestanding__
+#if defined(__mt_freestanding__)
+
+#if defined(__slc_os_sim__)
 #define MTPERF_CLOCKS 0
 #define MTPERF_EXECUTED_INSNS 1
 #define MTPERF_ISSUED_FP_INSNS 2
@@ -41,10 +43,37 @@ typedef long counter_t;
 #define MTPERF_EXTMEM_LOADS 16
 #define MTPERF_EXTMEM_STORES 17
 #define MTPERF_NCOUNTERS 18
+#endif
+
+#if defined(__slc_os_fpga__)
+#define MTPERF_CLOCKS       0
+#define MTPERF_IC_HOLDN     1
+#define MTPERF_DC_HOLDN     2
+#define MTPERF_FP_HOLDN     3
+#define MTPERF_FORCE_NOP    4
+#define MTPERF_HOLDN        5
+#define MTPERF_IU_SCH_BUS   6
+#define MTPERF_SCH_IU_BUS   7
+#define MTPERF_EXECUTED_INSNS   8
+#define MTPERF_IC_GRANT     9
+#define MTPERF_DC_GRANT    10
+#define MTPERF_RF_SYN_WR   11
+#define MTPERF_RF_ASYN_WR  12
+#define MTPERF_RF_CONC_WR  13
+#define MTPERF_RAU_RLS     14
+#define MTPERF_RAU_ALLOC   15
+#define MTPERF_DC_MISS     16
+#define MTPERF_S_HOLDN     17
+#define MTPERF_RF_HOLDN    18
+#define MTPERF_NCOUNTERS   19
+#endif
+
 #else
+
 #define MTPERF_CLOCKS 0
 #define MTPERF_UNIX_TIME 1
 #define MTPERF_NCOUNTERS 2
+
 #endif
 
 // get the current value for the specified counter
@@ -124,7 +153,14 @@ void __inline_mtperf_free_intervals(struct s_interval* p)
 #define mtperf_free_intervals(P) __inline_mtperf_free_intervals(P)
 
 
-#ifdef __mt_freestanding__
+#if defined(__mt_freestanding__)
+
+#ifdef __slc_os_fpga__
+#define __MTPERF_CT_BASE 0x80000800
+#endif
+#ifdef __slc_os_sim__
+#define __MTPERF_CT_BASE 8
+#endif
 
 typedef struct { counter_t ct[MTPERF_NCOUNTERS]; } __counters_t;
 
@@ -135,7 +171,7 @@ void __inline_mtperf_sample(counter_t * array)
 {
         __asm__ __volatile__("# sample begins");
         __counters_t* restrict __dst = (__counters_t*)(void*)(array);
-        volatile __counters_t* restrict __src = (volatile __counters_t*)(void*)8;
+        volatile __counters_t* restrict __src = (volatile __counters_t*)(void*)__MTPERF_CT_BASE;
 #define __read_cnt(i)                                                   \
     counter_t __ct ## i;                                                \
     __asm__("# touch counter %0" : "=r"(__ct ## i) : "0"(__src->ct[i])); \
@@ -159,6 +195,7 @@ void __inline_mtperf_sample(counter_t * array)
         __read_cnt(15);
         __read_cnt(16);
         __read_cnt(17);
+        __read_cnt(18);
 #undef __read_cnt
         __asm__ __volatile__("# sample ends");
 }
@@ -169,7 +206,7 @@ void __inline_mtperf_sample(counter_t * array)
 alwaysinline
 counter_t __inline_mtperf_sample1(int counter)
 {
-    return ((volatile __counters_t*restrict)(void*)8)->ct[counter];
+    return ((volatile __counters_t*restrict)(void*)__MTPERF_CT_BASE)->ct[counter];
 }
 #define mtperf_sample1(Counter) __inline_mtperf_sample1(Counter)
 
