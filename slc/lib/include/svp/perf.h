@@ -156,9 +156,11 @@ void __inline_mtperf_free_intervals(struct s_interval* p)
 #if defined(__mt_freestanding__)
 
 #ifdef __slc_os_fpga__
-#define __MTPERF_CT_BASE 0x80000800
+// AppleCORE performance counters on uT-LEON3, as of April 2011
+#define __MTPERF_CT_BASE 0x80000810
 #endif
 #ifdef __slc_os_sim__
+// Microgrid base address for perf counters
 #define __MTPERF_CT_BASE 8
 #endif
 

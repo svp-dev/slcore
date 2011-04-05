@@ -1,3 +1,9 @@
+2011-04-05  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
+	Fix the performance counter offset for UTLEON3.
+
+	* lib/include/svp/perf.h: Do it.
+
 2011-04-01  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
 	Add precision digits to the efficiency computation on uT-LEON3.
