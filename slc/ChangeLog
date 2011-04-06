@@ -1,3 +1,15 @@
+2011-04-06  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
+	Fix mis-definition of the service place for `malloc'.
+
+	With the new place format introduced on March 28th, the target of
+	place `15' (0xf) used by `dlmalloc' was changed from "core 0,
+	suspending" to "core 7, size 1". However core 7 is not isolated
+	from programs. This was reported by Q Yang.
+	
+	* lib/include/svp/mtmalloc.h (malloc_place): Change back to target
+	core 0.
+
 2011-04-05  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
 	Fix the performance counter offset for UTLEON3.

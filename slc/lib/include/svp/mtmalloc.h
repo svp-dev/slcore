@@ -27,7 +27,7 @@ void* dlrealloc(void*, size_t);
 
 #include <svp/compiler.h>
 
-#define malloc_place 0xf /* 8=suspend, 4|2=delegate, 1=exclusive (implicit core ID = 0) */
+#define malloc_place 0x1 /* core 0, size 1 */
 
 sl_decl(t_dlmalloc,,sl_shparm(void*, szret));
 
