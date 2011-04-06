@@ -191,13 +191,19 @@ for arg in "$@"; do
           slc_debug_flags+=("$arg");;
       -g*|-p|-pg) slc_debug_flags+=("$arg");;
 
-      -fasmfix-arg-*)     extra_f1flags+=(-x "${arg#-fasmfix-arg-}");;
-      -fasmopt-arg-*)     extra_f2flags+=(-x "${arg#-fasmopt-arg-}");;
+      -fspr-*)       extra_tflags+=(-x "${arg#-fspr-}");;
+      -fno-spr-*)    extra_tflags+=(-x no-"${arg#-fno-spr-}");;
 
-      -fasmopt)      do_filt2=yes ;;
-      -fno-asmopt)   do_filt2= ;;
-      -fasmopt-*)    extra_f2flags+=(-e "${arg#-fasmopt-}");;
-      -fno-asmopt-*) extra_f2flags+=(-e no-"${arg#-fno-asmopt-}");;
+      -fasmopt)         do_filt2=yes ;;
+      -fno-asmopt)      do_filt2= ;;
+
+      -fasmopt-do-*)    extra_f2flags+=(-e "${arg#-fasmopt-do-}");;
+      -fno-asmopt-do-*) extra_f2flags+=(-e no-"${arg#-fno-asmopt-do-}");;
+
+      -fasmfix-*)       extra_f1flags+=(-x "${arg#-fasmfix-}");;
+      -fno-asmfix-*)    extra_f1flags+=(-x no-"${arg#-fno-asmfix-}");;
+      -fasmopt-*)       extra_f2flags+=(-x "${arg#-fasmopt-}");;
+      -fno-asmopt-*)    extra_f2flags+=(-x no-"${arg#-fno-asmopt-}");;
 
       -fdump-asmopt-*)  extra_f2flags+=(-d "${arg#-fdump-asmopt-}");;
       -fdump-fixup-*)   extra_f1flags+=(-d "${arg#-fdump-fixup-}");;
@@ -403,29 +409,38 @@ General options:
                      without further optimizations.
 
 MT-specific optimizations:
-  -fno-asmopt-remdefaults  Do not remove family setup instructions that
-                           use default values.
+  -fno-asmopt-do-remdefaults  Do not remove family setup instructions that
+                              use default values.
 
-  -fno-asmopt-findlabels   Do not collect local block labels.
+  -fno-asmopt-do-findlabels   Do not collect local block labels.
 
-  -fno-asmopt-killunusedlabels  Do not remove unused local block labels.
+  -fno-asmopt-do-killunusedlabels  Do not remove unused local block labels.
 
-  -fno-asmopt-addswchll    Do not add the context switch annotation after
-                           potential uses of a long-latency operation.
+  -fno-asmopt-do-addswchll    Do not add the context switch annotation after
+                              potential uses of a long-latency operation.
 
-  -fno-asmopt-addswchbr    Do not add the context switch annotation after
-                           branches.
+  -fno-asmopt-swch-before-ll-use  Do not add the context swich annotation
+                                  before potential uses of a long-latency 
+                                  operation.
 
-  -fno-asmopt-rmdupswch    Do not trim clusters of multiple switch
-                           annotations.
+  -fno-asmopt-do-addswchbr    Do not add the context switch annotation after
+                              branches.
 
-  -fno-asmopt-prunenopend  Do not remove sequences of no-ops and switch
-                           annotations when they occur before a thread
-                           end annotation.
+  -fno-asmopt-do-rmdupswch    Do not trim clusters of multiple switch
+                              annotations.
 
-  -fno-asmopt-protectend   Do not insert an extra no-op instruction when
-                           a thread end annotation happens just after a
-                           label.
+  -fno-asmopt-do-prunenopend  Do not remove sequences of no-ops and switch
+                              annotations when they occur before a thread
+                              end annotation.
+
+  -fno-asmopt-do-protectend   Do not insert an extra no-op instruction when
+                              a thread end annotation happens just after a
+                              label.
+
+Additional MT code generation options:
+  -fasmfix-tls-via-gettid  Use \`gettid' to generate a base TLS stack pointer
+                           instead of \`ldfp'. Default is disabled on
+                           Microgrid targets and enabled for UTLEON3.
 
 As for gcc(1), options with long names starting with -f have both
 positive and negative forms; the negative form of -ffoo would be

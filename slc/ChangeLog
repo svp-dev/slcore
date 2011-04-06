@@ -1,3 +1,27 @@
+2011-04-07  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
+	Unify the option handling between `spr' and the assembly stages.
+
+	* tools/lib/slc/front/opts.py: Provide a dictionary-like interface
+	that allows to query the provided extra options (`-x'). Boolean
+	value is set depending on whether `no-' is prefixed.
+
+	* tools/bin/slc.in: Recognize option forms `-fspr-OPT',
+	`-fno-spr-OPT', `-fasmfix-OPT', `-fno-asmfix-OPT', `-fasmopt-OPT',
+	`-fno-asmopt-OPT'. Rename the stage activation options to the form
+	`-fasmopt-do-STAGE' / `-fno-asmopt-do-STAGE'. Document the
+	existing options.
+
+	* tools/lib/slc/front/chains.py (run_chain): Pass the extra
+	options to each visitor.
+
+	* tools/lib/slc/mt/common/asmproc/enhance.py (filter),
+	* tools/lib/slc/mt/common/asmproc/fixup.py (filter),	
+	* tools/lib/slc/mt/common/asmproc/stageopts.py (makestageopts),
+	* tools/lib/slc/mt/mtalpha/asmproc/opt.py (addswchll),	
+	* tools/lib/slc/mt/mtsparc/asmproc/base.py (initsp): Use the new
+	extra options interface.
+
 2011-04-06  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
 	Improve the documentation.

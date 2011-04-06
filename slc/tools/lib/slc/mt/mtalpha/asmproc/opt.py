@@ -98,7 +98,7 @@ def addswchll(fundata, items):
 
     allregs = regmagic.allregs
         
-    swchbeforell = not 'no-swch-before-ll-use' in addswchll.extra_options
+    swchbeforell = addswchll.extra_options.get('swch-before-ll-use',True)
 
     # initially exclude index
     maybell = allregs.copy()

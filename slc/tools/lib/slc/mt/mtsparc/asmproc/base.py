@@ -180,7 +180,7 @@ def initsp(fundata, items):
     """
     spreg = regmagic.alias_to_vname("tlsp")
     if fundata['use_sp']:
-        if not 'tls-via-gettid' in initsp.extra_options:
+        if not initsp.extra_options.get('tls-via-gettid', False):
             fundata['prologue'].insert(0, ('other', 'ldfp %s' % spreg, 'MT: init SP'))
         else:
             fundata['prologue'] = [

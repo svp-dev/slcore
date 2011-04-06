@@ -20,6 +20,28 @@ register_arg('-v', '--verbose', action = "store_true", dest="verbose", default =
              help="Run verbosely.")
 register_arg('-o', action = "store", nargs = 1, dest = "output", default = "-",
              metavar = "FILE", help="Print translated code to FILE.")
+register_arg('-x', action = "append", dest = "extraopts", metavar = "EXTRAOPT",
+             nargs = 1, default = [],
+             help="Set the specified extra option EXTRAOPT.")
+
+class ExtraOpts(object):
+
+    def __init__(self, resolved):
+        opts = {}
+        for o in resolved.extraopts:
+            if o.startswith('no-'):
+                opts[o[3:]] = False
+            else:
+                opts[o] = True
+        self.opts = opts
+
+    def __getitem__(self, name):
+        return self.get(name)
+
+    def get(self, name, default = None):
+        return self.opts.get(name, default)
+        
+        
 
 resolved = None
 inputs = None
@@ -37,16 +59,17 @@ def parse_args(args = None):
     parser = optparse.OptionParser(option_list = _option_list,
                                    version = """%%prog %s
 
-Copyright (C) 2009,2010 The SL project.
+Copyright (C) 2009,2010,2011 The SL project.
 This is free software; see the source for copying conditions.  There is NO
 warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 
 Written by Raphael 'kena' Poss.
 """ % package_version, epilog = "Report bugs and suggestions to %s." % package_bugreport)
 
-    global resolved, inputs
+    global resolved, inputs, extras
     resolved, inputs = parser.parse_args(args)
-    return (resolved, inputs)
+    extras = ExtraOpts(resolved)
+    return (extras, resolved, inputs)
     
 
 

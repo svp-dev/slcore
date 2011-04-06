@@ -21,7 +21,7 @@ def filter(fbegin, finner, fcinner, fend, *args):
         except Exception, e:
             die('%s: %r' % (fname, e))
 
-    extras = opts.resolved.extras
+    extras = opts.extras
     for inname in opts.inputs:
         items = inname
         for t in fbegin:

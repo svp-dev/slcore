@@ -144,6 +144,7 @@ def run_chain(program):
     t = _chains[opts.resolved.target]
     for (lbl, visitor) in t:
         #print "XX, ", lbl
+        visitor.extra_options = opts.extras
         program.accept(visitor)
         
         dname = get_dump_fname(lbl)
