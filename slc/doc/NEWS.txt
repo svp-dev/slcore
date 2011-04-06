@@ -41,6 +41,18 @@ Language and library
 
   For now these are only supported for the Microgrid targets.
 
+Compiler interface
+``````````````````
+
+The following command-line flags are now supported::
+
+   -fno-spr-create-strategies
+   -fno-spr-collapse-singletons
+   -fasmfix-tls-via-gettid
+   -fno-asmopt-swch-before-ll-use
+
+Check the manual page or ``slc --help`` for details.
+
 Microgrid-specific changes
 ``````````````````````````
 

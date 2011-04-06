@@ -1,5 +1,11 @@
 2011-04-07  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	Improve the documentation.
+
+	* doc/NEWS.txt: Document the latest command-line options.
+
+2011-04-07  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	Add command-line options to control the create strategies.
 
 	* tools/lib/slc/mt/common/strategy.py: Recognize and obey options
