@@ -1,5 +1,23 @@
 2011-04-06  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	Implement MT allocation strategies.
+	
+	* tools/lib/t-spr/slimpl.m4: New create specifier
+	`sl__strategy(xxx)'. This replaces the embryonic `sl__allcores'
+	which meant `sl__strategy(exact)'.
+
+	* tools/lib/slc/mt/common/strategy.py: New. This prepares the
+	`allocate' flags depending on the strategy specifiers and any
+	statically known information about the index range.
+
+	* tools/lib/slc/mt/front/chains.py,
+	* tools/lib/slc/mt/mtalpha/gencreate.py,
+	* tools/lib/slc/mt/mtsparc/gencreate.py: Use it.
+		
+	* tools/lib/Makefile.am (nobase_python_PYTHON): List the new file.
+
+2011-04-06  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	Fix mis-definition of the service place for `malloc'.
 
 	With the new place format introduced on March 28th, the target of

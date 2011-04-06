@@ -86,6 +86,7 @@ nobase_python_PYTHON = \
 	slc/mt/common/regmagic.py \
 	slc/mt/common/compile.py \
 	slc/mt/common/gentfun.py \
+	slc/mt/common/strategy.py \
 	slc/mt/common/asmproc/__init__.py \
 	slc/mt/common/asmproc/input.py \
 	slc/mt/common/asmproc/output.py \

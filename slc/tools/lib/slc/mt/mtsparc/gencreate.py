@@ -121,19 +121,21 @@ class Create_2_MTSCreate(ScopedVisitor):
         if allocinsn == 'allocates' and not self.newisa:
                 die("suspending create is not supported on this target", cr)
 
-        if cr.extras.has_attr('allcores'):
-            if not self.newisa:
-                warn("attribute 'allcores' has no effect on this target", cr)
-            exactbit = '1'
-        else:
-            exactbit = '0'
+        start = CVarUse(decl = cr.cvar_start)
+        limit = CVarUse(decl = cr.cvar_limit)
+        step = CVarUse(decl = cr.cvar_step)
+        block = CVarUse(decl = cr.cvar_block)
+        
+
+
+        strategyuse = CVarUse(cr.cvar_strategy)
 
 
         newbl += (flatten(cr.loc,
                           '__asm__ __volatile__("%s %%2, %%0\\t! MT: CREATE %s"'
                           ' : "=r"(' % (allocinsn,lbl)) + 
                   usefvar + ') : "0"(' + CVarUse(decl = cr.cvar_place) + 
-                  '), "rP"(' + exactbit + '));')
+                  '), "rP"(' + strategyuse + '));')
         
         if lc.target_next is not None:
             if self.newisa:
@@ -144,11 +146,6 @@ class Create_2_MTSCreate(ScopedVisitor):
             newbl += (flatten(cr.loc, ' if (__builtin_expect(%d == (' % failval) + 
                           usefvar + '), 0)) ' + 
                           CGoto(target = lc.target_next)) + ';'
-        
-        start = CVarUse(decl = cr.cvar_start)
-        limit = CVarUse(decl = cr.cvar_limit)
-        step = CVarUse(decl = cr.cvar_step)
-        block = CVarUse(decl = cr.cvar_block)
         
         newbl += (flatten(cr.loc, 
                          '__asm__ ("setstart %%0, %%2\\t! MT: CREATE %s"'

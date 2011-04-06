@@ -63,6 +63,10 @@ class Create_2_MTACreate(ScopedVisitor):
 
         # generate allocate + test for alternative
         fidvar = cr.cvar_fid
+        start = CVarUse(decl = cr.cvar_start)
+        limit = CVarUse(decl = cr.cvar_limit)
+        step = CVarUse(decl = cr.cvar_step)
+        block = CVarUse(decl = cr.cvar_block)
         
         usefvar = CVarUse(decl = fidvar)
 
@@ -80,15 +84,12 @@ class Create_2_MTACreate(ScopedVisitor):
             else:
                 allocinsn = 'allocate'
 
-        if cr.extras.has_attr('allcores'):
-            exactbit = '1'
-        else:
-            exactbit = '0'
+        strategyuse = CVarUse(cr.cvar_strategy)
 
         newbl += (flatten(cr.loc,
                           '__asm__ __volatile__("%s %%2, %%1, %%0\\t# MT: CREATE %s"'
                           ' : "=r"(' % (allocinsn, lbl)) + 
-                  usefvar + ') : "rI"(' + exactbit + '), "r"(' + CVarUse(decl = cr.cvar_place) + '));')
+                  usefvar + ') : "rI"(' + strategyuse + '), "r"(' + CVarUse(decl = cr.cvar_place) + '));')
         
         if lc.target_next is not None:
             newbl += (flatten(cr.loc, ' if (!__builtin_expect(!!(') + 
@@ -152,10 +153,6 @@ class Create_2_MTACreate(ScopedVisitor):
             lc.mavar = mavar
 
         # generate create
-        start = CVarUse(decl = cr.cvar_start)
-        limit = CVarUse(decl = cr.cvar_limit)
-        step = CVarUse(decl = cr.cvar_step)
-        block = CVarUse(decl = cr.cvar_block)
         newbl += (flatten(cr.loc, 
                          '__asm__ ("setstart %%0, %%2\\t# MT: CREATE %s"'
                          ' : "=r"(' % lbl) +

@@ -18,6 +18,7 @@ from ..mt.mtalpha.gencreate import *
 from ..mt.mtalpha.genssync import *
 from ..mt.mtsparc.gentfun import *
 from ..mt.mtsparc.gencreate import *
+from ..mt.common.strategy import *
 from ..lower.spawndecl import *
 from ..lower.lowerspawnsync import *
 from ..am.visitors import *
@@ -62,11 +63,13 @@ _chains = {
         ('lseta', LinkSetA()),
         ('autores', AutoResolve()),
         ('autoresss', AutoResolveSpawnSync()),
+        ('makestrategy', CreateMTStrategy(newisa=True)),
         ('flattencr', Create_2_MTACreate()), 
         ('flattenfun',TFun_2_MTATFun()),
         ('flattenss',SSync_2_MTASSync()),
         ] + _common_suffix,
     'mta+seq' : _common_prefix + [
+        ('makestrategy', CreateMTStrategy(newisa=True)),
         ('splitcr', SplitCreates(oracle=make_mt_oracle('mta'))),
         ('splitss', SplitSpawnSync(oracle=make_mt_oracle('mta'))),
         ('lseta', LinkSetA()),
@@ -83,11 +86,13 @@ _chains = {
         ('lseta', LinkSetA()),
         ('autores', AutoResolve()),
 #        ('autoresss', AutoResolveSpawnSync()),
+        ('makestrategy', CreateMTStrategy()),
         ('flattencr', Create_2_MTSCreate()), 
         ('flattenfun',TFun_2_MTSTFun()),
 #        ('flattenss',SSync_2_MTSSSync()),
         ] + _common_suffix,
     'mts+seq' : _common_prefix + [
+        ('makestrategy', CreateMTStrategy()),
         ('splitcr', SplitCreates(oracle=make_mt_oracle('mts'))),
 #        ('splitss', SplitSpawnSync(oracle=make_mt_oracle('mts'))),
         ('lseta', LinkSetA()),
@@ -104,11 +109,13 @@ _chains = {
         ('lseta', LinkSetA()),
         ('autores', AutoResolve()),
 #        ('autoresss', AutoResolveSpawnSync()),
+        ('makestrategy', CreateMTStrategy(newisa=True)),
         ('flattencr', Create_2_MTSCreate(newisa=True)), 
         ('flattenfun',TFun_2_MTSTFun()),
 #        ('flattenss',SSync_2_MTSSSync()),
         ] + _common_suffix,
     'mtsn+seq' : _common_prefix + [
+        ('makestrategy', CreateMTStrategy(newisa=True)),
         ('splitcr', SplitCreates(oracle=make_mt_oracle('mts'))),
 #        ('splitss', SplitSpawnSync(oracle=make_mt_oracle('mts'))),
         ('lseta', LinkSetA()),
