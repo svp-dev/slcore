@@ -1,5 +1,12 @@
 2011-04-07  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	Fix a bug with counter sampling.
+
+	* lib/include/svp/perf.h (__inline_mtperf_sample): Do not
+	read/write more counters than are defined.
+
+2011-04-07  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	Improve the documentation.
 
 	* doc/NEWS.txt: Document the latest command-line options.

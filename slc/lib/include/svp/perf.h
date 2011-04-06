@@ -175,9 +175,11 @@ void __inline_mtperf_sample(counter_t * array)
         __counters_t* restrict __dst = (__counters_t*)(void*)(array);
         volatile __counters_t* restrict __src = (volatile __counters_t*)(void*)__MTPERF_CT_BASE;
 #define __read_cnt(i)                                                   \
-    counter_t __ct ## i;                                                \
-    __asm__("# touch counter %0" : "=r"(__ct ## i) : "0"(__src->ct[i])); \
-    __dst->ct[i] = __ct ## i;
+        if ((i + 1) <= MTPERF_NCOUNTERS) {                              \
+            counter_t __ct ## i;                                        \
+            __asm__("# touch counter %0" : "=r"(__ct ## i) : "0"(__src->ct[i])); \
+            __dst->ct[i] = __ct ## i;                                   \
+        }
 
         __read_cnt(0);
         __read_cnt(1);
