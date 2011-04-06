@@ -409,6 +409,12 @@ General options:
                      without further optimizations.
 
 MT-specific optimizations:
+  -fno-spr-create-strategies  Do not apply the create strategies
+                              specified by the program code.
+
+  -fno-spr-collapse-singletons  Do not force strategy \`single' on
+                                singleton families created with \`fill'.
+
   -fno-asmopt-do-remdefaults  Do not remove family setup instructions that
                               use default values.
 

@@ -1,5 +1,16 @@
 2011-04-07  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	Add command-line options to control the create strategies.
+
+	* tools/lib/slc/mt/common/strategy.py: Recognize and obey options
+	`create-strategies' (enable strategies) and
+	`collapse-singletons' (automatically use strategy `single' for
+	singleton families).
+
+	* tools/bin/slc.in: Document the options.
+
+2011-04-07  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	Unify the option handling between `spr' and the assembly stages.
 
 	* tools/lib/slc/front/opts.py: Provide a dictionary-like interface
