@@ -1,5 +1,11 @@
 2011-04-06  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	Improve the documentation.
+
+	* doc/NEWS.txt: Document the create specifiers.
+
+2011-04-06  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	Implement MT allocation strategies.
 	
 	* tools/lib/t-spr/slimpl.m4: New create specifier

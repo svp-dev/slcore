@@ -16,15 +16,28 @@ Language and library
 - New create specifiers are introduced in the language:
 
   - ``sl__nowait``: creation fails if a context cannot be allocated
-    right away.
+    right away. 
 
-  - ``sl__forcewait``: family creation always occurs; no fall-back
-    to run the work sequentially is generated.
+  - ``sl__forcewait``: family creation suspends until a context
+    becomes available; no fall-back to run the work sequentially is
+    generated.
 
-  - ``sl__allcores``: family creation is forced to use all cores in
-    the target place. If a context cannot be allocated on all cores,
-    either the code falls back, suspends or fails depending on the
-    other attributes.
+  - ``sl__forceseq``: family execution is performed sequentially
+    within the parent thread's context.
+
+  - ``sl__strategy(NAME)``: family allocation occurs according to the
+    specified strategy. The following symbolic names are possible:
+
+    - ``fill``: try to use as many cores in the place as possible.
+
+    - ``exact``: try to use all cores in the place.
+
+    - ``balanced``: try to use the least loaded core.
+
+    - ``single``: use only the first core.
+
+    - ``default``: the default strategy for the target place
+      (currently ``fill``).
 
   For now these are only supported for the Microgrid targets.
 
