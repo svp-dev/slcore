@@ -1,5 +1,12 @@
 2011-04-07  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	Fix an assembly optimization bug on MT-Alpha.
+
+	* tools/lib/slc/mt/mtalpha/asmproc/opt.py (addswchll): Recognize
+	the new `allocate' format.
+	
+2011-04-07  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	Warn when compiler options are not used.
 
 	* tools/lib/slc/front/opts.py (check_unused): New.

@@ -71,10 +71,10 @@ def seereg(reg, str):
 
 _re3way = re.compile(r'\w+\s([^,]+),([^,]+),([^,]+)$')
 _re1way = re.compile(r'\w+\s([^,]+)$')
-_re2way = re.compile(r'(?:mov|sqrt\S*|cvt\S*|itof\S*|ftoi\S*|sync|allocate)\s([^,]+),([^,]+)$')
+_re2way = re.compile(r'(?:mov|sqrt\S*|cvt\S*|itof\S*|ftoi\S*|sync)\s([^,]+),([^,]+)$')
 _rexway = re.compile(r'\w+\s([^,]+),(.*)')
 _reld = re.compile(r'(ld[lqts]|ld[bw]u)')
-_re3wayll = re.compile(r'((add|sub|mul|div)[fgts]|f?gets)')
+_re3wayll = re.compile(r'((add|sub|mul|div)[fgts]|f?gets|allocate)')
 _w1way = re.compile(r'(rpcc|ldfp|ldpc|f?clr)')
 
 
