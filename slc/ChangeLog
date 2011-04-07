@@ -1,5 +1,16 @@
 2011-04-07  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	Warn when compiler options are not used.
+
+	* tools/lib/slc/front/opts.py (check_unused): New.
+
+	* tools/lib/slc/front/main.py,
+	* tools/lib/slc/mt/common/asmproc/enhance.py,	
+	* tools/lib/slc/mt/common/asmproc/fixup.py: Check for unused
+	options at the end of processing.
+
+2011-04-07  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	Fix a bug with counter sampling.
 
 	* lib/include/svp/perf.h (__inline_mtperf_sample): Do not

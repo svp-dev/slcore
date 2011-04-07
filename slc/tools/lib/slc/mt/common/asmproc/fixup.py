@@ -46,3 +46,5 @@ def filter(fbegin, finner, fcinner, fend, *args):
             outf.write(line)
     outf.flush()
     if fname != "-": outf.close()
+
+    opts.check_unused()

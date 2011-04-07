@@ -23,6 +23,8 @@ def main():
         out = file(opts.resolved.output, 'w')
     p.accept(PrintVisitor(stream = out))
 
+    opts.check_unused()
+
 if __name__ == "__main__":
     main()
 

@@ -1,6 +1,8 @@
 import optparse
 import sys
 from slc_config import package_version, package_bugreport
+from ..msg import warn
+
 _option_list = []
 
 _dump_stages = {}
@@ -34,17 +36,25 @@ class ExtraOpts(object):
             else:
                 opts[o] = True
         self.opts = opts
+        self.touched = set()
 
     def __getitem__(self, name):
+        self.touched.add(name)
         return self.get(name)
 
     def get(self, name, default = None):
+        self.touched.add(name)
         return self.opts.get(name, default)
         
-        
-
 resolved = None
 inputs = None
+extras = None
+
+def check_unused():
+    for k in extras.opts.keys():
+        if k not in extras.touched:
+            warn('unused option "%s"' % k)
+
 
 def parse_args(args = None):
     if args is None:

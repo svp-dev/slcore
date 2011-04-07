@@ -46,6 +46,7 @@ def filter(fbegin, fstages, fend, *args):
             die('%s: %r' % (fname, e))
 
     extras = opts.extras
+
     for inname in opts.inputs:
         items = inname
         for t in fbegin:
@@ -68,6 +69,8 @@ def filter(fbegin, fstages, fend, *args):
             outf.write(line)
     outf.flush()
     if fname != "-": outf.close()
+
+    opts.check_unused()
 
 
     
