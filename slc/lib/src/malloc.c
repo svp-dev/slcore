@@ -1327,7 +1327,7 @@ int mspace_mallopt(int, int);
 #undef assert
 #define assert(x) if(!(x)) ABORT
 #else /* ABORT_ON_ASSERT_FAILURE */
-#include <cassert.h>
+#include <assert.h>
 #endif /* ABORT_ON_ASSERT_FAILURE */
 #else  /* DEBUG */
 #ifndef assert

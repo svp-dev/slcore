@@ -1,3 +1,13 @@
+2011-04-13  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
+	Make some additional debugging features for `malloc'.
+
+	* lib/src/malloc.c: Include `assert.h' not `cassert.h' which is
+	now obsolete.
+
+	* lib/src/tlsmalloc/tlsmalloc.c (tls_free): When `DEBUG_MALLOC' is
+	set check whether a stack pointer is given to free().
+
 2011-04-07  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
 	Fix an assembly optimization bug on MT-Alpha.

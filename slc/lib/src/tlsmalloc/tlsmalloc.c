@@ -570,6 +570,16 @@ void tls_free(void *ptr)
         EXT_FREE(ptr);
     else if (!IS_TLS_LOCAL(ptr)) {
         /* FIXME: memory consistency: delegate to home place */
+#ifdef DEBUG_MALLOC
+        uintptr_t tls_base = (uintptr_t)TLS_BASE();
+        uintptr_t tls_top = (uintptr_t)TLS_TOP();
+        uintptr_t tls_size = tls_top - tls_base;
+        uintptr_t ptr_where = (uintptr_t)ptr & (tls_size - 1);
+        if (ptr_where >= tls_size/2)
+        {
+            fprintf(stderr, "warning: maybe free of stack pointer %p\n", ptr);
+        }
+#endif
         block_of_ptr(ptr)->tag = TAG_PENDING;
     }
     else {
