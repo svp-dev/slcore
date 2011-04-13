@@ -27,7 +27,7 @@ extern clock_t clock(void);
 
 #include <svp/compiler.h>
 
-alwaysinline
+alwaysinline unused
 clock_t __inline_clock(void)
 {
     clock_t c;                                               

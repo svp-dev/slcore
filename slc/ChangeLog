@@ -1,5 +1,16 @@
 2011-04-13  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	Prevent some spurious warnings.
+
+	* tools/include/svp/compiler.h: Also define `unused'.
+	
+	* lib/mtalpha-sim/include/time.h,
+	* lib/include/svp/perf.h,
+	* lib/include/svp/mtmalloc.h: 
+	* tools/include/svp/delegate.h: Use it.
+
+2011-04-13  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	Make some additional debugging features for `malloc'.
 
 	* lib/src/malloc.c: Include `assert.h' not `cassert.h' which is

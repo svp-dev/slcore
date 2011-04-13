@@ -31,7 +31,7 @@ void* dlrealloc(void*, size_t);
 
 sl_decl(t_dlmalloc,,sl_shparm(void*, szret));
 
-alwaysinline
+alwaysinline unused
 void* excl_dlmalloc(size_t sz)
 {
     sl_create(,malloc_place,,,,,sl__exclusive,t_dlmalloc,sl_sharg(void*,szret,(void*)sz));
@@ -41,7 +41,7 @@ void* excl_dlmalloc(size_t sz)
 
 sl_decl(t_dlfree,,sl_glparm(void*, ptr));
 
-alwaysinline
+alwaysinline unused
 void excl_dlfree(void* ptr)
 {
     sl_create(,malloc_place,,,,,sl__exclusive,t_dlfree,sl_glarg(void*,,ptr));
@@ -50,7 +50,7 @@ void excl_dlfree(void* ptr)
 
 sl_decl(t_dlrealloc,,sl_glparm(void*, ptr), sl_shparm(void*, szret));
 
-alwaysinline
+alwaysinline unused
 void* excl_dlrealloc(void* ptr, size_t sz)
 {
     sl_create(,malloc_place,,,,,sl__exclusive,t_dlrealloc,sl_glarg(void*,,ptr), sl_sharg(void*,szret,(void*)sz));
@@ -60,7 +60,7 @@ void* excl_dlrealloc(void* ptr, size_t sz)
 
 sl_decl(t_dlcalloc,,sl_glparm(size_t, cnt), sl_shparm(void*, szret));
 
-alwaysinline
+alwaysinline unused
 void* excl_dlcalloc(size_t cnt, size_t sz)
 {
     sl_create(,malloc_place,,,,,sl__exclusive,t_dlcalloc,sl_glarg(size_t,,cnt), sl_sharg(void*,szret,(void*)sz));

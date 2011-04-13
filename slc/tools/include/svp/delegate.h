@@ -45,7 +45,7 @@ extern sl_place_t get_local_place(void);
 
 #include <svp/compiler.h>
 
-alwaysinline
+alwaysinline unused
 sl_place_t __inline_get_current_place(void)
 {
     sl_place_t p;
@@ -54,7 +54,7 @@ sl_place_t __inline_get_current_place(void)
 }
 #define get_current_place() __inline_get_current_place()
 
-alwaysinline
+alwaysinline unused
 unsigned long __inline_get_core_id(void)
 {
     unsigned long p;
@@ -63,7 +63,7 @@ unsigned long __inline_get_core_id(void)
 }
 #define get_core_id() __inline_get_core_id()
 
-alwaysinline
+alwaysinline unused
 sl_place_t __inline_get_local_place(void)
 {
     unsigned long cid = get_core_id();

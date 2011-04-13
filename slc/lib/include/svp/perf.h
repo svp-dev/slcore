@@ -138,14 +138,14 @@ void mtperf_report_intervals(const struct s_interval* ivs, size_t n, int flags);
 #include <stdlib.h>
 #include <svp/compiler.h>
 
-alwaysinline
+alwaysinline unused
 struct s_interval* __inline_mtperf_alloc_intervals(size_t n)
 {
     return (struct s_interval*)calloc(n, sizeof(struct s_interval));
 }
 #define mtperf_alloc_intervals(N) __inline_mtperf_alloc_intervals(N)
 
-alwaysinline
+alwaysinline unused
 void __inline_mtperf_free_intervals(struct s_interval* p)
 {
     free(p);
@@ -168,7 +168,7 @@ typedef struct { counter_t ct[MTPERF_NCOUNTERS]; } __counters_t;
 
 #if defined(__GNUC__) && !defined(__AVOID_GNUISMS)
 
-alwaysinline
+alwaysinline unused
 void __inline_mtperf_sample(counter_t * array)
 {
         __asm__ __volatile__("# sample begins");
@@ -207,7 +207,7 @@ void __inline_mtperf_sample(counter_t * array)
 
 #endif /* __GNUC__ && !__AVOID_GNUISMS */
 
-alwaysinline
+alwaysinline unused
 counter_t __inline_mtperf_sample1(int counter)
 {
     return ((volatile __counters_t*restrict)(void*)__MTPERF_CT_BASE)->ct[counter];
@@ -218,7 +218,7 @@ counter_t __inline_mtperf_sample1(int counter)
 
 #include <time.h>
 
-alwaysinline
+alwaysinline unused
 void __inline_mtperf_sample(counter_t* array)
 {
     array[0] = (counter_t)clock();
@@ -226,7 +226,7 @@ void __inline_mtperf_sample(counter_t* array)
 }
 #define mtperf_sample(Array) __inline_mtperf_sample(Array)
 
-alwaysinline
+alwaysinline unused
 counter_t __inline_mtperf_sample1(int counter)
 {
     counter_t val;
@@ -241,7 +241,7 @@ counter_t __inline_mtperf_sample1(int counter)
 
 #endif /* !__mt_freestanding__ */
 
-alwaysinline
+alwaysinline unused
 void __inline_mtperf_empty_interval(struct s_interval *ivs, size_t p,
                                     int numarg, const char *tag)
 {
@@ -252,7 +252,7 @@ void __inline_mtperf_empty_interval(struct s_interval *ivs, size_t p,
 #define mtperf_empty_interval(Ivs, P, Numarg, Tag)      \
     __inline_mtperf_empty_interval(Ivs, P, Numarg, Tag)
 
-alwaysinline
+alwaysinline unused
 void __inline_mtperf_start_interval(struct s_interval *ivs, size_t p,
                                     int numarg, const char *tag)
 {
@@ -263,7 +263,7 @@ void __inline_mtperf_start_interval(struct s_interval *ivs, size_t p,
 #define mtperf_start_interval(Ivs, P, Numarg, Tag) \
     __inline_mtperf_start_interval(Ivs, P, Numarg, Tag)
 
-alwaysinline
+alwaysinline unused
 void __inline_mtperf_finish_interval(struct s_interval *ivs, size_t p)
 {
     mtperf_sample(ivs[p].after);

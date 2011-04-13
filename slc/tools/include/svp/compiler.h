@@ -55,10 +55,12 @@
 #if defined (__GNUC__) && !defined(__AVOID_GNUISMS)
 # define noinline __attribute__((__noinline__))
 # define alwaysinline __attribute__((__always_inline__)) static
+# define unused __attribute__((__unused__))
 #else
 # warning "No definition for noinline/alwaysinline on this target."
 # define noinline /* nothing */
 # define alwaysinline static inline
+# define unused /* nothing */
 #endif
 
 #if defined(__mt_freestanding__) && defined(__GNUC__) && !defined(__AVOID_GNUISMS)
