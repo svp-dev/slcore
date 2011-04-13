@@ -1,5 +1,12 @@
 2011-04-13  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	Fix a SEP bug.
+	
+	* lib/src/mtsep.c (do_sep_alloc): Properly handle the case where
+	`ncores' was set to 0.
+
+2011-04-13  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	Prevent some spurious warnings.
 
 	* tools/include/svp/compiler.h: Also define `unused'.

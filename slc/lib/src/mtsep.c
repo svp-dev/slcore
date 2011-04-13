@@ -134,13 +134,13 @@ static sl_place_t do_sep_alloc(struct sep_data_t* sep, size_t ncores, unsigned l
     case SAL_MIN:
         // hardware only supports powers of two, so round request up to
         // a power of two
-        ncores = 1U << fast_log2(2 * ncores - 1);
+        ncores = (ncores != 0) ? 1U << fast_log2(2 * ncores - 1) : 1;
         // fall-through to SAL_EXACT
         
     case SAL_EXACT:
         // hardware only supports powers of two, so if there's a request
         // for something else, tough luck.
-        if (likely(is_pow2(ncores))) {
+        if (likely(ncores != 0 && is_pow2(ncores))) {
             r = alloc_range(sep, fast_log2(ncores));
         }
         break;
@@ -148,11 +148,13 @@ static sl_place_t do_sep_alloc(struct sep_data_t* sep, size_t ncores, unsigned l
     case SAL_MAX: {
         // hardware only supports powers of two, so round request down to
         // a power of two
-        size_t i = fast_log2(ncores);
-        do {
-            r = alloc_range(sep, i);
-        } while (!r && i--);
-        ncores = (1 << i);
+        if (likely(ncores != 0)) {
+            size_t i = fast_log2(ncores);
+            do {
+                r = alloc_range(sep, i);
+            } while (!r && i--);
+            ncores = (1 << i);
+        }
         break;
     }
     }
