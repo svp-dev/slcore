@@ -347,7 +347,13 @@ esac
 
 
 # Propagate selection to programs/libraries
+version_major=${version%%.*}
+version_rest=${version#*.}
+version_minor=${version_rest%%[b.]*}
 slc_ppflags+=( \
+    -D__slc_version_string__=\"$version\" \
+    -D__slc_version_major__=$version_major \
+    -D__slc_version_minor__=$version_minor \
     -D__slc_dialect_${slc_dialect//[^a-zA-Z0-9]/_}__ \
     -D__slc_variant_${slc_variant//[^a-zA-Z0-9]/_}__ \
     -D__slc_arch_${slc_arch//[^a-zA-Z0-9]/_}__ \

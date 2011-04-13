@@ -105,7 +105,11 @@ struct s_interval {
   counter_t after[MTPERF_NCOUNTERS];
   const char *tag;
   int num;
+  unsigned magic;
+  unsigned ncounters;
 };
+
+#define _PERF_MAGIC_NUMBER_ 0xCAFEF00D
 
 // allocate multiple intervals.
 struct s_interval* mtperf_alloc_intervals(size_t n);
@@ -137,6 +141,7 @@ void mtperf_report_intervals(const struct s_interval* ivs, size_t n, int flags);
 
 #include <stdlib.h>
 #include <svp/compiler.h>
+#include <assert.h>
 
 alwaysinline unused
 struct s_interval* __inline_mtperf_alloc_intervals(size_t n)
@@ -245,7 +250,7 @@ alwaysinline unused
 void __inline_mtperf_empty_interval(struct s_interval *ivs, size_t p,
                                     int numarg, const char *tag)
 {
-    struct s_interval init = { { 0 }, { 0 }, tag, numarg };
+    struct s_interval init = { { 0 }, { 0 }, tag, numarg, _PERF_MAGIC_NUMBER_, MTPERF_NCOUNTERS };
     ivs[p] = init;
 }
 
@@ -258,6 +263,8 @@ void __inline_mtperf_start_interval(struct s_interval *ivs, size_t p,
 {
     ivs[p].tag = tag;
     ivs[p].num = numarg;
+    ivs[p].magic = _PERF_MAGIC_NUMBER_;
+    ivs[p].ncounters = MTPERF_NCOUNTERS;
     mtperf_sample(ivs[p].before);
 }
 #define mtperf_start_interval(Ivs, P, Numarg, Tag) \
@@ -267,6 +274,8 @@ alwaysinline unused
 void __inline_mtperf_finish_interval(struct s_interval *ivs, size_t p)
 {
     mtperf_sample(ivs[p].after);
+    assert(ivs[p].magic == _PERF_MAGIC_NUMBER_);
+    assert(ivs[p].ncounters == MTPERF_NCOUNTERS);
 }
 #define mtperf_finish_interval(Ivs, P) __inline_mtperf_finish_interval(Ivs, P)
 

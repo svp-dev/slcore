@@ -129,7 +129,10 @@ void sys_init(void* slrbase_init,
   verbose_boot = getenv("MGSYS_QUIET") ? 0 : 1;
 
   if (verbose_boot) {
-      output_string("\nMicrogrid says:  h e l l o  w o r l d !\n\n", 2);
+      output_string("\n"
+                    "Microgrid says:  h e l l o  w o r l d !\n"
+                    "\n"
+                    "* init compiled with slc " __slc_version_string__ "\n", 2);
   }
   
   sys_heap_init();

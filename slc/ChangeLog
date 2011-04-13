@@ -1,3 +1,18 @@
+2011-04-14  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
+	Add some version-based run-time consistency checks.
+
+	* lib/include/svp/perf.h,
+	* lib/src/perf.c (mtperf_report_intervals): Remember the number of
+	counters in intervals when sampling. Check them.
+
+	* tools/bin/cce.in: Pass the compiler version numbers at compile
+	time.
+	
+	* lib/src/mtinit.c (sys_init),	
+	* lib/src/perf.c (mtperf_report_intervals): Print the version
+	number.
+
 2011-04-13  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
 	Fix a SEP bug.
