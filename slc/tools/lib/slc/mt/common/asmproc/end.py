@@ -11,7 +11,7 @@ def prunenopend(fundata, items):
             continue
         elif type in ['other','directive']:
             #pprint.pprint((type, content, comment, queue))
-            if content in ['nop', 'fnop', 'swch']: # and comment != 'MT: branch':
+            if content in ['nop', 'fnop', 'swch'] and 'DELAYSLOT' not in comment:
                 queue.append((type, content, comment))
                 continue
             elif content == 'end':

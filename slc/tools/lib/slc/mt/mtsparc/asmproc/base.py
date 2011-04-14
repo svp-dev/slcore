@@ -1,4 +1,5 @@
 import re
+from decode import decode
 from ..regdefs import regmagic
 from ....msg import die
 
@@ -434,30 +435,6 @@ def protectallcallregs(fundata, items):
             fundata['prologue'].append(('other', 'clr $%s' % _ovregs[i]['name'], 'maybe used in call'))
     return items
 
-_delayed = re.compile(r'(ret[lt]?|call|jmpl|b([anegl]|[nlg]e|gu|leu|cc|cs|pos|neg|vc|vs))\s')
-
-def markdelay(fundata, items):
-    """
-    Mark delayed instructions and delay slots.
-    """
-    indelayslot = 0
-    for (type, content, comment) in items:
-        if type == 'directive':
-            indelayslot = 0
-        elif type == 'other':
-            if _delayed.match(content) is not None:
-                if indelayslot == 1: die("%s: delayed instruction in delay slot is not supported" % fundata['name'])
-                indelayslot = 1
-                comment = comment + ' DELAYED'
-            else:
-                if indelayslot == 1:
-                    # this is the delay slot itself
-                    comment = comment + ' DELAYSLOT'
-                    indelayslot = 2
-                elif indelayslot == 2:
-                    # this is the instruction just after the delay slot
-                    indelayslot = 0
-        yield (type, content, comment)
 
 def protectend(fundata, items):
     """
@@ -496,6 +473,7 @@ def zerog0(fundata, items):
 from ...common.asmproc.labels import *
 from ...common.asmproc.markused import *
 from ...common.asmproc.compress import *
+from delay import *
 
 _filter_begin = [reader, lexer, splitsemi, parser, grouper]
 _cfilter_inner = [canonregs,
@@ -542,6 +520,7 @@ _filter_inner = [canonregs,
 
                  xjoin2,
 
+                 decode,
                  markdelay,
                  protectend,
 

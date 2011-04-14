@@ -1,3 +1,18 @@
+2011-04-15  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
+	Preliminary support for `swch' annotations for MT-SPARC.
+	
+	* tools/lib/slc/mt/mtsparc/asmproc/decode.py: New.
+	
+	* tools/lib/slc/mt/mtsparc/asmproc/base.py: Move `markdelay' to...
+	
+	* tools/lib/slc/mt/mtsparc/asmproc/delay.py: ...here.
+
+	* tools/lib/slc/mt/mtsparc/asmproc/opt.py: Use them.
+
+	* tools/lib/slc/mt/common/asmproc/end.py (prunenopend): Avoid
+	removing nops in delay slots.
+	
 2011-04-14  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
 	Make a database of MT-SPARC instructions.

@@ -122,6 +122,8 @@ nobase_python_PYTHON = \
 	slc/mt/mtsparc/asmproc/base.py \
 	slc/mt/mtsparc/asmproc/common.py \
 	slc/mt/mtsparc/asmproc/opt.py \
+	slc/mt/mtsparc/asmproc/delay.py \
+	slc/mt/mtsparc/asmproc/decode.py \
 	slc/mt/mtsparc/asmproc/opc/mtsparc.py \
 	slc/mt/mtsparc/asmproc/opc/__init__.py \
 	slc/am/__init__.py \
