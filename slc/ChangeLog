@@ -1,5 +1,22 @@
 2011-04-14  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	Make a database of MT-SPARC instructions.
+
+	* tools/lib/slc/mt/mtsparc/asmproc/opc/formats.db: import
+	the MT-SPARC instruction formats from GNU as.
+
+	* tools/lib/slc/mt/mtsparc/asmproc/opc/decode.py: Translate
+	`formats.db' to `mtsparc.py'.
+
+	* tools/lib/slc/mt/mtsparc/asmproc/opc/mtsparc.py: Result of
+	translation.
+
+	* tools/lib/slc/mt/mtsparc/asmproc/opc/__init__.py: New.
+
+	* tools/lib/Makefile.am: Distribute and install the new files.
+	
+2011-04-14  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	Add some version-based run-time consistency checks.
 
 	* lib/include/svp/perf.h,

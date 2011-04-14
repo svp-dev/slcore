@@ -1,0 +1,655 @@
+b	l	dl,br
+b,a	l	dl,br
+ba	l	dl,cbr
+ba,a	l	dl,cbr
+bcc	l	dl,cbr
+bcc,a	l	dl,cbr
+bcs	l	dl,cbr
+bcs,a	l	dl,cbr
+be	l	dl,cbr
+be,a	l	dl,cbr
+beq	l	dl,cbr
+beq,a	l	dl,cbr
+bg	l	dl,cbr
+bg,a	l	dl,cbr
+bgt	l	dl,cbr
+bgt,a	l	dl,cbr
+bge	l	dl,cbr
+bge,a	l	dl,cbr
+bgeu	l	dl,cbr
+bgeu,a	l	dl,cbr
+bgu	l	dl,cbr
+bgu,a	l	dl,cbr
+bl	l	dl,cbr
+bl,a	l	dl,cbr
+blt	l	dl,cbr
+blt,a	l	dl,cbr
+ble	l	dl,cbr
+ble,a	l	dl,cbr
+bleu	l	dl,cbr
+bleu,a	l	dl,cbr
+blu	l	dl,cbr
+blu,a	l	dl,cbr
+bn	l	dl,cbr
+bn,a	l	dl,cbr
+bne	l	dl,cbr
+bne,a	l	dl,cbr
+bneg	l	dl,cbr
+bneg,a	l	dl,cbr
+bnz	l	dl,cbr
+bnz,a	l	dl,cbr
+bpos	l	dl,cbr
+bpos,a	l	dl,cbr
+bvc	l	dl,cbr
+bvc,a	l	dl,cbr
+bvs	l	dl,cbr
+bvs,a	l	dl,cbr
+bz	l	dl,cbr
+bz,a	l	dl,cbr
+fb	l	dl,cbr
+fb,a	l	dl,cbr
+fba	l	dl,cbr
+fba,a	l	dl,cbr
+fbe	l	dl,cbr
+fbe,a	l	dl,cbr
+fbz	l	dl,cbr
+fbz,a	l	dl,cbr
+fbg	l	dl,cbr
+fbg,a	l	dl,cbr
+fbge	l	dl,cbr
+fbge,a	l	dl,cbr
+fbl	l	dl,cbr
+fbl,a	l	dl,cbr
+fble	l	dl,cbr
+fble,a	l	dl,cbr
+fblg	l	dl,cbr
+fblg,a	l	dl,cbr
+fbn	l	dl,cbr
+fbn,a	l	dl,cbr
+fbne	l	dl,cbr
+fbne,a	l	dl,cbr
+fbnz	l	dl,cbr
+fbnz,a	l	dl,cbr
+fbo	l	dl,cbr
+fbo,a	l	dl,cbr
+fbu	l	dl,cbr
+fbu,a	l	dl,cbr
+fbue	l	dl,cbr
+fbue,a	l	dl,cbr
+fbug	l	dl,cbr
+fbug,a	l	dl,cbr
+fbuge	l	dl,cbr
+fbuge,a	l	dl,cbr
+fbul	l	dl,cbr
+fbul,a	l	dl,cbr
+fbule	l	dl,cbr
+fbule,a	l	dl,cbr
+ld	[1+2],d	ll
+ld	[1],d	ll
+ld	[1+i],d	ll
+ld	[i+1],d	ll
+ld	[i],d	ll
+ld	[1],d	ll
+ld	[1+2],g	ll
+ld	[1],g	ll
+ld	[1+i],g	ll
+ld	[i+1],g	ll
+ld	[i],g	ll
+ld	[1],g	ll
+ld	[1+2],F	ll
+ld	[1],F	ll	
+ld	[1+i],F	ll
+ld	[i+1],F	ll
+ld	[i],F	ll	
+ld	[1],F	ll
+ld	[1+2],D	ll
+ld	[1],D	ll	
+ld	[1+i],D	ll
+ld	[i+1],D	ll
+ld	[i],D	ll
+ld	[1],D	ll
+ld	[1+2],C	ll
+ld	[1],C	ll
+ld	[1+i],C	ll
+ld	[i+1],C	ll
+ld	[i],C	ll	
+ld	[1],C	ll
+ldd	[1+2],u	ll
+ldd	[1],u	ll
+ldd	[1+i],u	ll
+ldd	[i+1],u	ll
+ldd	[i],u	ll
+ldd	[1],u	ll
+ldd	[1+2],U	ll
+ldd	[1],U	ll
+ldd	[1+i],U	ll
+ldd	[i+1],U	ll
+ldd	[i],U	ll
+ldd	[1],U	ll
+ldd	[1+2],D	ll
+ldd	[1],D	ll
+ldd	[1+i],D	ll
+ldd	[i+1],D	ll
+ldd	[i],D	ll
+ldd	[1],D	ll
+ldsb	[1+2],d	ll
+ldsb	[1],d	ll
+ldsb	[1+i],d	ll
+ldsb	[i+1],d	ll
+ldsb	[i],d	ll
+ldsb	[1],d	ll
+ldsh	[1],d	ll
+ldsh	[1+2],d	ll
+ldsh	[1+i],d	ll
+ldsh	[i+1],d	ll
+ldsh	[i],d	ll
+ldsh	[1],d	ll
+ldstub	[1+2],d	ll
+ldstub	[1],d	ll
+ldstub	[1+i],d	ll
+ldstub	[i+1],d	ll
+ldstub	[i],d	ll
+ldstub	[1],d	ll
+ldub	[1+2],d	ll
+ldub	[1],d	ll
+ldub	[1+i],d	ll
+ldub	[i+1],d	ll
+ldub	[i],d	ll
+ldub	[1],d	ll
+lduh	[1+2],d	ll
+lduh	[1],d	ll
+lduh	[1+i],d	ll
+lduh	[i+1],d	ll
+lduh	[i],d	ll
+lduh	[1],d	ll
+lda	[1+2]A,d	ll
+lda	[1]A,d	ll
+ldda	[1+2]A,d	ll
+ldda	[1]A,d	ll
+ldsba	[1+2]A,d	ll
+ldsba	[1]A,d	ll
+ldsha	[1+2]A,d	ll
+ldsha	[1]A,d	ll
+ldstuba	[1+2]A,d	ll
+ldstuba	[1]A,d	ll
+lduba	[1+2]A,d	ll
+lduba	[1]A,d	ll
+lduha	[1+2]A,d	ll
+lduha	[1]A,d	ll	
+st	3,[1+2]
+st	3,[1]
+st	3,[1+i]
+st	3,[i+1]
+st	3,[i]
+st	3,[1]
+st	f,[1+2]
+st	f,[1]
+st	f,[1+i]
+st	f,[i+1]
+st	f,[i]
+st	f,[1]
+st	D,[1+2]
+st	D,[1]
+st	D,[1+i]
+st	D,[i+1]
+st	D,[i]
+st	D,[1]
+st	C,[1+2]
+st	C,[1]
+st	C,[1+i]
+st	C,[i+1]
+st	C,[i]
+st	C,[1]
+st	F,[1+2]
+st	F,[1]
+st	F,[1+i]
+st	F,[i+1]
+st	F,[i]
+st	F,[1]
+spill	3,[1+2]
+spill	3,[1]
+spill	3,[1+i]
+spill	3,[i+1]
+spill	3,[i]
+spill	3,[1]
+sta	3,[1+2]A
+sta	3,[1]A
+stb	3,[1+2]
+stb	3,[1]
+stb	3,[1+i]
+stb	3,[i+1]
+stb	3,[i]
+stb	3,[1]
+stsb	3,[1+2]
+stsb	3,[1]
+stsb	3,[1+i]
+stsb	3,[i+1]
+stsb	3,[i]
+stsb	3,[1]
+stub	3,[1+2]
+stub	3,[1]
+stub	3,[1+i]
+stub	3,[i+1]
+stub	3,[i]
+stub	3,[1]
+stba	3,[1+2]A
+stba	3,[1]A
+stsba	3,[1+2]A
+stsba	3,[1]A
+stuba	3,[1+2]A
+stuba	3,[1]A
+std	4,[1+2]
+std	4,[1]
+std	4,[1+i]
+std	4,[i+1]
+std	4,[i]
+std	4,[1]
+std	q,[1+2]
+std	q,[1]
+std	q,[1+i]
+std	q,[i+1]
+std	q,[i]
+std	q,[1]
+std	5,[1+2]
+std	5,[1]
+std	5,[1+i]
+std	5,[i+1]
+std	5,[i]
+std	5,[1]
+std	Q,[1+2]
+std	Q,[1]
+std	Q,[1+i]
+std	Q,[i+1]
+std	Q,[i]
+std	Q,[1]
+std	D,[1+2]
+std	D,[1]
+std	D,[1+i]
+std	D,[i+1]
+std	D,[i]
+std	D,[1]
+spilld	4,[1+2]
+spilld	4,[1]
+spilld	4,[1+i]
+spilld	4,[i+1]
+spilld	4,[i]
+spilld	4,[1]
+stda	4,[1+2]A
+stda	4,[1]A
+sth	3,[1+2]
+sth	3,[1]
+sth	3,[1+i]
+sth	3,[i+1]
+sth	3,[i]
+sth	3,[1]
+stsh	3,[1+2]
+stsh	3,[1]
+stsh	3,[1+i]
+stsh	3,[i+1]
+stsh	3,[i]
+stsh	3,[1]
+stuh	3,[1+2]
+stuh	3,[1]
+stuh	3,[1+i]
+stuh	3,[i+1]
+stuh	3,[i]
+stuh	3,[1]
+stha	3,[1+2]A
+stha	3,[1]A
+stsha	3,[1+2]A
+stsha	3,[1]A
+stuha	3,[1+2]A
+stuha	3,[1]A
+swap	[1+2],d	ll
+swap	[1],d	ll
+swap	[1+i],d	ll
+swap	[i+1],d	ll
+swap	[i],d	ll
+swap	[1],d	ll
+swapa	[1+2]A,d	ll
+swapa	[1]A,d	ll
+restore	1,2,d	
+restore	
+restore	1,i,d
+restore		
+rett	1+2	dl,br
+rett	1	dl,br
+rett	1+i	dl,br
+rett	i+1	dl,br
+rett	i	dl,br
+rett	i	dl,br
+rett	1	dl,br
+save	1,2,d
+save	1,i,d
+save	
+ret		dl,i:15,br
+retl		dl,i:31,br
+jmpl	1+2,d	dl,br
+jmpl	1,d	dl,br
+jmpl	1,d	dl,br
+jmpl	i,d	dl,br
+jmpl	1+i,d	dl,br
+jmpl	i+1,d	dl,br
+flush	1+2	ll
+flush	1	ll
+flush	1	ll
+flush	i	ll
+flush	1+i	ll
+flush	i+1	ll
+iflush	1+2	ll
+iflush	1	ll
+iflush	1	ll
+iflush	i	ll
+iflush	1+i	ll
+iflush	i+1	ll
+stbar		ll
+sll	1,2,d
+sll	1,X,d
+sra	1,2,d
+sra	1,X,d
+srl	1,2,d
+srl	1,X,d
+mulscc	1,2,d	ll,i:'y'
+mulscc	1,i,d	ll,i:'y'
+clr	d
+clr	d
+clr	[1+2]
+clr	[1]
+clr	[1+i]
+clr	[i+1]
+clr	[i]
+clr	[1]
+clrb	[1+2]
+clrb	[1]
+clrb	[1+i]
+clrb	[i+1]
+clrb	[i]
+clrb	[1]
+clrh	[1+2]
+clrh	[1]
+clrh	[1+i]
+clrh	[i+1]
+clrh	[i]
+clrh	[1]
+orcc	1,2,d
+orcc	1,i,d
+orcc	i,1,d
+orncc	1,2,d
+orncc	1,i,d
+orn	1,2,d
+orn	1,i,d
+tst	1
+tst	2
+tst	1
+wr	1,2,m
+wr	1,i,m
+wr	1,m
+wr	1,2,y
+wr	1,i,y
+wr	1,y
+wr	1,2,p
+wr	1,i,p
+wr	1,p
+wr	1,2,w
+wr	1,i,w
+wr	1,w
+wr	1,2,t
+wr	1,i,t
+wr	1,t
+rd	M,d
+rd	y,d
+rd	p,d
+rd	w,d
+rd	t,d
+launch	1	br
+allocate	d	ll
+allocate	2,d	ll
+allocate	^,d	ll
+allocates	d	ll
+allocates	2,d	ll
+allocates	^,d	ll
+allocatex	d	ll
+allocatex	2,d	ll
+allocatex	^,d	ll
+create	2,d	ll
+sync	2,d	ll
+gettid	d
+getfid	d
+getpid	d
+getcid	d
+ldbp	d
+ldfp	d
+setstart	1,2
+setstart	1,^
+setlimit	1,2
+setlimit	1,^
+setstep	1,2
+setstep	1,^
+setblock	1,2
+setblock	1,^
+setthread	1,2
+setthread	1,^
+crei	2,1	ll
+cred	^,1	ll
+putg	2,1,>
+puts	2,1,>
+gets	2,>,d	ll
+detach	1
+release	1
+break	2
+break	^
+print	1,2
+print	1,^
+fputg	f,1,>
+fputs	f,1,>
+fgets	2,>,g	ll
+mov	1,2,m
+mov	1,i,m
+mov	1,2,y
+mov	1,i,y
+mov	1,2,p
+mov	1,i,p
+mov	1,2,w
+mov	1,i,w
+mov	1,2,t
+mov	1,i,t
+mov	M,d
+mov	y,d
+mov	p,d
+mov	w,d
+mov	t,d
+mov	1,m
+mov	i,m
+mov	1,m
+mov	1,y
+mov	i,y
+mov	1,y
+mov	1,p
+mov	i,p
+mov	1,p
+mov	1,w
+mov	i,w
+mov	1,w
+mov	1,t
+mov	i,t
+mov	1,t
+mov	2,d
+mov	i,d
+mov	1,d
+mov	1,d
+or	1,2,d
+or	1,i,d
+or	i,1,d
+bset	2,r
+bset	i,r
+andn	1,2,d
+andn	1,i,d
+andncc	1,2,d
+andncc	1,i,d
+bclr	2,r
+bclr	i,r
+cmp	1,2
+cmp	1,i
+sub	1,2,d
+sub	1,i,d
+subcc	1,2,d
+subcc	1,i,d
+subx	1,2,d
+subx	1,i,d
+subxcc	1,2,d
+subxcc	1,i,d
+and	1,2,d
+and	1,i,d
+and	i,1,d
+andcc	1,2,d
+andcc	1,i,d
+andcc	i,1,d
+dec	r
+dec	i,r
+deccc	r
+deccc	i,r
+inc	r
+inc	i,r
+inccc	r
+inccc	i,r
+btst	1,2
+btst	i,1
+neg	2,d
+neg	O
+add	1,2,d
+add	1,i,d
+add	i,1,d
+addcc	1,2,d
+addcc	1,i,d
+addcc	i,1,d
+addx	1,2,d
+addx	1,i,d
+addx	i,1,d
+addxcc	1,2,d
+addxcc	1,i,d
+addxcc	i,1,d
+smul	1,2,d	ll,o:'y'
+smul	1,i,d	ll,o:'y'
+smul	i,1,d	ll,o:'y'
+smulcc	1,2,d	ll,o:'y'
+smulcc	1,i,d	ll,o:'y'
+smulcc	i,1,d	ll,o:'y'
+umul	1,2,d	ll,o:'y'
+umul	1,i,d	ll,o:'y'
+umul	i,1,d	ll,o:'y'
+umulcc	1,2,d	ll,o:'y'
+umulcc	1,i,d	ll,o:'y'
+umulcc	i,1,d	ll,o:'y'
+sdiv	1,2,d	ll,i:'y'
+sdiv	1,i,d	ll,i:'y'
+sdiv	i,1,d	ll,i:'y'
+sdivcc	1,2,d	ll,i:'y'
+sdivcc	1,i,d	ll,i:'y'
+sdivcc	i,1,d	ll,i:'y'
+udiv	1,2,d	ll,i:'y'
+udiv	1,i,d	ll,i:'y'
+udiv	i,1,d	ll,i:'y'
+udivcc	1,2,d	ll,i:'y'
+udivcc	1,i,d	ll,i:'y'
+udivcc	i,1,d	ll,i:'y'
+call	L	o:15,br,dl
+call	L,#	o:15,br,dl
+call	1+2	o:15,br,dl
+call	1+2,#	o:15,br,dl
+call	1	o:15,br,dl
+call	1,#	o:15,br,dl
+call	1+i	o:15,br,dl
+call	1+i,#	o:15,br,dl
+call	i+1	o:15,br,dl
+call	i+1,#	o:15,br,dl
+call	i	o:15,br,dl
+call	i,#	o:15,br,dl
+call	1	o:15,br,dl
+call	1,#	o:15,br,dl
+jmp	1+2	dl,br
+jmp	1	dl,br
+jmp	1+i	dl,br
+jmp	i+1	dl,br
+jmp	i	dl,br
+jmp	1	dl,br
+nop	
+set	S0,d
+sethi	h,d
+taddcc	1,2,d
+taddcc	1,i,d
+taddcc	i,1,d
+taddcctv	1,2,d
+taddcctv	1,i,d
+taddcctv	i,1,d
+tsubcc	1,2,d
+tsubcc	1,i,d
+tsubcctv	1,2,d
+tsubcctv	1,i,d
+unimp	n
+xnor	1,2,d
+xnor	1,i,d
+xnor	i,1,d
+xnorcc	1,2,d
+xnorcc	1,i,d
+xnorcc	i,1,d
+xor	1,2,d
+xor	1,i,d
+xor	i,1,d
+xorcc	1,2,d
+xorcc	1,i,d
+xorcc	i,1,d
+not	1,d
+not	r
+btog	2,r
+btog	i,r
+fdtoi	B,g
+fstoi	f,g
+fqtoi	R,g
+fprints	e,2
+fprintd	v,2
+fprintq	V,2
+fitod	f,H
+fitos	f,g
+fitoq	f,J
+fdtoq	B,J
+fdtos	B,g
+fqtod	R,H
+fqtos	R,g
+fstod	f,H
+fstoq	f,J
+fdivd	v,B,H	ll
+fdivq	V,R,J	ll
+fdivx	V,R,J	ll
+fdivs	e,f,g	ll
+fmuld	v,B,H	ll
+fmulq	V,R,J	ll
+fmulx	V,R,J	ll
+fmuls	e,f,g	ll
+fdmulq	v,B,J	ll
+fdmulx	v,B,J	ll
+fsmuld	e,f,H	ll
+fsqrtd	B,H	ll
+fsqrtq	R,J	ll
+fsqrtx	R,J	ll
+fsqrts	f,g	ll
+fabss	f,g
+fmovs	f,g
+fnegs	f,g
+faddd	v,B,H	ll	
+faddq	V,R,J	ll
+faddx	V,R,J	ll
+fadds	e,f,g	ll
+fsubd	v,B,H	ll
+fsubq	V,R,J	ll
+fsubx	V,R,J	ll
+fsubs	e,f,g	ll	
+fcmpd	v,B	ll
+fcmped	v,B	ll
+fcmpq	V,R	ll
+fcmpeq	V,R	ll
+fcmpx	V,R	ll
+fcmpex	V,R	ll
+fcmps	e,f	ll
+fcmpes	e,f	ll
+cpop1	[1+2],d
+cpop2	[1+2],d

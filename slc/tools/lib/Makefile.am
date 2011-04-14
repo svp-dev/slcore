@@ -122,6 +122,8 @@ nobase_python_PYTHON = \
 	slc/mt/mtsparc/asmproc/base.py \
 	slc/mt/mtsparc/asmproc/common.py \
 	slc/mt/mtsparc/asmproc/opt.py \
+	slc/mt/mtsparc/asmproc/opc/mtsparc.py \
+	slc/mt/mtsparc/asmproc/opc/__init__.py \
 	slc/am/__init__.py \
 	slc/am/visitors.py \
 	slc/lower/__init__.py \
@@ -177,6 +179,8 @@ nobase_pkglib_DATA =
 nobase_pkglib_LIBRARIES = 
 
 EXTRA_DIST = \
+	slc/mt/mtsparc/asmproc/opc/formats.db \
+	slc/mt/mtsparc/asmproc/opc/decode.py \
 	r-mtsparc-fpga.sh.in \
 	r-mt-sim.sh.in \
 	r-host.sh.in \
