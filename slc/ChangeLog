@@ -1,5 +1,13 @@
 2011-04-15  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	Minor fix in library.
+
+	* lib/include/svp/perf.h: Do not generate comments in the inline
+	assembly, since the comment prefix may vary across targets (in
+	particular it is `!' on SPARC).
+
+2011-04-15  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	MT-Alpha code generation improvements.
 
 	* tools/lib/slc/mt/mtalpha/asmproc/base.py (detectregs): Split

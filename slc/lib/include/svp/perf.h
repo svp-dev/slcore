@@ -176,13 +176,13 @@ typedef struct { counter_t ct[MTPERF_NCOUNTERS]; } __counters_t;
 alwaysinline unused
 void __inline_mtperf_sample(counter_t * array)
 {
-        __asm__ __volatile__("# sample begins");
+        __asm__ __volatile__("");
         __counters_t* restrict __dst = (__counters_t*)(void*)(array);
         volatile __counters_t* restrict __src = (volatile __counters_t*)(void*)__MTPERF_CT_BASE;
 #define __read_cnt(i)                                                   \
         if ((i + 1) <= MTPERF_NCOUNTERS) {                              \
             counter_t __ct ## i;                                        \
-            __asm__("# touch counter %0" : "=r"(__ct ## i) : "0"(__src->ct[i])); \
+            __asm__("" : "=r"(__ct ## i) : "0"(__src->ct[i])); \
             __dst->ct[i] = __ct ## i;                                   \
         }
 
@@ -206,7 +206,7 @@ void __inline_mtperf_sample(counter_t * array)
         __read_cnt(17);
         __read_cnt(18);
 #undef __read_cnt
-        __asm__ __volatile__("# sample ends");
+        __asm__ __volatile__("");
 }
 #define mtperf_sample(Array) __inline_mtperf_sample(Array)
 
