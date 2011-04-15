@@ -1,5 +1,22 @@
 2011-04-15  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	MT-SPARC code generation fixes and improvements.
+	
+	* tools/lib/slc/mt/mtsparc/asmproc/delay.py (markdelay): indicate
+	which instruction is involved when reporting delayed-in-delay-slot.
+
+	* tools/lib/slc/mt/mtsparc/asmproc/opc/mtsparc.py,
+	* tools/lib/slc/mt/mtsparc/asmproc/opc/decode.py (regref), Also
+	recognize the legacy register forms.
+
+	* tools/lib/slc/mt/mtsparc/asmproc/opt.py (addswchll): Ignore
+	extra outputs to %y (for now).
+
+	* tools/lib/slc/mt/mtsparc/asmproc/base.py (fillannulnop): Insert
+	`nop' in the delay slot of "annul" branches.
+
+2011-04-15  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	Preliminary support for `swch' annotations for MT-SPARC.
 	
 	* tools/lib/slc/mt/mtsparc/asmproc/decode.py: New.

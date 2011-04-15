@@ -452,7 +452,24 @@ def protectend(fundata, items):
                 indelayslot = False
         yield (type, content, comment)
         
-    
+
+_re_annul = re.compile(r'\S+,a(\s+.*|\s*)$')
+def fillannulnop(fundata,items):
+    """
+    Fill a "nop" in the delay slot of branch-and-annul
+    instructions.
+
+    This is necessary because we can't run the risk
+    of placing a waiting instruction in those delay slots.
+    """
+
+    for (type, content, comment) in items:
+        if type == 'other' and _re_annul.match(content) is not None:
+            yield (type, content, comment)
+            yield ('other', 'nop', 'MT: nop in annul slot')
+            continue
+        yield (type, content, comment)
+            
 
 
 from common import *
@@ -484,6 +501,7 @@ _cfilter_inner = [canonregs,
                   creplsave,
                   creplrestore,
 
+                  fillannulnop,
 
                   zerog0,
                   cphyregs]
@@ -519,6 +537,8 @@ _filter_inner = [canonregs,
                  compress,
 
                  xjoin2,
+
+                 fillannulnop,
 
                  decode,
                  markdelay,

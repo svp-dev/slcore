@@ -6,8 +6,8 @@ class insn_metadata(object):
     def __init__(self, info):
         self.inputs, self.outputs, self.double_regs, self.long_latency, self.delayed, self.extra_inputs, self.extra_outputs, self.immediates, self.is_branch, self.is_condbranch = info
 
-reg = r"""(\$[lgsd]?f?\d+)"""
-imm = r"""([^%$]\w*|%(?:(?:hi|lo)x?|hh|hm|lm|h44|m44|uhi|ulo|(?:tgd|tldm|tie)_(?:hi22|lo10)|(?:tldo|tle)_(?:hix22|lox10))\([^)]+\))"""
+reg = r"""(\$[lgsd]?f?\d+|%(?:sp|fp|[ilog][0-7]|[rf]\d+))"""
+imm = r"""([^%$]\S*|%(?:(?:hi|lo)x?|hh|hm|lm|h44|m44|uhi|ulo|(?:tgd|tldm|tie)_(?:hi22|lo10)|(?:tldo|tle)_(?:hix22|lox10))\([^)]+\))"""
 re000 = re.compile(r'''\s*''' + imm + r'''\s*$''')
 re001 = re.compile(r'''\s*''' + reg + r'''\s*,\s*''' + reg + r'''\s*,\s*''' + reg + r'''\s*$''')
 re002 = re.compile(r'''\s*$''')

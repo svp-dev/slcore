@@ -125,6 +125,7 @@ def addswchll(fundata, items):
                     reads.append(nextreg(op))
                     #print "hello double",i,reads
             for i in md.extra_inputs:
+                if i == 'y': continue
                 reads.append('$%d' % i)
                 reads.append('$l%d' % (i-locals_offset))
 
@@ -140,6 +141,7 @@ def addswchll(fundata, items):
                     outputs.append(nextreg(op))
 
             for i in md.extra_outputs:
+                if i == 'y': continue
                 outputs.append('$%d' % i)
                 outputs.append('$l%d' % (i-locals_offset))
                 

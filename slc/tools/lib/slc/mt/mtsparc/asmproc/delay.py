@@ -1,3 +1,5 @@
+from ....msg import die
+
 def markdelay(fundata, items):
     """
     Mark delayed instructions and delay slots.
@@ -8,8 +10,10 @@ def markdelay(fundata, items):
             indelayslot = 0
         elif type == 'other':
             comment = comment.replace('DELAYED','').replace('DELAYSLOT','')
+            #print "XX", content, indelayslot
             if getattr(content, 'metadata',None) and content.metadata.delayed:
-                if indelayslot == 1: die("%s: delayed instruction in delay slot is not supported" % fundata['name'])
+                if indelayslot == 1: die("%s: delayed instruction in delay slot is not supported: %s" 
+                                         % (fundata['name'], content))
                 indelayslot = 1
                 if 'DELAYED' not in comment:
                     comment = comment + ' DELAYED'
