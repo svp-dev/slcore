@@ -1,5 +1,16 @@
 2011-04-15  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	MT-Alpha code generation improvements.
+
+	* tools/lib/slc/mt/mtalpha/asmproc/base.py (detectregs): Split
+	into `detectgp' and `detectsp'.  New phase `killspadjusts' to
+	remove unneeded uses of SP in thread functions.
+
+	* tools/lib/slc/mt/mtalpha/asmproc/opt.py (seereg): Also consider
+	accesses to globals as potentially suspending.
+
+2011-04-15  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	MT-SPARC code generation fixes and improvements.
 	
 	* tools/lib/slc/mt/mtsparc/asmproc/delay.py (markdelay): indicate

@@ -62,7 +62,7 @@ from ...common.asmproc.remdefaults import *
 from ...common.asmproc.labels import *
 
 
-_re_seereg = re.compile(r'\$[ld]?f?\d+')
+_re_seereg = re.compile(r'\$[gld]?f?\d+')
 def seereg(reg, str):
     for m in _re_seereg.findall(str):
         if m == reg:

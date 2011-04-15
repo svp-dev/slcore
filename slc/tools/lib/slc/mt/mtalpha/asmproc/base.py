@@ -92,32 +92,125 @@ def crenameregs(fundata, items):
     return crenameregs_gen(fundata, items, regmagic)
 
 _re_jsr = re.compile(r'jsr\s|bs?r\s.*!samegp')
-def detectregs(fundata, items):
+def detectgp(fundata, items):
     """
-    Check if GP / SP are used; whether they are needed impacts
+    Check if GP is used; whether they are needed impacts
+    later stages.
+    """
+    use_gp = 0
+    gpreg = regmagic.alias_to_vname('gp')
+    for (type, content, comment) in items:
+        if type == 'other':
+            if gpreg in content:
+                use_gp = 1
+        yield (type, content, comment)
+    for (type, content, comment) in fundata['prologue'] + fundata['pprologue']:
+        if type == 'other':
+            if gpreg in content:
+                use_gp = 1
+    fundata['use_gp'] = use_gp
+
+
+_re_regs = re.compile(r'\$[gsld]f?\d+')
+def detectsp(fundata, items):
+    """
+    Check if SP is used; whether it is needed impacts
     later stages.
 
     SP is assumed to be needed in presence of a function call,
-    regardless of whether it is used in the current function body.
+    regardless of whether it is used in the current function body. However
+    SP-to-SP arithmetic does not count.
     """
     use_sp = 0
     spreg = regmagic.alias_to_vname('tlsp')
     use_gp = 0
-    gpreg = regmagic.alias_to_vname('gp')
-    #use_pv = 0
-    #pvreg = regmagic.alias_to_vname('pv')
     for (type, content, comment) in items:
         if type == 'other':
-            if spreg in content or _re_jsr.match(content):
+            if _re_jsr.match(content) is not None:
                 use_sp = 1
-            if gpreg in content:
-                use_gp = 1
-            #elif ('jsr' in content) and (pvreg in content):
-            #    use_pv = 1
+            else:
+                allregs = _re_regs.findall(content)
+                #print "XX", content, allregs
+                if spreg in allregs:
+                    others = [x for x in allregs if x != spreg]
+                    if len(others) != 0:
+                        # some other reg than SP involved, assume needed
+                        use_sp = 1
+                    else:
+                        # mark for killspadjusts below
+                        comment = comment + ' SP_ADJUST'
         yield (type, content, comment)
+
+    p = []
+    for (type, content, comment) in fundata['prologue']:
+        if type == 'other':
+            if _re_jsr.match(content) is not None:
+                use_sp = 1
+            else:
+                allregs = _re_regs.findall(content)
+                #print "XX", content, allregs
+                if spreg in allregs:
+                    others = [x for x in allregs if x != spreg]
+                    if len(others) != 0:
+                        # some other reg than SP involved, assume needed
+                        use_sp = 1
+                    else:
+                        # mark for killspadjusts below
+                        comment = comment + ' SP_ADJUST'
+        p.append((type, content, comment))
+    fundata['prologue'] = p
+
+    p = []
+    for (type, content, comment) in fundata['pprologue']:
+        if type == 'other':
+            if _re_jsr.match(content) is not None:
+                use_sp = 1
+            else:
+                allregs = _re_regs.findall(content)
+                #print "XX", content, allregs
+                if spreg in allregs:
+                    others = [x for x in allregs if x != spreg]
+                    if len(others) != 0:
+                        # some other reg than SP involved, assume needed
+                        use_sp = 1
+                    else:
+                        # mark for killspadjusts below
+                        comment = comment + ' SP_ADJUST'
+        p.append((type, content, comment))
+    fundata['pprologue'] = p
+
+
     fundata['use_sp'] = use_sp
-    fundata['use_gp'] = use_gp
-    #fundata['use_pv'] = use_pv
+
+def killspadjusts(fundata, items):
+    """
+    Remove SP adjustments if SP is not needed.
+    """
+    usesp = fundata['use_sp']
+
+    for (type, content, comment) in items:
+        if not usesp and type == 'other' and ' SP_ADJUST' in comment:
+            yield ('empty','','MT: killed sp adjust: ' + content)
+            continue
+        yield (type, content, comment)
+
+    p = []
+    for (type, content, comment) in fundata['prologue']:
+        if not usesp and type == 'other' and ' SP_ADJUST' in comment:
+            p.append(('empty','','MT: killed sp adjust: ' + content))
+            continue
+        p.append((type, content, comment))
+    fundata['prologue'] = p
+
+    p = []
+    for (type, content, comment) in fundata['pprologue']:
+        if not usesp and type == 'other' and ' SP_ADJUST' in comment:
+            p.append(('empty','','MT: killed sp adjust: ' + content))
+            continue
+        p.append((type, content, comment))
+    fundata['pprologue'] = p
+    
+
 
 def replaceret(fundata, items):
     """
@@ -730,7 +823,6 @@ _filter_inner = [
                 canonregs,
                 regextract,
                 renameregs,
-                detectregs,
                 replaceret,
                 munchret,
                 killgpdisp,
@@ -741,9 +833,17 @@ _filter_inner = [
                 findcalls,
                 protectcallsave,
                 protectallcallregs,
-                initspecial,
-                #killgpreload,
+
+                
+
                 optprologue,
+
+                detectgp,
+                detectsp,
+                killspadjusts,
+                initspecial,
+
+                #killgpreload,
                 
                 #markused,
                 #findusedcallregs,
