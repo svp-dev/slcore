@@ -1,3 +1,10 @@
+2011-04-19  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
+	Extend the test suite.
+
+	* tests/0_slc/1_create/crrec.c,
+	* tests/0_slc/1_create/sprec.c: New.
+
 2011-03-28  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
 	Reduce the test suite.
