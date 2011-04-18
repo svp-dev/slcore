@@ -1,5 +1,16 @@
 2011-04-19  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	Avoid a potential pitfall with the MT-Alpha code generation.
+
+	* tools/lib/slc/mt/mtalpha/gencreate.py
+	(Create_2_MTACreate.visit_lowcreate)
+	(Create_2_MTACreate.visit_seta): Do not copy the argument names in
+	the instruction comment. This is because the other engines may use
+	special words (`DELAYED', etc) which might appear in argument
+	names in programs.
+
+2011-04-19  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	Small MT-Alpha code generation optimization.
 
 	* tools/lib/slc/mt/mtalpha/regdefs.py

@@ -39,7 +39,7 @@ class Create_2_MTACreate(ScopedVisitor):
             else: rspec = 'rI'
             regnr = a['regnr']
             newbl.append(flatten(seta.loc, 
-                                ' __asm__ ("%(insn)s %%2, %%0, %(regnr)d\\t# MT: set %(cat)sarg %(name)s"'
+                                ' __asm__ ("%(insn)s %%2, %%0, %(regnr)d\\t# MT: set %(cat)sarg"'
                                  ' : "=r"(' % locals()) +
                          fidvar + ') : "0"(' + fidvar + 
                          '), "%s"((' % rspec + ctype + ')(' +
@@ -219,7 +219,7 @@ class Create_2_MTACreate(ScopedVisitor):
                                      ' __asm__ ('
                                      '"%(insn1)s %%0, %(regnr)d, %%1; '
                                      ' %(insn2)s %%1, %%1'
-                                     '\\t# MT: get shared %(name)s"' % locals()) +
+                                     '\\t# MT: get shared"' % locals()) +
                               ' : "=r"(' + usefvar + '), "=%(rspec)s"(' % locals() +
                               CVarUse(decl = argvar) + ') : "0"(' + usefvar + '));')
     
