@@ -1,3 +1,10 @@
+2011-04-18  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
+	Fix a bug in the Fibre input conversion.
+
+	* tools/bin/sag (FibreGenerator.unfold): Support very large
+	integer constants.
+
 2011-04-15  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
 	Minor fix in library.

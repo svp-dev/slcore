@@ -41,7 +41,7 @@ class FibreGenerator(object):
             return [0]
 
     def dt(self,d):
-        if type(d) is type(0):
+        if type(d) is type(0) or type(d) is type(0L):
             return (d >= 0) and "u" or "l"
         elif type(d) is type(0.0):
             return "d"
@@ -84,7 +84,8 @@ class FibreGenerator(object):
                 self.dozeros(sz[1:])
             print "}",
         else:
-            print item,
+            r = ("%r" % item)
+            print r.replace("L", (r[0] == '-') and "LL" or "ULL"),
 
 
     def dogen(self):
