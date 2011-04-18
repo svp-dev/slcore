@@ -248,9 +248,11 @@ class RegDefs:
        }
 
     def post_init_regmagic(self, rm):
-        # all virtual register names, except SP and GP
+        # all regs that may be read from, except SP and GP
         rm.allregs = set(['$l%d' % x for x in xrange(31 - self.iargregs) if x not in (17, 18)] + \
                   ['$lf%d' % x for x in xrange(31 - self.fargregs)] + \
+                  ['$g%d' % x for x in xrange(self.iargregs)] + \
+                  ['$gf%d' % x for x in xrange(self.fargregs)] + \
                   ['$d%d' % x for x in xrange(self.iargregs / 2)] + \
                   ['$df%d' % x for x in xrange(self.fargregs / 2)] + \
                   ['$%d' % x for x in xrange(31)])

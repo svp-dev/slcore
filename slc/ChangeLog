@@ -1,5 +1,15 @@
 2011-04-19  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	Small MT-Alpha code generation optimization.
+
+	* tools/lib/slc/mt/mtalpha/regdefs.py
+	(RegDefs.post_init_regmagic): Add the register global parameters
+	to the list of candidate registers for long latency reads. This
+	allows the dataflow analysis to mark access to globals as
+	potentially suspending.
+
+2011-04-19  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	Enhance the MT-SPARC code generation.
 	
 	* tools/lib/slc/mt/mtsparc/gencreate.py: Annotate creates with the
