@@ -1,3 +1,15 @@
+2011-04-19  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
+	Enhance the MT-SPARC code generation.
+	
+	* tools/lib/slc/mt/mtsparc/gencreate.py: Annotate creates with the
+	list of registers that hold thread arguments.
+	
+	* tools/lib/slc/mt/mtsparc/asmproc/opt.py (addswchll): Factor into
+	a `DetectDataflow' class. Enhance to drain thread argument
+	registers. Use it here, and...	
+	* tools/lib/slc/mt/mtsparc/asmproc/base.py: ...here.
+
 2011-04-18  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
 	Fix a bug in the Fibre input conversion.

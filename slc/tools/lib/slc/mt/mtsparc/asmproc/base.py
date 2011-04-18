@@ -491,6 +491,7 @@ from ...common.asmproc.labels import *
 from ...common.asmproc.markused import *
 from ...common.asmproc.compress import *
 from delay import *
+from opt import makedataflow
 
 _filter_begin = [reader, lexer, splitsemi, parser, grouper]
 _cfilter_inner = [canonregs,
@@ -502,6 +503,9 @@ _cfilter_inner = [canonregs,
                   creplrestore,
 
                   fillannulnop,
+
+                  decode,
+                  makedataflow(addswch = False, drainargs = True),
 
                   zerog0,
                   cphyregs]
@@ -541,6 +545,8 @@ _filter_inner = [canonregs,
                  fillannulnop,
 
                  decode,
+                 makedataflow(addswch = False, drainargs = True),
+
                  markdelay,
                  protectend,
 

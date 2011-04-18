@@ -167,6 +167,7 @@ class Create_2_MTSCreate(ScopedVisitor):
                       ' : "=r"(' + usefvar + ') : "0"(' + usefvar + '), "rP"(' + funvar + ')); ')
 
 
+        argregs = set()
         crc = Scope()
         aregn = 0
         gargs = []
@@ -181,6 +182,7 @@ class Create_2_MTSCreate(ScopedVisitor):
             crc.decls += var
             gargs.append(CVarUse(decl = var))
             aregn += 1
+            argregs.add(r)
 
         if c['gl_mem_offset'] is not None:
             # one extra global var
@@ -193,6 +195,7 @@ class Create_2_MTSCreate(ScopedVisitor):
             crc.decls += var
             gargs.append(CVarUse(decl = var))
             aregn += 1
+            argregs.add(r)
 
         collect = Block()
         sargs = []
@@ -210,6 +213,7 @@ class Create_2_MTSCreate(ScopedVisitor):
             sargs.append(CVarUse(decl = var))
             collect += CVarSet(decl = arg_cvar, rhs = CVarUse(decl = var)) + Opaque(';')
             aregn += 1
+            argregs.add(r)
 
         if not self.newisa:
             # build reg arg lists
@@ -226,8 +230,8 @@ class Create_2_MTSCreate(ScopedVisitor):
                 ilist +=  Opaque(', "r"(') + v + ')'
 
             crc += (flatten(cr.loc, 
-                            ' __asm__ __volatile__("create %%0, %%0\\t! MT: CREATE %s'
-                            '\\n\\tmov %%0, %%0\\t! MT: SYNC %s" : ' % (lbl, lbl)) +
+                            ' __asm__ __volatile__("create %%0, %%0\\t! MT: CREATE %s DRAIN(%s)'
+                            '\\n\\tmov %%0, %%0\\t! MT: SYNC %s" : ' % (lbl, ','.join(argregs).replace('%','%%'), lbl)) +
                     olist + ' : ' + ilist + ' : "memory");')
 
             if cr.sync_type != 'normal':

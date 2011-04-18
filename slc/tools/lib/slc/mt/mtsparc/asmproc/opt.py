@@ -67,132 +67,161 @@ _re_regnum = re.compile('([0-9]+)')
 def nextreg(reg):
     return _re_regnum.sub(lambda n:str(int(n.group(1))+1), reg)
 
-_re_seereg = re.compile(r'\$[gld]?f?\d+')
+# seereg looks at registers that are written by threads (locals, dependents)
+_re_seereg = re.compile(r'\$[ld]?f?\d+')
 def seereg(reg, str):
     for m in _re_seereg.findall(str):
         if m == reg:
             return True
         return False
 
-def addswchll(fundata, items):
-    """
-    Add "swch" annotations after instructions that may consume
-    the result of a long-latency operation.
+_re_creargs = re.compile(r'.*MT: CREATE.*DRAIN\(([^)]*)\)')
+def makedataflow(addswch, drainargs):
+    class DetectDataflow(object):
+        def __init__(self):
+            if addswch:
+                self.__name__ = "addswchll"
+            else:
+                self.__name__ = "dataflow"
 
-    Additionally, as an optimization, insert a "swch" annotation before
-    as well, to give some extra delay to the long-latency operations
-    by forcing a cycle through the thread active queue.
-    """
-    allregs = regmagic.allregs
-        
-    swchbeforell = addswchll.extra_options.get('swch-before-ll-use',True)
+        def __call__(self, fundata, items):
+            """
+            Add "swch" annotations after instructions that may consume
+            the result of a long-latency operation.
 
-    locals_offset = regmagic.rd.mt_locals_offset
+            Additionally, as an optimization, insert a "swch" annotation before
+            as well, to give some extra delay to the long-latency operations
+            by forcing a cycle through the thread active queue.
+            """
+            allregs = regmagic.allregs
 
-    # initially exclude index
-    maybell = allregs.copy()
-    for (type, content, comment) in items:
-        #print (type,content[:3],comment)
-        if type == 'label':
-            #print "FOO"
-            yield (type, content, comment)
+            swchbeforell = None
+            if addswch:
+                swchbeforell = self.extra_options.get('swch-before-ll-use',True)
+
+            locals_offset = regmagic.rd.mt_locals_offset
+
+            # initially exclude index
             maybell = allregs.copy()
+            for (type, content, comment) in items:
+                #print (type,content[:3],comment)
+                if type == 'label':
+                    #print "FOO"
+                    yield (type, content, comment)
+                    maybell = allregs.copy()
 
-        elif type == 'empty':
-            yield (type, content, comment)
-            if comment.startswith('MTREG_SET:'):
-                hint = set(comment.split(':',1)[1].strip().split(','))
-                maybell = maybell - hint
-            elif comment.startswith('MTREG_SPEC:'):
-                hint = set(comment.split(':',1)[1].strip().split(','))
-                maybell = maybell - hint
-                allregs = allregs - hint
+                elif type == 'empty':
+                    yield (type, content, comment)
+                    if comment.startswith('MTREG_SET:'):
+                        hint = set(comment.split(':',1)[1].strip().split(','))
+                        maybell = maybell - hint
+                    elif comment.startswith('MTREG_SPEC:'):
+                        hint = set(comment.split(':',1)[1].strip().split(','))
+                        maybell = maybell - hint
+                        allregs = allregs - hint
 
-        elif type == 'other' and content.metadata is not None:
-            #print "BAR %s :: %s ::" % (content, comment)
-            reads = []
-            shortwrites = []
-            longwrites = []
-            
-            md = content.metadata
-            ops = content.operands
-            ll = md.long_latency
+                elif type == 'other' and content.metadata is not None:
+                    #print "BAR %s :: %s ::" % (content, comment)
+                    reads = []
+                    shortwrites = []
+                    longwrites = []
 
-            for i in md.inputs:
-                op = ops[i]
-                reads.append(op)
-                if i in md.double_regs:
-                    reads.append(nextreg(op))
-                    #print "hello double",i,reads
-            for i in md.extra_inputs:
-                if i == 'y': continue
-                reads.append('$%d' % i)
-                reads.append('$l%d' % (i-locals_offset))
+                    md = content.metadata
+                    ops = content.operands
+                    ll = md.long_latency
 
-            if ll:
-                outputs = longwrites
-            else:
-                outputs = shortwrites
+                    for i in md.inputs:
+                        op = ops[i]
+                        reads.append(op)
+                        if i in md.double_regs:
+                            reads.append(nextreg(op))
+                            #print "hello double",i,reads
+                    for i in md.extra_inputs:
+                        if i == 'y': continue
+                        reads.append('$%d' % i)
+                        reads.append('$l%d' % (i-locals_offset))
 
-            for i in md.outputs:
-                op = ops[i]
-                outputs.append(op)
-                if i in md.double_regs:
-                    outputs.append(nextreg(op))
+                    if ll:
+                        outputs = longwrites
+                    else:
+                        outputs = shortwrites
 
-            for i in md.extra_outputs:
-                if i == 'y': continue
-                outputs.append('$%d' % i)
-                outputs.append('$l%d' % (i-locals_offset))
-                
-            
-            test = 0
-            q = set()
+                    for i in md.outputs:
+                        op = ops[i]
+                        outputs.append(op)
+                        if i in md.double_regs:
+                            outputs.append(nextreg(op))
 
-            # if one of the "maybe regs" is read from,
-            # assume we are reading result from long latency.
-            #print "maybell = %r" % (maybell,)
-            #print "reads = %r" % (reads,)
-            for rx in maybell:
-                for r in reads:
-                    if seereg(rx,r):
-                        test = 1
-                        q.add(rx)
+                    for i in md.extra_outputs:
+                        if i == 'y': continue
+                        outputs.append('$%d' % i)
+                        outputs.append('$l%d' % (i-locals_offset))
 
-            if test == 1 and md.delayed:
-                # we don't support swch after a delayed instruction,
-                # so we need to force all inputs beforehand
-                for r in q:
-                    yield ('other', 'mov %s,%s' %(r,r), 'MT: force read before delayed')
-                    yield ('other', 'swch', '')
-                test = 0
-            if test == 1 and swchbeforell:
-                yield ('other','swch','MT: before-ll: %s' % ','.join(q))
-            yield (type, content, comment)
-            if test == 1:
-                yield ('other','swch','MT: after-ll: %s' % ','.join(q))
-
-            if content.metadata.is_branch:
-                maybell = allregs.copy()
-            else:
-                # all the registers that are "short written"
-                # will not cause long latency during next use
-                for rx in maybell:
-                    for r in shortwrites:
-                        if seereg(rx, r):
-                            q.add(rx)
-                # remove touched registers from the long latency registers
-                for r in q:
-                    maybell = set((x for x in maybell if x != r))
-                # add generated long latency
-                for rx in allregs:
-                    for r in longwrites:
-                        if seereg(rx, r):
-                            maybell.add(rx)
-        else:
-            yield (type, content, comment)
+                    if drainargs and content.startswith('create'):
+                        m = _re_creargs.match(comment)
+                        if m is not None:
+                            argregs = m.group(1).split(',')
+                            removed = set()
+                            for rx in maybell:
+                                for r in argregs:
+                                    if seereg(rx, r):
+                                        yield('other', 'mov %s,%s' %(r,r), 'MT: drain create arg')
+                                        yield('other', 'swch', '')
+                                        #print "XXX", argregs
+                                        removed.add(r)
+                            maybell = maybell - removed
 
 
+                    test = 0
+
+                    # "q" is the set of touched registers -- those that
+                    # hold a ready value after the current instruction.
+                    q = set()
+
+                    # if one of the "maybe regs" is read from,
+                    # assume we are reading result from long latency.
+                    #print "maybell = %r" % (maybell,)
+                    #print "reads = %r" % (reads,)
+                    for rx in maybell:
+                        for r in reads:
+                            if seereg(rx,r):
+                                test = 1
+                                q.add(rx)
+
+                    if test == 1 and md.delayed:
+                        # we can't suspend a delayed instruction,
+                        # so we need to force all inputs beforehand
+                        for r in q:
+                            yield ('other', 'mov %s,%s' %(r,r), 'MT: force read before delayed')
+                            yield ('other', 'swch', '')
+                        test = 0
+
+                    if test == 1 and addswch and swchbeforell:
+                        yield ('other','swch','MT: before-ll: %s' % ','.join(q))
+                    yield (type, content, comment)
+                    if test == 1 and addswch:
+                        yield ('other','swch','MT: after-ll: %s' % ','.join(q))
+
+                    if content.metadata.is_branch:
+                        maybell = allregs.copy()
+                    else:
+                        # all the registers that were "short written"
+                        # will not cause long latency during next use
+                        for rx in maybell:
+                            for r in shortwrites:
+                                if seereg(rx, r):
+                                    q.add(rx)
+                        # remove touched registers from the long latency registers
+                        maybell = maybell - q
+                        # add generated long latency
+                        for rx in allregs:
+                            for r in longwrites:
+                                if seereg(rx, r):
+                                    maybell.add(rx)
+                else:
+                    yield (type, content, comment)
+
+    return DetectDataflow()
 
 def protectend(fundata, items):
     """
@@ -229,7 +258,7 @@ _filter_stages = [
         killunusedlabels,
 
         decode,
-        addswchll,
+        makedataflow(addswch = True, drainargs = False),
 
         rmdupswch,
         rmswchbegin,
