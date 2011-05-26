@@ -21,6 +21,7 @@ void* dlmalloc(size_t);
 void dlfree(void*);
 void* dlcalloc(size_t, size_t);
 void* dlrealloc(void*, size_t);
+void* dlmemalign(size_t, size_t);
 
 /* "fast" aliases */
 #if defined(__mt_freestanding__) && defined(__slc_os_sim__)

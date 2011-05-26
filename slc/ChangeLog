@@ -1,5 +1,11 @@
 2011-05-27  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	Declare `dlmemalign' for use during system initialization.
+
+	* lib/include/svp/mtmalloc.h: Declare `dlmemalign'.
+
+2011-05-27  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	Support `strcmp' in the standard library.
 
 	* lib/src/strcmp.c: Import from FreeBSD.
