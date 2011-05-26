@@ -19,6 +19,7 @@
 #include <svp/sep.h>
 #include <svp/compiler.h>
 #include <svp/testoutput.h>
+#include <svp/delegate.h>
 #include "mtconf.h"
 
 // log2 of the maximum number of cores that are supported
@@ -159,7 +160,7 @@ static sl_place_t do_sep_alloc(struct sep_data_t* sep, size_t ncores, unsigned l
     }
     }
 
-    return r ? MAKE_PLACE_ID(sep, r - sep->ranges, ncores, 0) : 0;
+    return r ? MAKE_PLACE_ID(sep, r - sep->ranges, ncores, 1) : 0;
 }
 
 // Performs place allocation
@@ -343,44 +344,34 @@ void sep_dump_info(struct SEP* p)
     }
 }
 
-void sys_sep_init(void* init_parameters)
+void sys_sep_init(void)
 {
-    struct gridconf_t {
-        uint32_t ncores;
-        uint8_t  core_info[][4];
-    };
-    struct gridconf_t * gc = (struct gridconf_t*) init_parameters;
-    sl_place_t p;
+    sl_place_t p = get_current_place();
+    size_t ncores = p & -p;
     unsigned int i, size;
 
     if (verbose_boot) {
-        output_string("* SEP init: parsing layout for ", 2);
-        output_uint(gc->ncores, 2);
+        output_string("* SEP init: setting up for ", 2);
+        output_uint(ncores, 2);
         output_string(" cores...  ", 2);
     }
     
     // can't use assert() before places have been defined
-    if (unlikely(gc->ncores > MAX_NCORES)) {
+    if (unlikely(ncores > MAX_NCORES)) {
         output_string("SEP init fail: ncores > MAX_NCORES\n", 2);
         abort();
     }
 
-    // right now we only support a homogenous grid, and don't use the topology
-    for (i = 0; i < gc->ncores; ++i) {
-        if (unlikely(gc->core_info[i][0] != 0)) {
-            output_string("SEP init fail: unknown core type in grid\n", 2);
-            abort();
-        }
-    }
+    // right now we only support a homogenous grid with some I/O cores, and don't use the topology
     
     // Get the number of bits needed for an address: ceil(log2(gc->ncores))
-    root_sep_data.num_cores = gc->ncores;
-    root_sep_data.pid_bits = fast_log2(gc->ncores * 2 - 1);
+    root_sep_data.num_cores = ncores;
+    root_sep_data.pid_bits = fast_log2(ncores * 2 - 1);
 
     // add the available cores to the free pool
-    for (i = 0, size = gc->ncores; size != 0; )
+    for (i = 0, size = ncores; size != 0; )
     {
-        unsigned int l2_size = fast_log2(gc->ncores);
+        unsigned int l2_size = fast_log2(ncores);
         free_range(&root_sep_data, &root_sep_data.ranges[0], l2_size);
         i    += (1 << l2_size);
         size -= (1 << l2_size);

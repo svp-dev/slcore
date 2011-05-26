@@ -1,5 +1,13 @@
 2011-05-27  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	Initialize the root SEP based on the size of its "current" place.
+
+	* lib/src/mtsep.c (sys_sep_init): Use `get_current_place()' to
+	retrieve the number of cores instead of a configuration
+	variable. Assume an homogeneous grid.
+
+2011-05-27  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	Use the configuration ROM to find the architecture parameters.
 
 	* tools/lib/mtalpha-sim/slrt.s: Do not expect a configuration
