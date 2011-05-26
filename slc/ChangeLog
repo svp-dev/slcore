@@ -1,3 +1,10 @@
+2011-05-26  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
+	Enhance `slt'.
+
+	* tools/bin/slt.in: Escape more characters when generating
+	build/test directory names.
+
 2011-04-19  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
 	Avoid a potential pitfall with the MT-Alpha code generation.
