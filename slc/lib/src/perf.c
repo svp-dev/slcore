@@ -117,7 +117,7 @@ ARITH mtperf_compute_extra(const counter_t* before, const counter_t* after, unsi
 #if defined(__mt_freestanding__)
 #if defined(__slc_os_sim__)
     counter_t ncores = after[MTPERF_PLACE_SIZE];
-    long core_rate = *mgconf_master_freq / *mgconf_core_freq;
+    long core_rate = mgconf_master_freq / mgconf_core_freq;
 #else
     counter_t ncores = 1;
     long core_rate = 100;
@@ -139,7 +139,7 @@ ARITH mtperf_compute_extra(const counter_t* before, const counter_t* after, unsi
         // thread table occupancy
         ARITH ttotal = after[MTPERF_CUMUL_TT_OCCUPANCY] - before[MTPERF_CUMUL_TT_OCCUPANCY];
         ttotal /= ncores;
-        ttotal /= *mgconf_ttes_per_core;
+        ttotal /= mgconf_ttes_per_core;
         if (elapsed) return ttotal /= elapsed;
         break;
     }
@@ -148,7 +148,7 @@ ARITH mtperf_compute_extra(const counter_t* before, const counter_t* after, unsi
         // family table occupancy
         ARITH ttotal = after[MTPERF_CUMUL_FT_OCCUPANCY] - before[MTPERF_CUMUL_FT_OCCUPANCY];
         ttotal /= ncores;
-        ttotal /= *mgconf_ftes_per_core;
+        ttotal /= mgconf_ftes_per_core;
         if (elapsed) return ttotal /= elapsed;
         break;
     }

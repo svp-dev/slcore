@@ -13,269 +13,394 @@
 //
 
 #include "mtconf.h"
+#include "mgsim.h"
 #include <svp/sep.h>
 #include <svp/testoutput.h>
+#include <svp/mtmalloc.h>
+#include <stdlib.h>
+#include <string.h>
 
 extern int verbose_boot;
 
-typedef void (*parserfunc)(confword_t* data);
+confword_t mgconf_ftes_per_core = (confword_t)-1;
+confword_t mgconf_ttes_per_core = (confword_t)-1;
+confword_t mgconf_core_freq = (confword_t)-1;
+confword_t mgconf_master_freq = (confword_t)-1;
 
-static
-void parse_arch_v1(confword_t* data)
+struct mg_device_id
 {
-    if (!verbose_boot)
-        return;
-
-    static const char * const unknown = "UNKNOWN";
-    const char *archtype = unknown;
-    const char *isatype = unknown;
-    const char *memtype = unknown;
-    switch(data[0])
-    {
-    case 1: archtype = "simulated microgrid"; break;
-    }
-    switch(data[1])
-    {
-    case 1: isatype = "DEC Alpha with MT extensions"; break;
-    case 2: isatype = "SPARCV8 with MT extensions"; break;
-    }
-    switch(data[3])
-    {
-    case 1: memtype = "serial"; break;
-    case 2: memtype = "parallel"; break;
-    case 3: memtype = "banked"; break;
-    case 4: memtype = "random banked"; break;
-    case 5: memtype = "COMA network, ZL protocol"; break;
-    case 6: memtype = "COMA network, ML protocol"; break;
-    }
-        
-    output_string("architecture settings\n"
-                  "   type: ", 2);
-    output_string(archtype, 2);
-    output_string("\n"
-                  "   core ISA: ", 2);
-    output_string(isatype, 2);
-    output_string("\n"
-                  "   memory: ", 2);
-    output_string(memtype, 2);
-    output_string("\n"
-                  "   FPUs: ", 2);
-    output_uint(data[2], 2);
-    output_char('\n', 2);
-}
-
-static const confword_t one_ghz = 1000;
-const confword_t * mgconf_core_freq = &one_ghz;
-const confword_t * mgconf_master_freq = &one_ghz;
-
-static
-void parse_timings_v1(confword_t* data)
-{
-    mgconf_core_freq = &data[0];
-    mgconf_master_freq = &data[0];
-
-    if (!verbose_boot)
-        return;
-
-    output_string("timings\n"
-                  "   core frequency: ", 2);
-    output_uint(data[0], 2);
-    output_string("MHz\n", 2);
-
-/*
-                  "   external memory bandwidth: ", 2);
-    output_uint(data[1], 2);
-    output_string(" x 1E6 bytes/s\n", 2);
-*/
-}
-
-static
-void parse_timings_v2(confword_t* data)
-{
-    mgconf_master_freq = &data[0];
-    mgconf_core_freq = &data[1];
-
-    if (!verbose_boot)
-        return;
-
-    output_string("timings\n"
-                  "   master frequency: ", 2);
-    output_uint(data[0], 2);
-    output_string("MHz\n"
-                  "   core frequency: ", 2);
-    output_uint(data[1], 2);
-    output_string("MHz\n"
-                  "   memory frequency: ", 2);
-    output_uint(data[2], 2);
-    output_string("MHz\n"
-                  "   DDR frequency: ", 2);
-    output_uint(data[3], 2);
-    output_string("MHz\n"
-                  "   internal memory bandwidth: ", 2);
-    output_uint(data[2]*64, 2); // 1 cache line per cycle
-    output_string(" x 1E6 bytes/s\n"
-                  "   external memory bandwidth: ", 2);
-    output_uint(data[3]*16, 2); // two (double-rate) 64-bit transfers per cycle. 
-    output_string(" x 1E6 bytes/s\n", 2);
-}
-
-static
-void parse_timings_v3(confword_t* data)
-{
-    mgconf_master_freq = &data[0];
-    mgconf_core_freq = &data[1];
-
-    if (!verbose_boot)
-        return;
-
-    output_string("timings\n"
-                  "   master frequency: ", 2);
-    output_uint(data[0], 2);
-    output_string("MHz\n"
-                  "   core frequency: ", 2);
-    output_uint(data[1], 2);
-    output_string("MHz\n"
-                  "   memory frequency: ", 2);
-    output_uint(data[2], 2);
-    output_string("MHz\n"
-                  "   DDR frequency: ", 2);
-    output_uint(data[3], 2);
-    output_string("MHz\n"
-                  "   number of DDR chanels: ", 2);
-    output_uint(data[4], 2);
-    output_string("\n"
-                  "   internal memory bandwidth: ", 2);
-    output_uint(data[2]*64, 2); // 1 cache line per cycle
-    output_string(" x 1E6 bytes/s\n"
-                  "   external memory bandwidth: ", 2);
-    output_uint(data[3]*16*data[4], 2); // two (double-rate) 64-bit transfers per cycle, per channel. 
-    output_string(" x 1E6 bytes/s\n", 2);
-}
-
-static
-void parse_cache_v1(confword_t* data)
-{
-    if (!verbose_boot)
-        return;
-
-    output_string("cache settings\n"
-                  "   cache line size: ", 2);
-    output_uint(data[0], 2);
-    output_string(" bytes\n"
-                  "   L1 I-cache size: ", 2);
-    output_uint(data[1], 2);
-    output_string(" bytes\n"
-                  "   L1 D-cache size: ", 2);
-    output_uint(data[2], 2);
-    output_string(" bytes\n"
-                  "   L2 cache size: ", 2);
-    output_uint(data[4], 2);
-    output_string(" bytes\n"
-                  "   number of L2 caches: ", 2);
-    output_uint(data[3], 2);
-    output_char('\n', 2);
-}
-
-static const confword_t def_ftes_ttes[2] = { 32, 256 };
-const confword_t * mgconf_ftes_per_core = &def_ftes_ttes[0];
-const confword_t * mgconf_ttes_per_core = &def_ftes_ttes[1];
-
-static
-void parse_conc_v1(confword_t* data)
-{
-    mgconf_ftes_per_core = &data[0];
-    mgconf_ttes_per_core = &data[1];
-
-    if (!verbose_boot)
-        return;
-
-    output_string("concurrency resources\n"
-                  "   family entries per core: ", 2);
-    output_uint(data[0], 2);
-    output_string("\n"
-                  "   thread entries per core: ", 2);
-    output_uint(data[1], 2);
-    output_string("\n"
-                  "   int reg file size: ", 2);
-    output_uint(data[2], 2);
-    output_string("\n"
-                  "   float reg file size: ", 2);
-    output_uint(data[3], 2);
-    output_char('\n', 2);
-}
-
-void * mgconf_layout_data;
-
-static
-void parse_layout_v12(confword_t* data)
-{
-    mgconf_layout_data = &data[0];
-    if (!verbose_boot)
-        return;
-
-    output_string("place layout\n", 2);
-}
-
-static parserfunc parsers[] = 
-{
-    0,               // tag = 0 -> no configuration
-    &parse_arch_v1, 
-    &parse_timings_v1,
-    &parse_cache_v1,
-    &parse_conc_v1,
-    &parse_layout_v12,
-    &parse_timings_v2,
-    &parse_timings_v3,
-    &parse_layout_v12,
+    uint16_t provider;
+    uint16_t model;
+    uint16_t revision;
+    uint16_t padding;
 };
 
-
-void sys_conf_init(void *init_parameters)
+struct mg_device_info
 {
-    confword_t * words = (confword_t*) init_parameters;
+    size_t ndevices;
+    struct mg_device_id *enumeration;
+    void*               *base_addrs;
+};
 
-    if (verbose_boot) {
-        output_string("* reading configuration from 0x", 2);
-        output_hex(words, 2);
-        output_char(',', 2);
-    }
+struct mg_device_info mg_devinfo;
 
-    if (*words < 0x10000) 
+size_t mg_uart_devid = (size_t)-1;
+size_t mg_lcd_devid = (size_t)-1;
+size_t mg_rtc_devid = (size_t)-1;
+size_t mg_cfgrom_devid = (size_t)-1;
+size_t mg_gfxctl_devid = (size_t)-1;
+
+static
+void detect_lcd(size_t devid, void *addr) 
+{
+    uint32_t lcdcfg = *(uint32_t*)addr;
+    if (verbose_boot)
     {
-        if (verbose_boot) output_string(" old style: only place info found.\n", 2);
-        mgconf_layout_data = init_parameters;
+        output_string("* lcd at 0x", 1);
+        output_hex(addr, 1);
+        output_string(", size ", 1);
+        output_uint((lcdcfg >> 16) & 0xffff, 1);
+        output_char('x', 1);
+        output_uint(lcdcfg & 0xffff, 1);
+        output_string(".\n", 1);
     }
-    else 
+    if (mg_lcd_devid == (size_t)-1)
     {
-        if (verbose_boot) output_string(" new style:\n", 2);
+        mg_lcd_devid = devid; 
+    }
+}
 
-        // new style microgrid, configuration blocks
-        // are available, see MGSystem.cpp for values
-        while (*words != 0)
+static
+void detect_uart(size_t devid, void *addr)
+{
+    if (verbose_boot)
+    {
+        output_string("* uart at 0x", 1);
+        output_hex(addr, 1);
+        output_string(".\n", 1);
+    }
+    if (mg_uart_devid == (size_t)-1)
+    {
+        mg_uart_devid = devid; 
+    }    
+}
+
+static
+void detect_gfx(size_t devid, void *addr)
+{
+    if (verbose_boot)
+    {
+        output_string("* gfx at 0x", 1);
+        output_hex(addr, 1);
+        output_string(".\n", 1);
+    }
+    if (mg_gfxctl_devid == (size_t)-1)
+    {
+        mg_gfxctl_devid = devid; 
+    }    
+}
+
+static
+void detect_rtc(size_t devid, void *addr)
+{
+    if (verbose_boot)
+    {
+        output_string("* rtc at 0x", 1);
+        output_hex(addr, 1);
+        output_string(".\n", 1);
+    }
+    if (mg_rtc_devid == (size_t)-1)
+    {
+        mg_rtc_devid = devid; 
+    }    
+}
+
+static
+void detect_rom(size_t devid, void *addr)
+{
+    uint32_t magic = *(uint32_t*)addr;
+    if (magic == CONF_MAGIC)
+    {
+        if (verbose_boot)
         {
-            unsigned tag = *words >> 16;
-            unsigned size = *words & 0xffff;
-            confword_t *data = words + 1;
-            
-            if (verbose_boot) {
-                output_string("  at 0x", 2);
-                output_hex(words, 2);
-                output_string(", tag ", 2); output_uint(tag, 2);
-                output_string(", ", 2); output_int(size, 2);
-                output_string(" words: ", 2);
-            }
-            if (tag >= (sizeof(parsers) / sizeof(parsers[0])) || !parsers[tag])
-            {
-                if (verbose_boot) { 
-                    output_string("unknown tag", 2);
-                    output_int(tag, 2);
-                    output_char('\n', 2);
-                }
-            }
-            else 
-                parsers[tag](data);
-          
-            words += size + 1;
+            output_string("* configuration ROM at 0x", 1);
+            output_hex(addr, 1);
+            output_string(".\n", 1);
+        }
+        if (mg_cfgrom_devid == (size_t)-1)
+        {
+            mg_cfgrom_devid = devid;
         }
     }
 }
+
+static struct 
+{ 
+    struct mg_device_id id;
+    const char *name;
+    void (*detect)(size_t, void*);
+} known_devs[] =
+{
+    { { 1, 1, 1 }, "lcd", &detect_lcd },
+    { { 1, 2, 1 }, "rtc", &detect_rtc },
+    { { 1, 4, 1 }, "gfx", &detect_gfx },
+    { { 1, 5, 1 }, "rom", &detect_rom },
+    { { 1, 7, 1 }, "uart", &detect_uart },
+    { { 0, 0, 0 }, 0, 0 }
+};
+
+void sys_conf_init(void)
+{
+    /* attempt to find the config ROM */
+    if (mg_cfgrom_devid == (size_t)-1)
+    {
+        if (verbose_boot)
+        {
+            output_string("* no configuration ROM, unable to read configuration\n", 1);
+        }
+        return;
+    }
+
+    struct block
+    {
+        confword_t tag;
+        confword_t next;
+        confword_t payload[];
+    };
+
+    confword_t system_type_id = (confword_t)-1;
+    confword_t system_version_id = (confword_t)-1;
+    confword_t system_freq_id = (confword_t)-1;
+    confword_t core_type_id = (confword_t)-1;
+    confword_t core_freq_id = (confword_t)-1;
+    confword_t core_pid_id = (confword_t)-1;
+    confword_t core_threads_id = (confword_t)-1;
+    confword_t core_families_id = (confword_t)-1;
+    
+
+    const confword_t *cfg = mg_devinfo.base_addrs[mg_cfgrom_devid];
+    for (const struct block *p = (const struct block*)(cfg + 1); p->tag != 0; p = (const struct block*)(cfg + p->next))
+    {
+#define get_symbol(n) ((char*)(cfg + n + 1))
+
+        switch(p->tag)
+        {
+        case CONF_TAG_TYPETABLE:
+        {
+            size_t ntypes = p->payload[0];
+            for (size_t i = 0; i < ntypes; ++i)
+            {
+                confword_t name = p->payload[1 + 2*i];
+                const confword_t *attrtable = cfg + p->payload[1 + 2*i + 1];
+                size_t nattrs = attrtable[0];
+                if (system_type_id == (confword_t)-1 && strcmp(get_symbol(name), "system") == 0)
+                {
+                    system_type_id = i;
+                    for (size_t j = 0; j < nattrs; ++j)
+                    {
+                        confword_t aname = attrtable[2 + j];
+                        if (system_version_id == (confword_t)-1 && strcmp(get_symbol(aname), "version") == 0)
+                            system_version_id = j;
+                        else if (system_freq_id == (confword_t)-1 && strcmp(get_symbol(aname), "masterfreq") == 0)
+                            system_freq_id = j;
+                    }
+                }
+                if (strcmp(get_symbol(name), "cpu") == 0)
+                {
+                    core_type_id = i;
+                    for (size_t j = 0; j < nattrs; ++j)
+                    {
+                        confword_t aname = attrtable[2 + j];
+                        if (core_freq_id == (confword_t)-1 && strcmp(get_symbol(aname), "freq") == 0)
+                            core_freq_id = j;
+                        else if (core_threads_id == (confword_t)-1 && strcmp(get_symbol(aname), "threads") == 0)
+                            core_threads_id = j;
+                        else if (core_families_id == (confword_t)-1 && strcmp(get_symbol(aname), "families") == 0)
+                            core_families_id = j;
+                        else if (core_pid_id == (confword_t)-1 && strcmp(get_symbol(aname), "pid") == 0)
+                            core_pid_id = j;
+                    }                    
+                }
+            }
+            break;
+        }
+        case CONF_TAG_OBJECT:
+        {
+            confword_t t = p->payload[0];
+            if (t == system_type_id)
+            {
+                mgconf_master_freq = p->payload[1 + 2*system_freq_id + 1];
+                if (verbose_boot)
+                {
+                    output_string("* master frequency: ", 1);
+                    output_uint(mgconf_master_freq, 1);
+                    output_string("MHz.\n* system version: ", 1);
+                    output_string(get_symbol(p->payload[1 + 2*system_version_id + 1]), 1);
+                    output_string(".\n", 1);
+                }
+                // ensure we do this only once
+                system_type_id = (confword_t)-1;
+            }
+            else if (t == core_type_id)
+            {
+                confword_t pid = p->payload[1 + 2*core_pid_id + 1],
+                    cf = p->payload[1 + 2*core_freq_id + 1],
+                    ttes = p->payload[1 + 2*core_threads_id + 1],
+                    ftes = p->payload[1 + 2*core_families_id + 1];
+                if (mgconf_core_freq != (confword_t)-1 && 
+                    (cf != mgconf_core_freq || ttes != mgconf_ttes_per_core || ftes != mgconf_ftes_per_core))
+                {
+                    output_string("# warning: core ", 2);
+                    output_uint(pid, 2);
+                    output_string(" has different properties - the grid is not homogeneous!\n", 2);
+                }
+                else if (mgconf_core_freq == (confword_t)-1)
+                {
+                    mgconf_core_freq = cf;
+                    mgconf_ttes_per_core = ttes;
+                    mgconf_ftes_per_core = ftes;
+                    if (verbose_boot)
+                    {
+                        output_string("* core frequency: ", 1);
+                        output_uint(mgconf_core_freq, 1);
+                        output_string("MHz.\n* ", 1);
+                        output_uint(mgconf_ttes_per_core, 1);
+                        output_string(" thread and ", 1);
+                        output_uint(mgconf_ftes_per_core, 1);                    
+                        output_string(" family entries per core.\n", 1);
+                    }
+                }
+            }
+        }
+        }
+    }
+    
+}
+
+void sys_detect_devs(void)
+{
+    /* check the system version */
+    long system_version;
+    mgsim_read_asr(system_version, ASR_SYSTEM_VERSION);
+    if (system_version != ASR_SYSTEM_VERSION_VALUE)
+    {
+        output_string("Execution system type ", 2);
+        output_uint(system_version, 2);
+        output_string(" does not match expected value ", 2);
+        output_uint(ASR_SYSTEM_VERSION_VALUE, 2);
+        output_char('\n', 2);
+        abort();
+    }
+
+    /* ensure that we are connected to I/O */
+    uint32_t io_params;
+    size_t n_iodevs, n_chans;
+    mgsim_read_asr(io_params, ASR_IO_PARAMS1);
+    if (io_params == 0)
+    {
+        if (verbose_boot)
+        {
+            output_string("* not connected to I/O, unable to read configuration", 1);
+        }
+        return;
+    }
+    if (verbose_boot)
+    {
+        output_string("* connected to I/O, ", 1);
+        output_uint(n_iodevs = (io_params & 0xff), 1);
+        output_string(" devices, ", 1);
+        output_uint(n_chans = ((io_params >> 8) & 0xff), 1);
+        output_string(" notification channels.\n", 1);
+    }    
+
+    uint32_t io_params2;
+    mgsim_read_asr(io_params2, ASR_IO_PARAMS2);
+    size_t dev_as_sz = 1UL << (io_params2 & 0xff);
+
+    char *aio_base;
+    mgsim_read_asr(aio_base, ASR_AIO_BASE);
+
+    /* try to find the SMC */
+    size_t smc_id = (io_params >> 16) & 0xff;
+    void *smc = aio_base + dev_as_sz * smc_id;
+    size_t ndevs = 0;
+    if (verbose_boot)
+    {
+        output_string("* smc at 0x", 1);
+        output_hex(smc, 1);
+        output_string(", enumerates ", 1);
+        output_uint(ndevs = *(uint64_t*)smc, 1);
+        output_string(" devices.\n", 1);
+    }
+
+    if (ndevs > n_iodevs)
+    {
+        output_string("# warning: not all devices are visible from the I/O core.", 2);
+        ndevs = n_iodevs;
+    }
+
+    /* copy the enumeration data */
+    mg_devinfo.ndevices = ndevs;
+
+    struct mg_device_id *devenum = (struct mg_device_id*)dlmalloc(ndevs * sizeof(struct mg_device_id));
+    if (devenum == NULL)
+    {
+        output_string("Unable to allocate memory to copy the enumeration data!\n", 2);
+        abort();
+    }
+    memcpy(devenum, ((struct mg_device_id*)smc) + 1, ndevs * sizeof(struct mg_device_id));
+    mg_devinfo.enumeration = devenum;
+    if (verbose_boot)
+    {
+        output_string("* I/O enumeration data at 0x", 1);
+        output_hex(devenum, 1);
+        output_string(".\n", 1);
+    }
+
+    /* set up the device base addresses */
+
+    void **addrs = (void**)dlmalloc(ndevs * sizeof(void*));
+    if (addrs == NULL)
+    {
+        output_string("Unable to allocate memory to set up the device base addresses!\n", 2);
+        abort();
+    }
+    size_t i, j;
+    const char *devname;
+    for (i = 0; i < ndevs; ++i)
+    {
+        addrs[i] = aio_base + dev_as_sz * i;
+        devname = 0;
+
+        /* try to recognize some useful devices */
+        for (j = 0; known_devs[j].name != 0; ++j)
+        {
+            if (known_devs[j].id.provider == devenum[i].provider &&
+                known_devs[j].id.model == devenum[i].model &&
+                known_devs[j].id.revision == devenum[i].revision)
+            {
+                if (known_devs[j].detect != 0)
+                {
+                    known_devs[j].detect(i, addrs[i]);
+                }
+                else if (verbose_boot)
+                {
+                    output_string("* unknown device ", 1);
+                    output_uint(devenum[i].provider, 1);
+                    output_char('/', 1);
+                    output_uint(devenum[i].model, 1);
+                    output_char('/', 1);
+                    output_uint(devenum[i].revision, 1);
+                    output_string(" at 0x", 1);
+                    output_hex(addrs[i], 1);
+                    output_string(".\n", 1); 
+                }
+                break;
+            }
+        }
+
+    }
+    mg_devinfo.base_addrs = addrs;
+
+}
+

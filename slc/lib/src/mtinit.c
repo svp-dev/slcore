@@ -102,14 +102,13 @@ void sys_check_ncores(void)
     }
 }
 
-extern void sys_sep_init(void*);
+extern void sys_sep_init(void);
 extern void sys_fibre_init(void*, bool);
 extern void sys_vars_init(void*, bool);
 
 void sys_init(void* slrbase_init, 
               void* fibrebase_init, 
-              char *initenv, 
-              void *confdata)
+              char *initenv)
 {
   sys_environ_init(initenv);
 
@@ -124,11 +123,15 @@ void sys_init(void* slrbase_init,
   
   sys_heap_init();
 
+  sys_detect_devs();
+
+  sys_conf_init();
+
   sys_fibre_init(fibrebase_init, true);
 
   sys_vars_init(slrbase_init, true);
 
-  sys_sep_init(mgconf_layout_data);
+  sys_sep_init();
 
   sys_check_ncores();
 

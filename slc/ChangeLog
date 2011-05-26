@@ -1,5 +1,23 @@
 2011-05-27  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	Use the configuration ROM to find the architecture parameters.
+
+	* tools/lib/mtalpha-sim/slrt.s: Do not expect a configuration
+	pointer in $l2 any more.
+
+	* lib/src/mtconf.h,
+	* lib/src/mtconf.c: Instead, use the new ancillary registers and
+	SMC device to enumerate the I/O bus, find the configuration ROM
+	and copy the configuration values from there. The `mgconf'
+	variables now hold the value, instead of a reference.
+
+	* lib/src/mtsep.c,
+	* lib/src/perf.c: Use the `mgconf' variables by value.
+
+	* lib/src/mtinit.c: Update accordingly.
+
+2011-05-27  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	Support loading the input data from ROMs.
 
 	* tools/bin/slr.in: Ensure that the slr data file is not empty.

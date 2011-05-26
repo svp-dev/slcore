@@ -5,12 +5,12 @@
 
 typedef uint32_t confword_t;
 
-extern const confword_t * mgconf_master_freq;
-extern const confword_t * mgconf_core_freq;
-extern const confword_t * mgconf_ftes_per_core;
-extern const confword_t * mgconf_ttes_per_core;
-extern void *mgconf_layout_data;
+extern confword_t mgconf_master_freq;
+extern confword_t mgconf_core_freq;
+extern confword_t mgconf_ftes_per_core;
+extern confword_t mgconf_ttes_per_core;
 
-void sys_conf_init(void *init_parameters);
+void sys_detect_devs(void);
+void sys_conf_init(void);
 
 #endif

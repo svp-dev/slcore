@@ -295,9 +295,9 @@ int root_sep_ctl(struct SEP* sep, unsigned long request, void *a, void *b)
         {
             // One core-place: atomic, programmable
             ret->flags = 2|4|1;
-            ret->a.p.family_capacity = *mgconf_ftes_per_core;
-            ret->a.p.thread_capacity = *mgconf_ttes_per_core;
-            ret->a.p.rate            = *mgconf_core_freq;
+            ret->a.p.family_capacity = mgconf_ftes_per_core;
+            ret->a.p.thread_capacity = mgconf_ttes_per_core;
+            ret->a.p.rate            = mgconf_core_freq;
         }
         else
         {

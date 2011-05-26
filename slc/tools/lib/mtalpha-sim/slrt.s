@@ -36,7 +36,9 @@ _start:
 	fclr $lf17 # flush callee-save reg
 	fclr $lf18 # flush callee-save reg
 	fclr $lf3 # init FP return reg
+        clr $l2 # flush arg reg
 	clr $l3 # flush arg reg
+        clr $l4 # flush arg reg
 	fclr $lf5 # flush arg reg
 	fclr $lf6 # flush arg reg
 	fclr $lf7 # flush arg reg
@@ -45,9 +47,7 @@ _start:
 	fclr $lf10 # flush arg reg
 
 	# here $l7(a0), $l6(a1), $l5(a2) are set by the environment
-	# $l2 set by the simulator, but must go to a3
-	# all 4 are used by the init function
-        mov $l2, $l4 # config -> a3
+	# all 3 are used by the init function
 	ldq $l14,sys_init($l17) !literal!1
 	jsr $l15,($l14),sys_init !lituse_jsr!1
 	ldgp $l17,0($l15)
