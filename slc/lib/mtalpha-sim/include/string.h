@@ -29,10 +29,10 @@ char *strncat(char *restrict s1, const char *restrict s2, size_t n);
 
 /* missing:
    memcmp
-   strcmp
    strcoll
 */
 
+int strcmp(const char *s1, const char *s2);
 int strncmp(const char *s1, const char *s2, size_t n);
 
 /* missing:

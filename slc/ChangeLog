@@ -1,3 +1,11 @@
+2011-05-27  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
+	Support `strcmp' in the standard library.
+
+	* lib/src/strcmp.c: Import from FreeBSD.
+	* lib/mtalpha-sim/include/string.h: Declare it.
+	* lib/mtalpha.mk: List it.
+
 2011-05-26  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
 	Enhance `slt'.

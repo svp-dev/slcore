@@ -38,6 +38,7 @@ MTALIB_CSRC = \
 	src/stpncpy.c \
 	src/strcat.c \
 	src/strchr.c \
+	src/strcmp.c \
 	src/strcpy.c \
 	src/strdup.c \
 	src/strerror.c \
