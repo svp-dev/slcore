@@ -102,22 +102,9 @@ void sys_check_ncores(void)
     }
 }
 
-static noinline
-void sys_vars_init(void *slrbase_init, void *fibrebase_init)
-{
-  if (verbose_boot) {
-      output_string("* input data: fibre at 0x", 2);
-      output_hex(slrbase_init, 2);
-      output_string(", slr vars at 0x", 2);
-      output_hex(slrbase_init, 2);
-      output_char('.', 2);
-      output_char('\n', 2);
-  }
-  __slr_base = (struct __slr_base_t*) slrbase_init;
-  __fibre_base = (struct fibre_base_t*) fibrebase_init;
-}
-
 extern void sys_sep_init(void*);
+extern void sys_fibre_init(void*, bool);
+extern void sys_vars_init(void*, bool);
 
 void sys_init(void* slrbase_init, 
               void* fibrebase_init, 
@@ -137,9 +124,9 @@ void sys_init(void* slrbase_init,
   
   sys_heap_init();
 
-  sys_vars_init(slrbase_init, fibrebase_init);
+  sys_fibre_init(fibrebase_init, true);
 
-  sys_conf_init(confdata);
+  sys_vars_init(slrbase_init, true);
 
   sys_sep_init(mgconf_layout_data);
 

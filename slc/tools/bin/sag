@@ -124,8 +124,8 @@ class FibreGenerator(object):
             print "%s data%d" % (t2c[t], i),
             for s in sz[:-1]:
                 print "[%d]" % s,
-            print ";"
-        print "} __slr_data = {"
+            print " __attribute__((__aligned__(64)));"
+        print "char end; } __slr_data = {"
 
         print "  {/* metadata */"
         for i, sz, t, _ in ilist:
@@ -133,7 +133,7 @@ class FibreGenerator(object):
             print "(char*)(void*)&__slr_data.shape%d - (char*)(void*)&__slr_data," % i,
             print "(char*)(void*)&__slr_data.data%d - (char*)(void*)&__slr_data" % i,
             print "},"
-        print "  {-1,0,0,0}},"
+        print "  {-1,0,0, (char*)(void*)&__slr_data.end - (char*)(void*)&__slr_data }},"
 
         print "  /* dimensions */"
         for i, sz, _, _ in ilist:

@@ -459,7 +459,7 @@ if test -n "$dodata"; then
 	if test -n "$VERBOSE"; then
 	    echo "$basename: creating empty data file $datafile" >&2
 	fi
-        true >"$datafile"
+        printf '\0\0\0\0\0\0\0\0' >"$datafile"
     fi
 fi
 

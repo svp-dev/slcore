@@ -17,6 +17,8 @@
 
 #include <stddef.h>
 
+size_t fibre_nitems(void);
+
 int fibre_tag(size_t pos);
 size_t fibre_rank(size_t pos);
 size_t* fibre_shape(size_t pos);
@@ -30,6 +32,10 @@ extern struct fibre_base_t {
        ptrdiff_t data_offset;
 } *__fibre_base;
 
+extern size_t __fibre_nitems;
+
+#define __inline_fibre_nitems() __fibre_nitems
+#define fibre_nitems() __inline_fibre_nitems()
 #define __inline_fibre_tag(N) __fibre_base[N].tag
 #define fibre_tag(N) __inline_fibre_tag(N)
 #define __inline_fibre_rank(N) __fibre_base[N].rank

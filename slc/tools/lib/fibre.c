@@ -13,27 +13,39 @@
 //
 
 #include <svp/fibre.h>
+#include <assert.h>
 
 #undef fibre_tag
 int fibre_tag(size_t pos)
 {
+    assert(pos < fibre_nitems());
     return __inline_fibre_tag(pos);
 }
 
 #undef fibre_rank
 size_t fibre_rank(size_t pos)
 {
+    assert(pos < fibre_nitems());
     return __inline_fibre_rank(pos);
 }
 
 #undef fibre_shape
 size_t* fibre_shape(size_t pos)
 {
+    assert(pos < fibre_nitems());
     return __inline_fibre_shape(pos);
 }
 
 #undef fibre_data
 void* fibre_data(size_t pos)
 {
+    assert(pos < fibre_nitems());
     return __inline_fibre_data(pos);
 }
+
+#undef fibre_nitems
+size_t fibre_nitems(void)
+{
+    return __inline_fibre_nitems();
+}
+

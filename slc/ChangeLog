@@ -1,5 +1,23 @@
 2011-05-27  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	Support loading the input data from ROMs.
+
+	* tools/bin/slr.in: Ensure that the slr data file is not empty.
+	
+	* tools/bin/sag: Mark the end of the data and register the offset,
+	so that the size of the data is known. Also, align each generated
+	Fibre array on a 64-byte boundary.
+
+	* tools/include/svp/fibre.h: Expose the number of Fibre items with
+	`fibre_nitems()'.
+	* tools/lib/fibre.c: Implement it.
+
+	* lib/src/mtinit.c: Move the input data pointer initialization to...
+	* lib/src/mtinput.c: ... here. Split the initialization. For both
+	types of input, copy the data from ROM to the heap.
+
+2011-05-27  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	Declare `dlmemalign' for use during system initialization.
 
 	* lib/include/svp/mtmalloc.h: Declare `dlmemalign'.
