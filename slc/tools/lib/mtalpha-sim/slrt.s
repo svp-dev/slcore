@@ -16,7 +16,8 @@
 	.globl _start
 	.registers 0 0 31 0 0 31
 _start:
-	#MTREG_SET: $l2,$l5,$l6,$l7,$l27
+	#MTREG_SET: $l5,$l6,$l7
+        ldpc $l27
 	ldgp $l17, 0($l27)
 	ldfp $l18
 
