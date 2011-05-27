@@ -56,13 +56,13 @@ void detect_lcd(size_t devid, void *addr)
     uint32_t lcdcfg = *(uint32_t*)addr;
     if (verbose_boot)
     {
-        output_string("* lcd at 0x", 1);
-        output_hex(addr, 1);
-        output_string(", size ", 1);
-        output_uint((lcdcfg >> 16) & 0xffff, 1);
-        output_char('x', 1);
-        output_uint(lcdcfg & 0xffff, 1);
-        output_string(".\n", 1);
+        output_string("* lcd at 0x", 2);
+        output_hex(addr, 2);
+        output_string(", size ", 2);
+        output_uint((lcdcfg >> 16) & 0xffff, 2);
+        output_char('x', 2);
+        output_uint(lcdcfg & 0xffff, 2);
+        output_string(".\n", 2);
     }
     if (mg_lcd_devid == (size_t)-1)
     {
@@ -75,9 +75,9 @@ void detect_uart(size_t devid, void *addr)
 {
     if (verbose_boot)
     {
-        output_string("* uart at 0x", 1);
-        output_hex(addr, 1);
-        output_string(".\n", 1);
+        output_string("* uart at 0x", 2);
+        output_hex(addr, 2);
+        output_string(".\n", 2);
     }
     if (mg_uart_devid == (size_t)-1)
     {
@@ -90,9 +90,9 @@ void detect_gfx(size_t devid, void *addr)
 {
     if (verbose_boot)
     {
-        output_string("* gfx at 0x", 1);
-        output_hex(addr, 1);
-        output_string(".\n", 1);
+        output_string("* gfx at 0x", 2);
+        output_hex(addr, 2);
+        output_string(".\n", 2);
     }
     if (mg_gfxctl_devid == (size_t)-1)
     {
@@ -105,9 +105,9 @@ void detect_rtc(size_t devid, void *addr)
 {
     if (verbose_boot)
     {
-        output_string("* rtc at 0x", 1);
-        output_hex(addr, 1);
-        output_string(".\n", 1);
+        output_string("* rtc at 0x", 2);
+        output_hex(addr, 2);
+        output_string(".\n", 2);
     }
     if (mg_rtc_devid == (size_t)-1)
     {
@@ -123,9 +123,9 @@ void detect_rom(size_t devid, void *addr)
     {
         if (verbose_boot)
         {
-            output_string("* configuration ROM at 0x", 1);
-            output_hex(addr, 1);
-            output_string(".\n", 1);
+            output_string("* configuration ROM at 0x", 2);
+            output_hex(addr, 2);
+            output_string(".\n", 2);
         }
         if (mg_cfgrom_devid == (size_t)-1)
         {
@@ -156,7 +156,7 @@ void sys_conf_init(void)
     {
         if (verbose_boot)
         {
-            output_string("* no configuration ROM, unable to read configuration\n", 1);
+            output_string("* no configuration ROM, unable to read configuration\n", 2);
         }
         return;
     }
@@ -232,11 +232,11 @@ void sys_conf_init(void)
                 mgconf_master_freq = p->payload[1 + 2*system_freq_id + 1];
                 if (verbose_boot)
                 {
-                    output_string("* master frequency: ", 1);
-                    output_uint(mgconf_master_freq, 1);
-                    output_string("MHz.\n* system version: ", 1);
-                    output_string(get_symbol(p->payload[1 + 2*system_version_id + 1]), 1);
-                    output_string(".\n", 1);
+                    output_string("* master frequency: ", 2);
+                    output_uint(mgconf_master_freq, 2);
+                    output_string("MHz.\n* system version: ", 2);
+                    output_string(get_symbol(p->payload[1 + 2*system_version_id + 1]), 2);
+                    output_string(".\n", 2);
                 }
                 // ensure we do this only once
                 system_type_id = (confword_t)-1;
@@ -261,13 +261,13 @@ void sys_conf_init(void)
                     mgconf_ftes_per_core = ftes;
                     if (verbose_boot)
                     {
-                        output_string("* core frequency: ", 1);
-                        output_uint(mgconf_core_freq, 1);
-                        output_string("MHz.\n* ", 1);
-                        output_uint(mgconf_ttes_per_core, 1);
-                        output_string(" thread and ", 1);
-                        output_uint(mgconf_ftes_per_core, 1);                    
-                        output_string(" family entries per core.\n", 1);
+                        output_string("* core frequency: ", 2);
+                        output_uint(mgconf_core_freq, 2);
+                        output_string("MHz.\n* ", 2);
+                        output_uint(mgconf_ttes_per_core, 2);
+                        output_string(" thread and ", 2);
+                        output_uint(mgconf_ftes_per_core, 2);                    
+                        output_string(" family entries per core.\n", 2);
                     }
                 }
             }
@@ -300,17 +300,17 @@ void sys_detect_devs(void)
     {
         if (verbose_boot)
         {
-            output_string("* not connected to I/O, unable to read configuration", 1);
+            output_string("* not connected to I/O, unable to read configuration", 2);
         }
         return;
     }
     if (verbose_boot)
     {
-        output_string("* connected to I/O, ", 1);
-        output_uint(n_iodevs = (io_params & 0xff), 1);
-        output_string(" devices, ", 1);
-        output_uint(n_chans = ((io_params >> 8) & 0xff), 1);
-        output_string(" notification channels.\n", 1);
+        output_string("* connected to I/O, ", 2);
+        output_uint(n_iodevs = (io_params & 0xff), 2);
+        output_string(" devices, ", 2);
+        output_uint(n_chans = ((io_params >> 8) & 0xff), 2);
+        output_string(" notification channels.\n", 2);
     }    
 
     uint32_t io_params2;
@@ -326,11 +326,11 @@ void sys_detect_devs(void)
     size_t ndevs = 0;
     if (verbose_boot)
     {
-        output_string("* smc at 0x", 1);
-        output_hex(smc, 1);
-        output_string(", enumerates ", 1);
-        output_uint(ndevs = *(uint64_t*)smc, 1);
-        output_string(" devices.\n", 1);
+        output_string("* smc at 0x", 2);
+        output_hex(smc, 2);
+        output_string(", enumerates ", 2);
+        output_uint(ndevs = *(uint64_t*)smc, 2);
+        output_string(" devices.\n", 2);
     }
 
     if (ndevs > n_iodevs)
@@ -352,9 +352,9 @@ void sys_detect_devs(void)
     mg_devinfo.enumeration = devenum;
     if (verbose_boot)
     {
-        output_string("* I/O enumeration data at 0x", 1);
-        output_hex(devenum, 1);
-        output_string(".\n", 1);
+        output_string("* I/O enumeration data at 0x", 2);
+        output_hex(devenum, 2);
+        output_string(".\n", 2);
     }
 
     /* set up the device base addresses */
@@ -385,15 +385,15 @@ void sys_detect_devs(void)
                 }
                 else if (verbose_boot)
                 {
-                    output_string("* unknown device ", 1);
-                    output_uint(devenum[i].provider, 1);
-                    output_char('/', 1);
-                    output_uint(devenum[i].model, 1);
-                    output_char('/', 1);
-                    output_uint(devenum[i].revision, 1);
-                    output_string(" at 0x", 1);
-                    output_hex(addrs[i], 1);
-                    output_string(".\n", 1); 
+                    output_string("* unknown device ", 2);
+                    output_uint(devenum[i].provider, 2);
+                    output_char('/', 2);
+                    output_uint(devenum[i].model, 2);
+                    output_char('/', 2);
+                    output_uint(devenum[i].revision, 2);
+                    output_string(" at 0x", 2);
+                    output_hex(addrs[i], 2);
+                    output_string(".\n", 2); 
                 }
                 break;
             }

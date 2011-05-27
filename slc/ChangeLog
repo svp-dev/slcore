@@ -1,5 +1,11 @@
 2011-05-27  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	Ensure that initialization messages are printed to stderr.
+
+	* lib/src/mtconf.c: Do it.
+
+2011-05-27  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	Fix input of slr variables.
 
 	* tools/bin/sag: Ensure that the data size is populated in the
