@@ -13,13 +13,35 @@
 //
 #include <svp/perf.h>
 #include <time.h>
+#include "mtconf.h"
+
+static
+time_t rtc_gettime(void)
+{
+    if (mg_rtc_devid == (confword_t)-1)
+        return 1;
+
+    volatile const uint32_t* rtc = (const uint32_t*)mg_devinfo.base_addrs[mg_rtc_devid];
+    return rtc[5];
+}
+
+sl_def(get_time, sl__static, sl_shparm(time_t, t))
+{
+    sl_setp(t, rtc_gettime());
+}
+sl_enddef
 
 time_t time(time_t *p)
 {
-#ifdef MTPERF_UNIX_TIME
-    time_t c = mtperf_sample1(MTPERF_UNIX_TIME);
+    time_t c;
+#if defined(__slc_os_fpga__)
+    // UTLEON3 does not support suspending allocate,
+    // but it does not matter because we are single core
+    c = rtc_gettime();
 #else
-    time_t c = 1;
+    sl_create(, 1,,,,,sl__forcewait, get_time, sl_sharg(time_t, c, 0));
+    sl_sync();
+    c = sl_geta(c);
 #endif
     if (p)
         *p = c;

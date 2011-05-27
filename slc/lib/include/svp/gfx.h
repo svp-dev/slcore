@@ -15,33 +15,6 @@
 #ifndef SLC_SVP_GFX_H
 # define SLC_SVP_GFX_H
 
-#ifdef __mt_freestanding__
-
-#define gfx_init() ((void)0)
-#define gfx_close() ((void)0)
-
-#include <svp/mgsim.h>
-
-#define gfx_resize(W, H)  \
-    mgsim_control((((unsigned long)(W))<<48) | ((((unsigned long)(H)) & 0xffff)<<32), \
-                  MGSCTL_TYPE_GFX, MGSCTL_GFX_RESIZE, 0)
-
-#define gfx_putpixel(X, Y, Data) \
-    mgsim_control((((unsigned long)(X))<<48) | ((((unsigned long)(Y)) & 0xffff)<<32)|((Data) & 0xffffffff), \
-                  MGSCTL_TYPE_GFX, MGSCTL_GFX_PUTPIXEL, MGSCTL_GFX_PUTPIXEL_XY)
-
-#define gfx_fb_set(Offset, Data) \
-    mgsim_control((((unsigned long)(Offset)) << 32) | ((Data) & 0xffffffff), \
-                  MGSCTL_TYPE_GFX, MGSCTL_GFX_PUTPIXEL, MGSCTL_GFX_PUTPIXEL_OFFSET)
-
-#define gfx_dump(Key, Stream, EmbedTimeStamp, EmbedThreadInfo)		\
-    mgsim_control((long)(Key),                                          \
-                  MGSCTL_TYPE_GFX, MGSCTL_GFX_SSHOT,                    \
-                  ((EmbedTimeStamp)?MGSCTL_GFX_SSHOT_TIMESTAMP:0) |     \
-                  ((EmbedThreadInfo)?MGSCTL_GFX_SSHOT_TINFO:0) | (Stream))
-
-#else
-
 #include <stddef.h>
 #include <stdint.h>
 #include <svp/compiler.h>
@@ -67,8 +40,6 @@ void gfx_dump(unsigned key, int stream, int embed_ts, int embed_tinfo);
     if (likely(__o < (__gfx_w*__gfx_h)))				\
       __gfx_framebuffer[__o] = (Data);					\
   } while(0)
-
-#endif
 
 
 #endif // ! SLC_SVP_GFX_H

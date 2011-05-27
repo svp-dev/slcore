@@ -54,13 +54,13 @@ MTALIB_CSRC = \
 	src/strtoul.c \
 	src/strtoull.c \
 	src/sys_errlist.c \
-	src/time.c \
 	src/tlstack_malloc.c \
 	src/vfprintf.c \
 	src/vprintf.c \
 	src/vsnprintf.c
 
 MTALIB_SRC = \
+	src/time.c \
 	src/malloc_excl.c \
 	src/div.c \
 	src/roman.c \
@@ -69,6 +69,7 @@ MTALIB_SRC = \
 MTALIB_SIM_SRC = \
 	src/mtconf.c \
 	src/mtinit.c \
+	src/mtgfx.c \
 	src/mtsep.c
 
 MTALIB_EXTRA = \

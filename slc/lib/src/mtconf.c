@@ -27,20 +27,6 @@ confword_t mgconf_ttes_per_core = (confword_t)-1;
 confword_t mgconf_core_freq = (confword_t)-1;
 confword_t mgconf_master_freq = (confword_t)-1;
 
-struct mg_device_id
-{
-    uint16_t provider;
-    uint16_t model;
-    uint16_t revision;
-    uint16_t padding;
-};
-
-struct mg_device_info
-{
-    size_t ndevices;
-    struct mg_device_id *enumeration;
-    void*               *base_addrs;
-};
 
 struct mg_device_info mg_devinfo;
 
@@ -49,6 +35,9 @@ size_t mg_lcd_devid = (size_t)-1;
 size_t mg_rtc_devid = (size_t)-1;
 size_t mg_cfgrom_devid = (size_t)-1;
 size_t mg_gfxctl_devid = (size_t)-1;
+size_t mg_gfxfb_devid = (size_t)-1;
+volatile uint32_t *mg_gfx_ctl;
+void *mg_gfx_fb;
 
 static
 void detect_lcd(size_t devid, void *addr) 
@@ -88,15 +77,25 @@ void detect_uart(size_t devid, void *addr)
 static
 void detect_gfx(size_t devid, void *addr)
 {
+    /* obtain the address of the framebuffer */
+    uint32_t fb_devid = *((uint32_t*)addr + 9);
+    void *fb_addr = mg_devinfo.base_addrs[fb_devid];
+
     if (verbose_boot)
     {
-        output_string("* gfx at 0x", 2);
+        output_string("* gfxctl at 0x", 2);
         output_hex(addr, 2);
+        output_string(", framebuffer at 0x", 2);
+        output_hex(fb_addr, 2);
         output_string(".\n", 2);
     }
+
     if (mg_gfxctl_devid == (size_t)-1)
     {
+        mg_gfxfb_devid = fb_devid;
+        mg_gfx_fb = fb_addr;
         mg_gfxctl_devid = devid; 
+        mg_gfx_ctl = addr;
     }    
 }
 
@@ -370,6 +369,13 @@ void sys_detect_devs(void)
     for (i = 0; i < ndevs; ++i)
     {
         addrs[i] = aio_base + dev_as_sz * i;
+    }
+    mg_devinfo.base_addrs = addrs;
+
+    /* detect the devices */
+
+    for (i = 0; i < ndevs; ++i)
+    {
         devname = 0;
 
         /* try to recognize some useful devices */
@@ -398,9 +404,7 @@ void sys_detect_devs(void)
                 break;
             }
         }
-
     }
-    mg_devinfo.base_addrs = addrs;
 
 }
 

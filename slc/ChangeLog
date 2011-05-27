@@ -1,5 +1,22 @@
 2011-05-27  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	More changes towards the integration of mgsim 3.1.
+
+	* lib/src/time.c: Use the RTC device (if any) to fetch the time.
+	* lib/mtalpha.mk: Compile `time.c' as a MT target.
+
+	* lib/include/svp/gfx.h: Use the same primitives for all targets.
+	* lib/src/mtgfx.c: New.
+	* lib/mtalpha.mk: List the new file.
+
+	* lib/src/mtconf.c: Also declare the configuration variables...
+	* lib/src/mtconf.h: ...here.
+
+	* tools/lib/r-mt-sim.sh.in: Pass the executable file as a ROM
+	image.
+
+2011-05-27  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	Ensure that initialization messages are printed to stderr.
 
 	* lib/src/mtconf.c: Do it.
