@@ -1,6 +1,12 @@
 2011-05-27  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
 	Improve the documentation.
+	
+	* doc/NEWS.txt: Initialize for 3.6.
+
+2011-05-27  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
+	Improve the documentation.
 
 	* doc/NEWS.txt: Update for version 3.5.
 
