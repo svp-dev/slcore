@@ -1,5 +1,11 @@
 2011-05-27  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	Improve the documentation.
+
+	* doc/NEWS.txt: Update for version 3.5.
+
+2011-05-27  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	Add a missing file.
 
 	* lib/src/mgsim.h: Import from mgsim 3.1.
