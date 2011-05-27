@@ -1,5 +1,12 @@
 2011-05-27  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	Add a missing file.
+
+	* lib/src/mgsim.h: Import from mgsim 3.1.
+	* lib/mtalpha.mk (MTALIB_EXTRA): List the new file.
+
+2011-05-27  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	More changes towards the integration of mgsim 3.1.
 
 	* lib/src/time.c: Use the RTC device (if any) to fetch the time.

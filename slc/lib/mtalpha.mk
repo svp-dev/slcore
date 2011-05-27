@@ -77,6 +77,7 @@ MTALIB_EXTRA = \
 	src/fpmath.h \
 	src/heap.h \
 	src/malloc_wrappers.c \
+	src/mgsim.h \
 	src/missing_uclibc_math.c \
 	src/mtconf.h \
 	src/mtstdio.h \
