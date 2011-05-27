@@ -1,5 +1,14 @@
 2011-05-27  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	Fix input of slr variables.
+
+	* tools/bin/sag: Ensure that the data size is populated in the
+	last entry.
+
+	* lib/src/mtinput.c: Simplify.
+
+2011-05-27  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	Adjust the MT-Alpha entry point.
 
 	* tools/lib/mtalpha-sim/slrt.s: Compute PV locally instead of

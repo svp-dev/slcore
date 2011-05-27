@@ -152,20 +152,20 @@ class FibreGenerator(object):
 class SlrVarGenerator(object):
     def genasm(self, out, data):
         print >>out, "struct __slr_data_t {"
-        print >>out, "  struct meta_%d_t { ptrdiff_t offset; size_t nitems; } meta[%d];" % (len(data), len(data))
+        print >>out, "  struct { ptrdiff_t offset; size_t nitems; } meta[%d];" % (len(data)+1)
         for d in data:
-            print >>out, "  %s data_%s[%d];" % (d['type'], d['label'], d['len'])
-        print >>out, "} __slr_data = {\n  { /* meta */"
+            print >>out, "  %s data_%s[%d] __attribute__((__aligned__(64)));" % (d['type'], d['label'], d['len'])
+        print >>out, "  char end; } __slr_data = {\n  { /* meta */"
         for d in data:
             print >>out, "    { (char*)(void*)&__slr_data.data_%s - (char*)(void*)&__slr_data," % d['label'],
             print >>out, "%d }," % d['len']
-        print >>out, "  },"
+        print >>out, "    { 0, (char*)(void*)&__slr_data.end - (char*)(void*)&__slr_data } },"
         for d in data:
             print >>out, "  { /* %s */ " % d['label']
             for i in d['items']:
                 print >>out, "\t%s," % i
             print >>out, "  },"
-        print "};"
+        print " 0 };"
 
     def proto(self, out, parm):
         if len(parm):

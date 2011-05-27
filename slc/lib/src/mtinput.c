@@ -37,7 +37,7 @@ void sys_vars_init(void *rawdata, bool copy)
     if (nitems == 0)
         sz = sizeof(slr_base[0]);
     else
-        sz = (size_t)slr_base[nitems].nitems;
+        sz = slr_base[nitems].nitems;
 
     if (copy)
     {
