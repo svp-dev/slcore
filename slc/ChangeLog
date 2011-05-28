@@ -1,5 +1,11 @@
 2011-05-28  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	Clearly distinguish 3.5b from 3.6b in the documentation.
+
+	* doc/NEWS.txt: Do it.
+
+2011-05-28  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	Align the input data on addresses multiple of 64 bytes.
 
 	(feature requested by Bert Gijsbers)

@@ -4,11 +4,46 @@
 
 This document describes major updates to the SL toolchain.
 
-Version 3.6 (Development)
-=========================
+Version 3.6b (Development)
+==========================
 
-Version 3.5 (May 2011)
-======================
+Changes since 3.5b
+------------------
+
+Microgrid-specific changes
+``````````````````````````
+
+- When targeting the Microgrid simulator, the SL compiler expects
+  version 3.1 or later of the simulator.
+
+- The Microgrid supports I/O devices. For now only devices connected
+  to the first core are recognized. 
+
+- In particular, the Microgrid supports a real time clock, from which
+  C's ``time()`` function is implemented. More support for time will be
+  added as need arises.
+
+- Also as a consequence the graphical framebuffer is supported as an
+  I/O device. The ``gfx_`` API from the SL library has been modified to
+  use this device when run on the first core, but not from other
+  cores. For the time being, accesses to the framebuffer must
+  therefore be delegated to the first core.
+
+- The Microgrid simulator version 3.1 uses a different configuration
+  format than previous versions. The machine profiles bundled with the
+  SL tool chain have been updated; however any custom profile need to
+  be updated as well. More details in CSA note [mgsim17].
+
+Language and library
+````````````````````
+
+- The Fibre and "slr variables" data input mechanisms now align the
+  data on addresses multiple of 64 bytes. This is an attempt at
+  aligning the data on cache line boundaries (requested by Bert
+  Gijsbers).
+
+Version 3.5b (Development)
+==========================
 
 Changes since 3.4
 -----------------
@@ -23,9 +58,6 @@ Microgrid-specific changes
 
 - The root SEP code in the SL library was updated to handle the new
   handling of place layouts.
-
-- The Microgrid supports I/O devices. For now only devices connected
-  to the first core are recognized. 
 
 Language and library
 ````````````````````
@@ -58,10 +90,6 @@ Language and library
 
   For now these are only supported for the Microgrid targets. They are
   further documented in note [mgsim12].
-
-- As the graphical framebuffer is now an I/O device, it can now be
-  reached only from the first core. Accesses from other cores will
-  cause memory access errors.
 
 Compiler interface
 ``````````````````
