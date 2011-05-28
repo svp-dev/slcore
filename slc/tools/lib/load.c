@@ -48,7 +48,16 @@ void load_binary_data(const char* fname, void**ptr, bool verbose)
     
     if (sz > 0) {
         void *p;
-        ensure(p = malloc(sz + sizeof(double)), "malloc"); // ensure enough space after end
+        sz += sizeof(double); // ensure enough space after end
+
+#ifdef HAVE_POSIX_MEMALIGN
+        ensure(posix_memalign(&p, 64, sz) == 0 && p != NULL, "posix_memalign");
+#else
+        // align manually
+        ensure(p = malloc(sz + 64), "malloc");
+        if ((uintptr_t)p % 64 != 0)
+            p = (char*)p + (64 - (uintptr_t)p % 64);
+#endif
         
         fseek(f, 0L, SEEK_SET);
         ensure(fread(p, sz, 1, f) == 1, "fread");

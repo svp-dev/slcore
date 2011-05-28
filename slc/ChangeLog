@@ -1,3 +1,21 @@
+2011-05-28  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
+	Align the input data on addresses multiple of 64 bytes.
+
+	(feature requested by Bert Gijsbers)
+
+	* build-aux/ax_func_posix_memalign.m4: New.
+	* configure.ac: Use it to detect `posix_memalign()'.
+
+	* tools/lib/seqc.mk,
+	* tools/lib/ptl.mk,
+	* lib/ptl.mk,
+	* lib/seqc.mk: Ensure that the configuration defines from Autoconf
+	are propagated to all `slc' commands.
+
+	* tools/lib/load.c: Align the data, using `posix_memalign' if
+	available.
+
 2011-05-27  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
 	Improve the documentation.

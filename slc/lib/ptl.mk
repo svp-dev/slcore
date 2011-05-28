@@ -16,7 +16,8 @@ ptl_host_host_ptl_libsl_a_BUILTOBJS = \
 ptl_host_host_ptl_libsl_a_SOURCES =
 ptl_host_host_ptl_libsl_a_LIBADD = $(ptl_host_host_ptl_libsl_a_BUILTOBJS)
 
-SLC_PTL = $(SLC_RUN) -b ptl -nostdlib $(AM_CXXFLAGS) $(CXXFLAGS)
+SLC_PTL = $(SLC_RUN) -b ptl -nostdlib $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) \
+        $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS)
 
 ptl-host-host-ptl/%.o: $(srcdir)/src/%.c
 	$(AM_V_at)$(MKDIR_P) ptl-host-host-ptl

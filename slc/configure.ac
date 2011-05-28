@@ -64,6 +64,8 @@ if test "x$ac_cv_prog_cc_c99" = "xno"; then
    AC_MSG_ERROR([Cannot find a C99 compiler.])
 fi
 
+AX_FUNC_POSIX_MEMALIGN
+
 AC_PROG_CXX
 AC_PROG_RANLIB
 AC_PROG_LN_S

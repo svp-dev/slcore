@@ -47,7 +47,8 @@ seqc_o_host_host_seqc_libsl_a_BUILTOBJS = \
 seqc_o_host_host_seqc_libsl_a_SOURCES = 
 seqc_o_host_host_seqc_libsl_a_LIBADD = $(seqc_o_host_host_seqc_libsl_a_BUILTOBJS)
 
-SLC_SEQC_O = $(SLC_RUN) -b seqc_o $(AM_CFLAGS) $(CFLAGS)
+SLC_SEQC_O = $(SLC_RUN) -b seqc_o $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) \
+        $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS)
 
 seqc_o-host-host-seqc/%.o: $(srcdir)/src/%.c
 	$(AM_V_at)$(MKDIR_P) seqc_o-host-host-seqc
@@ -75,7 +76,8 @@ seq_naked_host_host_seqc_libsl_a_BUILTOBJS = \
 seq_naked_host_host_seqc_libsl_a_SOURCES = 
 seq_naked_host_host_seqc_libsl_a_LIBADD = $(seq_naked_host_host_seqc_libsl_a_BUILTOBJS)
 
-SLC_SEQC = $(SLC_RUN) -b seqc $(AM_CFLAGS) $(CFLAGS)
+SLC_SEQC = $(SLC_RUN) -b seqc $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) \
+        $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS)
 
 seq_naked-host-host-seqc/%.o: $(srcdir)/src/%.c
 	$(AM_V_at)$(MKDIR_P) seq_naked-host-host-seqc

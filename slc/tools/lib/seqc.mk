@@ -62,15 +62,16 @@ seqc_o_host_host_seqc_libslc_a_LIBADD = \
 seqc_o_host_host_seqc_libslmain_a_SOURCES = # empty for now
 seqc_o_host_host_seqc_libslmain_a_LIBADD = seqc_o-host-host-seqc/main.o
 
-SLC_SEQC_O = $(SLC_RUN) -b seqc_o -nostdlib
+SLC_SEQC_O = $(SLC_RUN) -b seqc_o -nostdlib $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) \
+        $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS)
 
 seqc_o-host-host-seqc/%.o: $(srcdir)/host-host-seqc/%.c
 	$(AM_V_at)$(MKDIR_P) seqc_o-host-host-seqc
-	$(slc_verbose)$(SLC_SEQC_O) -c -o $@ $< $(AM_CFLAGS) $(CFLAGS)
+	$(slc_verbose)$(SLC_SEQC_O) -c -o $@ $<
 
 seqc_o-host-host-seqc/%.o: $(srcdir)/%.c
 	$(AM_V_at)$(MKDIR_P) seqc_o-host-host-seqc
-	$(slc_verbose)$(SLC_SEQC_O) -c -o $@ $< $(AM_CFLAGS) $(CFLAGS)
+	$(slc_verbose)$(SLC_SEQC_O) -c -o $@ $<
 
 CLEANFILES += \
 	seqc_o-host-host-seqc/dummyplaces.o \
@@ -98,15 +99,16 @@ seq_naked_host_host_seqc_libslc_a_LIBADD = \
 seq_naked_host_host_seqc_libslmain_a_SOURCES = # empty for now
 seq_naked_host_host_seqc_libslmain_a_LIBADD = seq_naked-host-host-seqc/main.o
 
-SLC_SEQC = $(SLC_RUN) -b seqc -nostdlib
+SLC_SEQC = $(SLC_RUN) -b seqc -nostdlib $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) \
+        $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS)
 
 seq_naked-host-host-seqc/%.o: $(srcdir)/host-host-seqc/%.c
 	$(AM_V_at)$(MKDIR_P) seq_naked-host-host-seqc
-	$(slc_verbose)$(SLC_SEQC) -c -o $@ $< $(AM_CFLAGS) $(CFLAGS)
+	$(slc_verbose)$(SLC_SEQC) -c -o $@ $<
 
 seq_naked-host-host-seqc/%.o: $(srcdir)/%.c
 	$(AM_V_at)$(MKDIR_P) seq_naked-host-host-seqc
-	$(slc_verbose)$(SLC_SEQC) -c -o $@ $< $(AM_CFLAGS) $(CFLAGS)
+	$(slc_verbose)$(SLC_SEQC) -c -o $@ $<
 
 CLEANFILES += \
 	seq_naked-host-host-seqc/dummyplaces.o \
