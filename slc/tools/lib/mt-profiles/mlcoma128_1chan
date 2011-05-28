@@ -1,7 +1,0 @@
-DESCRIPTION="128-core, ML's COMA, 1GHz cores, 1xDDR3-1600"
-simargs_base+=(-o NumProcessors=128)
-
-# DDR timings for DDR3-1600 and 1GHz cores are defaults in mgsim
-simargs_base+=(-o MemoryType=COMA)
-
-simargs_base+=(-o L2CacheAssociativity=4 -o L2CacheNumSets=128)

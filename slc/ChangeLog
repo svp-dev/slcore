@@ -1,5 +1,31 @@
 2011-05-28  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	Update the Microgrid machine profiles.
+
+	* tools/lib/mt-profiles/lzcoma128_2chan,
+	* tools/lib/mt-profiles/lzcoma256_4chan,
+	* tools/lib/mt-profiles/mlcoma128_2chan,
+	* tools/lib/mt-profiles/mlcoma256_4chan: Update to use the new
+	MGSim configuration format.
+
+	* tools/lib/mt-profiles/simple,
+	* tools/lib/mt-profiles/lzcoma128_1chan,
+	* tools/lib/mt-profiles/lzcoma256_1chan,
+	* tools/lib/mt-profiles/mlcoma128_1chan,
+	* tools/lib/mt-profiles/mlcoma256_1chan: Delete the rarely-used,
+	meaningless profiles.
+
+	* tools/lib/mt-profiles/rbm128,
+	* tools/lib/mt-profiles/rbm256: Document that these profiles are
+	not realistic.
+
+	* tools/lib/Makefile.am (nobase_dist_pkgdata_DATA): Update
+	accordingly.
+
+	* doc/NEWS.txt: Document the change.
+
+2011-05-28  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	Clearly distinguish 3.5b from 3.6b in the documentation.
 
 	* doc/NEWS.txt: Do it.

@@ -2,15 +2,15 @@ DESCRIPTION="256-core, ML's COMA, 1.2GHz cores, 4xDDR3-2400"
 simargs_base+=(-o NumProcessors=256)
 
 simargs_base+=(-o MemoryType=COMA)
-simargs_base+=(-o DDRMemoryFreq=1200 -o CoreFreq=1200 -o MemoryFreq=1200)
-simargs_base+=(-o NumRootDirectories=4)
+simargs_base+=(-o \*.DDR.Channel\*:Freq=1200 -o CoreFreq=1200 -o MemoryFreq=1200)
+simargs_base+=(-o \*.Memory:NumRootDirectories=4)
 
 # DDR Timings for DDR3-2400, in bus clock cycles, as per 
 # mgsim/config.ini
-simargs_base+=(-o DDR_tCL=9)
-simargs_base+=(-o DDR_tRCD=11)
-simargs_base+=(-o DDR_tRP=9)
-simargs_base+=(-o DDR_tRAS=27)
-simargs_base+=(-o DDR_tCWL=10)
+simargs_base+=(-o \*.DDR.Channel\*:tCL=9)
+simargs_base+=(-o \*.DDR.Channel\*:tRCD=11)
+simargs_base+=(-o \*.DDR.Channel\*:tRP=9)
+simargs_base+=(-o \*.DDR.Channel\*:tRAS=27)
+simargs_base+=(-o \*.DDR.Channel\*:tCWL=10)
 
-simargs_base+=(-o L2CacheAssociativity=4 -o L2CacheNumSets=128)
+simargs_base+=(-o \*.Memory:L2CacheAssociativity=4 -o \*.Memory:L2CacheNumSets=128)

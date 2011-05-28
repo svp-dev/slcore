@@ -159,15 +159,10 @@ nobase_dist_pkgdata_DATA = \
 	t-utc0/include/sl_support.h \
         mt-profiles/coma128 \
         mt-profiles/default \
-	mt-profiles/simple \
-        mt-profiles/lzcoma128_1chan \
         mt-profiles/lzcoma128_2chan \
-        mt-profiles/lzcoma256_1chan \
         mt-profiles/lzcoma256_4chan \
 	mt-profiles/lzcoma_default \
-        mt-profiles/mlcoma128_1chan \
 	mt-profiles/mlcoma128_2chan \
-        mt-profiles/mlcoma256_1chan \
 	mt-profiles/mlcoma256_4chan \
 	mt-profiles/mlcoma_default \
         mt-profiles/rbm1 \

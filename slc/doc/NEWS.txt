@@ -34,6 +34,11 @@ Microgrid-specific changes
   SL tool chain have been updated; however any custom profile need to
   be updated as well. More details in CSA note [mgsim17].
 
+- The machine profiles for large grids but only one DDR channel have
+  been removed because they do not reflect a useful configuration. The
+  profiles for large grids and random banked memory have been updated
+  to reflect they they are not realistic configurations.
+
 Language and library
 ````````````````````
 

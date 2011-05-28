@@ -2,8 +2,8 @@ DESCRIPTION="128-core, ZL's COMA, 1GHz cores, 2xDDR3-1600"
 
 simargs_base+=(-o MemoryType=ZLCOMA)
 simargs_base+=(-o NumProcessors=128)
-simargs_base+=(-o NumRootDirectories=2)
+simargs_base+=(-o \*.Memory:NumRootDirectories=2)
 
 # DDR timings for DDR3-1600 and 1GHz cores are defaults in mgsim
-simargs_base+=(-o L2CacheAssociativity=4 -o L2CacheNumSets=128)
+simargs_base+=(-o \*.Memory:L2CacheAssociativity=4 -o \*.Memory:L2CacheNumSets=128)
 

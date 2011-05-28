@@ -1,4 +1,4 @@
-DESCRIPTION="256-core, random banked memory"
+DESCRIPTION="256-core, random banked memory (WARNING: not realistic)"
 
 simargs_base+=(-o MemoryType=RandomBanked)
 simargs_base+=(-o NumProcessors=256)
