@@ -157,6 +157,7 @@ nobase_dist_pkgdata_DATA = \
 	t-utc/slimpl.m4 \
 	t-utc0/slimpl.m4 \
 	t-utc0/include/sl_support.h \
+        mt-profiles/arggen \
         mt-profiles/coma128 \
         mt-profiles/default \
         mt-profiles/lzcoma128_2chan \

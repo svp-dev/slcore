@@ -25,7 +25,7 @@ simargs_base=()
 ##
 
 if test -n "${SLR_RECURSIVE:-}"; then
-  SIMPROFILE=simple
+  SIMPROFILE=arggen
   export MGSYS_QUIET=1
   simargs_base+=(-q)
   unset SLR_NCORES SIMARGS

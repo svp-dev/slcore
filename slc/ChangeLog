@@ -1,3 +1,16 @@
+2011-05-30  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
+	Fix `slr' for MGSim targets.
+
+	* tools/lib/mt-profiles/arggen: New profile for input data
+	generation.
+
+	* tools/lib/r-mt-sim.sh.in: Use the new profile when running
+	`arggen'.
+
+	* tools/lib/Makefile.am (nobase_dist_pkgdata_DATA): List the new
+	file.
+
 2011-05-28  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
 	Update the Microgrid machine profiles.

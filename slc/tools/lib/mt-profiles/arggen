@@ -1,0 +1,6 @@
+DESCRIPTION="Simple profile for input data generation."
+
+simargs_base+=(-o MemoryType=RandomBanked)
+simargs_base+=(-o NumProcessors=1 -o NumProcessorsPerFPU=1)
+simargs_base+=(-o CoreFreq=1000)
+simargs_base+=(-o \*.BootROM:PreloadROMToRAM=true)
