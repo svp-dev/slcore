@@ -23,7 +23,7 @@
 #include "mtconf.h"
 #include "heap.h"
 
-int verbose_boot;
+int verbose_boot = 1;
 
 static noinline
 void sys_environ_init(char *initenv)
@@ -36,31 +36,61 @@ void sys_environ_init(char *initenv)
        a couple of standalone NUL bytes.
     */
 
-    output_string("# env: scan...", 2);
-    /* first: count. */
+    // (using dlmalloc directly since we are still single-threaded at
+    // this point, no exclusion required)
+
+    /* first: count, and detect verbosity. */
     char *p = initenv;
     size_t nvars = 0;
     if (p)
         while (p[0] != 0)
         {
             ++nvars;
-            p += strlen(p) + 1;
+            size_t sz = strlen(p);
+            if (strncmp("MGSYS_QUIET=", p, sz) == 0)
+                verbose_boot = 0;
+            p += sz + 1;
         }
 
+    size_t envdatasize = p - initenv;
+
+    /* then: duplicate the data, since it may be in ROM */
+    if (verbose_boot)
+    {
+        output_string("* input data: env at 0x", 2);
+        output_hex(initenv, 2);
+        output_string(", ", 2);
+        output_uint(envdatasize, 2);
+        output_string(" bytes\n", 2);
+    }
+
+    char *area = dlmalloc(envdatasize);
+    memcpy(area, initenv, envdatasize);
+
+    if (verbose_boot)
+    {
+        output_string("* strings at 0x", 2);
+        output_hex(area, 2);
+    }
+
     /* then: make array of pointers to each variable */
-
-    // (using dlmalloc directly since we are still single-threaded at
-    // this point, no exclusion required)
-
-    output_string(" read...", 2);
     environ = dlmalloc((nvars + 1) * sizeof(char*));
+
     size_t i;
-    for (i = 0, p = initenv; i < nvars; ++i, p += strlen(p) + 1)
+    for (i = 0, p = area; i < nvars; ++i, p += strlen(p) + 1)
     {
         environ[i] = p;
     }
     environ[i] = 0;
-    output_string(" done.\n", 2);
+
+    if (verbose_boot)
+    {
+        output_string(", environ[", 2);
+        output_uint(nvars, 2);
+        output_string("] at 0x", 2);
+        output_hex(environ, 2);
+        output_string(".\n", 2);
+    }
 }
 
 extern sl_place_t __main_place_id;
@@ -112,13 +142,8 @@ void sys_init(void* slrbase_init,
 {
   sys_environ_init(initenv);
 
-  verbose_boot = getenv("MGSYS_QUIET") ? 0 : 1;
-
   if (verbose_boot) {
-      output_string("\n"
-                    "Microgrid says:  h e l l o  w o r l d !\n"
-                    "\n"
-                    "* init compiled with slc " __slc_version_string__ "\n", 2);
+      output_string("* init compiled with slc " __slc_version_string__ ".\n", 2);
   }
   
   sys_heap_init();
@@ -137,8 +162,11 @@ void sys_init(void* slrbase_init,
 
   if (verbose_boot) 
   {
-      output_string("\ninit done, ", 2); 
+      output_string("\n"
+                    "Microgrid says:  h e l l o  w o r l d !\n"
+                    "\n"
+                    "init done, program will start now; core cycles so far: ", 2); 
       output_uint(clock(), 2);
-      output_string(" cycles wasted. program will start now.\n\n", 2);
+      output_char('\n', 2);
   }
 }

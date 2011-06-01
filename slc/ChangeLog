@@ -1,3 +1,12 @@
+2011-06-01  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
+	Fix `getenv' for MGSim targets.
+
+	* lib/src/mtinit.c (sys_environ_init): Ensure that the data is
+	copied to heap from ROM. Also, detect verbosity early while
+	scanning the environment data and avoid printing anything if not
+	verbose.
+
 2011-05-30  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
 	Fix `slr' for MGSim targets.
