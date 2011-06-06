@@ -1,3 +1,12 @@
+2011-06-06  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
+	Fix bug in `slr'.
+
+	(Reported by Irfan.)
+	
+	* tools/lib/load.c (load_binary_data): Use the file size, not the
+	padded size, when calling `fread'.
+
 2011-06-01  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
 	Fix `getenv' for MGSim targets.
