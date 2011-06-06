@@ -12,8 +12,7 @@
 // `COPYING' file in the root directory.
 //
 
-#define shutup_ctime_h
-#include <ctime.h>
+#include <time.h>
 
 #undef clock
 clock_t clock(void) {

@@ -41,9 +41,9 @@ const char* mtperf_counter_names[] = {
     "tt_total",
     "ft_total",
     "xq_total",
-    "unixtime",
-    "localdate",
-    "localtime",
+    "notused",
+    "notused",
+    "notused",
     "n_cl_loads_ext",
     "n_cl_stores_ext",
 // computed columns

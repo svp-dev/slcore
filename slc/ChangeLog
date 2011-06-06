@@ -1,5 +1,15 @@
 2011-06-06  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	Minor code cleanups.
+
+	* lib/src/mtclock.c: Use `time.h', not the deprecated `ctime.h'.
+
+	* lib/src/perf.c: Drop the labels for the columns that were
+	previously reporting wall clock times. These are not implemented
+	any more (currently unused).
+
+2011-06-06  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	Fix bug in `slr'.
 
 	(Reported by Irfan.)
