@@ -1,3 +1,10 @@
+2011-06-07  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
+	Simplify the MT profile used to generate input data.
+
+	* tools/lib/mt-profiles/arggen: Disable the configuration ROM, Gfx
+	and LCD devices.
+
 2011-06-06  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
 	Minor code cleanups.
