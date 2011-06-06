@@ -20,8 +20,6 @@
 #include <stdlib.h>
 #include <string.h>
 
-extern int verbose_boot;
-
 confword_t mgconf_ftes_per_core = (confword_t)-1;
 confword_t mgconf_ttes_per_core = (confword_t)-1;
 confword_t mgconf_core_freq = (confword_t)-1;
@@ -51,7 +49,9 @@ void detect_lcd(size_t devid, void *addr)
         output_uint((lcdcfg >> 16) & 0xffff, 2);
         output_char('x', 2);
         output_uint(lcdcfg & 0xffff, 2);
-        output_string(".\n", 2);
+        output_char('.', 2);
+        output_ts(2);
+        output_char('\n', 2);
     }
     if (mg_lcd_devid == (size_t)-1)
     {
@@ -66,7 +66,9 @@ void detect_uart(size_t devid, void *addr)
     {
         output_string("* uart at 0x", 2);
         output_hex(addr, 2);
-        output_string(".\n", 2);
+        output_char('.', 2);
+        output_ts(2);
+        output_char('\n', 2);
     }
     if (mg_uart_devid == (size_t)-1)
     {
@@ -87,7 +89,9 @@ void detect_gfx(size_t devid, void *addr)
         output_hex(addr, 2);
         output_string(", framebuffer at 0x", 2);
         output_hex(fb_addr, 2);
-        output_string(".\n", 2);
+        output_char('.', 2);
+        output_ts(2);
+        output_char('\n', 2);
     }
 
     if (mg_gfxctl_devid == (size_t)-1)
@@ -106,7 +110,9 @@ void detect_rtc(size_t devid, void *addr)
     {
         output_string("* rtc at 0x", 2);
         output_hex(addr, 2);
-        output_string(".\n", 2);
+        output_char('.', 2);
+        output_ts(2);
+        output_char('\n', 2);
     }
     if (mg_rtc_devid == (size_t)-1)
     {
@@ -124,7 +130,9 @@ void detect_rom(size_t devid, void *addr)
         {
             output_string("* configuration ROM at 0x", 2);
             output_hex(addr, 2);
-            output_string(".\n", 2);
+            output_char('.', 2);
+            output_ts(2);
+            output_char('\n', 2);
         }
         if (mg_cfgrom_devid == (size_t)-1)
         {
@@ -155,7 +163,9 @@ void sys_conf_init(void)
     {
         if (verbose_boot)
         {
-            output_string("* no configuration ROM, unable to read configuration\n", 2);
+            output_string("* no configuration ROM, unable to read configuration", 2);
+            output_ts(2);
+            output_char('\n', 2);
         }
         return;
     }
@@ -176,6 +186,10 @@ void sys_conf_init(void)
     confword_t core_threads_id = (confword_t)-1;
     confword_t core_families_id = (confword_t)-1;
     
+    if (verbose_boot)
+    {
+        output_string("* reading configuration...\n", 2);
+    }
 
     const confword_t *cfg = mg_devinfo.base_addrs[mg_cfgrom_devid];
     for (const struct block *p = (const struct block*)(cfg + 1); p->tag != 0; p = (const struct block*)(cfg + p->next))
@@ -231,11 +245,11 @@ void sys_conf_init(void)
                 mgconf_master_freq = p->payload[1 + 2*system_freq_id + 1];
                 if (verbose_boot)
                 {
-                    output_string("* master frequency: ", 2);
-                    output_uint(mgconf_master_freq, 2);
-                    output_string("MHz.\n* system version: ", 2);
+                    output_string("  - system version: ", 2);
                     output_string(get_symbol(p->payload[1 + 2*system_version_id + 1]), 2);
-                    output_string(".\n", 2);
+                    output_string(".\n  - master frequency: ", 2);
+                    output_uint(mgconf_master_freq, 2);
+                    output_string("MHz.\n", 2);
                 }
                 // ensure we do this only once
                 system_type_id = (confword_t)-1;
@@ -260,9 +274,9 @@ void sys_conf_init(void)
                     mgconf_ftes_per_core = ftes;
                     if (verbose_boot)
                     {
-                        output_string("* core frequency: ", 2);
+                        output_string("  - core frequency: ", 2);
                         output_uint(mgconf_core_freq, 2);
-                        output_string("MHz.\n* ", 2);
+                        output_string("MHz.\n  - ", 2);
                         output_uint(mgconf_ttes_per_core, 2);
                         output_string(" thread and ", 2);
                         output_uint(mgconf_ftes_per_core, 2);                    
@@ -273,7 +287,12 @@ void sys_conf_init(void)
         }
         }
     }
-    
+    if (verbose_boot)
+    {
+        output_string("  done.", 2);
+        output_ts(2);
+        output_char('\n', 2);
+    }
 }
 
 void sys_detect_devs(void)
@@ -299,7 +318,9 @@ void sys_detect_devs(void)
     {
         if (verbose_boot)
         {
-            output_string("* not connected to I/O, unable to read configuration", 2);
+            output_string("* not connected to I/O, unable to read configuration.", 2);
+            output_ts(2);
+            output_char('\n', 2);
         }
         return;
     }
@@ -309,7 +330,9 @@ void sys_detect_devs(void)
         output_uint(n_iodevs = (io_params & 0xff), 2);
         output_string(" devices, ", 2);
         output_uint(n_chans = ((io_params >> 8) & 0xff), 2);
-        output_string(" notification channels.\n", 2);
+        output_string(" notification channels.", 2);
+        output_ts(2);
+        output_char('\n', 2);
     }    
 
     uint32_t io_params2;
@@ -329,7 +352,9 @@ void sys_detect_devs(void)
         output_hex(smc, 2);
         output_string(", enumerates ", 2);
         output_uint(ndevs = *(uint64_t*)smc, 2);
-        output_string(" devices.\n", 2);
+        output_string(" devices.", 2);
+        output_ts(2);
+        output_char('\n', 2);
     }
 
     if (ndevs > n_iodevs)
@@ -353,7 +378,9 @@ void sys_detect_devs(void)
     {
         output_string("* I/O enumeration data at 0x", 2);
         output_hex(devenum, 2);
-        output_string(".\n", 2);
+        output_char('.', 2);
+        output_ts(2);
+        output_char('\n', 2);
     }
 
     /* set up the device base addresses */
@@ -399,7 +426,9 @@ void sys_detect_devs(void)
                     output_uint(devenum[i].revision, 2);
                     output_string(" at 0x", 2);
                     output_hex(addrs[i], 2);
-                    output_string(".\n", 2); 
+                    output_char('.', 2); 
+                    output_ts(2);
+                    output_char('\n', 2);
                 }
                 break;
             }

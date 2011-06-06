@@ -3,6 +3,7 @@
 
 #include <stdint.h>
 #include <stddef.h>
+#include <time.h>
 
 typedef uint32_t confword_t;
 
@@ -38,7 +39,18 @@ extern size_t mg_gfxfb_devid;
 extern volatile uint32_t *mg_gfx_ctl;
 extern void *mg_gfx_fb;
 
+extern int verbose_boot;
+extern clock_t boot_ts;
 
+#define output_ts(Stream) do {                            \
+        clock_t _tmp = clock();                           \
+        output_char(' ', (Stream));                       \
+        output_char('[', (Stream));                       \
+        output_char('+', (Stream));                       \
+        output_uint(_tmp - boot_ts, (Stream));            \
+        output_char(']', (Stream));                       \
+        boot_ts = _tmp;                                   \
+    } while(0)
 
 void sys_detect_devs(void);
 void sys_conf_init(void);

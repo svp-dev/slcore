@@ -1,5 +1,22 @@
 2011-06-07  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	Enhance the reporting during the MT boot sequence.
+
+	* lib/src/mtinit.c (sys_environ_init): Properly detect when
+	`MGSYS_QUIET' is set.
+
+	* lib/src/mtinit.c,
+	* lib/src/mtconf.h: New macro `output_ts' which tracks the number
+	of clock cycles elapsed between uses.
+
+	* lib/src/mtinit.c,
+	* lib/src/heap.c,
+	* lib/src/mtconf.c,
+	* lib/src/mtinput.c,
+	* lib/src/mtsep.c: Use it.
+	
+2011-06-07  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	Simplify the MT profile used to generate input data.
 
 	* tools/lib/mt-profiles/arggen: Disable the configuration ROM, Gfx

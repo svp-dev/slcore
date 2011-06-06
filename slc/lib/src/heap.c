@@ -14,6 +14,7 @@
 #include <errno.h>
 #include <svp/testoutput.h>
 #include "heap.h"
+#include "mtconf.h"
 
 #if defined(__mtsparc__)
 
@@ -67,8 +68,6 @@ void* sbrk(int incr)
     return brk(brk_p + incr);
 }
 
-extern int verbose_boot;
-
 void sys_heap_init(void)
 {
     if (!verbose_boot)
@@ -79,5 +78,7 @@ void sys_heap_init(void)
     output_char(',', 2);
     output_char(' ', 2);
     output_uint(HEAP_SIZE, 2);
-    output_string(" bytes.\n", 2);
+    output_string(" bytes.", 2);
+    output_ts(2);
+    output_char('\n', 2);
 }

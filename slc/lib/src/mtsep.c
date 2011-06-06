@@ -390,6 +390,8 @@ void sys_sep_init(void)
     __main_place_id = p;
 
     if (verbose_boot) {
-        output_string("done.\n", 2);
+        output_string("done.", 2);
+        output_ts(2);
+        output_char('\n', 2);
     }
 }

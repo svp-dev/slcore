@@ -24,6 +24,7 @@
 #include "heap.h"
 
 int verbose_boot = 1;
+clock_t boot_ts = 0;
 
 static noinline
 void sys_environ_init(char *initenv)
@@ -47,7 +48,7 @@ void sys_environ_init(char *initenv)
         {
             ++nvars;
             size_t sz = strlen(p);
-            if (strncmp("MGSYS_QUIET=", p, sz) == 0)
+            if (strncmp("MGSYS_QUIET=", p, (sz > 12) ? 12 : sz) == 0)
                 verbose_boot = 0;
             p += sz + 1;
         }
@@ -61,7 +62,9 @@ void sys_environ_init(char *initenv)
         output_hex(initenv, 2);
         output_string(", ", 2);
         output_uint(envdatasize, 2);
-        output_string(" bytes\n", 2);
+        output_string(" bytes.", 2);
+        output_ts(2);
+        output_char('\n', 2);
     }
 
     char *area = dlmalloc(envdatasize);
@@ -89,7 +92,9 @@ void sys_environ_init(char *initenv)
         output_uint(nvars, 2);
         output_string("] at 0x", 2);
         output_hex(environ, 2);
-        output_string(".\n", 2);
+        output_string(".", 2);
+        output_ts(2);
+        output_char('\n', 2);
     }
 }
 
@@ -110,6 +115,7 @@ void sys_set_main_pid(unsigned req_ncores)
     {
         output_string(" success, t_main goes to pid=0x", 2);
         output_hex(__main_place_id, 2);
+        output_ts(2);
         output_char('\n', 2);
     }
 }
@@ -140,33 +146,31 @@ void sys_init(void* slrbase_init,
               void* fibrebase_init, 
               char *initenv)
 {
-  sys_environ_init(initenv);
+    boot_ts = clock();
 
-  if (verbose_boot) {
-      output_string("* init compiled with slc " __slc_version_string__ ".\n", 2);
-  }
-  
-  sys_heap_init();
+    sys_environ_init(initenv);
 
-  sys_detect_devs();
+    sys_heap_init();
 
-  sys_conf_init();
+    sys_fibre_init(fibrebase_init, true);
 
-  sys_fibre_init(fibrebase_init, true);
+    sys_vars_init(slrbase_init, true);
 
-  sys_vars_init(slrbase_init, true);
+    sys_detect_devs();
 
-  sys_sep_init();
+    sys_conf_init();
 
-  sys_check_ncores();
+    sys_sep_init();
 
-  if (verbose_boot) 
-  {
-      output_string("\n"
-                    "Microgrid says:  h e l l o  w o r l d !\n"
-                    "\n"
-                    "init done, program will start now; core cycles so far: ", 2); 
-      output_uint(clock(), 2);
-      output_char('\n', 2);
-  }
+    sys_check_ncores();
+
+    if (verbose_boot) {
+        output_string("* init compiled with slc " __slc_version_string__ ".\n"
+                      "\n"
+                      "Microgrid says:  h e l l o  w o r l d !\n"
+                      "\n"
+                      "init done, program will start now; core cycles so far: ", 2); 
+        output_uint(clock(), 2);
+        output_char('\n', 2);
+    }
 }

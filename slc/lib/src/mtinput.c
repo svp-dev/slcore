@@ -19,8 +19,8 @@
 #include <string.h>
 #include <stdlib.h>
 #include <stdbool.h>
+#include "mtconf.h"
 
-extern int verbose_boot;
 size_t __fibre_nitems = 0;
 struct fibre_base_t *__fibre_base;
 struct __slr_base_t *__slr_base;
@@ -60,7 +60,9 @@ void sys_vars_init(void *rawdata, bool copy)
         output_hex(__slr_base, 2);
         output_string(", ", 2);
         output_uint(sz, 2);
-        output_string(" bytes.\n", 2);
+        output_string(" bytes.", 2);
+        output_ts(2);
+        output_char('\n', 2);
     }
 }
 
@@ -101,6 +103,8 @@ void sys_fibre_init(void* rawdata, bool copy)
         output_hex(__fibre_base, 2);
         output_string(", ", 2);
         output_uint(sz, 2);
-        output_string(" bytes.\n", 2);
+        output_string(" bytes.", 2);
+        output_ts(2);
+        output_char('\n', 2);
     }
 }
