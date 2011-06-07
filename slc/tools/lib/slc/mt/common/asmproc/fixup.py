@@ -1,4 +1,5 @@
 from ....front import dump
+from ....msg import die
 
 from stageopts import makestageopts
 from filter import funfilter, cfunfilter

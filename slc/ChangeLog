@@ -1,5 +1,12 @@
 2011-06-07  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	Fix an error reporting bug in `spr'.
+
+	* tools/lib/slc/mt/common/asmproc/fixup.py: Ensure that `die' is
+	defined.
+
+2011-06-07  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	Enhance the reporting during the MT boot sequence.
 
 	* lib/src/mtinit.c (sys_environ_init): Properly detect when
