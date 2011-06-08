@@ -1,3 +1,16 @@
+2011-06-08  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
+	Extend the behavior of `slr -n'.
+
+	To prevent result variations due to placement, it is useful to
+	allow various values of `-n' to place the execution from the same
+	first core. For this a new environment variable `SLR_PLACESIZE' is
+	introduced. When this is set, its value is used to allocate a
+	place and the value of `-n' (`SLR_NCORES') is then use to adjuste
+	the size field within the allocated place identifier.
+
+	* lib/src/mtinit.c (sys_check_ncores): Do it.
+
 2011-06-07  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
 	Fix an error reporting bug in `spr'.
