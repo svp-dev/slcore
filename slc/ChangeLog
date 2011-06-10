@@ -1,5 +1,13 @@
 2011-06-10  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	Minor usability enhancement for `slr -p'.
+
+	* tools/lib/r-mt-sim.sh.in: Ensure that extra command-line
+	arguments provided to the generated `run.h' are passed to MGSim,
+	not the executed program.
+
+2011-06-10  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	Fix support for `slr -Mv list'.
 
 	* tools/bin/slr.in: Use `-l' instead of `-D' as required by MGSim

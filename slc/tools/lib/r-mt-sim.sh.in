@@ -132,7 +132,7 @@ fi
 
 runner_cmdline=("${mgsim[@]}" \
     ${simargs_base+"${simargs_base[@]}"} ${SIMARGS:-} \
-    -t -L7 "$datafile" -L6 "$fdatafile" -L5 "$envfile" -o system.BootROM:ROMFileName="$d/$b" -- "$d/$b" ${1+"$@"})
+    -t -L7 "$datafile" -L6 "$fdatafile" -L5 "$envfile" -o system.BootROM:ROMFileName="$d/$b")
 
 first=${runner_cmdline[0]}
 unset runner_cmdline[0]
@@ -144,12 +144,12 @@ cd "\$d"
 $thevar=\${$thevar:-$first}
 EOF
   set | grep '^runner_cmdline=' >>"$SLR_RDIR"/run.sh
-  echo "exec ${RUNNER_PREFIX:-} $do_debug \"\$$thevar\" \"\${runner_cmdline[@]}\" \"\$@\"" >>"$SLR_RDIR"/run.sh
+  echo "exec ${RUNNER_PREFIX:-} $do_debug \"\$$thevar\" \"\${runner_cmdline[@]}\" \"\$@\" -- $d/$b ${1:+$@}" >>"$SLR_RDIR"/run.sh
   chmod +x run.sh
 fi
 
 if test -n "${VERBOSE:-}"; then
     echo "$basename: cwd=$PWD" >&2
-    echo "$basename: running: ${RUNNER_PREFIX:-} $do_debug $first ${runner_cmdline[*]}" >&2
+    echo "$basename: running: ${RUNNER_PREFIX:-} $do_debug $first ${runner_cmdline[*]} -- $d/$b ${1:+$@}" >&2
 fi  
 exec ${RUNNER_PREFIX:-} $do_debug "$first" "${runner_cmdline[@]}"
