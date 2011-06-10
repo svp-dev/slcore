@@ -49,14 +49,17 @@ _start:
 
 	# here $l7(a0), $l6(a1), $l5(a2) are set by the environment
 	# all 3 are used by the init function
-	ldq $l14,sys_init($l17) !literal!1
+	ldq $l14,sys_init($l17)  !literal!1
 	jsr $l15,($l14),sys_init !lituse_jsr!1
 	ldgp $l17,0($l15)
 
-	# initialize argc and argv for main()
-	lda $l7,1($l31)
-	ldq $l6,__pseudo_argv($l17) !literal
-	ldq $l5,environ($l17) !literal
+	# initialize argc, argv and environ for main()
+	ldah $l7,__argc($l17)     !gprelhigh
+        ldq $l7, __argc($l7)      !gprellow
+	ldah $l6,__argv_ptr($l17) !gprelhigh
+        ldq $l6, __argv_ptr($l6)  !gprellow
+	ldah $l5, environ($l17)   !gprelhigh
+        ldq $l5, environ($l5)     !gprellow
 
 	# call main()
 	ldq $l14,main($l17) !literal!2
@@ -118,7 +121,21 @@ environ:
 __pseudo_argv:
 	.long $progname
 	.long 0
-        
+
+        .globl __argv_ptr
+        .type __argv_ptr, @object
+        .size __argv_ptr, 8
+	.align 3
+__argv_ptr:
+	.long __pseudo_argv
+
+        .globl __argc
+        .type __argc, @object
+        .size __argc, 8
+	.align 3
+__argc:
+	.long 1
+
 $progname:
 	.ascii "a.out\0"
         

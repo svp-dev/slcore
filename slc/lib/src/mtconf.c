@@ -32,6 +32,7 @@ size_t mg_uart_devid = (size_t)-1;
 size_t mg_lcd_devid = (size_t)-1;
 size_t mg_rtc_devid = (size_t)-1;
 size_t mg_cfgrom_devid = (size_t)-1;
+size_t mg_argvrom_devid = (size_t)-1;
 size_t mg_gfxctl_devid = (size_t)-1;
 size_t mg_gfxfb_devid = (size_t)-1;
 volatile uint32_t *mg_gfx_ctl;
@@ -139,6 +140,21 @@ void detect_rom(size_t devid, void *addr)
             mg_cfgrom_devid = devid;
         }
     }
+    else if (magic == 0x56475241 /*ASCII "ARGV"*/)
+    {
+        if (verbose_boot)
+        {
+            output_string("* argument ROM at 0x", 2);
+            output_hex(addr, 2);
+            output_char('.', 2);
+            output_ts(2);
+            output_char('\n', 2);
+        }
+        if (mg_argvrom_devid == (size_t)-1)
+        {
+            mg_argvrom_devid = devid;
+        }
+    }
 }
 
 static struct 
@@ -155,6 +171,70 @@ static struct
     { { 1, 7, 1 }, "uart", &detect_uart },
     { { 0, 0, 0 }, 0, 0 }
 };
+
+extern long __argc;
+extern char** __argv_ptr;
+void sys_argv_init(void)
+{
+    /* attempt to find the argv ROM */
+    if (mg_argvrom_devid == (size_t)-1)
+    {
+        if (verbose_boot)
+        {
+            output_string("* no argument ROM, unable to read arguments", 2);
+            output_ts(2);
+            output_char('\n', 2);
+        }
+        return;
+    }
+
+    const struct argvdata {
+        uint32_t magic;
+        uint32_t argc;
+        uint32_t datasize;
+        char data[];
+    } *argvdata = (const struct argvdata*)mg_devinfo.base_addrs[mg_argvrom_devid];
+
+    size_t argc = argvdata->argc;
+    size_t datasize = argvdata->datasize;
+
+    char *localdata = (char*)dlmalloc(datasize);
+    char** argv = (char**)dlmalloc((argc + 1) * sizeof(char*));
+    if (localdata == NULL || argv == NULL)
+    {
+        output_string("Unable to allocate memory to copy the argument data!\n", 2);
+        abort();
+    }
+
+    memcpy(localdata, argvdata->data, datasize);
+    
+    char *p;
+    size_t i;
+    for (i = 0, p = localdata; i < argc; ++i)
+    {
+        argv[i] = p;
+        p = p + strlen(p) + 1;
+    }
+    argv[i] = 0;
+
+    __argc = argc;
+    __argv_ptr = argv;
+
+    if (verbose_boot)
+    {
+        output_string("* input data: arguments at 0x", 2);
+        output_hex(localdata, 2);
+        output_string(", argv[", 2);
+        output_uint(argc, 2);
+        output_string("] at 0x", 2);
+        output_hex(argv, 2);
+        output_string(", ", 2);
+        output_uint(datasize, 2);
+        output_string(" bytes.", 2);
+        output_ts(2);
+        output_char('\n', 2);
+    }
+}
 
 void sys_conf_init(void)
 {

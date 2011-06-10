@@ -33,6 +33,7 @@ extern size_t mg_uart_devid;
 extern size_t mg_lcd_devid;
 extern size_t mg_rtc_devid;
 extern size_t mg_cfgrom_devid;
+extern size_t mg_argvrom_devid;
 extern size_t mg_gfxctl_devid;
 extern size_t mg_gfxfb_devid;
 
@@ -54,5 +55,6 @@ extern clock_t boot_ts;
 
 void sys_detect_devs(void);
 void sys_conf_init(void);
+void sys_argv_init(void);
 
 #endif

@@ -1,3 +1,19 @@
+2011-06-10  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
+	Support command-line arguments for programs on MT targets.
+
+	* tools/bin/slr.in,
+	* tools/lib/r-mt-sim.sh.in: Ensure that trailing arguments are
+	propagated to the simulator.
+
+	* tools/lib/mtalpha-sim/slrt.s: Define `__argc' and `__argv' as a
+	writable variable. Use them to load the arguments to `main'.
+
+	* lib/src/mtconf.h,
+	* lib/src/mtconf.c,
+	* lib/src/mtinit.c: Recognize the argument data ROM if configured
+	and load argc/argv[] from it.
+
 2011-06-08  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
 	Extend the behavior of `slr -n'.

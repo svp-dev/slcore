@@ -199,6 +199,7 @@ prev_arg=
 show_embedded=
 datatag=
 vars=()
+argv=()
 program=
 query=
 rdatafile=
@@ -270,11 +271,14 @@ for arg in "$@"; do
       -*)  die 1 "unrecognized command-line argument: $arg (try -h)";;
       *=*) vars+=("$arg"); shift ;;
       *)   if test -z "$program"; then program=$arg; shift
-           else die 1 "unrecognized command-line argument: $arg (try -h)"
+           else 
+              argv+=("$arg"); shift
 	   fi ;;
   esac
 done
 if test -n "${prev_arg:-}"; then die 1 "argument to \`$arg' is missing"; fi
+
+argv+=(${1:+"$@"})
 
 # if listing profiles, do only that and nothing else
 if test "x$SIMPROFILE" = "xlist"; then
@@ -596,6 +600,6 @@ export SLR_NCORES
 
 if test -n "$VERBOSE"; then
     echo "$basename: cwd: $PWD" >&2
-    echo "$basename: running: @BASH@ $runner_script $program $datafile $fdatafile" >&2
+    echo "$basename: running: @BASH@ $runner_script $program $datafile $fdatafile ${1:+${argv[*]}}" >&2
 fi
-exec @BASH@ "$runner_script" "$program" "$datafile" "$fdatafile"
+exec @BASH@ "$runner_script" "$program" "$datafile" "$fdatafile" ${argv:+"${argv[@]}"}

@@ -176,6 +176,8 @@ void sys_init(void* slrbase_init,
 
     sys_detect_devs();
 
+    sys_argv_init();
+
     sys_conf_init();
 
     sys_sep_init();
