@@ -1,5 +1,12 @@
 2011-06-10  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	Fix support for `slr -Mv list'.
+
+	* tools/bin/slr.in: Use `-l' instead of `-D' as required by MGSim
+	3.1.
+
+2011-06-10  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	Support command-line arguments for programs on MT targets.
 
 	* tools/bin/slr.in,

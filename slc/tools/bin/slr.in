@@ -316,7 +316,7 @@ fi
 if test -n "$monenable" -o -n "$monpats" -o -n "$monmdfile" -o -n "$mondatafile"; then
   SIMARGS+=" -m"
   if test "x$monpats" = "xlist"; then
-     SIMARGS+=" -n -D"
+     SIMARGS+=" -n -l"
   elif test -n "$monpats"; then
      SIMARGS+=" -o MonitorSampleVariables=$monpats"
   fi
