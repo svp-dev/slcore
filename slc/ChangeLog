@@ -1,3 +1,10 @@
+2011-06-21  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
+	Minor configuration fix.
+
+	* configure.ac: Check for `pthread_barrier_wait' before enabling
+	the TLS malloc test code.
+
 2011-06-10  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
 	Minor usability enhancement for `slr -p'.

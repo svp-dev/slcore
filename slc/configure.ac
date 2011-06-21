@@ -81,7 +81,15 @@ SLC_CHECK_TARGETS
 if test "x$ax_pthread_ok" = "xyes" -a "x$ac_cv_tls" != "xnone"; then
    PTHREAD_CFLAGS="$PTHREAD_CFLAGS -DTHREADSPEC=$ac_cv_tls"
 fi
-AM_CONDITIONAL([CHECK_TLSMALLOC], [test "x$ax_pthread_ok" = "xyes" -a "x$ac_cv_tls" != "xnone"])
+
+save_LIBS=$LIBS; save_CFLAGS=$CFLAGS; save_CC=$CC
+LIBS="$PTHREAD_LIBS $LIBS"
+CFLAGS="$CFLAGS $PTHREAD_CFLAGS"
+CC="$PTHREAD_CC"
+AC_CHECK_FUNCS([pthread_barrier_wait])
+CC=$save_CC; CFLAGS=$save_CFLAGS; LIBS=$save_LIBS
+
+AM_CONDITIONAL([CHECK_TLSMALLOC], [test "x$ax_pthread_ok" = xyes -a "x$ac_cv_tls" != xnone -a "x$ac_cv_func_pthread_barrier_wait" = xyes])
 
 
 if test "x$enable_ptl" = "xyes"; then
