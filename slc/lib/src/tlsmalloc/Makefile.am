@@ -12,7 +12,7 @@ check_PROGRAMS = tlsmcheck
 noinst_PROGRAMS = $(check_PROGRAMS)
 TESTS = $(check_PROGRAMS)
 
-tlsmcheck_CPPFLAGS = -DARCH_TLS_SERVICES=\"tls_arch_pthreads.h\"
+tlsmcheck_CPPFLAGS = -DARCH_TLS_SERVICES=\"tls_arch_pthreads.h\" -DFOOTERS -DDEBUG_MALLOC
 tlsmcheck_CFLAGS = $(PTHREAD_CFLAGS) $(AM_CFLAGS)
 tlsmcheck_LDADD = $(PTHREAD_LIBS)
 tlsmcheck_SOURCES = tlsmcheck.c tlsmalloc.c tlsmalloc.h tricks.h tlsconfig.h

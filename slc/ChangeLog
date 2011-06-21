@@ -1,5 +1,23 @@
 2011-06-21  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	Enhance debugging facilities for the TLS heap allocator.
+
+	* lib/src/tlsmalloc/tlsmalloc.c: New check code with footers to
+	data structures and magic numbers. This is defined when compiled
+	with `-DFOOTERS'. New feature to disable garbage collection when
+	compiled with `-DDISABLE_GC'.
+
+	* lib/src/tlsmalloc/Makefile.am: Compile the test code with
+	footers enables and extra debugging.
+	
+	* lib/mtsparc.mk,
+	* lib/mtalpha.mk: New compilation targets `*_tlsmalloc_fast*` and
+	`*_tlsmalloc_*_nogc'. The basic (default) object `tlsmalloc.o' now
+	uses footer and magic checking with assertions enabled. Link with
+	the `_fast' version to disable assertion checking and footers.
+
+2011-06-21  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	Simplify `assert' on MT targets.
 
 	* lib/mtalpha-sim/include/assert.h: Use `svp_abort' to terminate

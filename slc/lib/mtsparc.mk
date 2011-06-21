@@ -38,14 +38,31 @@ SLC_MTSN = $(SLC_RUN) -b mtsn $(SHUTUP) -DNO_FLOATING_POINT
 mtsn_%.o: $(srcdir)/src/%.c
 	$(slc_verbose)$(SLC_MTSN) -c -o $@ $<
 
+mtsn_tlsmalloc_fast.o: $(srcdir)/src/tlsmalloc/tlsmalloc.c
+	$(slc_verbose)$(SLC_MTSN) -c -o $@ $< $(TLSMALLOC_DEFS) $(TLSMALLOC_DEFS_MTSN) -DNDEBUG
+
 mtsn_tlsmalloc.o: $(srcdir)/src/tlsmalloc/tlsmalloc.c
-	$(slc_verbose)$(SLC_MTSN) -c -o $@ $< $(TLSMALLOC_DEFS) $(TLSMALLOC_DEFS_MTSN)
+	$(slc_verbose)$(SLC_MTSN) -c -o $@ $< $(TLSMALLOC_DEFS) $(TLSMALLOC_DEFS_MTSN) -DFOOTERS
 
 mtsn_tlsmalloc_debug.o: $(srcdir)/src/tlsmalloc/tlsmalloc.c
-	$(slc_verbose)$(SLC_MTSN) -c -o $@ $< $(TLSMALLOC_DEFS) $(TLSMALLOC_DEFS_MTSN) -DDEBUG_MALLOC
+	$(slc_verbose)$(SLC_MTSN) -c -o $@ $< $(TLSMALLOC_DEFS) $(TLSMALLOC_DEFS_MTSN) -DDEBUG_MALLOC -DFOOTERS
 
 mtsn_tlsmalloc_mgdebug.o: $(srcdir)/src/tlsmalloc/tlsmalloc.c
-	$(slc_verbose)$(SLC_MTSN) -c -o $@ $< $(TLSMALLOC_DEFS) $(TLSMALLOC_DEFS_MTSN) -DDEBUG_MGSIM
+	$(slc_verbose)$(SLC_MTSN) -c -o $@ $< $(TLSMALLOC_DEFS) $(TLSMALLOC_DEFS_MTSN) -DDEBUG_MGSIM -DFOOTERS
+
+
+mtsn_tlsmalloc_fast_nogc.o: $(srcdir)/src/tlsmalloc/tlsmalloc.c
+	$(slc_verbose)$(SLC_MTSN) -c -o $@ $< $(TLSMALLOC_DEFS) $(TLSMALLOC_DEFS_MTSN) -DNDEBUG -DDISABLE_GC
+
+mtsn_tlsmalloc_nogc.o: $(srcdir)/src/tlsmalloc/tlsmalloc.c
+	$(slc_verbose)$(SLC_MTSN) -c -o $@ $< $(TLSMALLOC_DEFS) $(TLSMALLOC_DEFS_MTSN) -DFOOTERS -DDISABLE_GC
+
+mtsn_tlsmalloc_debug_nogc.o: $(srcdir)/src/tlsmalloc/tlsmalloc.c
+	$(slc_verbose)$(SLC_MTSN) -c -o $@ $< $(TLSMALLOC_DEFS) $(TLSMALLOC_DEFS_MTSN) -DDEBUG_MALLOC -DFOOTERS -DDISABLE_GC
+
+mtsn_tlsmalloc_mgdebug_nogc.o: $(srcdir)/src/tlsmalloc/tlsmalloc.c
+	$(slc_verbose)$(SLC_MTSN) -c -o $@ $< $(TLSMALLOC_DEFS) $(TLSMALLOC_DEFS_MTSN) -DDEBUG_MGSIM -DFOOTERS -DDISABLE_GC
+
 
 mtsn_tlstack_malloc_mgdebug.o: $(srcdir)/src/tlstack_malloc.c
 	$(slc_verbose)$(SLC_MTSN) -c -o $@ $< -DDEBUG_MGSIM

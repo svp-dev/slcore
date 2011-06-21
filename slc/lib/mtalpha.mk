@@ -157,14 +157,34 @@ mta_%.o: $(srcdir)/src/%.c
 mta_gdtoa_%.o: $(srcdir)/src/gdtoa/%.c
 	$(slc_verbose)$(SLC_MTA) -c -o $@ $<
 
+
+
+mta_tlsmalloc_fast.o: $(srcdir)/src/tlsmalloc/tlsmalloc.c
+	$(slc_verbose)$(SLC_MTA) -c -o $@ $< $(TLSMALLOC_DEFS) $(TLSMALLOC_DEFS_MTA) -DNDEBUG
+
 mta_tlsmalloc.o: $(srcdir)/src/tlsmalloc/tlsmalloc.c
-	$(slc_verbose)$(SLC_MTA) -c -o $@ $< $(TLSMALLOC_DEFS) $(TLSMALLOC_DEFS_MTA)
+	$(slc_verbose)$(SLC_MTA) -c -o $@ $< $(TLSMALLOC_DEFS) $(TLSMALLOC_DEFS_MTA) -DFOOTERS
 
 mta_tlsmalloc_debug.o: $(srcdir)/src/tlsmalloc/tlsmalloc.c
-	$(slc_verbose)$(SLC_MTA) -c -o $@ $< $(TLSMALLOC_DEFS) $(TLSMALLOC_DEFS_MTA) -DDEBUG_MALLOC
+	$(slc_verbose)$(SLC_MTA) -c -o $@ $< $(TLSMALLOC_DEFS) $(TLSMALLOC_DEFS_MTA) -DDEBUG_MALLOC -DFOOTERS
 
 mta_tlsmalloc_mgdebug.o: $(srcdir)/src/tlsmalloc/tlsmalloc.c
-	$(slc_verbose)$(SLC_MTA) -c -o $@ $< $(TLSMALLOC_DEFS) $(TLSMALLOC_DEFS_MTA) -DDEBUG_MGSIM
+	$(slc_verbose)$(SLC_MTA) -c -o $@ $< $(TLSMALLOC_DEFS) $(TLSMALLOC_DEFS_MTA) -DDEBUG_MGSIM -DFOOTERS
+
+
+mta_tlsmalloc_fast_nogc.o: $(srcdir)/src/tlsmalloc/tlsmalloc.c
+	$(slc_verbose)$(SLC_MTA) -c -o $@ $< $(TLSMALLOC_DEFS) $(TLSMALLOC_DEFS_MTA) -DNDEBUG -DDISABLE_GC
+
+mta_tlsmalloc_nogc.o: $(srcdir)/src/tlsmalloc/tlsmalloc.c
+	$(slc_verbose)$(SLC_MTA) -c -o $@ $< $(TLSMALLOC_DEFS) $(TLSMALLOC_DEFS_MTA) -DFOOTERS -DDISABLE_GC
+
+mta_tlsmalloc_nogc_debug.o: $(srcdir)/src/tlsmalloc/tlsmalloc.c
+	$(slc_verbose)$(SLC_MTA) -c -o $@ $< $(TLSMALLOC_DEFS) $(TLSMALLOC_DEFS_MTA) -DDEBUG_MALLOC -DFOOTERS -DDISABLE_GC
+
+mta_tlsmalloc_nogc_mgdebug.o: $(srcdir)/src/tlsmalloc/tlsmalloc.c
+	$(slc_verbose)$(SLC_MTA) -c -o $@ $< $(TLSMALLOC_DEFS) $(TLSMALLOC_DEFS_MTA) -DDEBUG_MGSIM -DFOOTERS -DDISABLE_GC
+
+
 
 mta_tlstack_malloc_mgdebug.o: $(srcdir)/src/tlstack_malloc.c
 	$(slc_verbose)$(SLC_MTA) -c -o $@ $< -DDEBUG_MGSIM
