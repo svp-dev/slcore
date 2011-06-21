@@ -1,3 +1,17 @@
+//
+// mtconf.h: this file is part of the Microgrid simulator.
+//
+// Copyright (C) 2010,2011 the Microgrid project.
+//
+// This program is free software; you can redistribute it and/or
+// modify it under the terms of the GNU General Public License
+// as published by the Free Software Foundation; either version 3
+// of the License, or (at your option) any later version.
+//
+// The complete GNU General Public Licence Notice can be found as the
+// `COPYING' file in the root directory.
+//
+
 #ifndef MT_CONF_H
 #define MT_CONF_H
 
@@ -22,9 +36,11 @@ struct mg_device_id
 
 struct mg_device_info
 {
-    size_t ndevices;
+    size_t               ndevices;
     struct mg_device_id *enumeration;
     void*               *base_addrs;
+    size_t               nchannels;
+    long                *channels;
 };
 
 extern struct mg_device_info mg_devinfo;
@@ -55,6 +71,5 @@ extern clock_t boot_ts;
 
 void sys_detect_devs(void);
 void sys_conf_init(void);
-void sys_argv_init(void);
 
 #endif

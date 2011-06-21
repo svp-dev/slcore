@@ -23,9 +23,6 @@
 #include "mtconf.h"
 #include "heap.h"
 
-int verbose_boot = 1;
-clock_t boot_ts = 0;
-
 static noinline
 void sys_environ_init(char *initenv)
 {
@@ -191,6 +188,7 @@ void sys_places_init(void)
 extern void sys_sep_init(void);
 extern void sys_fibre_init(void*, bool);
 extern void sys_vars_init(void*, bool);
+extern void sys_argv_init(void);
 
 void sys_init(void* slrbase_init, 
               void* fibrebase_init, 

@@ -68,6 +68,7 @@ MTALIB_SRC = \
 
 MTALIB_SIM_SRC = \
 	src/mtconf.c \
+	src/mtargs.c \
 	src/mtinit.c \
 	src/mtgfx.c \
 	src/mtsep.c
@@ -188,6 +189,7 @@ mta_tlsmalloc_nogc_mgdebug.o: $(srcdir)/src/tlsmalloc/tlsmalloc.c
 
 mta_tlstack_malloc_mgdebug.o: $(srcdir)/src/tlstack_malloc.c
 	$(slc_verbose)$(SLC_MTA) -c -o $@ $< -DDEBUG_MGSIM
+
 
 mta_malloc.o: $(srcdir)/src/malloc.c
 	$(slc_verbose)$(SLC_MTA) -c -o $@ $< $(MALLOC_DEFS) $(MALLOC_DEFS_MTA)

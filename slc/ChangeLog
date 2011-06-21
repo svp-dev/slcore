@@ -1,5 +1,21 @@
 2011-06-21  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	Externalize the MGSim configuration code.
+
+	* lib/src/mtconf.c: Move the argv-specific code to...
+	* lib/src/mtargs.c: ...here.
+	* lib/mtalpha.mk: List the new file.
+
+	* lib/src/mtconf.h,
+	* lib/src/mtconf.c: Push to MGSim 3.1. Then import back the
+	modified copy.
+
+	* lib/src/mtinit.c: Remove the definitions for `verbose_boot' and
+	`boot_ts' which are now defined by `mtconf.c'. Declare
+	`sys_argv_init'.
+
+2011-06-21  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	Implement proper locking of some non-reentrant library functions.
 
 	* lib/src/mtinit.c: Reserve 3 system places for stdio

@@ -1,7 +1,7 @@
 //
-// mtconf.c: this file is part of the SL toolchain.
+// mtconf.c: this file is part of the Microgrid simulator.
 //
-// Copyright (C) 2010,2011 Universiteit van Amsterdam.
+// Copyright (C) 2010,2011 the Microgrid project.
 //
 // This program is free software; you can redistribute it and/or
 // modify it under the terms of the GNU General Public License
@@ -14,11 +14,12 @@
 
 #include "mtconf.h"
 #include "mgsim.h"
-#include <svp/sep.h>
 #include <svp/testoutput.h>
 #include <svp/mtmalloc.h>
-#include <stdlib.h>
-#include <string.h>
+#include <svp/abort.h>
+
+int verbose_boot = 1;
+clock_t boot_ts = 0;
 
 confword_t mgconf_ftes_per_core = (confword_t)-1;
 confword_t mgconf_ttes_per_core = (confword_t)-1;
@@ -31,12 +32,27 @@ struct mg_device_info mg_devinfo;
 size_t mg_uart_devid = (size_t)-1;
 size_t mg_lcd_devid = (size_t)-1;
 size_t mg_rtc_devid = (size_t)-1;
+size_t mg_rpc_devid = (size_t)-1;
 size_t mg_cfgrom_devid = (size_t)-1;
 size_t mg_argvrom_devid = (size_t)-1;
 size_t mg_gfxctl_devid = (size_t)-1;
 size_t mg_gfxfb_devid = (size_t)-1;
 volatile uint32_t *mg_gfx_ctl;
 void *mg_gfx_fb;
+
+
+// local version of strcmp to avoid 
+// a dependency on the stdlib.
+static int
+__strcmp(const unsigned char *s1, const unsigned char *s2)
+{
+	while (*s1 == *s2++)
+		if (*s1++ == '\0')
+			return (0);
+	return (*s1 - *(s2 - 1));
+}
+
+
 
 static
 void detect_lcd(size_t devid, void *addr) 
@@ -122,6 +138,23 @@ void detect_rtc(size_t devid, void *addr)
 }
 
 static
+void detect_rpc(size_t devid, void *addr)
+{
+    if (verbose_boot)
+    {
+        output_string("* rpc interface at 0x", 2);
+        output_hex(addr, 2);
+        output_char('.', 2);
+        output_ts(2);
+        output_char('\n', 2);
+    }
+    if (mg_rpc_devid == (size_t)-1)
+    {
+        mg_rpc_devid = devid; 
+    }    
+}
+
+static
 void detect_rom(size_t devid, void *addr)
 {
     uint32_t magic = *(uint32_t*)addr;
@@ -169,72 +202,10 @@ static struct
     { { 1, 4, 1 }, "gfx", &detect_gfx },
     { { 1, 5, 1 }, "rom", &detect_rom },
     { { 1, 7, 1 }, "uart", &detect_uart },
+    { { 1, 8, 1 }, "rpc", &detect_rpc },
     { { 0, 0, 0 }, 0, 0 }
 };
 
-extern long __argc;
-extern char** __argv_ptr;
-void sys_argv_init(void)
-{
-    /* attempt to find the argv ROM */
-    if (mg_argvrom_devid == (size_t)-1)
-    {
-        if (verbose_boot)
-        {
-            output_string("* no argument ROM, unable to read arguments", 2);
-            output_ts(2);
-            output_char('\n', 2);
-        }
-        return;
-    }
-
-    const struct argvdata {
-        uint32_t magic;
-        uint32_t argc;
-        uint32_t datasize;
-        char data[];
-    } *argvdata = (const struct argvdata*)mg_devinfo.base_addrs[mg_argvrom_devid];
-
-    size_t argc = argvdata->argc;
-    size_t datasize = argvdata->datasize;
-
-    char *localdata = (char*)dlmalloc(datasize);
-    char** argv = (char**)dlmalloc((argc + 1) * sizeof(char*));
-    if (localdata == NULL || argv == NULL)
-    {
-        output_string("Unable to allocate memory to copy the argument data!\n", 2);
-        abort();
-    }
-
-    memcpy(localdata, argvdata->data, datasize);
-    
-    char *p;
-    size_t i;
-    for (i = 0, p = localdata; i < argc; ++i)
-    {
-        argv[i] = p;
-        p = p + strlen(p) + 1;
-    }
-    argv[i] = 0;
-
-    __argc = argc;
-    __argv_ptr = argv;
-
-    if (verbose_boot)
-    {
-        output_string("* input data: arguments at 0x", 2);
-        output_hex(localdata, 2);
-        output_string(", argv[", 2);
-        output_uint(argc, 2);
-        output_string("] at 0x", 2);
-        output_hex(argv, 2);
-        output_string(", ", 2);
-        output_uint(datasize, 2);
-        output_string(" bytes.", 2);
-        output_ts(2);
-        output_char('\n', 2);
-    }
-}
 
 void sys_conf_init(void)
 {
@@ -286,31 +257,31 @@ void sys_conf_init(void)
                 confword_t name = p->payload[1 + 2*i];
                 const confword_t *attrtable = cfg + p->payload[1 + 2*i + 1];
                 size_t nattrs = attrtable[0];
-                if (system_type_id == (confword_t)-1 && strcmp(get_symbol(name), "system") == 0)
+                if (system_type_id == (confword_t)-1 && __strcmp(get_symbol(name), "system") == 0)
                 {
                     system_type_id = i;
                     for (size_t j = 0; j < nattrs; ++j)
                     {
                         confword_t aname = attrtable[2 + j];
-                        if (system_version_id == (confword_t)-1 && strcmp(get_symbol(aname), "version") == 0)
+                        if (system_version_id == (confword_t)-1 && __strcmp(get_symbol(aname), "version") == 0)
                             system_version_id = j;
-                        else if (system_freq_id == (confword_t)-1 && strcmp(get_symbol(aname), "masterfreq") == 0)
+                        else if (system_freq_id == (confword_t)-1 && __strcmp(get_symbol(aname), "masterfreq") == 0)
                             system_freq_id = j;
                     }
                 }
-                if (strcmp(get_symbol(name), "cpu") == 0)
+                if (__strcmp(get_symbol(name), "cpu") == 0)
                 {
                     core_type_id = i;
                     for (size_t j = 0; j < nattrs; ++j)
                     {
                         confword_t aname = attrtable[2 + j];
-                        if (core_freq_id == (confword_t)-1 && strcmp(get_symbol(aname), "freq") == 0)
+                        if (core_freq_id == (confword_t)-1 && __strcmp(get_symbol(aname), "freq") == 0)
                             core_freq_id = j;
-                        else if (core_threads_id == (confword_t)-1 && strcmp(get_symbol(aname), "threads") == 0)
+                        else if (core_threads_id == (confword_t)-1 && __strcmp(get_symbol(aname), "threads") == 0)
                             core_threads_id = j;
-                        else if (core_families_id == (confword_t)-1 && strcmp(get_symbol(aname), "families") == 0)
+                        else if (core_families_id == (confword_t)-1 && __strcmp(get_symbol(aname), "families") == 0)
                             core_families_id = j;
-                        else if (core_pid_id == (confword_t)-1 && strcmp(get_symbol(aname), "pid") == 0)
+                        else if (core_pid_id == (confword_t)-1 && __strcmp(get_symbol(aname), "pid") == 0)
                             core_pid_id = j;
                     }                    
                 }
@@ -375,8 +346,16 @@ void sys_conf_init(void)
     }
 }
 
+#define MAX_NDEVS 128
+
+static void *_dev_addrs[MAX_NDEVS];
+static struct mg_device_id _dev_ids[MAX_NDEVS];
+
+
 void sys_detect_devs(void)
 {
+    size_t i, j;
+
     /* check the system version */
     long system_version;
     mgsim_read_asr(system_version, ASR_SYSTEM_VERSION);
@@ -387,7 +366,7 @@ void sys_detect_devs(void)
         output_string(" does not match expected value ", 2);
         output_uint(ASR_SYSTEM_VERSION_VALUE, 2);
         output_char('\n', 2);
-        abort();
+        svp_abort();
     }
 
     /* ensure that we are connected to I/O */
@@ -422,6 +401,14 @@ void sys_detect_devs(void)
     char *aio_base;
     mgsim_read_asr(aio_base, ASR_AIO_BASE);
 
+    /* save the notification address */
+    long *pnc_base;
+    mgsim_read_asr(pnc_base, ASR_PNC_BASE);
+
+    mg_devinfo.nchannels = n_chans;
+    mg_devinfo.channels = pnc_base;
+
+
     /* try to find the SMC */
     size_t smc_id = (io_params >> 16) & 0xff;
     void *smc = aio_base + dev_as_sz * smc_id;
@@ -446,13 +433,22 @@ void sys_detect_devs(void)
     /* copy the enumeration data */
     mg_devinfo.ndevices = ndevs;
 
-    struct mg_device_id *devenum = (struct mg_device_id*)dlmalloc(ndevs * sizeof(struct mg_device_id));
-    if (devenum == NULL)
+    struct mg_device_id *devenum = &_dev_ids[0];
+
+#ifndef MGSIM_TEST_SUITE
+    if (ndevs > MAX_NDEVS)
     {
-        output_string("Unable to allocate memory to copy the enumeration data!\n", 2);
-        abort();
+        devenum = (struct mg_device_id*)dlmalloc(ndevs * sizeof(struct mg_device_id));
+        if (devenum == NULL)
+        {
+            output_string("Unable to allocate memory to copy the enumeration data!\n", 2);
+            svp_abort();
+        }
     }
-    memcpy(devenum, ((struct mg_device_id*)smc) + 1, ndevs * sizeof(struct mg_device_id));
+#endif
+    for (i = 0; i < ndevs; ++i)
+        devenum[i] = (((struct mg_device_id*)smc) + 1)[i];
+
     mg_devinfo.enumeration = devenum;
     if (verbose_boot)
     {
@@ -465,13 +461,20 @@ void sys_detect_devs(void)
 
     /* set up the device base addresses */
 
-    void **addrs = (void**)dlmalloc(ndevs * sizeof(void*));
-    if (addrs == NULL)
+    void **addrs = &_dev_addrs[0];
+
+#ifndef MGSIM_TEST_SUITE
+    if (ndevs > MAX_NDEVS)
     {
-        output_string("Unable to allocate memory to set up the device base addresses!\n", 2);
-        abort();
+        addrs = (void**)dlmalloc(ndevs * sizeof(void*));
+        if (addrs == NULL)
+        {
+            output_string("Unable to allocate memory to set up the device base addresses!\n", 2);
+            svp_abort();
+        }
     }
-    size_t i, j;
+#endif
+
     const char *devname;
     for (i = 0; i < ndevs; ++i)
     {
