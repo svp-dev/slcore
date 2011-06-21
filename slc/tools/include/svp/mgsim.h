@@ -4,7 +4,7 @@
 void mgsim_control(unsigned long val, unsigned int type, unsigned int command, unsigned int flags);
 #if !defined(__AVOID_INLINABLE_PRIMITIVES)
 #define __inline_mgsim_control(Value, Type, Command, Flags)      \
-    __asm__ __volatile__("print %0, %1" : : "r"(Value), "rI"(((Command)<<6) | (Type) | (Flags)))
+    ((void) ({ __asm__ __volatile__("print %0, %1" : : "r"(Value), "rI"(((Command)<<6) | (Type) | (Flags))); }) )
 #define mgsim_control(Value, Type, Command, Flags) __inline_mgsim_control(Value, Type, Command, Flags)
 #endif
 
@@ -43,7 +43,7 @@ void mgsim_outfloat(double val, unsigned int stream, unsigned int prec);
 #if !defined(__AVOID_INLINABLE_PRIMITIVES)
 #if !defined(__slc_soft_float__)
 #define __inline_mgsim_outfloat(F, Stream, Precision) \
-    __asm__ __volatile("printf %0, %1" : : "f"(F), "r"((Stream) | (Precision << 4)))
+    ((void) ({ __asm__ __volatile("printf %0, %1" : : "f"(F), "r"((Stream) | (Precision << 4))); }) )
 #else
 #define __inline_mgsim_outfloat(F, Stream, Precision) \
     mgsim_control(F, MGSCTL_TYPE_PRINT, MGSCTL_PRINT_HEX, Stream)

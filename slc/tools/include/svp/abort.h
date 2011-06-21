@@ -18,7 +18,7 @@
 #ifdef __mt_freestanding__
 
 #include <svp/mgsim.h>
-#define svp_abort() mgsim_control(0, MGSCTL_TYPE_STATACTION, MGSCTL_SA_EXCEPTION, 0);
+#define svp_abort() mgsim_control(0, MGSCTL_TYPE_STATACTION, MGSCTL_SA_EXCEPTION, 0)
 
 #else
 # include <stdlib.h>

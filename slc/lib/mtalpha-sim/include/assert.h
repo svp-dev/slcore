@@ -17,15 +17,13 @@
 
 #include <svp/compiler.h>
 #include <svp/testoutput.h>
+#include <svp/abort.h>
 
 #undef assert
 
 #ifdef NDEBUG
 #define assert(e)       ((void)0)
 #else
-
-// forward decl, we avoid including stdio/stdlib
-void abort(void);
 
 #define assert(e)  \
     ((void) (likely(e) ? 0 : __assert (#e, __FILE__, __LINE__)))
@@ -34,7 +32,7 @@ void abort(void);
             output_string(file ":", 2);                                 \
             output_uint(line, 2);                                       \
             output_string(": failed assertion `" e "'\n", 2);           \
-        }), abort())
+        }), svp_abort())
 
 #endif
 

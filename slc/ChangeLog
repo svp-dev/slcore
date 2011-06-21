@@ -1,5 +1,17 @@
 2011-06-21  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	Simplify `assert' on MT targets.
+
+	* lib/mtalpha-sim/include/assert.h: Use `svp_abort' to terminate
+	so that the failure will be reported in the surrounding code.
+
+	* tools/include/svp/abort.h: Remove an extraneous semicolon.
+
+	* tools/include/svp/mgsim.h: Allow to use the `mgsim_control'
+	functions as (void) expressions.
+	
+2011-06-21  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	Support C's `clock()' on MT-SPARC.
 
 	* lib/mtalpha-sim/include/time.h: Use `%tick' (ASR4) to read the
