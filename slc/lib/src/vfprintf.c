@@ -74,6 +74,8 @@ __FBSDID("$FreeBSD: src/lib/libc/stdio/vfprintf.c,v 1.90.2.1 2009/08/03 08:13:06
 #define	CHAR	char
 #include "printfcommon.h"
 
+#include <svp/delegate.h> // sl_place_t
+
 #if 0 // no grouping
 struct grouping_state {
 	char *thousands_sep;	/* locale-specific thousands separator */
@@ -307,8 +309,9 @@ vfprintf(FILE * restrict fp, const char * restrict fmt0, va_list ap)
 int
 __vfprintf(FILE *fp, const char *fmt0, va_list ap)
 #endif
-int
-vfprintf(FILE * restrict fp, const char * restrict fmt0, va_list ap)
+
+static int
+__vfprintf(FILE * restrict fp, const char * restrict fmt0, va_list ap)
 {
 	char *fmt;		/* format string */
 	int ch;			/* character from fmt */
@@ -1099,3 +1102,25 @@ error:
 	/* NOTREACHED */
 }
 
+sl_def(t_vfprintf,sl__static,sl_glparm(FILE*,fp), sl_glparm(const char*,fmt0), sl_glparm(va_list*,ap), sl_shparm(int,ret))
+{
+    sl_setp(ret, __vfprintf(sl_getp(fp), sl_getp(fmt0), *sl_getp(ap)));
+}
+sl_enddef
+
+
+extern sl_place_t __stdio_place_id;
+
+int
+vfprintf(FILE * restrict fp, const char * restrict fmt0, va_list ap)
+{
+#if defined(__slc_os_fpga__)
+    // UTLEON3 does not support suspending allocate,
+    // but it does not matter because we are single core
+    return __vfprintf(fp, fmt0, ap);
+#else
+    sl_create(,__stdio_place_id,,,,, sl__exclusive, t_vfprintf, sl_glarg(FILE*,,fp), sl_glarg(const char*,,fmt0), sl_glarg(va_list*,,&ap),sl_sharg(int,ret,0));
+    sl_sync();
+    return sl_geta(ret);
+#endif
+}

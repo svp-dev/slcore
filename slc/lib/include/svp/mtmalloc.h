@@ -27,15 +27,16 @@ void* dlmemalign(size_t, size_t);
 #if defined(__mt_freestanding__) && defined(__slc_os_sim__)
 
 #include <svp/compiler.h>
+#include <svp/delegate.h>
 
-#define malloc_place 0x1 /* core 0, size 1 */
+extern sl_place_t __malloc_place_id;
 
 sl_decl(t_dlmalloc,,sl_shparm(void*, szret));
 
 alwaysinline unused
 void* excl_dlmalloc(size_t sz)
 {
-    sl_create(,malloc_place,,,,,sl__exclusive,t_dlmalloc,sl_sharg(void*,szret,(void*)sz));
+    sl_create(,__malloc_place_id,,,,,sl__exclusive,t_dlmalloc,sl_sharg(void*,szret,(void*)sz));
     sl_sync();
     return (void*)sl_geta(szret);
 }
@@ -45,7 +46,7 @@ sl_decl(t_dlfree,,sl_glparm(void*, ptr));
 alwaysinline unused
 void excl_dlfree(void* ptr)
 {
-    sl_create(,malloc_place,,,,,sl__exclusive,t_dlfree,sl_glarg(void*,,ptr));
+    sl_create(,__malloc_place_id,,,,,sl__exclusive,t_dlfree,sl_glarg(void*,,ptr));
     sl_sync();
 }
 
@@ -54,7 +55,7 @@ sl_decl(t_dlrealloc,,sl_glparm(void*, ptr), sl_shparm(void*, szret));
 alwaysinline unused
 void* excl_dlrealloc(void* ptr, size_t sz)
 {
-    sl_create(,malloc_place,,,,,sl__exclusive,t_dlrealloc,sl_glarg(void*,,ptr), sl_sharg(void*,szret,(void*)sz));
+    sl_create(,__malloc_place_id,,,,,sl__exclusive,t_dlrealloc,sl_glarg(void*,,ptr), sl_sharg(void*,szret,(void*)sz));
     sl_sync();
     return (void*)sl_geta(szret);
 }
@@ -64,7 +65,7 @@ sl_decl(t_dlcalloc,,sl_glparm(size_t, cnt), sl_shparm(void*, szret));
 alwaysinline unused
 void* excl_dlcalloc(size_t cnt, size_t sz)
 {
-    sl_create(,malloc_place,,,,,sl__exclusive,t_dlcalloc,sl_glarg(size_t,,cnt), sl_sharg(void*,szret,(void*)sz));
+    sl_create(,__malloc_place_id,,,,,sl__exclusive,t_dlcalloc,sl_glarg(size_t,,cnt), sl_sharg(void*,szret,(void*)sz));
     sl_sync();
     return (void*)sl_geta(szret);
 }

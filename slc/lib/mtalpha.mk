@@ -55,13 +55,13 @@ MTALIB_CSRC = \
 	src/strtoull.c \
 	src/sys_errlist.c \
 	src/tlstack_malloc.c \
-	src/vfprintf.c \
 	src/vprintf.c \
 	src/vsnprintf.c
 
 MTALIB_SRC = \
 	src/time.c \
 	src/malloc_excl.c \
+	src/vfprintf.c \
 	src/div.c \
 	src/roman.c \
 	src/io.c
@@ -145,7 +145,7 @@ TLSMALLOC_DEFS_MTA = \
 
 MTALIB_COBJS = \
 	$(addprefix mta_,$(addsuffix .o,$(notdir $(basename $(MTALIB_CSRC))))) \
-	$(addprefix mta_gdtoa_,$(addsuffix .o,$(notdir $(basename $(GDTOA_SRC))))) \
+	$(addprefix mta_gdtoa_,$(addsuffix .o,$(notdir $(basename $(GDTOA_CSRC))))) \
 	mta_tlsmalloc.o \
 	mta_malloc_excl.o
 
@@ -210,6 +210,7 @@ mta_malloc_debug.o: $(srcdir)/src/malloc.c
 
 # $(3)_libsl_a_CONTENTS = \
 #	$(MTALIB_COBJS) \
+#	$(addprefix $(2)/gdtoa_,$(addsuffix .o,$(notdir $(basename $(GDTOA_SRC))))) \
 # 	$(addprefix $(2)/,$(addsuffix .o,$(notdir $(basename $(MTALIB_SRC))))) \
 # 	$(addprefix $(2)/,$(addsuffix .o,$(notdir $(basename $(MTALIB_SIM_SRC))))) 
 
@@ -280,6 +281,7 @@ nobase_pkglib_DATA += \
 
 mta_hybrid_mtalpha_sim_libsl_a_CONTENTS = \
 	$(MTALIB_COBJS) \
+	$(addprefix mta_hybrid-mtalpha-sim/gdtoa_,$(addsuffix .o,$(notdir $(basename $(GDTOA_SRC))))) \
 	$(addprefix mta_hybrid-mtalpha-sim/,$(addsuffix .o,$(notdir $(basename $(MTALIB_SRC))))) \
 	$(addprefix mta_hybrid-mtalpha-sim/,$(addsuffix .o,$(notdir $(basename $(MTALIB_SIM_SRC)))))
 
@@ -288,6 +290,10 @@ CLEANFILES += \
 	mta_hybrid-mtalpha-sim/libsl.a
 
 mta_hybrid-mtalpha-sim/%.o: $(srcdir)/src/%.c
+	$(AM_V_at)$(MKDIR_P) mta_hybrid-mtalpha-sim
+	$(slc_verbose)$(SLC_MTA) -c -o $@ $<
+
+mta_hybrid-mtalpha-sim/gdtoa_%.o: $(srcdir)/src/gdtoa/%.c
 	$(AM_V_at)$(MKDIR_P) mta_hybrid-mtalpha-sim
 	$(slc_verbose)$(SLC_MTA) -c -o $@ $<
 
@@ -307,6 +313,7 @@ nobase_pkglib_DATA += \
 
 seq_naked_mtalpha_sim_libsl_a_CONTENTS = \
 	$(MTALIB_COBJS) \
+	$(addprefix seq_naked-mtalpha-sim/gdtoa_,$(addsuffix .o,$(notdir $(basename $(GDTOA_SRC))))) \
 	$(addprefix seq_naked-mtalpha-sim/,$(addsuffix .o,$(notdir $(basename $(MTALIB_SRC))))) \
 	$(addprefix seq_naked-mtalpha-sim/,$(addsuffix .o,$(notdir $(basename $(MTALIB_SIM_SRC)))))
 
@@ -317,6 +324,10 @@ CLEANFILES += \
 SLC_MTA_S = $(SLC_RUN) -b mta_s $(SHUTUP)
 
 seq_naked-mtalpha-sim/%.o: $(srcdir)/src/%.c
+	$(AM_V_at)$(MKDIR_P) seq_naked-mtalpha-sim
+	$(slc_verbose)$(SLC_MTA_S) -c -o $@ $<
+
+seq_naked-mtalpha-sim/gdtoa_%.o: $(srcdir)/src/gdtoa/%.c
 	$(AM_V_at)$(MKDIR_P) seq_naked-mtalpha-sim
 	$(slc_verbose)$(SLC_MTA_S) -c -o $@ $<
 
@@ -336,6 +347,7 @@ nobase_pkglib_DATA += \
 
 mta_naked_mtalpha_sim_libsl_a_CONTENTS = \
 	$(MTALIB_COBJS) \
+	$(addprefix mta_naked-mtalpha-sim/gdtoa_,$(addsuffix .o,$(notdir $(basename $(GDTOA_SRC))))) \
 	$(addprefix mta_naked-mtalpha-sim/,$(addsuffix .o,$(notdir $(basename $(MTALIB_SRC))))) \
 	$(addprefix mta_naked-mtalpha-sim/,$(addsuffix .o,$(notdir $(basename $(MTALIB_SIM_SRC)))))
 
@@ -346,6 +358,10 @@ CLEANFILES += \
 SLC_MTA_N = $(SLC_RUN) -b mta_n $(SHUTUP)
 
 mta_naked-mtalpha-sim/%.o: $(srcdir)/src/%.c
+	$(AM_V_at)$(MKDIR_P) mta_naked-mtalpha-sim
+	$(slc_verbose)$(SLC_MTA_N) -c -o $@ $<
+
+mta_naked-mtalpha-sim/gdtoa_%.o: $(srcdir)/src/gdtoa/%.c
 	$(AM_V_at)$(MKDIR_P) mta_naked-mtalpha-sim
 	$(slc_verbose)$(SLC_MTA_N) -c -o $@ $<
 

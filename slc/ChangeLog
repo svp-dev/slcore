@@ -1,5 +1,20 @@
 2011-06-21  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	Implement proper locking of some non-reentrant library functions.
+
+	* lib/src/mtinit.c: Reserve 3 system places for stdio
+	(`vfprintf'), dlmalloc and dtoa.
+
+	* lib/src/gdtoa/misc.c,
+	* lib/src/vfprintf.c,
+	* lib/include/svp/mtmalloc.h: Use them.
+
+	* lib/gdtoa.mk,
+	* lib/mtalpha.mk: Ensure that the source files that use
+	`sl_create' are compiled separately for each compiler target.
+
+2011-06-21  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	Enhance debugging facilities for the TLS heap allocator.
 
 	* lib/src/tlsmalloc/tlsmalloc.c: New check code with footers to

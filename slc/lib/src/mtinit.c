@@ -156,6 +156,38 @@ void sys_check_ncores(void)
     }
 }
 
+sl_place_t __stdio_place_id;
+sl_place_t __malloc_place_id;
+sl_place_t __dtoa_place_id;
+
+static noinline
+void sys_places_init(void)
+{
+    if (verbose_boot) output_string("* allocating places for the C stdlib...", 2);
+
+    int r1 = sep_alloc(root_sep, &__stdio_place_id, SAL_MIN, 1);
+    int r2 = sep_alloc(root_sep, &__malloc_place_id, SAL_MIN, 1);
+    int r3 = sep_alloc(root_sep, &__dtoa_place_id, SAL_MIN, 1);
+    if (r1 == -1 || r2 == -1 || r3 == -1)
+    {
+        if (verbose_boot) output_string(" failed", 2);
+        abort();
+    }
+
+    if (verbose_boot)
+    {
+        output_string(" success: stdio at 0x", 2);
+        output_hex(__stdio_place_id, 2);
+        output_string(", malloc at 0x", 2);
+        output_hex(__malloc_place_id, 2);
+        output_string(", dtoa at 0x", 2);
+        output_hex(__dtoa_place_id, 2);
+        output_ts(2);
+        output_char('\n', 2);        
+    }
+}
+
+
 extern void sys_sep_init(void);
 extern void sys_fibre_init(void*, bool);
 extern void sys_vars_init(void*, bool);
@@ -181,6 +213,8 @@ void sys_init(void* slrbase_init,
     sys_conf_init();
 
     sys_sep_init();
+
+    sys_places_init();
 
     sys_check_ncores();
 

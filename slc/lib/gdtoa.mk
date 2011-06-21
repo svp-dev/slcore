@@ -1,4 +1,7 @@
 GDTOA_SRC = \
+	src/gdtoa/misc.c
+
+GDTOA_CSRC = \
 	src/gdtoa/dmisc.c \
 	src/gdtoa/dtoa.c \
 	src/gdtoa/g__fmt.c \
@@ -13,7 +16,6 @@ GDTOA_SRC = \
 	src/gdtoa/gmisc.c \
 	src/gdtoa/hd_init.c \
 	src/gdtoa/hexnan.c \
-	src/gdtoa/misc.c \
 	src/gdtoa/smisc.c \
 	src/gdtoa/strtod.c \
 	src/gdtoa/strtodg.c \

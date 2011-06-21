@@ -29,6 +29,7 @@ THIS SOFTWARE.
 /* Please send bug reports to David M. Gay (dmg at acm dot org,
  * with " at " changed at "@" and " dot " changed to ".").	*/
 
+#include <svp/delegate.h>
 #include "gdtoaimp.h"
 
  static Bigint *freelist[Kmax+1];
@@ -40,8 +41,9 @@ THIS SOFTWARE.
 static double private_mem[PRIVATE_mem], *pmem_next = private_mem;
 #endif
 
+static
  Bigint *
-Balloc
+__Balloc
 #ifdef KR_headers
 	(k) int k;
 #else
@@ -82,8 +84,27 @@ Balloc
 	return rv;
 	}
 
+sl_def(t_Balloc, sl__static, sl_shparm(Bigint*, ret), sl_glparm(int, k))
+{
+    int k = sl_getp(k);
+    Bigint* rv = __Balloc(k);
+    sl_setp(ret, rv);
+}
+sl_enddef
+
+extern sl_place_t __dtoa_place_id;
+
+Bigint *Balloc(int k)
+{
+    sl_create(,__dtoa_place_id,,,,, sl__exclusive, t_Balloc, sl_sharg(Bigint*,ret,0), sl_glarg(int,,k));
+    sl_sync();
+    return sl_geta(ret);
+}
+
+
+static
  void
-Bfree
+__Bfree
 #ifdef KR_headers
 	(v) Bigint *v;
 #else
@@ -101,6 +122,19 @@ Bfree
 			}
 		}
 	}
+
+sl_def(t_Bfree, sl__static, sl_glparm(Bigint*, v))
+{
+    __Bfree(sl_getp(v));
+}
+sl_enddef
+
+void Bfree(Bigint* v)
+{
+    sl_create(,__dtoa_place_id,,,,, sl__exclusive, t_Bfree, sl_glarg(Bigint*,,v));
+    sl_sync();
+}
+
 
  int
 lo0bits
