@@ -22,7 +22,7 @@
 extern time_t time(time_t*);
 extern clock_t clock(void);
 
-#if !defined(__AVOID_INLINABLE_PRIMITIVES) && (defined(__alpha__) || defined(__mtalpha__)) && \
+#if !defined(__AVOID_INLINABLE_PRIMITIVES) && defined(__mt_freestanding__) && \
     defined(__GNUC__) && !defined(__AVOID_GNUISMS)
 
 #include <svp/compiler.h>
@@ -31,7 +31,15 @@ alwaysinline unused
 clock_t __inline_clock(void)
 {
     clock_t c;                                               
+#if defined(__alpha__) || defined(__mtalpha__)
     __asm__ __volatile__ ("rpcc %0" : "=r"(c) : : "memory");
+#else
+#if defined(__mtsparc__)
+    __asm__ __volatile__("rd %%asr4, %0" : "=r"(c) : : "memory");
+#else
+# error no clock definition for this target.
+#endif
+#endif
     return c;
 }
 

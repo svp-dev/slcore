@@ -1,5 +1,12 @@
 2011-06-21  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	Support C's `clock()' on MT-SPARC.
+
+	* lib/mtalpha-sim/include/time.h: Use `%tick' (ASR4) to read the
+	processor's cycle counter on MT-SPARC.
+
+2011-06-21  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	Minor configuration fix.
 
 	* configure.ac: Check for `pthread_barrier_wait' before enabling
