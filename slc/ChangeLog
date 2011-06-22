@@ -1,3 +1,10 @@
+2011-06-22  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
+	Fix argument data generation for `slr'.
+
+	* tools/lib/mt-profiles/arggen: Ensure there are enough cores for
+	the system places.
+
 2011-06-21  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
 	Externalize the MGSim configuration code.
