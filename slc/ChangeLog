@@ -1,5 +1,11 @@
 2011-06-22  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	Minor packaging fix.
+
+	* lib/gdtoa.mk (EXTRA_DIST): Ensure all sources are listed.
+
+2011-06-22  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	Ensure that argv[0] is properly provided to MT programs.
 
 	* tools/lib/r-mt-sim.sh.in (exec): Do it.

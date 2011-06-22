@@ -57,5 +57,5 @@ GDTOA_EXTRA = \
 	src/gdtoa/makefile \
 	src/gdtoa/README
 
-EXTRA_DIST += $(GDTOA_SRC) $(GDTOA_EXTRA)
+EXTRA_DIST += $(GDTOA_CSRC) $(GDTOA_SRC) $(GDTOA_EXTRA)
 
