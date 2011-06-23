@@ -98,7 +98,6 @@ MALLOC_DEFS = -DLACKS_SYS_TYPES_H \
 	-DLACKS_TIME
 
 TLSMALLOC_DEFS = \
-	-DNDEBUG \
 	-Dtls_malloc=malloc \
 	-Dtls_free=free \
 	-Dtls_realloc=realloc \

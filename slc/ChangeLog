@@ -1,3 +1,9 @@
+2011-06-24  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
+	Ensure that the debug objects for `malloc' use assertions.
+
+	* lib/mtalpha.mk (TLSMALLOC_DEFS): Do not use `-DNDEBUG' here.
+
 2011-06-23  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
 	Install the debug objects for `malloc'.
