@@ -197,6 +197,17 @@ mta_malloc.o: $(srcdir)/src/malloc.c
 mta_malloc_debug.o: $(srcdir)/src/malloc.c
 	$(slc_verbose)$(SLC_MTA) -c -o $@ $< $(MALLOC_DEFS) $(MALLOC_DEFS_MTA) -DDEBUG=1 -DABORT_ON_ASSERT_FAILURE=0 -DFOOTERS=1
 
+# install the debug objects with other package data
+pkglib_DATA += \
+	mta_tlsmalloc_fast.o \
+	mta_tlsmalloc_debug.o \
+	mta_tlsmalloc_mgdebug.o \
+	mta_tlsmalloc_fast_nogc.o \
+	mta_tlsmalloc_nogc.o \
+	mta_tlsmalloc_nogc_debug.o \
+	mta_tlsmalloc_nogc_mgdebug.o \
+	mta_tlstack_malloc_mgdebug.o \
+	mta_malloc_debug.o
 
 ### Common rules ###
 

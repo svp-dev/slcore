@@ -1,3 +1,15 @@
+2011-06-23  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
+	Install the debug objects for `malloc'.
+
+	(Requested by C. Joslin.)
+
+	* lib/Makefile.am (pkglib_DATA): New.
+	* lib/mtalpha.mk,
+	* lib/mtsparc.mk,
+	* lib/mtsparc2.mk: Install all the alternate implementations of
+	`malloc'.
+
 2011-06-22  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
 	Minor packaging fix.

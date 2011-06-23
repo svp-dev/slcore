@@ -57,10 +57,10 @@ mtsn_tlsmalloc_fast_nogc.o: $(srcdir)/src/tlsmalloc/tlsmalloc.c
 mtsn_tlsmalloc_nogc.o: $(srcdir)/src/tlsmalloc/tlsmalloc.c
 	$(slc_verbose)$(SLC_MTSN) -c -o $@ $< $(TLSMALLOC_DEFS) $(TLSMALLOC_DEFS_MTSN) -DFOOTERS -DDISABLE_GC
 
-mtsn_tlsmalloc_debug_nogc.o: $(srcdir)/src/tlsmalloc/tlsmalloc.c
+mtsn_tlsmalloc_nogc_debug.o: $(srcdir)/src/tlsmalloc/tlsmalloc.c
 	$(slc_verbose)$(SLC_MTSN) -c -o $@ $< $(TLSMALLOC_DEFS) $(TLSMALLOC_DEFS_MTSN) -DDEBUG_MALLOC -DFOOTERS -DDISABLE_GC
 
-mtsn_tlsmalloc_mgdebug_nogc.o: $(srcdir)/src/tlsmalloc/tlsmalloc.c
+mtsn_tlsmalloc_nogc_mgdebug.o: $(srcdir)/src/tlsmalloc/tlsmalloc.c
 	$(slc_verbose)$(SLC_MTSN) -c -o $@ $< $(TLSMALLOC_DEFS) $(TLSMALLOC_DEFS_MTSN) -DDEBUG_MGSIM -DFOOTERS -DDISABLE_GC
 
 
@@ -72,6 +72,17 @@ mtsn_malloc.o: $(srcdir)/src/malloc.c
 
 mtsn_malloc_debug.o: $(srcdir)/src/malloc.c
 	$(slc_verbose)$(SLC_MTSN) -c -o $@ $< $(MALLOC_DEFS) -DDEBUG=1 -DABORT_ON_ASSERT_FAILURE=0 -DFOOTERS=1
+
+pkglib_DATA += \
+	mtsn_tlsmalloc_fast.o \
+	mtsn_tlsmalloc_debug.o \
+	mtsn_tlsmalloc_mgdebug.o \
+	mtsn_tlsmalloc_fast_nogc.o \
+	mtsn_tlsmalloc_nogc.o \
+	mtsn_tlsmalloc_nogc_debug.o \
+	mtsn_tlsmalloc_nogc_mgdebug.o \
+	mtsn_tlstack_malloc_mgdebug.o \
+	mtsn_malloc_debug.o
 
 
 ### Common rules ###

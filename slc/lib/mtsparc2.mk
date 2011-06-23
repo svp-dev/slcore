@@ -38,14 +38,30 @@ SLC_MTS = $(SLC_RUN) -b mts $(SHUTUP) -DNO_FLOATING_POINT
 mts_%.o: $(srcdir)/src/%.c
 	$(slc_verbose)$(SLC_MTS) -c -o $@ $<
 
+mts_tlsmalloc_fast.o: $(srcdir)/src/tlsmalloc/tlsmalloc.c
+	$(slc_verbose)$(SLC_MTS) -c -o $@ $< $(TLSMALLOC_DEFS) $(TLSMALLOC_DEFS_MTS) -DNDEBUG
+
 mts_tlsmalloc.o: $(srcdir)/src/tlsmalloc/tlsmalloc.c
-	$(slc_verbose)$(SLC_MTS) -c -o $@ $< $(TLSMALLOC_DEFS) $(TLSMALLOC_DEFS_MTS)
+	$(slc_verbose)$(SLC_MTS) -c -o $@ $< $(TLSMALLOC_DEFS) $(TLSMALLOC_DEFS_MTS) -DFOOTERS
 
 mts_tlsmalloc_debug.o: $(srcdir)/src/tlsmalloc/tlsmalloc.c
-	$(slc_verbose)$(SLC_MTS) -c -o $@ $< $(TLSMALLOC_DEFS) $(TLSMALLOC_DEFS_MTS) -DDEBUG_MALLOC
+	$(slc_verbose)$(SLC_MTS) -c -o $@ $< $(TLSMALLOC_DEFS) $(TLSMALLOC_DEFS_MTS) -DFOOTERS -DDEBUG_MALLOC
 
 mts_tlsmalloc_mgdebug.o: $(srcdir)/src/tlsmalloc/tlsmalloc.c
-	$(slc_verbose)$(SLC_MTS) -c -o $@ $< $(TLSMALLOC_DEFS) $(TLSMALLOC_DEFS_MTS) -DDEBUG_MGFPGA
+	$(slc_verbose)$(SLC_MTS) -c -o $@ $< $(TLSMALLOC_DEFS) $(TLSMALLOC_DEFS_MTS) -DFOOTERS -DDEBUG_MGFPGA
+
+mts_tlsmalloc_fast_nogc.o: $(srcdir)/src/tlsmalloc/tlsmalloc.c
+	$(slc_verbose)$(SLC_MTS) -c -o $@ $< $(TLSMALLOC_DEFS) $(TLSMALLOC_DEFS_MTS) -DNDEBUG -DDISABLE_GC
+
+mts_tlsmalloc_nogc.o: $(srcdir)/src/tlsmalloc/tlsmalloc.c
+	$(slc_verbose)$(SLC_MTS) -c -o $@ $< $(TLSMALLOC_DEFS) $(TLSMALLOC_DEFS_MTS) -DFOOTERS -DDISABLE_GC
+
+mts_tlsmalloc_nogc_debug.o: $(srcdir)/src/tlsmalloc/tlsmalloc.c
+	$(slc_verbose)$(SLC_MTS) -c -o $@ $< $(TLSMALLOC_DEFS) $(TLSMALLOC_DEFS_MTS) -DFOOTERS -DDEBUG_MALLOC -DDISABLE_GC
+
+mts_tlsmalloc_nogc_mgdebug.o: $(srcdir)/src/tlsmalloc/tlsmalloc.c
+	$(slc_verbose)$(SLC_MTS) -c -o $@ $< $(TLSMALLOC_DEFS) $(TLSMALLOC_DEFS_MTS) -DFOOTERS -DDEBUG_MGFPGA -DDISABLE_GC
+
 
 mts_tlstack_malloc_mgdebug.o: $(srcdir)/src/tlstack_malloc.c
 	$(slc_verbose)$(SLC_MTS) -c -o $@ $< -DDEBUG_MGFPGA
@@ -55,6 +71,17 @@ mts_malloc.o: $(srcdir)/src/malloc.c
 
 mts_malloc_debug.o: $(srcdir)/src/malloc.c
 	$(slc_verbose)$(SLC_MTS) -c -o $@ $< $(MALLOC_DEFS) -DDEBUG=1 -DABORT_ON_ASSERT_FAILURE=0 -DFOOTERS=1
+
+pkglib_DATA += \
+	mts_tlsmalloc_fast.o \
+	mts_tlsmalloc_debug.o \
+	mts_tlsmalloc_mgdebug.o \
+	mts_tlsmalloc_fast_nogc.o \
+	mts_tlsmalloc_nogc.o \
+	mts_tlsmalloc_nogc_debug.o \
+	mts_tlsmalloc_nogc_mgdebug.o \
+	mts_tlstack_malloc_mgdebug.o \
+	mts_malloc_debug.o
 
 
 ### Common rules ###

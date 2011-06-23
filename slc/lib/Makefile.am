@@ -63,6 +63,7 @@ nobase_dist_pkgdata_DATA = \
 	include/svp/sep.h
 
 include $(top_srcdir)/build-aux/sl.mk
+pkglib_DATA = 
 nobase_pkglib_DATA = 
 nobase_pkglib_LIBRARIES = 
 CLEANFILES =
