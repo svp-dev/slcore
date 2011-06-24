@@ -86,3 +86,18 @@ void gfx_dump(unsigned key, int stream, int embed_ts, int embed_tinfo /* unused 
   if (stream == 0)
     fclose(f);
 }
+
+
+void gfx_putpixel(size_t x, size_t y, uint32_t data)
+{
+    size_t w = __gfx_w;
+    if (likely(likely((x) < w) && likely((y) < __gfx_h)))
+        __gfx_framebuffer[(y) * w + (x)] = (data);
+}
+
+void gfx_fb_set(size_t offset, uint32_t data)
+{
+    if (likely((offset) < (__gfx_w * __gfx_h)))
+        __gfx_framebuffer[(offset)] = (data);
+}
+

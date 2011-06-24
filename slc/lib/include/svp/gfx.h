@@ -27,19 +27,7 @@ void gfx_resize(size_t, size_t);
 void gfx_init(void);
 void gfx_close(void);
 void gfx_dump(unsigned key, int stream, int embed_ts, int embed_tinfo);
-
-#define gfx_putpixel(X, Y, Data) do {					\
-    size_t __x = (X), __y = (Y);					\
-    size_t __w = __gfx_w;						\
-    if (likely(likely((size_t)__x < __gfx_w) && likely((size_t)__y < __gfx_h))) \
-      __gfx_framebuffer[__y * __w + __x] = (Data);			\
-  } while(0)
-
-#define gfx_fb_set(Offset, Data) do {					\
-    size_t __o = (Offset);						\
-    if (likely(__o < (__gfx_w*__gfx_h)))				\
-      __gfx_framebuffer[__o] = (Data);					\
-  } while(0)
-
+void gfx_putpixel(size_t, size_t, uint32_t);
+void gfx_fb_set(size_t, uint32_t);
 
 #endif // ! SLC_SVP_GFX_H

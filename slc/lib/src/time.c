@@ -39,7 +39,7 @@ time_t time(time_t *p)
     // but it does not matter because we are single core
     c = rtc_gettime();
 #else
-    sl_create(, 1,,,,,sl__forcewait, get_time, sl_sharg(time_t, c, 0));
+    sl_create(, mg_io_place_id,,,,,sl__forcewait, get_time, sl_sharg(time_t, c, 0));
     sl_sync();
     c = sl_geta(c);
 #endif

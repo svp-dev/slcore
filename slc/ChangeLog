@@ -1,5 +1,21 @@
 2011-06-24  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	Improve the I/O APIs.
+
+	* lib/src/mtconf.h,
+	* lib/src/mtconf.c: Import the latest version from MGSim. This
+	preserves the I/O place ID during device detection.
+
+	* lib/src/time.c: Use the I/O place ID.
+
+	* lib/include/svp/gfx.h: Turn the inlinable code into...
+	* lib/src/mtgfx.c: ...delegations to the I/O core on the
+	Microgrid.
+	* lib/src/gfx.c: Provide alternate implementations for other
+	targets.
+
+2011-06-24  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	Ensure that the debug objects for `malloc' use assertions.
 
 	* lib/mtalpha.mk (TLSMALLOC_DEFS): Do not use `-DNDEBUG' here.
