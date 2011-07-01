@@ -17,11 +17,6 @@
 
 #include <stddef.h>
 #include <stdint.h>
-#include <svp/compiler.h>
-
-extern uint32_t * __restrict__ __gfx_framebuffer;
-extern size_t __gfx_w;
-extern size_t __gfx_h;
 
 void gfx_resize(size_t, size_t);
 void gfx_init(void);
