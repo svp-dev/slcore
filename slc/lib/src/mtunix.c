@@ -21,6 +21,10 @@
 #define RC_ARG2AH 11
 #define RC_ARG3   12
 #define RC_ARG4   13
+#define RC_RES1AL 14
+#define RC_RES1AH 15
+#define RC_RES2AL 16
+#define RC_RES2AH 17
 
 #define COMMON_BEGIN                                          \
     volatile uint32_t* ctl = sl_getp(ctl);                    \
@@ -41,10 +45,12 @@
         ;                                                     \
     ctl[RC_COMPLL] = 0xcafe42; /* completion */               \
     ctl[RC_COMPLH] = 0; /* completion */                      \
-    ctl[RC_ARG1SZ] = 12; /* number of result words 1 */       \
-    ctl[RC_ARG2SZ] = 0; /* number of result words 2 */        \
-    ctl[RC_ARG1AL] = ((uintptr_t)&res & 0xffffffff);          \
-    ctl[RC_ARG1AH] = ((uintptr_t)&res >> 32); 
+    ctl[RC_ARG1SZ] = 0; /* arg size 1 */                      \
+    ctl[RC_ARG2SZ] = 0; /* arg size 2 */                      \
+    ctl[RC_RES1AL] = ((uintptr_t)&res & 0xffffffff);          \
+    ctl[RC_RES1AH] = ((uintptr_t)&res >> 32);                 \
+    ctl[RC_RES2AL] = 0; /* res base addr */                   \
+    ctl[RC_RES2AH] = 0; /* res base addr */ 
 
 #define COMMIT_CHECK                                            \
     /* commit */                                                \
@@ -72,9 +78,9 @@ sl_def(do_open, sl__static,
     COMMON_BEGIN;
 
     ctl[RC_PROC] = RPC_open;
-    ctl[RC_ARG2SZ] = sl_getp(pathlen);
-    ctl[RC_ARG2AL] = ((uintptr_t)sl_getp(path) & 0xffffffff);
-    ctl[RC_ARG2AH] = ((uintptr_t)sl_getp(path) >> 32);
+    ctl[RC_ARG1SZ] = sl_getp(pathlen);
+    ctl[RC_ARG1AL] = ((uintptr_t)sl_getp(path) & 0xffffffff);
+    ctl[RC_ARG1AH] = ((uintptr_t)sl_getp(path) >> 32);
     ctl[RC_ARG3] = sl_getp(oflag_fd);
     ctl[RC_ARG4] = sl_getp(mode);
     
@@ -168,9 +174,8 @@ sl_def(do_read, sl__static,
     COMMON_BEGIN;
 
     ctl[RC_PROC] = RPC_read;
-    ctl[RC_ARG2SZ] = sl_getp(sz);
-    ctl[RC_ARG2AL] = ((uintptr_t)sl_getp(data) & 0xffffffff);
-    ctl[RC_ARG2AH] = ((uintptr_t)sl_getp(data) >> 32);
+    ctl[RC_RES2AL] = ((uintptr_t)sl_getp(data) & 0xffffffff);
+    ctl[RC_RES2AH] = ((uintptr_t)sl_getp(data) >> 32);
     ctl[RC_ARG3] = sl_getp(fd_ret);
     ctl[RC_ARG4] = sl_getp(sz);
     
@@ -210,9 +215,9 @@ sl_def(do_write, sl__static,
     COMMON_BEGIN;
 
     ctl[RC_PROC] = RPC_write;
-    ctl[RC_ARG2SZ] = sl_getp(sz); // round up
-    ctl[RC_ARG2AL] = ((uintptr_t)sl_getp(data) & 0xffffffff);
-    ctl[RC_ARG2AH] = ((uintptr_t)sl_getp(data) >> 32);
+    ctl[RC_ARG1SZ] = sl_getp(sz);
+    ctl[RC_ARG1AL] = ((uintptr_t)sl_getp(data) & 0xffffffff);
+    ctl[RC_ARG1AH] = ((uintptr_t)sl_getp(data) >> 32);
     ctl[RC_ARG3] = sl_getp(fd_ret);
     ctl[RC_ARG4] = sl_getp(sz);
     
@@ -251,9 +256,8 @@ sl_def(do_fstat, sl__static,
     COMMON_BEGIN;
 
     ctl[RC_PROC] = RPC_fstat;
-    ctl[RC_ARG2SZ] = sizeof(struct vstat); // round up
-    ctl[RC_ARG2AL] = ((uintptr_t)sl_getp(st) & 0xffffffff);
-    ctl[RC_ARG2AH] = ((uintptr_t)sl_getp(st) >> 32);
+    ctl[RC_RES2AL] = ((uintptr_t)sl_getp(st) & 0xffffffff);
+    ctl[RC_RES2AH] = ((uintptr_t)sl_getp(st) >> 32);
     ctl[RC_ARG3] = sl_getp(fd_ret);
     
     COMMIT_CHECK;

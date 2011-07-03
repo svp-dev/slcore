@@ -1,5 +1,12 @@
 2011-07-03  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	Improve the POSIX file interface.
+
+	* lib/src/mtunix.c: Separate argument and result data as per the
+	latest RPC code in MGSim.
+
+2011-07-03  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	Fix an overflow error in `gettimeofday_virtual'.
 
 	* lib/src/gtod_virtual.c (gettimeofday_virtual): Use types large
