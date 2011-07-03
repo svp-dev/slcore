@@ -1,5 +1,35 @@
 2011-07-03  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	Extend the C library for MT platforms.
+
+	* lib/mtalpha-sim/include/errno.h: Import more codes from FreeBSD.
+
+	* lib/src/sys_errlist.c: Delete, replace by...
+	* lib/src/errlst.c: ...this (imported from FreeBSD).
+
+	* lib/src/perror.c: Use the stdio output functions.
+	* lib/src/puts.c: Include `stdio.h' to check the function
+	prototype.
+
+	* lib/mtalpha-sim/include/sys/types.h: New definition for
+	`suseconds_t'.
+
+	* lib/mtalpha-sim/include/sys/time.h,
+	* lib/src/gtod.c,
+	* lib/src/gtod_virtual.c: New.
+
+	* lib/src/time.c: Replace to use `gettimeofday'.
+	
+	* lib/mtalpha-sim/include/time.h: Declare `time_virtual'.
+	* lib/src/time_virtual.c: New.
+
+	* lib/mtalpha.mk: List the new files. Separate MG-specific sources
+	that need SL extensions (MTALIB_SIM_SRC) from those that don't
+	(MTALIB_SIM_CSRC). Compile the latter only once.
+	* lib/mtsparc.mk: Also compile the sources from MTALIB_SIM_CSRC.
+
+2011-07-03  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	Update the MG initialization code from upstream.
 
 	* lib/src/mtconf.h,

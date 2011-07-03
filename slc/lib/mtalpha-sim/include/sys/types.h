@@ -32,4 +32,6 @@ typedef long time_t;
 
 typedef long ssize_t;
 
+typedef long suseconds_t;
+
 #endif

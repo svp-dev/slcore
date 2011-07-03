@@ -20,6 +20,12 @@
 #define CLOCKS_PER_SEC 1000000000
 
 extern time_t time(time_t*);
+extern time_t time_virtual(time_t*);
+
+#ifdef MG_VIRTUAL_TIME
+#define time time_virtual
+#endif
+
 extern clock_t clock(void);
 
 #if !defined(__AVOID_INLINABLE_PRIMITIVES) && defined(__mt_freestanding__) && \

@@ -10,6 +10,7 @@ MTALIB_CSRC = \
 	src/bzero.c \
 	src/ctype.c \
 	src/dtoa_simple.c \
+	src/errlst.c \
 	src/errno.c \
 	src/exit.c \
 	src/ffs.c \
@@ -27,6 +28,7 @@ MTALIB_CSRC = \
 	src/mtstdio.c \
 	src/perf.c \
 	src/perf_wrappers.c \
+	src/perror.c \
 	src/printf.c \
 	src/printf-pos.c \
 	src/putc.c \
@@ -53,13 +55,13 @@ MTALIB_CSRC = \
 	src/strtoll.c \
 	src/strtoul.c \
 	src/strtoull.c \
-	src/sys_errlist.c \
+	src/time.c \
+	src/time_virtual.c \
 	src/tlstack_malloc.c \
 	src/vprintf.c \
 	src/vsnprintf.c
 
 MTALIB_SRC = \
-	src/time.c \
 	src/malloc_excl.c \
 	src/vfprintf.c \
 	src/div.c \
@@ -67,11 +69,17 @@ MTALIB_SRC = \
 	src/io.c
 
 MTALIB_SIM_SRC = \
-	src/mtconf.c \
-	src/mtargs.c \
-	src/mtinit.c \
+	src/gtod.c \
 	src/mtgfx.c \
 	src/mtsep.c
+
+MTALIB_SIM_CSRC = \
+	src/gtod_virtual.c \
+	src/mtconf.c \
+	src/mtargs.c \
+	src/mtinit.c
+
+
 
 MTALIB_EXTRA = \
 	src/floatio.h \
@@ -85,7 +93,7 @@ MTALIB_EXTRA = \
 	src/printfcommon.h \
 	src/printflocal.h
 
-EXTRA_DIST += $(MTALIB_CSRC) $(MTALIB_SRC) $(MTALIB_SIM_SRC) $(MTALIB_EXTRA)
+EXTRA_DIST += $(MTALIB_CSRC) $(MTALIB_SRC) $(MTALIB_SIM_SRC) $(MTALIB_SIM_CSRC) $(MTALIB_EXTRA)
 
 MALLOC_DEFS = -DLACKS_SYS_TYPES_H \
 	-DUSE_DL_PREFIX \
@@ -111,6 +119,7 @@ EXTRA_DIST += $(MTAMATHOBJS)
 if ENABLE_SLC_MTALPHA
 
 nobase_dist_pkgdata_DATA += \
+	mtalpha-sim/include/sys/time.h \
 	mtalpha-sim/include/sys/types.h \
 	mtalpha-sim/include/bits/float.h \
 	mtalpha-sim/include/alloca.h \
@@ -145,6 +154,7 @@ TLSMALLOC_DEFS_MTA = \
 
 MTALIB_COBJS = \
 	$(addprefix mta_,$(addsuffix .o,$(notdir $(basename $(MTALIB_CSRC))))) \
+	$(addprefix mta_,$(addsuffix .o,$(notdir $(basename $(MTALIB_SIM_CSRC))))) \
 	$(addprefix mta_gdtoa_,$(addsuffix .o,$(notdir $(basename $(GDTOA_CSRC))))) \
 	mta_tlsmalloc.o \
 	mta_malloc_excl.o

@@ -1,15 +1,15 @@
-#include "mtstdio.h"
-#include <cstring.h>
-#include <cerrno.h>
+#include <stdio.h>
+#include <errno.h>
 
-void perror(const char* s)
+void perror(const char*s)
 {
     FILE *f = stderr;
-    if (s && *s) {
-        __writes(f, s);
-        __writec(f, ':');
-        __writec(f, ' ');
-    }
-    __writes(f, strerror(errno));
-    __writec(f, '\n');
+    if (s && s[0])
+        fprintf(f, "%s: ", s);
+    if (errno >= sys_nerr)
+        fprintf(f, "Unknown error: %d\n", errno);
+    else
+        fprintf(f, "%s\n", sys_errlist[errno]);
 }
+
+

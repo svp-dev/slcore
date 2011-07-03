@@ -30,6 +30,7 @@ TLSMALLOC_DEFS_MTSN = \
 
 MTSNLIB_COBJS = \
 	$(addprefix mtsn_,$(addsuffix .o,$(notdir $(basename $(MTALIB_CSRC))))) \
+	$(addprefix mtsn_,$(addsuffix .o,$(notdir $(basename $(MTALIB_SIM_CSRC))))) \
 	mtsn_tlsmalloc.o
 
 # NO_FLOATING_POINT to disable handling of floats in printf

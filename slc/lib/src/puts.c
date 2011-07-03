@@ -1,3 +1,4 @@
+#include <stdio.h>
 #include "mtstdio.h"
 
 int puts(const char*s)
