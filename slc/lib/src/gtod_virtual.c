@@ -4,8 +4,6 @@
 
 #include "mtconf.h"
 
-#include <svp/testoutput.h>
-
 int gettimeofday_virtual(struct timeval* tv, struct timezone *tz)
 {
     if (tz)
@@ -15,10 +13,15 @@ int gettimeofday_virtual(struct timeval* tv, struct timezone *tz)
         return -1;
     }
 
-    long long ticks = clock();
-    unsigned long long freq = (mgconf_core_freq == (confword_t)-1) ? 1000 : mgconf_core_freq;
-    tv->tv_usec = ticks % freq;
-    tv->tv_sec = boot_time + (ticks / freq) / 1000000;
+    clock_t ticks = clock();
+    unsigned long freq = (mgconf_core_freq == (confword_t)-1) ? 1000 : mgconf_core_freq;
+
+    unsigned long long usecs = ticks / (unsigned long long)freq;
+    unsigned long secs = usecs / 1000000;
+
+    tv->tv_sec = boot_time + secs;
+    tv->tv_usec = usecs - secs;
+
     return 0;
 }
 

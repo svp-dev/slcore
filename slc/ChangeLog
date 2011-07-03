@@ -1,5 +1,12 @@
 2011-07-03  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	Fix an overflow error in `gettimeofday_virtual'.
+
+	* lib/src/gtod_virtual.c (gettimeofday_virtual): Use types large
+	enough for the results of large multiplies.
+
+2011-07-03  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	Enhance `slr'.
 
 	* tools/bin/slr.in: Fix the behavior of `--'. Allow to set the
