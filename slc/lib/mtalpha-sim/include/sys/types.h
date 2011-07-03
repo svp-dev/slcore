@@ -34,4 +34,16 @@ typedef long ssize_t;
 
 typedef long suseconds_t;
 
+typedef size_t blksize_t;
+typedef uint64_t blkcnt_t;
+typedef uint64_t ino_t;
+typedef uint16_t mode_t;
+typedef uint16_t nlink_t;
+
+struct timespec {
+    time_t  tv_sec;        /* seconds */
+    long    tv_nsec;       /* and nanoseconds */
+};
+
+
 #endif

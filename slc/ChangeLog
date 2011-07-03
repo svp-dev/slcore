@@ -1,5 +1,22 @@
 2011-07-03  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	Implement some POSIX file interfaces for MT targets.
+
+	* lib/mtalpha-sim/include/sys/types.h: Add some type definitions
+	useful for `struct stat'.
+
+	* lib/mtalpha-sim/include/sys/stat.h,
+	* lib/mtalpha-sim/include/unistd.h,
+	* lib/mtalpha-sim/include/fcntl.h: New.
+
+	* lib/src/RPCServiceDatabase.h: Import from MGSim.
+
+	* lib/src/mtunix.c: New.
+
+	* lib/mtalpha.mk: List the new files.
+
+2011-07-03  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	Extend the C library for MT platforms.
 
 	* lib/mtalpha-sim/include/errno.h: Import more codes from FreeBSD.

@@ -71,13 +71,14 @@ MTALIB_SRC = \
 MTALIB_SIM_SRC = \
 	src/gtod.c \
 	src/mtgfx.c \
-	src/mtsep.c
+	src/mtsep.c \
+	src/mtunix.c
 
 MTALIB_SIM_CSRC = \
 	src/gtod_virtual.c \
 	src/mtconf.c \
 	src/mtargs.c \
-	src/mtinit.c
+	src/mtinit.c 
 
 
 
@@ -89,6 +90,7 @@ MTALIB_EXTRA = \
 	src/mgsim.h \
 	src/missing_uclibc_math.c \
 	src/mtconf.h \
+	src/RPCServiceDatabase.h \
 	src/mtstdio.h \
 	src/printfcommon.h \
 	src/printflocal.h
@@ -119,6 +121,7 @@ EXTRA_DIST += $(MTAMATHOBJS)
 if ENABLE_SLC_MTALPHA
 
 nobase_dist_pkgdata_DATA += \
+	mtalpha-sim/include/sys/stat.h \
 	mtalpha-sim/include/sys/time.h \
 	mtalpha-sim/include/sys/types.h \
 	mtalpha-sim/include/bits/float.h \
@@ -126,6 +129,7 @@ nobase_dist_pkgdata_DATA += \
 	mtalpha-sim/include/assert.h \
 	mtalpha-sim/include/ctype.h \
 	mtalpha-sim/include/errno.h \
+	mtalpha-sim/include/fcntl.h \
 	mtalpha-sim/include/float.h \
 	mtalpha-sim/include/limits.h \
 	mtalpha-sim/include/math.h \
@@ -137,7 +141,8 @@ nobase_dist_pkgdata_DATA += \
 	mtalpha-sim/include/stdlib.h \
 	mtalpha-sim/include/string.h \
 	mtalpha-sim/include/strings.h \
-	mtalpha-sim/include/time.h 
+	mtalpha-sim/include/time.h \
+	mtalpha-sim/include/unistd.h
 
 SHUTUP = \
 	-Dshutup_cstring_h \
