@@ -1,5 +1,12 @@
 2011-07-03  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	Enhance `slr'.
+
+	* tools/bin/slr.in: Fix the behavior of `--'. Allow to set the
+	program name after `--'.
+
+2011-07-03  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	Implement some POSIX file interfaces for MT targets.
 
 	* lib/mtalpha-sim/include/sys/types.h: Add some type definitions
