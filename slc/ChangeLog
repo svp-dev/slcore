@@ -1,3 +1,11 @@
+2011-07-03  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
+	Update the MG initialization code from upstream.
+
+	* lib/src/mtconf.h,
+	* lib/src/mtconf.c: Import the latest version from MGSim. This
+	detects the RPC interface and configures its notification channel.
+
 2011-07-01  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
 	Minor library clean-ups.
