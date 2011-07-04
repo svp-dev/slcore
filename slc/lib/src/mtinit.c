@@ -111,13 +111,14 @@ void sys_set_main_pid(unsigned req_ncores, unsigned req_placesize)
             output_string(" failed", 2);
         abort();
     }
+
+    p = p & (p - 1); // drop the existing size bit
+    p |= req_ncores; // add the new size bit
+    
+    __main_place_id = p;
+
     if (verbose_boot) 
     {
-        p = p & (p - 1); // drop the existing size bit
-        p |= req_ncores; // add the new size bit
-
-        __main_place_id = p;
-
         output_string(" success, t_main goes to pid=0x", 2);
         output_hex(p, 2);
         output_ts(2);

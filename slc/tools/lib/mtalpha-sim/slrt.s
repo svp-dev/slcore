@@ -97,7 +97,9 @@ $fini:
 
 $msg:	
 	.ascii "slrt: main returned \0"
-
+$progname:
+	.ascii "a.out\0"
+        
         .section .data
 
         .globl __main_place_id
@@ -136,6 +138,3 @@ __argv_ptr:
 __argc:
 	.long 1
 
-$progname:
-	.ascii "a.out\0"
-        

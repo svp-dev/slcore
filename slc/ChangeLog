@@ -1,3 +1,16 @@
+2011-07-04  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
+	Fix passing of command-line arguments when `MGSYS_QUIET' is set.
+
+	* tools/lib/mtalpha-sim/slrt.s: Put the pseudo `$progname' in
+	section .rodata.
+
+	* lib/src/mtconf.c: Import the latest version from MGSim. This
+	detects devices properly even when `verbose_boot' is not set.
+
+	* lib/src/mtini.c: Ensure that `__main_place_id' is set properly
+	even when `verbose_boot' is not set.
+
 2011-07-03  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
 	Improve the POSIX file interface.
