@@ -3,12 +3,15 @@
 if ENABLE_SLC_MTSPARC
 
 nobase_dist_pkgdata_DATA += \
+	mtsparc-fpga/include/sys/stat.h \
+	mtsparc-fpga/include/sys/time.h \
 	mtsparc-fpga/include/sys/types.h \
 	mtsparc-fpga/include/bits/float.h \
 	mtsparc-fpga/include/alloca.h \
 	mtsparc-fpga/include/assert.h \
 	mtsparc-fpga/include/ctype.h \
 	mtsparc-fpga/include/errno.h \
+	mtsparc-fpga/include/fcntl.h \
 	mtsparc-fpga/include/float.h \
 	mtsparc-fpga/include/limits.h \
 	mtsparc-fpga/include/math.h \
@@ -20,7 +23,8 @@ nobase_dist_pkgdata_DATA += \
 	mtsparc-fpga/include/stdlib.h \
 	mtsparc-fpga/include/string.h \
 	mtsparc-fpga/include/strings.h \
-	mtsparc-fpga/include/time.h 
+	mtsparc-fpga/include/time.h \
+	mtsparc-fpga/include/unistd.h 
 
 MALLOC_DEFS_MTS = \
 	-DPAGESIZE=0x100U

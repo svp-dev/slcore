@@ -3,12 +3,15 @@
 if ENABLE_SLC_MTSPARC
 
 nobase_dist_pkgdata_DATA += \
+	mtsparc-sim/include/sys/stat.h \
 	mtsparc-sim/include/sys/types.h \
+	mtsparc-sim/include/sys/time.h \
 	mtsparc-sim/include/bits/float.h \
 	mtsparc-sim/include/alloca.h \
 	mtsparc-sim/include/assert.h \
 	mtsparc-sim/include/ctype.h \
 	mtsparc-sim/include/errno.h \
+	mtsparc-sim/include/fcntl.h \
 	mtsparc-sim/include/float.h \
 	mtsparc-sim/include/limits.h \
 	mtsparc-sim/include/math.h \
@@ -20,7 +23,8 @@ nobase_dist_pkgdata_DATA += \
 	mtsparc-sim/include/stdlib.h \
 	mtsparc-sim/include/string.h \
 	mtsparc-sim/include/strings.h \
-	mtsparc-sim/include/time.h 
+	mtsparc-sim/include/time.h \
+	mtsparc-sim/include/unistd.h
 
 MALLOC_DEFS_MTSN = \
 	-DPAGESIZE=0x400000U

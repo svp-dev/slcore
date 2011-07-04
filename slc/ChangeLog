@@ -1,5 +1,13 @@
 2011-07-04  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	Minor packaging fix.
+
+	* lib/mtsparc2.mk (nobase_dist_pkgdata_DATA),
+	* lib/mtsparc2.mk (nobase_dist_pkgdata_DATA): List all the MT
+	header files.
+
+2011-07-04  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	Fix passing of command-line arguments when `MGSYS_QUIET' is set.
 
 	* tools/lib/mtalpha-sim/slrt.s: Put the pseudo `$progname' in
