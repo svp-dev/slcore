@@ -1,3 +1,15 @@
+2011-07-08  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
+	Align the MT profiles to the latest MGSim configuration.
+	
+	* tools/lib/mt-profiles/default,
+	* tools/lib/mt-profiles/coma128: Do it.
+
+	* tools/lib/mt-profiles/lzcoma_default,
+	* tools/lib/mt-profiles/mlcoma_default: Delete.
+
+	* tools/lib/Makefile.am: Update accordingly.
+
 2011-07-04  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
 	Minor packaging fix.

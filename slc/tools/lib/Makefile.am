@@ -162,10 +162,8 @@ nobase_dist_pkgdata_DATA = \
         mt-profiles/default \
         mt-profiles/lzcoma128_2chan \
         mt-profiles/lzcoma256_4chan \
-	mt-profiles/lzcoma_default \
 	mt-profiles/mlcoma128_2chan \
 	mt-profiles/mlcoma256_4chan \
-	mt-profiles/mlcoma_default \
         mt-profiles/rbm1 \
         mt-profiles/rbm16 \
         mt-profiles/rbm128 \

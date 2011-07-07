@@ -1,4 +1,4 @@
-DESCRIPTION="256-core, ML's COMA, 1.2GHz cores, 4xDDR3-2400"
+DESCRIPTION="256-core, ML's COMA, 1.2GHz cores, 4xDDR3-2400, 32K L2 caches"
 simargs_base+=(-o NumProcessors=256)
 
 simargs_base+=(-o MemoryType=COMA)
