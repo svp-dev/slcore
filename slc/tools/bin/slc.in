@@ -533,7 +533,7 @@ EOF
 fi
 
 # Here check the configuration
-eval $(slc_use_slrt=$slc_use_slrt slc_use_main=$slc_use_main slc_use_libsl=$slc_use_libsl slc_debug_flags="${slc_debug_flags[*]}" "$cce_helper" -s "$impl")
+eval $(slc_use_slrt=$slc_use_slrt slc_use_main=$slc_use_main slc_use_libsl=$slc_use_libsl slc_debug_flags="${slc_debug_flags[*]}" extra_f1flags="${extra_f1flags[*]}" "$cce_helper" -s "$impl")
 
 # If we were requested to test the configuration, do it now
 if test -n "$check"; then

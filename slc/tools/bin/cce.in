@@ -375,6 +375,8 @@ esac
 slc_ppflags+=(-DUSE_C_DIVIDE)
 
 slc_debug_flags=(${slc_debug_flags:+$slc_debug_flags})
+extra_f1flags=(${extra_f1flags:+$extra_f1flags})
+
 case $slc_arch in
     mtalpha)
         slc_ppflags+=(-D__mt_freestanding__ -D__WORDSIZE=64)

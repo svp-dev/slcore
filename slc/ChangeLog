@@ -1,5 +1,16 @@
 2011-08-05  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	Fix `slc -fdump-fixup-XXX' on MT-SPARC.
+
+	* tools/bin/slc.in: Ensure that `extra_f1flags' are passed to
+	`cce' so that `cce' can append any new values (eg `-x
+	tls-via-gettid') to the values specified on `slc's command line.
+
+	* tools/slc/cce.in: Acknowledge any previously set value to
+	`extra_f1flags'.
+
+2011-08-05  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	Fix a code generation bug for MT-SPARC.
 
 	* tools/lib/slc/mt/mtsparc/asmproc/base.py (initsp, replsave):
