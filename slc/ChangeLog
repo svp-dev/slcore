@@ -1,3 +1,12 @@
+2011-08-05  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
+	Fix a code generation bug for MT-SPARC.
+
+	* tools/lib/slc/mt/mtsparc/asmproc/base.py (initsp, replsave):
+	Rename `initsp' to `initspfp'. Ensure that %fp is set when `save'
+	was removed, because `save' would have initialized %fp as an alias
+	for the original value of %sp.
+
 2011-07-08  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
 	Align the MT profiles to the latest MGSim configuration.

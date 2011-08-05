@@ -79,6 +79,7 @@ def replsave(fundata, items):
     spreg = regmagic.alias_to_vname('tlsp')
     for (type, content, comment) in items:
         if type == 'other' and content.startswith('save'):
+            fundata['killedsave'] = True
             if not fundata['use_sp'] and spreg in content:
                 # SP is not used in the body other than this save
                 # (it was generated because of some shared argument using a local register)
@@ -175,22 +176,40 @@ def xsplit(fundata, items):
     fundata['prologue'] = []
 
 
-def initsp(fundata, items):
+def initspfp(fundata, items):
     """
-    If SP is needed, initialize it in the prologue.
+    If SP/FP are needed, initialize them in the prologue.
     """
     spreg = regmagic.alias_to_vname("tlsp")
-    if fundata['use_sp']:
-        if not initsp.extra_options.get('tls-via-gettid', False):
-            fundata['prologue'].insert(0, ('other', 'ldfp %s' % spreg, 'MT: init SP'))
-        else:
-            fundata['prologue'] = [
-                ('other', 'gettid %s' % spreg, 'MT: init SP'),
-                ('other', 'sethi %hi(__first_tls_top), $l1', 'MT: init SP'),
-                ('other', 'sll %s,10,%s' % (spreg,spreg), 'MT: init SP'),
-                ('other', 'add %s,$l1,%s' % (spreg,spreg), 'MT: init SP'),
-                ] + fundata['prologue']
-
+    fpreg = regmagic.alias_to_vname("fp")
+    newp = []
+    if fundata['use_sp'] or fundata['use_fp']:
+        tls_via_gettid = initspfp.extra_options.get('tls-via-gettid', False)
+        if fundata['use_sp']:
+            if not tls_via_gettid:
+                newp.append(('other', 'ldfp %s' % spreg, 'MT: init SP'))
+            else:
+                newp += [
+                    ('other', 'gettid %s' % spreg, 'MT: init SP'),
+                    ('other', 'sethi %hi(__first_tls_top), $l1', 'MT: init SP'),
+                    ('other', 'sll %s,10,%s' % (spreg,spreg), 'MT: init SP'),
+                    ('other', 'add %s,$l1,%s' % (spreg,spreg), 'MT: init SP'),
+                    ]
+        if fundata['use_fp'] and fundata['killedsave']:
+            if not tls_via_gettid:
+                newp.append(('other', 'ldfp %s' % fpreg, 'MT: init FP'))
+            else:
+                if fundata['use_sp']:
+                    newp.append(('other', 'mov %s, %s' % (spreg, fpreg), 'MT: init FP'))
+                else:
+                    newp += [
+                    ('other', 'gettid %s' % fpreg, 'MT: init FP'),
+                    ('other', 'sethi %hi(__first_tls_top), $l1', 'MT: init FP'),
+                    ('other', 'sll %s,10,%s' % (fpreg,fpreg), 'MT: init FP'),
+                    ('other', 'add %s,$l1,%s' % (fpreg,fpreg), 'MT: init FP'),
+                    ] 
+               
+    fundata['prologue'] = newp + fundata['prologue']
     return items
 
 def xjoin1(fundata, items):
@@ -525,7 +544,7 @@ _filter_inner = [canonregs,
                  xsplit,
 
                  protectallcallregs,
-                 initsp,
+                 initspfp,
 
 
                  xjoin1,
