@@ -105,12 +105,47 @@ def renamelocals(fundata, items):
     """
 
     rmask = fundata['usedregs']
+    armask = fundata['alignedregs']
     renamings = []
+    # first go through the aligned registers (that go in pairs)
+    for nr in xrange(9, 31, 2):
+        regname1 = '$l%d' % nr
+        regname2 = '$l%d' % (nr + 1)
+        
+        if (armask[nr] # aligned registers only
+            and
+            rmask[nr] # register is used
+            and
+            (rmask[nr] != 2 and rmask[nr+1] != 2) # not a special register (we can't rename those here, they should be handled by makespecialtransform)
+            and
+            not fundata['hasjumps']): # can't rename in functions that contain calls
+
+            assert rmask[nr + 1] # if reg nr was marked as used and aligned, the next one must be aligned and used too
+            for i in xrange(1, nr, 2):
+                if not rmask[i] and not rmask[i+1]:
+                    freenr = i
+                    newname1 = '$l%d' % freenr
+                    newname2 = '$l%d' % (freenr + 1)
+                    rmask[nr] = False
+                    rmask[nr + 1] = False
+                    rmask[freenr] = True
+                    rmask[freenr + 1] = True
+                    armask[nr] = False
+                    armask[nr + 1] = False
+                    armask[freenr] = True
+                    armask[freenr + 1] = True
+                    renamings.append((regname1, newname1))
+                    renamings.append((regname2, newname2))
+                    yield ('empty','','MT: regs %s/%s renamed to %s/%s' % (regname1, regname2, newname1, newname2))
+                    break
+
+    # then go through the non-aligned registers
     for nr in xrange(8, 31):
         regname = '$l%d' % nr
         newnr = nr
-        if rmask[nr] == True and False in rmask[:nr] and not fundata['hasjumps']:
+        if not armask[nr] and rmask[nr] and (rmask[nr] != 2) and False in rmask[:nr] and not fundata['hasjumps']:
             freenr = [i for (i,r) in enumerate(rmask) if r == False][0]
+            assert not armask[freenr]
             newnr = freenr
             newname = '$l%d' % newnr
             rmask[nr] = False
@@ -488,8 +523,59 @@ def fillannulnop(fundata,items):
             yield ('other', 'nop', 'MT: nop in annul slot')
             continue
         yield (type, content, comment)
-            
 
+_re_ldd = re.compile(r'ldd\s+(\[.*\])\s*,\s*(\S+)')
+_re_std = re.compile(r'(std|spilld)\s+(\S+)\s*,\s*(\[.*\])')
+_re_li = re.compile(r'\$l(\d+)')
+_re_gi = re.compile(r'\$g(\d+)')
+_re_si = re.compile(r'\$[sd](\d+)')
+def markaligned(fundata, items):
+    rmask = fundata['usedregs']
+    rgmask = fundata['usedgl']
+    armask = [False] * 32
+    argmask = [False] * 32
+    arsmask = [False] * 32
+    for (type, content, comment) in items:
+        if type == 'other':
+            m = _re_ldd.match(content)
+            if m is not None:
+                treg = m.group(2)
+            else:
+                m = _re_std.match(content)
+                if m is not None:
+                    treg = m.group(1)
+                else:
+                    continue
+
+            m2 = _re_li.match(treg)
+            if m2 is not None:
+                a = int(m2.group(1))
+                b = int(m2.group(1)) + 1
+                rmask[b] = True # markused did not necessarily mark the 2nd part of the reg
+                armask[a] = 1
+                armask[b] = 2
+                continue
+            m2 = _re_gi.match(treg)
+            if m2 is not None:
+                a = int(m2.group(1))
+                b = int(m2.group(1)) + 1
+                rgmask[b] = True # markused did not necessarily mark the 2nd part of the reg
+                argmask[a] = 1
+                argmask[b] = 2
+                continue
+            m2 = _re_si.match(treg)
+            if m2 is not None:
+                a = int(m2.group(1))
+                b = int(m2.group(1)) + 1
+                arsmask[a] = 1
+                arsmask[b] = 2
+                continue
+        continue
+
+    fundata['alignedregs'] = armask
+    fundata['alignedgl'] = argmask
+    fundata['alignedsh'] = arsmask
+    return items
 
 from common import *
 from ...common.asmproc.regextract import *
@@ -550,6 +636,7 @@ _filter_inner = [canonregs,
                  xjoin1,
 
                  markused,
+                 markaligned,
 
                  makespecialtransform('tlsp', regmagic),
                  makespecialtransform('fp', regmagic),

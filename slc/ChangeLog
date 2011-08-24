@@ -1,3 +1,28 @@
+2011-08-24  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
+	Fix a code generation bug for MT-SPARC.
+
+	The bug was caused by invalid renaming (for reg. window
+	compression) of registers involved in a double-register operation
+	(eg. `ldd', `std'). These should be renamed in pairs in a way that
+	preserves the odd- or even-ness of the register number.
+
+	* tools/lib/slc/mt/mtsparc/asmproc/base.py (markaligned): Detect
+	registers involved in a double-register operation (ldd,std).
+
+	* tools/lib/slc/mt/common/asmproc/compress.py
+	(makespecialtransform): Avoid renaming special registers if they
+	are involved in a double-register operation.
+
+	* tools/lib/slc/mt/common/asmproc/compress.py (compress): Ensure
+	that the reduced local window size is even if any globals or
+	shared are involved in a ldd/std operation. Likewise with the
+	global window size and shared registers.
+
+	* tools/lib/slc/mt/mtsparc/asmproc/base.py (renamelocals): Rename
+	any registers involved in a double-registers operation in pairs
+	atomically, or not at all (ie avoid renaming only one half).
+
 2011-08-05  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
 	Fix `slc -fdump-fixup-XXX' on MT-SPARC.
