@@ -1,3 +1,14 @@
+2011-08-29  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
+	Extend the C library for MT platforms.
+
+	* lib/src/memchr.c,
+	* lib/src/memcmp.c: New.
+
+	* lib/mtalpha-sim/include/string.h: Declare them.
+
+	* lib/mtalpha.mk: Compile them.
+
 2011-08-24  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
 	Fix a code generation bug for MT-SPARC.
