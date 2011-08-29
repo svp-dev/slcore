@@ -26,6 +26,7 @@ EXTRA_DIST = \
 	src/mtclock.c \
 	src/mtsep.c \
 	src/mtinput.c \
+	src/mtuart.c \
 	src/div.c
 
 nobase_dist_pkgdata_DATA = \

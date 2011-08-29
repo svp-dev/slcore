@@ -11,7 +11,8 @@
 
 enum file_kind {
     FK_OUT,
-    FK_STRING
+    FK_STRING,
+    FK_VIRTUAL
 };
 
 struct __sl_FILE {
@@ -23,6 +24,10 @@ struct __sl_FILE {
             char *end;
             char *cur;
         } str;
+        struct {
+            size_t (*output)(const void* bytes, size_t sz, void* extra);
+            void *extra;
+        } virt;
     } out;
 };
 
@@ -45,6 +50,8 @@ __write(FILE *f, const void *bytes, size_t sz)
         f->out.str.cur += n;
         return n;
     }
+    case FK_VIRTUAL:
+        return f->out.virt.output(bytes, sz, f->out.virt.extra);
     }  
 }
 
@@ -64,7 +71,16 @@ __writes(FILE *f, const char * str)
         while (likely(*p && f->out.str.end-f->out.str.cur))
             *f->out.str.cur++ = *p++;
         break;
+    case FK_VIRTUAL:
+    {
+        while (likely(*p)) 
+        {
+            char c = *p++;
+            f->out.virt.output(&c, 1, f->out.virt.extra);
+        }
     }      
+    break;
+    }
     return p - str;
 }
 
@@ -82,6 +98,12 @@ __writec(FILE *f, int c)
             return 1;
         }
         else return 0;
+    case FK_VIRTUAL:
+    {
+        char b = c;
+        return f->out.virt.output(&b, 1, f->out.virt.extra);
+    }
+    break;
     }
 }
 

@@ -1,5 +1,18 @@
 2011-08-29  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	Implement an UART driver for the Microgrid.
+
+	* lib/src/mtstdio.h: Extend C's `FILE' to support output via a
+	callback function.
+
+	* lib/src/mtuart.c: New. Define `uart_getc', `uart_putc', and
+	`FILE *stduart' for use by programs.
+	
+	* lib/mtalpha.mk: Compile it.
+	* lib/Makefile.am: Distribute it.
+
+2011-08-29  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	Extend the C library for MT platforms.
 
 	* lib/src/memchr.c,

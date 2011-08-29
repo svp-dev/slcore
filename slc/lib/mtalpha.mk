@@ -74,6 +74,7 @@ MTALIB_SIM_SRC = \
 	src/gtod.c \
 	src/mtgfx.c \
 	src/mtsep.c \
+	src/mtuart.c \
 	src/mtunix.c
 
 MTALIB_SIM_CSRC = \
