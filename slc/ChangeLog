@@ -1,5 +1,15 @@
 2011-09-26  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	Fix the configurability of the Python interpreter.
+
+	* tools/bin/cce.in (slc_translator): Ensure that the
+	Autoconf-detected @PYTHON@ is used to run `spr', since the default
+	Python might not be appropriate (v2.7 will do, v3.x will not).
+
+	* doc/README.txt: Document the Python version requirement.
+
+2011-09-26  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	Remove support for "infinite" families.
 
 	* tools/lib/t-seqc/slimpl.m4,

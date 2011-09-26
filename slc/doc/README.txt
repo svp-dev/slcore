@@ -37,9 +37,7 @@ The following tools are used by slc:
 
 - a standard ISO C99 compiler
 
-- a standard ISO C++ compiler
-
-- the POSIX thread library
+- Python >=2.6 and <3.x (2.6 or later is required, 3.x not supported yet)
 
 The following tools are also required, but can be installed using the
 automated installer in the separate ``deploy`` package:

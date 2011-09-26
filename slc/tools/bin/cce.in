@@ -218,7 +218,7 @@ case $slc_dialect in
             hrt_hybrid) target=hrt+seq ;;
             *) echo "unknown variant: $slc_dialect-$slc_variant" >&2 ;;
         esac
-        slc_translator=("$spr_helper" -b "$target")
+        slc_translator=("$python" "$spr_helper" -b "$target")
         ;;
 esac
 
