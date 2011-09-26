@@ -1,5 +1,16 @@
 2011-09-26  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	Add support for clearing the graphical output.
+
+	* lib/include/svp/gfx.h: New API `gfx_clear()'.
+
+	* lib/src/mtgfx.c: Implement it. This uses the latest display I/O
+	device feature from MGSim 3.1.202 or later.
+
+	* lib/src/gfx.c: Implement the software replacement.
+
+2011-09-26  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	Fix a bug in the I/O subsystem.
 
 	* lib/src/mtconf.c: Import the latest version from MGSim. This

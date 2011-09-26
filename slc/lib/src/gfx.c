@@ -18,6 +18,7 @@
 #include <stddef.h>
 #include <stdlib.h>
 #include <stdio.h>
+#include <string.h>
 
 uint32_t * __restrict__ __gfx_framebuffer = 0;
 size_t __gfx_w = 0;
@@ -37,6 +38,10 @@ void gfx_resize(size_t nw, size_t nh)
     __gfx_h = nh;
   } else
     __gfx_w = __gfx_h = 0;
+}
+
+void gfx_clear(void) { 
+    memset(__gfx_framebuffer, 0, __gfx_w * __gfx_h * sizeof(uint32_t));
 }
 
 void gfx_init(void) { gfx_resize(100, 100); }

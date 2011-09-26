@@ -39,6 +39,20 @@ void gfx_init(void)
     sl_create(,mg_io_place_id,,,,, sl__forcewait, do_gfx_init); sl_sync();
 }
 
+sl_def(do_gfx_clear, sl__static)
+{
+    if (mg_gfx_ctl == 0)
+        return;
+
+    mg_gfx_ctl[0] = 1; // clear
+}
+sl_enddef
+
+void gfx_clear(void)
+{
+    sl_create(,mg_io_place_id,,,,, sl__forcewait, do_gfx_clear); sl_sync();
+}
+
 sl_def(do_gfx_resize, sl__static, sl_glparm(size_t, nw), sl_glparm(size_t, nh))
 {
     if (mg_gfx_ctl == 0)

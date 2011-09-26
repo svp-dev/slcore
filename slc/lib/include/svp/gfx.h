@@ -20,6 +20,7 @@
 
 void gfx_resize(size_t, size_t);
 void gfx_init(void);
+void gfx_clear(void);
 void gfx_close(void);
 void gfx_dump(unsigned key, int stream, int embed_ts, int embed_tinfo);
 void gfx_putpixel(size_t, size_t, uint32_t);
