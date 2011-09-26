@@ -100,10 +100,7 @@ class Create_2_Loop(ScopedVisitor):
         docall = CVarSet(decl = cr.cvar_exitcode,
                          rhs = funvar + '(' + ix + callist + ')')
 
-        newbl.append(flatten(cr.loc_end, "if (!") + step + ') ' +
-                     "for (" + ix + " = " + start + '; ;' + ix + " += " + limit + ")" +
-                     "{ if (0 != (" + docall + ')) break; }' +
-                     "else if (" + step + " > 0) " + 
+        newbl.append(flatten(cr.loc_end, "if (") + step + " > 0) " + 
                      "for (" + ix + " = " + start + "; " + 
                      ix + " < " + limit + "; " +
                      ix + " += " + step + ") " +
@@ -112,8 +109,7 @@ class Create_2_Loop(ScopedVisitor):
                      "for (" + ix + " = " + start + "; " + 
                      ix + " > " + limit + "; " +
                      ix + " += " + step + ") " +
-                     "{ if (0 != (" + docall + ")) break; }" +
-                     ";")
+                     "{ if (0 != (" + docall + ")) break; };")
 
         return newbl
 

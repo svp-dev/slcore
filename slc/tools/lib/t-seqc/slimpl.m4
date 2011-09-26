@@ -108,10 +108,7 @@ __slf[[]]_sl_lbl.f(&__slf[[]]_sl_lbl); m4_dnl
 if (__slf[[]]_sl_lbl.ex != 0) break; m4_dnl
 } m4_dnl
 ]])m4_dnl
-if (!__slf[[]]_sl_lbl.st)m4_dnl
- for (__slf[[]]_sl_lbl.ix = __slf[[]]_sl_lbl.be; m4_dnl
-      ; __slf[[]]_sl_lbl.ix += __slf[[]]_sl_lbl.li) _sl_body m4_dnl
-else if (__slf[[]]_sl_lbl.st > 0)m4_dnl
+if (__slf[[]]_sl_lbl.st > 0)m4_dnl
  for (__slf[[]]_sl_lbl.ix = __slf[[]]_sl_lbl.be; m4_dnl
       __slf[[]]_sl_lbl.ix < __slf[[]]_sl_lbl.li; m4_dnl
       __slf[[]]_sl_lbl.ix += __slf[[]]_sl_lbl.st) _sl_body m4_dnl
