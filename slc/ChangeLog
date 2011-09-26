@@ -1,5 +1,12 @@
 2011-09-26  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	Fix a bug in the I/O subsystem.
+
+	* lib/src/mtconf.c: Import the latest version from MGSim. This
+	ensures that the `mg_io_place_id' is a 1-core place identifier.
+
+2011-09-26  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	Fix the configurability of the Python interpreter.
 
 	* tools/bin/cce.in (slc_translator): Ensure that the
