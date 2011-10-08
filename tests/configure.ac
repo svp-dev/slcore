@@ -14,7 +14,7 @@
 AC_PREREQ([2.61])
 AC_INIT([sl-tests], 
         m4_esyscmd([build-aux/git-version-gen build-aux/tarball-version s/sl-tests-/v/ sl-tests]), 
-        [sl-users@nic.surfnet.nl])
+        [sl-users@svp-home.org])
 AC_CONFIG_AUX_DIR([build-aux])
 
 AM_INIT_AUTOMAKE([1.11 tar-ustar no-define foreign dist-bzip2
