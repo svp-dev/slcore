@@ -66,8 +66,9 @@ unsigned long __inline_get_core_id(void)
 alwaysinline unused
 sl_place_t __inline_get_local_place(void)
 {
-    unsigned long cid = get_core_id();
-    return (cid << 1) | 1;
+    unsigned long cpid = get_current_place();
+    unsigned long cpid_nosize = cpid & (cpid - 1);
+    return cpid_nosize | (get_core_id() << 1) | 1;
 }
 #define get_local_place() __inline_get_local_place()
 
@@ -76,7 +77,7 @@ sl_place_t __inline_get_local_place(void)
 #if defined(__slc_os_sim__)
 
 #define PLACE_DEFAULT 0
-#define PLACE_LOCAL get_local_place()
+#define PLACE_LOCAL 1
 
 #else
 

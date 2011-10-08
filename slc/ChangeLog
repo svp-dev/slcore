@@ -1,5 +1,15 @@
 2011-10-09  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	Update the handling of local places as per MGSim r4608.
+
+	* tools/include/svp/delegate.h (__inline_get_local_place): Ensure
+	that the explicit local place identifier has valid capability bits
+	by copying the capability from the default place.
+	(PLACE_LOCAL): Use `1' as this is now normalized properly by
+	MGSim.
+
+2011-10-09  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	Avoid using the entire grid by default for `t_main.'
 
 	* lib/src/mtinit.c (sys_check_ncores): Use the entire grid if
