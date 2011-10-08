@@ -1,3 +1,13 @@
+2011-10-09  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
+	Avoid using the entire grid by default for `t_main.'
+
+	* lib/src/mtinit.c (sys_check_ncores): Use the entire grid if
+	`SLR_NCORES' is explicitly set to 0.
+
+	* tools/bin/slr.in (SLR_NCORES): Delegate t_main to a 1-core place
+	by default. Document the new behavior of -n 0.
+
 2011-09-26  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
 	Add support for clearing the graphical output.

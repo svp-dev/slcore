@@ -137,7 +137,17 @@ void sys_check_ncores(void)
             output_string(v, 2);
         }
         unsigned req_ncores = strtoul(v, 0, 10);
-        if (req_ncores && ((req_ncores & (req_ncores - 1)) == 0))
+        if (req_ncores == 0)
+        {
+            if (verbose_boot)
+            {
+                output_string(" -> t_main goes to pid=0x", 2);
+                output_hex(__main_place_id = get_current_place(), 2);
+                output_ts(2);
+                output_char('\n', 2);
+            }
+        }
+        else if ((req_ncores & (req_ncores - 1)) == 0)
         {
             unsigned req_placesize = 0;
             if (v2 && v2[0])

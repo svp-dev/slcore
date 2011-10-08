@@ -76,6 +76,7 @@ Execution selection:
 Microgrid simulation options:
   -n N                 Allocate a place of N cores upon program startup and 
                        delegate the program's top-level thread t_main to it.
+                       If N=0, use the entire grid.
 
   -m list              List available profiles.
 
@@ -217,7 +218,7 @@ SIMARGS=${SIMARGS:-}
 VERBOSE=${VERBOSE:-}
 DEBUG=${DEBUG:-}
 SIMPROFILE=${SIMPROFILE:-default}
-SLR_NCORES=${SLR_NCORES:-}
+SLR_NCORES=${SLR_NCORES:-1}
 monpats=
 monmdfile=
 mondatafile=
