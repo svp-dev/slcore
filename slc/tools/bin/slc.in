@@ -448,6 +448,10 @@ Additional MT code generation options:
                            instead of \`ldfp'. Default is disabled on
                            Microgrid targets and enabled for UTLEON3.
 
+  -fasmfix-clear-local-regs  Ensure that local registers are set to a non-empty
+                             value upon thread start-up. Default is disabled
+                             on Microgrid targets and enabled for UTLEON3.
+
 As for gcc(1), options with long names starting with -f have both
 positive and negative forms; the negative form of -ffoo would be
 -fno-foo. This manual documents only one of these two forms, whichever

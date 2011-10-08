@@ -390,7 +390,7 @@ case $slc_arch-$slc_os in
 	slc_ldflags+=(-Wl,-Ttext -Wl,0x1000000 -nostdlib)
 	;;
     *-fpga)
-        extra_f1flags+=(-x tls-via-gettid)
+        extra_f1flags+=(-x tls-via-gettid -x clear-local-regs)
 	slc_ldflags+=(-Wl,-Ttext -Wl,0 -nostdlib)
 	;;
     host-host-hrt)

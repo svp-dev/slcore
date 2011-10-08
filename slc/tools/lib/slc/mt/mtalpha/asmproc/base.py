@@ -532,7 +532,8 @@ def protectcallregs(fundata, items):
     If there are function calls, then all argument registers
     that are actually used need to be initialized.
     """
-    if fundata['hasjumps']:
+    doprotect = protectcallregs.extra_options.get('clear-local-regs',False)
+    if doprotect and fundata['hasjumps']:
         init = []
         for r in set(fundata['usedcallregs']): # | fundata['spilledcallregs']:
             if r is not None:
@@ -777,16 +778,18 @@ def makeprotectspecial(keyname, regname):
     # and here there is no more split with the prologue.
     # so we have to detect explicitly the prologue boundary again.
     def protectspecial(fundata, items):
+        doprotect = protectspecial.extra_options.get('clear-local-regs',False)
         hasload = fundata[keyname]
         regnr = fundata['specials'][regname]
         for (type, content, comment) in items:
-            if content.startswith('.prologue') and hasload:
+            if doprotect and content.startswith('.prologue') and hasload:
                 yield ('other','clr $l%d' % regnr, 'init maybe used')
             yield (type, content, comment)
     return protectspecial
 
 def protectallcallregs(fundata, items):
-    if fundata['hasjumps']:
+    doprotect = protectallcallregs.extra_options.get('clear-local-regs',False)
+    if doprotect and fundata['hasjumps']:
         for leg_preg in regmagic.call_arg_registers:
             pregs = regmagic.get_vregs_for_legacy(leg_preg)
             assert len(pregs) == 1
@@ -800,7 +803,8 @@ def protectallcallregs(fundata, items):
     return items
 
 def protectcallsave(fundata, items):
-    if fundata['hasjumps']:
+    doprotect = protectcallsave.extra_options.get('clear-local-regs',False)
+    if doprotect and fundata['hasjumps']:
         for leg_preg in regmagic.call_saved_registers:
             pregs = regmagic.get_vregs_for_legacy(leg_preg)
             assert len(pregs) == 1

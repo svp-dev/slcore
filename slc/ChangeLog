@@ -1,5 +1,25 @@
 2011-10-09  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	New MT code generation optimization.
+
+	As of MGSim r4608, reads to empty *local* registers automatically
+	translate to reads of zero. This allows the compiler to spill
+	these registers without an initial setup, so we can avoid forcing
+	them to zero upon thread start-up explicitly.
+
+	* tools/lib/slc/mt/mtalpha/asmproc/base.py (protectcallregs)
+	(makeprotectspecial, protectallcallregs, protectcallsave),
+	* tools/lib/slc/mt/mtsparc/asmproc/base.py (protectallcallregs):
+	Only emit the instructions to pre-clear local registers if the
+	configuration option `clear-local-regs' is enabled.
+
+	* tools/bin/cce.in: Enable the option `clear-local-regs' only for
+	the UTLEON3 target.
+
+	* tools/bin/slc.in: Document the new option.
+
+2011-10-09  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	Update the handling of local places as per MGSim r4608.
 
 	* tools/include/svp/delegate.h (__inline_get_local_place): Ensure

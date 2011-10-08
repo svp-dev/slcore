@@ -481,7 +481,8 @@ def protectallcallregs(fundata, items):
     Prime the i/o registers in presence of a call (they
     may be read by the callee)
     """
-    if fundata['hasjumps']:
+    doprotect = protectallcallregs.extra_options.get('clear-local-regs',False)
+    if doprotect and fundata['hasjumps']:
         for i in xrange(0, 8):
             if i != 6: # avoid setting FP/SP here
                 fundata['prologue'].append(('other', 'clr $%s' % _ivregs[i]['name'], 'maybe used in call'))
