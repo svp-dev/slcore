@@ -1,3 +1,18 @@
+2011-10-24  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
+	Simplify the delegation API.
+
+	* tools/include/svp/delegate.h: Simplify. Use the same constants
+	(0/1) for the symbolic place identifiers across all
+	implementations. Provide new primitives (macros)
+	`sl_default_placement', `sl_local_processor_address',
+	`sl_placement_size', `sl_first_processor_address' for use in
+	programs.
+
+	* tools/lib/dummyplaces.c: Homogeneise the
+	implementation. Anything else than MT targets and `seqc' are not
+	implemented yet.
+
 2011-10-09  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
 	New MT code generation optimization.

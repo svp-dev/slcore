@@ -74,25 +74,13 @@ sl_place_t __inline_get_local_place(void)
 
 #endif
 
-#if defined(__slc_os_sim__)
 
 #define PLACE_DEFAULT 0
 #define PLACE_LOCAL 1
 
-#else
-
-#if defined(__slc_os_host_ptl__)
-
-static const sl_place_t PLACE_DEFAULT = uTC::PLACE_GROUP;
-static const sl_place_t PLACE_LOCAL = uTC::PLACE_LOCAL;
-
-#else
-
-#define PLACE_DEFAULT 0
-#define PLACE_LOCAL   0
-
-#endif
-
-#endif
+#define sl_default_placement() get_current_place()
+#define sl_local_processor_address() get_core_id()
+#define sl_placement_size(P) ((P) & -(P))
+#define sl_first_processor_address(P) ((P) & ((P) - 1))
 
 #endif

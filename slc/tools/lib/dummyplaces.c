@@ -16,16 +16,43 @@
 
 #undef get_current_place
 sl_place_t get_current_place(void) {
-    return PLACE_DEFAULT;
+#if defined(__mt_freestanding__)
+    return __inline_get_current_place();
+#else 
+#if defined(__slc_os_host_seqc__)
+    return 0;
+#else
+    // unimplemented yet
+    abort();
+#endif
+#endif
 }
 
 #undef get_core_id
 unsigned long get_core_id(void) {
+#if defined(__mt_freestanding__)
+    return __inline_get_core_id();
+#else 
+#if defined(__slc_os_host_seqc__)
     return 0;
+#else
+    // unimplemented yet
+    abort();
+#endif
+#endif
 }
 
 #undef get_local_place
 sl_place_t get_local_place(void) {
-    return PLACE_LOCAL;
+#if defined(__mt_freestanding__)
+    return __inline_get_local_place();
+#else 
+#if defined(__slc_os_host_seqc__)
+    return 0;
+#else
+    // unimplemented yet
+    abort();
+#endif
+#endif
 }
 
