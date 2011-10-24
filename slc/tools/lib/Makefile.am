@@ -126,6 +126,9 @@ nobase_python_PYTHON = \
 	slc/mt/mtsparc/asmproc/decode.py \
 	slc/mt/mtsparc/asmproc/opc/mtsparc.py \
 	slc/mt/mtsparc/asmproc/opc/__init__.py \
+	slc/ptl/__init__.py \
+	slc/ptl/genptlcreate.py \
+	slc/ptl/gentfun.py \
 	slc/am/__init__.py \
 	slc/am/visitors.py \
 	slc/lower/__init__.py \

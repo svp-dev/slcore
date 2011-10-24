@@ -1,3 +1,26 @@
+2011-10-24  M. Irfan-Ud-Din <m.irfan-ud-din@uva.nl>
+
+	Start integration with latest utc-ptl/hlsim revisions.
+
+	* tools/bin/cce.in: New aliases `ptl_n', `ptl_s'. Set these and
+	`ptl' to use the `spr' front-end.
+
+	* tools/lib/slc/ptl/__init__.py,
+	* tools/lib/slc/ptl/genptlcreate.py,
+	* tools/lib/slc/ptl/gentfun.py: New.
+	* tools/lib/Makefile.am: List the new files.
+
+	* tools/lib/slc/front/chains.py: Add the corresponding chains.
+
+	* tools/lib/t-spr/include/sl_support.h: Extend accordingly.
+
+	* tools/include/svp/delegate.h: Simplify (use the same definition
+	of `sl_place_t').
+
+	* tools/lib/slc/lower/split.py (SplitFuns.visit_fundef): Mark the
+	handling of `extern' and `static' for future work (they don't
+	behave well with ptl/hlsim yet).
+
 2011-10-24  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
 	Allow to disable automatic `swch' placement.

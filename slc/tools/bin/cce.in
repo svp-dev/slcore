@@ -156,9 +156,11 @@ case $alias in
     hrt_n)        alias=spr-hrt_naked-host-host-hrt ;;
     hrt_s)        alias=spr-seq_naked-host-host-hrt ;;
 
-    ptl)   alias=ptl-ptl-host-host-ptl ;;
+    ptl)    alias=spr-ptl_hybrid-host-host-ptl ;;
+    ptl_n)  alias=spr-ptl_naked-host-host-ptl ;;
+    ptl_s)  alias=spr-seq_naked-host-host-ptl ;;
+    
     utc0)  alias=utc0-mta_naked-mtalpha-sim ;;
-    ptlx)  alias=ptlx--x-x ;;
     utcx)  alias=utc--x-x ;;
     *-*)   ;; # more than one word: pass to next stage
     *)     # remaining single-word aliases
@@ -191,10 +193,10 @@ basearchvar=$(tr a-z A-Z <<<"$basearch")
 
 # Language mode selection
 slc_complang=unknown
-case $slc_dialect in
-    ptl*)         slc_complang=cpp;;
-    spr|seqc|spp) slc_complang=c;;
-    utc*)         slc_complang=utc;;
+case $slc_dialect-$slc_os in
+    *-host-ptl)         slc_complang=cpp;;
+    spr-*|seqc-*|spp-*) slc_complang=c;;
+    utc*)               slc_complang=utc;;
     *) echo "unknown dialect: $slc_dialect" >&2;;
 esac
 
@@ -207,15 +209,17 @@ case $slc_dialect in
     spr)
         target=unknown
         case $slc_variant in
-            seq_naked) target=seq ;;
-            mta_naked) target=mta ;;
-            mta_hybrid) target=mta+seq ;;
-            mts_naked) target=mts ;;
-            mts_hybrid) target=mts+seq ;;
-            mtsn_naked) target=mtsn ;;
+            seq_naked)   target=seq ;;
+            ptl_naked)   target=ptl ;;			            
+            ptl_hybrid)  target=ptl+seq ;;			                        
+            mta_naked)   target=mta ;;
+            mta_hybrid)  target=mta+seq ;;
+            mts_naked)   target=mts ;;
+            mts_hybrid)  target=mts+seq ;;
+            mtsn_naked)  target=mtsn ;;
             mtsn_hybrid) target=mtsn+seq ;;
-            hrt_naked)  target=hrt ;;
-            hrt_hybrid) target=hrt+seq ;;
+            hrt_naked)   target=hrt ;;
+            hrt_hybrid)  target=hrt+seq ;;
             *) echo "unknown variant: $slc_dialect-$slc_variant" >&2 ;;
         esac
         slc_translator=("$python" "$spr_helper" -b "$target")

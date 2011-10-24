@@ -207,7 +207,7 @@ class SplitFuns(DefaultVisitor):
             newbl.append(flatten(fd.loc, ';'))
 
         if fd.extras.get_attr('static', None) is not None:
-            qual = "static"
+            qual = "static" # FIXME: ptl/hlsim are annoyed with this
         else:
             qual = "extern"
 
@@ -224,7 +224,7 @@ class SplitFuns(DefaultVisitor):
         if fd.extras.get_attr('typedef', None) is not None:
             qual = 'typedef'
         elif fd.extras.get_attr('static', None) is not None:
-            qual = 'static'
+            qual = 'static' # FIXME: ptl/hlsim are annoyed with this
         else:
             qual = ''
 
@@ -259,12 +259,12 @@ class SplitFuns(DefaultVisitor):
 
 
         if fd.extras.get_attr('static', None) is not None:
-            qual = "static"
+            qual = "static" # FIXME: ptl/hlsim are annoyed with this 
         else:
             qual = ""
 
         nflavors = len(flavors)
-        lfuncs = ', '.join((self.oracle.flavored_funsym(name, f) for f in flavors))
+        lfuncs = ', '.join(('(void*)' + self.oracle.flavored_funsym(name, f) for f in flavors))
 
         # newbl.append(flatten(fd.loc, 
         #                      '%(qual1)s void * __slD_%(name)s[%(nflavors)d] = '

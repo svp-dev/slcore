@@ -18,15 +18,7 @@
 
 /* sl_place_t: data type for place identifiers */
 
-#if defined(__slc_os_host_ptl__)
-
-typedef uTC::place sl_place_t;
-
-#else
-
 typedef unsigned long sl_place_t;
-
-#endif
 
 /* family exit codes */
 

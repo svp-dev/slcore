@@ -22,6 +22,8 @@ from ..mt.common.strategy import *
 from ..lower.spawndecl import *
 from ..lower.lowerspawnsync import *
 from ..am.visitors import *
+from ..ptl.gentfun import *
+from ..ptl.genptlcreate import *
 
 _common_prefix = [
     ('walk', DefaultVisitor()),
@@ -127,7 +129,30 @@ _chains = {
                                                   'fseq':TFun_2_CFun()}))),
 #        ('flattenss', DefaultVisitor(Dispatcher({'smts':SSync_2_MTSSSync(),
 #                                                 'sseq':SSync_2_CSSync()}))),
-        ] + _common_suffix
+        ] + _common_suffix,
+    'ptl' : _common_prefix + [
+        ('makestrategy', CreateMTStrategy(newisa=True)),
+        ('lseta', LinkSetA()),
+        ('autores', AutoResolve()),
+        ('autoresss', AutoResolveSpawnSync()),
+        ('flattencr',Create_2_ptlCreate()),
+        ('flattenfun',TFun_2_ptlTFun()),
+        #('flattenss',SSync_2_ptlSSync()), # not supported in ptl (yet)
+        ] + _common_suffix,
+    'ptl+seq' : _common_prefix + [
+        ('makestrategy', CreateMTStrategy(newisa=True)),
+        ('splitcr', SplitCreates(oracle=make_mt_oracle('ptl'))), 
+#        ('splitss', SplitSpawnSync(oracle=make_mt_oracle('ptl'))), # not supported in ptl (yet)
+        ('lseta', LinkSetA()),
+        ('flseta', FlavorSetA()),
+        ('splitfun', SplitFuns(oracle=make_mt_oracle('ptl'))),
+        ('flattencr', ScopedVisitor(Dispatcher({'cptl':Create_2_ptlCreate(),
+                                                'cseq':Create_2_Loop()}))),
+        ('flattenfun', DefaultVisitor(Dispatcher({'fptl':TFun_2_ptlTFun(),
+                                                  'fseq':TFun_2_CFun()}))),
+#        ('flattenss', DefaultVisitor(Dispatcher({'sptl':SSync_2_MTSSSync(),   # not supported in ptl (yet)
+#                                                 'sseq':SSync_2_CSSync()}))),
+        ] + _common_suffix,
 }
 
 _default_chain = 'seq'
