@@ -1,3 +1,13 @@
+
+def rmswchdir(fundata, items):
+    """
+    Remove .swch and .noswch.
+    """
+    for (type, content, comment) in items:
+        if type == 'directive' and content in [".swch", ".noswch"]:
+            continue
+        yield (type, content, comment)
+
 def rmdupswch(fundata, items):
     """
     Remove duplicate "swch" annotations.

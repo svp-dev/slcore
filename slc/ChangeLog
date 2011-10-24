@@ -1,5 +1,21 @@
 2011-10-24  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	Allow to disable automatic `swch' placement.
+
+	A new pseudo-directive pair `.swch' and `.noswch' configure
+	whether the assembly post-processor automatically adds the `swch'
+	annotation.
+
+	* tools/lib/slc/mt/common/asmproc/swch.py (rmswchdir):
+	New. Removes the pseudo-directives at the end of processing (since
+	they are not recognized by the assembler).
+
+	* tools/lib/slc/mt/mtsparc/asmproc/opt.py (makedataflow),
+	tools/lib/slc/mt/mtalpha/asmproc/opt.py (addswchll): Use the new
+	pseudo-directives. Also invoke `rmswchdir'.
+
+2011-10-24  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	Simplify the delegation API.
 
 	* tools/include/svp/delegate.h: Simplify. Use the same constants

@@ -100,6 +100,7 @@ def makedataflow(addswch, drainargs):
                 swchbeforell = self.extra_options.get('swch-before-ll-use',True)
 
             locals_offset = regmagic.rd.mt_locals_offset
+            swchenabled = True
 
             # initially exclude index
             maybell = allregs.copy()
@@ -119,6 +120,9 @@ def makedataflow(addswch, drainargs):
                         hint = set(comment.split(':',1)[1].strip().split(','))
                         maybell = maybell - hint
                         allregs = allregs - hint
+
+                elif type == 'directive' and content in ['.swch', '.noswch']:
+                    swchenabled = (content == '.swch')
 
                 elif type == 'other' and content.metadata is not None:
                     #print "BAR %s :: %s ::" % (content, comment)
@@ -196,10 +200,10 @@ def makedataflow(addswch, drainargs):
                             yield ('other', 'swch', '')
                         test = 0
 
-                    if test == 1 and addswch and swchbeforell:
+                    if test == 1 and addswch and swchbeforell and swchenabled:
                         yield ('other','swch','MT: before-ll: %s' % ','.join(q))
                     yield (type, content, comment)
-                    if test == 1 and addswch:
+                    if test == 1 and addswch and swchenabled:
                         yield ('other','swch','MT: after-ll: %s' % ','.join(q))
 
                     if content.metadata.is_branch:
@@ -269,6 +273,8 @@ _filter_stages = [
         protectend,
 
         canontovname,
+
+        rmswchdir,
         ]
 _filter_end = [common.flattener,
                common.printer]

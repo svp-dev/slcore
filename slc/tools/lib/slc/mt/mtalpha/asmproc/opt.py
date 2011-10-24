@@ -99,6 +99,7 @@ def addswchll(fundata, items):
     allregs = regmagic.allregs
         
     swchbeforell = addswchll.extra_options.get('swch-before-ll-use',True)
+    swchenabled = True
 
     # initially exclude index
     maybell = allregs.copy()
@@ -118,6 +119,9 @@ def addswchll(fundata, items):
                 hint = set(comment.split(':',1)[1].strip().split(','))
                 maybell = maybell - hint
                 allregs = allregs - hint
+
+        elif type == 'directive' and content in ['.swch', '.noswch']:
+            swchenabled = (content == '.swch')
 
         elif type == 'other':
             #print "BAR %s :: %s ::" % (content, comment)
@@ -203,10 +207,10 @@ def addswchll(fundata, items):
                     if seereg(rx,r):
                         test = 1
                         q.add(rx)
-            if test == 1 and swchbeforell:
+            if test == 1 and swchbeforell and swchenabled:
                 yield ('other','swch','MT: before-ll: %s' % ','.join(q))
             yield (type, content, comment)
-            if test == 1:
+            if test == 1 and swchenabled:
                 yield ('other','swch','MT: after-ll: %s' % ','.join(q))
 
             # all the registers that are "short written"
@@ -310,7 +314,10 @@ _filter_stages = [adjustmov,
                   rmswchbegin,
                   
                   prunenopend, 
-                  protectend]
+                  protectend,
+
+                  rmswchdir
+                  ]
 
 _filter_end = [common.flattener,
                common.forcezero,
