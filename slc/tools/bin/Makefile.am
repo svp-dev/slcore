@@ -40,6 +40,8 @@ edit_scripts = $(SED) \
 	       -e 's|@PTHREAD_CC[@]|$(PTHREAD_CC)|g' \
 	       -e 's|@PTHREAD_CFLAGS[@]|$(PTHREAD_CFLAGS)|g' \
 	       -e 's|@PTHREAD_LIBS[@]|$(PTHREAD_LIBS)|g' \
+	       -e 's|@PTL_LIBDIR[@]|$(PTL_LIBDIR)|g' \
+	       -e 's|@PTL_INCLUDEDIR[@]|$(PTL_INCLUDEDIR)|g' \
 	       -e 's|@python[@]|$(PYTHON)|g' \
 	       -e 's|@slc_libdir[@]|$(pkglibdir)|g' \
 	       -e 's|@slc_incdir[@]|$(pkgdatadir)/include|g' \

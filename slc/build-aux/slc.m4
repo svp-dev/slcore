@@ -64,31 +64,33 @@ AC_DEFUN([SLC_CHECK_TARGETS],
 
   AC_ARG_ENABLE([ptl],
                 [AC_HELP_STRING([--disable-ptl],
-                                [disable support for muTC-ptl compilation (default is try to enable)])],
+                                [Disable support for utc-ptl compilation (default is try to enable)])],
                 [], [enable_ptl=yes])
-
-  dnl Automake conditional is decided late, so that the surrounding configure script
-  dnl can change its mind about supporting this target.
-  AC_CONFIG_COMMANDS_PRE([AM_CONDITIONAL([ENABLE_SLC_PTL], [test "x$enable_ptl" = "xyes"])])
+  AC_ARG_ENABLE([hlsim],
+                [AC_HELP_STRING([--disable-hlsim], [Disable support for hlsim (default is try to enable if ptl is enabled.)])],
+                [], [enable_hlsim=yes])
 
   AC_ARG_ENABLE([hrt],
                 [AC_HELP_STRING([--enable-hrt],
                                 [enable support for the Hydra runtime (default is disable)])],
                 [], [enable_hrt=no])
-  AC_CONFIG_COMMANDS_PRE([AM_CONDITIONAL([ENABLE_SLC_HRT], [test "x$enable_hrt" = "xyes"])])
 
   AC_ARG_ENABLE([mtalpha], 
                 [AC_HELP_STRING([--disable-mtalpha], 
                                 [disable support for MT-Alpha compilation (default is try to enable)])],
                 [], [enable_mtalpha=yes])
 
-  AC_CONFIG_COMMANDS_PRE([AM_CONDITIONAL([ENABLE_SLC_MTALPHA], [test "x$enable_mtalpha" = xyes])])
-
   AC_ARG_ENABLE([mtsparc], 
                 [AC_HELP_STRING([--disable-mtsparc], 
                                 [disable support for MT-Sparc compilation (default is try to enable)])],
                 [], [enable_mtsparc=yes])
 
+  dnl Automake conditional is decided late, so that the surrounding configure script
+  dnl can change its mind about supporting this target.
+  AC_CONFIG_COMMANDS_PRE([AM_CONDITIONAL([ENABLE_SLC_PTL], [test "x$enable_ptl" = "xyes"])])
+  AC_CONFIG_COMMANDS_PRE([AM_CONDITIONAL([ENABLE_SLC_HLSIM], [test "x$enable_hlsim" = "xyes"])])
+  AC_CONFIG_COMMANDS_PRE([AM_CONDITIONAL([ENABLE_SLC_HRT], [test "x$enable_hrt" = "xyes"])])
+  AC_CONFIG_COMMANDS_PRE([AM_CONDITIONAL([ENABLE_SLC_MTALPHA], [test "x$enable_mtalpha" = xyes])])
   AC_CONFIG_COMMANDS_PRE([AM_CONDITIONAL([ENABLE_SLC_MTSPARC], [test "x$enable_mtsparc" = xyes])])
 ])
 

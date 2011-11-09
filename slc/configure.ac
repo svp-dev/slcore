@@ -66,7 +66,6 @@ fi
 
 AX_FUNC_POSIX_MEMALIGN
 
-AC_PROG_CXX
 AC_PROG_RANLIB
 AC_PROG_LN_S
 AX_PTHREAD
@@ -91,16 +90,59 @@ CC=$save_CC; CFLAGS=$save_CFLAGS; LIBS=$save_LIBS
 
 AM_CONDITIONAL([CHECK_TLSMALLOC], [test "x$ax_pthread_ok" = xyes -a "x$ac_cv_tls" != xnone -a "x$ac_cv_func_pthread_barrier_wait" = xyes])
 
+defaultbase=/usr
+if test $prefix != NONE; then
+   defaultbase=$prefix
+fi
+AC_ARG_WITH([ptl-libdir], 
+            [AC_HELP_STRING([--with-ptl-libdir=DIR], [find utc-ptl and/or hlsim in DIR.])], 
+            [], [with_ptl_libdir=$defaultbase/lib])
+AC_ARG_WITH([ptl-includedir], 
+            [AC_HELP_STRING([--with-ptl-includedir=DIR], [find utc-ptl and/or hlsim in DIR.])], 
+            [], [with_ptl_includedir=$defaultbase/include])
+PTL_LIBDIR=$with_ptl_libdir
+PTL_INCLUDEDIR=$with_ptl_includedir
+AC_SUBST([PTL_LIBDIR])
+AC_SUBST([PTL_INCLUDEDIR])
 
-if test "x$enable_ptl" = "xyes"; then
-  if test "x$GXX" != "xyes"; then
-     AC_MSG_WARN([not using the GNU C++ compiler. muTC-ptl support is disabled.])
-     enable_ptl=no
-  fi
-  if test "x$ax_pthread_ok" != "xyes"; then
-     AC_MSG_WARN([POSIX threads not available. muTC-ptl support is disabled.])
-     enable_hrt=no
-  fi
+if test "x$enable_ptl" = xyes; then
+  for variant in ptl-opt ptln-opt ptl-dbg ptln-dbg; do
+    AC_MSG_CHECKING([for utc-ptl in $with_ptl_libdir/$variant])
+    if test ! -r "$with_ptl_libdir/$variant/utc-ptl/libptl.cppflags" -o \
+            ! -r "$with_ptl_libdir/$variant/utc-ptl/libptl.cxxcppcmd" -o \
+            ! -r "$with_ptl_libdir/$variant/utc-ptl/libptl.cxxflags" -o \
+            ! -r "$with_ptl_libdir/$variant/utc-ptl/libptl.cxxcmd" -o \
+            ! -r "$with_ptl_libdir/$variant/utc-ptl/libptl.ldflags"; then
+      AC_MSG_RESULT([no])
+      AC_MSG_WARN([libptl variant "$variant" not installed/built correctly. utc-ptl support is disabled.])
+      enable_ptl=no
+      break
+    else
+      AC_MSG_RESULT([yes])
+    fi
+  done
+fi
+if test x"$enable_ptl" != xyes; then
+   enable_hlsim=no
+fi
+
+if test "x$enable_hlsim" = xyes; then
+  for variant in ptl-opt ptl-dbg; do
+
+    AC_MSG_CHECKING([for hlsim in $with_ptl_libdir/$variant])
+    if test ! -r "$with_ptl_libdir/$variant/hlsim-ptl/libhlsim.cppflags" -o \
+            ! -r "$with_ptl_libdir/$variant/hlsim-ptl/libhlsim.cxxcppcmd" -o \
+            ! -r "$with_ptl_libdir/$variant/hlsim-ptl/libhlsim.cxxflags" -o \
+            ! -r "$with_ptl_libdir/$variant/hlsim-ptl/libhlsim.cxxcmd" -o \
+            ! -r "$with_ptl_libdir/$variant/hlsim-ptl/libhlsim.ldflags"; then
+      AC_MSG_RESULT([no])
+      AC_MSG_WARN([libhlsim variant "$variant" not installed/built correctly. hlsim support is disabled.])
+      enable_hlsim=no
+      break
+    else
+      AC_MSG_RESULT([yes])
+    fi
+  done
 fi
 
 if test "x$enable_hrt" = "xyes"; then
@@ -152,3 +194,21 @@ AC_CONFIG_FILES([
 
 AC_OUTPUT
 
+cat <<EOF
+*
+* Configuration done.
+*
+* Support for MT-Alpha:   $enable_mtalpha
+* Support for MT-SPARC:   $enable_mtsparc
+* Support for utc-ptl:    $enable_ptl
+* Support for hlsim:      $enable_hlsim
+* Support for hrt:        $enable_hrt
+*
+* Destination dir:        $prefix
+*
+Now run:
+
+    make all
+    make check
+
+EOF

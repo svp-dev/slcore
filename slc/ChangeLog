@@ -1,3 +1,21 @@
+2011-11-09  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
+	Integrate utc-ptl / hlsim better into the tool chain.
+
+	* tools/bin/cce.in: New aliases `hls' next to `ptl'. Use the
+	former for compilation through hlsim, the latter for pure
+	utc-ptl. Extract the compiler / flag information from the
+	configuration file installed with both libraries.
+
+	* build-aux/slc.m4,
+	* configure.ac,
+	* tools/bin/Makefile.am (edit_scripts): Allow to configure the
+	path to the hlsim/ptl libraries+headers. Pass them as variables
+	when generating `cce'.
+
+	* tools/lib/ptl.mk (SLC_PTL): Remove the extra flags, as these are
+	now inherited from the hlsim/ptl installation.
+
 2011-10-24  M. Irfan-Ud-Din <m.irfan-ud-din@uva.nl>
 
 	Start integration with latest utc-ptl/hlsim revisions.

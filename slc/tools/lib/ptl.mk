@@ -46,8 +46,7 @@ BUILT_SOURCES += \
 	host-host-ptl/include/ptl_create.h
 
 
-SLC_PTL = $(SLC_RUN) -b ptl -nostdlib $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) \
-        $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS)
+SLC_PTL = $(SLC_RUN) -b ptl_n -nostdlib 
 
 ptl-host-host-ptl/%.o: $(srcdir)/host-host-ptl/%.c
 	$(AM_V_at)$(MKDIR_P) ptl-host-host-ptl
