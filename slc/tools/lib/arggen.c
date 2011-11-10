@@ -1,7 +1,7 @@
 //
 // arggen.c: this file is part of the SL toolchain.
 //
-// Copyright (C) 2009 The SL project.
+// Copyright (C) 2009,2010,2011 The SL project.
 //
 // This program is free software; you can redistribute it and/or
 // modify it under the terms of the GNU General Public License
@@ -22,7 +22,7 @@
 #include "data.c"
 #endif
 
-#ifdef __mt_freestanding__
+#ifndef __slc_arch_host__
 sl_def(do_print, void, sl_shparm(long, tok))
 {
   sl_index(i);
@@ -37,7 +37,7 @@ sl_enddef
 
 sl_def(t_main, void)
 {
-#ifdef __mt_freestanding__
+#ifndef __slc_arch_host__
   sl_create(,, (long)&__slr_data, ((long)&__slr_data)+sizeof(__slr_data),,,,
 	    do_print, sl_sharg(long, , 0));
   sl_sync();

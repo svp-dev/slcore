@@ -1,3 +1,25 @@
+2011-11-11  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
+	Clean-up to prepare for a new build layout.
+
+	* Makefile.am: Fix target `show-vars': use `tools' instead of
+	`slc/tools'.
+
+	* build-aux/slc.m4: Split the `--enable' flag detection into a
+	separate macro `SLC_CHECK_TARGETS'.
+
+	* lib/src/empty.c: Replace the symlink by a copy.
+
+	* tools/lib/arggen.c: Make the special case about the host
+	platform, not the MT targets.
+
+	* tools/lib/dummyplaces.c: Include `stdlib.h' for `abort'.
+
+	* tools/bin/slranlib.in,
+	* tools/bin/slar.in: Lookup the tools via `cce' as if `-nostdlib'
+	was passed, to reduce warnings when used to build slrt/libslc
+	initially.
+
 2011-11-09  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
 	Integrate utc-ptl / hlsim better into the tool chain.
