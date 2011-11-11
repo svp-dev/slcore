@@ -1,102 +1,102 @@
 ########### MT-Alpha components ###########
 
 MTALIB_CSRC = \
-	src/mtinput.c \
-	src/abort.c \
-	src/atoi.c \
-	src/atol.c \
-	src/atoll.c \
-	src/bcopy.c \
-	src/bzero.c \
-	src/ctype.c \
-	src/dtoa_simple.c \
-	src/errlst.c \
-	src/errno.c \
-	src/exit.c \
-	src/ffs.c \
-	src/fprintf.c \
-	src/fputc.c \
-	src/fputs.c \
-	src/fwrite.c \
-	src/getenv.c \
-	src/_hdtoa.c \
-	src/heap.c \
-	src/malloc.c \
-	src/memchr.c \
-	src/memcmp.c \
-	src/memcpy.c \
-	src/memmove.c \
-	src/memset.c \
-	src/mtstdio.c \
-	src/perf.c \
-	src/perf_wrappers.c \
-	src/perror.c \
-	src/printf.c \
-	src/printf-pos.c \
-	src/putc.c \
-	src/putchar.c \
-	src/puts.c \
-	src/snprintf.c \
-	src/sprintf.c \
-	src/stpcpy.c \
-	src/stpncpy.c \
-	src/strcat.c \
-	src/strchr.c \
-	src/strcmp.c \
-	src/strcpy.c \
-	src/strdup.c \
-	src/strerror.c \
-	src/strlcat.c \
-	src/strlcpy.c \
-	src/strlen.c \
-	src/strncat.c \
-	src/strncmp.c \
-	src/strncpy.c \
-	src/strnlen.c \
-	src/strtol.c \
-	src/strtoll.c \
-	src/strtoul.c \
-	src/strtoull.c \
-	src/time.c \
-	src/time_virtual.c \
-	src/tlstack_malloc.c \
-	src/vprintf.c \
-	src/vsnprintf.c
+	libc/bsd/libc/gdtoa/_hdtoa.c \
+	libc/bsd/libc/gen/errlst.c \
+	libc/bsd/libc/stdio/fprintf.c \
+	libc/bsd/libc/stdio/printf-pos.c \
+	libc/bsd/libc/stdio/printf.c \
+	libc/bsd/libc/stdio/sprintf.c \
+	libc/bsd/libc/stdlib//atoll.c \
+	libc/bsd/libc/stdlib/atoi.c \
+	libc/bsd/libc/stdlib/atol.c \
+	libc/bsd/libc/stdlib/getenv.c \
+	libc/bsd/libc/stdlib/strtol.c \
+	libc/bsd/libc/stdlib/strtoll.c \
+	libc/bsd/libc/stdlib/strtoul.c \
+	libc/bsd/libc/stdlib/strtoull.c \
+	libc/bsd/libc/string/memchr.c \
+	libc/bsd/libc/string/memcmp.c \
+	libc/bsd/libc/string/memcpy.c \
+	libc/bsd/libc/string/memmove.c \
+	libc/bsd/libc/string/memset.c \
+	libc/bsd/libc/string/stpcpy.c \
+	libc/bsd/libc/string/stpncpy.c \
+	libc/bsd/libc/string/strcat.c \
+	libc/bsd/libc/string/strchr.c \
+	libc/bsd/libc/string/strcmp.c \
+	libc/bsd/libc/string/strcpy.c \
+	libc/bsd/libc/string/strdup.c \
+	libc/bsd/libc/string/strerror.c \
+	libc/bsd/libc/string/strlcat.c \
+	libc/bsd/libc/string/strlcpy.c \
+	libc/bsd/libc/string/strlen.c \
+	libc/bsd/libc/string/strncat.c \
+	libc/bsd/libc/string/strncmp.c \
+	libc/bsd/libc/string/strncpy.c \
+	libc/bsd/libc/string/strnlen.c \
+	libc/bsd/libc/stringsrc/bcopy.c \
+	libc/bsd/libc/stringsrc/bzero.c \
+	libc/malloc/malloc.c \
+	libc/misc/ctype.c \
+	libc/misc/dtoa_simple.c \
+	libc/misc/errno.c \
+	libc/stdio/fputc.c \
+	libc/stdio/fputs.c \
+	libc/stdio/fwrite.c \
+	libc/stdio/mtstdio.c \
+	libc/stdio/perror.c \
+	libc/stdio/putc.c \
+	libc/stdio/putchar.c \
+	libc/stdio/puts.c \
+	libc/stdio/snprintf.c \
+	libc/stdio/vprintf.c \
+	libc/stdio/vsnprintf.c \
+	libc/string/ffs.c \
+	mgos/input/mtinput.c \
+	mgos/posix-compat/abort.c \
+	mgos/posix-compat/exit.c \
+	mgos/posix-compat/heap.c \
+	mgos/posix-compat/time.c \
+	mgos/posix-compat/time_virtual.c \
+	mgos/tlstack_malloc.c \
+	slsys/perf/perf.c \
+	slsys/perf/perf_wrappers.c
 
 MTALIB_SRC = \
-	src/malloc_excl.c \
-	src/vfprintf.c \
-	src/div.c \
-	src/roman.c \
-	src/io.c
+	libc/malloc/malloc_excl.c \
+	libc/bsd/libc/stdio/vfprintf.c \
+	slsys/deprecated/div.c \
+	slsys/deprecated/roman.c \
+	slsys/deprecated/io.c
 
 MTALIB_SIM_SRC = \
-	src/gtod.c \
-	src/mtgfx.c \
-	src/mtsep.c \
-	src/mtuart.c \
-	src/mtunix.c
+	mgos/posix-compat/gtod.c \
+	mgos/gfx/mtgfx.c \
+	mgos/sep/mtsep.c \
+	mgos/uart/mtuart.c \
+	mgos/posix-compat/mtunix.c
 
 MTALIB_SIM_CSRC = \
-	src/gtod_virtual.c \
-	src/mtconf.c \
-	src/mtargs.c \
-	src/mtinit.c 
+	mgos/posix-compat/gtod_virtual.c \
+	mgos/mgsim/mtconf.c \
+	mgos/input/mtargs.c \
+	mgos/init/mtinit.c 
 
 
 
 MTALIB_EXTRA = \
-	src/floatio.h \
-	src/fpmath.h \
-	src/heap.h \
-	src/malloc_wrappers.c \
-	src/mgsim.h \
-	src/missing_uclibc_math.c \
-	src/mtconf.h \
-	src/RPCServiceDatabase.h \
-	src/mtstdio.h \
-	src/printfcommon.h \
-	src/printflocal.h
+	libc/bsd/libc/include/fpmath.h \
+	libc/bsd/libc/stdio/floatio.h \
+	libc/bsd/libc/stdio/printfcommon.h \
+	libc/bsd/libc/stdio/printflocal.h \
+	libc/malloc/malloc_wrappers.c \
+	libc/math/missing_uclibc_math.c \
+	libc/stdio/mtstdio.h \
+	mgos/mgsim/RPCServiceDatabase.h \
+	mgos/mgsim/mgsim.h \
+	mgos/mgsim/mtconf.h \
+	mgos/posix-compat/heap.h
 
 EXTRA_DIST += $(MTALIB_CSRC) $(MTALIB_SRC) $(MTALIB_SIM_SRC) $(MTALIB_SIM_CSRC) $(MTALIB_EXTRA)
 

@@ -12,56 +12,37 @@
 ##
 
 #
-SUBDIRS = src/tlsmalloc
+SUBDIRS = mgos/tlsmalloc
  
 EXTRA_DIST = \
-	src/empty.c \
-	src/io.c \
-	src/gfx.c \
-	src/perf.c \
-	src/perf_wrappers.c \
-	src/dummysep.c \
-	src/roman.c \
-	src/mtinit.c \
-	src/mtclock.c \
-	src/mtsep.c \
-	src/mtinput.c \
-	src/mtuart.c \
-	src/div.c
+	mgos/init/mtinit.c \
+	mgos/input/mtinput.c \
+	mgos/posix-compat/mtclock.c \
+	mgos/sep/dummysep.c \
+	mgos/sep/mtsep.c \
+	mgos/uart/mtuart.c \
+	slsys/deprecated/div.c \
+	slsys/deprecated/io.c \
+	slsys/deprecated/roman.c \
+	slsys/gfx/gfx.c \
+	slsys/perf/perf.c \
+	slsys/perf/perf_wrappers.c
 
 nobase_dist_pkgdata_DATA = \
-	include/sys/ctypes.h \
-	include/calloca.h \
-	include/cassert.h \
-	include/cctype.h \
-	include/cerrno.h \
-	include/cfloat.h \
-	include/climits.h \
-	include/cmalloc.h \
-	include/cmath.h \
-	include/cstdbool.h \
-	include/cstdarg.h \
-	include/cstddef.h \
-	include/cstdint.h \
-	include/cstdio.h \
-	include/cstdlib.h \
-	include/cstring.h \
-	include/cstrings.h \
-	include/ctime.h \
-	include/sac_helpers.h \
-	include/undocumented.h \
-	include/svp/argslot.h \
-	include/svp/assert.h \
-	include/svp/callgate.h \
-	include/svp/div.h \
-	include/svp/fast_malloc.h \
-	include/svp/mtmalloc.h \
+	include/svp/deprecated/argslot.h \
+	include/svp/deprecated/assert.h \
+	include/svp/deprecated/callgate.h \
+	include/svp/deprecated/div.h \
+	include/svp/deprecated/fast_malloc.h \
+	include/svp/deprecated/io.h \
+	include/svp/deprecated/iomacros.h \
+	include/svp/deprecated/roman.h \
 	include/svp/gfx.h \
-	include/svp/io.h \
-	include/svp/iomacros.h \
 	include/svp/perf.h \
-	include/svp/roman.h \
-	include/svp/sep.h
+	include/svp/sep.h \
+	include/sys/ctypes.h \
+	include/sac_helpers.h \
+	include/undocumented.h
 
 include $(top_srcdir)/build-aux/sl.mk
 pkglib_DATA = 

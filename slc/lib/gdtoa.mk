@@ -1,61 +1,61 @@
 GDTOA_SRC = \
-	src/gdtoa/misc.c
+	libc/bsd/contrib/gdtoa/misc.c
 
 GDTOA_CSRC = \
-	src/gdtoa/dmisc.c \
-	src/gdtoa/dtoa.c \
-	src/gdtoa/g__fmt.c \
-	src/gdtoa/g_ddfmt.c \
-	src/gdtoa/g_dfmt.c \
-	src/gdtoa/g_ffmt.c \
-	src/gdtoa/g_Qfmt.c \
-	src/gdtoa/g_xfmt.c \
-	src/gdtoa/g_xLfmt.c \
-	src/gdtoa/gdtoa.c \
-	src/gdtoa/gethex.c \
-	src/gdtoa/gmisc.c \
-	src/gdtoa/hd_init.c \
-	src/gdtoa/hexnan.c \
-	src/gdtoa/smisc.c \
-	src/gdtoa/strtod.c \
-	src/gdtoa/strtodg.c \
-	src/gdtoa/strtodI.c \
-	src/gdtoa/strtodnrp.c \
-	src/gdtoa/strtof.c \
-	src/gdtoa/strtoId.c \
-	src/gdtoa/strtoIdd.c \
-	src/gdtoa/strtoIf.c \
-	src/gdtoa/strtoIg.c \
-	src/gdtoa/strtoIQ.c \
-	src/gdtoa/strtoIx.c \
-	src/gdtoa/strtoIxL.c \
-	src/gdtoa/strtopd.c \
-	src/gdtoa/strtopdd.c \
-	src/gdtoa/strtopf.c \
-	src/gdtoa/strtopQ.c \
-	src/gdtoa/strtopx.c \
-	src/gdtoa/strtopxL.c \
-	src/gdtoa/strtord.c \
-	src/gdtoa/strtordd.c \
-	src/gdtoa/strtorf.c \
-	src/gdtoa/strtorQ.c \
-	src/gdtoa/strtorx.c \
-	src/gdtoa/strtorxL.c \
-	src/gdtoa/sum.c \
-	src/gdtoa/ulp.c
+	libc/bsd/contrib/gdtoa/dmisc.c \
+	libc/bsd/contrib/gdtoa/dtoa.c \
+	libc/bsd/contrib/gdtoa/g__fmt.c \
+	libc/bsd/contrib/gdtoa/g_ddfmt.c \
+	libc/bsd/contrib/gdtoa/g_dfmt.c \
+	libc/bsd/contrib/gdtoa/g_ffmt.c \
+	libc/bsd/contrib/gdtoa/g_Qfmt.c \
+	libc/bsd/contrib/gdtoa/g_xfmt.c \
+	libc/bsd/contrib/gdtoa/g_xLfmt.c \
+	libc/bsd/contrib/gdtoa/gdtoa.c \
+	libc/bsd/contrib/gdtoa/gethex.c \
+	libc/bsd/contrib/gdtoa/gmisc.c \
+	libc/bsd/contrib/gdtoa/hd_init.c \
+	libc/bsd/contrib/gdtoa/hexnan.c \
+	libc/bsd/contrib/gdtoa/smisc.c \
+	libc/bsd/contrib/gdtoa/strtod.c \
+	libc/bsd/contrib/gdtoa/strtodg.c \
+	libc/bsd/contrib/gdtoa/strtodI.c \
+	libc/bsd/contrib/gdtoa/strtodnrp.c \
+	libc/bsd/contrib/gdtoa/strtof.c \
+	libc/bsd/contrib/gdtoa/strtoId.c \
+	libc/bsd/contrib/gdtoa/strtoIdd.c \
+	libc/bsd/contrib/gdtoa/strtoIf.c \
+	libc/bsd/contrib/gdtoa/strtoIg.c \
+	libc/bsd/contrib/gdtoa/strtoIQ.c \
+	libc/bsd/contrib/gdtoa/strtoIx.c \
+	libc/bsd/contrib/gdtoa/strtoIxL.c \
+	libc/bsd/contrib/gdtoa/strtopd.c \
+	libc/bsd/contrib/gdtoa/strtopdd.c \
+	libc/bsd/contrib/gdtoa/strtopf.c \
+	libc/bsd/contrib/gdtoa/strtopQ.c \
+	libc/bsd/contrib/gdtoa/strtopx.c \
+	libc/bsd/contrib/gdtoa/strtopxL.c \
+	libc/bsd/contrib/gdtoa/strtord.c \
+	libc/bsd/contrib/gdtoa/strtordd.c \
+	libc/bsd/contrib/gdtoa/strtorf.c \
+	libc/bsd/contrib/gdtoa/strtorQ.c \
+	libc/bsd/contrib/gdtoa/strtorx.c \
+	libc/bsd/contrib/gdtoa/strtorxL.c \
+	libc/bsd/contrib/gdtoa/sum.c \
+	libc/bsd/contrib/gdtoa/ulp.c
 
 GDTOA_EXTRA = \
-	src/gdtoa/arith.h \
-	src/gdtoa/arith-mtalpha.h \
-	src/gdtoa/gd_qnan.h \
-	src/gdtoa/gd_qnan-mtalpha.h \
-	src/gdtoa/gdtoa_fltrnds.h \
-	src/gdtoa/gdtoaimp.h \
-	src/gdtoa/gdtoa.h \
-	src/gdtoa/qnan.c \
-	src/gdtoa/arithchk.c \
-	src/gdtoa/makefile \
-	src/gdtoa/README
+	libc/bsd/contrib/gdtoa/arith.h \
+	libc/bsd/contrib/gdtoa/arith-mtalpha.h \
+	libc/bsd/contrib/gdtoa/gd_qnan.h \
+	libc/bsd/contrib/gdtoa/gd_qnan-mtalpha.h \
+	libc/bsd/contrib/gdtoa/gdtoa_fltrnds.h \
+	libc/bsd/contrib/gdtoa/gdtoaimp.h \
+	libc/bsd/contrib/gdtoa/gdtoa.h \
+	libc/bsd/contrib/gdtoa/qnan.c \
+	libc/bsd/contrib/gdtoa/arithchk.c \
+	libc/bsd/contrib/gdtoa/makefile \
+	libc/bsd/contrib/gdtoa/README
 
 EXTRA_DIST += $(GDTOA_CSRC) $(GDTOA_SRC) $(GDTOA_EXTRA)
 
