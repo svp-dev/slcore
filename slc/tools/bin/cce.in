@@ -157,20 +157,25 @@ case $alias in
     mts_n)        alias=spr-mts_naked-mtsparc-fpga ;;
     mts_s)        alias=spr-seq_naked-mtsparc-fpga ;;
 
-    mtsparc|mtsn)  alias=spr-mtsn_hybrid-mtsparc-sim ;;
-    mtsn_n)        alias=spr-mtsn_naked-mtsparc-sim ;;
-    mtsn_s)        alias=spr-seq_naked-mtsparc-sim ;;
+    mtsparc|mtsn) alias=spr-mtsn_hybrid-mtsparc-sim ;;
+    mtsn_n)       alias=spr-mtsn_naked-mtsparc-sim ;;
+    mtsn_s)       alias=spr-seq_naked-mtsparc-sim ;;
 
     hrt)          alias=spr-hrt_hybrid-host-host-hrt ;;
     hrt_n)        alias=spr-hrt_naked-host-host-hrt ;;
     hrt_s)        alias=spr-seq_naked-host-host-hrt ;;
 
-    ptl_n)  alias=spr-ptl_naked-host-host-ptl ;;
-    ptl_s)  alias=spr-seq_naked-host-host-ptl ;;
+    ptl_n)        alias=spr-ptl_naked-host-host-ptl ;;
+    ptl_s)        alias=spr-seq_naked-host-host-ptl ;;
+    ptld_n)       alias=spr-ptl_naked-host-host-ptld ;;
+    ptld_s)       alias=spr-seq_naked-host-host-ptld ;;
 
-    hls)    alias=spr-ptl_hybrid-host-host-hlsim ;;
-    hls_n)  alias=spr-ptl_naked-host-host-hlsim ;;
-    hls_s)  alias=spr-seq_naked-host-host-hlsim ;;
+    hls)          alias=spr-ptl_hybrid-host-host-hlsim ;;
+    hls_n)        alias=spr-ptl_naked-host-host-hlsim ;;
+    hls_s)        alias=spr-seq_naked-host-host-hlsim ;;
+    hlsd)         alias=spr-ptl_hybrid-host-host-hlsimd ;;
+    hlsd_n)       alias=spr-ptl_naked-host-host-hlsimd ;;
+    hlsd_s)       alias=spr-seq_naked-host-host-hlsimd ;;
     
     utc0)  alias=utc0-mta_naked-mtalpha-sim ;;
     utcx)  alias=utc--x-x ;;
@@ -206,7 +211,7 @@ basearchvar=$(tr a-z A-Z <<<"$basearch")
 # Language mode selection
 slc_complang=unknown
 case $slc_dialect-$slc_os in
-    *-host-ptl)         slc_complang=cpp;;
+    *-host-ptl*)        slc_complang=cpp;;
     spr-*|seqc-*|spp-*) slc_complang=c;;
     utc*)               slc_complang=utc;;
     *) echo "unknown dialect: $slc_dialect" >&2;;
@@ -282,11 +287,11 @@ done
 IFS=$save_IFS
 
 # ptl variant selection
-ptl_variant=opt
-if test "x$slc_debug_flags" != "x"; then ptl_variant=dbg; fi
 case $slc_os in
-    *ptl)   ptl_variant=ptln-$ptl_variant; ptl_lib=utc-ptl/libptl ;;
-    *hlsim) ptl_variant=ptl-$ptl_variant; ptl_lib=hlsim-ptl/libhlsim ;;
+    host-ptl)    ptl_variant=ptln-opt; ptl_core=utc-ptl; ptl_libname=libptl ;;
+    host-ptld)   ptl_variant=ptln-dbg; ptl_core=utc-ptl; ptl_libname=libptl ;;
+    host-hlsim)  ptl_variant=ptl-opt;  ptl_core=hlsim-ptl; ptl_libname=libhlsim ;;
+    host-hlsimd) ptl_variant=ptl-dbg;  ptl_core=hlsim-ptl; ptl_libname=libhlsim ;;
 esac
 
 # Compiler selection
@@ -296,10 +301,11 @@ case $slc_dialect-$slc_arch in
     *-host)
 	case $slc_complang-$slc_os in
             c-*hrt)   slc_compiler=($PTHREAD_CC $PTHREAD_CFLAGS) ;;
-            *ptl|*hlsim) slc_compiler=($(cat "$PTL_LIBDIR/$ptl_variant/$ptl_lib.cxxcmd"))
-                         slc_cflags+=($(cat "$PTL_LIBDIR/$ptl_variant/$ptl_lib.cxxflags"))
-                         slc_ppflags+=($(cat "$PTL_LIBDIR/$ptl_variant/$ptl_lib.cppflags"))
-                         ;; 
+            *host-ptl*|*host-hlsim*)
+                 slc_compiler=($(cat "$PTL_LIBDIR/$ptl_variant/$ptl_core/$ptl_libname.cxxcmd"))
+                 slc_cflags+=($(cat "$PTL_LIBDIR/$ptl_variant/$ptl_core/$ptl_libname.cxxflags"))
+                 slc_ppflags+=($(cat "$PTL_LIBDIR/$ptl_variant/$ptl_core/$ptl_libname.cppflags") -I$PTL_INCLUDEDIR/$ptl_variant/$ptl_core)
+                 ;; 
 	    c-*)      slc_compiler=($CC_HOST) ;;
 	    *) echo "$basename: warning: no compiler for $dialect-$arch" >&2 ;;
 	esac
@@ -352,10 +358,9 @@ case $slc_complang-$slc_arch in
     *-x)      slc_aslink=("$scu_helper" assemble/link);;
     *-host)
 	case $slc_complang-$slc_os in
-            c-*hrt)   slc_aslink=($PTHREAD_CC $PTHREAD_CFLAGS $PTHREAD_LIBS) ;;
-	    *ptl|*hlsim) slc_aslink=($(cat "$PTL_LIBDIR/$ptl_variant/$ptl_lib.cxxcmd")) ;;
-	    cpp-*hlsim) slc_aslink=($CXX_HOST $PTHREAD_CFLAGS $PTHREAD_LIBS) ;;
-	    c-*)      slc_aslink=($CC_HOST) ;;
+            c-*hrt)      slc_aslink=($PTHREAD_CC $PTHREAD_CFLAGS $PTHREAD_LIBS) ;;
+	    *host-ptl*|*host-hlsim*) slc_aslink=($(cat "$PTL_LIBDIR/$ptl_variant/$ptl_core/$ptl_libname.cxxcmd")) ;;
+	    c-*)         slc_aslink=($CC_HOST) ;;
 	    *) echo "$basename: warning: no as/ld for $dialect-$arch" >&2 ;;
 	esac
 	;;
@@ -446,9 +451,9 @@ case $slc_os in
 	if test "$slc_use_slrt" != "no"; then
             found=
             for d in $slc_libdir; do
-  		osdir=$d/$slc_variant-$slc_arch-$slc_os
-		if test -r "$osdir/slrt.o"; then
-		    found=$osdir/slrt.o
+  		osdir=$d/$slc_arch-$slc_os
+                if test -r "$osdir/slrt.o"; then
+                    found=$osdir/slrt.o
 		    break
 		fi
             done
@@ -460,11 +465,16 @@ case $slc_os in
         fi
 
 	for d in $slc_libdir; do
-            ldir=$d/$slc_variant-$slc_arch-$slc_os
+            ldir=$d/$slc_arch-$slc_os
             if test -r $ldir; then
 	        slc_ldflags+=("-L$ldir")
             fi
-            ldir=$d/$slc_arch-$slc_os
+            ldir=$d/$slc_arch-$slc_os/$slc_variant
+            if test -r $ldir; then
+	        slc_ldflags+=("-L$ldir")
+            fi
+            # FIXME: backward compat until lib/ is also migrated to new build
+            ldir=$d/$slc_variant-$slc_arch-$slc_os
             if test -r $ldir; then
 	        slc_ldflags+=("-L$ldir")
             fi
@@ -486,8 +496,13 @@ case $slc_os in
 esac
 
 case $slc_os in
-    *-hlsim) slc_ldflags+=($(cat "$PTL_LIBDIR/$ptl_variant/$ptl_lib.ldflags") -L$PTL_LIBDIR/$ptl_variant/hlsim-ptl -lhlsim -lptl) ;;
-    *-ptl)   slc_ldflags+=($(cat "$PTL_LIBDIR/$ptl_variant/$ptl_lib.ldflags") -L$PTL_LIBDIR/$ptl_variant/utc-ptl -lptl) ;;
+   *host-hlsim*|*host-ptl*)
+      slc_ldflags+=($(cat "$PTL_LIBDIR/$ptl_variant/$ptl_core/$ptl_libname.ldflags"))
+      ;;
+esac
+case $slc_os in
+    *host-hlsim*) slc_ldflags+=(-L$PTL_LIBDIR/$ptl_variant/$ptl_core -lhlsim -lptl) ;;
+    *host-ptl*)   slc_ldflags+=(-L$PTL_LIBDIR/$ptl_variant/$ptl_core -lptl) ;;
 esac
 
 set | grep '^slc_'

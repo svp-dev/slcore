@@ -1,5 +1,115 @@
 2011-11-11  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	Implement a new build layout for `tools'.
+
+	* tools/lib/t-seqc/,
+	* tools/lib/t-spr/,
+	* tools/lib/t-sppalpha/,
+	* tools/lib/t-utc/,
+	* tools/lib/t-utc0/,
+	* tools/lib/arggen.c,
+	* tools/lib/mt-profiles/
+	* tools/lib/slc/,
+	* tools/lib/slc_config.py.in: Rename to...
+	
+	* tools/t-seqc/,
+	* tools/t-spr/,
+	* tools/t-sppalpha/,
+	* tools/t-utc/,
+	* tools/t-utc0/,
+	* tools/arggen.c,
+	* tools/mt-profiles/
+	* tools/slc/,
+	* tools/slc_config.py.in: ... here.
+
+	* tools/lib/Makefile.am: Move the corresponding rules to...
+	* tools/Makefile.am: ... here.
+
+	* tools/lib/Makefile.am,
+	* tools/lib/hrt.mk,
+	* tools/lib/seqc.mk,
+	* tools/lib/ptl.mk,
+	* tools/lib/mtalpha.mk,
+	* tools/lib/mtsparc.mk,
+	* tools/lib/host-host-ptl/,
+	* tools/lib/t-ptl/: Retire to...
+
+	* tools/lib/attic/Makefile.am,
+	* tools/lib/attic/hrt.mk,
+	* tools/lib/attic/seqc.mk,
+	* tools/lib/attic/ptl.mk,
+	* tools/lib/attic/mtalpha.mk,
+	* tools/lib/attic/mtsparc.mk,
+	* tools/lib/attic/host-host-ptl/,
+	* tools/lib/attic/t-ptl/: ... here.
+
+	* tools/lib/dummyplaces.c,
+	* tools/lib/empty.c,
+	* tools/lib/fibre.c,
+	* tools/lib/main.c: Rename to...
+
+	* tools/lib/common/dummyplaces.c,
+	* tools/lib/common/empty.c,
+	* tools/lib/common/fibre.c,
+	* tools/lib/common/main.c: ...here.
+
+	* tools/lib/host-host-seqc/load.c,
+	* tools/lib/host-host-seqc/slrt.c: Rename to...
+	
+	* tools/lib/host/load.c,
+	* tools/lib/host/slrt.c: ...here.
+
+	* tools/lib/host-host-hrt/include/sl_hrt.h,
+	* tools/lib/host-host-hrt/tc.c,
+	* tools/lib/host-host-hrt/slrt.c: Rename to...
+	
+	* tools/lib/hrt/include/sl_hrt.h,
+	* tools/lib/hrt/tc.c,
+	* tools/lib/hrt/slrt.c: ...here.
+
+	* tools/lib/mgsim.c,
+	* tools/lib/mtplaces.c: Rename to...
+	* tools/lib/mt/mgsim.c,
+	* tools/lib/mt/mtplaces.c: ...here.
+
+	* tools/lib/mtalpha-sim/slrt.s,
+	* tools/lib/mtalpha-sim/callgate.s,
+	* tools/lib/mtsparc-fpga/slrt.s,
+	* tools/lib/mtsparc-fpga/callgate.s: Rename to...
+
+	* tools/lib/mt/mta/slrt.s,
+	* tools/lib/mt/mta/callgate.s,
+	* tools/lib/mt/mts/slrt.s,
+	* tools/lib/mt/mts/callgate.s: ...here.
+
+	* tools/lib/configure.ac,
+	* tools/lib/Makefile.am,
+	* tools/lib/host-host-seqc/Makefile.am,
+	* tools/lib/host-host-ptl/Makefile.am,
+	* tools/lib/host-host-ptld/Makefile.am,
+	* tools/lib/host-host-hlsim/Makefile.am,
+	* tools/lib/host-host-hlsimd/Makefile.am,
+	* tools/lib/mtalpha-sim/Makefile.am,
+	* tools/lib/mtsparc-sim/Makefile.am,
+	* tools/lib/mtsparc-fpga/Makefile.am,
+	* tools/lib/common.mk,
+	* tools/lib/mt.mk,
+	* tools/lib/host.mk: New.
+
+	* tools/Makefile.am: Define rules to recurse into `lib' with CC
+	set to the newly-built `slc'.
+
+	* configure.ac: Adjust the list of generated files accordingly.	
+
+	* build-aux/slc.m4: Also pass `SLRAR' and `SLRANLIB'.
+
+	* tools/bin/cce.in: Define a new set of `ptl' and `hlsim'
+	targets. Find `slrt' using the new directory layout.
+
+	* lib/ptl.mk: Use the new `ptl' target name.
+
+2011-11-11  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	Clean-up to prepare for a new build layout.
 
 	* Makefile.am: Fix target `show-vars': use `tools' instead of

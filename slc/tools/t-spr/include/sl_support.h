@@ -1,27 +1,14 @@
 
 #define sl_proccall(Fun, ...) do { sl_create(,,,,,,sl__forceseq,Fun, ## __VA_ARGS__); sl_sync(); } while(0)
 
-#if defined(__slc_os_host_ptl__)
+#if defined(__slc_os_host_ptl__) || defined(__slc_os_host_hlsim__) \
+    || defined(__slc_os_host_ptld__) || defined(__slc_os_host_hlsimd__)
 
-/*
-  For using the embedded utc-ptl, use no flags at all. (warning: may not work any more.)
+# include <uTC.h>
 
-  For plain utc-ptl, using an external utc-ptl distribution, use the following flags:
-  -DUSE_EXTERNAL_PTL -DUSE_PLAIN_PTL -I/path/to/ptl/include -L/path/to/ptl/lib -lptl-lib-name
-
-  For utc-ptl + hlsim, using external utc-ptl and hlsim, use the following:
-  -DUSE_EXTERNAL_PTL -I/path/to/ptl/include -L/path/to/ptl/lib -lptl-lib-name \
-        -I/path/to/hlsim/include -L/path/to/hlsim/lib -lhlsim-lib-name
-
- */
-#  ifdef USE_EXTERNAL_PTL
-#    include <uTC.h>
-#    ifndef USE_PLAIN_PTL
-#      include <simulator.h>
-#    endif
-#  else
-#    include "ptl_svp.h"
-#  endif
+# if defined(__slc_os_host_hlsim__) || defined(__slc_os_host_hlsimd__)
+#  include <simulator.h>
+# endif
 
 typedef uTC::family sl_family_t;
 

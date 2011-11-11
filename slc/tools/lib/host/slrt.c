@@ -14,10 +14,11 @@
 
 #include <svp/delegate.h>
 
-sl_place_t __main_place_id = PLACE_DEFAULT;
+sl_place_t __main_place_id = 0;
 
 const char *__tag__ = "\0slr_runner:host:";
 const char *__datatag__ = "\0slr_datatag:seqc-seqc_o-host-host-seqc:";
 
-#include "../load.c"
+#include "load.c"
+
 

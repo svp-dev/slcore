@@ -125,9 +125,9 @@ AC_DEFUN([AC_WITH_SLC],
     base_src='$(abs_top_srcdir)'/$slc_cv_local_src
     base_build='$(abs_top_builddir)'/$slc_cv_local_src
     SLC_INCDIR=$base_src/tools/include:$base_build/tools/include:$base_src/lib/include:$base_build/lib/include
-    SLC_LIBDIR=$base_src/tools/lib:$base_build/tools/lib:$base_src/lib:$base_build/lib
-    SLC_DATADIR=$base_src/tools/lib:$base_build/tools/lib:$base_src/lib:$base_build/lib
-    PYTHONPATH=$base_src/tools/lib:$base_build/tools/lib
+    SLC_LIBDIR=$base_build/tools/lib:$base_build/lib
+    SLC_DATADIR=$base_src/tools:$base_build/tools:$base_src/lib:$base_build/lib
+    PYTHONPATH=$base_src/tools:$base_build/tools
     SPP=$base_src/tools/bin/spp
     SPR=$base_src/tools/bin/spr
     SCU=$base_src/tools/bin/scu
@@ -138,6 +138,8 @@ AC_DEFUN([AC_WITH_SLC],
     SLT_MANY=$base_build/tools/bin/slt-many
     CM4=$base_build/tools/bin/cm4
     TMO=$base_build/tools/bin/timeout
+    SLAR=$base_build/tools/bin/slar
+    SLRANLIB=$base_build/tools/bin/slranlib
     SLC_LOCAL=$base_build/tools/bin/slc
     SLC_BASE=
   elif test "x$SLC_BASE" = x; then
@@ -169,6 +171,8 @@ AC_DEFUN([AC_WITH_SLC],
     SLT_MANY=$SLC_BASE/bin/slt-many
     CM4=$SLC_BASE/bin/cm4
     TMO=$SLC_BASE/bin/timeout
+    SLAR=$SLC_BASE/bin/slar
+    SLRANLIB=$SLC_BASE/bin/slranlib
     SLC_LOCAL=$SLC_BASE/bin/slc
   fi
   AC_SUBST([SLC_LIBDIR])
@@ -186,4 +190,6 @@ AC_DEFUN([AC_WITH_SLC],
   AC_SUBST([SLT_MANY])
   AC_SUBST([CM4])
   AC_SUBST([TMO])
+  AC_SUBST([SLAR])
+  AC_SUBST([SLRANLIB])
 ])
