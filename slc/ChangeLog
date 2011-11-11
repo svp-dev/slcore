@@ -1,5 +1,26 @@
 2011-11-11  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	Minor package clean-up.
+
+	* tools/Makefile.am: Extrate sub-parts into into...
+	* tools/slc.mk,
+	* tools/lib.ml: ...here.
+
+	* tools/lib/r-host.sh.in,
+	* tools/lib/r-mt-sim.sh.in,
+	* tools/lib/r-mt-fpga.sh.in: Rename to...
+	* tools/r-host.sh.in,
+	* tools/r-mt-sim.sh.in,
+	* tools/r-mt-fpga.sh.in: ...here.
+
+	* tools/lib/Makefile.am: Move the related rules to...
+	* tools/runscripts.mk: ...here.
+	* tools/Makefile.am: include it.
+
+	* build-aux/slc.m4 (SLC_LIBDIR): Update accordingly.
+
+2011-11-11  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	Implement a new build layout for `tools'.
 
 	* tools/lib/t-seqc/,
