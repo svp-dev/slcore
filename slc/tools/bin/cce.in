@@ -302,7 +302,7 @@ case $slc_dialect-$slc_arch in
 	case $slc_complang-$slc_os in
             c-*hrt)   slc_compiler=($PTHREAD_CC $PTHREAD_CFLAGS) ;;
             *host-ptl*|*host-hlsim*)
-                 slc_compiler=($(cat "$PTL_LIBDIR/$ptl_variant/$ptl_core/$ptl_libname.cxxcmd"))
+                 slc_compiler=($(cat "$PTL_LIBDIR/$ptl_variant/$ptl_core/$ptl_libname.cxxcmd") -D_GLIBCXX_USE_C99_MATH=1)
                  slc_cflags+=($(cat "$PTL_LIBDIR/$ptl_variant/$ptl_core/$ptl_libname.cxxflags"))
                  slc_ppflags+=($(cat "$PTL_LIBDIR/$ptl_variant/$ptl_core/$ptl_libname.cppflags") -I$PTL_INCLUDEDIR/$ptl_variant/$ptl_core)
                  ;; 
@@ -464,32 +464,30 @@ case $slc_os in
 	    fi
         fi
 
+        have_libmgos_a=
+        have_libm_a=
+        have_libc_a=
 	for d in $slc_libdir; do
             ldir=$d/$slc_arch-$slc_os
             if test -r $ldir; then
 	        slc_ldflags+=("-L$ldir")
+                if test -r $ldir/libmgos.a; then have_libmgos_a=yes; fi
+                if test -r $ldir/libm.a; then have_libm_a=yes; fi
+                if test -r $ldir/libc.a; then have_libc_a=yes; fi
             fi
+
             ldir=$d/$slc_arch-$slc_os/$slc_variant
             if test -r $ldir; then
 	        slc_ldflags+=("-L$ldir")
             fi
-            # FIXME: backward compat until lib/ is also migrated to new build
-            ldir=$d/$slc_variant-$slc_arch-$slc_os
-            if test -r $ldir; then
-	        slc_ldflags+=("-L$ldir")
-            fi
         done
-	if test "$slc_use_libsl" != "no"; then
-            slc_ldflags+=("-lsl")
-	fi
-
-        if test "$slc_use_slrt" != "no"; then
-	    slc_ldflags+=("-lslc")
-        fi
-
-        if test "$slc_use_main" != "no"; then
-            slc_ldflags+=("-lslmain")
-        fi
+        if test "$slc_use_mgos" != "no" -a "$have_libmgos_a" = yes;  then slc_ldflags+=("-lmgos"); fi
+        if test "$slc_use_cstdlib" != "no" -a "$have_libc_a" = yes;  then slc_ldflags+=("-lc"); fi
+        if test "$slc_use_mgos" != "no" -a "$have_libmgos_a" = yes;  then slc_ldflags+=("-lmgos"); fi
+        if test "$slc_use_cstdlib" != "no" -a "$have_libm_a" = yes;  then slc_ldflags+=("-lm"); fi
+	if test "$slc_use_libsl" != "no"; then slc_ldflags+=("-lsl"); fi
+        if test "$slc_use_slrt" != "no"; then slc_ldflags+=("-lslc"); fi
+        if test "$slc_use_main" != "no"; then slc_ldflags+=("-lslmain"); fi
 
         IFS=$save_IFS
 	;;

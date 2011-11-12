@@ -12,12 +12,13 @@
 // `COPYING' file in the root directory.
 //
 
-#include "mtconf.h"
-#include "mgsim.h"
 #include <svp/testoutput.h>
-#include <svp/mtmalloc.h>
 #include <stdlib.h>
 #include <string.h>
+
+#include "mgsim/mtconf.h"
+#include "mgsim/mgsim.h"
+#include "malloc/mtmalloc.h"
 
 extern long __argc;
 extern char** __argv_ptr;

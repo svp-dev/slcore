@@ -6,7 +6,8 @@
 #include <stdlib.h>
 #include <stdint.h>
 #include <svp/mgsim.h>
-#include <svp/mtmalloc.h>
+
+#include "malloc/mtmalloc.h"
 
 /* EXT_FREE(P): delegate to the external memory allocator */
 #define EXT_FREE excl_dlfree

@@ -1,6 +1,11 @@
 
 #define sl_proccall(Fun, ...) do { sl_create(,,,,,,sl__forceseq,Fun, ## __VA_ARGS__); sl_sync(); } while(0)
 
+#ifdef __cplusplus
+/* we need to import std:: since math functions etc may reside there. */
+using namespace std;
+#endif
+
 #if defined(__slc_os_host_ptl__) || defined(__slc_os_host_hlsim__) \
     || defined(__slc_os_host_ptld__) || defined(__slc_os_host_hlsimd__)
 

@@ -16,8 +16,8 @@
 #include <svp/perf.h>
 #include <svp/testoutput.h>
 
-#ifdef __mt_freestanding__
-#include "mtconf.h"
+#if defined(__slc_os_sim__)
+#include "mgsim/mtconf.h"
 #endif
 
 #include <stdio.h>

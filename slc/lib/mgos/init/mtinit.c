@@ -16,12 +16,13 @@
 #include <svp/sep.h>
 #include <svp/fibre.h>
 #include <svp/slr.h>
-#include <svp/mtmalloc.h>
 #include <stdlib.h>
 #include <string.h>
 #include <time.h>
-#include "mtconf.h"
-#include "heap.h"
+
+#include "mgsim/mtconf.h"
+#include "posix-compat/heap.h"
+#include "malloc/mtmalloc.h"
 
 static noinline
 void sys_environ_init(char *initenv)

@@ -1,6 +1,5 @@
 #include <sys/time.h>
 #include <time.h>
-#include "mtconf.h"
 
 time_t time_virtual(time_t* p)
 {

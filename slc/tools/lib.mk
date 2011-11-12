@@ -1,5 +1,3 @@
-include $(top_srcdir)/build-aux/slcvars.mk
-
 .SECONDARY: lib/.configure_done
 lib/.configure_done: $(srcdir)/lib/configure
 	$(AM_V_at)rm -f "$@"
@@ -13,15 +11,11 @@ lib/.configure_done: $(srcdir)/lib/configure
 	         SLAR="$(SLAR)" $(RECURSIVE_CONFIGURE_FLAGS)
 	$(AM_V_at)touch "$@"
 
-.SECONDARY: lib/.build_done
-lib/.build_done: lib/.configure_done bin/cce bin/slc $(srcdir)/lib/configure.ac $(srcdir)/lib/Makefile.am
-	$(AM_V_at)rm -f $@
+.PHONY: lib/.build_done
+lib/.build_done: lib/.configure_done
 	$(AM_V_GEN)cd lib && $(SLC_VARS) $(MAKE) all
-	$(AM_V_at)touch $@
 
 noinst_DATA += lib/.build_done
-
-DIST_SUBDIRS = lib $(SUBDIRS)
 
 install-data-local: lib/.build_done
 	cd lib && $(SLC_VARS) $(MAKE) install prefix="$(prefix)" DESTDIR="$(DESTDIR)"

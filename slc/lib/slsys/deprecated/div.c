@@ -14,7 +14,7 @@
 
 #include <svp/compiler.h>
 #include <svp/abort.h>
-#include <svp/div.h>
+#include <svp/deprecated/div.h>
 
 // algorithm courtesy of Michael Hicks
 

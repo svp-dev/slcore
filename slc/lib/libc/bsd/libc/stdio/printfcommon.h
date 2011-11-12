@@ -52,7 +52,7 @@
 #define	freedtoa	__freedtoa
 #include "gdtoa/gdtoa.h"
 
-#include "mtstdio.h"
+#include "stdio/mtstdio.h"
 
 #define	DEFPREC		6
 

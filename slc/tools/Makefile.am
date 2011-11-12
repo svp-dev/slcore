@@ -1,4 +1,5 @@
 SUBDIRS = bin .
+DIST_SUBDIRS = $(SUBDIRS) lib
 
 nobase_dist_pkgdata_DATA =
 nobase_python_PYTHON =
@@ -9,6 +10,8 @@ EXTRA_DIST =
 MAINTAINERCLEANFILES =
 DISTCLEANFILES = 
 CLEANFILES =
+
+include $(top_srcdir)/build-aux/slcvars.mk
 
 include slc.mk
 include runscripts.mk

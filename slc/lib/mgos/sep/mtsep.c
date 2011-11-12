@@ -20,7 +20,8 @@
 #include <svp/compiler.h>
 #include <svp/testoutput.h>
 #include <svp/delegate.h>
-#include "mtconf.h"
+
+#include "mgsim/mtconf.h"
 
 // log2 of the maximum number of cores that are supported
 #define L2_MAX_NCORES 10

@@ -2,7 +2,7 @@
 #include <sys/time.h>
 #include <time.h>
 
-#include "mtconf.h"
+#include "mgsim/mtconf.h"
 
 int gettimeofday_virtual(struct timeval* tv, struct timezone *tz)
 {

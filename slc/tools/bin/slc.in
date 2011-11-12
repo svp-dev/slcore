@@ -182,9 +182,12 @@ for arg in "$@"; do
                 ;;
 
       -nodefaultmain) slc_use_main=no ;;
-      -nostartfiles) slc_use_slrt=no; slc_use_main=no ;;
-      -nodefaultlibs) slc_use_libsl=no ;;
-      -nostdlib) slc_use_slrt=no; slc_use_libsl=no; slc_use_main=no ;;
+      -nomgos) slc_use_mgos=no ;;
+      -nostartfiles) slc_use_slrt=no; slc_use_mgos=no ;;
+      -nodefaultlibs) 
+          slc_use_cstdlib=no; slc_use_libsl=no slc_use_main=no ;;
+      -nostdlib) 
+          slc_use_mgos=no; slc_use_cstdlib=no; slc_use_slrt=no; slc_use_libsl=no; slc_use_main=no ;;
 
       -g3) 
           echo "$basename: warning: support for $arg is incomplete" >&2
@@ -537,7 +540,14 @@ EOF
 fi
 
 # Here check the configuration
-eval $(slc_use_slrt=$slc_use_slrt slc_use_main=$slc_use_main slc_use_libsl=$slc_use_libsl slc_debug_flags="${slc_debug_flags[*]}" extra_f1flags="${extra_f1flags[*]}" "$cce_helper" -s "$impl")
+eval $(slc_use_mgos=$slc_use_mgos \
+        slc_use_cstdlib=$slc_use_cstdlib \
+        slc_use_slrt=$slc_use_slrt \
+        slc_use_main=$slc_use_main \
+        slc_use_libsl=$slc_use_libsl \
+        slc_debug_flags="${slc_debug_flags[*]}" \
+        extra_f1flags="${extra_f1flags[*]}" \
+        "$cce_helper" -s "$impl")
 
 # If we were requested to test the configuration, do it now
 if test -n "$check"; then

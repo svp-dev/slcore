@@ -1,7 +1,7 @@
 #include <svp/gfx.h>
 #include <svp/testoutput.h>
 #include <svp/compiler.h>
-#include "mtconf.h"
+#include "mgsim/mtconf.h"
 
 uint32_t * __restrict__ __gfx_framebuffer = 0;
 size_t __gfx_w = 0;

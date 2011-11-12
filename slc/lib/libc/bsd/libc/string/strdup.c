@@ -37,7 +37,7 @@ __FBSDID("$FreeBSD: src/lib/libc/string/strdup.c,v 1.6.2.1 2009/08/03 08:13:06 k
 */
 
 #include <string.h>
-#include <svp/fast_malloc.h>
+#include <stdlib.h>
 
 char *
 strdup(const char *str)
@@ -46,7 +46,7 @@ strdup(const char *str)
 	char *copy;
 
 	len = strlen(str) + 1;
-	if ((copy = fast_malloc(len)) == NULL)
+	if ((copy = malloc(len)) == NULL)
 		return (NULL);
 	memcpy(copy, str, len);
 	return (copy);

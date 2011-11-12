@@ -1,3 +1,110 @@
+2011-11-12  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
+	Implement a new build layout for `lib'.
+
+	* lib/mtalpha-sim/include: Move the standard C headers to...
+	* lib/libc/include: ...here.
+
+	* lib/include: Move the SL-specific headers to...
+	* lib/slsys/include: ...here.
+
+	* lib/Makefile.am,
+	* lib/mtalpha.mk,
+	* lib/mtsparc.mk,
+	* lib/mtsparc2.mk,
+	* lib/ptl.mk,
+	* lib/seqc.mk: Retire to...
+
+	* lib/attic/Makefile.am,
+	* lib/attic/mtalpha.mk,
+	* lib/attic/mtsparc.mk,
+	* lib/attic/mtsparc2.mk,
+	* lib/attic/ptl.mk,
+	* lib/attic/seqc.mk: ... here.
+
+	* lib/slsys/Makefile.am: New. Distribute / install the SL-specific
+	headers.
+
+	* lib/slsys/include/svp/deprecated/io.h,
+	* lib/slsys/deprecated/div.c,
+	* lib/slsys/deprecated/io.c: Adjust the include paths.
+
+	* lib/mtamathobjs.mk: Rename to...
+	* lib/mtalpha-sim/mtamathobjs.mk: ...here. Adjust the paths.
+
+	* tools/lib.mk: Extract the include to `slcvars.mk' and the
+	definition of `DIST_SUBDIRS' to...
+	* tools/Makefile.am: ...here.
+
+	* lib/configure.ac,
+	* lib/Makefile.am,
+	* lib/host-host-seqc/Makefile.am,
+	* lib/host-host-ptl/Makefile.am,
+	* lib/host-host-ptld/Makefile.am,
+	* lib/host-host-hlsim/Makefile.am,
+	* lib/host-host-hlsimd/Makefile.am,
+	* lib/mtalpha-sim/Makefile.am,
+	* lib/mtsparc-sim/Makefile.am,
+	* lib/mtsparc-fpga/Makefile.am,
+	* lib/common.mk,
+	* lib/libc-headers.mk,
+	* lib/libc.mk,
+	* lib/malloc.mk,
+	* lib/mgos-host.mk,
+	* lib/mgos.mk,
+	* lib/tlsmalloc.mk: New.
+
+	* lib/gdtoa.mk: Change the path to be relative to one subdirectory
+	deeper.
+
+	* lib/libc/bsd/contrib/gdtoa/misc.c: Fix to support compilation of
+	UTLEON3.
+
+	* lib/libc/bsd/contrib/gdtoa/qnan.c: Use plain C syntax for `main'
+	and C's `printf'.
+
+	* lib/slsys/perf/perf.c,
+	* lib/libc/bsd/stdio/printfcommon.h,
+	* lib/libc/malloc/malloc_excl.c,
+	* lib/libc/malloc/malloc_wrappers.c,
+	* lib/mgos/gfx/mtgfx.c,
+	* lib/mgos/init/mtinit.c,
+	* lib/mgos/input/mtargs.c,
+	* lib/mgos/input/mtinput.c,
+	* lib/mgos/mgsim/mtconf.c,
+	* lib/mgos/posix-compat/gtod.c,
+	* lib/mgos/posix-compat/gtod_virtual.c,
+	* lib/mgos/posix-compat/heap.c,
+	* lib/mgos/posix-compat/mtunix.c,
+	* lib/mgos/sep/mtsep.c,
+	* lib/mgos/tlsmalloc/tls_arch_mtalpha.h,
+	* lib/mgos/tlsmalloc/tls_arch_mtsparc_sim.h,
+	* lib/mgos/uart/mtuart.c: Adjust includes after header renaming.
+
+	* lib/mgos/posix-compat/time.c,
+	* lib/mgos/posix-compat/time_virtual.c: Remove unnecessary
+	includes.
+
+	* lib/libc/bsd/libc/string/strdup.h: Use C's `stdlib.h'.
+
+	* Makefile.am: Use `tools/lib.mk' to recurse into `lib'. Also
+	recurse explicitely in `lib/mgos/tlsmalloc'.
+	* configure.ac: Adjust accordingly.
+
+	* tools/lib/common.mk: Preset `AM_CPPFLAGS' to empty.
+	* tools/lib/mt.mk (AM_CPPFLAGS): Refer to the libc include directory.
+
+	* tools/bin/cce.in: Define `_GLIBCXX_USE_C99_MATH' always
+	for `ptl' and `hlsim'.
+	* tools/t-spr/include/sl_support.h: Import the `std' namespace
+	when using C++, since the math functions are stolen there.
+
+	* tools/bin/slc.in,
+	* tools/bin/cce.in: Support linking with `libmgos', `libc' and
+	`libm' if they are available for the target. New `slr' flag
+	`-nomgos' to disable linking against `libmgos'. Implied by
+	`-nostdlib' and `-nostartfiles'.
+
 2011-11-11  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
 	Move files around for a new build layout for `lib'.

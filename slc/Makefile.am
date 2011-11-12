@@ -13,7 +13,8 @@
 
 # 
 
-SUBDIRS = . build-aux tools lib doc
+SUBDIRS = tools lib/mgos/tlsmalloc . build-aux doc
+DIST_SUBDIRS = $(SUBDIRS) lib
 
 README: $(srcdir)/doc/README.txt
 	$(AM_V_at)rm -f $@
@@ -26,6 +27,8 @@ NEWS: $(srcdir)/doc/NEWS.txt
 	$(AM_V_at)chmod -w $@
 
 include $(srcdir)/build-aux/slcvars.mk
+include $(srcdir)/build-aux/version.mk
+
 show-vars:
 	@echo
 	@echo ": Set the following to work from the source directory;"
@@ -38,4 +41,6 @@ show-vars:
 
 ACLOCAL_AMFLAGS = -I build-aux
 
-include $(srcdir)/build-aux/version.mk
+noinst_DATA = 
+include tools/lib.mk
+

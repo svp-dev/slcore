@@ -5,8 +5,9 @@
 #include <string.h>
 #include <stdarg.h>
 #include <svp/delegate.h>
-#include "mtconf.h"
-#include "RPCServiceDatabase.h"
+
+#include "mgsim/mtconf.h"
+#include "mgsim/RPCServiceDatabase.h"
 
 /* device control words, see mgsim / RPC interface */
 #define RC_CMD    0

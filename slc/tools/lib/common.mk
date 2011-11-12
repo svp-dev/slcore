@@ -3,6 +3,7 @@ AR     = $(SLAR) $(COMMON_TAG)
 CC     = $(SLC) -nostdlib
 CCAS   = $(SLC) -nostdlib
 CCASFLAGS = -b $(COMMON_TAG)
+AM_CPPFLAGS =
 pkglibdir = $(libdir)/sl-core/$(subdir)
 
 noinst_LIBRARIES        = libslrt.a

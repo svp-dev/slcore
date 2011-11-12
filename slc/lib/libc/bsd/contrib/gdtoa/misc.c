@@ -96,9 +96,15 @@ extern sl_place_t __dtoa_place_id;
 
 Bigint *Balloc(int k)
 {
+#if defined(__slc_os_fpga__)
+    // UTLEON3 does not support suspending allocate,
+    // but it does not matter because we are single core
+    return __Balloc(k);
+#else
     sl_create(,__dtoa_place_id,,,,, sl__exclusive, t_Balloc, sl_sharg(Bigint*,ret,0), sl_glarg(int,,k));
     sl_sync();
     return sl_geta(ret);
+#endif
 }
 
 
@@ -131,8 +137,14 @@ sl_enddef
 
 void Bfree(Bigint* v)
 {
+#if defined(__slc_os_fpga__)
+    // UTLEON3 does not support suspending allocate,
+    // but it does not matter because we are single core
+    return __Bfree(v);
+#else
     sl_create(,__dtoa_place_id,,,,, sl__exclusive, t_Bfree, sl_glarg(Bigint*,,v));
     sl_sync();
+#endif
 }
 
 

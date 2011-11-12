@@ -42,7 +42,7 @@ SOFTWARE.
 /* had sizeof(long double) = 10.  Are such compilers still	*/
 /* distributed?							*/
 
-#include <svp/iomacros.h>
+#include <stdio.h>
 #include "arith.h"
 
 #ifndef Long
@@ -65,7 +65,7 @@ typedef unsigned Long Ulong;
 
 #define UL (unsigned long)
 
-sl_def(t_main, void)
+int main(void)
 {
 #ifdef HAVE_IEEE
 	typedef union {
@@ -105,6 +105,6 @@ sl_def(t_main, void)
 		printf("#define ldus_QNAN%d 0x%x\n", i, a.u[i]);
 #endif
 #endif /* HAVE_IEEE */
-//	return 0;
+	return 0;
 	}
-sl_enddef
+

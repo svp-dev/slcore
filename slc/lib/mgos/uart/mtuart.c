@@ -1,7 +1,8 @@
 #include <svp/testoutput.h>
 #include <errno.h>
-#include "mtconf.h"
-#include "mtstdio.h"
+
+#include "mgsim/mtconf.h"
+#include "stdio/mtstdio.h"
 
 #define drain(X) __asm__ __volatile__("mov %0, %0" : : "r"(X))
 

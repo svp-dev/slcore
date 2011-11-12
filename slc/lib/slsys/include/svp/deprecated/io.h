@@ -15,10 +15,12 @@
 #ifndef SLC_SVP_IO_H
 # define SLC_SVP_IO_H
 
-#include <svp/argslot.h>
+#include <svp/deprecated/argslot.h>
 #include <stddef.h>
 
+#ifndef __shutup_io_h
 #warning "this header is deprecated. Use <stdio.h> instead."
+#endif
 
 /* Print a single character to the console output. */
 sl_decl(svp_io_putc, void,

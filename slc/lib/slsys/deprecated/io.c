@@ -13,10 +13,12 @@
 //
 
 #include <svp/compiler.h>
-#include <svp/div.h>
-#include <svp/io.h>
 #include <svp/testoutput.h>
 #include <math.h>
+
+#define __shutup_io_h
+#include <svp/deprecated/div.h>
+#include <svp/deprecated/io.h>
 
 static const char digits[] = "0123456789abcdef";
 

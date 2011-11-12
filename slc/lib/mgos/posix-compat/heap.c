@@ -13,8 +13,9 @@
 //
 #include <errno.h>
 #include <svp/testoutput.h>
+
 #include "heap.h"
-#include "mtconf.h"
+#include "mgsim/mtconf.h"
 
 #if defined(__mtsparc__)
 

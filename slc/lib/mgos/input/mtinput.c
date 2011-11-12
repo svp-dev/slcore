@@ -15,11 +15,12 @@
 #include <svp/fibre.h>
 #include <svp/slr.h>
 #include <svp/testoutput.h>
-#include <svp/mtmalloc.h>
 #include <string.h>
 #include <stdlib.h>
 #include <stdbool.h>
-#include "mtconf.h"
+
+#include "malloc/mtmalloc.h"
+#include "mgsim/mtconf.h"
 
 size_t __fibre_nitems = 0;
 struct fibre_base_t *__fibre_base;

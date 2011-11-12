@@ -14,7 +14,8 @@
 #include <svp/perf.h>
 #include <sys/time.h>
 #include <errno.h>
-#include "mtconf.h"
+
+#include "mgsim/mtconf.h"
 
 static
 int rtc_gettime(struct timeval *tv)

@@ -186,8 +186,7 @@ AC_CONFIG_FILES([
         tools/Makefile
 	tools/bin/Makefile
         tools/slc_config.py
-	lib/Makefile
-        lib/src/tlsmalloc/Makefile
+        lib/mgos/tlsmalloc/Makefile
 	doc/Makefile
 ])
 

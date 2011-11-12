@@ -13,7 +13,7 @@
 //
 
 #include <stdlib.h>
-#include <svp/mtmalloc.h>
+#include "mtmalloc.h"
 
 sl_def(t_dlmalloc,,sl_shparm(void*, szret))
 {
