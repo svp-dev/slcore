@@ -1,5 +1,11 @@
 2011-11-13  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	Update the documentation for version 3.7b.
+
+	* doc/NEWS.txt: Do it.
+
+2011-11-13  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	Minor packaging fix.
 
 	* bootstrap: Properly recurse into `tools/lib' and `lib'.
