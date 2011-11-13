@@ -19,5 +19,7 @@ else
 fi
 
 $AUTORECONF -v -f -i
+(cd tools/lib && $AUTORECONF -v -f -i)
+(cd lib && $AUTORECONF -v -f -i)
 
 echo "Reconfiguration done."

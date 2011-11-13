@@ -2,6 +2,12 @@
 
 	Minor packaging fix.
 
+	* bootstrap: Properly recurse into `tools/lib' and `lib'.
+
+2011-11-13  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
+	Minor packaging fix.
+
 	* tools/slc.mk (nobase_dist_pkgdata_DATA): Distribute and install
 	the files needed for the `mta_on' target.
 
