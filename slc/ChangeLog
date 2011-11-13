@@ -1,3 +1,9 @@
+2011-11-13  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
+	Fix the documentation.
+
+	* doc/NEWS.txt: Do it.
+
 2011-11-11  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
 	Merge the following changes from 3.7b.
