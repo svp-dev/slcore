@@ -133,6 +133,8 @@ nobase_python_PYTHON += \
 nobase_dist_pkgdata_DATA += \
 	t-spr/slimpl.m4 \
 	t-spr/include/sl_support.h \
+	t-sppalpha/slimpl.m4 \
+	t-sppalpha/include/sl_support.h \
 	t-utc/slimpl.m4 \
 	t-utc0/slimpl.m4 \
 	t-utc0/include/sl_support.h \

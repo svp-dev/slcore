@@ -1,5 +1,12 @@
 2011-11-13  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	Minor packaging fix.
+
+	* tools/slc.mk (nobase_dist_pkgdata_DATA): Distribute and install
+	the files needed for the `mta_on' target.
+
+2011-11-13  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	Remove old files.
 
 	* tools/lib/attic,
