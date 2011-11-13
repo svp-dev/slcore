@@ -3,6 +3,7 @@
 set -eu
 cce_helper=${CCE:-@cce_helper@}
 impl=${1:?}
+export slc_use_slrt=no slc_use_libsl=no slc_use_main=no
 eval $("$cce_helper" -s "$impl")
 shift
 exec "${slc_ar[@]}" ${1:+"$@"}

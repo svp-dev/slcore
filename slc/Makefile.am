@@ -33,7 +33,7 @@ show-vars:
 	@for n in $(SLC_VARS); do \
 	   echo "export $$n;"; \
 	done
-	@echo "export PATH=$(abs_top_builddir)/slc/tools/bin:$$PATH;"
+	@echo "export PATH=$(abs_top_builddir)/tools/bin:$$PATH;"
 
 
 ACLOCAL_AMFLAGS = -I build-aux

@@ -1,1 +1,1 @@
-../../tools/lib/empty.c
+int __unused() {};

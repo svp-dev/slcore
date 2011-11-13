@@ -13,6 +13,8 @@
 //
 
 #include <svp/delegate.h>
+#include <stdlib.h>
+
 
 #undef get_current_place
 sl_place_t get_current_place(void) {

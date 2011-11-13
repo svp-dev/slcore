@@ -52,16 +52,8 @@ AC_DEFUN([_SLC_WITH_CROSS_GCC],
  AC_PATH_PROG([CC_MTSPARC], [mtsparc-linux-gnu-gcc], [no], [$prefix/bin$PATH_SEPARATOR$PATH])
 ])
 
-# SLC_CHECK_TARGETS
-# --------------
-# Try to find the GCC cross-compilers for alpha-linux and leon-linux.
-AC_DEFUN([SLC_CHECK_TARGETS],
+AC_DEFUN([SLC_TARGET_FLAGS],
 [dnl
-  AC_REQUIRE([AC_PROG_CXX])
-  AC_REQUIRE([AC_WITH_MG_BINUTILS])
-  AC_REQUIRE([AC_WITH_MGSIM])
-  AC_REQUIRE([_SLC_WITH_CROSS_GCC])
-
   AC_ARG_ENABLE([ptl],
                 [AC_HELP_STRING([--disable-ptl],
                                 [disable support for muTC-ptl compilation (default is try to enable)])],
@@ -90,6 +82,20 @@ AC_DEFUN([SLC_CHECK_TARGETS],
                 [], [enable_mtsparc=yes])
 
   AC_CONFIG_COMMANDS_PRE([AM_CONDITIONAL([ENABLE_SLC_MTSPARC], [test "x$enable_mtsparc" = xyes])])
+  AC_CONFIG_COMMANDS_PRE([RECURSIVE_CONFIGURE_FLAGS="--enable-ptl=$enable_ptl --enable-hlsim=$enable_hlsim --enable-hrt=$enable_hrt --enable-mtalpha=$enable_mtalpha --enable-mtsparc=$enable_mtsparc"; AC_SUBST([RECURSIVE_CONFIGURE_FLAGS])])
+])
+
+# SLC_CHECK_TARGETS
+# --------------
+# Try to find the GCC cross-compilers for alpha-linux and leon-linux.
+AC_DEFUN([SLC_CHECK_TARGETS],
+[dnl
+  AC_REQUIRE([AC_PROG_CXX])
+  AC_REQUIRE([AC_WITH_MG_BINUTILS])
+  AC_REQUIRE([AC_WITH_MGSIM])
+  AC_REQUIRE([_SLC_WITH_CROSS_GCC])
+
+  AC_REQUIRE([SLC_TARGET_FLAGS])
 ])
 
 AC_DEFUN([AC_WITH_SLC],
