@@ -1,3 +1,10 @@
+2011-11-13  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
+	Remove old files.
+
+	* tools/lib/attic,
+	* lib/attic: Remove.
+
 2011-11-12  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
 	Implement a new build layout for `lib'.

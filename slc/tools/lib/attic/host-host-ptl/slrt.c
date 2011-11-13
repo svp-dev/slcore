@@ -1,1 +1,0 @@
-../host-host-seqc/slrt.c
