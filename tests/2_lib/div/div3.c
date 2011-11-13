@@ -14,6 +14,10 @@
 
 #include <svp/div.h>
 
+// ignored for now until the legacy "svp" interface
+// is replaced by C99's div
+// XIGNORE: *:*
+
 sl_def(t_main, void)
 {
   unsigned long xqu = 42, yqu = 5;

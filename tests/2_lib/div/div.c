@@ -16,6 +16,10 @@
 #include <svp/slr.h>
 #include <stdio.h>
 
+// ignored for now until the legacy "svp" interface
+// is replaced by C99's div
+// XIGNORE: *:*
+
 sl_def(testu, void,
        sl_glparm(uint64_t, x),
        sl_glparm(uint64_t, y))

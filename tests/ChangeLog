@@ -1,3 +1,15 @@
+2011-11-13  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
+	Fix the test suite after the recent upheaval of sl-core.
+
+	* 2_lib/alloca/a2.c,
+	* 2_lib/alloca/a3.c: Use `stdio.h' to import a valid `printf'.
+
+	* 2_lib/div/div.c,
+	* 2_lib/div/div2.c,
+	* 2_lib/div/div3.c: Disable for now. These must be replaced by new
+	tests using the C99 `div' API.
+
 2011-10-09  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
 	* configure.ac: New e-mail contact address.

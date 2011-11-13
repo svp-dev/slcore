@@ -16,6 +16,10 @@
 #include <assert.h>
 #include <stdio.h>
 
+// ignored for now until the legacy "svp" interface
+// is replaced by C99's div
+// XIGNORE: *:*
+
 sl_def(t_main, void)
 {
   uint64_t x = 69, y = 5;

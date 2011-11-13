@@ -13,7 +13,7 @@
 //
 
 #include <alloca.h>
-#include <svp/iomacros.h>
+#include <stdio.h>
 
 sl_def(foo, void,
        sl_glparm(char*, p1),
