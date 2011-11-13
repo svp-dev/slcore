@@ -4,11 +4,35 @@
 
 This document describes major updates to the SL toolchain.
 
-Version 3.6b (Development)
-==========================
+Version 3.6
+===========
 
 Changes since 3.5b
 ------------------
+
+Language and library
+````````````````````
+
+- Program command-line arguments passed through `slr' are now
+  propagated to C's `main's argc/argv pair on all targets.
+
+- The Fibre and "slr variables" data input mechanisms now align the
+  data on addresses multiple of 64 bytes. This is an attempt at
+  aligning the data on cache line boundaries (requested by Bert
+  Gijsbers).
+
+- Multiple versions of the TLS heap allocator are generated, with
+  different levels of debugging instrumentation and with and without
+  garbage collection of remotely deallocated chunks. The
+  implementation can be chosen by linking one of the various
+  `mta_tlsmalloc' objects generated.
+
+- Preliminary support for POSIX file access is implemented on MT
+  targets.
+
+- Remove support for so-called "infinite" thread families. Programs
+  that need many threads can simple use a large index range or loop on
+  family creation.
 
 Microgrid-specific changes
 ``````````````````````````
@@ -21,7 +45,7 @@ Microgrid-specific changes
 
 - In particular, the Microgrid supports a real time clock, from which
   C's ``time()`` function is implemented. More support for time will be
-  added as need arises.
+  added as need arises
 
 - Also as a consequence the graphical framebuffer is supported as an
   I/O device. The ``gfx_`` API from the SL library has been modified to
@@ -39,13 +63,12 @@ Microgrid-specific changes
   profiles for large grids and random banked memory have been updated
   to reflect they they are not realistic configurations.
 
-Language and library
-````````````````````
+- The non-thread-safe functions `vfprintf', `gdtoa' and `dlmalloc'
+  have been isolated to execute mutually exclusively on their own
+  cores.
 
-- The Fibre and "slr variables" data input mechanisms now align the
-  data on addresses multiple of 64 bytes. This is an attempt at
-  aligning the data on cache line boundaries (requested by Bert
-  Gijsbers).
+- Several code generation optimizations and fixes, on both MT-Alpha
+  and MT-SPARC (see the ChangeLog for details).
 
 Version 3.5b (Development)
 ==========================

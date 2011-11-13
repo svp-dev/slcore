@@ -1,3 +1,9 @@
+2011-11-13  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
+	Update the documentation for version 3.6.
+
+	* doc/NEWS.txt: Do it.
+
 2011-10-24  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
 	Allow to disable automatic `swch' placement.
