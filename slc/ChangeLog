@@ -1,3 +1,9 @@
+2011-11-15  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
+	Fix the entry point for ptl and hlsim programs.
+
+	* tools/lib/host/slrt.c: Implement the `_main'/`Pmain' magic.
+
 2011-11-13  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
 	Update the documentation for version 3.7b.

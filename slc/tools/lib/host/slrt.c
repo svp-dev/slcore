@@ -21,4 +21,30 @@ const char *__datatag__ = "\0slr_datatag:seqc-seqc_o-host-host-seqc:";
 
 #include "load.c"
 
+#if defined(__slc_os_host_ptl__) || defined(__slc_os_host_hlsim__) \
+    || defined(__slc_os_host_ptld__) || defined(__slc_os_host_hlsimd__)
 
+/* utc-ptl and hlsim define their own "main" function which initialize the ptl
+   library, then creates an initial family running a function called "_main". However
+   the input SL code may also require to define a plain C "main" function and expect
+   that to be run in a thread. 
+
+   So instead we rename all occurrences of "main" in the SL code to "Pmain", and
+   we use that from here.
+*/
+
+// defined by program
+extern int Pmain(int, char**);
+
+// Wrapper from an SVP-PTL style thread function to the
+// user level main function with the original arguments.
+void _main(void)
+{
+    int argc;
+    char **argv, **envp;
+    uTC::args_get(&argc, &argv, &envp);
+
+    Pmain(argc, argv);
+}
+
+#endif // ptl || hlsim
