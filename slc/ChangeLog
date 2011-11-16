@@ -1,5 +1,12 @@
 2011-11-16  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	Minor packaging fix.
+	
+	* build-aux/slc.m4: Update the include path so that `slc' can find
+	the slsys headers.
+
+2011-11-16  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	Increase compatibility with `hlsim'.
 
 	* lib/mgos/sep/mtsep.c: Avoid reading the MGSim configuration
