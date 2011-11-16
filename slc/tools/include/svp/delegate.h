@@ -32,11 +32,12 @@ extern sl_place_t get_current_place(void);
 extern unsigned long get_core_id(void);
 extern sl_place_t get_local_place(void);
 
-#if !defined(__AVOID_INLINABLE_PRIMITIVES) && defined(__mt_freestanding__) && \
+#if !defined(__AVOID_INLINABLE_PRIMITIVES) && \
     defined(__GNUC__) && !defined(__AVOID_GNUISMS)
 
 #include <svp/compiler.h>
 
+#if defined(__mt_freestanding__)
 alwaysinline unused
 sl_place_t __inline_get_current_place(void)
 {
@@ -54,6 +55,8 @@ unsigned long __inline_get_core_id(void)
     return p;
 }
 #define get_core_id() __inline_get_core_id()
+
+#endif
 
 alwaysinline unused
 sl_place_t __inline_get_local_place(void)

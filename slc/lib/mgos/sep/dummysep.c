@@ -7,7 +7,7 @@ int root_sep_ctl(struct SEP* sep, unsigned long request, void *a, void *b)
     return -1;
 }
 
-void sep_dump_info(struct SEP* unused)
+void sep_dump_info(struct SEP* notused)
 {
     /* do nothing */
 }

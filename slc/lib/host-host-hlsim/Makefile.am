@@ -23,4 +23,4 @@ ptl_hybrid_libsl_a_SOURCES = $(SPEC_SOURCES)
 ptl_hybrid_libsl_a_LIBADD = $(libslcommon_a_OBJECTS)
 ptl_hybrid_libsl_a_DEPENDENCIES = $(ptl_hybrid_libsl_a_LIBADD)
 
-include ../mgos-host.mk
+include ../mgos-hlsim.mk

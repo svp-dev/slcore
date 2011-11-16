@@ -1,3 +1,27 @@
+2011-11-16  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
+	Increase compatibility with `hlsim'.
+
+	* lib/mgos/sep/mtsep.c: Avoid reading the MGSim configuration
+	variables if MGSim is not used.
+
+	* tools/include/svp/delegate.h: Share the definition of
+	`get_local_place()' over all targets.
+
+	* tools/lib/common/dummyplaces.c: Implement primitives also for
+	hlsim.
+
+	* tools/lib/host/slrt.c: Initialize the SEP when using hlsim.
+	
+	* lib/mgos-hlsim.mk: New.
+	
+	* lib/host-host-hlsim/Makefile.am,
+	* lib/host-host-hlsimd/Makefile.am: Use it to include the SEP in
+	the library.
+
+	* lib/mgos/sep/dummysep.c: Avoid the word `unused' which may be
+	defined by a header.
+
 2011-11-15  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
 	Fix the entry point for ptl and hlsim programs.

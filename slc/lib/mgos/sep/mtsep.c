@@ -297,9 +297,17 @@ int root_sep_ctl(struct SEP* sep, unsigned long request, void *a, void *b)
         {
             // One core-place: atomic, programmable
             ret->flags = 2|4|1;
+#if defined(__slc_os_sim__)
             ret->a.p.family_capacity = mgconf_ftes_per_core;
             ret->a.p.thread_capacity = mgconf_ttes_per_core;
             ret->a.p.rate            = mgconf_core_freq;
+#else
+            // FIXME: this information should be retrieved
+            // from the substrate execution environment.
+            ret->a.p.family_capacity = 0;
+            ret->a.p.thread_capacity = 0; 
+            ret->a.p.rate            = 0;
+#endif
         }
         else
         {

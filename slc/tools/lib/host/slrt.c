@@ -14,6 +14,8 @@
 
 #include <svp/delegate.h>
 
+unsigned long boot_ts = 0;
+int verbose_boot = 1;
 sl_place_t __main_place_id = 0;
 
 const char *__tag__ = "\0slr_runner:host:";
@@ -35,16 +37,28 @@ const char *__datatag__ = "\0slr_datatag:seqc-seqc_o-host-host-seqc:";
 
 // defined by program
 extern int Pmain(int, char**);
+extern void sys_sep_init(void);
+
+extern int __main_exit_status;
 
 // Wrapper from an SVP-PTL style thread function to the
 // user level main function with the original arguments.
 void _main(void)
 {
+
+#if defined(__slc_os_host_hlsim__) || defined(__slc_os_host_hlsimd__)
+    char * v = getenv("MGSYS_QUIET");
+    if (v != NULL)
+        verbose_boot = 0;
+    
+    sys_sep_init();
+#endif
+
     int argc;
     char **argv, **envp;
     uTC::args_get(&argc, &argv, &envp);
 
-    Pmain(argc, argv);
+    __main_exit_status = Pmain(argc, argv);
 }
 
 #endif // ptl || hlsim

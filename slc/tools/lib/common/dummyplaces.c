@@ -15,46 +15,46 @@
 #include <svp/delegate.h>
 #include <stdlib.h>
 
-
 #undef get_current_place
 sl_place_t get_current_place(void) {
-#if defined(__mt_freestanding__)
+#if defined(__slc_os_sim__)
     return __inline_get_current_place();
-#else 
+#endif
 #if defined(__slc_os_host_seqc__)
-    return 0;
-#else
-    // unimplemented yet
+    return 1;
+#endif
+#if defined(__slc_os_host_hlsim__) || defined(__slc_os_host_hlsimd__)
+    return hlsim_get_current_place();
+#endif
+
+
+    // here none of the conditions above apply,
+    // but there is no reasonable default. So we 
+    // cannot allow the program to continue.
     abort();
-#endif
-#endif
 }
 
 #undef get_core_id
 unsigned long get_core_id(void) {
-#if defined(__mt_freestanding__)
+#if defined(__slc_os_sim__)
     return __inline_get_core_id();
-#else 
+#endif
 #if defined(__slc_os_host_seqc__)
     return 0;
-#else
-    // unimplemented yet
+#endif
+#if defined(__slc_os_host_hlsim__) || defined(__slc_os_host_hlsimd__)
+    return hlsim_get_core_id();
+#endif
+
+    // here none of the conditions above apply,
+    // but there is no reasonable default. So we 
+    // cannot allow the program to continue.
     abort();
-#endif
-#endif
 }
 
 #undef get_local_place
 sl_place_t get_local_place(void) {
-#if defined(__mt_freestanding__)
     return __inline_get_local_place();
-#else 
-#if defined(__slc_os_host_seqc__)
-    return 0;
-#else
-    // unimplemented yet
-    abort();
-#endif
-#endif
 }
+
 
