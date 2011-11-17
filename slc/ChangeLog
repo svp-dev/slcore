@@ -1,5 +1,14 @@
 2011-11-17  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	Minor build fixes.
+
+	* tools/lib/host/load.c: Include `stdint.h' for 'uintptr_t'.
+	* tools/include/svp/delegate.h: Include `stdlib.h' to declare
+	`abort()' (required with GNU which may also have throw specifiers
+	in the declaration).
+
+2011-11-17  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	Fix initialization on the sequential target.
 
 	* lib/mgos/init/mtinit.c (sys_init): Do not handle `-n' if running

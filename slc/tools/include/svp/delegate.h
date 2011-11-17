@@ -36,7 +36,7 @@ extern sl_place_t get_local_place(void);
     defined(__GNUC__) && !defined(__AVOID_GNUISMS)
 
 #include <svp/compiler.h>
-extern void abort(void);
+#include <stdlib.h>
 
 alwaysinline unused
 sl_place_t __inline_get_current_place(void)
