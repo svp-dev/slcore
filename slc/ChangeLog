@@ -1,5 +1,12 @@
 2011-11-17  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	Fix initialization on the sequential target.
+
+	* lib/mgos/init/mtinit.c (sys_init): Do not handle `-n' if running
+	on the sequential target.
+
+2011-11-17  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	Homogeneize MT and host system initialization.
 
 	* tools/lib/mt/mtplaces.c: Rename to...

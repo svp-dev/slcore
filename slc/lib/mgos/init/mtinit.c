@@ -55,7 +55,11 @@ void sys_init(void* slrbase_init,
 
 #endif
 
+#if !defined(__slc_os_host_seqc__)
+
     sys_check_ncores();
+
+#endif
 
     if (verbose_boot) {
         output_string("* init compiled with slc " __slc_version_string__ ".\n"
