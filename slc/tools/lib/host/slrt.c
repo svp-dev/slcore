@@ -37,7 +37,6 @@ const char *__datatag__ = "\0slr_datatag:seqc-seqc_o-host-host-seqc:";
 
 // defined by program
 extern int Pmain(int, char**);
-extern void sys_sep_init(void);
 
 extern int __main_exit_status;
 
@@ -45,18 +44,11 @@ extern int __main_exit_status;
 // user level main function with the original arguments.
 void _main(void)
 {
-
-#if defined(__slc_os_host_hlsim__) || defined(__slc_os_host_hlsimd__)
-    char * v = getenv("MGSYS_QUIET");
-    if (v != NULL)
-        verbose_boot = 0;
-    
-    sys_sep_init();
-#endif
-
     int argc;
     char **argv, **envp;
     uTC::args_get(&argc, &argv, &envp);
+
+    sys_init(NULL, NULL, NULL);
 
     __main_exit_status = Pmain(argc, argv);
 }

@@ -1,3 +1,45 @@
+2011-11-17  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
+	Homogeneize MT and host system initialization.
+
+	* tools/lib/mt/mtplaces.c: Rename to...
+	* tools/lib/common/places.c: ... here.
+
+	* tools/lib/host.mk,
+	* tools/lib/mt.mk: Use it.
+
+	* tools/lib/common/dummyplaces.c: Remove.
+
+	* tools/include/svp/delegate.h: Implement the inlinable primitives
+	here.
+
+	* tools/lib/host/load.c,
+	* tools/lib/host/slrt.c: Call `sys_init' before the program starts.
+
+	* tools/r-host.sh.in: Ensure the sub-process that generates data
+	is run as if `-n 0' was passed, and reduce the output with
+	`MGSYS_QUIET'.
+
+	* lib/mgos/init/mtinit.c: Separate sub-parts into...
+	* lib/mgos/init/mtinit.h,
+	* lib/mgos/init/initmain.h,
+	* lib/mgos/init/initplaces.h,
+	* lib/mgos/init/inienvt.h: ...here.
+
+	* lib/mgos.mk: Update accordingly.
+
+	* lib/mgos/init/mtinit.c: Call only the initializers relevant on
+	each target.
+
+	* lib/mgos-host.mk: Include the initialization code and the same
+	SEP as other platforms.
+
+	* lib/host-host-hlsim/Makefile.am,
+	* lib/host-host-hlsimd/Makefile.am: Use it.
+
+	* lib/mgos-hlsim.mk,
+	* lib/mgos/sep/dummysep.c: Remove.
+
 2011-11-16  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
 	Minor packaging fix.

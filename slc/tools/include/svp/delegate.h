@@ -36,27 +36,53 @@ extern sl_place_t get_local_place(void);
     defined(__GNUC__) && !defined(__AVOID_GNUISMS)
 
 #include <svp/compiler.h>
+extern void abort(void);
 
-#if defined(__mt_freestanding__)
 alwaysinline unused
 sl_place_t __inline_get_current_place(void)
 {
+#if defined(__slc_os_sim__)
     sl_place_t p;
     __asm__("getpid %0" : "=r"(p));
     return p;
+#endif
+#if defined(__slc_os_host_seqc__) \
+  || defined(__slc_os_host_ptl__) || defined(__slc_os_host_ptld__)
+    return 1;
+#endif
+#if defined(__slc_os_host_hlsim__) || defined(__slc_os_host_hlsimd__)
+    return hlsim_get_current_place();
+#endif
+    
+    // here none of the conditions above apply,
+    // but there is no reasonable default. So we 
+    // cannot allow the program to continue.
+    abort();
 }
 #define get_current_place() __inline_get_current_place()
 
 alwaysinline unused
 unsigned long __inline_get_core_id(void)
 {
+#if defined(__slc_os_sim__)
     unsigned long p;
     __asm__("getcid %0" : "=r"(p));
     return p;
+#endif
+#if defined(__slc_os_host_seqc__) \
+  || defined(__slc_os_host_ptl__) || defined(__slc_os_host_ptld__)
+    return 0;
+#endif
+#if defined(__slc_os_host_hlsim__) || defined(__slc_os_host_hlsimd__)
+    return hlsim_get_core_id();
+#endif
+
+    // here none of the conditions above apply,
+    // but there is no reasonable default. So we 
+    // cannot allow the program to continue.
+    abort();
 }
 #define get_core_id() __inline_get_core_id()
-
-#endif
 
 alwaysinline unused
 sl_place_t __inline_get_local_place(void)

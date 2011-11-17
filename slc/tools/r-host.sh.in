@@ -11,6 +11,21 @@ DEBUGGER=${DEBUGGER:-gdb --args}
 shift
 shift
 shift
+
+
+##
+## Selection of the number of cores
+##
+
+if test -n "${SLR_RECURSIVE:-}"; then
+  export MGSYS_QUIET=1
+  unset SLR_NCORES SIMARGS
+fi
+
+##
+## Sanity checks.
+##
+
 if ! test -x "$program"; then
     echo "$basename: $program: not an executable" >&2
     exit 127

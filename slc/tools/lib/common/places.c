@@ -1,5 +1,5 @@
 //
-// mtplaces.c: this file is part of the SL toolchain.
+// places.c: this file is part of the SL toolchain.
 //
 // Copyright (C) 2011 The SL project.
 //
@@ -28,4 +28,3 @@ unsigned long get_core_id(void) {
 sl_place_t get_local_place(void) {
     return __inline_get_local_place();
 }
-

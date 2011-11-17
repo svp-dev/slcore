@@ -1,7 +1,11 @@
 libmgos_a_CFLAGS = -b $(COMMON_TAG)
 libmgos_a_SOURCES = \
 	../mgos/gfx/mtgfx.c \
+	../mgos/init/mtinit.h \
 	../mgos/init/mtinit.c \
+	../mgos/init/initenv.c \
+	../mgos/init/initmain.c \
+	../mgos/init/initplaces.c \
 	../mgos/input/mtargs.c \
 	../mgos/input/mtinput.c \
 	../mgos/mgsim/RPCServiceDatabase.h \

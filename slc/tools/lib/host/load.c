@@ -67,6 +67,7 @@ void load_binary_data(const char* fname, void**ptr, bool verbose)
     fclose(f);
 }
 
+extern void sys_init(void*, void*, char*);
 
 #ifdef __cplusplus
 extern "C" {
@@ -78,11 +79,12 @@ void *__fibre_base = 0;
 __attribute__((__constructor__))
 void slr_init(void)
 {
+    /* VERBOSE set by slr -t or -g */
     char *vs = getenv("VERBOSE");
     bool verbose = false;
     if (vs && vs[0])
         verbose = true;
-    
+
     char *data = getenv("SLR_DATA");
     if (data)
         load_binary_data(data, &__slr_base, verbose);
@@ -90,6 +92,16 @@ void slr_init(void)
     char *fdata = getenv("SLR_FDATA");
     if (fdata)
         load_binary_data(fdata, &__fibre_base, verbose);    
+
+    /* MGSYS_QUIET set by user */
+    if (getenv("MGSYS_QUIET") != NULL)
+        verbose_boot = 0;    
+
+#if !defined(__slc_os_host_hlsim__) && !defined(__slc_os_host_hlsimd__)
+    /* hlsim must be initialized via main first, 
+     so sys_init gets called from _main() instead. */
+    sys_init(NULL, NULL, NULL);
+#endif
 }
 
 #ifdef __cplusplus
