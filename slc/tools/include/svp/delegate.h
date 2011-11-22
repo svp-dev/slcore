@@ -46,14 +46,13 @@ sl_place_t __inline_get_current_place(void)
     __asm__("getpid %0" : "=r"(p));
     return p;
 #endif
-#if defined(__slc_os_host_seqc__) \
-  || defined(__slc_os_host_ptl__) || defined(__slc_os_host_ptld__)
-    return 1;
-#endif
 #if defined(__slc_os_host_hlsim__) || defined(__slc_os_host_hlsimd__)
     return hlsim_get_current_place();
+#endif 
+#if !defined(__slc_multiple_places__)
+    return 1;
 #endif
-    
+   
     // here none of the conditions above apply,
     // but there is no reasonable default. So we 
     // cannot allow the program to continue.
@@ -69,12 +68,11 @@ unsigned long __inline_get_core_id(void)
     __asm__("getcid %0" : "=r"(p));
     return p;
 #endif
-#if defined(__slc_os_host_seqc__) \
-  || defined(__slc_os_host_ptl__) || defined(__slc_os_host_ptld__)
-    return 0;
-#endif
 #if defined(__slc_os_host_hlsim__) || defined(__slc_os_host_hlsimd__)
     return hlsim_get_core_id();
+#endif
+#if !defined(__slc_multiple_places__)
+    return 0;
 #endif
 
     // here none of the conditions above apply,

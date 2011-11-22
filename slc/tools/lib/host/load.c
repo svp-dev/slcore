@@ -98,8 +98,8 @@ void slr_init(void)
     if (getenv("MGSYS_QUIET") != NULL)
         verbose_boot = 0;    
 
-#if !defined(__slc_os_host_hlsim__) && !defined(__slc_os_host_hlsimd__)
-    /* hlsim must be initialized via main first, 
+#if !defined(__slc_os_init_via_main__)
+    /* hlsim/ptl must be initialized via main first, 
      so sys_init gets called from _main() instead. */
     sys_init(NULL, NULL, NULL);
 #endif

@@ -1,5 +1,18 @@
 2011-11-22  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	Better integration for `hls' and `ptl' targets.
+
+	* tools/bin/cce.in: Define `__slc_os_init_via_main__' (run-time
+	initialized during `main', thus not available in global
+	constructors) and `__slc_multiple_places__' (more than 1 place
+	supported) for all targets where they are true.
+
+	* tools/include/svp/delegate.h,
+	* tools/lib/host/load.c,
+	* lib/mgos/init/mtinit.c: Use the new macros.
+
+2011-11-22  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	Fix debugging of `hlsd' and `ptld' targets.
 
 	* tools/bin/cce.in: Preset the compiler flags before defining the

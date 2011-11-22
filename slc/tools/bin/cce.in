@@ -405,7 +405,17 @@ slc_ppflags+=( \
     -D__slc_os_${slc_os//[^a-zA-Z0-9]/_}__ )
 
 # Extra flag selection
+case $slc_arch-$slc_os in
+    host-host-hlsim* | mt*-sim) 
+        slc_ppflags+=(-D__slc_multiple_places__) ;;
+esac
+case $slc_arch-$slc_os in
+    host-host-ptl* | host-host-hlsim*) 
+        slc_ppflags+=(-D__slc_os_init_via_main__)
+        ;;
+esac
 
+# Default underlying compiler
 case $slc_arch in
     mtalpha)
         slc_cflags+=(-mcpu=21264a -fno-math-errno -fno-trapping-math)

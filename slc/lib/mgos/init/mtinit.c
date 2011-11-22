@@ -48,14 +48,9 @@ void sys_init(void* slrbase_init,
 
     sys_sep_init();
 
-#if !defined(__slc_arch_host__) || \
-  defined(__slc_os_host_hlsim__) || defined(__slc_os_host_hlsimd__)
+#if defined(__slc_multiple_places__)
 
     sys_places_init();
-
-#endif
-
-#if !defined(__slc_os_host_seqc__)
 
     sys_check_ncores();
 
