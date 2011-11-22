@@ -1,3 +1,12 @@
+2011-11-22  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
+	Fix debugging of `hlsd' and `ptld' targets.
+
+	* tools/bin/cce.in: Preset the compiler flags before defining the
+	compiler, so that the hlsim/ptl overrides are appended after the
+	preset. In particular this allows things like `-g -O0' to be
+	imported after the default `-O2'.
+
 2011-11-17  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
 	Minor build fixes.

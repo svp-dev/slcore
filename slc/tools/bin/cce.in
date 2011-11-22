@@ -294,6 +294,21 @@ case $slc_os in
     host-hlsimd) ptl_variant=ptl-dbg;  ptl_core=hlsim-ptl; ptl_libname=libhlsim ;;
 esac
 
+# Compiler flags selection; default to optimize
+# must occur before compiler selection below, so that ptl
+# overrides can change the optimization level.
+case $slc_dialect-$slc_arch in
+    spr-mt*)
+	slc_cflags+=(-O2) ;;
+    spr-host)
+        slc_cflags+=(-O2) ;;
+    spp-*)
+	slc_cflags+=(-O2 -DMT_FORCE_TEMP_FOR_SHARED_WRITE=1) ;;
+    utc0-*)
+	slc_cflags+=(-O1) ;;
+    *) ;;
+esac
+
 # Compiler selection
 case $slc_dialect-$slc_arch in
     utc-x) slc_compiler=($CC_HOST -E) ;;
@@ -328,19 +343,6 @@ case $slc_dialect-$slc_arch in
 	slc_filter2=("$python" "$spp_helper" "$slc_transbase" filter2)
 	;;
 
-esac
-
-# Compiler flags selection; default to optimize
-case $slc_dialect-$slc_arch in
-    spr-mt*)
-	slc_cflags+=(-O2) ;;
-    spr-host)
-        slc_cflags+=(-O2) ;;
-    spp-*)
-	slc_cflags+=(-O2 -DMT_FORCE_TEMP_FOR_SHARED_WRITE=1) ;;
-    utc0-*)
-	slc_cflags+=(-O1) ;;
-    *) ;;
 esac
 
 # Disable debugging for the MT targets
