@@ -96,7 +96,7 @@ class TFun_2_ptlTFun(DefaultVisitor):
 
     def visit_indexdecl(self, idecl):
         return flatten(idecl.loc, 
-                       " uTC::index %s" 
+                       " uTC::index __tmp_index; long int %s = __tmp_index" 
                        % idecl.indexname) 
 
     def visit_break(self, br):

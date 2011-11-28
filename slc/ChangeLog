@@ -1,3 +1,13 @@
+2011-03-08  Irfan Uddin  <mirfanud@uva.nl>
+
+	sl_index fixed for hl-sim.
+	
+	* tools/slc/ptl/gentfun.py: Indexes were wrong in hlsim. The
+	problem was in conversion, because in ptl indices are objects and
+	conversion to long gives wrong results. In the translater code I
+	generate a temp object of index, and then convert that index to
+	long.
+
 2011-11-22  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
 	Better integration for `hls' and `ptl' targets.
