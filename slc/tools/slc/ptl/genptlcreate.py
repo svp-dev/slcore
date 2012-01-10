@@ -129,20 +129,22 @@ class Create_2_ptlCreate(ScopedVisitor):
         # generate create
 
         if cr.sync_type == 'detach':
-            newbl += (flatten(cr.loc, 'uTC::create(*(uTC::family*)(void*)&') + usefvar + ', ' +
-		                  '(uTC::context)(void*)' + usefvar + ', ' + 'false, true, ' +
-						   start + ',' + limit + ',' + step + ',' + block
-						  + ',' + funvar + callist + ');')
+            printmsg = ' DPRINT( "Detach create is called from function " << __func__ << "(" << __FILE__ << ":" << __LINE__ << ")" ); '
+            newbl += (flatten(cr.loc, printmsg) + 'uTC::create(*(uTC::family*)(void*)&' + usefvar + ', ' +
+                  '(uTC::context)(void*)' + usefvar + ', ' + 'false, true, ' +
+                  start + ',' + limit + ',' + step + ',' + block
+                  + ',' + funvar + callist + ');')
         else:
-            newbl += (flatten(cr.loc, 'uTC::create(*(uTC::family*)(void*)&') + usefvar + ', ' +
-		                  '(uTC::context)(void*)' + usefvar + ', ' + 'false, false, ' +
-						   start + ',' + limit + ',' + step + ',' + block
-						  + ',' + funvar + callist + ');')
+            printmsg = ' DPRINT( "Create is called from function " << __func__ << "(" << __FILE__ << ":" << __LINE__ << ")" ); '
+            newbl += (flatten(cr.loc, printmsg) + 'uTC::create(*(uTC::family*)(void*)&' + usefvar + ', ' +
+                 '(uTC::context)(void*)' + usefvar + ', ' + 'false, false, ' +
+                 start + ',' + limit + ',' + step + ',' + block + ',' + funvar + callist + ');')
 
 
         # done with body, now handle sync
 
-        newbl += flatten(cr.loc_end, 'uTC::sync(*(uTC::family*)(void*)&') + usefvar +');'
+        printmsg = ' DPRINT( "Sync is called from function " << __func__ << "(" << __FILE__ << ":" << __LINE__ << ")" ); '
+        newbl += flatten(cr.loc_end, printmsg) + 'uTC::sync(*(uTC::family*)(void*)&' + usefvar +');'
 
         return newbl
 

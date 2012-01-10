@@ -33,6 +33,12 @@ typedef uTC::family sl_family_t;
    must be renamed to "Pmain" */
 [[]]#define main Pmain
 
+#ifdef UTC_CONFIG_DEBUG
+[[]]#define DP[[]]RINT(s) ((void)(std::clog << "[" << pthread_self() << "] " << s << std::endl))
+#else
+[[]]#define DP[[]]RINT(s) ((void)0)
+#endif
+
 #else
 
 /* utc-ptl / hlsim use signature-based profiling; this implies that

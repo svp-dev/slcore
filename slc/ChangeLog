@@ -1,5 +1,18 @@
 2012-01-10  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	Applied the following patch.
+
+        2011-12-06  Irfan Uddin  <mirfanud@gmail.com>
+
+	Debug print info added to create and sync for ptl/hlsim.
+
+	* tools/slc/ptl/genptlcreate.py: Use DPRINT.
+
+	* tools/t-spr/include/sl_support.h: Ensure DPRINT is defined after
+	translation.
+
+2012-01-10  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	Fix a bug in the MT C standard library.
 
 	* lib/libc/stdio/fputs.c: Do not append a newline char, contrary
