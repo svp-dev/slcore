@@ -1,3 +1,10 @@
+2012-01-10  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
+	Fix a bug in the MT C standard library.
+
+	* lib/libc/stdio/fputs.c: Do not append a newline char, contrary
+	to `puts' which does.
+
 2011-03-08  Irfan Uddin  <mirfanud@uva.nl>
 
 	sl_index fixed for hl-sim.
