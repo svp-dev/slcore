@@ -3,7 +3,7 @@ simargs_base+=(-o NumProcessors=256)
 
 simargs_base+=(-o MemoryType=COMA)
 simargs_base+=(-o \*.DDR.Channel\*:Freq=1200 -o CoreFreq=1200 -o MemoryFreq=1200)
-simargs_base+=(-o \*.Memory:NumRootDirectories=4)
+simargs_base+=(-o \*Memory:NumRootDirectories=4)
 
 # DDR Timings for DDR3-2400, in bus clock cycles, as per 
 # mgsim/config.ini
@@ -13,4 +13,4 @@ simargs_base+=(-o \*.DDR.Channel\*:tRP=9)
 simargs_base+=(-o \*.DDR.Channel\*:tRAS=27)
 simargs_base+=(-o \*.DDR.Channel\*:tCWL=10)
 
-simargs_base+=(-o \*.Memory:L2CacheAssociativity=4 -o \*.Memory:L2CacheNumSets=128)
+simargs_base+=(-o \*Memory:L2CacheAssociativity=4 -o \*Memory:L2CacheNumSets=128)

@@ -1,3 +1,19 @@
+2012-01-11  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
+	Update `slr' and MT profiles to mgsim 3.2.18+.
+
+	MGSim 3.2.18+ uses short component names without a `system.'
+	prefix. Make the tools compatible with it.
+
+	* tools/r-mt-sim.sh.in (runner_cmdline),
+	* tools/mt-profiles/mlcoma256_4chan (simargs_base), 
+	* tools/mt-profiles/mlcoma128_2chan (simargs_base), 
+	* tools/mt-profiles/lzcoma256_4chan (simargs_base), 
+	* tools/mt-profiles/lzcoma128_2chan (simargs_base), 
+	* tools/mt-profiles/arggen (simargs_base),
+	* tools/mt-profiles/default (simargs_base): Prefix the configured
+	variables with `*' instead of `*.'.
+
 2012-01-10  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
 	Applied the following patch.

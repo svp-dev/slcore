@@ -5,7 +5,7 @@ simargs_base+=(-o NumProcessors=128)
 simargs_base+=(-o MemoryType=COMA)
 
 # Two channels = 2 root directories
-simargs_base+=(-o \*.Memory:NumRootDirectories=2)
+simargs_base+=(-o \*Memory:NumRootDirectories=2)
 
 
-simargs_base+=(-o \*.Memory:L2CacheAssociativity=4 -o \*.Memory:L2CacheNumSets=128)
+simargs_base+=(-o \*Memory:L2CacheAssociativity=4 -o \*Memory:L2CacheNumSets=128)

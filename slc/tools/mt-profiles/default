@@ -5,5 +5,5 @@ simargs_base+=(-o NumProcessors=128)
 simargs_base+=(-o MemoryType=COMA)
 
 # Four channels = 4 root directories
-# simargs_base+=(-o \*.Memory:NumRootDirectories=4) # should be default now
+# simargs_base+=(-o \*Memory:NumRootDirectories=4) # should be default now
 
