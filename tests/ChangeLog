@@ -1,3 +1,10 @@
+2012-01-11  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
+	Report the test settings during configuration.
+
+	* configure.ac: Print the configuration before `configure'
+	terminates.
+
 2011-11-13  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
 	Fix the test suite after the recent upheaval of sl-core.
