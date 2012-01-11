@@ -1,5 +1,12 @@
 2012-01-11  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	Support hlsim in test suites.
+
+	* build-aux/slctests.mk,
+	* build-aux/slctests.m4: Do it.
+
+2012-01-11  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	Update `slr' and MT profiles to mgsim 3.2.18+.
 
 	MGSim 3.2.18+ uses short component names without a `system.'

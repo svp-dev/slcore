@@ -16,7 +16,13 @@ include $(top_srcdir)/build-aux/sl.mk
 EXTRA_TEST_IMPL =
 
 if ENABLE_CHECK_PTL
-EXTRA_TEST_IMPL += ptl
+EXTRA_TEST_IMPL += ptl_n ptl_s 
+EXTRA_TEST_IMPL += ptld_n ptld_s
+endif
+
+if ENABLE_CHECK_HLSIM
+EXTRA_TEST_IMPL += hls hls_n hls_s
+EXTRA_TEST_IMPL += hlsd hlsd_n hlsd_s
 endif
 
 if ENABLE_CHECK_PPP

@@ -36,6 +36,14 @@ AC_ARG_ENABLE([check-ptl],
  fi], [enable_check_ptl=$enable_ptl])
 AM_CONDITIONAL([ENABLE_CHECK_PTL], [test "x$enable_check_ptl" = "xyes"])
 
+AC_ARG_ENABLE([check-hlsim],
+[AC_HELP_STRING([--disable-check-hlsim], [do not check hlsim (default is to check)])],
+[enable_check_hlsim=no
+ if test "x$enableval" = xyes; then
+   enable_check_hlsim=$enable_hlsim
+ fi], [enable_check_hlsim=$enable_hlsim])
+AM_CONDITIONAL([ENABLE_CHECK_HLSIM], [test "x$enable_check_hlsim" = "xyes"])
+
 AC_ARG_ENABLE([check-spr],
 [AC_HELP_STRING([--disable-check-spr], [do not check SPR compiler (default is to check)])],
 [enable_check_spr=$enableval], [enable_check_spr=yes])
