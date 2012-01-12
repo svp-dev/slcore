@@ -1,5 +1,12 @@
 2012-01-12  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	Enhance code documentation.
+
+	* lib/mgos/posix-compat/gtod_virtual.c (gettimeofday_virtual):
+	Explain the ratio between core ticks and mgconf frequency.
+
+2012-01-12  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	Implement "fast" wall clock time access for MGSim.
 
 	With MGSim 3.2.21+ it is possible to (unrealistically) extract
