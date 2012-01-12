@@ -26,6 +26,11 @@ mta_hybrid_libsl_a_LIBADD = $(libslcommon_a_OBJECTS)
 mta_hybrid_libsl_a_DEPENDENCIES = $(mta_hybrid_libsl_a_LIBADD)
 
 include ../mgos.mk
+
+libmgos_a_SOURCES += \
+	../mgos/posix-compat/gtod_mgsim.c \
+	../mgos/posix-compat/time_mgsim.c
+
 include ../libc.mk
 
 include mtamathobjs.mk

@@ -15,8 +15,13 @@ struct timezone {
 
 int     gettimeofday(struct timeval *, struct timezone *);
 int     gettimeofday_virtual(struct timeval *, struct timezone *);
+#ifdef __slc_os_sim__
+int     gettimeofday_mgsim(struct timeval *, struct timezone *);
+#endif
 
-#ifdef MG_VIRTUAL_TIME
+#if defined(MG_FAST_TIME) && defined(__slc_os_sim__)
+#define gettimeofday gettimeofday_mgsim
+#elif defined(MG_VIRTUAL_TIME)
 #define gettimeofday gettimeofday_virtual
 #endif
 

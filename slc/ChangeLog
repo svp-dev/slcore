@@ -1,3 +1,24 @@
+2012-01-12  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
+	Implement "fast" wall clock time access for MGSim.
+
+	With MGSim 3.2.21+ it is possible to (unrealistically) extract
+	wall clock time from a virtual performance counter. Make this
+	visible through the SL API.
+
+	* lib/slsys/include/svp/perf.h: Declare the new "performance
+	counters".
+
+	* lib/libc/include/sys/time.h,
+	* lib/libc/include/time.h: Expose `gettimeofday_mgsim' and
+	`time_mgsim'. Alias `gettimeofday' and `time' to them if the macro
+	`MG_FAST_TIME' is defined.
+
+	* lib/mgos/posix-compat/gtod_mgsim.c,
+	* lib/mgos/posix-compat/time_mgsim.c: Implement them.
+
+	* lib/mtalpha-sim/Makefile.am: Compile them.
+
 2012-01-11  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
 	Support hlsim in test suites.
