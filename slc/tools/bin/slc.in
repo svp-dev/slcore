@@ -30,7 +30,6 @@ bugreports=@bugreports@
 # Load defaults
 slc_mode=ld
 impl=seqc
-combine=
 verbose=
 verdisplay=
 do_filt2=yes
@@ -157,8 +156,6 @@ for arg in "$@"; do
       -o)	prev_arg=outfile;;
       -save-temps) keep=yes ;;
       -v)         verbose=yes ;;
-      -combine=*) combine=${arg#*=} ;;
-      -combine)   combine=C ;;
 
       -L*|-Wl,*)          extra_ldflags+=("$arg") ;;
       -l*)                in_ld_spec+=("$arg") ;;
@@ -390,13 +387,7 @@ General options:
   -P                 Inhibit generation of linemarkers in the output
                      from both the preprocessor and the translation by M4.
 
-  -combine=[PHASES]  Group input files into a single output for each of
-                     the specified PHASES.
-
-  -combine           Synonymous with -combine=C (behavior similar to \`gcc').
-
-  -o file            Place output in "file". This implies -combine for the
-                     phase where \`$basename' is configured to stop.
+  -o file            Place output in "file". 
 
   -nostartfiles      Do not use the standard startup files when linking.
 
@@ -657,7 +648,7 @@ case $slc_mode in
     as) finalstage=A;;
     ld) finalstage=L; defout=a.out;;
 esac
-combine="$finalstage$combine"
+combine="$finalstage"
 finalname=${outfile:-$defout}
 
 prepare_chain() {
@@ -805,7 +796,7 @@ EOF
 	  ;;
       C)
 	  res=4
-	  cmd=("${slc_compiler[@]}" -o "$target" -combine -S -nostdinc $deps "${slc_cflags[@]}")
+	  cmd=("${slc_compiler[@]}" -o "$target" -S -nostdinc $deps "${slc_cflags[@]}")
 	  ;;
       F)
 	  res=5

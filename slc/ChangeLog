@@ -1,3 +1,11 @@
+2012-02-08  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
+	Simplify `slc'.
+
+	* tools/bin/slc.in: Remove support for `-combine' since this
+	feature was abandoned with GCC 4.6 and is not used by SL
+	applications anyways.
+
 2012-01-12  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
 	Enhance code documentation.
