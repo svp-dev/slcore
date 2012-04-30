@@ -1,3 +1,9 @@
+2012-04-30  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
+	Add a top-level documentation.
+
+	* README.rst: New.
+
 2011-03-08  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
 	Split programs, demos and benchmarks to a separate repository.
