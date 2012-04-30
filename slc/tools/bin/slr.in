@@ -266,7 +266,6 @@ for arg in "$@"; do
       -X)   SIMGFX=1; shift;;
       -Xs)  SIMGFX=1; prev_arg=gfx_scale; shift;;
       -Xr)  SIMGFX=1; prev_arg=gfx_refresh; shift;;
-      -Xd)  SIMGFX=1; prev_arg=gfx_geometry; shift;;
       -p)   prev_arg=TMPDIR; KEEP=1; shift;;
       --)  shift; break;;
       -*)  die 1 "unrecognized command-line argument: $arg (try -h)";;
@@ -601,7 +600,7 @@ else
 fi
 
 export SIMARGS VERBOSE DEBUG SIMGFX SIMPROFILE TMPDIR
-export gfx_scale gfx_geometry gfx_refresh
+export gfx_scale gfx_refresh
 export SLR_NCORES
 
 if test -n "$VERBOSE"; then

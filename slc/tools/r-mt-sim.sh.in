@@ -98,15 +98,11 @@ if test -n "${SIMGFX:-}"; then
 	echo "$basename: warning: ${mgsim[0]}.gfx not found, disabling graphical output." >&2
     else    
 	mgsim[0]=${mgsim[0]}.gfx
-	simargs_base+=(-o GfxEnableOutput=true)
 	if test -n "${gfx_scale:-}"; then
-	    simargs_base+=(-o GfxHorizScale=${gfx_scale%,*} -o GfxVertScale=${gfx_scale#*,})
-	fi
-	if test -n "${gfx_geometry:-}"; then
-	    simargs_base+=(-o GfxDisplayWidth=${gfx_geometry%,*} -o GfxDisplayHeight=${gfx_geometry#*,})
+	    simargs_base+=(-o SDLHorizScale=${gfx_scale%,*} -o SDLVertScale=${gfx_scale#*,})
 	fi
 	if test -n "${gfx_refresh:-}"; then
-	    simargs_base+=(-o GfxRefreshDelay=$gfx_refresh)
+	    simargs_base+=(-o SDLRefreshDelay=$gfx_refresh)
 	fi
     fi
 fi
