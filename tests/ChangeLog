@@ -1,5 +1,12 @@
 2012-04-30  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	Extend the test suite.
+
+	* 2_lib/argv.c: New. Check that the argc/argv command line are
+	properly passed to `main'.
+
+2012-04-30  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	Update the documentation.
 
 	* README: Do it.
