@@ -1,5 +1,14 @@
 2012-04-30  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	Minor fix for compatibility with Automake 1.11.2+.
+
+	* tools/Makefile.am: Rename `pkglib_SCRIPTS' to `sllib_SCRIPTS'
+	since Automake 1.11.2+ is not happy about putting scripts in a lib
+	dir.
+	* tools/runscripts.mk: Use it.
+
+2012-04-30  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	Update the documentation.
 
 	* slc/doc/HACKING.txt: Rename to...

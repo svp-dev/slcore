@@ -1,7 +1,7 @@
 RUNSCRIPTS = r-host.sh r-mtalpha-sim.sh r-mtsparc-sim.sh r-mtsparc-fpga.sh
 EXTRA_DIST += r-host.sh.in r-mt-sim.sh.in r-mtsparc-fpga.sh.in
 
-pkglib_SCRIPTS += $(RUNSCRIPTS)
+sllib_SCRIPTS += $(RUNSCRIPTS)
 CLEANFILES += $(RUNSCRIPTS)
 
 r-host.sh: r-host.sh.in Makefile
