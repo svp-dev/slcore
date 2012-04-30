@@ -248,6 +248,51 @@ ssize_t write(int fd, void* data, size_t sz)
     return sl_geta(ret);
 }
 
+sl_def(do_lseek, sl__static, 
+       sl_glparm(uint32_t*, ctl), 
+       sl_glparm(long*, notif),
+       sl_glparm(off_t*, offset),
+       sl_glparm(int, fd),
+       sl_glparm(int, whence))
+{
+    COMMON_BEGIN;
+
+    off_t* o = sl_getp(offset);
+
+    ctl[RC_PROC] = RPC_lseek;
+    ctl[RC_ARG1SZ] = sizeof(off_t);
+    ctl[RC_ARG1AL] = ((uintptr_t)(o) & 0xffffffff);
+    ctl[RC_ARG1AH] = ((uintptr_t)(o) >> 32);
+    ctl[RC_RES2AL] = ((uintptr_t)(o) & 0xffffffff);
+    ctl[RC_RES2AH] = ((uintptr_t)(o) >> 32);
+    ctl[RC_ARG3] = sl_getp(fd);
+    ctl[RC_ARG4] = sl_getp(whence);
+    
+    COMMIT_CHECK;
+}
+sl_enddef
+
+
+off_t lseek(int fd, off_t offset, int whence)
+{
+    if (mg_rpc_devid == (size_t)-1)
+    {
+        errno = ENOSYS;
+        return -1;
+    }
+    uint32_t * ctl = mg_devinfo.base_addrs[mg_rpc_devid];
+    long * notif = &mg_devinfo.channels[mg_rpc_chanid];
+
+    sl_create(, mg_io_place_id,,,,, sl__exclusive, do_lseek,
+              sl_glarg(uint32_t*,, ctl),
+              sl_glarg(long*,, notif),
+              sl_glarg(off_t*,, &offset),
+              sl_glarg(int,,fd),
+              sl_glarg(int,,whence));
+    sl_sync();
+    return offset;
+}
+
 sl_def(do_fstat, sl__static, 
        sl_glparm(uint32_t*, ctl), 
        sl_glparm(long*, notif),

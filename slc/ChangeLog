@@ -1,3 +1,9 @@
+2012-04-30  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
+	Improve the POSIX file interface.
+
+	* lib/mgos/posix-compat/mtunix.c: Add support for `lseek'.
+
 2012-02-08  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
 	Simplify `slc'.
