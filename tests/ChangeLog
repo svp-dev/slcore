@@ -1,3 +1,9 @@
+2012-04-30  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
+	Update the documentation.
+
+	* README: Do it.
+
 2012-01-11  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
 	Report the test settings during configuration.

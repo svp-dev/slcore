@@ -2,6 +2,9 @@
  SL unit test suite
 ====================
 
+This package contains a collection of individual source files that can
+be processed via ``slt`` to check that the SL compiler works properly.
+
 Configuration
 =============
 
@@ -17,7 +20,8 @@ The test suite is run with the following command::
 
    make check -jN
 
-where N is the number of cores on the system (parallel checks).
+where N is the number of cores on the system (parallel checks). This
+automates the execution of ``slt`` over all test programs.
 
 If ``make check`` reports that a test fails, then after a fix is
 installed it is possible to re-check only the failed test(s) with the
@@ -32,7 +36,12 @@ following commands::
 
 However this does not support ``-jN``.
 
+Licensing
+=========
 
+The individual test programs and the provided scripts and Makefiles to
+automate their testing are licensed under the terms of the GNU Public
+License, version 3. http://www.gnu.org/licenses/gpl-3.0.txt
 
 .. Local Variables:
 .. mode: rst
