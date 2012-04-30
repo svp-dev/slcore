@@ -1,5 +1,26 @@
 2012-04-30  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	Update the documentation.
+
+	* slc/doc/HACKING.txt: Rename to...
+	* slc/doc/HACKING.rst: ...here. Simplify. Update to reflect the
+	existence of the separate `deploy' package.
+
+	* slc/doc/README.txt: Rename to...
+	* slc/doc/README.rst: ...here. Update to reflect the existence of
+	the separate `deploy' package. Detail the licensing terms.
+
+	* slc/doc/NEWS.txt,
+	* slc/doc/acronyms.txt: Rename to...
+	* slc/doc/NEWS.rst,
+	* slc/doc/acronyms.rst: ...here.
+
+	* slc/doc/requirements.txt: Remove, as is now outdated.
+
+	* slc/doc/Makefile.am: Update accordingly.
+
+2012-04-30  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	Fix support for MGSim graphics.
 
 	Since MGSim 3.2 the configuration interface has evolved. Make `slr

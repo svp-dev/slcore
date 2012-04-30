@@ -1,6 +1,6 @@
 ## Makefile.am: this file is part of the SL toolchain.
 ## 
-## Copyright (C) 2009 The SL project
+## Copyright (C) 2009,2010,2011,2012 The SL project
 ##
 ## This program is free software; you can redistribute it and/or
 ## modify it under the terms of the GNU General Public License
@@ -12,11 +12,10 @@
 ##
 
 # 
-dist_pdf_DATA = acronyms.pdf README.pdf NEWS.pdf HACKING.pdf requirements.pdf
-dist_doc_DATA = acronyms.txt README.txt NEWS.txt HACKING.txt requirements.txt \
-                sl_deps.png
+dist_pdf_DATA = acronyms.pdf README.pdf NEWS.pdf HACKING.pdf 
+dist_doc_DATA = acronyms.rst README.rst NEWS.rst HACKING.rst sl_deps.png
 
-SUFFIXES = .txt .tex .pdf
+SUFFIXES = .rst .tex .pdf
 TEXI2PDF_FLAGS = --tidy --batch --build-dir=tmp.t2d
 
 .tex.pdf:
@@ -28,7 +27,7 @@ TEXI2PDF_FLAGS = --tidy --batch --build-dir=tmp.t2d
         done
 	$(TEXI2PDF) $(TEXI2PDF_FLAGS) -o $@ $<
 
-.txt.tex:
+.rst.tex:
 	$(RST2LATEX) --halt=warning $< >$@.tmp
 	mv $@.tmp $@
 

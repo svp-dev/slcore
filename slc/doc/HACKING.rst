@@ -10,15 +10,14 @@
 Getting started
 ===============
 
-1. Obtain the top-level source tree (``sys``) from a public Git branch
-   or the CSA Subversion repository.
+1. Obtain the top-level source tree (``sys``) from a public Git branch.
 
 2. Read ``slc/doc/README.txt`` and ``slc/doc/HACKING.txt`` thoroughly.
 
 3. Ensure you did #2, really. 
 
 4. Check all the requirements are available, install/upgrade as
-   needed. Use the Makefile in ``deploy`` if possible.
+   needed. Use the installer from the separate ``deploy`` package.
 
 5. Run::
 
@@ -64,10 +63,7 @@ directory to set environment variables::
 
 Note: this will update ``PATH`` as well. Once the variables are set,
 the command-line utilities can be used directly without running ``make
-install``, e.g.::
-
-   $ cd programs/demo && slc 10threads.c && slr a.out
-
+install``.
 
 Committing work
 ===============
@@ -100,27 +96,21 @@ When pushing your changes to a remote directory:
 
 5. send the contents of the file from step #3 to the mailing list,
    ensuring that the changes to the change log(s) appear first in the
-   e-mail.
+   e-mail. Alternatively, if using GitHub, advertise a pull request.
 
 
 Distributing
 ============
 
-To package a copy of the entire SL toolchain for use by users who do
-not have access to the SVN repository, perform the following steps:
+To package a copy of the entire SL toolchain for final users, use the
+``dist`` packager included in the separate ``deploy`` repository.
+This packager automates the following steps:
 
-1. ensure that the documentation is consistent with the state of the
-   software;
+1. ensure that ``make distcheck`` succeeds.
 
-2. ensure that ``slc/doc/NEWS.txt`` contains the latest major changes;
+2. run ``make dist``.
 
-3. ensure that ``make distcheck`` succeeds.
-
-4. commit any outstanding changes. 
-
-5. run ``make dist``.
-
-After step #5 has completed, ``make dist`` will have output two
+After step #2 has completed, ``make dist`` will have output two
 archives (``.tar.gz`` and ``.tar.bz2``) suitable for distribution.
 
 Goodies
