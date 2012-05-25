@@ -1,3 +1,11 @@
+2012-05-25  Irfan Uddin  <mirfanud@gmail.com>
+
+	Fix a bug in the hlsim code generation.
+
+	* tools/slc/ptl/genptlcreate.py
+	(Create_2_ptlCreate.visit_lowcreate): Use the named family handle
+	in `sync'.
+
 2012-05-25  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
 	Increase portability of the tools towards compatibility with Solaris.
