@@ -144,7 +144,8 @@ class Create_2_ptlCreate(ScopedVisitor):
         # done with body, now handle sync
 
         printmsg = ' DPRINT( "Sync is called from function " << __func__ << "(" << __FILE__ << ":" << __LINE__ << ")" ); '
-        newbl += flatten(cr.loc_end, printmsg) + 'uTC::sync(*(uTC::family*)(void*)&' + usefvar +');'
+        newbl += flatten(cr.loc_end, printmsg) + CVarSet(decl = cr.cvar_exitcode,
+                                                         rhs = Opaque('uTC::sync(*(uTC::family*)(void*)&') + usefvar +')' ) + ';'
 
         return newbl
 
