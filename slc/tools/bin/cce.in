@@ -204,9 +204,9 @@ if test "x$set_vars" = x; then
     exit 0
 fi
 
-archvar=$(tr a-z A-Z <<<"$slc_arch")
+archvar=$(tr abcdefghijklmnopqrstuvwxyz ABCDEFGHIJKLMNOPQRSTUVWXYZ <<<"$slc_arch")
 basearch=${slc_arch:2}
-basearchvar=$(tr a-z A-Z <<<"$basearch")
+basearchvar=$(tr abcdefghijklmnopqrstuvwxyz ABCDEFGHIJKLMNOPQRSTUVWXYZ <<<"$basearch")
 
 # Language mode selection
 slc_complang=unknown

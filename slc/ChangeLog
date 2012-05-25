@@ -1,3 +1,10 @@
+2012-05-25  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
+	Increase portability of the tools towards compatibility with Solaris.
+
+	* tools/bin/cce.in (archvar,basearchvar): Use the explicit form of
+	`tr' to increase portability of `cce'.
+
 2012-04-30  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
 	Minor fix for compatibility with Automake 1.11.2+.
