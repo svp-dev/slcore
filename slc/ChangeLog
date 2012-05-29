@@ -1,5 +1,12 @@
 2012-05-29  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	Fix support for `malloc'.
+
+	* slc/lib/libc.mk: Do not link in `malloc_wrappers' by default, as
+	this will plainly disable the TLS-based `malloc'.
+
+2012-05-29  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	Increase compatibility with the latest Automake.
 
 	* slc/lib/common.mk,
