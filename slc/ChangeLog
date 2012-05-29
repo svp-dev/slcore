@@ -1,5 +1,15 @@
 2012-05-29  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
+	Increase compatibility with the latest Automake.
+
+	* slc/lib/common.mk,
+	* slc/lib/malloc.mk,
+	* slc/lib/tlsmalloc.mk,
+	* slc/tools/lib/common.mk: Avoid using `pkglib_DATA' which is not
+	valid as per Automake 1.11.2/3.
+
+2012-05-29  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
 	Minor packaging fix.
 
 	* Makefile.am (README, NEWS): Fix the aliasing.

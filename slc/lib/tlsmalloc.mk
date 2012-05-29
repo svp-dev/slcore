@@ -14,7 +14,7 @@ noinst_LIBRARIES += \
 	libtlsmalloc_nogc_debug.a \
 	libtlsmalloc_nogc_mgdebug.a
 
-pkglib_DATA += \
+sllib_DATA += \
 	$(libtlsmalloc_fast_a_OBJECTS) \
 	$(libtlsmalloc_a_OBJECTS) \
 	$(libtlsmalloc_debug_a_OBJECTS) \

@@ -2,7 +2,7 @@ noinst_LIBRARIES += \
 	libmalloc.a \
 	libmalloc_debug.a
 
-pkglib_DATA += \
+sllib_DATA += \
 	$(libmalloc_a_OBJECTS) \
 	$(libmalloc_debug_a_OBJECTS)
 
