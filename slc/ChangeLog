@@ -1,3 +1,9 @@
+2012-05-29  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
+	Minor packaging fix.
+
+	* Makefile.am (README, NEWS): Fix the aliasing.
+
 2012-05-25  Irfan Uddin  <mirfanud@gmail.com>
 
 	Fix a bug in the hlsim code generation.
