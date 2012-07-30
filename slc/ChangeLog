@@ -1,3 +1,17 @@
+2012-07-30  Raphael 'kena' Poss  <r.c.poss@uva.nl>
+
+	Optimize the MT-Alpha code generation.
+
+	The "create" instruction implies a memory barrier in the MT
+	architecture. However, until this point the compiler would insert
+	an extra barrier just before the instruction in the generated
+	code. This was a vestige of a time where the architecture
+	implementation had not yet implemented the barrier in
+	hardware. This patch removes the unnecessary barrier.
+
+	* tools/slc/mt/mtalpha/gencreate.py
+	(Create_2_MTACreate.visit_lowcreate): Do it.
+
 2012-05-29  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
 	Fix support for `malloc'.
