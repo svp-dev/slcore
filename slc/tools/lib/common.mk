@@ -4,10 +4,12 @@ CC     = $(SLC) -nostdlib
 CCAS   = $(SLC) -nostdlib
 CCASFLAGS = -b $(COMMON_TAG)
 AM_CPPFLAGS =
+
 pkglibdir = $(libdir)/sl-core/$(subdir)
+sllibdir = $(pkglibdir)
 
 noinst_LIBRARIES        = libslrt.a
-nobase_pkglib_DATA      = slrt.o
+nobase_sllib_DATA       = slrt.o
 nobase_pkglib_LIBRARIES = libslc.a
 
 libslrt_a_CFLAGS = -b $(COMMON_TAG)

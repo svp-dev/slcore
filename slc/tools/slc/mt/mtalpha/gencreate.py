@@ -163,7 +163,7 @@ class Create_2_MTACreate(ScopedVisitor):
                   ' : "=r"(' + usefvar + ') : "0"(' + usefvar + '), "rI"(' + step + ')); ' +
                   '__asm__ ("setblock %%0, %%2\\t# MT: CREATE %s"' % lbl +
                   ' : "=r"(' + usefvar + ') : "0"(' + usefvar + '), "rI"(' + block + ')); ' +
-                  '__asm__ __volatile__("wmb; crei %%0, 0(%%2)\\t# MT: CREATE %s"' % lbl +
+                  '__asm__ __volatile__("crei %%0, 0(%%2)\\t# MT: CREATE %s"' % lbl +
                   ' : "=r"(' + usefvar + ') : "0"(' + usefvar + '),' +
                   '   "r"(' + funvar + ') : "memory");')
 
@@ -177,6 +177,8 @@ class Create_2_MTACreate(ScopedVisitor):
 
         # first of all, if there weresome memory-passed arguments,
         # we need to push the argument register to the child family.
+        # A memory barrier is required because the remote thread(s) may
+        # access the memory as soon as putg completes.
         
         if c['gl_mem_offset'] is not None:
             newbl += (flatten(cr.loc_end, 

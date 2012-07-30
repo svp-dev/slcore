@@ -16,14 +16,14 @@
 SUBDIRS = tools lib/mgos/tlsmalloc . build-aux doc
 DIST_SUBDIRS = $(SUBDIRS) lib
 
-README: $(srcdir)/doc/README.txt
+README: $(srcdir)/doc/README.rst
 	$(AM_V_at)rm -f $@
-	$(AM_V_GEN)cp $(srcdir)/doc/README.txt $@
+	$(AM_V_GEN)cp $(srcdir)/doc/README.rst $@
 	$(AM_V_at)chmod -w $@
 
-NEWS: $(srcdir)/doc/NEWS.txt
+NEWS: $(srcdir)/doc/NEWS.rst
 	$(AM_V_at)rm -f $@
-	$(AM_V_GEN)cp $(srcdir)/doc/NEWS.txt $@
+	$(AM_V_GEN)cp $(srcdir)/doc/NEWS.rst $@
 	$(AM_V_at)chmod -w $@
 
 include $(srcdir)/build-aux/slcvars.mk

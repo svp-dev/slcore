@@ -57,7 +57,6 @@ libc_a_SOURCES = \
 	../libc/bsd/libc/string/bzero.c \
 	../libc/malloc/mtmalloc.h \
 	../libc/malloc/malloc_excl.c \
-	../libc/malloc/malloc_wrappers.c \
 	../libc/misc/ctype.c \
 	../libc/misc/dtoa_simple.c \
 	../libc/misc/errno.c \
