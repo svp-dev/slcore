@@ -1,3 +1,10 @@
+2012-10-18  Raphael 'kena' Poss  <r.poss@uva.nl>
+
+	Fix the output formatting in mtperf_report_intervals.
+
+	* lib/slsys/perf/perf.c: Ensure that the first column of the CSV
+	header is separated from the next with a space.
+
 2012-07-30  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
 	Optimize the MT-Alpha code generation.

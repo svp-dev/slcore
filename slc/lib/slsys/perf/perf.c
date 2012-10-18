@@ -281,7 +281,7 @@ void mtperf_report_intervals(const struct s_interval* ivs,
                 pf(mtperf_compute_extra(ivs[j].before, ivs[j].after, i));
             }                
             if (print_headers) {
-                if (i) pc(sep);
+                pc(sep);
                 pc('"');
                 if (ivs[j].num >= 0) { pn(ivs[j].num); pc(' '); }
                 ps(ivs[j].tag ? ivs[j].tag : "(anon)");
