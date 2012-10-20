@@ -263,6 +263,8 @@ float lgammaf(float x);
 #define lgamma(x) __builtin_lgamma(x)
 #define lgammaf(x) __builtin_lgammaf(x)
 
+extern int signgam;
+
 double tgamma(double x);
 float tgammaf(float x);
 #define tgamma(x) __builtin_tgamma(x)

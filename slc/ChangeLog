@@ -1,5 +1,11 @@
 2012-10-20  Raphael 'kena' Poss  <r.poss@uva.nl>
 
+	Declare `signam' in the embedded `math.h'.
+
+	* lib/libc/include/math.h: Do it.
+
+2012-10-20  Raphael 'kena' Poss  <r.poss@uva.nl>
+
 	Improve compatibility with the latest Automake versions.
 
 	* build-aux/slctests.mk (SL_LOG_COMPILER): Prefix the command line
