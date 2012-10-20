@@ -18,25 +18,55 @@
 #ifdef __mt_freestanding__
 
 #include <svp/compiler.h>
-#include <svp/mgsim.h>
 
-#define output_float(F, Stream, Precision) mgsim_outfloat(F, Stream, Precision)
+#ifndef __MGSIM_DEBUG_STDOUT
+#define __MGSIM_DEBUG_STDOUT 0x200UL
+#endif
+#ifndef __MGSIM_DEBUG_STDERR
+#define __MGSIM_DEBUG_STDERR 0x230UL
+#endif
 
-#define output_uint(N, Stream) mgsim_control(N, MGSCTL_TYPE_PRINT, MGSCTL_PRINT_UDEC, Stream)
-#define output_hex(N, Stream)  mgsim_control(N, MGSCTL_TYPE_PRINT, MGSCTL_PRINT_HEX, Stream)
-#define output_int(N, Stream)  mgsim_control(N, MGSCTL_TYPE_PRINT, MGSCTL_PRINT_SDEC, Stream)
-#define output_char(N, Stream) mgsim_control(N, MGSCTL_TYPE_PRINT, MGSCTL_PRINT_BYTE, Stream)
+#define output_float(F, Stream, Precision)                              \
+    do  {                                                               \
+        volatile long *base = (long*)(void*)(((Stream) == 1) ? __MGSIM_DEBUG_STDOUT : __MGSIM_DEBUG_STDERR); \
+        *(base + 4) = (long)(Precision);                                \
+        *(__typeof__(F)*)(void*)(base + 5) = (F);                       \
+    } while(0)
+
+#define output_uint(N, Stream)                                          \
+    do  {                                                               \
+        volatile unsigned long *base = (unsigned long*)(void*)(((Stream) == 1) ? __MGSIM_DEBUG_STDOUT : __MGSIM_DEBUG_STDERR); \
+        *(base + 1) = (unsigned long)(N);                               \
+    } while(0)
+
+#define output_int(N, Stream)                                           \
+    do  {                                                               \
+        volatile long *base = (long*)(void*)(((Stream) == 1) ? __MGSIM_DEBUG_STDOUT : __MGSIM_DEBUG_STDERR); \
+        *(base + 2) = (long)(N);                                        \
+    } while(0)
+
+#define output_hex(N, Stream)                                           \
+    do  {                                                               \
+        volatile unsigned long *base = (unsigned long*)(void*)(((Stream) == 1) ? __MGSIM_DEBUG_STDOUT : __MGSIM_DEBUG_STDERR); \
+        *(base + 3) = (unsigned long)(N);                               \
+    } while(0)
+
+#define output_char(N, Stream)                                          \
+    do  {                                                               \
+        volatile unsigned char *base = (unsigned char*)(void*)(((Stream) == 1) ? __MGSIM_DEBUG_STDOUT : __MGSIM_DEBUG_STDERR); \
+        *base = (unsigned char)(N);                                     \
+    } while(0)
 
 # define output_string(S, Stream)                                       \
     do {								\
-        const unsigned char *__ptr = (const unsigned char*)(void*)(S);  \
+        const unsigned char *__ptr = (const unsigned char*)(const void*)(S);  \
         while(likely(*__ptr)) output_char(*__ptr++, Stream);            \
     } while(0)
 
 # define output_bytes(S, L, Stream)					\
     do {                                                                \
-        const unsigned char *__ptr = (const unsigned char*)(void*)(S);  \
-        unsigned long __i = 0, __max = (L);                             \
+        const unsigned char *__ptr = (const unsigned char*)(const void*)(S);  \
+        unsigned long __i = 0, __max = (unsigned long)(L);              \
         while(likely(__i < __max)) output_char(__ptr[__i++], Stream);	\
     } while(0)
 

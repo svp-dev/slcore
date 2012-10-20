@@ -128,7 +128,7 @@ fi
 
 runner_cmdline=("${mgsim[@]}" \
     ${simargs_base+"${simargs_base[@]}"} ${SIMARGS:-} \
-    -t -L7 "$datafile" -L6 "$fdatafile" -L5 "$envfile" -o '*BootROM:ROMFileName='"$d/$b")
+    -t -L7 "$datafile" -L6 "$fdatafile" -L5 "$envfile" -o 'rom_boot:ROMFileName='"$d/$b")
 
 first=${runner_cmdline[0]}
 unset runner_cmdline[0]

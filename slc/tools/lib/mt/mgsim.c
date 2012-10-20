@@ -14,12 +14,6 @@
 
 #include <svp/mgsim.h>
 
-#undef mgsim_outfloat
-void mgsim_outfloat(double val, unsigned int stream, unsigned int prec)
-{
-    __inline_mgsim_outfloat(val, stream, prec);
-}
-
 #undef mgsim_control
 void mgsim_control(unsigned long val, unsigned int type, unsigned int command, unsigned int flags)
 {

@@ -1,5 +1,26 @@
 2012-10-20  Raphael 'kena' Poss  <r.poss@uva.nl>
 
+	Align MT code with MGSim 3.3
+
+	* tools/r-mt-sim.sh.in (runner_cmdline): Set boot ROM file name in
+	`rom_boot' instead of `*BootROM'.
+
+	* tools/include/svp/testoutput.h: Use MMIO to the debug channel instead
+	of `mgsim_control'.
+
+	* tools/include/svp/mgsim.h: Use MMIO to the action and MMU interfaces
+	instead of the `print' instruction.
+
+	* tools/lib/mt/mgsim.c,
+	* tools/include/svp/mgsim.h: Remove the `mgsim_outfloat' interface
+	as it was not used anyways.
+
+	* tools/lib/mt/mta/slrt.s,
+	* tools/lib/mt/mts/slrt.s: Use MMIO to the action interface to report
+	main's exit code.
+
+2012-10-20  Raphael 'kena' Poss  <r.poss@uva.nl>
+
 	Declare `signam' in the embedded `math.h'.
 
 	* lib/libc/include/math.h: Do it.

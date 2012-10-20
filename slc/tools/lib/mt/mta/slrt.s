@@ -66,37 +66,14 @@ _start:
 	jsr $l15,($l14),main !lituse_jsr!2
 	ldgp $l17,0($l15)
 
-	bne $l1, $bad
-        nop
+        stq $l1, 0x278($31) # exit simulator with main's error code
 	end
-$bad:
-	ldah $l3, $msg($l17) !gprelhigh
-	lda $l2, 115($l31)  # char <- 's'
-	lda $l3, $msg($l3) !gprellow
-	.align 4
-$L0:
-	print $l2, 194  # print char -> stderr
-	lda $l3, 1($l3)
-	ldbu $l2, 0($l3)
-	sextb $l2, $l2
-	bne $l2, $L0
-
-	print $l1, 130 # print int -> stderr
-        lda $l1, 10($l31) # NL
-	print $l1, 194  # print char -> stderr
-$fini:	
-	nop
-	nop
-	pal1d 0
-	br $fini
 	.end _start
 
 	.section .rodata
 	.ascii "\0slr_runner:mtalpha-sim:\0"
 	.ascii "\0slr_datatag:mta:\0"
 
-$msg:	
-	.ascii "slrt: main returned \0"
 $progname:
 	.ascii "a.out\0"
         

@@ -61,6 +61,7 @@ _start:
 
         ! otherwise, save the code
         ! and print a message
+        mov     %o0, %o1
         sethi   %hi(__exit_code), %o5
         sethi   %hi(__pseudo_stderr), %o3
         st      %o0, [%o5+%lo(__exit_code)]
@@ -91,8 +92,9 @@ _start:
         stb     %o5, [%o2]
 
 .Lfail:
-        ! FIXME: inv ins or something to signal failure
-        unimp 10
+        ! exit with code in MGSim
+        st      %o1, [0x26c]
+        ! FIXME: inv ins or something to signal failure if st immediately before does not end execution
         b,a .Lfail
         nop
 
