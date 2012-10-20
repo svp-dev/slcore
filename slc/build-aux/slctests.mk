@@ -47,6 +47,10 @@ endif
 if ENABLE_CHECK_SPR_MTS
 EXTRA_TEST_IMPL += mts_n
 endif
+
+if ENABLE_CHECK_SPR_MIPSEL
+EXTRA_TEST_IMPL += mipsel_s
+endif
 # add extra implementations here when they become available
 endif
 
@@ -58,7 +62,7 @@ SLT_IMPL_LIST ?= seqc $(EXTRA_TEST_IMPL)
 
 TEST_EXTENSIONS = .sl .c
 SL_LOG_COMPILER = \
-	$(SLC_VARS) SRCDIR=$(srcdir) \
+	env $(SLC_VARS) SRCDIR=$(srcdir) \
 	SLT_IMPL_LIST="$(SLT_IMPL_LIST)" \
 	DUMP_LOGS=1 TEXT_ONLY=1 SEQUENTIAL=1 \
 	$(BASH) $(SLT)

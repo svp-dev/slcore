@@ -1,3 +1,11 @@
+2012-10-20  Raphael 'kena' Poss  <r.poss@uva.nl>
+
+	Improve compatibility with the latest Automake versions.
+
+	* build-aux/slctests.mk (SL_LOG_COMPILER): Prefix the command line
+	with `env' since the latest versions of Automake require a command as first
+	word.
+
 2012-10-18  Raphael 'kena' Poss  <r.poss@uva.nl>
 
 	Fix the output formatting in mtperf_report_intervals.
