@@ -1,5 +1,15 @@
 2012-10-21  Raphael 'kena' Poss  <r.poss@uva.nl>
 
+	Kill some compiler warnings.
+
+	* lib/mgos/tlsmalloc/tls_arch_mtalpha.h (UNMAP_STORAGE, MAP_STORAGE),
+	* lib/mgos/tlsmalloc/tls_arch_mtsparc.h (UNMAP_STORAGE)
+	(MAP_STORAGE): Cast the pointers before calling `mgsim_control',
+	since it is now a function and the compiler now tries to check
+	types.
+
+2012-10-21  Raphael 'kena' Poss  <r.poss@uva.nl>
+
 	Extend the performance counter interface to the latest MGSim.
 
 	* lib/slsys/include/svp/perf.h,

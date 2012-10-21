@@ -23,7 +23,7 @@ int MAP_STORAGE(void *p, size_t sz)
 {
     unsigned l2 = __builtin_ctz(sz);                          
     assert((l2 >= 12) && ((l2 - 12) < 8));                  
-    mgsim_control(p, MGSCTL_TYPE_MEM, MGSCTL_MEM_MAP, l2-12); 
+    mgsim_control((unsigned long)p, MGSCTL_TYPE_MEM, MGSCTL_MEM_MAP, l2-12); 
     return 1;                                                          
 }
 #define MAP_STORAGE_FAIL 0
@@ -35,7 +35,7 @@ void UNMAP_STORAGE(void *p, size_t sz)
 {
     unsigned l2 = __builtin_ctz(sz);                          
     assert((l2 >= 12) && ((l2 - 12) < 8));                  
-    mgsim_control(p, MGSCTL_TYPE_MEM, MGSCTL_MEM_UNMAP, l2-12); 
+    mgsim_control((unsigned long)p, MGSCTL_TYPE_MEM, MGSCTL_MEM_UNMAP, l2-12); 
 }
 
 
