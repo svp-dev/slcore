@@ -42,6 +42,7 @@ AC_CONFIG_FILES([Makefile
                  host-host-hlsimd/Makefile
                  mtalpha-sim/Makefile
                  mtsparc-sim/Makefile
+                 mipsel-sim/Makefile
                  mtsparc-fpga/Makefile
                  ])
 

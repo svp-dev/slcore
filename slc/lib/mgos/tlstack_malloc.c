@@ -42,8 +42,13 @@ void* tls_malloc(size_t sz)
     output_uint(sz, 0);
 #endif
     uintptr_t tls_top, tls_bottom;
+#if defined(__mips__)
+    asm("mfc2 %0, $5" : "=r"(tls_top));
+    asm("mfc2 %0, $4" : "=r"(tls_bottom));
+#else
     __asm__("ldfp %0" : "=r"(tls_top));
     __asm__("ldbp %0" : "=r"(tls_bottom));
+#endif
 
     // The "stack" area of TLS starts from the middle. Everything
     // below is "thread heap" and is not automatically deallocated

@@ -15,7 +15,7 @@
 #ifndef SLC_MTA_STDDEF_H
 # define SLC_MTA_STDDEF_H
 
-#if defined(__alpha__)||defined(__mtalpha__)||defined(__mtsparc__)
+#if defined(__alpha__)||defined(__mtalpha__)||defined(__mtsparc__)||defined(__mips__)
 
 /* 7.17.2 types */
 

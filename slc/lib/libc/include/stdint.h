@@ -15,7 +15,7 @@
 #ifndef SLC_MTA_STDINT_H
 # define SLC_MTA_STDINT_H
 
-#if defined(__alpha__)||defined(__mtalpha__)||defined(__mtsparc__)
+#if defined(__alpha__)||defined(__mtalpha__)||defined(__mtsparc__)||defined(__mips__)
 
 /* 7.18.1.1 Exact-width integer types */
 typedef signed char             int8_t;

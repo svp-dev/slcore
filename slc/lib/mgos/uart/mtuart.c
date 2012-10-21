@@ -4,7 +4,11 @@
 #include "mgsim/mtconf.h"
 #include "stdio/mtstdio.h"
 
+#if defined(__mips__)
+#define drain(X) __asm__ __volatile__("move %0, %0" : : "r"(X))
+#else
 #define drain(X) __asm__ __volatile__("mov %0, %0" : : "r"(X))
+#endif
 
 sl_def(do_uart_init, sl__static, sl_glparm(char*,ctl), sl_glparm(long*,chans))
 {

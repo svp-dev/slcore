@@ -1114,7 +1114,7 @@ extern sl_place_t __stdio_place_id;
 int
 vfprintf(FILE * restrict fp, const char * restrict fmt0, va_list ap)
 {
-#if defined(__slc_os_fpga__)
+#if defined(__slc_os_fpga__) || (defined(__slc_os_sim__) && defined(__mips__))
     // UTLEON3 does not support suspending allocate,
     // but it does not matter because we are single core
     return __vfprintf(fp, fmt0, ap);

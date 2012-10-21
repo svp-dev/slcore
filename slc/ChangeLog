@@ -1,5 +1,148 @@
 2012-10-21  Raphael 'kena' Poss  <r.poss@uva.nl>
 
+	Provide library support for MIPSel.
+
+	* lib/mipsel-sim/libgcc.a: Import from GCC 4.7.1. This was built by
+	configuring gcc for `mipsel-linux-gnu', then manually editing
+	`mipsel-linux-gnu/libgcc/Makefile' in the build tree to use `slc
+	-b mipsel_s' as code generator.
+
+	* lib/libc/math/mipsel/acosf.o, lib/libc/math/mipsel/acoshf.o,
+	lib/libc/math/mipsel/asinf.o, lib/libc/math/mipsel/asinhf.o,
+	lib/libc/math/mipsel/atan2f.o, lib/libc/math/mipsel/atanf.o,
+	lib/libc/math/mipsel/atanhf.o, lib/libc/math/mipsel/cabsf.o,
+	lib/libc/math/mipsel/carg.o, lib/libc/math/mipsel/cargf.o,
+	lib/libc/math/mipsel/cbrtf.o, lib/libc/math/mipsel/ceilf.o,
+	lib/libc/math/mipsel/copysignf.o, lib/libc/math/mipsel/cosf.o,
+	lib/libc/math/mipsel/coshf.o, lib/libc/math/mipsel/e_acos.o,
+	lib/libc/math/mipsel/e_acosh.o, lib/libc/math/mipsel/e_asin.o,
+	lib/libc/math/mipsel/e_atan2.o, lib/libc/math/mipsel/e_atanh.o,
+	lib/libc/math/mipsel/e_cosh.o, lib/libc/math/mipsel/e_exp.o,
+	lib/libc/math/mipsel/e_fmod.o, lib/libc/math/mipsel/e_gamma.o,
+	lib/libc/math/mipsel/e_gamma_r.o, lib/libc/math/mipsel/e_hypot.o,
+	lib/libc/math/mipsel/e_j0.o, lib/libc/math/mipsel/e_j1.o,
+	lib/libc/math/mipsel/e_jn.o, lib/libc/math/mipsel/e_lgamma.o,
+	lib/libc/math/mipsel/e_lgamma_r.o, lib/libc/math/mipsel/e_log.o,
+	lib/libc/math/mipsel/e_log10.o, lib/libc/math/mipsel/e_log2.o,
+	lib/libc/math/mipsel/e_pow.o, lib/libc/math/mipsel/e_rem_pio2.o,
+	lib/libc/math/mipsel/e_remainder.o,
+	lib/libc/math/mipsel/e_scalb.o, lib/libc/math/mipsel/e_sinh.o,
+	lib/libc/math/mipsel/e_sqrt.o, lib/libc/math/mipsel/erfcf.o,
+	lib/libc/math/mipsel/erff.o, lib/libc/math/mipsel/exp2f.o,
+	lib/libc/math/mipsel/expf.o, lib/libc/math/mipsel/expm1f.o,
+	lib/libc/math/mipsel/fabsf.o, lib/libc/math/mipsel/fdimf.o,
+	lib/libc/math/mipsel/floorf.o, lib/libc/math/mipsel/fmaf.o,
+	lib/libc/math/mipsel/fmaxf.o, lib/libc/math/mipsel/fminf.o,
+	lib/libc/math/mipsel/fmodf.o, lib/libc/math/mipsel/frexpf.o,
+	lib/libc/math/mipsel/hypotf.o, lib/libc/math/mipsel/ilogbf.o,
+	lib/libc/math/mipsel/k_cos.o, lib/libc/math/mipsel/k_rem_pio2.o,
+	lib/libc/math/mipsel/k_sin.o, lib/libc/math/mipsel/k_standard.o,
+	lib/libc/math/mipsel/k_tan.o, lib/libc/math/mipsel/ldexpf.o,
+	lib/libc/math/mipsel/lgammaf.o, lib/libc/math/mipsel/llrintf.o,
+	lib/libc/math/mipsel/llroundf.o, lib/libc/math/mipsel/log10f.o,
+	lib/libc/math/mipsel/log1pf.o, lib/libc/math/mipsel/log2f.o,
+	lib/libc/math/mipsel/logbf.o, lib/libc/math/mipsel/logf.o,
+	lib/libc/math/mipsel/lrintf.o, lib/libc/math/mipsel/lroundf.o,
+	lib/libc/math/mipsel/modff.o, lib/libc/math/mipsel/nan.o,
+	lib/libc/math/mipsel/nearbyintf.o,
+	lib/libc/math/mipsel/nextafterf.o, lib/libc/math/mipsel/powf.o,
+	lib/libc/math/mipsel/remainderf.o, lib/libc/math/mipsel/remquof.o,
+	lib/libc/math/mipsel/rintf.o, lib/libc/math/mipsel/roundf.o,
+	lib/libc/math/mipsel/s_asinh.o, lib/libc/math/mipsel/s_atan.o,
+	lib/libc/math/mipsel/s_cbrt.o, lib/libc/math/mipsel/s_ceil.o,
+	lib/libc/math/mipsel/s_copysign.o, lib/libc/math/mipsel/s_cos.o,
+	lib/libc/math/mipsel/s_erf.o, lib/libc/math/mipsel/s_expm1.o,
+	lib/libc/math/mipsel/s_fabs.o, lib/libc/math/mipsel/s_fdim.o,
+	lib/libc/math/mipsel/s_finite.o, lib/libc/math/mipsel/s_finitef.o,
+	lib/libc/math/mipsel/s_floor.o, lib/libc/math/mipsel/s_fma.o,
+	lib/libc/math/mipsel/s_fmax.o, lib/libc/math/mipsel/s_fmin.o,
+	lib/libc/math/mipsel/s_fpclassify.o,
+	lib/libc/math/mipsel/s_fpclassifyf.o,
+	lib/libc/math/mipsel/s_frexp.o, lib/libc/math/mipsel/s_ilogb.o,
+	lib/libc/math/mipsel/s_isinf.o, lib/libc/math/mipsel/s_isinff.o,
+	lib/libc/math/mipsel/s_isnan.o, lib/libc/math/mipsel/s_isnanf.o,
+	lib/libc/math/mipsel/s_ldexp.o,
+	lib/libc/math/mipsel/s_lib_version.o,
+	lib/libc/math/mipsel/s_llrint.o, lib/libc/math/mipsel/s_llround.o,
+	lib/libc/math/mipsel/s_log1p.o, lib/libc/math/mipsel/s_logb.o,
+	lib/libc/math/mipsel/s_lrint.o, lib/libc/math/mipsel/s_lround.o,
+	lib/libc/math/mipsel/s_matherr.o, lib/libc/math/mipsel/s_modf.o,
+	lib/libc/math/mipsel/s_nearbyint.o,
+	lib/libc/math/mipsel/s_nextafter.o,
+	lib/libc/math/mipsel/s_remquo.o, lib/libc/math/mipsel/s_rint.o,
+	lib/libc/math/mipsel/s_round.o, lib/libc/math/mipsel/s_scalbln.o,
+	lib/libc/math/mipsel/s_scalbn.o, lib/libc/math/mipsel/s_signbit.o,
+	lib/libc/math/mipsel/s_signbitf.o,
+	lib/libc/math/mipsel/s_signgam.o,
+	lib/libc/math/mipsel/s_significand.o,
+	lib/libc/math/mipsel/s_sin.o, lib/libc/math/mipsel/s_tan.o,
+	lib/libc/math/mipsel/s_tanh.o, lib/libc/math/mipsel/s_trunc.o,
+	lib/libc/math/mipsel/scalblnf.o, lib/libc/math/mipsel/scalbnf.o,
+	lib/libc/math/mipsel/sinf.o, lib/libc/math/mipsel/sinhf.o,
+	lib/libc/math/mipsel/sqrtf.o, lib/libc/math/mipsel/tanf.o,
+	lib/libc/math/mipsel/tanhf.o, lib/libc/math/mipsel/tgammaf.o,
+	lib/libc/math/mipsel/truncf.o, lib/libc/math/mipsel/w_acos.o,
+	lib/libc/math/mipsel/w_acosh.o, lib/libc/math/mipsel/w_asin.o,
+	lib/libc/math/mipsel/w_atan2.o, lib/libc/math/mipsel/w_atanh.o,
+	lib/libc/math/mipsel/w_cabs.o, lib/libc/math/mipsel/w_cosh.o,
+	lib/libc/math/mipsel/w_drem.o, lib/libc/math/mipsel/w_exp.o,
+	lib/libc/math/mipsel/w_exp2.o, lib/libc/math/mipsel/w_fmod.o,
+	lib/libc/math/mipsel/w_gamma.o, lib/libc/math/mipsel/w_hypot.o,
+	lib/libc/math/mipsel/w_j0.o, lib/libc/math/mipsel/w_j1.o,
+	lib/libc/math/mipsel/w_jn.o, lib/libc/math/mipsel/w_lgamma.o,
+	lib/libc/math/mipsel/w_lgamma_r.o, lib/libc/math/mipsel/w_log.o,
+	lib/libc/math/mipsel/w_log10.o, lib/libc/math/mipsel/w_log2.o,
+	lib/libc/math/mipsel/w_pow.o, lib/libc/math/mipsel/w_remainder.o,
+	lib/libc/math/mipsel/w_sinh.o, lib/libc/math/mipsel/w_sqrt.o,
+	lib/libc/math/mipsel/w_tgamma.o: Import from uCLibc 0.9.30.1. This
+	was built by configuring uClibc for the `mips' architecture, MIPS
+	I ISA, Little Endian, O32 ABI, with FP support, but no MMU. Then
+	the file `Rules.mak' was manually modified to set `CC' to `slc -b
+	mipsel_s'.
+
+	* doc/README.rst: Report the new precompiled binaries (math
+	objects and libgcc.a).
+
+	* lib/mipsel-sim/mipselmathobjs.mk: List the new files.
+
+	* lib/common.mk: Predefine `nobase_sllib_DATA'.
+
+	* lib/mtalpha-sim/Makefile.am: Copy to...
+	* lib/mipsel-sim/Makefile.am: ...here. Define library support only
+	for `seq_naked' code generation. Use the MIPS math objects for
+	`libm'. List and install `libgcc.a'.
+
+	* lib/libc/bsd/libc/include/fpmath.h,
+	* lib/libc/bsd/libc/stdio/vfprintf.c,
+	* lib/mgos/posix-compat/heap.c,
+	* lib/libc/include/limits.h,
+	* lib/libc/include/stddef.h,
+	* lib/libc/include/stdint.h,
+	* lib/libc/malloc/mtmalloc.h: Extend the preprocessor conditionals
+	to `__mips__'.
+
+	* lib/libc/include/time.h: Also support MIPS. Use the MGSim
+	performance counters to support clock() since MIPS I does not
+	define a TSC natively.
+
+	* lib/mgos/tlsmalloc/tls_arch_mtalpha_sim.h: Copy to...
+	* lib/mgos/tlsmalloc/tls_arch_mipsel_sim.h: ... here.
+
+	* lib/mgos/tlsmalloc/tls_arch_mipsel_sim.h,
+	* lib/mgos/tlstack_malloc.c: Also support MIPS. Use the `mfc2'
+	instruction directly for ldbp/ldfp since we don't use a modified
+	assembler yet.
+	* lib/mipsel-sim/Makefile.am: Use it to build the `tlsmalloc' code.
+
+	* lib/mgos/uart/mtuart.c: Use `move' to drain a waiting register
+	on MIPS, because the GNU assembler for MIPS does not support the
+	alias `mov'.
+
+	* lib/configure.ac,
+	* lib/Makefile.am: Recurse into `mipsel-sim' if configured.
+
+2012-10-21  Raphael 'kena' Poss  <r.poss@uva.nl>
+
 	Provide tool support for MIPSel.
 
 	We support only sequential code for now.

@@ -38,7 +38,7 @@
 #define _LITTLE_ENDIAN  1234    /* LSB first: i386, vax */
 #define _BIG_ENDIAN     4321    /* MSB first: 68000, ibm, net */
 
-#if defined(__alpha__) || defined(__mtalpha__)
+#if defined(__alpha__) || defined(__mtalpha__) || defined(__mips__)
 #define _BYTE_ORDER _LITTLE_ENDIAN
 #endif
 

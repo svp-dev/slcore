@@ -36,6 +36,10 @@ clock_t clock(void);
 #if !defined(__AVOID_INLINABLE_PRIMITIVES) && defined(__mt_freestanding__) && \
     defined(__GNUC__) && !defined(__AVOID_GNUISMS)
 
+#ifdef __mips__
+#include <svp/perf.h>
+#endif
+
 #include <svp/compiler.h>
 
 alwaysinline unused
@@ -44,12 +48,12 @@ clock_t __inline_clock(void)
     clock_t c;                                               
 #if defined(__alpha__) || defined(__mtalpha__)
     __asm__ __volatile__ ("rpcc %0" : "=r"(c) : : "memory");
-#else
-#if defined(__mtsparc__)
+#elif defined(__mips__)
+    c = (clock_t)mtperf_sample1(MTPERF_CORE_CYCLES);
+#elif defined(__mtsparc__)
     __asm__ __volatile__("rd %%asr4, %0" : "=r"(c) : : "memory");
 #else
 # error no clock definition for this target.
-#endif
 #endif
     return c;
 }

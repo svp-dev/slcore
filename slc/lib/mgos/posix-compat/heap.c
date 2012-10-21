@@ -18,7 +18,7 @@
 #include "heap.h"
 #include "mgsim/mtconf.h"
 
-#if defined(__mtsparc__)
+#if defined(__mtsparc__)||defined(__mips__)
 
 #ifndef PAGESIZE
 #define PAGESIZE 4*1024

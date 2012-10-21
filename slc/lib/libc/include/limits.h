@@ -15,7 +15,7 @@
 #ifndef SLC_MTA_LIMITS_H
 # define SLC_MTA_LIMITS_H
 
-#if defined(__alpha__)||defined(__mtalpha__)||defined(__mtsparc__)
+#if defined(__alpha__)||defined(__mtalpha__)||defined(__mtsparc__)||defined(__mips__)
 
 #define MB_LEN_MAX      16
 
