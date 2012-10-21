@@ -39,7 +39,7 @@ libm_a_SOURCES = ../libc/math/missing_uclibc_math.c
 libm_a_LIBADD  = $(MTAMATHOBJS)
 libm_a_DEPENDENCIES = $(libm_a_LIBADD)
 
-MALLOC_DEFS_TARGET    = -DPAGESIZE=0x40000000U
+MALLOC_DEFS_TARGET    = -DPAGESIZE=0x8000U
 TLSMALLOC_DEFS_TARGET = -DARCH_TLS_SERVICES=\"tls_arch_mtalpha.h\" 
 include ../malloc.mk
 include ../tlsmalloc.mk

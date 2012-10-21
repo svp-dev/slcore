@@ -1,5 +1,50 @@
 2012-10-21  Raphael 'kena' Poss  <r.poss@uva.nl>
 
+	Enhance the heap memory manager and fix a long-standing bug.
+
+	Multiple changes packaged in one commit:
+
+	- enable use of the MGSim MMU to map/unmap memory pages dynamically.
+
+	- use smaller page sizes to accommodate the MGSim MMU granularity.
+
+	- fix a bug in `sbrk': `sbrk' must return the *previous* brk, not
+	the new one (as per man page). Prior to this patch, with the
+	introduction of dynamic page mapping `malloc' would get an error
+	when it tried to write to the area above the pointer returned to
+	`sbrk'.
+
+	- better accommodate for the MGSim memory address space. This is
+	because the default MGsim configuration places I/O ranges just
+	below the 4GB boundary; with a 10GB heap on MT-Alpha there would
+	be a conflict if heap space directly follows program code.
+	Instead, place the heap base into its own section
+	(`MGOS_HEAPBASE'), then tell the linker to place this either below
+	I/O (on 32-bit targets) or above I/O (on 64-bit targets).
+
+	* lib/mgos/posix-compat/heap.c (PAGESIZE, PAGE_BITS),
+	* lib/mtalpha-sim/Makefile.am (PAGESIZE),
+	* lib/mtsparc-fpga/Makefile.am (PAGESIZE),
+	* lib/mtsparc-sim/Makefile.am (PAGESIZE): Use 4K pages on 32-bit platforms,
+	32K on 64-bit.
+
+	* lib/mgos/posix-compat/heap.c (__heap, brk): When MGSim is
+	targeted, place a 1-byte heap base in the section `MGOS_HEAPBASE',
+	then use the MMU to dynamically map/unmap pages.
+
+	* tools/bin/cce.in: Place the code at 0x1000, and the heap at
+	either 0x40000000 or 0x1000000000 depending on whether the target
+	is 32-bit or 64-bit MGSim.
+
+	* lib/mgos/posix-compat/heap.c (sbrk): Return the old brk, not the
+	new one.
+
+	* lib/malloc.mk: Enable use of `sys/types.h' which now exists; as
+	well as shrinking the HEAP space with `sbrk' and negative
+	increments which we now support.
+
+2012-10-21  Raphael 'kena' Poss  <r.poss@uva.nl>
+
 	Link with `libgcc.a' if it is configured.
 
 	* tools/bin/cce.in: If `libgcc.a' is present in an SL library

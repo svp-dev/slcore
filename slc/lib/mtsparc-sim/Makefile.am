@@ -35,7 +35,7 @@ include ../libc.mk
 #libm_a_LIBADD  = $(MTAMATHOBJS)
 #libm_a_DEPENDENCIES = $(libm_a_LIBADD)
 
-MALLOC_DEFS_TARGET    = -DPAGESIZE=0x400000U
+MALLOC_DEFS_TARGET    = -DPAGESIZE=0x1000U
 TLSMALLOC_DEFS_TARGET = -DARCH_TLS_SERVICES=\"tls_arch_mtsparc_sim.h\" 
 include ../malloc.mk
 include ../tlsmalloc.mk

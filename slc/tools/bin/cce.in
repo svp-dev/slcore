@@ -439,7 +439,17 @@ case $slc_arch in
 esac
 case $slc_arch-$slc_os in
     *-sim)
-	slc_ldflags+=(-Wl,-Ttext -Wl,0x1000000 -nostdlib)
+	slc_ldflags+=(-Wl,-Ttext -Wl,0x1000 -nostdlib)
+        case $slc_arch in
+            mtsparc|mips*)
+                # with 32-bit, place the heap far above the code, but below I/O.
+                slc_ldflags+=(-Wl,--section-start -Wl,MGOS_HEAPBASE=0x40000000)
+                ;;
+            mtalpha)
+                # with 64-bit the heap can collide with the I/O region. move it above.
+                slc_ldflags+=(-Wl,--section-start -Wl,MGOS_HEAPBASE=0x100000000)
+                ;;
+        esac
 	;;
     *-fpga)
         extra_f1flags+=(-x tls-via-gettid -x clear-local-regs)
