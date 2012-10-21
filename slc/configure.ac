@@ -172,12 +172,26 @@ if test "x$enable_mtsparc" = "xyes"; then
   fi
 fi
 
+if test "x$enable_mipsel" = "xyes"; then
+  if test "x$UTCC_MIPSEL" = "xno" \
+     -o "x$CC_MIPSEL" = "xno" \
+     -o "x$AR_MIPSEL" = "xno" \
+     -o "x$RANLIB_MIPSEL" = "xno"; then
+   AC_MSG_WARN([Some MIPSel utilities are missing; MIPSel support disabled.])
+   enable_mipsel=no
+  fi
+fi
+
 if test "x$MGSIM_ALPHA" = "xno"; then
    AC_MSG_WARN([Cannot find the MT-Alpha Microgrid simulator. `slr' will not run MT-Alpha programs.])
 fi
 
 if test "x$MGSIM_SPARC" = "xno"; then
    AC_MSG_WARN([Cannot find the MT-Sparc Microgrid simulator. `slr' may not run MT-Sparc programs.])
+fi
+
+if test "x$MGSIM_MIPSEL" = "xno"; then
+   AC_MSG_WARN([Cannot find the MIPSel Microgrid simulator. `slr' may not run MIPSel programs.])
 fi
 
 AC_CONFIG_FILES([
@@ -198,6 +212,7 @@ cat <<EOF
 *
 * Support for MT-Alpha:   $enable_mtalpha
 * Support for MT-SPARC:   $enable_mtsparc
+* Support for MIPSel:     $enable_mipsel
 * Support for utc-ptl:    $enable_ptl
 * Support for hlsim:      $enable_hlsim
 * Support for hrt:        $enable_hrt

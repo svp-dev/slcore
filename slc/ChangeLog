@@ -1,5 +1,18 @@
 2012-10-21  Raphael 'kena' Poss  <r.poss@uva.nl>
 
+	Provide infrastructure to support MIPSel compatibility.
+
+	* build-aux/mgbinutils.m4: Detect ar, ranlib and nm for mipsel-linux-gnu.
+	* build-aux/mgsim.m4: Detect mgsim for mipsel.
+	* build-aux/slc.m4: Detect gcc for mipsel-linux-gnu; support a new
+	flag --enable-mipsel.
+	* configure.ac: Determine whether MIPSel is supported based on detected tools.
+
+	* build-aux/slctests.m4: Provide a new Automake conditional
+	ENABLE_CHECK_SPR_MIPSEL.
+
+2012-10-21  Raphael 'kena' Poss  <r.poss@uva.nl>
+
 	Enhance the heap memory manager and fix a long-standing bug.
 
 	Multiple changes packaged in one commit:

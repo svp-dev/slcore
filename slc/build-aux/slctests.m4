@@ -51,6 +51,7 @@ AM_CONDITIONAL([ENABLE_CHECK_SPR], [test "x$enable_check_spr" = "xyes"])
 
 AM_CONDITIONAL([ENABLE_CHECK_SPR_MTA], [test "x$enable_check_spr" = "xyes" -a "x$enable_mtalpha" = "xyes"])
 AM_CONDITIONAL([ENABLE_CHECK_SPR_MTS], [test "x$enable_check_spr" = "xyes" -a "x$enable_mtsparc" = "xyes"])
+AM_CONDITIONAL([ENABLE_CHECK_SPR_MIPSEL], [test "x$enable_check_spr" = "xyes" -a "x$enable_mipsel" = "xyes"])
 
 AC_ARG_ENABLE([check-coma-zl],
 [AC_HELP_STRING([--disable-check-coma-zl], [do not check ZLs COMA simulation (default is to check)])],

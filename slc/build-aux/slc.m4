@@ -50,6 +50,9 @@ AC_DEFUN([_SLC_WITH_CROSS_GCC],
 
  AC_ARG_VAR([CC_MTSPARC], [Location of the GCC/Sparc cross-compiler.])
  AC_PATH_PROG([CC_MTSPARC], [mtsparc-linux-gnu-gcc], [no], [$prefix/bin$PATH_SEPARATOR$PATH])
+
+ AC_ARG_VAR([CC_MIPSEL], [Location of the GCC/MIPSel cross-compiler.])
+ AC_PATH_PROG([CC_MIPSEL], [mipsel-linux-gnu-gcc], [no], [$prefix/bin$PATH_SEPARATOR$PATH])
 ])
 
 AC_DEFUN([SLC_TARGET_FLAGS],
@@ -77,6 +80,11 @@ AC_DEFUN([SLC_TARGET_FLAGS],
                                 [disable support for MT-Sparc compilation (default is try to enable)])],
                 [], [enable_mtsparc=yes])
 
+  AC_ARG_ENABLE([mipsel], 
+                [AC_HELP_STRING([--disable-mipsel], 
+                                [disable support for MIPSel compilation (default is try to enable)])],
+                [], [enable_mipsel=yes])
+
   dnl Automake conditional is decided late, so that the surrounding configure script
   dnl can change its mind about supporting this target.
   AC_CONFIG_COMMANDS_PRE([AM_CONDITIONAL([ENABLE_SLC_PTL], [test "x$enable_ptl" = "xyes"])])
@@ -84,7 +92,8 @@ AC_DEFUN([SLC_TARGET_FLAGS],
   AC_CONFIG_COMMANDS_PRE([AM_CONDITIONAL([ENABLE_SLC_HRT], [test "x$enable_hrt" = "xyes"])])
   AC_CONFIG_COMMANDS_PRE([AM_CONDITIONAL([ENABLE_SLC_MTALPHA], [test "x$enable_mtalpha" = xyes])])
   AC_CONFIG_COMMANDS_PRE([AM_CONDITIONAL([ENABLE_SLC_MTSPARC], [test "x$enable_mtsparc" = xyes])])
-  AC_CONFIG_COMMANDS_PRE([RECURSIVE_CONFIGURE_FLAGS="--enable-ptl=$enable_ptl --enable-hlsim=$enable_hlsim --enable-hrt=$enable_hrt --enable-mtalpha=$enable_mtalpha --enable-mtsparc=$enable_mtsparc"; AC_SUBST([RECURSIVE_CONFIGURE_FLAGS])])
+  AC_CONFIG_COMMANDS_PRE([AM_CONDITIONAL([ENABLE_SLC_MIPSEL], [test "x$enable_mipsel" = xyes])])
+  AC_CONFIG_COMMANDS_PRE([RECURSIVE_CONFIGURE_FLAGS="--enable-ptl=$enable_ptl --enable-hlsim=$enable_hlsim --enable-hrt=$enable_hrt --enable-mtalpha=$enable_mtalpha --enable-mtsparc=$enable_mtsparc --enable-mipsel=$enable_mipsel"; AC_SUBST([RECURSIVE_CONFIGURE_FLAGS])])
 ])
 
 # SLC_CHECK_TARGETS
