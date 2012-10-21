@@ -1,5 +1,12 @@
 2012-10-21  Raphael 'kena' Poss  <r.poss@uva.nl>
 
+	Synchronize library support with MGSim 3.3.
+
+	* lib/mgos/mgsim/mgsim.h: Import from MGSim 3.3. This extends the
+	ASR/APR support to MIPS.
+
+2012-10-21  Raphael 'kena' Poss  <r.poss@uva.nl>
+
 	Provide library support for MIPSel.
 
 	* lib/mipsel-sim/libgcc.a: Import from GCC 4.7.1. This was built by
