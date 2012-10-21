@@ -1,3 +1,9 @@
+2012-10-21  Raphael 'kena' Poss  <r.poss@uva.nl>
+
+	Improve `configure'.
+
+	* configure.ac: Report status of configuration for MIPSel.
+
 2012-04-30  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
 	Extend the test suite.
