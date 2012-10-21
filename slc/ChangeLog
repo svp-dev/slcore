@@ -1,5 +1,12 @@
 2012-10-21  Raphael 'kena' Poss  <r.poss@uva.nl>
 
+	Link with `libgcc.a' if it is configured.
+
+	* tools/bin/cce.in: If `libgcc.a' is present in an SL library
+	directory, then link it in as part of the C standard library.
+
+2012-10-21  Raphael 'kena' Poss  <r.poss@uva.nl>
+
 	Kill some compiler warnings.
 
 	* lib/mgos/tlsmalloc/tls_arch_mtalpha.h (UNMAP_STORAGE, MAP_STORAGE),

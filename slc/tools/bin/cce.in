@@ -479,6 +479,7 @@ case $slc_os in
         have_libmgos_a=
         have_libm_a=
         have_libc_a=
+        have_libgcc_a=
 	for d in $slc_libdir; do
             ldir=$d/$slc_arch-$slc_os
             if test -r $ldir; then
@@ -486,6 +487,7 @@ case $slc_os in
                 if test -r $ldir/libmgos.a; then have_libmgos_a=yes; fi
                 if test -r $ldir/libm.a; then have_libm_a=yes; fi
                 if test -r $ldir/libc.a; then have_libc_a=yes; fi
+                if test -r $ldir/libgcc.a; then have_libgcc_a=yes; fi
             fi
 
             ldir=$d/$slc_arch-$slc_os/$slc_variant
@@ -500,6 +502,7 @@ case $slc_os in
 	if test "$slc_use_libsl" != "no"; then slc_ldflags+=("-lsl"); fi
         if test "$slc_use_slrt" != "no"; then slc_ldflags+=("-lslc"); fi
         if test "$slc_use_main" != "no"; then slc_ldflags+=("-lslmain"); fi
+        if test "$slc_use_cstdlib" != "no" -a "$have_libgcc_a" = yes;  then slc_ldflags+=("-lgcc"); fi
 
         IFS=$save_IFS
 	;;
