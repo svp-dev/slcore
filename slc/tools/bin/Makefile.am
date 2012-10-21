@@ -37,6 +37,9 @@ edit_scripts = $(SED) \
 	       -e 's|@CC_MTSPARC[@]|$(CC_MTSPARC)|g' \
 	       -e 's|@AR_MTSPARC[@]|$(AR_MTSPARC)|g' \
 	       -e 's|@RANLIB_MTSPARC[@]|$(RANLIB_MTSPARC)|g' \
+	       -e 's|@CC_MIPSEL[@]|$(CC_MIPSEL)|g' \
+	       -e 's|@AR_MIPSEL[@]|$(AR_MIPSEL)|g' \
+	       -e 's|@RANLIB_MIPSEL[@]|$(RANLIB_MIPSEL)|g' \
 	       -e 's|@PTHREAD_CC[@]|$(PTHREAD_CC)|g' \
 	       -e 's|@PTHREAD_CFLAGS[@]|$(PTHREAD_CFLAGS)|g' \
 	       -e 's|@PTHREAD_LIBS[@]|$(PTHREAD_LIBS)|g' \

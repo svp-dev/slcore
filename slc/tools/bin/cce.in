@@ -39,6 +39,10 @@ CC_MTSPARC=${CC_MTSPARC_OVERRIDE:-@CC_MTSPARC@}
 AR_MTSPARC=${AR_MTSPARC_OVERRIDE:-@AR_MTSPARC@}
 RANLIB_MTSPARC=${RANLIB_MTSPARC_OVERRIDE:-@RANLIB_MTSPARC@}
 
+CC_MIPSEL=${CC_MIPSEL_OVERRIDE:-@CC_MIPSEL@}
+AR_MIPSEL=${AR_MIPSEL_OVERRIDE:-@AR_MIPSEL@}
+RANLIB_MIPSEL=${RANLIB_MIPSEL_OVERRIDE:-@RANLIB_MIPSEL@}
+
 PTHREAD_CC=${PTHREAD_CC_OVERRIDE:-@PTHREAD_CC@}
 PTHREAD_CFLAGS=${PTHREAD_CFLAGS_OVERRIDE:-@PTHREAD_CFLAGS@}
 PTHREAD_LIBS=${PTHREAD_LIBS_OVERRIDE:-@PTHREAD_LIBS@}
@@ -160,6 +164,8 @@ case $alias in
     mtsparc|mtsn) alias=spr-mtsn_hybrid-mtsparc-sim ;;
     mtsn_n)       alias=spr-mtsn_naked-mtsparc-sim ;;
     mtsn_s)       alias=spr-seq_naked-mtsparc-sim ;;
+
+    mipsel_s)     alias=spr-seq_naked-mipsel-sim ;;
 
     hrt)          alias=spr-hrt_hybrid-host-host-hrt ;;
     hrt_n)        alias=spr-hrt_naked-host-host-hrt ;;
@@ -298,7 +304,7 @@ esac
 # must occur before compiler selection below, so that ptl
 # overrides can change the optimization level.
 case $slc_dialect-$slc_arch in
-    spr-mt*)
+    spr-mt*|spr-mips*)
 	slc_cflags+=(-O2) ;;
     spr-host)
         slc_cflags+=(-O2) ;;
@@ -327,6 +333,11 @@ case $slc_dialect-$slc_arch in
 	slc_filter1=(cp)
 	slc_filter2=(cp)
 	;;
+    spr-mips*)
+	slc_compiler=($(eval "echo \${CC_$archvar:-$scu_helper} -std=gnu99"))
+	slc_filter1=(cp)
+	slc_filter2=("$python" "$spp_helper" "$slc_arch" "$slc_transbase" filter2)
+        ;;
     spr-*|spp-*)
         archcomp=$(eval "echo \${CC_$archvar:-\"\$scu_helper\"} -std=gnu99")
 	slc_compiler=("$python" "$spp_helper" "$slc_arch" "$slc_transbase" compile $archcomp)
@@ -384,6 +395,10 @@ case $slc_arch in
               slc_ar=($AR_MTSPARC)
               slc_ranlib=($RANLIB_MTSPARC)
 	      ;;
+    mipsel)
+              slc_ar=($AR_MIPSEL)
+              slc_ranlib=($RANLIB_MIPSEL)
+	      ;;
     *)
               slc_ar=("$scu_helper" archive)
               slc_ranlib=("$scu_helper" ranlib)
@@ -417,6 +432,10 @@ esac
 
 # Default underlying compiler
 case $slc_arch in
+    mips*)
+        # NB: fno-expensive-optimizations seems to be mandatory in gcc 4.7 to ensure delay slots are not filled
+        slc_cflags+=(-march=mips1 -fno-delayed-branch -mno-shared -mno-explicit-relocs -fno-math-errno -fno-trapping-math --param max-delay-slot-insn-search=0 --param max-delay-slot-live-search=0 -fno-expensive-optimizations -mno-check-zero-division)
+        ;;
     mtalpha)
         slc_cflags+=(-mcpu=21264a -fno-math-errno -fno-trapping-math)
         ;;
@@ -433,7 +452,7 @@ case $slc_arch in
     mtalpha)
         slc_ppflags+=(-D__mt_freestanding__ -D__WORDSIZE=64)
 	;;
-    mtsparc)
+    mtsparc|mips*)
         slc_ppflags+=(-D__mt_freestanding__ -D__WORDSIZE=32)
 	;;
 esac

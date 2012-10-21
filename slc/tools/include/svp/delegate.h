@@ -43,7 +43,11 @@ sl_place_t __inline_get_current_place(void)
 {
 #if defined(__slc_os_sim__)
     sl_place_t p;
+#if defined(__mips__)
+    __asm__("mfc2 %0, $2" : "=r"(p));
+#else
     __asm__("getpid %0" : "=r"(p));
+#endif
     return p;
 #endif
 #if defined(__slc_os_host_hlsim__) || defined(__slc_os_host_hlsimd__)
@@ -65,7 +69,11 @@ unsigned long __inline_get_core_id(void)
 {
 #if defined(__slc_os_sim__)
     unsigned long p;
+#if defined(__mips__)
+    __asm__("mfc2 %0, $3" : "=r"(p));
+#else
     __asm__("getcid %0" : "=r"(p));
+#endif
     return p;
 #endif
 #if defined(__slc_os_host_hlsim__) || defined(__slc_os_host_hlsimd__)

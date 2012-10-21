@@ -6,6 +6,9 @@ endif
 if ENABLE_SLC_MTSPARC
 SUBDIRS += mtsparc-sim mtsparc-fpga
 endif
+if ENABLE_SLC_MIPSEL
+SUBDIRS += mipsel-sim
+endif
 
 if ENABLE_SLC_PTL
 SUBDIRS += \

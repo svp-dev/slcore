@@ -1,5 +1,54 @@
 2012-10-21  Raphael 'kena' Poss  <r.poss@uva.nl>
 
+	Provide tool support for MIPSel.
+
+	We support only sequential code for now.
+
+	* tools/bin/Makefile.am: Forward the tool configuration to `cce'.
+
+	* tools/bin/cce.in: Configure tool chain to generate MIPS code
+	with tag `spr-seq_naked-mipsel-sim' (shorthand `mipsel_s').
+
+	* tools/include/svp/compiler.h: Do not use `swch' for `nop' with
+	MIPS targets, since we don't use a modified assembler yet.
+
+	* tools/include/svp/delegate.h: Use the `mfc2' instruction
+	directly for getpid/getcid, since we don't use a modified
+	assembler yet.
+
+	* tools/lib/mt/mipsel/slrt.s: New.
+	* tools/lib/mipsel-sim/Makefile.am: New.
+
+	* tools/lib/Makefile.am,
+	* tools/lib/configure.ac: Also recurse in `mipsel-sim' if
+	configured.
+
+	* tools/runscripts.mk: Generate a new script `r-mipsel-sim'.
+
+	* tools/slc/mt/mipsel/__init__.py: New.
+	* tools/slc/mt/mipsel/regdefs.py: New; do not define any MT magic for now.
+	* tools/slc/mt/mipsel/asmproc/__init__.py: New.
+
+	* tools/slc/mt/mtsparc/asmproc/base.py,
+	* tools/slc/mt/mtsparc/asmproc/common.py,
+	* tools/slc/mt/mtsparc/asmproc/opt.py: Copy to...
+
+	* tools/slc/mt/mipsel/asmproc/base.py,
+	* tools/slc/mt/mipsel/asmproc/common.py,
+	* tools/slc/mt/mipsel/asmproc/opt.py: ... here. Remove all the
+	assembly massaging code for now. Note that MIPS assembly uses
+	'.type NAME, @function' instead of '.type NAME, #function' as in
+	SPARC.
+
+	* tools/slc/mt/mipsel/asmproc/opt.py (noreorder): Replace all
+	occurrences of '.set reorder' by `.set noreorder' because
+	otherwise the assembler would pull instructions in the delay slot
+	of branches.
+
+	* tools/slc.mk: List the new files.
+
+2012-10-21  Raphael 'kena' Poss  <r.poss@uva.nl>
+
 	Provide infrastructure to support MIPSel compatibility.
 
 	* build-aux/mgbinutils.m4: Detect ar, ranlib and nm for mipsel-linux-gnu.

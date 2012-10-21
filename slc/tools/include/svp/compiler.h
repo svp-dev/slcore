@@ -41,7 +41,7 @@
 /* No operation instruction */
 
 #if defined(__GNUC__) && !defined(__AVOID_GNUISMS)
-# ifdef __mt_freestanding__
+# if defined(__mt_freestanding__) && !defined(__mips__)
 #  define nop() __asm__ __volatile__("nop\n\tswch")
 # else
 #  define nop() __asm__ __volatile__("nop")

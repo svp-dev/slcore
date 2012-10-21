@@ -101,6 +101,12 @@ nobase_python_PYTHON += \
 	slc/mt/mtsparc/asmproc/decode.py \
 	slc/mt/mtsparc/asmproc/opc/mtsparc.py \
 	slc/mt/mtsparc/asmproc/opc/__init__.py \
+	slc/mt/mipsel/__init__.py \
+	slc/mt/mipsel/regdefs.py \
+	slc/mt/mipsel/asmproc/__init__.py \
+	slc/mt/mipsel/asmproc/base.py \
+	slc/mt/mipsel/asmproc/common.py \
+	slc/mt/mipsel/asmproc/opt.py \
 	slc/ptl/__init__.py \
 	slc/ptl/genptlcreate.py \
 	slc/ptl/gentfun.py \
