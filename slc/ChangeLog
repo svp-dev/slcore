@@ -1,3 +1,11 @@
+2012-10-21  Raphael 'kena' Poss  <r.poss@uva.nl>
+
+	Extend the performance counter interface to the latest MGSim.
+
+	* lib/slsys/include/svp/perf.h,
+	* lib/slsys/perf/perf.c: Add support for the number of created
+	threads/families and the number of core cycles, as per MGSim 3.3.
+
 2012-10-20  Raphael 'kena' Poss  <r.poss@uva.nl>
 
 	Align MT code with MGSim 3.3

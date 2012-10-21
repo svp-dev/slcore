@@ -42,7 +42,10 @@ typedef long counter_t;
 #define MTPERF_UNIX_PACKED_TIME 15
 #define MTPERF_EXTMEM_LOADS 16
 #define MTPERF_EXTMEM_STORES 17
-#define MTPERF_NCOUNTERS 18
+#define MTPERF_CREATED_THREADS 18
+#define MTPERF_CREATED_FAMILIES 19
+#define MTPERF_CORE_CYCLES 20
+#define MTPERF_NCOUNTERS 21
 #endif
 
 #if defined(__slc_os_fpga__)
@@ -205,6 +208,8 @@ void __inline_mtperf_sample(counter_t * array)
         __read_cnt(16);
         __read_cnt(17);
         __read_cnt(18);
+        __read_cnt(19);
+        __read_cnt(20);
 #undef __read_cnt
         __asm__ __volatile__("");
 }
