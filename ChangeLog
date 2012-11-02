@@ -1,3 +1,9 @@
+2012-11-02  Raphael 'kena' Poss  <r.poss@uva.nl>
+
+	Minor packaging fix.
+
+	* bootstrap: Avoid forcing Automake 1.11, since 1.12 is now out.
+
 2012-04-30  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
 	Add a top-level documentation.

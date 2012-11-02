@@ -1,16 +1,8 @@
 #! /bin/sh
 # slc, a SVP generic compiler.
-# Copyright (C) 2009,2010 The CSA group, The SL project.
+# Copyright (C) 2009,2010,2011,2012 The CSA group, The SL project.
 
 set -e
-
-echo "Detecting which Autotools to use..."
-# Some systems ship both the latest Automake and
-# an older version, and default to the older. Try
-# to detect this.
-automake-1.11 --version >/dev/null 2>/dev/null \
-  && export AUTOMAKE=automake-1.11 \
-  && export ACLOCAL=aclocal-1.11
 
 if [ "$#" -eq "1" ]; then
   AUTORECONF=$1
