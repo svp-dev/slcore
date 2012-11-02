@@ -1,5 +1,11 @@
 2012-11-02  Raphael 'kena' Poss  <r.poss@uva.nl>
 
+	Minor packaging fix.
+
+	* bootstrap: Avoid forcing Automake 1.11, since 1.12 is now out.
+
+2012-11-02  Raphael 'kena' Poss  <r.poss@uva.nl>
+
 	Update the automatic configuration to recognize the latest MGSim naming.
 
 	* build-aux/mgsim.m4: Recognize/detect the names `mtalpha-mgsim', etc.
