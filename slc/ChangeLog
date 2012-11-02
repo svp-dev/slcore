@@ -1,5 +1,13 @@
 2012-11-02  Raphael 'kena' Poss  <r.poss@uva.nl>
 
+	Fix the `output_*' interfaces on MT targets.
+
+	* tools/include/svp/testoutput.h: Place a compiler memory barrier
+	after each output to prevent the compiler from reordering writes
+	to separate memory addresses.
+
+2012-11-02  Raphael 'kena' Poss  <r.poss@uva.nl>
+
 	Fix `output_char' on MT targets.
 
 	* tools/include/svp/testoutput.h (output_char): Ensure that bytes

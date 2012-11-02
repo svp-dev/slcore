@@ -30,31 +30,37 @@
     do  {                                                               \
         volatile long *base = (long*)(void*)(((Stream) == 1) ? __MGSIM_DEBUG_STDOUT : __MGSIM_DEBUG_STDERR); \
         *(base + 4) = (long)(Precision);                                \
-        *(__typeof__(F)*)(void*)(base + 5) = (F);                       \
+        __asm__ __volatile__("" : : : "memory");                        \
+        *(double*)(void*)(base + 5) = (double)(F);                      \
+        __asm__ __volatile__("" : : : "memory");                        \
     } while(0)
 
 #define output_uint(N, Stream)                                          \
     do  {                                                               \
         volatile unsigned long *base = (unsigned long*)(void*)(((Stream) == 1) ? __MGSIM_DEBUG_STDOUT : __MGSIM_DEBUG_STDERR); \
         *(base + 1) = (unsigned long)(N);                               \
+        __asm__ __volatile__("" : : : "memory");                        \
     } while(0)
 
 #define output_int(N, Stream)                                           \
     do  {                                                               \
         volatile long *base = (long*)(void*)(((Stream) == 1) ? __MGSIM_DEBUG_STDOUT : __MGSIM_DEBUG_STDERR); \
         *(base + 2) = (long)(N);                                        \
+        __asm__ __volatile__("" : : : "memory");                        \
     } while(0)
 
 #define output_hex(N, Stream)                                           \
     do  {                                                               \
         volatile unsigned long *base = (unsigned long*)(void*)(((Stream) == 1) ? __MGSIM_DEBUG_STDOUT : __MGSIM_DEBUG_STDERR); \
         *(base + 3) = (unsigned long)(N);                               \
+        __asm__ __volatile__("" : : : "memory");                        \
     } while(0)
 
 #define output_char(N, Stream)                                          \
     do  {                                                               \
         volatile unsigned long *base = (unsigned long*)(void*)(((Stream) == 1) ? __MGSIM_DEBUG_STDOUT : __MGSIM_DEBUG_STDERR); \
         *base = (unsigned long)(N);                                     \
+        __asm__ __volatile__("" : : : "memory");                        \
     } while(0)
 
 # define output_string(S, Stream)                                       \
