@@ -2,6 +2,7 @@
 EXTRA_DIST = \
 	tls_arch_mtalpha.h \
 	tls_arch_pthreads.h \
+	tls_arch_mipsel_sim.h \
 	tls_arch_mtsparc_sim.h \
 	tls_arch_mtsparc_fpga.h 
 

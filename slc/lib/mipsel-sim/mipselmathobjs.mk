@@ -164,4 +164,4 @@ MIPSELMATHOBJS = \
   $(srcdir)/../libc/math/mipsel/w_sqrt.o \
   $(srcdir)/../libc/math/mipsel/w_tgamma.o
 
-EXTRA_DIST += $(MTAMATHOBJS)
+EXTRA_DIST += $(MIPSELMATHOBJS)

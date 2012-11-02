@@ -8,7 +8,7 @@ nobase_pkglib_LIBRARIES += \
 	libm.a \
 	seq_naked/libsl.a 
 
-nobase_sllib_DATA += \
+nobase_dist_sllib_DATA += \
 	libgcc.a
 
 seq_naked_libsl_a_CFLAGS = -b mipsel_s

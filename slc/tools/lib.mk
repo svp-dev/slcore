@@ -28,9 +28,4 @@ clean-local:
 	rm -f lib/.build_done
 
 distclean-local:
-	if test -r lib/Makefile; then cd lib && make distclean; fi
 	rm -f lib/.configure_done
-
-maintainerclean-local:
-	if test -r lib/Makefile; then cd lib && make maintainerclean; fi
-

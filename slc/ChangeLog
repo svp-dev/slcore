@@ -1,5 +1,22 @@
 2012-11-02  Raphael 'kena' Poss  <r.poss@uva.nl>
 
+	Packaging fixes.
+
+	* tools/lib.mk (distclean-local): Avoid recursing into `lib' since
+	Automake does it already based on DIST_SUBDIRS.
+
+	* lib/common.mk (nobase_dist_sllib_DATA): New variable.
+	* lib/mipsel-sim/Makefile.am (nobase_dist_sllib_DATA): Use it to
+	also distribute `libgcc.a'.
+
+	* lib/mipsel-sim/mipselmathobjs.mk (EXTRA_DIST): Ensure that
+	`$(MIPSELMATHOBJS)' gets distributed.
+
+	* lib/mgos/tlsmalloc/Makefile.am (EXTRA_DIST): Also distribute
+	`tls_arch_mipsel_sim.h'.
+
+2012-11-02  Raphael 'kena' Poss  <r.poss@uva.nl>
+
 	Adapt the `arggen' MT machine profile for use with MGSim 3.3.
 
 	* tools/mt-profiles/arggen: use the new device names in overrides.

@@ -10,6 +10,7 @@ sllibdir = $(pkglibdir)
 sllib_DATA =
 nobase_pkglib_LIBRARIES =
 nobase_sllib_DATA =
+nobase_dist_sllib_DATA =
 nobase_nodist_pkgdata_DATA =
 BUILT_SOURCES =
 EXTRA_DIST =
