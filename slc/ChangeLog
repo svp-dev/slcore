@@ -1,3 +1,9 @@
+2012-11-02  Raphael 'kena' Poss  <r.poss@uva.nl>
+
+	Update the automatic configuration to recognize the latest MGSim naming.
+
+	* build-aux/mgsim.m4: Recognize/detect the names `mtalpha-mgsim', etc.
+
 2012-10-21  Raphael 'kena' Poss  <r.poss@uva.nl>
 
 	Synchronize library support with MGSim 3.3.
