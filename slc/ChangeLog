@@ -1,5 +1,11 @@
 2012-11-02  Raphael 'kena' Poss  <r.poss@uva.nl>
 
+	Adapt the `arggen' MT machine profile for use with MGSim 3.3.
+
+	* tools/mt-profiles/arggen: use the new device names in overrides.
+
+2012-11-02  Raphael 'kena' Poss  <r.poss@uva.nl>
+
 	Fix the `output_*' interfaces on MT targets.
 
 	* tools/include/svp/testoutput.h: Place a compiler memory barrier

@@ -5,3 +5,6 @@ simargs_base+=(-o NumProcessors=4)
 simargs_base+=(-o CoreFreq=1000)
 simargs_base+=(-o \*BootROM:PreloadROMToRAM=true)
 simargs_base+=(-o \*cfgrom:enabledevice=false -o \*gfx:enabledevice=false -o \*lcd\*:enabledevice=false)
+# mgsim 3.3
+simargs_base+=(-o \*rom_boot:PreloadROMToRAM=true)
+simargs_base+=(-o \*rom_config:enabledevice=false -o gfx\*:enabledevice=false -o lcd\*:enabledevice=false)
