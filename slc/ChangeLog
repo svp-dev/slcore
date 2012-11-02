@@ -1,5 +1,13 @@
 2012-11-02  Raphael 'kena' Poss  <r.poss@uva.nl>
 
+	Fix `output_char' on MT targets.
+
+	* tools/include/svp/testoutput.h (output_char): Ensure that bytes
+	are written to the debug output as full words, to ensure
+	compatibility regardless of endianness.
+
+2012-11-02  Raphael 'kena' Poss  <r.poss@uva.nl>
+
 	Minor packaging fix.
 
 	* bootstrap: Avoid forcing Automake 1.11, since 1.12 is now out.

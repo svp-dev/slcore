@@ -53,8 +53,8 @@
 
 #define output_char(N, Stream)                                          \
     do  {                                                               \
-        volatile unsigned char *base = (unsigned char*)(void*)(((Stream) == 1) ? __MGSIM_DEBUG_STDOUT : __MGSIM_DEBUG_STDERR); \
-        *base = (unsigned char)(N);                                     \
+        volatile unsigned long *base = (unsigned long*)(void*)(((Stream) == 1) ? __MGSIM_DEBUG_STDOUT : __MGSIM_DEBUG_STDERR); \
+        *base = (unsigned long)(N);                                     \
     } while(0)
 
 # define output_string(S, Stream)                                       \
