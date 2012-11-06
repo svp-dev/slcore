@@ -1,3 +1,10 @@
+2012-11-05  Raphael 'kena' Poss  <r.poss@uva.nl>
+
+	Packaging fix.
+
+	* build-aux/mgsim.m4: Use `AC_PATH_PROGS' to try out multiple
+	candidate program names.
+
 2012-11-02  Raphael 'kena' Poss  <r.poss@uva.nl>
 
 	Packaging fixes.
