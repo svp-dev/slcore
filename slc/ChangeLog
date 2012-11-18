@@ -1,3 +1,11 @@
+2012-11-18  Raphael 'kena' Poss  <r.poss@uva.nl>
+
+	Fix a bug in `gettimeofday_virtual' on MIPSel.
+
+	* lib/mgos/posix-compat/gtod_virtual.c (gettimeofday_virtual): Use
+	`unsigned long' arithmetic to avoid hitting limitations with `long
+	long' on MIPSel. The extra bits are not needed anyways.
+
 2012-11-05  Raphael 'kena' Poss  <r.poss@uva.nl>
 
 	Packaging fix.

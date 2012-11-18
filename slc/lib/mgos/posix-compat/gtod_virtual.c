@@ -18,11 +18,11 @@ int gettimeofday_virtual(struct timeval* tv, struct timezone *tz)
 
     /* the mgsim frequencies are expressed in MHz. So it is a direct
      factor between clock ticks and microseconds. */
-    unsigned long long usecs = ticks / (unsigned long long)freq;
+    unsigned long usecs = ticks / freq;
     unsigned long secs = usecs / 1000000;
 
     tv->tv_sec = boot_time + secs;
-    tv->tv_usec = usecs - secs;
+    tv->tv_usec = usecs - secs * 1000000;
 
     return 0;
 }
