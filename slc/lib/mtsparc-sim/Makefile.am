@@ -5,6 +5,7 @@ include ../common.mk
 nobase_pkglib_LIBRARIES += \
 	libmgos.a \
 	libc.a \
+	libgcc.a \
 	seq_naked/libsl.a \
 	mtsn_naked/libsl.a \
 	mtsn_hybrid/libsl.a
@@ -28,6 +29,9 @@ mtsn_hybrid_libsl_a_DEPENDENCIES = $(mtsn_hybrid_libsl_a_LIBADD)
 
 include ../mgos.mk
 include ../libc.mk
+
+libgcc_a_CFLAGS = -b $(COMMON_TAG)
+libgcc_a_SOURCES = builtin_ffs.c
 
 #include mtamathobjs.mk
 #libm_a_CFLAGS  = -b $(COMMON_TAG)

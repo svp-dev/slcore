@@ -1,3 +1,13 @@
+2013-01-03  Raphael 'kena' Poss  <r.poss@uva.nl>
+
+	Provide compiler built-ins for ffs() on MT-SPARC.
+
+	These are required by dlmalloc(). This support enables
+	running MGSim's compiled unit tests.
+
+	* lib/mtsparc-sim/builtin_ffs.c (__ffssi2, __ffsdi2): New.
+	* lib/mtsparc-sim/Makefile.am: Build `libgcc.a' from it.
+
 2012-11-18  Raphael 'kena' Poss  <r.poss@uva.nl>
 
 	Fix a bug in `gettimeofday_virtual' on MIPSel.
