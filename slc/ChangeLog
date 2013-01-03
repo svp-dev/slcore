@@ -1,5 +1,23 @@
 2013-01-03  Raphael 'kena' Poss  <r.poss@uva.nl>
 
+	Extend the library with more ffs/fls functions.
+
+	* lib/libc/include/strings.h: Declare ffsl, ffsll, fsl, fsll,
+	fslll.
+
+	* lib/libc/string/ffs.c: Delete, replace by...
+	* lib/libc/bsd/libc/string/ffs.c: ... this. (imported from
+	FreeBSD)
+	* lib/libc/bsd/libc/string/ffsl.c,
+	* lib/libc/bsd/libc/string/ffsll.c,
+	* lib/libc/bsd/libc/string/fls.c,
+	* lib/libc/bsd/libc/string/flsl.c,
+	* lib/libc/bsd/libc/string/flsll.c: Import from FreeBSD.
+
+	* lib/libc.mk: Include them in `libc.a'.
+
+2013-01-03  Raphael 'kena' Poss  <r.poss@uva.nl>
+
 	Provide compiler built-ins for ffs() on MT-SPARC.
 
 	These are required by dlmalloc(). This support enables

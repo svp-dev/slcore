@@ -55,6 +55,12 @@ libc_a_SOURCES = \
 	../libc/bsd/libc/string/strnlen.c \
 	../libc/bsd/libc/string/bcopy.c \
 	../libc/bsd/libc/string/bzero.c \
+	../libc/bsd/libc/string/ffs.c \
+	../libc/bsd/libc/string/ffsl.c \
+	../libc/bsd/libc/string/ffsll.c \
+	../libc/bsd/libc/string/fls.c \
+	../libc/bsd/libc/string/flsl.c \
+	../libc/bsd/libc/string/flsll.c \
 	../libc/malloc/mtmalloc.h \
 	../libc/malloc/malloc_excl.c \
 	../libc/misc/ctype.c \
@@ -71,8 +77,8 @@ libc_a_SOURCES = \
 	../libc/stdio/puts.c \
 	../libc/stdio/snprintf.c \
 	../libc/stdio/vprintf.c \
-	../libc/stdio/vsnprintf.c \
-	../libc/string/ffs.c
+	../libc/stdio/vsnprintf.c 
+
 
 AM_CPPFLAGS += \
 	-I$(srcdir)/../libc/bsd/libc/include \

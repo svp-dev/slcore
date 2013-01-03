@@ -23,4 +23,15 @@ void     bzero(void *, size_t);                                 /* LEGACY */
 int      ffs(int);
 #define  ffs(X) __builtin_ffs(X)
 
+/* BSD extensions */
+int      ffsl(long value);
+#define  ffsl(X) __builtin_ffsl(X)
+
+int      ffsll(long long value);
+#define  ffsll(X) __builtin_ffsll(X)
+
+int     fls(int value);
+int     flsl(long value);
+int     flsll(long long value);
+
 #endif
