@@ -34,128 +34,62 @@ _start:
         add     %o6,%g1,%o6
         
         sub     %o6, 64, %o6
-        clr     %r16
-        clr     %r17
-        clr     %r18
-        clr     %r19
-        clr     %r20
-        clr     %r21
-        clr     %r22
-        clr     %r23
-        clr     %o3
-        clr     %o4
-        clr     %o5
 
-        mov     1, %o0
-        sethi   %hi(__pseudo_argv), %o1
-        sethi   %hi(environ), %o2
-        or      %o1, %lo(__pseudo_argv), %o1
-        or      %o2, %lo(environ), %o2
+        ! -L7 sets %r8=%o0, -L6 sets %r7=%g7
+        mov     %r7, %o1  ! pass as arg1 to sys_init
+        call    sys_init, 0
+         nop
+        
+        sethi   %hi(__argc), %g1
+        ld      [%g1+%lo(__argc)], %o0
+        sethi   %hi(__argv_ptr), %g1
+        ld      [%g1+%lo(__argv_ptr)], %o1
+        sethi   %hi(environ), %g1
+        ld      [%g1+%lo(environ)], %o2
         call    main, 0
          nop
 
-        ! did main terminate with code 0?
-        cmp     %o0, 0
-        be      .Lsuccess
-         nop
-
-        ! otherwise, save the code
-        ! and print a message
-        mov     %o0, %o1
-        sethi   %hi(__exit_code), %o5
-        sethi   %hi(__pseudo_stderr), %o3
-        st      %o0, [%o5+%lo(__exit_code)]
-        or      %o3, %lo(__pseudo_stderr), %o3
-        sethi   %hi(slrt_msg), %o5
-        mov     115, %o4
-        or      %o5, %lo(slrt_msg), %o5
-        mov     %o3, %o2
-.Lloop:
-        ldub    [%o5], %o4
-        stb     %o4, [%o3]
-        add     %o5, 1, %o5
-        ldsb    [%o5], %o4
-        cmp     %o4, 0
-        bne     .Lloop
-         nop
-
-        sra     %o0, 31, %o5
-        and     %o5, 15, %o5
-        add     %o5, %o0, %o0
-        sethi   %hi(slrt_hex), %o5
-        sra     %o0, 4, %o0
-        or      %o5, %lo(slrt_hex), %o5
-        ldub    [%o5+%o0], %o5
-        stb     %o5, [%o2]
-        stb     %o5, [%o2]
-        mov     10, %o5
-        stb     %o5, [%o2]
-
-.Lfail:
         ! exit with code in MGSim
-        st      %o1, [0x26c]
-        ! FIXME: inv ins or something to signal failure if st immediately before does not end execution
-        b,a .Lfail
-        nop
-
-.Lsuccess:
-        nop
+        st      %o0, [0x26c]
         end
         
         .size   _start, .-_start
-
-! MESSAGE STRINGS USED IN _start
-        
-	.section        ".rodata"
-        .align 8
-        .type slrt_msg, #object
-        .size slrt_msg, 21
-slrt_msg:
-        .asciz  "slrt: main returned "
-
-        .align 8
-        .type   slrt_hex, #object
-        .size   slrt_hex, 17
-slrt_hex:
-        .asciz  "0123456789abcdef"
-        
         
 ! PSEUDO OUTPUT DEVICES
         .section ".bss"
         .common __pseudo_stdout,4,4
         .common __pseudo_stderr,4,4
         .common __exit_code,4,4
-        
-! PSEUDO ARGV VECTOR
-        .global __pseudo_argv
-        .section        .rodata.str1.8
+
+! ARGC, ARGV, SLR CONTROL, ENVIRON
+        .section        ".rodata"
         .align 8
-__pseudo_progname:
+.LLC0:
+        .asciz  "slr_runner:mtsparc-sim:"
+        .asciz  "slr_datatag:b32f:"
+        .align 8
+.LLC1:
         .asciz  "a.out"
-        
         .section        ".data"
         .align 4
         .type   __pseudo_argv, #object
         .size   __pseudo_argv, 8
 __pseudo_argv:
-        .long   __pseudo_progname
+        .long   .LLC1
         .long   0
-
-! SLR SPECIAL IDENTIFICATION STRING
-        .section        ".rodata"
-        .align 8
-.Lslrident:      
-        .asciz  ""
-        .asciz  "slr_runner:mtsparc-sim:"
-        .asciz  "slr_datatag:b32f:"
-        
-        
-! PSEUDO PLACE IDENTIFIERS
-        .section ".bss"
+        .global __argv_ptr
+        .align 4
+        .type   __argv_ptr, #object
+        .size   __argv_ptr, 4
+__argv_ptr:
+        .long   __pseudo_argv
+        .global __argc
+        .align 4
+        .type   __argc, #object
+        .size   __argc, 4
+__argc:
+        .long   1
         .common __main_place_id,4,4
-        
-! PSEUDO ENVIRON       
-        .section ".bss"
         .common environ,4,4
         
 

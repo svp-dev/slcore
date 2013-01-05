@@ -1,5 +1,13 @@
 2013-01-05  Raphael 'kena' Poss  <r.poss@uva.nl>
 
+	Enhance the MT-SPARC slrt.
+
+	* tools/lib/mt/mts/slrt.s: Enhance to use the same initialization
+	strategy as MT-Alpha and MIPSel. This enables common system
+	initialization.
+
+2013-01-05  Raphael 'kena' Poss  <r.poss@uva.nl>
+
 	Simplify the MT-Alpha slrt.
 
 	* tools/lib/mt/mta/slrt.s: Do not initialize the registers to
