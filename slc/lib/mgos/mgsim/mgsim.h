@@ -9,17 +9,22 @@
 
 /**** Ancillary processor registers ****/
 
-#if defined(__mtalpha__)
-#define mgsim_read_asr(DestVar, Register) __asm__ __volatile__("getasr %1, %0" : "=r"(DestVar) : "I"(Register))
-#define mgsim_read_apr(DestVar, Register) __asm__ __volatile__("getapr %1, %0" : "=r"(DestVar) : "I"(Register))
-#elif defined(__mtsparc__)
-/* on MT-SPARC, ASR0 is %y, ASR15 is STBAR, and ASR20 are Microthreaded opcodes. */
-#define mgsim_read_asr(DestVar, Register) __asm__ __volatile__("rd %%asr%1, %0" : "=r"(DestVar) : "I"((Register)+1))
-#define mgsim_read_apr(DestVar, Register) __asm__ __volatile__("rd %%asr%1, %0" : "=r"(DestVar) : "I"((Register)+21))
-#elif defined(__mips__)
-#define mgsim_read_asr(DestVar, Register) __asm__ __volatile__("mfc2 %0, $%1" : "=r"(DestVar) : "I"((Register)+6))
-#define mgsim_read_apr(DestVar, Register) __asm__ __volatile__("mfc2 %0, $%1" : "=r"(DestVar) : "I"((Register)+16))
+#ifndef __MGSIM_ASR_IOBASE
+#define __MGSIM_ASR_IOBASE 0x400
 #endif
+#ifndef __MGSIM_APR_IOBASE
+#define __MGSIM_APR_IOBASE 0x500
+#endif
+
+#define mgsim_read_asr(DestVar, Register) do {                          \
+        volatile unsigned long* __reg = ((unsigned long*)(void*)(__MGSIM_ASR_IOBASE)); \
+        (DestVar) = (__typeof__(DestVar))__reg[Register];               \
+    } while(0)
+
+#define mgsim_read_apr(DestVar, Register) do {                          \
+        volatile unsigned long* __reg = ((unsigned long*)(void*)(__MGSIM_APR_IOBASE)); \
+        (DestVar) = (__typeof__(DestVar))__reg[Register];               \
+    } while(0)
 
 /* Ancillary system registers */
 
@@ -33,7 +38,8 @@
 #define ASR_IO_PARAMS2        7
 #define ASR_AIO_BASE          8
 #define ASR_PNC_BASE          9
-#define NUM_ASRS              10
+#define ASR_PID               10
+#define NUM_ASRS              11
 
 /* value for ASR_SYSTEM_VERSION: to be updated whenever the list of ASRs
    changes */

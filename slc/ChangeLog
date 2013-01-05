@@ -1,5 +1,14 @@
 2013-01-05  Raphael 'kena' Poss  <r.poss@uva.nl>
 
+	Synchronize library support with the latest MGSim sources.
+
+	* lib/mgos/mgsim/mgsim.h,
+	* lib/mgos/mgsim/mtconf.c: Import from MGSim. This uses
+	memory-mapped I/O for ASRs/APRs and the global heap for the
+	configuration data.
+
+2013-01-05  Raphael 'kena' Poss  <r.poss@uva.nl>
+
 	Drop support for "slr variables".
 
 	This mechanism can be advantageously replaced by command-line
