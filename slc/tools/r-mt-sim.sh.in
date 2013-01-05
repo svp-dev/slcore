@@ -17,7 +17,6 @@ DEBUGGER=${DEBUGGER:-gdb --args}
 SIMARGS=${SIMARGS:-}
 mgsim=(${MGSIM_@ARCH@:-@MGSIM_ARCH@})
 thevar=MGSIM_@ARCH@
-nm=(${NM_MT@ARCH@_OVERRIDE:-@NM_ARCH@})
 mtarch=@mtarch@
 python=${PYTHON:-@python@}
 simargs_base=()
@@ -122,17 +121,6 @@ if test -z "${SLR_RDIR:-}"; then d=$(cd "$d" && pwd -P); fi
 envfile=${SLR_RDIR:-${TMPDIR:-/tmp}}/$b.$$.envdata
 if test -n "${VERBOSE:-}"; then echo "$basename: dumping environment to: $envfile" >&2; fi
 $python -c "import os, sys; sys.stdout.write('\0'.join(('%s=%s' % x for x in os.environ.items()))+'\0'*8)" >"$envfile"
-
-if test -z "${SLR_RECURSIVE:-}"; then
-    symfile=${SLR_RDIR:-${TMPDIR:-/tmp}}/$b.$$.syms
-    if test -n "${VERBOSE:-}"; then echo "$basename: dumping symbols to: $symfile" >&2; fi
-    if test "x${nm[0]}" != xno; then
-        "${nm[@]}" -P "$program" >"$symfile"
-    else
-        touch "$symfile"
-    fi
-    simargs_base+=(-s "$symfile")
-fi
 
 runner_cmdline=("${mgsim[@]}" \
     ${simargs_base+"${simargs_base[@]}"} ${SIMARGS:-} \

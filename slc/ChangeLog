@@ -1,5 +1,18 @@
 2013-01-05  Raphael 'kena' Poss  <r.poss@uva.nl>
 
+	Simplify the MGSim run scripts.
+
+	Recent MGSim versions are able to read the symbol table
+	automatically from the ELF executable. Therefore, `slr' does not
+	need to prepare the symbol table itself any more.
+
+	* build-aux/mgbinutils.m4,
+	* tools/runscripts.mk: Do not propagate `nm' any more.
+
+	* tools/r-mt-sim.sh.in: Simplify.
+
+2013-01-05  Raphael 'kena' Poss  <r.poss@uva.nl>
+
 	Tell MGSim about register aliases for easier debugging.
 
 	Recent MGSim versions are able to list register aliases next to
