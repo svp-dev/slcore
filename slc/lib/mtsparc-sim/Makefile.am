@@ -31,7 +31,13 @@ include ../mgos.mk
 include ../libc.mk
 
 libgcc_a_CFLAGS = -b $(COMMON_TAG)
-libgcc_a_SOURCES = builtin_ffs.c
+libgcc_a_SOURCES = \
+	ffssi2.c ffsdi2.c \
+	clzsi2.c clzdi2.c \
+	ctzsi2.c ctzdi2.c \
+	div.h \
+	divdi3.c moddi3.c \
+	udivdi3.c umoddi3.c
 
 #include mtamathobjs.mk
 #libm_a_CFLAGS  = -b $(COMMON_TAG)

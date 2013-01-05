@@ -1,3 +1,21 @@
+2013-01-05  Raphael 'kena' Poss  <r.poss@uva.nl>
+
+	Provide some compiler intrinsics for MT-SPARC.
+
+	* lib/mtsparc-sim/builtin_ffs.c: Remove. Replace by...
+	* lib/mtsparc-sim/div.h,
+	* lib/mtsparc-sim/clzdi2.c,
+	* lib/mtsparc-sim/clzsi2.c,
+	* lib/mtsparc-sim/ctzdi2.c,
+	* lib/mtsparc-sim/ctzsi2.c,
+	* lib/mtsparc-sim/divdi3.c,
+	* lib/mtsparc-sim/ffsdi2.c,
+	* lib/mtsparc-sim/ffssi2.c,
+	* lib/mtsparc-sim/moddi3.c,
+	* lib/mtsparc-sim/udivdi3.c,
+	* lib/mtsparc-sim/umoddi3.c: ... these new files.
+	* lib/mtsparc-sim/Makefile.am: Use them to define `libgcc.a'.
+
 2013-01-03  Raphael 'kena' Poss  <r.poss@uva.nl>
 
 	Extend the library with more ffs/fls functions.
