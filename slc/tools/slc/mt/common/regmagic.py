@@ -271,15 +271,18 @@ class RegMagic:
         for a given legacy alias.
         """
         lo = self.rd.mt_locals_offset
+        flo = self.rd.mt_flocals_offset
         if legname.startswith('f') and legname != 'fp':
             r = self._freg_inv[self.rd.legacy_fregs[legname[1:]]]
             pref = 'f'
+            off = r[0]['nr'] + flo
         else:
             r = self._reg_inv[self.rd.legacy_regs[legname]]
             pref = ''
+            off = r[0]['nr'] + lo
         assert len(r) == 1
         assert r[0]['cat'] == 'l'
-        return '$%s%d' % (pref, r[0]['nr'] + lo)
+        return '$%s%d' % (pref, off)
 
     def makecrepl(self,funname):
         """
@@ -291,6 +294,7 @@ class RegMagic:
         subst = {}
         regs = self._regs
         lo = self.rd.mt_locals_offset
+        flo = self.rd.mt_flocals_offset
         for (spec, pref) in [('i',''),('f','f')]:
             for r in (r for r in regs[spec]['l'] if r is not None):
                 key = "$%s%d" % (pref,r['legnr'])
@@ -305,7 +309,9 @@ class RegMagic:
 
                 # all registers shifted by offset, except $31 (zero)
                 rl = int(rname)
-                if isfloat or rl != 31:
+                if isfloat:
+                    rl += flo
+                elif rl != 31:
                     rl += lo
 
                 v = '%s%d' % (v, rl)

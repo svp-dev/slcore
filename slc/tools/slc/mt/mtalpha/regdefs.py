@@ -18,6 +18,7 @@ class RegDefs:
     # offset in register window of
     # first local register
     mt_locals_offset = 0
+    mt_flocals_offset = 0
 
     legacy_fregs = {
        # Scratch registers

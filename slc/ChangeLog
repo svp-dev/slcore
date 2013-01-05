@@ -1,5 +1,32 @@
 2013-01-05  Raphael 'kena' Poss  <r.poss@uva.nl>
 
+	Preliminary support for floating-point for MT-SPARC.
+
+	At this point we force `double' to single precision because MT
+	argument passing can only use 1 register and 64-bit doubles would
+	require 2 registers. (To overcome this, either FP arguments should
+	be passed via memory, or a new mechanism must be devised to split
+	the values across two registers.)
+
+	Note that the MT binutils must be upgraded, as the versions prior
+	to this date used an invalid locals offset for FP registers.
+
+	* tools/bin/cce.in: Re-enable hardware floating-point, but forcing
+	single precision only with -fshort-double.
+
+	* tools/slc/mt/common/regmagic.py: Use separate `mt_locals_offset'
+	for integer and FP registers. This is required because (at least)
+	on SPARC FP register %f0 is a regular register, not zero, so it
+	should not be offset when mapping to locals.
+
+	* tools/slc/mt/mtalpha/regdefs.py: Set the FP locals offset to 0.
+
+	* tools/slc/mt/mtsparc/regdefs.py: Define mappings for
+	floating-point registers. Define the FP locals offset to 0
+	(integer locals offset stays 1 since %g0 is zero).
+
+2013-01-05  Raphael 'kena' Poss  <r.poss@uva.nl>
+
 	Synchronize library support with the latest MGSim sources.
 
 	* lib/mgos/mgsim/mgsim.h,

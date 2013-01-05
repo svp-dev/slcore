@@ -19,6 +19,7 @@ class RegDefs:
     # offset in register window of
     # first local register
     mt_locals_offset = 1
+    mt_flocals_offset = 0
 
     legacy_regs = {
         # globals
@@ -272,6 +273,16 @@ class RegDefs:
         'g5' : 'l2',
         'g6' : 'l1',
         'g7' : 'l0',
+
+        'gf0' : 'f31',
+        'gf1' : 'f30',
+        'gf2' : 'f29',
+        'gf3' : 'f28',
+        'gf4' : 'f27',
+        'gf5' : 'f26',
+        'gf6' : 'f25',
+        'gf7' : 'f24',
+
         # MT Shareds
         's0' : 'l0',
         'd0' : 'l1',
@@ -281,6 +292,16 @@ class RegDefs:
         'd2' : 'l5',
         's3' : 'l6',
         'd3' : 'l7',
+
+        'sf0' : 'f24',
+        'df0' : 'f25',
+        'sf1' : 'f26',
+        'df1' : 'f27',
+        'sf2' : 'f28',
+        'df2' : 'f29',
+        'sf3' : 'f30',
+        'df3' : 'f31',
+
         # Special locals
         'l0' : 'g1', # temp          phy 1
         'l1' : 'g2', # app reg       phy 2
@@ -306,6 +327,31 @@ class RegDefs:
         'l21' : 'fp', # i6           phy 22
         'l22' : 'i7', # RA-8         phy 23
         'l31' : 'g0', # ZERO
+
+        'lf0' : 'f0',
+        'lf1' : 'f1',
+        'lf2' : 'f2',
+        'lf3' : 'f3',
+        'lf4' : 'f4',
+        'lf5' : 'f5',
+        'lf6' : 'f6',
+        'lf7' : 'f7',
+        'lf8' : 'f8',
+        'lf9' : 'f9',
+        'lf10' : 'f10',
+        'lf11' : 'f11',
+        'lf12' : 'f12',
+        'lf13' : 'f13',
+        'lf14' : 'f14',
+        'lf15' : 'f15',
+        'lf16' : 'f16',
+        'lf17' : 'f17',
+        'lf18' : 'f18',
+        'lf19' : 'f19',
+        'lf20' : 'f20',
+        'lf21' : 'f21',
+        'lf22' : 'f22',
+        'lf23' : 'f23'
     }
 
     reg_aliases = {
@@ -358,14 +404,18 @@ class RegDefs:
 #         print >>sys.stderr, "---snip here---"
 
     def post_init_regmagic(self, rm):
-        # all virtual register names
+        # all virtual register names, except SP
         rm.allregs = set(['$l%d' % x for x in xrange(31 - self.iargregs) if x not in (14,)] + \
+                  ['$lf%d' % x for x in xrange(31 - self.fargregs)] + \
+                  ['$g%d' % x for x in xrange(self.iargregs)] + \
+                  ['$gf%d' % x for x in xrange(self.fargregs)] + \
                   ['$d%d' % x for x in xrange(self.iargregs / 2)] + \
+                  ['$df%d' % x for x in xrange(self.fargregs / 2)] + \
                   ['$%d' % x for x in xrange(31)])
 
         ### Register lists for the compile commands ###
         rm.fixed_registers = []
-        for (v, l) in [("",rm._reg_inv)]:
+        for (v, l) in [("f", rm._freg_inv), ("",rm._reg_inv)]:
             fixed = set()
             for rl in l:
                 for r in rl:
@@ -377,6 +427,7 @@ class RegDefs:
 ### Retain the numeric aliases for all registers
 for i in xrange(0, 32):
     RegDefs.legacy_regs['r%d' % i] = i
+    RegDefs.legacy_regs['f%d' % i] = i
 
 
 
