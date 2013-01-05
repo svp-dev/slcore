@@ -134,7 +134,7 @@ AC_DEFUN([AC_WITH_SLC],
     base_src='$(abs_top_srcdir)'/$slc_cv_local_src
     base_build='$(abs_top_builddir)'/$slc_cv_local_src
     SLC_INCDIR=$base_src/tools/include:$base_build/tools/include:$base_src/lib/slsys/include
-    SLC_LIBDIR=$base_build/tools/lib:$base_build/tools:$base_build/lib
+    SLC_LIBDIR=$base_build/tools/lib:$base_build/tools:$base_build/lib:$base_src/lib
     SLC_DATADIR=$base_src/tools:$base_build/tools:$base_src/lib:$base_build/lib
     PYTHONPATH=$base_src/tools:$base_build/tools
     SPP=$base_src/tools/bin/spp

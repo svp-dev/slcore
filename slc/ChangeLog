@@ -1,5 +1,12 @@
 2013-01-05  Raphael 'kena' Poss  <r.poss@uva.nl>
 
+	Minor packaging fix.
+
+	* build-aux/slc.m4: Also place `$srcdir/lib' in `SLC_LIBDIR' so that
+	`cce' can find a precompiled `libgcc.a'.
+
+2013-01-05  Raphael 'kena' Poss  <r.poss@uva.nl>
+
 	Provide some compiler intrinsics for MT-SPARC.
 
 	* lib/mtsparc-sim/builtin_ffs.c: Remove. Replace by...
