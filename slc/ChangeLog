@@ -1,5 +1,18 @@
 2013-01-05  Raphael 'kena' Poss  <r.poss@uva.nl>
 
+	Fix an assembly generation bug on MT-SPARC.
+
+	The MT-SPARC assembler needs to know when the effects of
+	`.registers' stop with `.noregisters', so as to translate register
+	names outside of MT mode properly. Prior to this patch
+	`.noregisters' was not generated and assembler warnings would
+	ensue.
+
+	* tools/slc/mt/mtsparc/asmproc/base.py (grouper): Add
+	`.noregisters' at the end of MT functions.
+
+2013-01-05  Raphael 'kena' Poss  <r.poss@uva.nl>
+
 	Simplify the MGSim run scripts.
 
 	Recent MGSim versions are able to read the symbol table

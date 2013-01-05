@@ -330,6 +330,7 @@ def grouper(items):
             state = 0
             if name.startswith('__slf_'):
                 funtype = 'fun'
+                queue.append(('directive','.noregisters',''))
                 name = name[6:]
             else:
                 funtype = 'cfun'
