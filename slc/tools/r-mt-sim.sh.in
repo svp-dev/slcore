@@ -5,9 +5,7 @@ if test -n "${TRACE:-}"; then set -x; fi
 set -eu
 basename=${0##*/}
 program=${1:?}
-datafile=${2:?}
-fdatafile=${3:?}
-shift
+fdatafile=${2:?}
 shift
 shift
 
@@ -124,7 +122,7 @@ $python -c "import os, sys; sys.stdout.write('\0'.join(('%s=%s' % x for x in os.
 
 runner_cmdline=("${mgsim[@]}" \
     ${simargs_base+"${simargs_base[@]}"} ${SIMARGS:-} \
-    -t -L7 "$datafile" -L6 "$fdatafile" -L5 "$envfile" -o 'rom_boot:ROMFileName='"$d/$b")
+    -t -L7 "$fdatafile" -L6 "$envfile" -o 'rom_boot:ROMFileName='"$d/$b")
 
 first=${runner_cmdline[0]}
 unset runner_cmdline[0]

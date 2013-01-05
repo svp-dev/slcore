@@ -5,9 +5,7 @@ if test -n "${TRACE:-}"; then set -x; fi
 set -eu
 basename=${0##*/}
 program=${1:?}
-datafile=${2:?}
-fdatafile=${3:?}
-shift
+fdatafile=${2:?}
 shift
 shift
 
@@ -26,7 +24,7 @@ if test -n "${VERBOSE:-}"; then echo "$basename: dumping environment to: $envfil
 $python -c "import os, sys; sys.stdout.write('\0'.join(('%s=%s' % x for x in os.environ.items()))+'\0'*8)" >"$envfile"
 
 ### FIXME: replace "echo" below with the target FPGA simulation script
-runner_cmdline=(echo data="$datafile" fdata="$fdatafile" envdata="$envfile" ${1+"$@"} "$d/$b")
+runner_cmdline=(echo fdata="$fdatafile" envdata="$envfile" ${1+"$@"} "$d/$b")
 
 first=${runner_cmdline[0]}
 unset runner_cmdline[0]

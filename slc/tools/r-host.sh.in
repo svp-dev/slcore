@@ -5,10 +5,8 @@ if test -n "${TRACE:-}"; then set -x; fi
 set -eu
 basename=${0##*/}
 program=${1:?}
-datafile=${2:?}
-fdatafile=${3:?}
+fdatafile=${2:?}
 DEBUGGER=${DEBUGGER:-gdb --args}
-shift
 shift
 shift
 
@@ -30,10 +28,6 @@ if ! test -x "$program"; then
     echo "$basename: $program: not an executable" >&2
     exit 127
 fi
-if ! test -r "$datafile"; then
-    echo "$basename: $datafile: file not found or not readable" >&2
-    exit 1
-fi
 if ! test -r "$fdatafile"; then
     echo "$basename: $fdatafile: file not found or not readable" >&2
     exit 1
@@ -48,9 +42,8 @@ b=${program##*/}
 d=$(dirname "$program")
 if test -z "${SLR_RDIR:-}"; then d=$(cd "$d" && pwd -P); fi
 
-SLR_DATA=$datafile
 SLR_FDATA=$fdatafile
-export SLR_DATA SLR_FDATA
+export SLR_FDATA
 runner_cmdline=(${RUNNER_PREFIX:-} $do_debug "$d/$b" ${1:+"$@"})
 
 if test -n "${SLR_RDIR:-}"; then

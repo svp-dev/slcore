@@ -13,7 +13,6 @@
 //
 
 #include <svp/fibre.h>
-#include <svp/slr.h>
 #include <svp/testoutput.h>
 #include <string.h>
 #include <stdlib.h>
@@ -24,48 +23,6 @@
 
 size_t __fibre_nitems = 0;
 struct fibre_base_t *__fibre_base;
-struct __slr_base_t *__slr_base;
-
-void sys_vars_init(void *rawdata, bool copy)
-{
-    struct __slr_base_t *slr_base = (struct __slr_base_t*)rawdata;
-
-    size_t nitems = 0;
-    for (size_t i = 0; slr_base[i].offset != 0; ++i)
-        ++nitems;
-
-    size_t sz;
-    if (nitems == 0)
-        sz = sizeof(slr_base[0]);
-    else
-        sz = slr_base[nitems].nitems;
-
-    if (copy)
-    {
-        void *area = dlmalloc(sz);
-        if (area == NULL)
-        {
-            output_string("Unable to allocate memory to copy the slr variable data!\n", 2);
-            abort();
-        }
-        memcpy(area, slr_base, sz);
-        __slr_base = area;
-    }
-    else
-    {
-        __slr_base = slr_base;
-    }
-
-    if (verbose_boot) {
-        output_string("* input data: slr vars at 0x", 2);
-        output_hex(__slr_base, 2);
-        output_string(", ", 2);
-        output_uint(sz, 2);
-        output_string(" bytes.", 2);
-        output_ts(2);
-        output_char('\n', 2);
-    }
-}
 
 void sys_fibre_init(void* rawdata, bool copy)
 {

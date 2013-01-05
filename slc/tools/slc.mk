@@ -3,7 +3,6 @@ nobase_dist_pkgdata_DATA += \
 	include/slc_m4sugar.m4 \
 	include/slc_m4sversion.m4 \
 	include/slc_m4sforeach.m4 \
-	include/svp/slr.h \
 	include/svp/delegate.h \
 	include/svp/fibre.h \
 	include/svp/compiler.h \

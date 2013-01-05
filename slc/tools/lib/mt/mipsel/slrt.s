@@ -19,10 +19,10 @@ __start:
         move    $fp,$sp
 	sw	$31,28($sp)
 	.cprestore	16
-        # slr provides args in $8(data), $7(fdata), $6(initenv)
-        # but sysinit expects args in a0=$4(data), a1=$5(fdata), a2=$6(initenv)
-        move    $4,$8 # a0($4): slr data file
-        move    $5,$7 # a1($5): slr fdata env
+        # slr provides args in $8(fdata), $7(initenv)
+        # but sysinit expects args in a0=$4(fdata), a1=$5(initenv)
+        move    $4,$8 # a0($4): slr fdata file
+        move    $5,$7 # a1($5): slr initenv
 	jal	sys_init
 	la	$2,__argc
 	lw	$4,0($2)

@@ -74,7 +74,6 @@ extern void sys_init(void*, void*, char*);
 extern "C" {
 #endif
 
-void *__slr_base = 0;
 void *__fibre_base = 0;
 
 __attribute__((__constructor__))
@@ -85,10 +84,6 @@ void slr_init(void)
     bool verbose = false;
     if (vs && vs[0])
         verbose = true;
-
-    char *data = getenv("SLR_DATA");
-    if (data)
-        load_binary_data(data, &__slr_base, verbose);
 
     char *fdata = getenv("SLR_FDATA");
     if (fdata)

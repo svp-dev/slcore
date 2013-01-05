@@ -1,5 +1,28 @@
 2013-01-05  Raphael 'kena' Poss  <r.poss@uva.nl>
 
+	Drop support for "slr variables".
+
+	This mechanism can be advantageously replaced by command-line
+	arguments passed to `main' (argc/argv) or Fibre input.
+
+	* tools/include/svp/slr.h: Remove.
+	* tools/slc.mk (nobase_dist_pkgdata_DATA): Update accordingly.
+
+	* tools/bin/slr.in: Do not recognize the command-line
+	arguments. Do not prepare the data.
+
+	* tools/lib/mt/mipsel/slrt.s,
+	* tools/lib/mt/mta/slrt.s,
+	* tools/r-mt-sim.sh.in,
+	* tools/r-host.sh.in,
+	* tools/r-mtsparc-fpga.sh.in: Do not pass the data.
+
+	* tools/lib/host/load.c,
+	* lib/mgos/init/mtinit.c,
+	* lib/mgos/input/mtinput.c: Do not initialize the var data.
+
+2013-01-05  Raphael 'kena' Poss  <r.poss@uva.nl>
+
 	Fix an assembly generation bug on MT-SPARC.
 
 	The MT-SPARC assembler needs to know when the effects of

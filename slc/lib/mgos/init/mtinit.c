@@ -19,8 +19,7 @@
 #include "mgsim/mtconf.h"
 #include "posix-compat/heap.h"
 
-void sys_init(void* slrbase_init, 
-              void* fibrebase_init, 
+void sys_init(void* fibrebase_init, 
               char *initenv)
 {
     boot_ts = clock();
@@ -35,8 +34,6 @@ void sys_init(void* slrbase_init,
     sys_heap_init();
 
     sys_fibre_init(fibrebase_init, true);
-
-    sys_vars_init(slrbase_init, true);
 
     sys_detect_devs();
 
