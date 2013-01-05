@@ -1,5 +1,12 @@
 2013-01-05  Raphael 'kena' Poss  <r.poss@uva.nl>
 
+	Simplify the MT-Alpha slrt.
+
+	* tools/lib/mt/mta/slrt.s: Do not initialize the registers to
+	zero, since D-RISC automatically reads zero from locals.
+
+2013-01-05  Raphael 'kena' Poss  <r.poss@uva.nl>
+
 	Provide more compatibility with MT-SPARC's single-precision FP support.
 
 	* lib/libc/misc/dtoa_simple.c (dtoa_simple): Avoid using large

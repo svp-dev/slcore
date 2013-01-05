@@ -22,30 +22,6 @@ _start:
 	ldfp $l18
 
 	mov $l18, $l16 # set up frame pointer
-	clr $l8 # flush callee-save reg
-	clr $l9 # flush callee-save reg
-	clr $l10 # flush callee-save reg
-	clr $l11 # flush callee-save reg
-	clr $l12 # flush callee-save reg
-	clr $l13 # flush callee-save reg
-	fclr $lf11 # flush callee-save reg
-	fclr $lf12 # flush callee-save reg
-	fclr $lf13 # flush callee-save reg
-	fclr $lf14 # flush callee-save reg
-	fclr $lf15 # flush callee-save reg
-	fclr $lf16 # flush callee-save reg
-	fclr $lf17 # flush callee-save reg
-	fclr $lf18 # flush callee-save reg
-	fclr $lf3 # init FP return reg
-        clr $l2 # flush arg reg
-	clr $l3 # flush arg reg
-        clr $l4 # flush arg reg
-	fclr $lf5 # flush arg reg
-	fclr $lf6 # flush arg reg
-	fclr $lf7 # flush arg reg
-	fclr $lf8 # flush arg reg
-	fclr $lf9 # flush arg reg
-	fclr $lf10 # flush arg reg
 
 	# here $l7(a0), $l6(a1) are set by the environment
 	# both are used by the init function
