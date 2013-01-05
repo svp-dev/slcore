@@ -11,12 +11,14 @@ shift
 shift
 shift
 
+spp_helper=${SPP:-@spp_helper@}
 slc_datadir=${SLC_DATADIR:-@slc_datadir@}
 DEBUGGER=${DEBUGGER:-gdb --args}
 SIMARGS=${SIMARGS:-}
 mgsim=(${MGSIM_@ARCH@:-@MGSIM_ARCH@})
 thevar=MGSIM_@ARCH@
 nm=(${NM_MT@ARCH@_OVERRIDE:-@NM_ARCH@})
+mtarch=@mtarch@
 python=${PYTHON:-@python@}
 simargs_base=()
 
@@ -106,6 +108,12 @@ if test -n "${SIMGFX:-}"; then
 	fi
     fi
 fi
+
+##
+## Naming of register aliases
+##
+simargs_base+=(-o IntRegAliases=$($python $spp_helper $mtarch spr showregs i))
+simargs_base+=(-o FltRegAliases=$($python $spp_helper $mtarch spr showregs f))
 
 b=${program##*/}
 d=$(dirname "$program")

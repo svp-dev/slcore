@@ -19,6 +19,7 @@ r-mtalpha-sim.sh: r-mt-sim.sh.in Makefile
 	 -e 's|@NM_ARCH[@]|$(NM_MTALPHA)|g' \
 	 -e 's|@ARCH[@]|ALPHA|g' \
 	 -e 's|@arch[@]|alpha|g' \
+	 -e 's|@mtarch[@]|mtalpha|g' \
 	 -e 's|@BASH[@]|$(BASH)|g' \
 	 -e 's|@python[@]|$(PYTHON)|g'
 	$(AM_V_at)chmod +x,a-w $@.out
@@ -32,6 +33,7 @@ r-mipsel-sim.sh: r-mt-sim.sh.in Makefile
 	 -e 's|@NM_ARCH[@]|$(NM_MIPSEL)|g' \
 	 -e 's|@ARCH[@]|MIPSEL|g' \
 	 -e 's|@arch[@]|mipsel|g' \
+	 -e 's|@mtarch[@]|mipsel|g' \
 	 -e 's|@BASH[@]|$(BASH)|g' \
 	 -e 's|@python[@]|$(PYTHON)|g'
 	$(AM_V_at)chmod +x,a-w $@.out
@@ -45,6 +47,7 @@ r-mtsparc-sim.sh: r-mt-sim.sh.in Makefile
 	 -e 's|@NM_ARCH[@]|$(NM_MTSPARC)|g' \
 	 -e 's|@ARCH[@]|SPARC|g' \
 	 -e 's|@arch[@]|sparc|g' \
+	 -e 's|@mtarch[@]|mtsparc|g' \
 	 -e 's|@BASH[@]|$(BASH)|g' \
 	 -e 's|@python[@]|$(PYTHON)|g'
 	$(AM_V_at)chmod +x,a-w $@.out
@@ -57,6 +60,7 @@ r-mtsparc-fpga.sh: r-mtsparc-fpga.sh.in Makefile
 	 -e 's|@NM_ARCH[@]|$(NM_MTSPARC)|g' \
 	 -e 's|@ARCH[@]|SPARC|g' \
 	 -e 's|@arch[@]|sparc|g' \
+	 -e 's|@mtarch[@]|mtsparc|g' \
 	 -e 's|@BASH[@]|$(BASH)|g' \
 	 -e 's|@python[@]|$(PYTHON)|g'
 	$(AM_V_at)chmod +x,a-w $@.out

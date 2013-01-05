@@ -1,5 +1,30 @@
 2013-01-05  Raphael 'kena' Poss  <r.poss@uva.nl>
 
+	Tell MGSim about register aliases for easier debugging.
+
+	Recent MGSim versions are able to list register aliases next to
+	the physical register names when inspecting the register file. The
+	list of aliases is configurable, and defaults to the ISA's
+	standard ABI names. Since `slc' uses non-standard register mappings,
+	it is thus useful to tell MGSim about our choices when running
+	with `slr'.
+
+	* tools/slc/mt/common/compile.py (Compile.showregs),
+	* tools/slc/mt/mipsel/compile.py (Compile.showregs): New: list the
+	mapping from local registers to legacy register aliases.
+
+	* tools/bin/spp: Recognize a new function `showregs' which invokes
+	`compile.showregs' to list mappings to local registers to aliases.
+
+	* tools/runscripts.mk: Also substitute '@mtarch@' to a name suitable
+	for use with `spp' (name of submodule of `slc.mt').
+
+	* tools/r-mt-sim.sh.in: Use `spp' to pass the options
+	`IntRegAliases' and `FltRegAliases' to MGSim.
+
+
+2013-01-05  Raphael 'kena' Poss  <r.poss@uva.nl>
+
 	Minor packaging fix.
 
 	* build-aux/slc.m4: Also place `$srcdir/lib' in `SLC_LIBDIR' so that

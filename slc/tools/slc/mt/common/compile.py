@@ -8,6 +8,13 @@ class Compile:
     def __init__(self, regmagic):
         self.regmagic = regmagic
 
+    def showregs(self, x):
+        rm = self.regmagic.rd.reg_mapping
+        if x != 'f':
+            print ','.join((rm.get('l%d'%x,'.') for x in xrange(32)))
+        else:
+            print ','.join((rm.get('lf%d'%x,'.') for x in xrange(32)))
+
     def __call__(self, compiler, *args):
         """ Run the compiler, adding special flags to fix registers """
 

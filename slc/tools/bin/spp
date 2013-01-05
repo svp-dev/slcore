@@ -184,6 +184,9 @@ if __name__ == "__main__":
    elif function == 'create':
       assert module == 'sppalpha'
       create(*rest)
+   elif function == 'showregs':
+      n = 'slc.mt.%s.compile' % arch; __import__(n)
+      sys.modules[n].compile.showregs(*rest)
    elif function == 'compile':
       n = 'slc.mt.%s.compile' % arch; __import__(n)
       sys.modules[n].compile(*rest)
