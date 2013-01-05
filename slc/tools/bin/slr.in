@@ -59,8 +59,8 @@ Execution selection:
 
   -x RUNNER            Use the specified RUNNER (use when autodetect fails).
 
-  -b SPEC              Use \`-b SPEC' when invoking the compiler to generate
-                       data files.
+  -b SPEC              Use data layout SPEC to generate Fibre binary data.
+                       (e.g. b32f, l32d, l64d, native, etc.)
 
 Microgrid simulation options:
   -n N                 Allocate a place of N cores upon program startup and 
@@ -99,9 +99,6 @@ Debugging options:
   -t                   Trace: print commands before running them.
 
   -g                   Debug: try to run debugger around the program. Implies -t.
-
-  -gd                  Debug: use debugging when generating data, do not 
-                       actually run the program. Implies -t.
 
   -p DIR               Package: keep all the information and files needed to 
                        re-run the program later. This is stored in a sub-
@@ -225,7 +222,6 @@ for arg in "$@"; do
       -c)	show_embedded=1; shift;;
       -t)       VERBOSE=1; shift;;
       -g)	VERBOSE=1; DEBUG=1; shift;;
-      -gd)      VERBOSE=1; debug_rec=1; shift;;
       -v|--version)	do_version;;
       -h|--help)	do_usage;;
       -l)  query=1; shift;;
@@ -335,22 +331,6 @@ if test -z "$datatag"; then
   fi
 fi
 
-
-# search arggen.sl in the datadirs
-saveIFS=$IFS
-IFS=:
-arggen=
-for d in $slc_datadir; do
-    if test -r "$d/arggen.c"; then
-	arggen=$d/arggen.c
-	break
-    fi
-done
-IFS=$saveIFS
-if test -z "$arggen"; then
-    die 1 "arggen.c not found in $slc_datadir"
-fi
-
 # if a fibre cache file is specified, use it
 if test -n "$rfdatafile"; then
   if ! test -r "$rfdatafile"; then die 1 "$rfdatafile: cannot read file"; fi
@@ -398,39 +378,11 @@ if test -n "$dofdata"; then
 	    die 1 "$fibre_in: cannot read file"
 	fi
 
-        # transform the Fibre data to a C string definition
+        # transform the Fibre data to binary format
 	if test -n "$VERBOSE"; then
-	    echo "$basename: running: [sed] <$fibre_in |$python $sag_helper f >$SLR_RDIR/input/fdata.c" >&2
+	    echo "$basename: running: $python $sag_helper f $datatag <$fibre_in >$fdatafile" >&2
 	fi
-	(if test "x$fibre_in" = "x-"; then cat; else cat "$fibre_in"; fi) | \
-	    sed -e 's/\#.*//g;' | \
-	    (tr '\t\n' '  ';echo " None") | \
-	    sed -e 's/^ *//g;
-s/\[[0-9 ,]*: */\[/g;
-s/ *\]/\]/g;
-s/\]\[/] [/g;
-s/  */,/g;
-s/[dD]/e/g;
-s/,$//g;' | $python "$sag_helper" f >"$SLR_RDIR"/input/fdata.c
-	
-	# compile arggen.c with Fibre data in C
-	mkdir -p "$SLR_RDIR"/slc-rec
-	if test -n "$VERBOSE"; then
-	    echo "$basename: running: TMPDIR=$SLR_RDIR/slc-rec @BASH@ $slc_helper -b $datatag -o $SLR_RDIR/input/genf.x -I$SLR_RDIR/input -DFIBRE_DATA=1 $arggen" >&2
-	fi
-	TMPDIR="$SLR_RDIR"/slc-rec @BASH@ \
-	    "$slc_helper" -b "$datatag" -o "$SLR_RDIR"/input/genf.x -I"$SLR_RDIR/input" -DFIBRE_DATA=1 "$arggen"
-
-	# run slr recursively on the arggen binary to dump the data
-	mkdir -p "$SLR_RDIR"/slr-rec
-	if test -n "$VERBOSE"; then
-	    echo "$basename: running: TMPDIR=$SLR_RDIR/slr-rec @BASH@ $0 $SLR_RDIR/input/genf.x >$fdatafile" >&2
-	fi
-	if test -n "$debug_rec"; then
-	    SLR_RECURSIVE=1 TMPDIR="$SLR_RDIR"/slr-rec @BASH@ "$0" -g -t "$SLR_RDIR"/input/genf.x
-	else
-	    SLR_RECURSIVE=1 TMPDIR="$SLR_RDIR"/slr-rec @BASH@ "$0" "$SLR_RDIR"/input/genf.x >"$fdatafile"
-	fi
+	(if test "x$fibre_in" = "x-"; then cat; else cat "$fibre_in"; fi) | $python "$sag_helper" f "$datatag" >"$fdatafile" 
     else
 	# Ensure a tag = -1 for the first Fibre item
 	if test -n "$VERBOSE"; then

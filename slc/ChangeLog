@@ -1,5 +1,27 @@
 2013-01-05  Raphael 'kena' Poss  <r.poss@uva.nl>
 
+	Optimize the conversion of Fibre input to binary data.
+
+	* tools/bin/sag: Emit output data directly. This requires to know
+	the data layout (big endian vs little endian, 32-bit vs 64-bit longs,
+	32-bit doubles vs 64-bit doubles).
+
+	* tools/bin/slr.in: Use it. Fetch the data layout from the `slr_datatag'.
+	* tools/r-host.sh.in,
+	* tools/r-mt-sim.sh.in: Simplify, since recursion is not needed
+	any more.
+
+	* tools/lib/host/slrt.c,
+	* tools/lib/mt/mipsel/slrt.s,
+	* tools/lib/mt/mta/slrt.s,
+	* tools/lib/mt/mts/slrt.s: Set the data layout.
+
+	* tools/arggen.c,
+	* tools/mt-profiles/arggen: Remove, as they are not obsolete.
+	* tools/slc.mk: Update accordingly.
+
+2013-01-05  Raphael 'kena' Poss  <r.poss@uva.nl>
+
 	Preliminary support for floating-point for MT-SPARC.
 
 	At this point we force `double' to single precision because MT

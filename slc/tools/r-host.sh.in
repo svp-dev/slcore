@@ -10,16 +10,6 @@ DEBUGGER=${DEBUGGER:-gdb --args}
 shift
 shift
 
-
-##
-## Selection of the number of cores
-##
-
-if test -n "${SLR_RECURSIVE:-}"; then
-  export MGSYS_QUIET=1
-  unset SLR_NCORES SIMARGS
-fi
-
 ##
 ## Sanity checks.
 ##

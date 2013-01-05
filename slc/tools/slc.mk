@@ -147,7 +147,6 @@ nobase_dist_pkgdata_DATA += \
 	t-seqc/include/sl_support.h
 
 nobase_dist_pkgdata_DATA += \
-        mt-profiles/arggen \
         mt-profiles/coma128 \
         mt-profiles/default \
         mt-profiles/lzcoma128_2chan \
@@ -158,9 +157,6 @@ nobase_dist_pkgdata_DATA += \
         mt-profiles/rbm16 \
         mt-profiles/rbm128 \
         mt-profiles/rbm256 
-
-nobase_dist_pkgdata_DATA += \
-	arggen.c
 
 EXTRA_DIST += \
 	slc/mt/mtsparc/asmproc/opc/formats.db \

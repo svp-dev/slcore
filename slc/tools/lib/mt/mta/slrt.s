@@ -72,7 +72,7 @@ _start:
 
 	.section .rodata
 	.ascii "\0slr_runner:mtalpha-sim:\0"
-	.ascii "\0slr_datatag:mta:\0"
+	.ascii "\0slr_datatag:l64d:\0"
 
 $progname:
 	.ascii "a.out\0"

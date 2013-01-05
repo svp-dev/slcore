@@ -38,7 +38,7 @@ __start:
 
 	.section .rodata
 	.ascii "\0slr_runner:mipsel-sim:\0"
-	.ascii "\0slr_datatag:mipsel_s:\0"
+	.ascii "\0slr_datatag:l32d:\0"
 
         .globl	__main_place_id
 	.section	.bss,"aw",@nobits

@@ -147,7 +147,7 @@ __pseudo_argv:
 .Lslrident:      
         .asciz  ""
         .asciz  "slr_runner:mtsparc-sim:"
-        .asciz  "slr_datatag:mtsn:"
+        .asciz  "slr_datatag:b32f:"
         
         
 ! PSEUDO PLACE IDENTIFIERS

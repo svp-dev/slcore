@@ -19,17 +19,6 @@ mtarch=@mtarch@
 python=${PYTHON:-@python@}
 simargs_base=()
 
-##
-## Selection of the number of cores
-##
-
-if test -n "${SLR_RECURSIVE:-}"; then
-  SIMPROFILE=arggen
-  export MGSYS_QUIET=1
-  simargs_base+=(-q)
-  unset SLR_NCORES SIMARGS
-fi
-
 found=
 pf="$HOME/.mt-profiles/$SIMPROFILE"
 if test -r "$pf"; then

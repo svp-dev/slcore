@@ -2,7 +2,7 @@
 #
 # sag: This file is part of the SL toolchain.
 #
-# Copyright (C) 2009 The SL project.
+# Copyright (C) 2009,2013 The SL project.
 #
 # This program is free software; you can redistribute it and/or
 # modify it under the terms of the GNU General Public License
@@ -14,11 +14,72 @@
 #
 
 import sys
+import re
+import StringIO
+import struct
 
 def die(msg):
     print >>sys.stderr, "%s: %s" % (sys.argv[0], msg)
     sys.exit(1)
 
+def emit(od):
+    spec = sys.argv[2].lower()
+    fmtmap = {
+        16: ['h','H'],
+        32: ['l','L'],
+        64: ['q','Q'] }
+    if spec[0] == 'b':
+        fmtbase = '>' # big endian
+        sfmt,ufmt = fmtmap[int(spec[1:3])]
+        dfmt = spec[3]
+    elif spec[0] == 'l':
+        fmtbase = '<' # little endian
+        sfmt,ufmt = fmtmap[int(spec[1:3])]
+        dfmt = spec[3]
+    elif spec == 'native':
+        fmtbase = '@'
+        sfmt,ufmt = ['l','L']
+        dfmt = 'd'
+    else:
+        print >>sys.stderr, "%s: unrecognized layout specification: %s" % (sys.argv[0], spec)
+        sys.exit(1)
+
+    s = StringIO.StringIO()
+    fmt = sfmt
+    lbl = {}
+    for v in od:
+        if v == 'a':
+            p = '\0' * ((64 - s.tell() % 64) % 64)
+            #print "%r -> %r" % (v, (s.tell(), p))
+            s.write(p)
+            assert (s.tell() % 64 == 0)
+        elif v == 'u':
+            fmt = ufmt
+        elif v == 'l':
+            fmt = sfmt
+        elif v == 'd':
+            fmt = dfmt
+        elif type(v) == type('') and v[0] == '&':
+            lbl[v[1:]] = s.tell()
+            p = struct.pack(fmtbase + ufmt, 0)
+            #print "%r -> %r" % (v, (s.tell(), p))
+            s.write(p)
+        elif type(v) == type('') and v[0] == ':':
+            l = v[1:]
+            assert l in lbl
+            off = s.tell()
+            s.seek(lbl[l])
+            p = struct.pack(fmtbase + ufmt, off)
+            #print "%r -> %r" % (v, (s.tell(), p))
+            s.write(p)
+            s.seek(off)
+        else:
+            p = struct.pack(fmtbase + fmt, v)
+            #print "%r -> %r" % (v, (s.tell(), p))
+            s.write(p)
+
+    print s.getvalue()
+        
 class FibreGenerator(object):
     def mergemax(self, r):
         if len(r) == 0:
@@ -65,27 +126,21 @@ class FibreGenerator(object):
         else:
             return self.dt(d)
 
-    def dozeros(self, sz):
+    def dozeros(self, od, sz):
         if sz[0]:
-            print "{",
             for i in xrange(sz[0]):
-                self.dozeros(sz[1:])
-            print "},",
+                self.dozeros(od, sz[1:])
         else:
-            print "0,",
+            od.append(0)
 
-    def unfold(self, sz, item):
+    def unfold(self, od, sz, item):
         if type(item) is type([]):
-            print "{",
             for d in item:
-                self.unfold(sz[1:], d)
-                print ",",
+                self.unfold(od, sz[1:], d)
             for i in xrange(len(item), sz[0]):
-                self.dozeros(sz[1:])
-            print "}",
+                self.dozeros(od, sz[1:])
         else:
-            r = ("%r" % item)
-            print r.replace("L", (r[0] == '-') and "LL" or "ULL"),
+            od.append(item)
 
 
     def dogen(self):
@@ -100,6 +155,13 @@ class FibreGenerator(object):
         def vc(n):
             return [[x + 0.,0.] for x in xrange(1,n+1)]
 
+        d = re.sub(r'(#[^\n]*\n|\s+)', r' ', d)
+        d = re.sub(r'\[(([0-9,]|\s)*:)?\s*', r'[', d)
+        d = re.sub(r'\]\[', r'] [', d)
+        d = re.sub(r'\s+\]', r']', d)
+        d = re.sub(r'[dD]', 'e', d)
+        d = '[' + re.sub(r'\s+', r',', d).strip(',') + ']'
+        #print d
         data = eval(d)
 
 
@@ -114,39 +176,38 @@ class FibreGenerator(object):
             #print >>sys.stderr, "%r / %r / %r" % (i, sz, t)
             ilist.append((i,sz,t,item))
 
-        print "struct __slr_data_t {"
-        print "  struct { int tag; size_t rank; ptrdiff_t shape_offset; ptrdiff_t data_offset; } metadata[%d]; " % (len(ilist)+1)
-
-        for i, sz, _, _ in ilist:
-            print "  size_t shape%d[%d];" % (i, len(sz))
+        od = []
 
         for i, sz, t, _ in ilist:
-            print "%s data%d" % (t2c[t], i),
-            for s in sz[:-1]:
-                print "[%d]" % s,
-            print " __attribute__((__aligned__(64)));"
-        print "char end; } __slr_data = {"
+            od.append('l')
+            od.append(t2e[t])
+            od.append('u')
+            od.append(len(sz)-1)
+            od.append('&shape%d' % i)
+            od.append('&data%d' % i)
 
-        print "  {/* metadata */"
-        for i, sz, t, _ in ilist:
-            print "  { %d, %d, " % (t2e[t], len(sz)-1),
-            print "(char*)(void*)&__slr_data.shape%d - (char*)(void*)&__slr_data," % i,
-            print "(char*)(void*)&__slr_data.data%d - (char*)(void*)&__slr_data" % i,
-            print "},"
-        print "  {-1,0,0, (char*)(void*)&__slr_data.end - (char*)(void*)&__slr_data }},"
+        od.append('l')
+        od.append(-1)
+        od.append('u')
+        od.append(0)
+        od.append(0)
+        od.append('&end')
 
-        print "  /* dimensions */"
         for i, sz, _, _ in ilist:
-            print "  {%s}," % ','.join((str(x) for x in sz))
-        print
-        print "  /* data */"
-        for i, sz, _, item in ilist:
-            self.unfold(sz, item)
-            print ","
-            #print "%d, %r, %s" % (i, dim(item), ty(item))
-        print "};"
+            od.append(':shape%d' % i)
+            for x in sz:
+                od.append(x)
+        for i, sz, t, item in ilist:
+            od.append('a')
+            od.append(':data%d' % i)
+            od.append(t)
+            self.unfold(od, sz, item)
+        od.append('a')
+        od.append(':end')
+        od.append(0)
 
-
+        #print od
+        emit(od)
 
 
 class SlrVarGenerator(object):
