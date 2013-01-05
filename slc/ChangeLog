@@ -1,5 +1,12 @@
 2013-01-05  Raphael 'kena' Poss  <r.poss@uva.nl>
 
+	Provide more compatibility with MT-SPARC's single-precision FP support.
+
+	* lib/libc/misc/dtoa_simple.c (dtoa_simple): Avoid using large
+	exponents when using short doubles.
+
+2013-01-05  Raphael 'kena' Poss  <r.poss@uva.nl>
+
 	Optimize the conversion of Fibre input to binary data.
 
 	* tools/bin/sag: Emit output data directly. This requires to know
