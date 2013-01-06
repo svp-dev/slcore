@@ -172,10 +172,10 @@ class TFun_2_MTFun(DefaultVisitor):
         if name in self.shlist:
             if setp.decl.type == 'shfparm':
                 regtype = 'f'
-                itype = 'f'
+                movinsn = self.regmagic.rd.fmovinsn
             else:
                 regtype = 'r'
-                itype = ''
+                movinsn = self.regmagic.rd.movinsn
             b = []
             cp = self.regmagic.comprefix
             b.append(flatten(setp.loc, 
@@ -190,7 +190,7 @@ class TFun_2_MTFun(DefaultVisitor):
                              ');'
                              ' __asm__ __volatile__("%(cp)s MT: start write shared %(name)s (%%0)"'
                              ' : "=%(regtype)s"(__slPsout_%(name)s) : "0"(__slPsout_%(name)s));'
-                             ' __asm__ __volatile__("%(itype)smov %%4, %%0\\t%(cp)s MT: write shared %(name)s (%%0)"'
+                             ' __asm__ __volatile__("%(movinsn)s %%4, %%0\\t%(cp)s MT: write shared %(name)s (%%0)"'
                              ' : "=%(regtype)s" (__slPsout_%(name)s), "=%(regtype)s" (__slPsin_%(name)s)'
                              ' : "0"(__slPsout_%(name)s), "1" (__slPsin_%(name)s), '
                              '   "%(regtype)s" (__tmp_set_%(name)s));'

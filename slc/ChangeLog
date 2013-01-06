@@ -1,5 +1,20 @@
 2013-01-06  Raphael 'kena' Poss  <r.poss@uva.nl>
 
+	Fix some FP-related MT-SPARC code generation bugs.
+
+	* tools/slc/mt/common/gentfun.py (TFun_2_MTFun.visit_setp):
+	Determine which FP register-to-register move instruction to use
+	from the regmagic (e.g. `fmov' is not valid on MT-SPARC).
+
+	* tools/slc/mt/mtalpha/regdefs.py,
+	* tools/slc/mt/mtsparc/regdefs.py: Define the instruction
+	mnemonics here.
+
+	* tools/slc/mt/mtsparc/gencreate.py: Propagate FP globals/shareds
+	to the child family.
+
+2013-01-06  Raphael 'kena' Poss  <r.poss@uva.nl>
+
 	Minor packaging fixes.
 
 	* tools/runscripts.mk: Propagate @spp_helper@ to the

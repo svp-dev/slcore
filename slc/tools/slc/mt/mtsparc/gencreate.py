@@ -197,9 +197,24 @@ class Create_2_MTSCreate(ScopedVisitor):
             aregn += 1
             argregs.add(r)
 
-        collect = Block()
-        sargs = []
+        faregn = 0
+        fgargs = []
+        for g in c['gfslots']:
+            name = g['name']
+            r = regmagic.vname_to_legacy("lf%d" % faregn)
+            var = CVarDecl(loc = cr.loc, 
+                           name = 'C$aR$%s$%s' % (cr.label, name), 
+                           ctype = g['ctype'],
+                           init = CVarUse(decl = cr.arg_dic[name].cvar),
+                           reg = (not self.newisa) and r or None)
+            crc.decls += var
+            fgargs.append(CVarUse(decl = var))
+            faregn += 1
+            argregs.add(r)
 
+        collect = Block()
+
+        sargs = []
         for s in c['sislots']:
             name = s['name']
             r = regmagic.vname_to_legacy("l%d" % aregn)
@@ -215,6 +230,22 @@ class Create_2_MTSCreate(ScopedVisitor):
             aregn += 1
             argregs.add(r)
 
+        fsargs = []
+        for s in c['sfslots']:
+            name = s['name']
+            r = regmagic.vname_to_legacy("lf%d" % faregn)
+            arg_cvar = cr.arg_dic[name].cvar
+            var = CVarDecl(loc = cr.loc, 
+                           name = 'C$aR$%s$%s' % (cr.label, name), 
+                           ctype = s['ctype'],
+                           init = CVarUse(decl = arg_cvar),
+                           reg = (not self.newisa) and r or None)
+            crc.decls += var
+            fsargs.append(CVarUse(decl = var))
+            collect += CVarSet(decl = arg_cvar, rhs = CVarUse(decl = var)) + Opaque(';')
+            faregn += 1
+            argregs.add(r)
+
         if not self.newisa:
             # build reg arg lists
             # start with fidvar/shareds first, as these need to reference each other
@@ -226,8 +257,14 @@ class Create_2_MTSCreate(ScopedVisitor):
                 olist +=  Opaque(', "=r"(') + v + ')'
                 ilist +=  Opaque(', "%d"(' % roff) + v + ')'
                 roff += 1
+            for v in fsargs:
+                olist +=  Opaque(', "=f"(') + v + ')'
+                ilist +=  Opaque(', "%d"(' % roff) + v + ')'
+                roff += 1
             for v in gargs:
                 ilist +=  Opaque(', "r"(') + v + ')'
+            for v in fgargs:
+                ilist +=  Opaque(', "f"(') + v + ')'
 
             crc += (flatten(cr.loc, 
                             ' __asm__ __volatile__("create %%0, %%0\\t! MT: CREATE %s DRAIN(%s)'
@@ -252,12 +289,28 @@ class Create_2_MTSCreate(ScopedVisitor):
                         '), "r"(' + a + '));')
                 aoff += 1
             aoff = 0
+            for a in fgargs:
+                crc += (flatten(cr.loc_end,
+                                ' __asm__("pfutg %%2, %%0, %d\\t! MT: set sarg"'
+                                ' : "=r"(' % aoff) +
+                        usefvar + ') : "0"(' + usefvar + 
+                        '), "f"(' + a + '));')
+                aoff += 1
+            aoff = 0
             for a in sargs:
                 crc += (flatten(cr.loc_end,
                                 ' __asm__("puts %%2, %%0, %d\\t! MT: set shared"'
                                 ' : "=r"(' % aoff) +
                         usefvar + ') : "0"(' + usefvar + 
                         '), "r"(' + a + '));')
+                aoff += 1
+            aoff = 0
+            for a in fsargs:
+                crc += (flatten(cr.loc_end,
+                                ' __asm__("fputs %%2, %%0, %d\\t! MT: set shared"'
+                                ' : "=r"(' % aoff) +
+                        usefvar + ') : "0"(' + usefvar + 
+                        '), "f"(' + a + '));')
                 aoff += 1
                            
             if cr.sync_type == 'normal':
@@ -274,6 +327,13 @@ class Create_2_MTSCreate(ScopedVisitor):
                                     ' __asm__("gets %%0, %d, %%1; '
                                     ' mov %%1, %%1\\t! MT get shared"' % aoff) +
                             ' : "=r"(' + usefvar + '), "=r"(' + a + 
+                            ') : "0"(' + usefvar + '));')
+                aoff = 0
+                for a in fsargs:
+                    crc += (flatten(cr.loc_end,
+                                    ' __asm__("fgets %%0, %d, %%1; '
+                                    ' fmovs %%1, %%1\\t! MT get shared"' % aoff) +
+                            ' : "=r"(' + usefvar + '), "=f"(' + a + 
                             ') : "0"(' + usefvar + '));')
             
             crc += (flatten(cr.loc_end,

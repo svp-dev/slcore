@@ -15,6 +15,9 @@ class RegDefs:
     canon_is_numeric = True
     comprefix = '#'
 
+    movinsn = 'mov'
+    fmovinsn = 'fmov'
+
     # offset in register window of
     # first local register
     mt_locals_offset = 0
