@@ -2,6 +2,9 @@
 
 // XIGNORE: mt*_*n:R
 
+// spawn not supported on MT-SPARC yet
+// XIGNORE: mts*:*
+
 sl_def(foo,void,sl_glparm(int, x))
 {
     if (sl_getp(x) > 0)

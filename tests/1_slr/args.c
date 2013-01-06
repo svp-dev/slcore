@@ -12,22 +12,31 @@
 // `COPYING' file in the root directory.
 //
 
-#include <svp/slr.h>
+#include <unistd.h>
+#include <stdlib.h>
 #include <svp/testoutput.h>
 
-slr_decl(slr_var(int, a),
-	 slr_var(int, b, "2nd variable"));
-
 /*
- * SLT_RUN:  a=10  b=-10
+ * SLT_RUN: -- -a 10  -b -10
  */
 
-sl_def(t_main, void)
+int main(int argc, char **argv)
 {
-  int a = slr_get(a)[0];
-  int b = slr_get(b)[0];
+    int a = 0, b = 0;
+    char ch;
+    while ((ch = getopt(argc, argv, "a:b:")) != -1) 
+        switch (ch) {
+        case 'a':
+            a = atoi(optarg);
+            break;
+        case 'b':
+            b = atoi(optarg);
+            break;
+        }
+
   int c = a + b;
   output_int(c, 1);
   output_char('\n', 1);
+  return 0;
 }
-sl_enddef
+

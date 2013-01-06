@@ -15,14 +15,14 @@
 
 #define test_index_params  0,-10,-20
 #include "common.h"
-// SLT_RUN: -dN=20 -dB=0
-// SLT_RUN: -dN=20 -dB=1
-// SLT_RUN: -dN=20 -dB=5
-// SLT_RUN: -dN=20 -dB=20
-// SLT_RUN: -dN=20 -dB=100
-// SLT_RUN: -dN=200 -dB=0
-// SLT_RUN: -dN=200 -dB=1
-// SLT_RUN: -dN=200 -dB=5
-// SLT_RUN: -dN=200 -dB=20
-// SLT_RUN: -dN=200 -dB=100
+// SLT_RUN: -- -n 20 -b 0
+// SLT_RUN: -- -n 20 -b 1
+// SLT_RUN: -- -n 20 -b 5
+// SLT_RUN: -- -n 20 -b 20
+// SLT_RUN: -- -n 20 -b 100
+// SLT_RUN: -- -n 200 -b 0
+// SLT_RUN: -- -n 200 -b 1
+// SLT_RUN: -- -n 200 -b 5
+// SLT_RUN: -- -n 200 -b 20
+// SLT_RUN: -- -n 200 -b 100
 // XIGNORE: ptl*:*

@@ -14,7 +14,8 @@
 
 #include <svp/testoutput.h>
 #include <math.h>
-#include <svp/slr.h>
+#include <svp/fibre.h>
+#include <assert.h>
 
 typedef struct {
   double d;
@@ -225,22 +226,20 @@ sl_def(do_test, void)
 }
 sl_enddef
 
-// XIGNORE: ppp*:D
+// XIGNORE: mts*:D
+// SLT_RUN: -f TEST.d1
+// SLT_RUN: -f TEST.d2
 
-// SLT_RUN: x=.42 n=42
-// SLT_RUN: x=.1 n=10
-
-slr_decl(slr_var(double, x),
-	 slr_var(long, n));
-
-sl_def(t_main, void)
+int main(int argc, char **argv)
 {
   int j;
   double x = .42;
   int n = 42;
 
-  if (slr_len(x)) x = slr_get(x)[0];
-  if (slr_len(n)) n = slr_get(n)[0];
+  assert(fibre_tag(0) == 2 && fibre_rank(0) == 0);
+  assert(fibre_tag(1) == 0 && fibre_rank(1) == 0);
+  x = *(double*)fibre_data(0);
+  n = *(long*)fibre_data(1);
 
   for(j = 0; j < MAX_TESTS; ++j) {
     values[j].desc = 0;
@@ -327,5 +326,6 @@ sl_def(t_main, void)
       output_int(values[j].l, 1); output_char(' ', 1);
       output_int(values[j].ll, 1); output_char('\n', 1);
     }
+
+  return 0;
 }
-sl_enddef

@@ -12,7 +12,11 @@
 // `COPYING' file in the root directory.
 //
 
+
 sl_def(foo, void) {} sl_enddef
+
+// spawn not supported on MT-SPARC yet
+// XIGNORE: mts*:*
 
 sl_def(t_main, void)
 {

@@ -1,3 +1,42 @@
+2013-01-06  Raphael 'kena' Poss  <r.poss@uva.nl>
+
+	Simplify the test suite.
+
+	* 0_slc/1_create/sp1.c,
+	* 0_slc/1_create/sprec.c: Do not test on MT-SPARC, which does not
+	support spawn/spawnsync.
+
+	* 1_slr/bigdata.c,
+	* 1_slr/multiargs.c: Remove, since the "slr vars" mechanism
+	has been removed.
+
+	* 1_slr/args.c,
+	* 0_slc/3_index/common.h: Use `getopt' instead of "slr vars".
+	* 0_slc/3_index/neg1.c,
+	* 0_slc/3_index/neg2.c,
+	* 0_slc/3_index/neg3.c,
+	* 0_slc/3_index/neg4.c,
+	* 0_slc/3_index/neg5.c,
+	* 0_slc/3_index/neg6.c,
+	* 0_slc/3_index/neg7.c,
+	* 0_slc/3_index/neg8.c,
+	* 0_slc/3_index/pos9.c,
+	* 0_slc/3_index/pos1.c,
+	* 0_slc/3_index/pos2.c,
+	* 0_slc/3_index/pos3.c,
+	* 0_slc/3_index/pos4.c,
+	* 0_slc/3_index/pos5.c,
+	* 0_slc/3_index/pos6.c,
+	* 0_slc/3_index/pos7.c,
+	* 0_slc/3_index/pos8.c,
+	* 0_slc/3_index/pos9.c: Update accordingly.
+
+	* 2_lib/math/avail.c: Use `getopt' instead of "slr vars". Also
+	ignore output on MT-SPARC which has only single-precision doubles
+	for now.
+	* 2_lib/math/tgamma.c: Use Fibre input instead of "slr
+	vars". Ignore output on MT-SPARC.
+
 2012-11-02  Raphael 'kena' Poss  <r.poss@uva.nl>
 
 	Minor packaging fix.

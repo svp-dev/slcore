@@ -14,9 +14,8 @@
 //
 #include <assert.h>
 #include <stdio.h>
+#include <unistd.h>
 #include <svp/delegate.h>
-
-#include <svp/slr.h>
 
 #define SAMPLES 200
 int indices[SAMPLES];
@@ -51,16 +50,21 @@ sl_def(iprint, int,
 }
 sl_enddef
 
-slr_decl(slr_var(int, B, "block size"),
-         slr_var(int, N, "max threads"));
-
-sl_def(t_main, void)
+int main(int argc, char **argv)
 {
   int r;
   int B = 0;
   int N = 20;
-  if (slr_len(B)) B = slr_get(B)[0];
-  if (slr_len(N)) N = slr_get(N)[0];
+  char ch;
+  while ((ch = getopt(argc, argv, "b:n:")) != -1) 
+      switch (ch) {
+      case 'b':
+          B = atoi(optarg);
+          break;
+      case 'n':
+          N = atoi(optarg);
+          break;
+      }
 
   assert(N <= SAMPLES);
   printf("start = %d, limit = %d, step = %d\n", test_index_params);
@@ -80,5 +84,7 @@ sl_def(t_main, void)
 	    sl_sharg(unsigned, c, 0),
 	    sl_glarg(unsigned, refc, sl_geta(count)));
   sl_sync();
+
+  return 0;
 }
-sl_enddef
+
