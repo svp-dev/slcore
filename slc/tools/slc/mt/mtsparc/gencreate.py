@@ -291,7 +291,7 @@ class Create_2_MTSCreate(ScopedVisitor):
             aoff = 0
             for a in fgargs:
                 crc += (flatten(cr.loc_end,
-                                ' __asm__("pfutg %%2, %%0, %d\\t! MT: set sarg"'
+                                ' __asm__("fputg %%2, %%0, %d\\t! MT: set sarg"'
                                 ' : "=r"(' % aoff) +
                         usefvar + ') : "0"(' + usefvar + 
                         '), "f"(' + a + '));')
