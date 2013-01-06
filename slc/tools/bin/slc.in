@@ -37,6 +37,7 @@ do_filt2=yes
 slc_use_main=yes
 slc_use_slrt=yes
 slc_use_libsl=yes
+slc_nostdinc=no
 
 check=
 prev_arg=
@@ -175,6 +176,7 @@ for arg in "$@"; do
       -x)  die "$arg not supported yet" ;;
       -nostdinc*)
                 echo "$basename: warning: $arg may not behave as expected" >&2
+                slc_nostdinc=yes
                 extra_ppflags+=("$arg")
                 ;;
 
@@ -536,6 +538,7 @@ eval $(slc_use_mgos=$slc_use_mgos \
         slc_use_slrt=$slc_use_slrt \
         slc_use_main=$slc_use_main \
         slc_use_libsl=$slc_use_libsl \
+        slc_nostdinc=$slc_nostdinc \
         slc_debug_flags="${slc_debug_flags[*]}" \
         extra_f1flags="${extra_f1flags[*]}" \
         "$cce_helper" -s "$impl")

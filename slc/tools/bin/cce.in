@@ -486,9 +486,11 @@ case $slc_os in
     *)
         save_IFS=$IFS
         IFS=:
-        for d in $slc_datadir; do
-            slc_ppflags+=("-I$d/$slc_arch-$slc_os/include")
-        done
+        if test "$slc_nostdinc" != "yes"; then
+            for d in $slc_datadir; do
+                slc_ppflags+=("-I$d/$slc_arch-$slc_os/include")
+            done
+        fi
 	if test "$slc_use_slrt" != "no"; then
             found=
             for d in $slc_libdir; do
