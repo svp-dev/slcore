@@ -2,6 +2,12 @@
 
 	Simplify the test suite.
 
+	* configure.ac: Simplify the reporting of which tests are enabled.
+
+2013-01-06  Raphael 'kena' Poss  <r.poss@uva.nl>
+
+	Simplify the test suite.
+
 	* 0_slc/1_create/sp1.c,
 	* 0_slc/1_create/sprec.c: Do not test on MT-SPARC, which does not
 	support spawn/spawnsync.

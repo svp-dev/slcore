@@ -38,16 +38,8 @@ cat <<EOF
 * Test suite enabled:      $enable_testsuite
 *
 * Checking for MT-Alpha:   $enable_mtalpha
-* (Checking slc/ppp:        $enable_check_ppp)
-* (Checking slc/spr:        $enable_check_spr)
-* (Checking mgs/zlcoma:     $enable_check_zlcoma)
-* (Checking legacy utc:     $enable_check_utc)
 * Checking for MT-SPARC:   $enable_mtsparc
-* (Checking slc/spr:        $enable_check_spr)
-* (Checking mgs/zlcoma:     $enable_check_zlcoma)
 * Checking for MIPSel:     $enable_mipsel
-* (Checking slc/spr:        $enable_check_spr)
-* (Checking mgs/zlcoma:     $enable_check_zlcoma)
 *
 * Checking for utc-ptl:    $enable_check_ptl
 * Checking for hlsim:      $enable_check_hlsim
