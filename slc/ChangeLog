@@ -1,3 +1,12 @@
+2013-01-06  Raphael 'kena' Poss  <r.poss@uva.nl>
+
+	Simplify the test suites.
+
+	* build-aux/slctest.m4: Disable support for muTC core compiler,
+	`ppp' translation and separate ZLCOMA testing. The latter can be
+	tested using SIMPROFILE anyways.
+	* build-aux/slctests.mk: Update accordingly.
+
 2013-01-05  Raphael 'kena' Poss  <r.poss@uva.nl>
 
 	Enhance the MT-SPARC slrt.

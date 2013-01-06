@@ -25,42 +25,26 @@ EXTRA_TEST_IMPL += hls hls_n hls_s
 EXTRA_TEST_IMPL += hlsd hlsd_n hlsd_s
 endif
 
-if ENABLE_CHECK_PPP
-EXTRA_TEST_IMPL += mta_on
-if ENABLE_CHECK_COMA_ZL
-EXTRA_TEST_IMPL += mta_on::-m~lzcoma_default
-endif
-endif
-
-if ENABLE_CHECK_SPR
-if ENABLE_CHECK_SPR_MTA
+if ENABLE_CHECK_MTA
 EXTRA_TEST_IMPL += mta
 EXTRA_TEST_IMPL += mta_n
 EXTRA_TEST_IMPL += mta_s
-if ENABLE_CHECK_COMA_ZL
-EXTRA_TEST_IMPL += mta::-m~lzcoma_default
-EXTRA_TEST_IMPL += mta_n::-m~lzcoma_default
-EXTRA_TEST_IMPL += mta_s::-m~lzcoma_default
-endif
 endif
 
-if ENABLE_CHECK_SPR_MTS
-EXTRA_TEST_IMPL += mts_n
+if ENABLE_CHECK_MTS
+EXTRA_TEST_IMPL += mtsn
+EXTRA_TEST_IMPL += mtsn_n
+EXTRA_TEST_IMPL += mtsn_s
 endif
 
-if ENABLE_CHECK_SPR_MIPSEL
+if ENABLE_CHECK_MIPSEL
 EXTRA_TEST_IMPL += mipsel_s
 endif
-# add extra implementations here when they become available
-endif
 
-if ENABLE_CHECK_UTC
-EXTRA_TEST_IMPL += utc0:-O0 utc0:-O1 utcx
-endif
 
 SLT_IMPL_LIST ?= seqc $(EXTRA_TEST_IMPL)
 
-TEST_EXTENSIONS = .sl .c
+TEST_EXTENSIONS = .c
 SL_LOG_COMPILER = \
 	env $(SLC_VARS) SRCDIR=$(srcdir) \
 	SLT_IMPL_LIST="$(SLT_IMPL_LIST)" \
