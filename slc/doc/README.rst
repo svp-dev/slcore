@@ -106,13 +106,13 @@ This software is composed of the following two separate components:
 
     This is a composite package containing:
  
-    - ``lib/libc/math/mipsel/``, ``lib/libc/math/mtalpha/m/``: a
-      precompiled subset of the uClibc math library, compiled with
-      ``slc``. The binary form is provided for convenience; it can be
-      regenerated using ``slc`` from the uCLibc sources. uClibc is
-      itself licensed under the terms of the Lesser GNU Public License
-      (LGPL), version 2.1. A copy of uClibc can be obtained at
-      http://www.uclibc.org/
+    - ``lib/libc/math/mipsel/``, ``lib/libc/math/,tsparc/``,
+      ``lib/libc/math/mtalpha/m/``: a precompiled subset of the uClibc
+      math library, compiled with ``slc``. The binary form is provided
+      for convenience; it can be regenerated using ``slc`` from the
+      uCLibc sources. uClibc is itself licensed under the terms of the
+      Lesser GNU Public License (LGPL), version 2.1. A copy of uClibc
+      can be obtained at http://www.uclibc.org/
 
       .. note:: To re-generate the math objecs: configure uClibc for
         the appropriate target; then modify ``Rules.mak`` to use ``slc
@@ -127,17 +127,27 @@ This software is composed of the following two separate components:
       under the terms of a custom copyleft license by Lucent. See the
       headers of each source file for licensing terms.
 
-    - ``lib/mipsel-sim/libgcc.a``: a precompiled version of GCC 4.7's
-      embedded ``libgcc.a``, compiled using ``slc`` itself instead of
-      ``gcc``. The binary form is provided as convenience; it can be
-      regenerated usng ``slc`` from any GCC version. GCC 4.7 is
-      licensed under the terms of the GNU Public License, version 3.
+    - ``lib/mipsel-sim/libgcc.a``, ``lib/mtsparc/sim/libgcc.a``:
+      precompiled versions of GCC 4.7's embedded ``libgcc.a``,
+      compiled using ``slc`` itself instead of ``gcc``. The binary
+      form is provided as convenience; it can be regenerated usng
+      ``slc`` from any GCC version. GCC 4.7 is licensed under the
+      terms of the GNU Public License, version 3.
 
-      .. note:: To re-generate ``libgcc.a``: configure gcc for target
-	``mipsel-linux-gnu``; then run ``make`` a first time; then
-	manually edit ``mipsel-linux-gnu/libgcc/Makefile`` in the
-	build tree to use ``slc -b mipsel_s`` as code generator; then
-	run ``make clean; make`` in ``mipsel-linux-gnu/libgcc``.
+      .. note:: To re-generate ``mipsel-sim/libgcc.a``: configure gcc
+	for target ``mipsel-linux-gnu``; then run ``make`` a first
+	time; then manually edit ``mipsel-linux-gnu/libgcc/Makefile``
+	in the build tree to use ``slc -b mipsel_s`` as code
+	generator; then run ``make clean; make`` in
+	``mipsel-linux-gnu/libgcc``.
+
+      .. note:: To re-generate ``mtsparc-sim/libgcc.a``: configure gcc
+	for target ``sparc-linux-gnu``; then run ``make`` a first
+	time; then manually edit ``sparc-linux-gnu/libgcc/Makefile``
+	in the build tree to use ``slc -b mtsn_s`` as code generator;
+	ensure the compilation does not use ``-g``, ``-fPIC`` nor
+	``-fbuilding-libgcc``; then run ``make clean; make`` in
+	``sparc-linux-gnu/libgcc``.
 
 
     - custom code in the subdirectories not already listed, licensed

@@ -1,5 +1,122 @@
 2013-01-06  Raphael 'kena' Poss  <r.poss@uva.nl>
 
+	Improve the library support for MT-SPARC.
+
+	* lib/mtsparc-sim/libgcc.a: Import from GCC 4.7.1. This was built
+	by configuring gcc for `sparc-linux-gnu', then manually editing
+	`sparc-linux-gnu/libgcc/Makefile' in the build tree to use `slc -b
+	mtsn_s' as code generator. Also the flags `-fbuilding-libgcc',
+	`-g' and `-fPIC' need to be removed.
+
+	* lib/libc/math/mtsparc/acosf.o, lib/libc/math/mtsparc/acoshf.o,
+	lib/libc/math/mtsparc/asinf.o, lib/libc/math/mtsparc/asinhf.o,
+	lib/libc/math/mtsparc/atan2f.o, lib/libc/math/mtsparc/atanf.o,
+	lib/libc/math/mtsparc/atanhf.o, lib/libc/math/mtsparc/cabsf.o,
+	lib/libc/math/mtsparc/carg.o, lib/libc/math/mtsparc/cargf.o,
+	lib/libc/math/mtsparc/cbrtf.o, lib/libc/math/mtsparc/ceilf.o,
+	lib/libc/math/mtsparc/copysignf.o, lib/libc/math/mtsparc/cosf.o,
+	lib/libc/math/mtsparc/coshf.o, lib/libc/math/mtsparc/e_acos.o,
+	lib/libc/math/mtsparc/e_acosh.o, lib/libc/math/mtsparc/e_asin.o,
+	lib/libc/math/mtsparc/e_atan2.o, lib/libc/math/mtsparc/e_atanh.o,
+	lib/libc/math/mtsparc/e_cosh.o, lib/libc/math/mtsparc/e_exp.o,
+	lib/libc/math/mtsparc/e_fmod.o, lib/libc/math/mtsparc/e_gamma.o,
+	lib/libc/math/mtsparc/e_gamma_r.o,
+	lib/libc/math/mtsparc/e_hypot.o, lib/libc/math/mtsparc/e_j0.o,
+	lib/libc/math/mtsparc/e_j1.o, lib/libc/math/mtsparc/e_jn.o,
+	lib/libc/math/mtsparc/e_lgamma.o,
+	lib/libc/math/mtsparc/e_lgamma_r.o, lib/libc/math/mtsparc/e_log.o,
+	lib/libc/math/mtsparc/e_log10.o, lib/libc/math/mtsparc/e_log2.o,
+	lib/libc/math/mtsparc/e_pow.o, lib/libc/math/mtsparc/e_rem_pio2.o,
+	lib/libc/math/mtsparc/e_remainder.o,
+	lib/libc/math/mtsparc/e_scalb.o, lib/libc/math/mtsparc/e_sinh.o,
+	lib/libc/math/mtsparc/e_sqrt.o, lib/libc/math/mtsparc/erfcf.o,
+	lib/libc/math/mtsparc/erff.o, lib/libc/math/mtsparc/exp2f.o,
+	lib/libc/math/mtsparc/expf.o, lib/libc/math/mtsparc/expm1f.o,
+	lib/libc/math/mtsparc/fabsf.o, lib/libc/math/mtsparc/fdimf.o,
+	lib/libc/math/mtsparc/floorf.o, lib/libc/math/mtsparc/fmaf.o,
+	lib/libc/math/mtsparc/fmaxf.o, lib/libc/math/mtsparc/fminf.o,
+	lib/libc/math/mtsparc/fmodf.o, lib/libc/math/mtsparc/frexpf.o,
+	lib/libc/math/mtsparc/hypotf.o, lib/libc/math/mtsparc/ilogbf.o,
+	lib/libc/math/mtsparc/k_cos.o, lib/libc/math/mtsparc/k_rem_pio2.o,
+	lib/libc/math/mtsparc/k_sin.o, lib/libc/math/mtsparc/k_standard.o,
+	lib/libc/math/mtsparc/k_tan.o, lib/libc/math/mtsparc/ldexpf.o,
+	lib/libc/math/mtsparc/lgammaf.o, lib/libc/math/mtsparc/llrintf.o,
+	lib/libc/math/mtsparc/llroundf.o, lib/libc/math/mtsparc/log10f.o,
+	lib/libc/math/mtsparc/log1pf.o, lib/libc/math/mtsparc/log2f.o,
+	lib/libc/math/mtsparc/logbf.o, lib/libc/math/mtsparc/logf.o,
+	lib/libc/math/mtsparc/lrintf.o, lib/libc/math/mtsparc/lroundf.o,
+	lib/libc/math/mtsparc/modff.o, lib/libc/math/mtsparc/nan.o,
+	lib/libc/math/mtsparc/nearbyintf.o,
+	lib/libc/math/mtsparc/nextafterf.o, lib/libc/math/mtsparc/powf.o,
+	lib/libc/math/mtsparc/remainderf.o,
+	lib/libc/math/mtsparc/remquof.o, lib/libc/math/mtsparc/rintf.o,
+	lib/libc/math/mtsparc/roundf.o, lib/libc/math/mtsparc/s_asinh.o,
+	lib/libc/math/mtsparc/s_atan.o, lib/libc/math/mtsparc/s_cbrt.o,
+	lib/libc/math/mtsparc/s_ceil.o,
+	lib/libc/math/mtsparc/s_copysign.o, lib/libc/math/mtsparc/s_cos.o,
+	lib/libc/math/mtsparc/s_erf.o, lib/libc/math/mtsparc/s_expm1.o,
+	lib/libc/math/mtsparc/s_fabs.o, lib/libc/math/mtsparc/s_fdim.o,
+	lib/libc/math/mtsparc/s_finite.o,
+	lib/libc/math/mtsparc/s_finitef.o,
+	lib/libc/math/mtsparc/s_floor.o, lib/libc/math/mtsparc/s_fma.o,
+	lib/libc/math/mtsparc/s_fmax.o, lib/libc/math/mtsparc/s_fmin.o,
+	lib/libc/math/mtsparc/s_fpclassify.o,
+	lib/libc/math/mtsparc/s_fpclassifyf.o,
+	lib/libc/math/mtsparc/s_frexp.o, lib/libc/math/mtsparc/s_ilogb.o,
+	lib/libc/math/mtsparc/s_isinf.o, lib/libc/math/mtsparc/s_isinff.o,
+	lib/libc/math/mtsparc/s_isnan.o, lib/libc/math/mtsparc/s_isnanf.o,
+	lib/libc/math/mtsparc/s_ldexp.o,
+	lib/libc/math/mtsparc/s_lib_version.o,
+	lib/libc/math/mtsparc/s_llrint.o,
+	lib/libc/math/mtsparc/s_llround.o,
+	lib/libc/math/mtsparc/s_log1p.o, lib/libc/math/mtsparc/s_logb.o,
+	lib/libc/math/mtsparc/s_lrint.o, lib/libc/math/mtsparc/s_lround.o,
+	lib/libc/math/mtsparc/s_matherr.o, lib/libc/math/mtsparc/s_modf.o,
+	lib/libc/math/mtsparc/s_nearbyint.o,
+	lib/libc/math/mtsparc/s_nextafter.o,
+	lib/libc/math/mtsparc/s_remquo.o, lib/libc/math/mtsparc/s_rint.o,
+	lib/libc/math/mtsparc/s_round.o,
+	lib/libc/math/mtsparc/s_scalbln.o,
+	lib/libc/math/mtsparc/s_scalbn.o,
+	lib/libc/math/mtsparc/s_signbit.o,
+	lib/libc/math/mtsparc/s_signbitf.o,
+	lib/libc/math/mtsparc/s_signgam.o,
+	lib/libc/math/mtsparc/s_significand.o,
+	lib/libc/math/mtsparc/s_sin.o, lib/libc/math/mtsparc/s_tan.o,
+	lib/libc/math/mtsparc/s_tanh.o, lib/libc/math/mtsparc/s_trunc.o,
+	lib/libc/math/mtsparc/scalblnf.o, lib/libc/math/mtsparc/scalbnf.o,
+	lib/libc/math/mtsparc/sinf.o, lib/libc/math/mtsparc/sinhf.o,
+	lib/libc/math/mtsparc/sqrtf.o, lib/libc/math/mtsparc/tanf.o,
+	lib/libc/math/mtsparc/tanhf.o, lib/libc/math/mtsparc/tgammaf.o,
+	lib/libc/math/mtsparc/truncf.o, lib/libc/math/mtsparc/w_acos.o,
+	lib/libc/math/mtsparc/w_acosh.o, lib/libc/math/mtsparc/w_asin.o,
+	lib/libc/math/mtsparc/w_atan2.o, lib/libc/math/mtsparc/w_atanh.o,
+	lib/libc/math/mtsparc/w_cabs.o, lib/libc/math/mtsparc/w_cosh.o,
+	lib/libc/math/mtsparc/w_drem.o, lib/libc/math/mtsparc/w_exp.o,
+	lib/libc/math/mtsparc/w_exp2.o, lib/libc/math/mtsparc/w_fmod.o,
+	lib/libc/math/mtsparc/w_gamma.o, lib/libc/math/mtsparc/w_hypot.o,
+	lib/libc/math/mtsparc/w_j0.o, lib/libc/math/mtsparc/w_j1.o,
+	lib/libc/math/mtsparc/w_jn.o, lib/libc/math/mtsparc/w_lgamma.o,
+	lib/libc/math/mtsparc/w_lgamma_r.o, lib/libc/math/mtsparc/w_log.o,
+	lib/libc/math/mtsparc/w_log10.o, lib/libc/math/mtsparc/w_log2.o,
+	lib/libc/math/mtsparc/w_pow.o,
+	lib/libc/math/mtsparc/w_remainder.o,
+	lib/libc/math/mtsparc/w_sinh.o, lib/libc/math/mtsparc/w_sqrt.o,
+	lib/libc/math/mtsparc/w_tgamma.o: Import from uCLibc
+	0.9.30.1. This was built by configuring uClibc for the `sparc'
+	architecture, SPARCv8 ISA, Big Endian, STATIC FLAT ABI, with FP
+	support, but no MMU. Then the file `Rules.mak' was manually
+	modified to set `CC' to `slc -b mtsn_s' and remove `-fPIC'.
+
+	* doc/README.rst: Report the new precompiled binaries (math
+	objects and libgcc.a).
+
+	* lib/mtsparc-sim/mtsmathobjs.mk: List the new files.
+	* lib/mtsparc-sim/Makefile.am: Use the MT-SPARC math objects for
+	`libm'. List and install `libgcc.a'.
+
+2013-01-06  Raphael 'kena' Poss  <r.poss@uva.nl>
+
 	Fix some FP-related MT-SPARC code generation bugs.
 
 	* tools/slc/mt/common/gentfun.py (TFun_2_MTFun.visit_setp):
