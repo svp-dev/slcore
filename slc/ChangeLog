@@ -1,5 +1,13 @@
 2013-01-06  Raphael 'kena' Poss  <r.poss@uva.nl>
 
+	Minor packaging fixes.
+
+	* tools/runscripts.mk: Propagate @spp_helper@ to the
+	scripts. Factor the common substitutions.
+	* tools/slc.mk: Distribute `slc/mt/mipsel/compile.py'.
+
+2013-01-06  Raphael 'kena' Poss  <r.poss@uva.nl>
+
 	Fix a bug in the MT-SPARC slrt.
 
 	* tools/lib/mt/mts/slrt.s: Ensure the `slr_runner' tag is prefixed

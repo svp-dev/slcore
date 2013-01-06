@@ -102,6 +102,7 @@ nobase_python_PYTHON += \
 	slc/mt/mtsparc/asmproc/opc/__init__.py \
 	slc/mt/mipsel/__init__.py \
 	slc/mt/mipsel/regdefs.py \
+	slc/mt/mipsel/compile.py \
 	slc/mt/mipsel/asmproc/__init__.py \
 	slc/mt/mipsel/asmproc/base.py \
 	slc/mt/mipsel/asmproc/common.py \
