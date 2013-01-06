@@ -1,5 +1,12 @@
 2013-01-06  Raphael 'kena' Poss  <r.poss@uva.nl>
 
+	Fix a bug in the MT-SPARC slrt.
+
+	* tools/lib/mt/mts/slrt.s: Ensure the `slr_runner' tag is prefixed
+	with a nul byte.
+
+2013-01-06  Raphael 'kena' Poss  <r.poss@uva.nl>
+
 	Add support for `-nostdinc' to `slc'.
 
 	This is required to compile uCLibc, which provides its own

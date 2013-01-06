@@ -65,7 +65,7 @@ _start:
         .section        ".rodata"
         .align 8
 .LLC0:
-        .asciz  "slr_runner:mtsparc-sim:"
+        .asciz  "\0slr_runner:mtsparc-sim:"
         .asciz  "slr_datatag:b32f:"
         .align 8
 .LLC1:
