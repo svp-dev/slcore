@@ -1,5 +1,17 @@
 2013-01-06  Raphael 'kena' Poss  <r.poss@uva.nl>
 
+	Extend the library support with `getopt'.
+
+	Since the "slr vars" mechanism is now unavailable, `getopt'
+	becomes a welcome addition to the MT library. The support
+	added in this patch is not thread-safe!
+
+	* lib/libc/include/unistd.h: Declare `getopt' and friends.
+	* lib/libc/bsd/stdlib/getopt.c: Import from FreeBSD.
+	* lib/libc.mk: List and distribute it.
+
+2013-01-06  Raphael 'kena' Poss  <r.poss@uva.nl>
+
 	Improve the library support for MT-SPARC.
 
 	* lib/mtsparc-sim/libgcc.a: Import from GCC 4.7.1. This was built

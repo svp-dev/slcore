@@ -29,6 +29,7 @@ libc_a_SOURCES = \
 	../libc/bsd/libc/stdlib/atoi.c \
 	../libc/bsd/libc/stdlib/atol.c \
 	../libc/bsd/libc/stdlib/getenv.c \
+	../libc/bsd/libc/stdlib/getopt.c \
 	../libc/bsd/libc/stdlib/strtol.c \
 	../libc/bsd/libc/stdlib/strtoll.c \
 	../libc/bsd/libc/stdlib/strtoul.c \

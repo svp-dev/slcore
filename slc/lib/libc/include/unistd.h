@@ -12,4 +12,14 @@ ssize_t write(int, void*, size_t);
 #define SEEK_CUR 1
 #define SEEK_END 2
 
+/* getopt support is not thread safe! */
+extern char *optarg;
+extern int optind;
+extern int optopt;
+extern int opterr;
+extern int optreset;
+
+int
+getopt(int argc, char * const argv[], const char *optstring);
+
 #endif
