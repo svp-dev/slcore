@@ -48,7 +48,7 @@ void _main(void)
     char **argv, **envp;
     uTC::args_get(&argc, &argv, &envp);
 
-    sys_init(NULL, NULL, NULL);
+    sys_init(NULL, NULL);
 
     __main_exit_status = Pmain(argc, argv);
 }

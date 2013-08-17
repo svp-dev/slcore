@@ -1,5 +1,17 @@
 2013-08-17  Raphael 'kena' Poss  <r.poss@uva.nl>
 
+	Fix an MT initialization bug.
+
+	The bug was introduced in January 2013
+	(ef5194dcd8158392d18590b254e1df0d91f327c3) when dropping support
+	for slr variables.
+
+	* tools/lib/host/load.c,
+	* tools/lib/host/slrt.c: Declare `slr_init' with two arguments,
+	not three.
+
+2013-08-17  Raphael 'kena' Poss  <r.poss@uva.nl>
+
 	Enhance the handling of MT profiles.
 
 	* tools/bin/slr.in: Ensure that `SIMPROFILE' is defined before

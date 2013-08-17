@@ -68,7 +68,7 @@ void load_binary_data(const char* fname, void**ptr, bool verbose)
     fclose(f);
 }
 
-extern void sys_init(void*, void*, char*);
+extern void sys_init(void*, char*);
 
 #ifdef __cplusplus
 extern "C" {
@@ -96,7 +96,7 @@ void slr_init(void)
 #if !defined(__slc_os_init_via_main__)
     /* hlsim/ptl must be initialized via main first, 
      so sys_init gets called from _main() instead. */
-    sys_init(NULL, NULL, NULL);
+    sys_init(NULL, NULL);
 #endif
 }
 
