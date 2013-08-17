@@ -1,3 +1,10 @@
+2013-08-17  Raphael 'kena' Poss  <r.poss@uva.nl>
+
+	Enhance the handling of MT profiles.
+
+	* tools/bin/slr.in: Ensure that `SIMPROFILE' is defined before
+	loading the profile, because it might use the variable.
+
 2013-01-06  Raphael 'kena' Poss  <r.poss@uva.nl>
 
 	Update the documentation for version 3.8b.
@@ -934,10 +941,10 @@
 	prefix. Make the tools compatible with it.
 
 	* tools/r-mt-sim.sh.in (runner_cmdline),
-	* tools/mt-profiles/mlcoma256_4chan (simargs_base), 
-	* tools/mt-profiles/mlcoma128_2chan (simargs_base), 
-	* tools/mt-profiles/lzcoma256_4chan (simargs_base), 
-	* tools/mt-profiles/lzcoma128_2chan (simargs_base), 
+	* tools/mt-profiles/mlcoma256_4chan (simargs_base),
+	* tools/mt-profiles/mlcoma128_2chan (simargs_base),
+	* tools/mt-profiles/lzcoma256_4chan (simargs_base),
+	* tools/mt-profiles/lzcoma128_2chan (simargs_base),
 	* tools/mt-profiles/arggen (simargs_base),
 	* tools/mt-profiles/default (simargs_base): Prefix the configured
 	variables with `*' instead of `*.'.
@@ -965,7 +972,7 @@
 2011-03-08  Irfan Uddin  <mirfanud@uva.nl>
 
 	sl_index fixed for hl-sim.
-	
+
 	* tools/slc/ptl/gentfun.py: Indexes were wrong in hlsim. The
 	problem was in conversion, because in ptl indices are objects and
 	conversion to long gives wrong results. In the translater code I
@@ -1055,7 +1062,7 @@
 2011-11-16  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
 	Minor packaging fix.
-	
+
 	* build-aux/slc.m4: Update the include path so that `slc' can find
 	the slsys headers.
 
@@ -1073,9 +1080,9 @@
 	hlsim.
 
 	* tools/lib/host/slrt.c: Initialize the SEP when using hlsim.
-	
+
 	* lib/mgos-hlsim.mk: New.
-	
+
 	* lib/host-host-hlsim/Makefile.am,
 	* lib/host-host-hlsimd/Makefile.am: Use it to include the SEP in
 	the library.
@@ -1243,7 +1250,7 @@
 	* include/cstring.h,
 	* include/cstrings.h,
 	* include/ctime.h: Rename to...
-	
+
 	* attic/calloca.h,
 	* attic/cassert.h,
 	* attic/cctype.h,
@@ -1261,7 +1268,7 @@
 	* attic/cstring.h,
 	* attic/cstrings.h,
 	* attic/ctime.h: ...here.
-	
+
 	* include/svp/argslot.h,
 	* include/svp/assert.h,
 	* include/svp/callgate.h,
@@ -1271,7 +1278,7 @@
 	* include/svp/iomacros.h,
 	* include/svp/minimath.h,
 	* include/svp/roman.h: Rename to...
-	
+
 	* include/svp/deprecated/argslot.h,
 	* include/svp/deprecated/assert.h,
 	* include/svp/deprecated/callgate.h,
@@ -1389,17 +1396,17 @@
 	* libc/bsd/contrib/gdtoa/strtorxL.c,
 	* libc/bsd/contrib/gdtoa/sum.c,
 	* libc/bsd/contrib/gdtoa/ulp.c: ...here.
-	
+
 	* src/_hdtoa.c: Rename to...
 	* libc/bsd/libc/gdtoa/_hdtoa.c: ...here.
-	
+
 	* src/errlst.c: Rename to...
 	* libc/bsd/libc/gen/errlst.c: ...here.
 	* src/fpmath.h: Rename to...
-	
+
 	* libc/bsd/libc/include/fpmath.h: ...here.
 	* src/floatio.h: Rename to...
-	
+
 	* src/fprintf.c,
 	* src/printf-pos.c,
 	* src/printf.c,
@@ -1407,7 +1414,7 @@
 	* src/printflocal.h,
 	* src/sprintf.c,
 	* src/vfprintf.c: Rename to...
-	
+
 	* libc/bsd/libc/stdio/floatio.h,
 	* libc/bsd/libc/stdio/fprintf.c,
 	* libc/bsd/libc/stdio/printf-pos.c,
@@ -1416,7 +1423,7 @@
 	* libc/bsd/libc/stdio/printflocal.h,
 	* libc/bsd/libc/stdio/sprintf.c,
 	* libc/bsd/libc/stdio/vfprintf.c: ...here.
-	
+
 	* src/atoi.c,
 	* src/atol.c,
 	* src/atoll.c,
@@ -1425,7 +1432,7 @@
 	* src/strtoll.c,
 	* src/strtoul.c,
 	* src/strtoull.c: Rename to...
-	
+
 	* libc/bsd/libc/stdlib/atoi.c,
 	* libc/bsd/libc/stdlib/atol.c,
 	* libc/bsd/libc/stdlib/atoll.c,
@@ -1481,7 +1488,7 @@
 	* libc/bsd/libc/string/strncpy.c,
 	* libc/bsd/libc/string/strnlen.c: ...here.
 
-	
+
 	* src/malloc.c,
 	* src/malloc_excl.c,
 	* src/malloc_wrappers.c,
@@ -1491,7 +1498,7 @@
 	* libc/malloc/malloc_excl.c,
 	* libc/malloc/malloc_wrappers.c,
 	* libc/malloc/mtmalloc.h: ...here.
-	
+
 	* src/missing_uclibc_math.c: Rename to...
 	* libc/math/missing_uclibc_math.c: ...here.
 
@@ -1836,7 +1843,7 @@
 	* libc/misc/ctype.c,
 	* libc/misc/dtoa_simple.c,
 	* libc/misc/errno.c: ...here.
-	
+
 	* src/fputc.c,
 	* src/fputs.c,
 	* src/fwrite.c,
@@ -1862,23 +1869,23 @@
 	* libc/stdio/snprintf.c,
 	* libc/stdio/vprintf.c,
 	* libc/stdio/vsnprintf.c: ...here.
-	
+
 	* src/ffs.c: Rename to...
 	* libc/string/ffs.c: ...here.
-	
+
 	* src/gfx.c,
 	* src/mtgfx.c: Rename to...
 	* mgos/gfx/gfx.c,
 	* mgos/gfx/mtgfx.c: ...here.
-	
+
 	* src/mtinit.c: Rename to...
 	* mgos/init/mtinit.c: ...here.
-	
+
 	* src/mtargs.c,
 	* src/mtinput.c: Rename to...
 	* mgos/input/mtargs.c,
 	* mgos/input/mtinput.c: ...here.
-	
+
 	* src/RPCServiceDatabase.h,
 	* src/mgsim.h,
 	* src/mtconf.c,
@@ -1887,7 +1894,7 @@
 	* mgos/mgsim/mgsim.h,
 	* mgos/mgsim/mtconf.c,
 	* mgos/mgsim/mtconf.h: ...here.
-	
+
 	* src/abort.c,
 	* src/exit.c,
 	* src/gtod.c,
@@ -1909,12 +1916,12 @@
 	* mgos/posix-compat/mtunix.c,
 	* mgos/posix-compat/time.c,
 	* mgos/posix-compat/time_virtual.c: ...here.
-	
+
 	* src/dummysep.c: Rename to...
 	* mgos/sep/dummysep.c: ...here.
 	* src/mtsep.c: Rename to...
 	* mgos/sep/mtsep.c: ...here.
-	
+
 	* src/tlsmalloc/Makefile.am,
 	* src/tlsmalloc/tls_arch_mtalpha.h,
 	* src/tlsmalloc/tls_arch_mtsparc_fpga.h,
@@ -1938,13 +1945,13 @@
 	* mgos/tlsmalloc/tlsmcheck.c,
 	* mgos/tlsmalloc/tricks.h,
 	* mgos/tlstack_malloc.c: ...here.
-	
+
 	* src/mtuart.c: Rename to...
 	* mgos/uart/mtuart.c: ...here.
-	
+
 	* src/mtamathobjs.mk: Rename to...
 	* mtamathobjs.mk: ...here.
-	
+
 	* src/div.c,
 	* src/io.c,
 	* src/roman.c: Rename to...
@@ -1952,11 +1959,11 @@
 	* slsys/deprecated/div.c,
 	* slsys/deprecated/io.c,
 	* slsys/deprecated/roman.c: ...here.
-	
+
 	* src/perf.c,
 	* src/perf_wrappers.c: Rename to...
 	* slsys/perf/perf.c,
-	* slsys/perf/perf_wrappers.c: ...here.	
+	* slsys/perf/perf_wrappers.c: ...here.
 
 	* src/empty.c: Remove.
 
@@ -1999,7 +2006,7 @@
 	* tools/lib/mt-profiles/
 	* tools/lib/slc/,
 	* tools/lib/slc_config.py.in: Rename to...
-	
+
 	* tools/t-seqc/,
 	* tools/t-spr/,
 	* tools/t-sppalpha/,
@@ -2043,14 +2050,14 @@
 
 	* tools/lib/host-host-seqc/load.c,
 	* tools/lib/host-host-seqc/slrt.c: Rename to...
-	
+
 	* tools/lib/host/load.c,
 	* tools/lib/host/slrt.c: ...here.
 
 	* tools/lib/host-host-hrt/include/sl_hrt.h,
 	* tools/lib/host-host-hrt/tc.c,
 	* tools/lib/host-host-hrt/slrt.c: Rename to...
-	
+
 	* tools/lib/hrt/include/sl_hrt.h,
 	* tools/lib/hrt/tc.c,
 	* tools/lib/hrt/slrt.c: ...here.
@@ -2087,7 +2094,7 @@
 	* tools/Makefile.am: Define rules to recurse into `lib' with CC
 	set to the newly-built `slc'.
 
-	* configure.ac: Adjust the list of generated files accordingly.	
+	* configure.ac: Adjust the list of generated files accordingly.
 
 	* build-aux/slc.m4: Also pass `SLRAR' and `SLRANLIB'.
 
@@ -2275,7 +2282,7 @@
 
 	* lib/src/mtuart.c: New. Define `uart_getc', `uart_putc', and
 	`FILE *stduart' for use by programs.
-	
+
 	* lib/mtalpha.mk: Compile it.
 	* lib/Makefile.am: Distribute it.
 
@@ -2338,7 +2345,7 @@
 2011-07-08  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
 	Align the MT profiles to the latest MGSim configuration.
-	
+
 	* tools/lib/mt-profiles/default,
 	* tools/lib/mt-profiles/coma128: Do it.
 
@@ -2427,7 +2434,7 @@
 	* lib/src/gtod_virtual.c: New.
 
 	* lib/src/time.c: Replace to use `gettimeofday'.
-	
+
 	* lib/mtalpha-sim/include/time.h: Declare `time_virtual'.
 	* lib/src/time_virtual.c: New.
 
@@ -2549,7 +2556,7 @@
 
 	* lib/src/tlsmalloc/Makefile.am: Compile the test code with
 	footers enables and extra debugging.
-	
+
 	* lib/mtsparc.mk,
 	* lib/mtalpha.mk: New compilation targets `*_tlsmalloc_fast*` and
 	`*_tlsmalloc_*_nogc'. The basic (default) object `tlsmalloc.o' now
@@ -2567,7 +2574,7 @@
 
 	* tools/include/svp/mgsim.h: Allow to use the `mgsim_control'
 	functions as (void) expressions.
-	
+
 2011-06-21  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
 	Support C's `clock()' on MT-SPARC.
@@ -2649,7 +2656,7 @@
 	* lib/src/mtconf.c,
 	* lib/src/mtinput.c,
 	* lib/src/mtsep.c: Use it.
-	
+
 2011-06-07  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
 	Simplify the MT profile used to generate input data.
@@ -2672,7 +2679,7 @@
 	Fix bug in `slr'.
 
 	(Reported by Irfan.)
-	
+
 	* tools/lib/load.c (load_binary_data): Use the file size, not the
 	padded size, when calling `fread'.
 
@@ -2751,7 +2758,7 @@
 2011-05-27  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
 	Improve the documentation.
-	
+
 	* doc/NEWS.txt: Initialize for 3.6.
 
 2011-05-27  Raphael 'kena' Poss  <r.c.poss@uva.nl>
@@ -2837,7 +2844,7 @@
 	Support loading the input data from ROMs.
 
 	* tools/bin/slr.in: Ensure that the slr data file is not empty.
-	
+
 	* tools/bin/sag: Mark the end of the data and register the offset,
 	so that the size of the data is known. Also, align each generated
 	Fibre array on a 64-byte boundary.
@@ -2895,13 +2902,13 @@
 2011-04-19  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
 	Enhance the MT-SPARC code generation.
-	
+
 	* tools/lib/slc/mt/mtsparc/gencreate.py: Annotate creates with the
 	list of registers that hold thread arguments.
-	
+
 	* tools/lib/slc/mt/mtsparc/asmproc/opt.py (addswchll): Factor into
 	a `DetectDataflow' class. Enhance to drain thread argument
-	registers. Use it here, and...	
+	registers. Use it here, and...
 	* tools/lib/slc/mt/mtsparc/asmproc/base.py: ...here.
 
 2011-04-18  Raphael 'kena' Poss  <r.c.poss@uva.nl>
@@ -2933,7 +2940,7 @@
 2011-04-15  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
 	MT-SPARC code generation fixes and improvements.
-	
+
 	* tools/lib/slc/mt/mtsparc/asmproc/delay.py (markdelay): indicate
 	which instruction is involved when reporting delayed-in-delay-slot.
 
@@ -2950,18 +2957,18 @@
 2011-04-15  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
 	Preliminary support for `swch' annotations for MT-SPARC.
-	
+
 	* tools/lib/slc/mt/mtsparc/asmproc/decode.py: New.
-	
+
 	* tools/lib/slc/mt/mtsparc/asmproc/base.py: Move `markdelay' to...
-	
+
 	* tools/lib/slc/mt/mtsparc/asmproc/delay.py: ...here.
 
 	* tools/lib/slc/mt/mtsparc/asmproc/opt.py: Use them.
 
 	* tools/lib/slc/mt/common/asmproc/end.py (prunenopend): Avoid
 	removing nops in delay slots.
-	
+
 2011-04-14  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
 	Make a database of MT-SPARC instructions.
@@ -2978,7 +2985,7 @@
 	* tools/lib/slc/mt/mtsparc/asmproc/opc/__init__.py: New.
 
 	* tools/lib/Makefile.am: Distribute and install the new files.
-	
+
 2011-04-14  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
 	Add some version-based run-time consistency checks.
@@ -2989,15 +2996,15 @@
 
 	* tools/bin/cce.in: Pass the compiler version numbers at compile
 	time.
-	
-	* lib/src/mtinit.c (sys_init),	
+
+	* lib/src/mtinit.c (sys_init),
 	* lib/src/perf.c (mtperf_report_intervals): Print the version
 	number.
 
 2011-04-13  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
 	Fix a SEP bug.
-	
+
 	* lib/src/mtsep.c (do_sep_alloc): Properly handle the case where
 	`ncores' was set to 0.
 
@@ -3006,10 +3013,10 @@
 	Prevent some spurious warnings.
 
 	* tools/include/svp/compiler.h: Also define `unused'.
-	
+
 	* lib/mtalpha-sim/include/time.h,
 	* lib/include/svp/perf.h,
-	* lib/include/svp/mtmalloc.h: 
+	* lib/include/svp/mtmalloc.h:
 	* tools/include/svp/delegate.h: Use it.
 
 2011-04-13  Raphael 'kena' Poss  <r.c.poss@uva.nl>
@@ -3028,7 +3035,7 @@
 
 	* tools/lib/slc/mt/mtalpha/asmproc/opt.py (addswchll): Recognize
 	the new `allocate' format.
-	
+
 2011-04-07  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
 	Warn when compiler options are not used.
@@ -3036,7 +3043,7 @@
 	* tools/lib/slc/front/opts.py (check_unused): New.
 
 	* tools/lib/slc/front/main.py,
-	* tools/lib/slc/mt/common/asmproc/enhance.py,	
+	* tools/lib/slc/mt/common/asmproc/enhance.py,
 	* tools/lib/slc/mt/common/asmproc/fixup.py: Check for unused
 	options at the end of processing.
 
@@ -3082,9 +3089,9 @@
 	options to each visitor.
 
 	* tools/lib/slc/mt/common/asmproc/enhance.py (filter),
-	* tools/lib/slc/mt/common/asmproc/fixup.py (filter),	
+	* tools/lib/slc/mt/common/asmproc/fixup.py (filter),
 	* tools/lib/slc/mt/common/asmproc/stageopts.py (makestageopts),
-	* tools/lib/slc/mt/mtalpha/asmproc/opt.py (addswchll),	
+	* tools/lib/slc/mt/mtalpha/asmproc/opt.py (addswchll),
 	* tools/lib/slc/mt/mtsparc/asmproc/base.py (initsp): Use the new
 	extra options interface.
 
@@ -3097,7 +3104,7 @@
 2011-04-06  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
 	Implement MT allocation strategies.
-	
+
 	* tools/lib/t-spr/slimpl.m4: New create specifier
 	`sl__strategy(xxx)'. This replaces the embryonic `sl__allcores'
 	which meant `sl__strategy(exact)'.
@@ -3109,7 +3116,7 @@
 	* tools/lib/slc/mt/front/chains.py,
 	* tools/lib/slc/mt/mtalpha/gencreate.py,
 	* tools/lib/slc/mt/mtsparc/gencreate.py: Use it.
-		
+
 	* tools/lib/Makefile.am (nobase_python_PYTHON): List the new file.
 
 2011-04-06  Raphael 'kena' Poss  <r.c.poss@uva.nl>
@@ -3120,7 +3127,7 @@
 	place `15' (0xf) used by `dlmalloc' was changed from "core 0,
 	suspending" to "core 7, size 1". However core 7 is not isolated
 	from programs. This was reported by Q Yang.
-	
+
 	* lib/include/svp/mtmalloc.h (malloc_place): Change back to target
 	core 0.
 
@@ -3152,13 +3159,13 @@
 	* lib/src/tlsmalloc/tls_arch_mtsparc.h: Rename to...
 	* lib/src/tlsmalloc/tls_arch_mtsparc_sim.h: ...this.
 	* lib/src/tlsmalloc/tls_arch_mtsparc_fpga.h: New. (broken for now)
-	
+
 	* lib/src/tlsmalloc/Makefile.am: Update the file list.
 
 	* lib/include/svp/mtmalloc.h: Disable the exclusive delegations
 	for now, since exclusive creates are not yet supported on FPGA.
 
-	* lib/include/svp/perf.h,	
+	* lib/include/svp/perf.h,
 	* lib/src/perf.c: Support the uT-LEON3 performance counters.
 
 	* lib/src/time.c: Stub implementation for the FPGA environment.
@@ -3171,9 +3178,9 @@
 	* lib/Makefile.am: List the new file.
 
 	* lib/mtalpha.mk: Separate the MGSim-specific sources into a
-	distinct list.	
+	distinct list.
 	* lib/mtsparc.mk: Use it.
-	
+
 	* lib/mtsparc2.mk: New.
 	* lib/Makefile.am: Include the new file.
 
@@ -3203,10 +3210,10 @@
 	Recognize a new command-line argument `-x'. Store the names
 	provided in an `extras' array.
 
-	* tools/lib/slc/mt/common/asmproc/fixup.py (filter),	
+	* tools/lib/slc/mt/common/asmproc/fixup.py (filter),
 	* tools/lib/slc/mt/common/asmproc/enhance.py (filter): provide the
 	extra options to the individual stages.
-	
+
 	* tools/bin/slc.in: New command-line arguments `-fasmfix-arg-XXX'
 	and `-fasmopt-arg-XXX'. This provides `-x XXX' to the underlying
 	filter.
@@ -3215,7 +3222,7 @@
 
 	Fixes to codegen for MT-Sparc.
 
-	For uT-LEON3 the allocation failure is -1, not 0. Test that. 
+	For uT-LEON3 the allocation failure is -1, not 0. Test that.
 
 	As of this writing the index limit on uT-LEON3 is inclusive, so
 	add -1 to the value provided in SL code. This breaks the
@@ -3246,14 +3253,14 @@
 	* tools/lib/slc/mt/common/swch.py,
 	* tools/lib/slc/mt/common/end.py: ... here.
 
-	* tools/lib/slc/mt/mtsparc/asmproc/opt.py: Use them. 
+	* tools/lib/slc/mt/mtsparc/asmproc/opt.py: Use them.
 
 	* tools/lib/Makefile.am (nobase_python_PYTHON): List the new files.
-	
+
 2011-03-30  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
 	Small codegen optimization for MT-Sparc
-	
+
 	* tools/lib/slc/mt/mtsparc/asmproc/base.py (replsave): skip the
 	`save' instruction in thread functions when it was spuriously
 	generated because of some shared/global parameter being used.
@@ -3274,7 +3281,7 @@
 	`get_core_id', `get_local_place'. Use them to define `PLACE_LOCAL'
 	and `PLACE_DEFAULT'.
 
-	* tools/lib/mtplaces.c,	
+	* tools/lib/mtplaces.c,
 	* tools/lib/dummyplaces.c: New. This implements the primitives
 	when inline assembly from `delegate.h' is not desired.
 
@@ -3283,7 +3290,7 @@
 	* tools/lib/mtsparc.mk,
 	* tools/lib/ptl.ml,
 	* tools/lib/seqc.ml: Compile and link them.
-	
+
 2011-03-28  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
 	Document changes for 3.5b.
@@ -3317,13 +3324,13 @@
 	* tools/lib/mt-profiles/mlcoma256_4chan,
 	* tools/lib/mt-profiles/rbm1,
 	* tools/lib/mt-profiles/rbm128,
-	* tools/lib/mt-profiles/rbm16,	
+	* tools/lib/mt-profiles/rbm16,
 	* tools/lib/mt-profiles/rbm256: Use a single core count since the
 	SEP can now carve new places itself.
-	
+
 	* tools/lib/mt-profiles/ml-npcrypt-p1,
 	* tools/lib/mt-profiles/ml-npcrypt-p2,
-	* tools/lib/mt-profiles/ml-npcrypt-p4,	
+	* tools/lib/mt-profiles/ml-npcrypt-p4,
 	* tools/lib/mt-profiles/ml-npcrypt-p8: Delete, since these are
 	meaningless with the new place handling.
 
@@ -3344,13 +3351,13 @@
 	* tools/lib/slc/lower/split.py: Avoid dual behavior when
 	`forcewait' is set.
 
-	* tools/lib/slc/mt/mtalpha/gencreate.py,	
+	* tools/lib/slc/mt/mtalpha/gencreate.py,
 	* tools/lib/slc/mt/mtsparc/gencreate.py: Generate different
 	`allocate' instructions depending on which attributes are set.
 
 	* tools/lib/t-sppalpha/include/sl_support.h: Use `allocate/s'
 	always.
-	
+
 2011-03-28  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
 	Add some create attributes to the language.
@@ -3369,7 +3376,7 @@
 2011-03-28  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
 	Update the documentation.
-	
+
 	* doc/NEWS.txt: Update for version 3.4.
 
 2011-03-27  Raphael 'kena' Poss  <r.c.poss@uva.nl>
@@ -3428,7 +3435,7 @@
 
 	* lib/src/mtinit.c: Use the new SEP interface.
 
-	* tools/lib/mtalpha-sim/slrt.s,		
+	* tools/lib/mtalpha-sim/slrt.s,
 	* tools/lib/mtsparc-fpga/slrt.s: Do not declare
 	`__main_placeinfo', as this is not needed any more.
 
@@ -3454,11 +3461,11 @@
 	a file (`build-aux/package-version') to work around issues with
 	broken VCS installs. Now that the source is hosted with git proper
 	git tags can be used instead.
-	
+
 	* build-aux/version-gen: Rename to...
 	* build-aux/version-gen.old: ...this.
 	* build-aux/package-version: Remove.
-	
+
 	* build-aux/git-version-gen: New (import from gnulib).
 
 	* build-aux/version.mk,
@@ -3493,9 +3500,9 @@
 	PrintVisitor).
 
 	* tools/lib/slc/lower/lowerspawnsync.py,
-	* tools/lib/slc/lower/spawndecl.py: New. 
+	* tools/lib/slc/lower/spawndecl.py: New.
 
-	* tools/lib/slc/mt/mtalpha/genssync.py,	
+	* tools/lib/slc/mt/mtalpha/genssync.py,
 	* tools/lib/slc/mt/mtalpha/gencreate.py: Compile them to
 	MT-Alpha. `sl_spawn' is equivalent to `sl_create();sl_detach()'
 	without code in between, and without the actual
@@ -3522,13 +3529,13 @@
 
 	* lib/src/mtconf.h,
 	* lib/src/mtconf.c: Save the master frequency.
-	
+
 2011-03-25  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
 	Reduce compiler warnings about unused variables.
-	
+
 	* tools/lib/slc/ast.py (CVarDecl.__init__),
-	* tools/lib/slc/visitors.py (PrintVisitor.visit_cvardecl),	
+	* tools/lib/slc/visitors.py (PrintVisitor.visit_cvardecl),
 	* tools/lib/slc/lower/lowcvars.py (ReduceCVars.visit_cvardecl):
 	New attribute `attrs' on C variable declarations. Generate
 	`__attribute__' when it is specified.
@@ -3536,7 +3543,7 @@
 	* tools/lib/slc/lower/lowercreate.py (Create_2_LowCreate.visit_create):
 	Use it for the variable holding the family exit code.
 
-	* tools/lib/slc/mt/common/gentfun.py (TFun_2_MTFun.visit_fundef), 
+	* tools/lib/slc/mt/common/gentfun.py (TFun_2_MTFun.visit_fundef),
 	* tools/lib/slc/lower/seq.py (TFun_2_CFun.visit_fundecl): Use
 	`__attribute__((unused))' for the index declaration.
 
@@ -3578,7 +3585,7 @@
 	* tools/lib/seqc.mk (seq_naked-host-host-seqc/%.o): Create
 	directories with the correct name.
 
-	* lib/src/empty.c: New. This is needed for the MT-Sparc library.	
+	* lib/src/empty.c: New. This is needed for the MT-Sparc library.
 	* lib/Makefile.am (EXTRA_DIST): List the new file.
 
 	* lib/mtsparc-fpga,
@@ -3594,7 +3601,7 @@
 
 	* lib/src/tlsmalloc/tls_arch_mtsparc.h: New.
 	* lib/src/tlsmalloc/Makefile.am: List the new file.
-	
+
 	* lib/mtsparc.mk: New. Use the common definitions from
 	`mtalpha.mk'.
 
@@ -3616,14 +3623,14 @@
 	* lib/src/malloc_excl.c: Implement the wrappers.
 
 	* lib/mtalpha.mk: List and compile them.
-	
+
 2011-03-17  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
 	Make the standard C headers more compatible with MT-Sparc.
 
 	* lib/mtalpha-sim/include/limits.h,
 	* lib/mtalpha-sim/include/stddef.h,
-	* lib/mtalpha-sim/include/stdint.h: Also recognize `__mtsparc__'. 
+	* lib/mtalpha-sim/include/stdint.h: Also recognize `__mtsparc__'.
 
 	* lib/mtalpha-sim/include/sys/types.h: Define `ssize_t' always.
 
@@ -3643,7 +3650,7 @@
 
 	Improve the legacy SL text output interface.
 
-	* lib/include/svp/io.h,	
+	* lib/include/svp/io.h,
 	* lib/src/io.c: Use `long' as the wide type for integer
 	output. This allows the code to be used with the 32-bit MT-Sparc.
 
@@ -3661,7 +3668,7 @@
 
 	Generate run scripts for both the FPGA and MGSim targets.
 
-	* tools/lib/Makefile.am: Generate `r-mtsparc-sim.sh' and `r-mtsparc-fpga.sh'. 
+	* tools/lib/Makefile.am: Generate `r-mtsparc-sim.sh' and `r-mtsparc-fpga.sh'.
 
 2011-03-17  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
@@ -3683,11 +3690,11 @@
 	* tools/bin/cce.in: Define `__slc_soft_float__' when compiling for
 	MT-Sparc.
 
-	* tools/include/svp/mgsim.h: Use it to define `mgsim_outfloat'.	
+	* tools/include/svp/mgsim.h: Use it to define `mgsim_outfloat'.
 
 	* tools/lib/t-spr/include/sl_support.h: Alias
 	`sl_(sh|gl)f(parm|arg)' to the matching non-f variant.
-	
+
 2011-03-17  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
 	Enhance the MT-Sparc assembly fixups.
@@ -3736,7 +3743,7 @@
 	* tools/lib/slc/visitors.py (PrintVisitor.visit_create): Spell
 	`detach' not `release'.
 
-	* tools/lib/slc/mt/common/asmproc/fixup.py: Import `sys'.	
+	* tools/lib/slc/mt/common/asmproc/fixup.py: Import `sys'.
 
 2011-03-13  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
@@ -3751,12 +3758,12 @@
 
 	* tools/lib/slc/front/chains.py: Recognize the new chains, using
 	appropriate variants of Create_2_MTSCreate.
-	
+
 
 2011-03-13  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
 	Initialize the MT-Sparc assembly optimization stage.
-	
+
 	* tools/lib/slc/mt/mtsparc/asmproc/opt.py (filter): Use the common
 	enhance code.
 
@@ -3769,15 +3776,15 @@
 	* tools/lib/slc/mt/common/asmproc/enhance.py: ...here.
 
 	* tools/lib/Makefile.am: List the new file.
-	
+
 2011-03-13  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
 	Factor option handling for MT assembly fixups.
 
-	* tools/lib/slc/mt/mtalpha/asmproc/opt.py (filter),	
+	* tools/lib/slc/mt/mtalpha/asmproc/opt.py (filter),
 	* tools/lib/slc/mt/common/asmproc/fixup.py: Factor option handling
 	into...
-	
+
 	* tools/lib/slc/mt/common/asmproc/stageopts.py: ...here.
 
 	* tools/lib/Makefile.am: List the new file.
@@ -3785,7 +3792,7 @@
 2011-03-13  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
 	Fix the register canonicalization code.
-	
+
 	* tools/lib/slc/mt/common/regmagic.py (RegMagic.makelegcanonrepl):
 	Use `f' in target register name for FP registers.
 
@@ -3802,7 +3809,7 @@
 	Factor common assembly fixup code (mt.base, mt.opt).
 
 	* tools/lib/slc/mt/mtalpha/asmproc/opt.py (findlabels,
-	killunusedlabels): Extract label detection and removal to...	
+	killunusedlabels): Extract label detection and removal to...
 	* tools/lib/slc/mt/common/asmproc/labels.py: ...here.
 
 	* tools/lib/slc/mt/mtalpha/asmproc/base.py (markused): Move
@@ -3815,7 +3822,7 @@
 
 	* tools/lib/Makefile.am (nobase_python_PYTHON): List the new
 	files.
-	
+
 2011-01-19  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
 	Attempt to fix the visibility of functions in objects (MT-Alpha).
@@ -3826,7 +3833,7 @@
 2011-01-19  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
 	Minor optimization in `spr'.
-	
+
 	* tools/lib/slc/mt/mtalpha/asmproc/base.py (xsplit): Precompute
 	the label names.
 
@@ -3843,14 +3850,14 @@
 	* tools/lib/slc/mt/mtalpha/asmproc/base.py,
 	* tools/lib/slc/mt/mtsparc/asmproc/base.py: Use them.
 
-	* tools/lib/slc/mt/mtsparc/regdefs.py,	
+	* tools/lib/slc/mt/mtsparc/regdefs.py,
 	* tools/lib/slc/mt/mtalpha/regdefs.py (mt_local_offset): New
 	attribute to indicate where the MT locals start wrt the
 	architectural register window.
 
 	* tools/lib/slc/mt/common/regmagic.py (makerepl, makecrepl): Use
 	it.
-	
+
 	* tools/lib/slc/mt/common/asmproc/canon.py: New pass to transform
 	regiser aliases to canonical form.
 
@@ -3867,7 +3874,7 @@
 	* tools/lib/slc/mt/mtalpha/asmproc/base.py,
 	* tools/lib/slc/mt/mtsparc/asmproc/common.py,
 	* tools/lib/slc/mt/mtsparc/asmproc/base.py: Use it.
-	
+
 	* tools/lib/slc/mt/common/regmagic.py (makelegre,
 	makelegcanonrepl): Support it.
 
@@ -3878,10 +3885,10 @@
 
 	* tools/lib/slc/mt/mtsparc/amsproc/base.py (zerog0): New pass to
 	rename `$l31'/`$31' to `g0'. Use it.
-	
+
 	* tools/lib/Makefile.am (nobase_python_PYTHON): List the new
 	files.
-	
+
 2011-01-16  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
 	New register use convention for MT-Sparc.
@@ -3893,7 +3900,7 @@
 2011-01-15  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
 	Extend the fixup code for MT-Sparc assembly.
-	
+
 	* tools/lib/slc/mt/mtsparc/asmproc/base.py (grouper): New function
 	grouper code, similar to the code for MT-Alpha.
 
@@ -3906,7 +3913,7 @@
 	Factor common assembly fixup code (mt.base).
 
 	* tools/lib/slc/mt/mtalpha/asmproc/base.py (filter): Move common
-	code to...	
+	code to...
 	* tools/lib/slc/mt/common/asmproc/fixup.py: ... here.
 
 	* tools/lib/Makefile.am (nobase_python_PYTHON): List the new file.
@@ -3929,7 +3936,7 @@
 	* tools/lib/slc/mt/common/asmproc/__init__.py: New.
 
 	* tools/lib/slc/mt/mtalpha/asmproc/common.py: Extract shared
-	implementation to...	
+	implementation to...
 	* tools/lib/slc/mt/common/asmproc/input.py,
 	* tools/lib/slc/mt/common/asmproc/output.py,
 	* tools/lib/slc/mt/common/asmproc/filter.py: ... here.
@@ -3987,12 +3994,12 @@
 
 	Support non-numeric register naming in `spr'.
 
-	* tools/lib/slc/mt/mtalpha/regdefs.py, 
+	* tools/lib/slc/mt/mtalpha/regdefs.py,
 	* tools/lib/slc/mt/mtalpha/regdefs.py: New attribute
 	`canon_is_numeric'.
 
 	* tools/lib/slc/mt/common/regmagic.py: New method `makecanon' to
-	find the canonical legacy register name by numeric offset.	
+	find the canonical legacy register name by numeric offset.
 	* tools/lib/slc/mt/common/regmagic.py (get_legacy,
 	vreg_to_legacy): Use it.
 
@@ -4025,7 +4032,7 @@
 
 	Support architecture-specific assembly comment syntax.
 
-	* tools/lib/slc/mt/mtalpha/regdefs.py,	
+	* tools/lib/slc/mt/mtalpha/regdefs.py,
 	* tools/lib/slc/mt/mtsparc/regdefs.py: New attribute `comprefix'.
 
 	* tools/lib/slc/mt/common/regmagic.py: Cache it.
@@ -4040,11 +4047,11 @@
 	None.
 
 	* tools/lib/slc/visitors.py (PrintVisitor.visit_cvardecl): Print
-	it.	
+	it.
 	* tools/lib/slc/lower/lowcvars.py (ReduceCVars.visit_cvardecl):
 	Lower it.
 
-	
+
 2010-12-28  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
 	Fix factoring of register magic in `spr'.
@@ -4093,7 +4100,7 @@
 
 	* tools/lib/slc/mt/mtsparc/__init__.py,
 	* tools/lib/slc/mt/mtsparc/asmproc/__init__.py: New.
-	
+
 	* tools/lib/slc/mt/mtalpha/compile.py: Copy to...
 	* tools/lib/slc/mt/mtsparc/compile.py: ...here.
 
@@ -4102,22 +4109,22 @@
 	parameters. Preserve semantics for all other registers.
 
 	* tools/lib/slc/mt/mtsparc/visitors.py,
-	* tools/lib/slc/mt/mtsparc/asmproc/base.py,	
+	* tools/lib/slc/mt/mtsparc/asmproc/base.py,
 	* tools/lib/slc/mt/mtsparc/asmproc/opt.py: New (placeholders for
 	now).
 
 	* tools/lib/slc/front/chains.py: New chains `mts' and `mts+seq'.
-	
+
 	* tools/lib/Makefile.am (nobase_python_PYTHON): List the new
 	files.
 
 2010-12-28  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
 	Make `spp' sensitive to the target architecture.
-	
+
 	* tools/lib/t-sppalpha/slimpl.m4,
 	* tools/bin/cce.in: Provide the architecture tag to `spp'.
-	
+
 	* tools/bin/spp: Select implementation based on architecture name.
 
 
@@ -4126,7 +4133,7 @@
 	Split MT-Alpha code into common and architecture-specific sources.
 
 	* tools/lib/slc/mt/__init__.py: New.
-	
+
 	* tools/lib/slc/mtalpha/__init__.py,
 	* tools/lib/slc/mtalpha/regmagic.py,
 	* tools/lib/slc/mtalpha/compile.py,
@@ -4147,7 +4154,7 @@
 
 	* tools/lib/slc/front/chains.py,
 	* tools/lib/slc/mt/mtalpha/asmproc/base.py,
-	* tools/lib/slc/mt/mtalpha/asmproc/common.py,	
+	* tools/lib/slc/mt/mtalpha/asmproc/common.py,
 	* tools/lib/slc/mt/mtalpha/asmproc/opt.py: Adjust import paths
 	accordingly.
 
@@ -4172,8 +4179,8 @@
 2010-12-28  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
 	Fix detection of `mts' in `cce'.
-	
-	* tools/bin/cce.in: Match `mts_hybrid'. 
+
+	* tools/bin/cce.in: Match `mts_hybrid'.
 
 2010-12-01  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
@@ -4215,7 +4222,7 @@
 2011-03-09  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
 	Fix visibility of inline functions.
-	
+
 	* tools/include/svp/compiler.h (alwaysinline): Use `static'.
 
 2011-03-09  Raphael 'kena' Poss  <r.c.poss@uva.nl>
@@ -4229,10 +4236,10 @@
 2011-03-09  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
 	Clean up more headers.
-	
+
 	* lib/mtalpha-sim/include/stdarg.h: Test for GNU C properly. Also
 	support CoSy varargs.
-	
+
 	* lib/mtalpha-sim/include/stdio.h: Check printf-like formats only
 	with GNU C. Only define `v' variants (using `va_list') if
 	`stdarg.h' defines `__va_list_available'.
@@ -4253,19 +4260,19 @@
 
 	* lib/src/tlsmalloc/tlsmalloc.c (get_new_superblock): Properly
 	type the argument to `MAP_STORAGE'.
-	
-	* lib/mtalpha-sim/include/time.h: Test for GNU C properly.	
+
+	* lib/mtalpha-sim/include/time.h: Test for GNU C properly.
 	* lib/src/time.c: Include `time.h' to get a proper declaration of
 	`clock_t' since `perf.h' does not include `time.h' any more.
 
 	* tools/include/svp/compiler.h: Test for GNU C properly.
-	
+
 	* tools/include/svp/fibre.h: Conditionalize the definition of
 	inlinable primitives.
 
 	* lib/src/_hdtoa.c: Include `stdint.h', since it is not indirectly
 	included any more.
-	
+
 2011-03-09  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
 	Implement counter sampling as C functions.
@@ -4289,7 +4296,7 @@
 
 	* tools/include/svp/mgsim.h: Also declare C function prototypes
 	for MG output primitives alongside the inlinable macros.
-	
+
 	* tools/lib/mgsim.c: Implement them.
 
 	* tools/lib/mtalpha.mk: Compile them.
@@ -4302,7 +4309,7 @@
 
 	* tools/include/svp/fibre.h: Also declare C function prototypes
 	for Fibre input primitives alongside the inlinable macros.
-	
+
 	* tools/lib/fibre.c: Implement them.
 
 	* tools/lib/seqc.mk,
@@ -4319,12 +4326,12 @@
 	binary for both COMA memory simulations. This drops the need for
 	separate support for `simx-alpha'.
 
-	* build-aux/mgsim.m4: Do not detect the separate executable.	
+	* build-aux/mgsim.m4: Do not detect the separate executable.
 	* build-aux/slctests.m4: Do not require the separate executable
 	for ENABLE_CHECK_COMA_ZL.
 
 	* tools/lib/Makefile.am: Do not substitute the separate program.
-	
+
 	* tools/lib/r-mt-sim.sh.in: Simplify.
 
 	* tools/lib/mt-profiles/lzcoma128_1chan,
@@ -4341,7 +4348,7 @@
 	* tools/lib/mt-profiles/rbm128,
 	* tools/lib/mt-profiles/rbm16,
 	* tools/lib/mt-profiles/rbm256: Update accordingly.
-	
+
 2011-03-07  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
 	Minor enhancement to `slr'.
@@ -4351,7 +4358,7 @@
 	be passed to `run.sh' to be appended on the command line. To be
 	used e.g. with `run.sh -i' to trigger interactive mode with MGSim.
 
-	* tools/lib/r-host.sh.in,	
+	* tools/lib/r-host.sh.in,
 	* tools/lib/r-mt-sim.sh: Append the command-line arguments given
 	to `run.sh' to the command.
 
@@ -4371,7 +4378,7 @@
 2011-02-23  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
 	Minor fix to build rules.
-	
+
 	* tools/lib/mtalpha.mk: Rename `SLC_CMD' to `SLC_MTA_N'.
 
 2011-02-23  Raphael 'kena' Poss  <r.c.poss@uva.nl>
@@ -4385,9 +4392,9 @@
 	* lib/mtalpha-sim/include/stdio.h,
 	* lib/mtalpha-sim/include/stdlib.h,
 	* lib/mtalpha-sim/include/string.h,
-	* lib/mtalpha-sim/include/strings.h,	
+	* lib/mtalpha-sim/include/strings.h,
 	* lib/mtalpha-sim/include/time.h: Remove `#warning'.
-	
+
 2011-02-21  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
 	Fix deadlock bug on MT-Alpha.
@@ -4407,8 +4414,8 @@
 
 	* tools/lib/t-spr/slimpl.m4,
 	* tools/lib/slc/lower/split.py: Recognize the new attribute.
-	
-	* tools/include/slc.m4,	
+
+	* tools/include/slc.m4,
 	* tools/lib/t-spr/include/sl_support.h: Make `sl_proccall' use it.
 
 	Ensure that `sl_proccall' always runs in the local context.
@@ -4417,8 +4424,8 @@
 
 	More debugging for DLMalloc.
 
-	* lib/mtalpha.mk: 
-	(mta_malloc_debug.o): Enable footers. 
+	* lib/mtalpha.mk:
+	(mta_malloc_debug.o): Enable footers.
 
 	* lib/src/malloc.c: Implement custom error actions with messages.
 
@@ -4439,7 +4446,7 @@
 
 	* lib/mtalpha-sim/include/sys/types.h,
 	* lib/mtalpha-sim/include/time.h: Declare C's time().
-	
+
 	* lib/mtalpha.mk (MTALIB_CSRC): List the new file.
 
 2010-12-19  Raphael 'kena' Poss  <r.c.poss@uva.nl>
@@ -4567,7 +4574,7 @@
 2010-11-11  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
 	Minor packaging fix.
-	
+
 	* tools/lib/Makefile.am (nobase_dist_pkgdata_DATA): Also
 	distribute and install the new profiles.
 
@@ -4622,7 +4629,7 @@
 2010-08-27  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
 	Fix `break' support for target `mta_on', fake for `ptl'.
-	
+
 	* tools/lib/t-ptl/slimpl.m4: Fake availability of `break'
 	(although it still hasn't the right semantics).
 
@@ -4675,7 +4682,7 @@
 	* tools/lib/mt-profiles/coma256,
 	* tools/lib/mt-profiles/simple,
 	* tools/lib/mt-profiles/rbm4: Remove unused profiles.
-	
+
 	* tools/lib/mt-profiles/rbm8: Replace by...
 	* tools/lib/mt-profiles/rbm16: ...this.
 
@@ -4692,7 +4699,7 @@
 	* tools/lib/mt-profiles/default: Use `coma128' as default profile.
 
 	* tools/lib/Makefile.am: Update accordingly.
-	
+
 2010-08-04  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
 	Minor MT-Alpha library fixes.
@@ -4832,7 +4839,7 @@
 
 	Allow the `utc0' target to run again.
 
-	* tools/bin/spp (main): Allow module `utc0'. 
+	* tools/bin/spp (main): Allow module `utc0'.
 
 2010-07-02  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
@@ -4908,7 +4915,7 @@
 
 2010-06-26  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
-	Enhance portability. 
+	Enhance portability.
 
 	* tools/lib/load.c: Do not try to use `argv' from the environment,
 	since this is non-portable.
@@ -4941,7 +4948,7 @@
 2010-06-22  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
 	Minor fix.
-	
+
 	* lib/src/tlstack_malloc.c: Fix typo in comment.
 
 2010-06-22  Raphael 'kena' Poss  <r.c.poss@uva.nl>
@@ -5004,7 +5011,7 @@
 
 	* lib/include/svp/sep.h: Define new policies for exclusive places
 	and sharing.
-	
+
 	* lib/src/mtsep.c: Support allocation of exclusive and shared
 	places. Generate separate place identifiers for both. Properly
 	indicate that the root place is shared.
@@ -5013,7 +5020,7 @@
 
 	Whitespace.
 
-	* lib/src/mtsep.c: Re-indent. 
+	* lib/src/mtsep.c: Re-indent.
 
 2010-06-14  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
@@ -5030,7 +5037,7 @@
 2010-06-14  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
 	Packaging fixes.
-	
+
 	* lib/Makefile.am (nobase_dist_pkgdata_DATA): Remove duplicate.
 	* lib/src/tlsmalloc/Makefile.am: List `tls_arch_pthreads.h' and
 	`tlsconfig.h'.
@@ -5039,7 +5046,7 @@
 2010-06-14  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
 	Fix library build.
-	
+
 	* lib/src/getenv.c,
 	* lib/src/gdtoa/gdtoaimpl.h: Use `malloc' and `free' instead of
 	`fast_malloc' and `fast_free'.
@@ -5069,7 +5076,7 @@
 	Make the TLS memory allocator the default allocator on MT-Alpha.
 
 	* lib/src/malloc_wrappers.c: Remove.
-	
+
 	* lib/mtalpha.mk: Do not build the dlmalloc wrappers any
 	more. Compile `tlsmalloc' and rename the services to their
 	standard C names.
@@ -5089,7 +5096,7 @@
 	(permissions are not checked for the first word of TLS, so it can
 	be read to 0 without error). Also, map and count the control block
 	itself. Rename the `mallinfo' services to `stats', since
-	`mallinfo' has special semantics not supported yet. 
+	`mallinfo' has special semantics not supported yet.
 
 	* lib/src/tlsmalloc/tlsmalloc.h,
 	* lib/src/tlsmalloc/tlsmalloc.c: Fix interface of `calloc'.
@@ -5111,7 +5118,7 @@
 	* tools/include/svp/abort.h,
 	* tools/include/svp/testoutput.h,
 	* lib/include/svp/gfx.h: Use it.
-	
+
 	* lib/src/exit.c: New.
 	* lib/mtalpha.mk: List the new file.
 	* lib/mtalpha-sim/include/stdlib.h: Declare `exit' and `_Exit'.
@@ -5193,7 +5200,7 @@
 
 	* lib/Makefile.am,
 	* lib/mtalpha.mk: Update file lists accordingly.
-	
+
 	* lib/src/malloc.c: Use the standard header names.
 	* lib/src/mtalpha.mk: Relax defines for `malloc'.
 
@@ -5271,14 +5278,14 @@
 
 	* configure.ac: Disable `ptl' target if POSIX threads are not
 	detected.
-	
+
 	* tools/bin/cce.in: Use `PTHREAD_CFLAGS' and `PTHREAD_LIBS' when
 	compiling for target `ptl'. Define `_GLIBCXX_USE_C99_MATH' always
 	for `ptl'.
 
 	* tools/lib/ptl.mk (ptl_host_host_ptl_libslc_a_CXXFLAGS): Use
 	`PTHREAD_CFLAGS.'
-	
+
 	* lib/ptl.mk (SLC_PTL): Use `AM_CXXFLAGS' too.
 
 2010-06-13  Raphael 'kena' Poss  <r.c.poss@uva.nl>
@@ -5460,7 +5467,7 @@
 	`sys_set_main_pid' into a plain function.
 
 2010-05-31  Raphael 'kena' Poss  <r.c.poss@uva.nl>
-	
+
 	* doc/NEWS.txt: Initialize for 3.x.
 
 2010-05-31  Raphael 'kena' Poss  <r.c.poss@uva.nl>
@@ -5479,7 +5486,7 @@
 	* tools/lib/ptl.mk,
 	* tools/lib/seqc.mk: Use `-nostdlib' to appease `cce' while `slrt'
 	is being built.
-	
+
 	* tools/lib/Makefile.am (nodist_nobase_python_PYTHON): Do not
 	distribute `slc_config.py', since it must be regenerated for every
 	installation.
@@ -5487,7 +5494,7 @@
 2010-05-31  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
 	Minor packaging fixes.
-	
+
 	* tools/lib/mtalpha.mk: Drop references to `libmain_seq.a' which
 	does not exist any more.
 	* tools/lib/ptl.mk: Also clean up `main.o'.
@@ -5545,7 +5552,7 @@
 
 	* tools/lib/slc/lower/seq.py: Fix flattening of argument types for
 	`create'.
-	
+
 	* tools/lib/slc/lower/split.py: Handle flattening of naked
 	`create' constructs to a function named by identifier. Remove
 	special behavior for `t_main', since it confuses things. Expose
@@ -5980,7 +5987,7 @@
 
 2010-05-24  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
-	Reduce dependency on hand-coded assembly. 
+	Reduce dependency on hand-coded assembly.
 
 	* lib/src/bzero.c,
 	* lib/src/bcopy.c,
@@ -6004,7 +6011,7 @@
 	Improve support for `slc -P'.
 
 	* tools/bin/slc.in: Propagate `-P' where needed.
-	
+
 	* tools/lib/slc/visitors.py (flatten): Omit linemarkers if `-P' is
 	specified.
 
@@ -6020,7 +6027,7 @@
 
 	Minor cleanups.
 
-	* tools/bin/slt.in: Also replace `+' by `_' when generating test 
+	* tools/bin/slt.in: Also replace `+' by `_' when generating test
 	output directory names.
 
 	* tools/include/slc.m4: Remove support for `sl_begin_header' and
@@ -6037,7 +6044,7 @@
 	* tools/bin/slc.in: Remove `-fwesley', obsolete since the `ppp'
 	target disappeared. New `-fdump-spr-XXX' argument. Remove references
 	to `-fcm4' in the documentation, since they are not really usable and
-	will disappear soon.	
+	will disappear soon.
 
 2010-05-21  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
@@ -6139,7 +6146,7 @@
 	* tools/bin/cce.in: ...here. Generalize translation stage via
 	new variable `$slc_translator'. Allow `spr' to replace `cm4'.
 	* tools/bin/slc.in: Simplify accordingly.
-	
+
 	* tools/bin/slc.in: Propagate `-P' to underlying tools instead of
 	translating. Move setting of `-E' to...
 	* tools/lib/slc/input/cm4.py: ...here.
@@ -6202,7 +6209,7 @@
 
 	Minor API improvement.
 
-	* tools/lib/slc/msg.py: Allow to use `warn' and `log' without context. 
+	* tools/lib/slc/msg.py: Allow to use `warn' and `log' without context.
 
 2010-05-19  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
@@ -6237,7 +6244,7 @@
 	assignment of exit code.
 
 2010-05-16  Raphael 'kena' Poss  <r.c.poss@uva.nl>
-	
+
 	Move forward with the new code transformation framework.
 
 	Framework usability improvements:
@@ -6268,7 +6275,7 @@
 	* tools/lib/lower/lowccast.py,
 	* tools/lib/lower/lowclabels.py,
 	* tools/lib/lower/lowcvars.py,
-	* tools/lib/lower/remflavors.py: New stages. 
+	* tools/lib/lower/remflavors.py: New stages.
 
 	Changes:
 
@@ -6403,9 +6410,9 @@
 
 	* tools/lib/slc/lower/seq.py: Simplify by using the result of
 	create lowering.
-	
+
 	* tools/lib/Makefile.am: List the new files.
-	
+
 	* tools/bin/spr: Test the new lowering.
 
 2010-05-03  Raphael 'kena' Poss  <r.c.poss@uva.nl>
@@ -6660,7 +6667,7 @@
 2010-04-01  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
 	Implement code generation for new back-end `ppp2'.
-	
+
 	* tools/bin/cce.in: Enable `-fwesley' by default for target
 	`ppp2'.
 
@@ -6705,7 +6712,7 @@
 2010-02-27  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
 	Minor packaging fix.
-	
+
 	* tools/lib/Makefile.am (nobase_dist_pkgdata_DATA): List the new
 	profiles.
 
@@ -6990,9 +6997,9 @@
 2010-02-07  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
 	Add support for program symbol tables in MGSim.
-	
+
 	* build-aux/mgbinutils.m4: Also detect the `nm' utility.
-	* tools/lib/Makefile.am: Propagate `nm' to `r-mt-sim.sh.in'.	
+	* tools/lib/Makefile.am: Propagate `nm' to `r-mt-sim.sh.in'.
 	* tools/lib/r-mt-sim.sh.in: Generate and pass program symbol table
 	to simulator.
 
@@ -7153,7 +7160,7 @@
 2010-01-25  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
 	Extend the SL standard library.
-	
+
 	* lib/include/undocumented.h: Add more C99 declarations.
 
 	* lib/src/atoi.c,
@@ -7165,7 +7172,7 @@
 	* lib/src/strtoull.c: New.
 
 	* lib/mtalpha.mk: Update accordingly.
-	
+
 2010-01-25  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
 	Misc fixes to MT-Alpha code generation.
@@ -7194,7 +7201,7 @@
 	had become invalid at some point when support for varargs and
 	transparent function calls was implemented. A new call gate was
 	required.
-	
+
 	* tools/lib/mtalpha-sim/callgate.s: New gate
 	__sl_callgate_owntls. This is required for the manual call gate
 	implemented in the library, since CALL_WITH_INFO cannot guarantee
@@ -7203,7 +7210,7 @@
 	Also, document the gates.
 
 	* lib/include/svp/callgate.h: Use the new gate.
-	
+
 2010-01-25  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
 	Add support for environment variables inside emulation.
@@ -7299,7 +7306,7 @@
 	* tools/lib/t-utc/slimpl.m4,
 	* tools/lib/t-utc0/slimpl.m4: Use `m4_normalize' and `m4_ifblank'
 	where appropriate.
-	
+
 
 2010-01-11  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
@@ -7335,7 +7342,7 @@
 2009-12-27  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
 	Minor packaging fix.
-	
+
 	* configure.ac: use `$PWD' instead of `slc/' as name for the
 	source tree when invoking `version-gen'.
 
@@ -7345,10 +7352,10 @@
 
 	* Makefile.am: Move Automake rules to manage `.version' to...
 	* build-aux/version.mk: ...here.
-	
+
 	* build-aux/Makefile.am: Install `version-gen' and `version.mk' so
 	they can be picked up by `sl-init-autoconf'.
-	
+
 	* build-aux/sl-init-autoconf: Copy `version-gen' and `version.mk'
 	where appropriate
 
@@ -7359,9 +7366,9 @@
 2009-12-26  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
 	Release version 2.2.
-	
+
 	* build-aux/package_version: Update to 2.2.
-	
+
 	* doc/NOTES.txt: Document recent changes. Split change
 	documentation for 2.1.0a from 2.2. Cleanup text and fix typos.
 
@@ -7448,14 +7455,14 @@
 
 	* tools/bin/Makefile.am: Make scripts and man pages depend on
 	`$(top_srcdir)/.version' so they are regenerated on version bumps.
-	
+
 2009-12-26  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
 	Introduce automatic version numbering.
 
 	* build-aux/version-gen: New. Inspired from `git-version-gen', but
 	privileging SVN revision numbers over git commit hashes.
-	
+
 	* build-aux/package-version: Set to 2.1.
 
 	* configure.ac,
@@ -7464,15 +7471,15 @@
 2009-12-20  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
 	Minor packaging fixes (allow `make distcheck').
-	
+
 	* lib/mtalpha.mk (CLEANFILES): Clean all built objects.
-	
+
 	* tools/lib/Makefile.am (CLEANFILES): Clean generated scripts.
 
 2009-12-20  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
 	Minor fixes to quiet compiler warnings.
-	
+
 	* tools/lib/t-pppalpha/include/sl_support.h: Avoid multi-line
 	`//'-style comments. (reported by C. Joslin)
 
@@ -7490,12 +7497,12 @@
 
 	This is required by `make check' in the `programs' package since
 	the `mandel' benchmark requires at least two 1-core places.
-	
+
 	* tools/lib/mt-profiles/rmb8: New.
 	* tools/lib/mt-profiles/default: Alias `rmb8'.
 
 	* tools/lib/Makefile.am: Update accordingly.
-	
+
 2009-12-20  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
 	Increase portability of the run script in execution packages.
@@ -7509,14 +7516,14 @@
 2009-12-20  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
 	Minor packaging fix.
-	
+
 	* build-aux/slc.m4: Also set `TMO' to the location of the
 	`timeout' script.
 
 2009-12-17  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
 	Enhance `slr' and `cce' for more flexibility.
-	
+
 	* tools/bin/slr.in: New parameter `-b' to specify the `cce' tag to
 	use when compiling input data. Re-order stages to allow compiling
 	Fibre data without a valid program executable when `-b' is
@@ -7528,8 +7535,8 @@
 2009-12-16  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
 	Also use the new `slr -p' feature with `slt'.
-	
-	* tools/bin/slt.in: Invoke `slr' with `-p'. 
+
+	* tools/bin/slt.in: Invoke `slr' with `-p'.
 
 2009-12-16  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
@@ -7582,7 +7589,7 @@
 	assembly output. This is not valid, as it must always be preceded
 	by an instruction. Hence, remove any `swch' not preceded by an
 	instruction.
-	
+
 	* tools/bin/spp (pppalpha.filter2): New stage `rmswchbegin'.
 
 2009-12-15  Raphael 'kena' Poss  <r.c.poss@uva.nl>
@@ -7598,7 +7605,7 @@
 	before such instructions, so that other threads get a chance to
 	execute and the dependency be satisfied by the time the
 	instruction goes around the active thread queue.
-	
+
 	* tools/bin/spp (pppalpha.addswchll): Also add `swch' *before*
 	operations that use the result of a long latency operation (not
 	only after).
@@ -7606,8 +7613,8 @@
 2009-12-14  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
 	Add support for more performance metrics from simulator.
-	
-	* lib/include/svp/perf.h, 
+
+	* lib/include/svp/perf.h,
 	* lib/src/perf.c: Add support for memory counters.
 
 2009-12-09  Raphael 'kena' Poss  <r.c.poss@uva.nl>
@@ -7627,8 +7634,8 @@
 2009-12-08  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
 	Minor packaging fix.
-	
-	* tools/lib/Makefile.am: Update profile list. 
+
+	* tools/lib/Makefile.am: Update profile list.
 
 2009-12-08  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
@@ -7660,9 +7667,9 @@
 
 	Profiles are searched first in `~/.mt-profiles', then in the
 	`mt-profile' directory of the build or installation tree.
-	
+
 	* tools/bin/slr.in,
-	* tools/lib/r-mt-sim.sh.in: Allow use of simulator profiles. 
+	* tools/lib/r-mt-sim.sh.in: Allow use of simulator profiles.
 
 	* tools/lib/mt-profiles/sifir,
 	* tools/lib/mt-profiles/bir,
@@ -7678,7 +7685,7 @@
 	* tools/lib/mt-profiles/coma256: Provide some reference profiles.
 
 	* tools/lib/Makefile.am: Update accordingly.
-	
+
 2009-12-07  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
 	Fix support for large thread indices in target `seqc'.
@@ -7689,7 +7696,7 @@
 2009-12-07  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
 	Fix output primitives to support merging stderr and stdout.
-	
+
 	* tools/include/svp/testoutput.h: Flush output streams after
 	output operations. This allows for proper interleaving when stream
 	1 and 2 alias each other.
@@ -7697,7 +7704,7 @@
 2009-12-06  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
 	Minor fix in SL macro expansion.
-	
+
 	* tools/include/slc.m4: Strip whitespace to determine the break
 	type.
 
@@ -7720,15 +7727,15 @@
 2009-12-02  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
 	Minor portability fix.
-	
+
 	* tools/bin/cce.in: Place `-lslc' last on the command line to cope
 	with single-pass linkers.
 
 2009-11-24  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
 	Minor `slr' fix.
-	
-	* tools/bin/slr.in,	
+
+	* tools/bin/slr.in,
 	* tools/lib/r-mt-sim.sh.in: Talk about "graphic update delay"
 	instead of "rate", to reflect the features available in the MG
 	simulator.
@@ -7736,14 +7743,14 @@
 2009-11-19  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
 	Extend Fibre syntax recognized by `slr'.
-	
+
 	* tools/bin/sag: New syntax `vc(N)' for Fibre which expands to an
 	array of complex numbers. (Used by FFT)
 
 2009-11-19  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
 	Tweak simulation architecture defaults.
-	
+
 	* tools/lib/r-mt-sim.sh.in: Change default place layout to better
 	spread cores across memory rings when using COMA.
 
@@ -7766,31 +7773,31 @@
 2009-11-19  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
 	Fix bug in `slr'.
-	
+
 	* tools/lib/r-mt-sim.sh.in: Restore proper default setting of the
 	number of cores when not specified on the command line.
 
 2009-11-18  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
 	Tweak the output format of the reporting of performance counters.
-	
-	* lib/include/svp/perf.h,	
+
+	* lib/include/svp/perf.h,
 	* lib/src/perf.c: Change output format as per discussions with
 	Dan. Example are given in note [sl8].
 
 2009-11-18  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
 	Extend the performance counters API in the library.
-	
+
 	* lib/include/svp/perf.h,
 	* lib/src/perf.c: Add the features described in note [sl8].
 
 2009-11-17  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
 	Implement a non-documented SL extension for the SAC compiler.
-	
+
 	* tools/lib/t-seqc/slimpl.m4,
-	* tools/lib/t-pppalpha/slimpl.m4,	
+	* tools/lib/t-pppalpha/slimpl.m4,
 	* tools/lib/t-pppalpha/include/sl_support.h,
 	* tools/bin/spp: Implement a new macro `sl_glparm_mutable' which
 	aliases the global thread parameter with a local (writable) thread
@@ -7808,7 +7815,7 @@
 	SL implementation as first parameter, and then run the
 	corresponding `ar' or `ranlib' utility with the remainder of the
 	argument list.
-	
+
 	* tools/bin/cce.in: Generate definitions for `slc_ar' and
 	`slc_ranlib'.
 
@@ -7817,11 +7824,11 @@
 
 	* tools/bin/Makefile.am: Generate the new scripts `slar' and
 	`slranlib'.
-	
+
 2009-11-17  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
 	Allow to configure #caches and #directories with COMA.
-	
+
 	* tools/lib/r-mt-sim.sh.in: Set configuration when flags are
 	specified.
 
@@ -7832,16 +7839,16 @@
 	* build-aux/slctests.m4: New AM conditional `ENABLE_CHECK_COMA'.
 
 	* build-aux/slctests.mk: Use it.
-	
+
 2009-11-17  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
 	Add support for COMA in `slr'.
-	
+
 	* build-aux/mgsim.m4: Search for `simx-alpha'.
-	
+
 	* tools/bin/slr.in: Add flags for COMA memory configuration. Move
 	simulator-specific tests to...
-	
+
 	* tools/bin/r-mt-sim.sh.in: ...here. Select simulator executable
 	depending on memory configuration.
 
@@ -7850,10 +7857,10 @@
 	Share runner script code between MT-Alpha/MT-Sparc.
 
 	* tools/lib/r-mtsparc-sim.sh.in: Remove.
-	* tools/lib/r-mtalpha-sim.sh.in: Rename to...	
+	* tools/lib/r-mtalpha-sim.sh.in: Rename to...
 	* tools/lib/r-mt-sim.sh.in: ...here. Change references to `alpha'
 	to references to `@arch@'.
-	
+
 	* tools/lib/Makefile.am: Generate `r-mtalpha-sim.sh' and
 	`r-mtsparc-sim.h' from `r-mt-sim.sh.in'.
 
@@ -7863,7 +7870,7 @@
 2009-11-06  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
 	Update `utc0' code generation.
-	
+
 	* tools/lib/t-utc0/slimpl.m4: Expand to `sync()' instead of
 	`__builtin_ut_sync()' (requested by S. Polstra).
 
@@ -7871,7 +7878,7 @@
 
 	Fix minor portability issue.
 
-	* tools/lib/arggen.c: Only use threads when running MT. 
+	* tools/lib/arggen.c: Only use threads when running MT.
 
 2009-11-06  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
@@ -7879,20 +7886,20 @@
 
 	When running with `slc -g -g' the underlying compiler would be
 	confused. (reported by A. Matei)
-	
+
 	* tools/bin/cce.in: Properly split `slc_debug_flags' into an
 	array.
 
 2009-11-06  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
 	Improve `slr' to allow more debugging.
-	
+
 	* tools/bin/slr.in: New option `-gd' to debug data generation.
 
 2009-11-04  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
 	Minor improvements to data input via `slr' and `sag'.
-	
+
 	* tools/lib/arggen.c: Optimize by using a parallel loop (suggested
 	by M. Lankamp)
 
@@ -7903,7 +7910,7 @@
 
 	Simplify handling of C99's `restrict'.
 
-	* tools/include/slc.m4: Move definition of `restrict' to...	
+	* tools/include/slc.m4: Move definition of `restrict' to...
 	* tools/lib/t-ptl/include/sl_support.h: ...here.
 
 2009-11-04  Raphael 'kena' Poss  <r.c.poss@uva.nl>
@@ -7914,7 +7921,7 @@
 	infinity.
 
 	* lib/src/mtsep.c: Cast 0 properly to make a pointer.
-	
+
 2009-11-04  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
 	Do not warn about `ctime.h' when including `svp/perf.h'.
@@ -7931,20 +7938,20 @@
 
 	* tools/lib/t-utc/include/sl_support.h: Provide (empty) since it
 	is required by `-EE'.
-	
+
 	* tools/lib/t-utc/slimpl.m4: Add more whitespace to make output
 	more palatable.
 
 2009-11-04  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
 	Optimize the `seqc' target.
-	
+
 	* tools/lib/t-seqc/slimpl.m4: Use `long' for index values.
 
 2009-11-04  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
 	Optimize the `ptl' target.
-	
+
 	* tools/lib/host-host-ptl/include/create.tpl,
 	* tools/lib/host-host-ptl/include/ptl_svp.h,
 	* tools/lib/host-host-ptl/ptl_svp.cc,
@@ -7954,26 +7961,26 @@
 2009-11-03  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
 	Fix minor portability issue.
-	
+
 	* tools/include/svp/compiler.h: Rewrite definition of `use()' to
 	make it portable.
 
 2009-10-29  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
 	Cosmetic fixes for `slt'.
-	
-	* tools/bin/slt.in: Improve readability of test log. 
+
+	* tools/bin/slt.in: Improve readability of test log.
 
 2009-10-29  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
 	Cosmetic fixes for `slr'.
-	
+
 	* tools/bin/slr.in: Do not complain about `-n' being used if it
 	specifies multiple places. (requested by M. Hicks)
 
-	* tools/lib/r-mtsparc-sim.sh.in, 	
+	* tools/lib/r-mtsparc-sim.sh.in,
 	* tools/lib/r-mtsparc-sim.sh.in: Allow `SIMARGS' to override
-	`-n'. (requested by M. Hicks)	
+	`-n'. (requested by M. Hicks)
 
 2009-10-21  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
@@ -7984,14 +7991,14 @@
 	write, causing no dependent read to actually occur in the location
 	defined by the source program. Synchronization was thus not
 	achieved properly.
-	
+
 	* tools/lib/t-pppalpha/include/sl_support.h: Clobber the dependent
 	in `sl_setp', albeit at a different place than initially.
 
 2009-10-21  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
 	Slight optimization MT-Alpha code generation.
-	
+
 	* tools/bin/spp (pppalpha): Allow `end' immediately after a branch.
 
 2009-10-21  Raphael 'kena' Poss  <r.c.poss@uva.nl>
@@ -8003,7 +8010,7 @@
 	the simple `sl_setp(x, sl_getp(x) + 1)' which should instead be
 	optimized to a single instruction. This changeset reintroduces
 	this optimization opportunity.
-	
+
 	* tools/lib/t-pppalpha/include/sl_support.h: Remove superfluous
 	clobber of the incoming shared just before a write to the
 	outgoing. (but still clobber it afterwards)
@@ -8015,7 +8022,7 @@
 	Constructs of the form `sl_setp(x, (foo == 0) ? bar : 0)' would
 	cause code generation to write to a shared register twice, which
 	is incorrect. (reported by M. Lankamp)
-	
+
 	* tools/lib/t-pppalpha/include/sl_support.h: Use a temporary in
 	the expansion of `sl_setp' and `sl_seta' to prevent computations
 	and control flow between the "guard" asm statemetns.
@@ -8023,21 +8030,21 @@
 2009-10-20  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
 	Minor packaging fix.
-	
-	* lib/seqc.mk (CLEANFILES), 
+
+	* lib/seqc.mk (CLEANFILES),
 	* lib/ptl.mk (CLEANFILES): Mention `perf.o'.
 
 2009-10-16  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
 	Fix `slr' breakage.
-	
+
 	* tools/bin/sag: Fix order in which `slr' variables from program
 	are considered.
 
 2009-10-15  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
 	Fix `slr -g' with simulator.
-	
+
 	* tools/lib/r-mtalpha-sim.sh.in (DEBUGGER),
 	* tools/lib/r-mtsparc-sim.sh.in (DEBUGGER): Fix typo (do not use
 	`.gfx' by default when debugging).
@@ -8045,8 +8052,8 @@
 2009-10-15  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
 	Reflect latest binutils changes. (cont.)
-	
-	* tools/lib/mtalpha-sim/slrt.s (_start),	
+
+	* tools/lib/mtalpha-sim/slrt.s (_start),
 	* tools/lib/mtalpha-sim/callgate.s (__sl_callgate): Move
 	`.registers' to before the label.
 
@@ -8065,10 +8072,10 @@
 
 	On some systems, it is needed to link with `-lm' to get access to
 	math functions.
-	
+
 	* build-aux/slc.m4: Check whether `-lm' is needed to use math on
 	the host C/C++.
-	
+
 	* build-aux/sl.mk: Use $(LIBS) for the host system.
 
 2009-10-14  Raphael 'kena' Poss  <r.c.poss@uva.nl>
@@ -8076,33 +8083,33 @@
 	Allow multiple uses of `slr_decl' in the same translation unit.
 
 	* tools/include/svp/slr.h: Support multiple uses of `slr_decl'.
-	
+
 	* tools/bin/sag: Sort variables according to the order specified
 	in the source.
 
 2009-10-13  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
 	ABI change: special memory now at the start of the address space.
-	
+
 	* lib/include/svp/perf.h: Counters now start at address +4 from
 	the start of the address space, instead of -256 from the end.
-	
+
 	* tools/lib/t-utc0/slimpl.m4: The `setempty' instruction now
 	expands to a load from address +4 from the start of the address
 	space, instead of a load from the end of the address
 	space. Transform the flush of a shared accordingly.
-	
+
 2009-10-13  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
 	Prepare for ABI change.
-	
+
 	* tools/bin/cce.in: Change the base offset for MT linking to 16Mb,
 	to allow for some reserved memory with special behavior before.
 
 2009-10-13  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
 	Ease post-processing of the output of `slr'.
-	
+
 	* tools/bin/sag (SlrVarGenerator.dogen): Prefix `#' to warning
 	messages so they can be treated as comments in text-processing
 	tools.
@@ -8121,28 +8128,28 @@
 	could be used only in some branches in the function body). The
 	solution implemented is to conservatively initialize RA always
 	when it may be used as a temporary.
-	
+
 	* tools/bin/spp (pppalpha.makeprotectspecial): New transform.
 	(pppalpha.filter): Use it.
 
 2009-10-10  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
 	Provide support for anonymous thread arguments/parameters.
-	
+
 	* tools/include/slc.m4: Define new macro `sl_anonymous'.
-	
+
 	* tools/lib/t-ptl/slimpl.m4,
 	* tools/lib/t-seqc/slimpl.m4,
-	* tools/lib/t-utc0/slimpl.m4	
+	* tools/lib/t-utc0/slimpl.m4
 	* tools/lib/t-pppalpha/slimpl.m4: Use `sl_anonymous' when no
 	thread parameter/argument name is provided.
 
 2009-10-10  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
 	Fix some issues with whitespace handling.
-	
+
 	* tools/include/m4sugar_regexp.patch: New.
-	
+
 	* tools/Makefile.am: Patch regexps after translating the quotes in
 	m4sugar, since some regexps can contain valid single pairs of [
 	and ].
@@ -8163,19 +8170,19 @@
 2009-10-09  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
 	Increase support for C99.
-	
+
 	* tools/bin/cce.in: Use `-std=gnu99' when compiling for MT.
 
 2009-10-09  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
 	Minor fix.
-	
+
 	* build-aux/sl.mk (.c.x): Fix typo in variable expansion.
 
 2009-10-08  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
 	Enhance the build framework.
-	
+
 	* build-aux/sl.mk: Allow Makefiles to add flags to the `slc'
 	command lines.
 
@@ -8184,7 +8191,7 @@
 	Enhance the performance counters library.
 
 	* lib/include/svp/perf.h: Introduce new macro `REPORT_STREAM'.
-	
+
 	* lib/src/perf.c: Use the specified stream for output.
 
 2009-10-08  Raphael 'kena' Poss  <r.c.poss@uva.nl>
@@ -8198,14 +8205,14 @@
 2009-10-08  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
 	Enhance `slr'.
-	
+
 	* tools/bin/slr.in: Also use `SLR_RECURSIVE' when processing the
 	Fibre input.
 
 2009-10-08  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
 	Allow to use thread function pointers with muTC-ptl.
-	
+
 	* tools/lib/t-ptl/simpl.m4: Do not take the address of the thread
 	function when invoking uTC::create.
 
@@ -8216,14 +8223,14 @@
 2009-10-08  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
 	Extend the library.
-	
+
 	* tools/include/svp/compiler.h: Introduce new macro
 	`use'. (req. by M. Lankamp)
 
 2009-10-07  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
 	Optimize the root SEP allocator.
-	
+
 	* lib/src/mtsep.c: Bucket places by power of 2 sizes; remove
 	allocated places from their allocation pools during `alloc' and
 	put them back during `free'.
@@ -8231,7 +8238,7 @@
 2009-10-06  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
 	Increase C99 compatibility.
-	
+
 	* tools/bin/cce.in: Append `-std=gnu99' when compiling C
 	natively. (reported by A. Matei)
 
@@ -8242,15 +8249,15 @@
 	The following options are introduced: `-X' enable graphics, `-Xr'
 	set refresh rate, `-Xs' set scaling factors, `-Xd' set output
 	dimensions.
-	
+
 	* tools/bin/slr.in: Add support for the new options. Document
 	them.
 
-	* tools/lib/r-mtalpha-sim.sh.in,	
-	* tools/lib/r-mtsparc-sim.sh.in: Use the `gfx' version of the	
+	* tools/lib/r-mtalpha-sim.sh.in,
+	* tools/lib/r-mtsparc-sim.sh.in: Use the `gfx' version of the
 	simulator where needed. Also enhance to use the `dbg' version when
 	-g is given to `slr'.
-	
+
 2009-10-01  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
 	Introduce performance counters and C99's clock().
@@ -8268,11 +8275,11 @@
 	* lib/seqc.mk,
 	* lib/ptl.mk,
 	* lib/mtalpha.mk: List the new files.
-	
+
 2009-09-30  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
 	Introduce a default architecture configuration with many places.
-	
+
 	* tools/bin/slr.in: Change documentation for `-n'. Force default
 	to many places of varying sizes.
 
@@ -8280,18 +8287,18 @@
 
 	* build-aux/slctests.mk: Do not use `-n' any more. Programs can
 	request multiple tests via SLT_RUN in the source code.
-	
+
 2009-09-29  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
 	Fix support for C99's float.h.
 
-	* lib/include/bits/float.h: New. 
+	* lib/include/bits/float.h: New.
 	* lib/Makefile.am: Update accordingly.
 
 2009-09-29  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
 	Fix build of demos that require the math library.
-	
+
 	* build-aux/sl.mk: Compile to MT alpha with `-lm' always, so that
 	demo code does not need to sort out when it is needed and not.
 
@@ -8306,7 +8313,7 @@
 	The script supports `-ftrace-m4' but documents `-fm4-trace'. Also
 	the underlying M4 implementation has changed the parameter for the
 	output file from `-o' to `--debugfile'.
-	
+
 	* tools/bin/slc.in: Align documentation with
 	implementation. Update to new M4 interface.
 
@@ -8318,14 +8325,14 @@
 	concept of SEP. Ensure this concept exists in the implementation
 	as well. Also, place sharing does not exist yet.
 
-	* lib/include/svp/sep.h,	
+	* lib/include/svp/sep.h,
 	* lib/src/mtsep.c: Introduce the SEP. Remove support for place
 	sharing.
-	
+
 2009-09-29  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
 	Fix bug in SL macro expansion.
-	
+
 	* tools/lib/t-pppalpha/slimpl.m4: Shell-quote the thread function
 	name when calling Python, so as to avoid strangeness with names of
 	the form "foo->bar" etc.
@@ -8333,7 +8340,7 @@
 2009-09-28  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
 	Extend the graphics output library.
-	
+
 	* lib/include/svp/gfx.h: Add support for pixel output at offset
 	from start of framebuffer.
 
@@ -8349,13 +8356,13 @@
 	Minor packaging fix.
 
 	* lib/Makefile.am: Install math headers.
-	
+
 	* lib/mtalpha.mk: Distribute math modules.
 
 2009-09-27  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
 	Improve support for C99 math.
-	
+
 	* lib/include/cmath.h: Properly define `float_t' and
 	`double_t'. Set `math_errhandling' to 0 since there is actually no
 	handling implemented.
@@ -8370,9 +8377,9 @@
 
 	* lib/include/cfloat.h,
 	* lib/include/cmath.h: Declare C99 math.
-	
+
 	* lib/src/missing_uclibc_math.c: New.
-	
+
 	* lib/src/mtalpha/m/acosf.o,
 	* lib/src/mtalpha/m/acoshf.o,
 	* lib/src/mtalpha/m/asinf.o,
@@ -8537,10 +8544,10 @@
 	* lib/src/mtalpha/m/w_sinh.o,
 	* lib/src/mtalpha/m/w_sqrt.o,
 	* lib/src/mtalpha/m/w_tgamma.o: Import from uClibc 0.9.30.1.
-	
+
 	* lib/src/mtamathobjs.mk: List the precompiled objects.
-	
-	* lib/mtalpha.mk: New target `mtalpha-sim/libm.a'.	
+
+	* lib/mtalpha.mk: New target `mtalpha-sim/libm.a'.
 
 2009-09-26  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
@@ -8570,17 +8577,17 @@
 	When using `-combine=P', multiple inclusions of `sl_support.h'
 	would occur and cause multiple definitions to happen later during
 	compilation.
-	
+
 	* tools/lib/t-utc0/include/sl_support.h,
 	* tools/lib/t-seqc/include/sl_support.h,
-	* tools/lib/t-ptl/include/sl_support.h,	
+	* tools/lib/t-ptl/include/sl_support.h,
 	* tools/lib/t-pppalpha/include/sl_support.h: Protect definitions
 	with conditional.
 
 2009-09-25  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
 	Add support for reusing `slr' parameters.
-	
+
 	* tools/bin/slt.in: Use the variable `EXTRA_RUN_ARGS' on each run
 	of `slr'. (Requested by M. Lankamp)
 
@@ -8599,10 +8606,10 @@
 	* tools/lib/mtalpha-sim/slrt.s: Move the definition of the
 	pointers to fibre and variable data, as well as their
 	initializations, to C code in...
-	
+
 	* slc/lib/src/mtinit.c: here. Call the place allocator
 	initialization as part of the library initialization.
-	
+
 	* slc/lib/Makefile.am: Mention the new files.
 
 	* slc/lib/mtalpha.mk: Compile them into the library.
@@ -8614,7 +8621,7 @@
 	An initial version of a SVP place allocator was developed by Joe
 	Master using a first-fit algorithm; this was extended to provide
 	multiple allocation policies.
-	
+
 	* lib/include/svp/sep.h,
 	* lib/src/mtsep.c: New.
 
@@ -8624,21 +8631,21 @@
 
 	The `seqc' implementation was out-of-sync with the others in not
 	defining `PLACE_LOCAL' and `PLACE_DEFAULT'.
-	
+
 	* tools/lib/t-seqc/include/sl_support.h: Rename `SVP_LOCAL' to
 	`PLACE_LOCAL' and define `PLACE_DEFAULT'.
 
 2009-09-24  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
 	Small optimization in MT-alpha code generation.
-	
+
 	* tools/bin/spp (pppalpha.makerepl): Prepend the dollar signs
 	early.
 
 2009-09-23  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
 	Fix bugs in MT-alpha code generation.
-	
+
 	* tools/lib/t-pppalpha/include/sl_support.h: Fix `sl_setp' for
 	floating-point shared parameters.
 
@@ -8653,12 +8660,12 @@
 	* tools/lib/t-utc0/slimpl.m4: Attempt to implement empty shared
 	thread arguments by emitting an explicit load from the top of the
 	address space.
-	
+
 2009-09-21  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
 	Simplify build.
-	
-	* lib/ptl.mk,	
+
+	* lib/ptl.mk,
 	* lib/seqc.mk: Simplify by providing a generic rule %.c -> %.o.
 
 2009-09-21  Raphael 'kena' Poss  <r.c.poss@uva.nl>
@@ -8669,19 +8676,19 @@
 	simulator introduced in r2814-r2817, and simulates a framebuffer
 	using memory but no graphics when using the other SVP
 	implementations.
-	
+
 	* lib/include/svp/gfx.h,
 	* lib/src/gfx.c: New.
 
 	* lib/Makefile.am: Update accordingly.
-	
+
 	* lib/seqc.mk,
 	* lib/ptl.mk: Include `gfx.c' in the library.
 
 2009-09-08  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
 	Minor packaging fix.
-	
+
 	* tools/bin/Makefile.am: Make script generation dependent on the
 	`Makefile' itself, since they need to be re-made when tools are
 	reconfigured.
@@ -8694,11 +8701,11 @@
 	from the file, due to an invalid loop increment.
 
 	* tools/bin/sag: Fix bug.
-	
+
 2009-08-31  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
 	Minor packaging fix.
-	
+
 	* tools/bin/Makefile.am: Use unique temporary directory to build
 	the scripts. This allows proper behavior when building the man
 	pages in concurrent `make' invocations.
@@ -8706,7 +8713,7 @@
 2009-08-31  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
 	Improve autonomy of other packages using SLC.
-	
+
 	* build-aux/slc.m4: Also try find `slc' in PATH if not specified
 	with `--with-slc' or SLC_BASE. Reject double slashes in SLC_BASE
 	as this is known to cause issues with M4.
@@ -8718,12 +8725,12 @@
 	Under some circumstances `slr' would not be able to find which
 	runner to use with an executable after it was compiled. This
 	changeset addresses this issue. (reported by M. Lankamp)
-	
-	* tools/lib/host-host-seqc/slrt.c,	
+
+	* tools/lib/host-host-seqc/slrt.c,
 	* tools/lib/host-host-ptl/slrt.c: Ensure that the magic strings
 	are prefixed by a NUL byte so that the `strings' command can find
-	them. 
-	
+	them.
+
 2009-08-31  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
 	Fix packaging.
@@ -8737,7 +8744,7 @@
 	* doc/HACKING.txt,
 	* doc/NEWS.txt,
 	* doc/README.txt,
-	* doc/acronyms.txt,	
+	* doc/acronyms.txt,
 	* doc/requirements.txt: Update to latest software changes.
 
 2009-08-29  Raphael 'kena' Poss  <r.c.poss@uva.nl>
@@ -8750,13 +8757,13 @@
 2009-08-28  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
 	Add more SAC to muTC helpers.
-	
+
 	* lib/include/sac_helpers.h: Also provide `fast_safe_free'.
 
 2009-08-28  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
 	Packaging fix.
-	
+
 	* lib/Makefile.am: Distribute and install `calloca.h'.
 
 2009-08-28  Raphael 'kena' Poss  <r.c.poss@uva.nl>
@@ -8768,15 +8775,15 @@
 	reach their respective algorithm. This was suggested by Chris
 	Jesshope. Also increase the `malloc' pool by larger chunks, so
 	that pool extension happens less often.
-	
+
 	* lib/src/callgate.h: Rename to...
 	* lib/include/svp/callgate.h: ...here. Simplify.
 
 	* lib/include/cmalloc.h: Provide wrappers.
-	
+
 	* lib/src/malloc_wrappers.c: Simplify by using the wrappers.
-	
-	* lib/mtalpha.mk,	
+
+	* lib/mtalpha.mk,
 	* lib/src/malloc_intrinsics.c: Make the page size bigger, so that
 	`malloc' increases its pool by bigger chunks.
 
@@ -8788,9 +8795,9 @@
 	pointer everything was in place except the declaration of the name
 	`alloca' itself. This changeset provides a header for this
 	purpose.
-	
+
 	* lib/include/calloca.h: New.
-	
+
 	* lib/include/sac_helpers.h: Add `safe_free()', which calls
 	`free()' if and only if it detects its argument is not the result
 	of `alloca'. This is non-portable (Microgrid only).
@@ -8813,7 +8820,7 @@
 	* tools/bin/spp (pppalpha.addswchll): Recognize that `allocate'
 	reads its parameter. Also recognize that `clr' and `fclr' make the
 	target register immediately available for reading.
-	
+
 2009-08-26  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
 	Fix packaging. This allows `make distcheck' to succeed.
@@ -8826,7 +8833,7 @@
 2009-08-26  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
 	Minor packaging fixes.
-	
+
 	* build-aux/slc.m4: Fail if the SL tools cannot be found. Use
 	`sl-core' instead of `slc' to fetch installed files from.
 
@@ -8850,13 +8857,13 @@
 	`sl-init-autoconf' script itself) or from the install locations.
 
 	* build-aux/sl-init-autoconf: New.
-	
+
 	* build-aux/Makefile.am: Install `sl-init-autoconf'. Also install
 	the `.mk' files to some location where `sl-init-autoconf' can find
 	them.
 
 	* Makefile.am: Recurse into `build-aux'.
-	
+
 2009-08-25  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
 	Rename the package to `sl-core'.
@@ -8870,4 +8877,3 @@
 See `ChangeLog.1' for earlier changes.
 
 	 LocalWords:  canonicalization
-	
