@@ -32,14 +32,14 @@ _start:
         sethi %hi(__first_tls_top), %g1
         sll     %o6,10,%o6
         add     %o6,%g1,%o6
-        
+
         sub     %o6, 64, %o6
 
         ! -L7 sets %r8=%o0, -L6 sets %r7=%g7
         mov     %r7, %o1  ! pass as arg1 to sys_init
         call    sys_init, 0
          nop
-        
+
         sethi   %hi(__argc), %g1
         ld      [%g1+%lo(__argc)], %o0
         sethi   %hi(__argv_ptr), %g1
@@ -49,12 +49,16 @@ _start:
         call    main, 0
          nop
 
+        ! inform sys_cleanup of main's result.
+        call    sys_cleanup, 0
+         nop
+
         ! exit with code in MGSim
         st      %o0, [0x26c]
         end
-        
+
         .size   _start, .-_start
-        
+
 ! PSEUDO OUTPUT DEVICES
         .section ".bss"
         .common __pseudo_stdout,4,4
@@ -91,7 +95,3 @@ __argc:
         .long   1
         .common __main_place_id,4,4
         .common environ,4,4
-        
-
-        
-        

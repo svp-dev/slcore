@@ -31,6 +31,10 @@ __start:
 	la	$2,environ
 	lw	$6,0($2)
 	jal	main
+
+        move    $4,$2 # provide main's exit code (v0) as sys_cleanup's a0
+        jal     sys_cleanup
+
         # exit with code
         sw      $2,0x26c($0)
 	.end	__start

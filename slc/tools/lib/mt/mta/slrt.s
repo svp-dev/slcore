@@ -42,6 +42,13 @@ _start:
 	jsr $l15,($l14),main !lituse_jsr!2
 	ldgp $l17,0($l15)
 
+        # inform sys_cleanup of main's result.
+        mov $l1, $l7
+        ldq $l14,sys_cleanup($l17)  !literal!1
+	jsr $l15,($l14),sys_cleanup !lituse_jsr!1
+	ldgp $l17,0($l15)
+
+        # sys_cleanup returns mgsim's status code, should be main's.
         stq $l1, 0x278($31) # exit simulator with main's error code
 	end
 	.end _start

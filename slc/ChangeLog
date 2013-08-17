@@ -1,5 +1,16 @@
 2013-08-17  Raphael 'kena' Poss  <r.poss@uva.nl>
 
+	Report time to completion when main() returns.
+
+	* lib/mgos/init/mtinit.c (sys_init, sys_cleanup): Measure and
+	report the execution time.
+	* tools/lib/host/load.c,
+	* tools/lib/mt/mta/slrt.s,
+	* tools/lib/mt/mts/slrt.s,
+	* tools/lib/mt/mipsel/slrt.s: Ensure `sys_cleanup' is called.
+
+2013-08-17  Raphael 'kena' Poss  <r.poss@uva.nl>
+
 	Fix an MT initialization bug.
 
 	The bug was introduced in January 2013

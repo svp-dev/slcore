@@ -69,6 +69,7 @@ void load_binary_data(const char* fname, void**ptr, bool verbose)
 }
 
 extern void sys_init(void*, char*);
+extern int sys_cleanup(int);
 
 #ifdef __cplusplus
 extern "C" {
@@ -98,6 +99,12 @@ void slr_init(void)
      so sys_init gets called from _main() instead. */
     sys_init(NULL, NULL);
 #endif
+}
+
+__attribute__((__destructor__))
+void slr_cleanup(void)
+{
+    sys_cleanup(0);
 }
 
 #ifdef __cplusplus
