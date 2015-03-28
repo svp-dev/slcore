@@ -23,7 +23,9 @@
 #define EXIT_FAILURE 1
 #define EXIT_SUCCESS 0
 
-/* missing: RAND_MAX, rand, srand */
+#define RAND_MAX        0x7ffffffd
+int rand(void);
+void srand(unsigned);
 
 /* missing: MB_CUR_MAX, */
 
@@ -62,7 +64,10 @@ int unsetenv(const char *name);
 
 /* missing: system, bsearch, qsort */
 
-/* missing: abs, labs, llabs */
+int abs(int i);
+long labs(long i);
+long long llabs(long long i);
+
 /* missing: div, ldiv, lldiv */
 /* missing: mblen, mbtowc, wctomb, mbstowcs, wcstombs */
 

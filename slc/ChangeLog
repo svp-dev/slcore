@@ -1,5 +1,16 @@
 2015-03-28  Raphael 'kena' Poss  <r.poss@uva.nl>
 
+	Implement srand(), rand() and {,l,ll}abs() in the libc.
+
+	* lib/libc/misc/rand.c: New.
+	* lib/libc/bsd/libc/stdlib/abs.c,
+	* lib/libc/bsd/libc/stdlib/labs.c,
+	* lib/libc/bsd/libc/stdlib/llabs.c: Import from FreeBSD.
+	* lib/libc/include/stdlib.h: Declare the new functions.
+	* lib/libc.mk (libc_a_SOURCES): List the new files.
+
+2015-03-28  Raphael 'kena' Poss  <r.poss@uva.nl>
+
 	Fix the POSIX read/write emulation.
 
 	The MGSim interface only supports a fixed/limited buffer size for

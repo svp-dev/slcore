@@ -25,6 +25,9 @@ libc_a_SOURCES = \
 	../libc/bsd/libc/stdio/printflocal.h \
 	../libc/bsd/libc/stdio/sprintf.c \
 	../libc/bsd/libc/stdio/vfprintf.c \
+	../libc/bsd/libc/stdlib/abs.c \
+	../libc/bsd/libc/stdlib/labs.c \
+	../libc/bsd/libc/stdlib/llabs.c \
 	../libc/bsd/libc/stdlib/atoll.c \
 	../libc/bsd/libc/stdlib/atoi.c \
 	../libc/bsd/libc/stdlib/atol.c \
@@ -67,6 +70,7 @@ libc_a_SOURCES = \
 	../libc/misc/ctype.c \
 	../libc/misc/dtoa_simple.c \
 	../libc/misc/errno.c \
+	../libc/misc/rand.c \
 	../libc/stdio/fputc.c \
 	../libc/stdio/fputs.c \
 	../libc/stdio/fwrite.c \
