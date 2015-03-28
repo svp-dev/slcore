@@ -196,14 +196,26 @@ ssize_t read(int fd, void* data, size_t sz)
     uint32_t * ctl = mg_devinfo.base_addrs[mg_rpc_devid];
     long * notif = &mg_devinfo.channels[mg_rpc_chanid];
 
-    sl_create(, mg_io_place_id,,,,, sl__exclusive, do_read,
-              sl_glarg(uint32_t*,, ctl),
-              sl_glarg(long*,, notif),
-              sl_sharg(ssize_t, ret, fd),
-              sl_glarg(void*,,data),
-              sl_glarg(size_t,, sz));
-    sl_sync();
-    return sl_geta(ret);
+    ssize_t ret = 0;
+    size_t already_transferred = 0;
+    while (already_transferred < sz)
+    {
+        size_t left = sz - already_transferred;
+        size_t to_transfer = (left > 512) ? 512 : left;
+        sl_create(, mg_io_place_id,,,,, sl__exclusive, do_read,
+                  sl_glarg(uint32_t*,, ctl),
+                  sl_glarg(long*,, notif),
+                  sl_sharg(ssize_t, ret, fd),
+                  sl_glarg(void*,,data + already_transferred),
+                  sl_glarg(size_t,, to_transfer));
+        sl_sync();
+        ret = sl_geta(ret);
+        if (ret < 0)
+            break;
+        already_transferred += ret;
+    }
+
+    return (already_transferred > 0) ? (ssize_t)already_transferred : ret;
 }
 
 sl_def(do_write, sl__static, 
@@ -238,14 +250,26 @@ ssize_t write(int fd, void* data, size_t sz)
     uint32_t * ctl = mg_devinfo.base_addrs[mg_rpc_devid];
     long * notif = &mg_devinfo.channels[mg_rpc_chanid];
 
-    sl_create(, mg_io_place_id,,,,, sl__exclusive, do_write,
-              sl_glarg(uint32_t*,, ctl),
-              sl_glarg(long*,, notif),
-              sl_sharg(ssize_t, ret, fd),
-              sl_glarg(void*,,data),
-              sl_glarg(size_t,, sz));
-    sl_sync();
-    return sl_geta(ret);
+    ssize_t ret = 0;
+    size_t already_transferred = 0;
+    while (already_transferred < sz)
+    {
+        size_t left = sz - already_transferred;
+        size_t to_transfer = (left > 512) ? 512 : left;
+        sl_create(, mg_io_place_id,,,,, sl__exclusive, do_write,
+                  sl_glarg(uint32_t*,, ctl),
+                  sl_glarg(long*,, notif),
+                  sl_sharg(ssize_t, ret, fd),
+                  sl_glarg(void*,, data + already_transferred),
+                  sl_glarg(size_t,, to_transfer));
+        sl_sync();
+        ret = sl_geta(ret);
+        if (ret < 0)
+            break;
+        already_transferred += ret;
+    }
+
+    return (already_transferred > 0) ? (ssize_t)already_transferred : ret;
 }
 
 sl_def(do_lseek, sl__static, 

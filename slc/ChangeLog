@@ -1,3 +1,17 @@
+2015-03-28  Raphael 'kena' Poss  <r.poss@uva.nl>
+
+	Fix the POSIX read/write emulation.
+
+	The MGSim interface only supports a fixed/limited buffer size for
+	RPC operations. The read/write code would blindly pass the
+	user-provided size to the MGSim RPC interface, resulting in short
+	reads/writes when the specified size exceeded the MGSim buffer
+	size.  This patch fixes this issue by introducing a loop in the
+	read/write wrappers, that splits the I/O request into 512-byte
+	chunks guaranteed to fit the MGsim buffer.
+
+	* lib/mgos/posix-compat/mtunix.c (read, write): Do it.
+
 2013-08-17  Raphael 'kena' Poss  <r.poss@uva.nl>
 
 	Report time to completion when main() returns.
