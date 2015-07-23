@@ -1,5 +1,15 @@
 2015-07-23  Raphael 'kena' Poss  <r.poss@uva.nl>
 
+	Increase the library compatibility with MIPS* targets.
+
+	As the MIPS* back-end does not yet support FP, try to reduce uses
+	of FP in the library.
+
+	* lib/slsys/perf/perf.c: Derive computed values as integers, not
+	floats.
+
+2015-07-23  Raphael 'kena' Poss  <r.poss@uva.nl>
+
 	Cosmetic fixes in the output of `slt'.
 
 	* tools/bin/slt.in: Avoid reporting "left over" messages for

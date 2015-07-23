@@ -1,7 +1,7 @@
 //
 // perf.c: this file is part of the SL toolchain.
 //
-// Copyright (C) 2009,2010,2011 The SL project.
+// Copyright (C) 2009-2015 The SL project.
 //
 // This program is free software; you can redistribute it and/or
 // modify it under the terms of the GNU General Public License
@@ -87,7 +87,7 @@ const char* mtperf_counter_names[] = {
 #define pn(Num) output_int((Num), stream)
 #define pnl  output_char('\n', stream);
 
-#if defined(__mt_freestanding__) && defined(__slc_os_fpga__)
+#if defined(__mt_freestanding__) && (defined(__slc_os_fpga__) || defined(__slc_arch_mipsel__))
 #define ARITH long
 #define pf(Num) output_int((Num), stream)
 #else
