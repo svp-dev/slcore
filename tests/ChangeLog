@@ -1,3 +1,11 @@
+2015-07-23  Raphael 'kena' Poss  <r.poss@uva.nl>
+
+	Add some missing files.
+
+	* 2_lib/math/avail.c.d1,
+	* 2_lib/math/avail.c.d2,
+	* 2_lib/math/tgamma.c.d: Do it.
+_
 2013-01-06  Raphael 'kena' Poss  <r.poss@uva.nl>
 
 	Simplify the test suite.
