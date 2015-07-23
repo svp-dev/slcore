@@ -1,5 +1,22 @@
 2015-07-23  Raphael 'kena' Poss  <r.poss@uva.nl>
 
+	Avoid testing for FP on MIPS* targets.
+
+        * 0_slc/1_createargs/delaysharedf.c,
+	* 0_slc/1_createargs/shfloat.c,
+	* 0_slc/2_manyargs/livermore8.c,
+	* 0_slc/4_funcalls/f11.c,
+	* 0_slc/4_funcalls/f5.c,
+	* 0_slc/4_funcalls/f6.c,
+	* 2_lib/math/avail.c,
+	* 2_lib/math/tgamma.c,
+	* 2_lib/va2.c,
+	* 2_lib/va3.c: Disable running on MIPS*.
+
+	* 2_lib/clock.c: Use only integers to test.
+
+2015-07-23  Raphael 'kena' Poss  <r.poss@uva.nl>
+
 	Fix the VLA tests for small address spaces.
 
 	Prior to this patch, the `bigarray' tests would attempt to

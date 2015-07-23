@@ -1,7 +1,7 @@
 //
 // tgamma.c: this file is part of the SL toolchain.
 //
-// Copyright (C) 2009,2010 The SL project.
+// Copyright (C) 2009-2015 The SL project.
 //
 // This program is free software; you can redistribute it and/or
 // modify it under the terms of the GNU General Public License
@@ -20,6 +20,9 @@
 // SLT_RUN: -f TEST.d
 
 // FIXME: uClibc's tgamma may be broken!
+
+// 2015-07-23: MIPSel does not support FP yet.
+// XIGNORE: mips*:R
 
 sl_def(t_main, void)
 {

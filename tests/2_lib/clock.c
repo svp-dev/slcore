@@ -1,7 +1,7 @@
 //
 // clock.c: this file is part of the SL toolchain.
 //
-// Copyright (C) 2009,2010 The SL project.
+// Copyright (C) 2009-2015 The SL project.
 //
 // This program is free software; you can redistribute it and/or
 // modify it under the terms of the GNU General Public License
@@ -22,8 +22,8 @@ sl_def(t_main, void)
   clock_t c1 = clock();
   puts("hello, world!");
   clock_t c2 = clock();
-  printf("time to print message: %d clocks = %g seconds\n",
+  printf("time to print message: %d clocks (= 1/%d seconds)\n",
 	 (int)(c2-c1),
-	 (float)(c2-c1)/(float)CLOCKS_PER_SEC);
+	 (int)CLOCKS_PER_SEC);
 }
 sl_enddef

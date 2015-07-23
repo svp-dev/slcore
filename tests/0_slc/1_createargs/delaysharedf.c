@@ -1,7 +1,7 @@
 //
 // delaysharedf.c: this file is part of the SL toolchain.
 //
-// Copyright (C) 2009 The SL project.
+// Copyright (C) 2009-2015 The SL project.
 //
 // This program is free software; you can redistribute it and/or
 // modify it under the terms of the GNU General Public License
@@ -26,6 +26,9 @@ sl_enddef
 // we want slc's testsuite to properly succeed. So
 // we mark the test to ignore the output on muTC-ptl:
 // XIGNORE: ptl*:D
+
+// 2015-07-23: MIPSel does not support FP yet.
+// XIGNORE: mips*:R
 
 sl_def(t_main, void)
 {

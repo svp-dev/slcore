@@ -1,7 +1,7 @@
 //
 // livermore8.c: this file is part of the SL toolchain.
 //
-// Copyright (C) 2009 The SL project.
+// Copyright (C) 2009-2015 The SL project.
 //
 // This program is free software; you can redistribute it and/or
 // modify it under the terms of the GNU General Public License
@@ -11,6 +11,9 @@
 // The complete GNU General Public Licence Notice can be found as the
 // `COPYING' file in the root directory.
 //
+
+// 2015-07-23: MIPSel does not support FP yet.
+// XIGNORE: mips*:R
 
 double du1[51],du2[51],du3[51];
 double a11, a12,a13,a21,a22,a23,a31,a32,a33, sig;

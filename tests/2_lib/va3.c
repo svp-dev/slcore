@@ -1,7 +1,7 @@
 //
 // va.c: this file is part of the SL toolchain.
 //
-// Copyright (C) 2010 The SL project.
+// Copyright (C) 2010-2015 The SL project.
 //
 // This program is free software; you can redistribute it and/or
 // modify it under the terms of the GNU General Public License
@@ -15,6 +15,9 @@
 #include <stdarg.h>
 #include <svp/testoutput.h>
 #include <svp/compiler.h>
+
+// 2015-07-23: MIPSel does not support FP yet.
+// XIGNORE: mips*:R
 
 noinline double select2(int s, va_list ap)
 {
