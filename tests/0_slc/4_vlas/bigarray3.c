@@ -1,7 +1,7 @@
 //
 // bigarray2.c: this file is part of the SL toolchain.
 //
-// Copyright (C) 2010 The SL project.
+// Copyright (C) 2010-2015 The SL project.
 //
 // This program is free software; you can redistribute it and/or
 // modify it under the terms of the GNU General Public License
@@ -23,7 +23,7 @@ int foo(int*a) { barrier(); return a[42]; }
 noinline
 int bar(void)
 {
-    int a[90000];
+    int a[4000];
     a[42] = 123;
     return foo(a)-23-58;
 }

@@ -1,5 +1,21 @@
 2015-07-23  Raphael 'kena' Poss  <r.poss@uva.nl>
 
+	Fix the VLA tests for small address spaces.
+
+	Prior to this patch, the `bigarray' tests would attempt to
+	allocate ~36KB from their local thread stack. However when running
+	on a default 32-bit MG configuration the thread local stack may be
+	smaller (e.g. 16-32KiB with current defaults). Since these tests
+	only exist to exercise the underlying codegen for frames larger
+	than 4KB, this patch reduces their memory demand to 16K.
+
+	* 0_slc/4_vlas/bigarray.c,
+	* 0_slc/4_vlas/bigarray2.c,
+	* 0_slc/4_vlas/bigarray3.c,
+	* 0_slc/4_vlas/bigarray4.c: Do it.
+
+2015-07-23  Raphael 'kena' Poss  <r.poss@uva.nl>
+
 	Add some missing files.
 
 	* 2_lib/math/avail.c.d1,
