@@ -1,3 +1,11 @@
+2015-07-23  Raphael 'kena' Poss  <r.poss@uva.nl>
+
+	Fix a linker error on the MIPS* targets.
+
+	* tools/bin/cce.in (slc_ldflags): Avoid setting a base address for
+	section `text'. Otherwise the test suite reveals ld fails due to
+	`.reginfo' overlapping with `.bss'.
+
 2015-03-28  Raphael 'kena' Poss  <r.poss@uva.nl>
 
 	Implement srand(), rand() and {,l,ll}abs() in the libc.
