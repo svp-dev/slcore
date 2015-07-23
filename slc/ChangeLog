@@ -1,5 +1,12 @@
 2015-07-23  Raphael 'kena' Poss  <r.poss@uva.nl>
 
+	Cosmetic fixes in the output of `slt'.
+
+	* tools/bin/slt.in: Avoid reporting "left over" messages for
+	unmatched glob patterns.
+
+2015-07-23  Raphael 'kena' Poss  <r.poss@uva.nl>
+
 	Fix a linker error on the MIPS* targets.
 
 	* tools/bin/cce.in (slc_ldflags): Avoid setting a base address for
