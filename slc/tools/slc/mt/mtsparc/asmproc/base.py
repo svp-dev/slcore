@@ -84,13 +84,13 @@ def replsave(fundata, items):
                 # SP is not used in the body other than this save
                 # (it was generated because of some shared argument using a local register)
                 # so just kill it
-                yield ('emty','','MT: killed ' + content)
+                yield ('empty','','MT: killed ' + content)
                 continue
             rest = content[4:].strip()
             if ',' in rest:
                 yield ('other', 'add ' + rest, 'MT: save')
             else:
-                yield ('emty','','MT: killed ' + content)
+                yield ('empty','','MT: killed ' + content)
             continue
         yield (type, content, comment)
                 

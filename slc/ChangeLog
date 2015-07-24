@@ -1,5 +1,13 @@
 2015-07-24  Raphael 'kena' Poss  <r.poss@uva.nl>
 
+	Fix a minor MT-SPARC code generation bug.
+
+	* tools/slc/mt/mtsparc/asmproc/base.py (replsave): The removed
+	instructions must be of type `empty' to appear in the output
+	properly.
+
+2015-07-24  Raphael 'kena' Poss  <r.poss@uva.nl>
+
 	Fix an initialization bug on MT-SPARC.
 
 	The reserved space for the stack on the initial thread
