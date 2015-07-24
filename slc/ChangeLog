@@ -1,3 +1,11 @@
+2015-07-24  Raphael 'kena' Poss  <r.poss@uva.nl>
+
+	Enhance portability of derived packages.
+
+	* build-aux/slc.m4: Capture the environment's PYTHONPATH during
+	`configure' runs. This is needed when ancillary modules
+	(eg. docutils) are installed in non-standard locations.
+
 2015-07-23  Raphael 'kena' Poss  <r.poss@uva.nl>
 
 	Increase the library compatibility with MIPS* targets.

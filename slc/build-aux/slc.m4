@@ -136,7 +136,7 @@ AC_DEFUN([AC_WITH_SLC],
     SLC_INCDIR=$base_src/tools/include:$base_build/tools/include:$base_src/lib/slsys/include
     SLC_LIBDIR=$base_build/tools/lib:$base_build/tools:$base_build/lib:$base_src/lib
     SLC_DATADIR=$base_src/tools:$base_build/tools:$base_src/lib:$base_build/lib
-    PYTHONPATH=$base_src/tools:$base_build/tools
+    PYTHONPATH=$base_src/tools:$base_build/tools${PYTHONPATH:+:$PYTHONPATH}
     SPP=$base_src/tools/bin/spp
     SPR=$base_src/tools/bin/spr
     SCU=$base_src/tools/bin/scu
@@ -169,7 +169,7 @@ AC_DEFUN([AC_WITH_SLC],
     SLC_LIBDIR=$SLC_BASE/lib/sl-core
     SLC_INCDIR=$SLC_BASE/share/sl-core/include
     SLC_DATADIR=$SLC_BASE/share/sl-core
-    PYTHONPATH=$SLC_BASE/lib/sl-core:$SLC_BASE/lib/python2.6/site-packages
+    PYTHONPATH=$SLC_BASE/lib/sl-core:$SLC_BASE/lib/python2.6/site-packages:$SLC_BASE/lib/python2.7/site-packages${PYTHONPATH:+:$PYTHONPATH}
     SPP=$SLC_BASE/bin/spp
     SPR=$SLC_BASE/bin/spr
     SCU=$SLC_BASE/bin/scu
