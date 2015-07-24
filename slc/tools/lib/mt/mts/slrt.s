@@ -1,6 +1,6 @@
 # slrt.s: this file is part of the SL toolchain.
 #
-# Copyright (C) 2011 Universiteit van Amsterdam
+# Copyright (C) 2011-2015 Universiteit van Amsterdam
 #
 # This program is free software, you can redistribute it and/or
 # modify it under the terms of the GNU General Public License
@@ -15,6 +15,7 @@
         .section ".bss"
         .global __tls_base
         .global __first_tls_top
+        .align 1024
         .lcomm __tls_base,1024
         .lcomm __first_tls_top,261120
 
@@ -29,7 +30,7 @@
 _start:
         ! make SP from TLS reservation
         gettid  %o6
-        sethi %hi(__first_tls_top), %g1
+        sethi   %hi(__first_tls_top), %g1
         sll     %o6,10,%o6
         add     %o6,%g1,%o6
 

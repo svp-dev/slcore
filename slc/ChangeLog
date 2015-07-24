@@ -1,5 +1,15 @@
 2015-07-24  Raphael 'kena' Poss  <r.poss@uva.nl>
 
+	Fix an initialization bug on MT-SPARC.
+
+	The reserved space for the stack on the initial thread
+	(__tls_base) must be aligned on a 1024 byte boundary, because we
+	want to only use `sethi' to compute a base pointer.
+
+	* tools/lib/mt/mts/slrt.s: Do it.
+
+2015-07-24  Raphael 'kena' Poss  <r.poss@uva.nl>
+
 	Fix a MT-SPARC code generation bug.
 
 	* tools/include/svp/compiler.h: The comment syntax in SPARC
