@@ -12,6 +12,7 @@ else
 fi
 
 slc/build-aux/sl-init-autoconf tests/build-aux
+(cd slc && ./bootstrap)
 (cd tests && ./build-aux/mkalltests.sh)
 $AUTORECONF -v -f -i
 

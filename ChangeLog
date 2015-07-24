@@ -1,3 +1,10 @@
+2015-07-24  Raphael 'kena' Poss  <r.poss@uva.nl>
+
+	Minor maintainer usability fix.
+
+	* bootstrap: Recurse into `slc', so that `slc/tools/lib' and
+	`slc/lib' get configured as well.
+
 2012-11-02  Raphael 'kena' Poss  <r.poss@uva.nl>
 
 	Minor packaging fix.
