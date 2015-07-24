@@ -1,7 +1,7 @@
 //
 // compiler.h: this file is part of the SL toolchain.
 //
-// Copyright (C) 2009 The SL project.
+// Copyright (C) 2009-2015 The SL project.
 //
 // This program is free software; you can redistribute it and/or
 // modify it under the terms of the GNU General Public License
@@ -18,7 +18,13 @@
 /* Definition for a memory barrier primitive */
 
 #if defined(__GNUC__) && !defined(__AVOID_GNUISMS)
+
+#if defined(__mtsparc__) || defined(__sparc__)
+# define barrier() __asm__ __volatile__("!MB" : : : "memory")
+#else
 # define barrier() __asm__ __volatile__("#MB" : : : "memory")
+#endif
+
 #else
 # ifdef __INTEL_COMPILER
 #  define barrier() __memory_barrier()

@@ -1,5 +1,13 @@
 2015-07-24  Raphael 'kena' Poss  <r.poss@uva.nl>
 
+	Fix a MT-SPARC code generation bug.
+
+	* tools/include/svp/compiler.h: The comment syntax in SPARC
+	assembly starts with a "!", not "#". A "#" confuses the assembly
+	post-processor to generate a misplaced `swch'.
+
+2015-07-24  Raphael 'kena' Poss  <r.poss@uva.nl>
+
 	Enhance portability of derived packages.
 
 	* build-aux/slc.m4: Capture the environment's PYTHONPATH during
