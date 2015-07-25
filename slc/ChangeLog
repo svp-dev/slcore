@@ -2,6 +2,23 @@
 
 	Fix a code generation bug for MT-SPARC.
 
+	This fixes the erroneous renaming/compression of reg windows
+	containing floats that are operands of double-float operations
+	(incl. `ldd' but also `faddd' etc.).
+
+	* tools/slc/mt/mtsparc/asmproc/opc/decode.py: Properly mark the
+	double-float instructions as updating a double operand.
+
+	* tools/slc/mt/mtsparc/asmproc/opc/mtsparc.py: Update the
+	generated file.
+
+	* tools/slc/mt/mtsparc/asmproc/base.py: Use this information to
+	mark the 2nd register of double-sized operands as used.
+
+2015-07-25  Raphael 'kena' Poss  <r.poss@uva.nl>
+
+	Fix a code generation bug for MT-SPARC.
+
 	* tools/slc/mt/mtsparc/regdefs.py: There are up to 23 local
 	integer registers, not 24 (%g0 doesn't count).
 	* tools/slc/mt/common/compress.py: There may be up to 32 FP

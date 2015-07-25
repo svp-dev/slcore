@@ -526,57 +526,76 @@ def fillannulnop(fundata,items):
             continue
         yield (type, content, comment)
 
-_re_ldd = re.compile(r'ldd\s+(\[.*\])\s*,\s*(\S+)')
-_re_std = re.compile(r'(std|spilld)\s+(\S+)\s*,\s*(\[.*\])')
-_re_li = re.compile(r'\$l(\d+)')
-_re_gi = re.compile(r'\$g(\d+)')
-_re_si = re.compile(r'\$[sd](\d+)')
+_re_li = re.compile(r'\$lf?(\d+)')
+_re_gi = re.compile(r'\$gf?(\d+)')
+_re_si = re.compile(r'\$[sd]f?(\d+)')
+import sys
 def markaligned(fundata, items):
     rmask = fundata['usedregs']
+    rfmask = fundata['usedfregs']
     rgmask = fundata['usedgl']
+    rgfmask = fundata['usedglf']
     armask = [False] * 32
     argmask = [False] * 32
     arsmask = [False] * 32
+    arfmask = [False] * 32
+    argfmask = [False] * 32
+    arsfmask = [False] * 32
     for (type, content, comment) in items:
-        if type == 'other':
-            m = _re_ldd.match(content)
-            if m is not None:
-                treg = m.group(2)
-            else:
-                m = _re_std.match(content)
-                if m is not None:
-                    treg = m.group(1)
-                else:
-                    continue
+        if type == 'other' and content not in ['swch', 'end']:
+            db = content.metadata.double_regs
+            for dreg in db:
+                treg = content.operands[dreg]
+                #print >>sys.stderr, "HAI ", content, treg
 
-            m2 = _re_li.match(treg)
-            if m2 is not None:
-                a = int(m2.group(1))
-                b = int(m2.group(1)) + 1
-                rmask[b] = True # markused did not necessarily mark the 2nd part of the reg
-                armask[a] = 1
-                armask[b] = 2
-                continue
-            m2 = _re_gi.match(treg)
-            if m2 is not None:
-                a = int(m2.group(1))
-                b = int(m2.group(1)) + 1
-                rgmask[b] = True # markused did not necessarily mark the 2nd part of the reg
-                argmask[a] = 1
-                argmask[b] = 2
-                continue
-            m2 = _re_si.match(treg)
-            if m2 is not None:
-                a = int(m2.group(1))
-                b = int(m2.group(1)) + 1
-                arsmask[a] = 1
-                arsmask[b] = 2
-                continue
+                isfloat = 'f' in treg
+                m2 = _re_li.match(treg)
+                if m2 is not None:
+                    a = int(m2.group(1))
+                    b = int(m2.group(1)) + 1
+                    if not isfloat:
+                        rmask[b] = True # markused did not necessarily mark the 2nd part of the reg
+                        armask[a] = 1
+                        armask[b] = 2
+                    else:
+                        rfmask[b] = True
+                        arfmask[a] = 1
+                        arfmask[b] = 2
+
+                    continue
+                m2 = _re_gi.match(treg)
+                if m2 is not None:
+                    a = int(m2.group(1))
+                    b = int(m2.group(1)) + 1
+                    if not isfloat:
+                        rgmask[b] = True # markused did not necessarily mark the 2nd part of the reg
+                        argmask[a] = 1
+                        argmask[b] = 2
+                    else:
+                        rgfmask[b] = True
+                        argfmask[a] = 1
+                        argfmask[b] = 2
+
+                    continue
+                m2 = _re_si.match(treg)
+                if m2 is not None:
+                    a = int(m2.group(1))
+                    b = int(m2.group(1)) + 1
+                    if not isfloat:
+                        arsmask[a] = 1
+                        arsmask[b] = 2
+                    else:
+                        arsfmask[a] = 1
+                        arsfmask[b] = 2
+                    continue
         continue
 
     fundata['alignedregs'] = armask
     fundata['alignedgl'] = argmask
     fundata['alignedsh'] = arsmask
+    fundata['alignedfregs'] = arfmask
+    fundata['alignedglf'] = argfmask
+    fundata['alignedshf'] = arsfmask
     return items
 
 from common import *
@@ -636,6 +655,8 @@ _filter_inner = [canonregs,
 
 
                  xjoin1,
+
+                 decode,
 
                  markused,
                  markaligned,

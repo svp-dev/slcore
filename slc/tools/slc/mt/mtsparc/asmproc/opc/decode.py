@@ -6,14 +6,14 @@
 # The input database is tab-delimited and should contain the following fields:
 # mnemonic     format    attributes
 # the attributes can be either empty or be set to a comma-delimited combination of:
-# "ll" (long latency) 
+# "ll" (long latency)
 # "dl" (delayed)
 # "o:N" (outputs to phy register N)
 # "i:N" (inputs from phy register N)
 
 formats = \
 """
-   
+
 # \d+
 + [+-]
 , ,
@@ -29,26 +29,26 @@ formats = \
 9 %fcc3
 > imm4
 A #asi
-B $fs2
+B $fsx2
 C %csr
 D %c\d+
 E %ccr
 F %fsr
 G imm19rel
-H $fd
+H $fdx
 I imm11
-J $fd
+J $fdx
 L imm30rel
 M %asr\d+
 N pn
 O $rs2d
 P %pc
 Q %cq
-R $fs2
+R $fsx2
 S (?:)
 T pt
 U $fdx
-V $fs1
+V $fsx1
 W %tick
 X imm13
 Y imm13
@@ -90,7 +90,7 @@ symbolic_formats = {}
 for f in formats.split('\n'):
     f = f.strip()
     if not f: continue
-    
+
     k = f[0]
     v = f[2:]
 
@@ -100,7 +100,7 @@ for f in formats.split('\n'):
 
 format_symbols = {}
 
-### Step 2: enrich the translation dict with attributes ### 
+### Step 2: enrich the translation dict with attributes ###
 
 tr = ''.join(('%c' % i for i in xrange(256)))
 for k, v in symbolic_formats.items():
@@ -155,7 +155,7 @@ for insn in f:
     name = name.strip()
     fmt = fmt.strip()
     attrs = [x.strip().lower() for x in attrs.split(',')]
-    
+
 
     reparser = []
     ins = []
@@ -239,7 +239,7 @@ for k,v in forms.items():
     forms_inv[idx] = (k, alias)
 
 
-### Step 6: Generate the output python code #### 
+### Step 6: Generate the output python code ####
 
 # parser for a register
 regref = r'(\$[lgsd]?f?\d+|%(?:sp|fp|[ilog][0-7]|[rf]\d+))'
@@ -255,7 +255,7 @@ class insn_metadata(object):
         self.inputs, self.outputs, self.double_regs, self.long_latency, self.delayed, self.extra_inputs, self.extra_outputs, self.immediates, self.is_branch, self.is_condbranch = info
 """
 print 'reg = r"""' + regref + '"""'
-print 'imm = r"""' + immref + '"""' 
+print 'imm = r"""' + immref + '"""'
 
 l = regexs_inv.keys()
 l.sort()
@@ -282,5 +282,3 @@ for k in l:
     print '      ],'
 
 print '}'
-
-
