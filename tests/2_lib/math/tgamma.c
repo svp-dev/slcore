@@ -23,6 +23,9 @@
 
 // 2015-07-23: MIPSel does not support FP yet.
 // XIGNORE: mips*:R
+// 2015-07-24: MT-SPARC only supports single FP floats,
+// and this wacks tgamma's results.
+// XIGNORE: mts*:D
 
 sl_def(t_main, void)
 {

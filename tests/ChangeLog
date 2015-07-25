@@ -1,5 +1,14 @@
 2015-07-25  Raphael 'kena' Poss  <r.poss@uva.nl>
 
+	Fix a test check.
+
+	On MT-SPARC, floating results are inaccurate due to incomplete
+	compiler support. Ignore the tgamma test output comparison.
+
+	* 2_lib/math/tgamma.c: Do it.
+
+2015-07-25  Raphael 'kena' Poss  <r.poss@uva.nl>
+
 	Accommodate for targets with tiny stacks.
 
 	Sequential MT-SPARC uses a tiny stack on its main thread,
