@@ -1,3 +1,10 @@
+2015-07-25  Raphael 'kena' Poss  <r.poss@uva.nl>
+
+	Enhance the usability of derived packages.
+
+	* build-aux/sl.mk: Simplify the target generation rules. This also
+	enables parallel builds of different targets.
+
 2015-07-24  Raphael 'kena' Poss  <r.poss@uva.nl>
 
 	Fix a minor MT-SPARC code generation bug.
