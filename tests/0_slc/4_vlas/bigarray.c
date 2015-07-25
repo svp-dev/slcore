@@ -18,7 +18,9 @@
 noinline
 int foo(int*a) { barrier(); return a[42]; }
 
+// 2015-07-24: ptl and mts-seq have tiny stacks.
 // XIGNORE: ptl*:R
+// XIGNORE: mts*_s:R
 
 sl_def(t_main, void)
 {

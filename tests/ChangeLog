@@ -1,5 +1,18 @@
 2015-07-25  Raphael 'kena' Poss  <r.poss@uva.nl>
 
+	Accommodate for targets with tiny stacks.
+
+	Sequential MT-SPARC uses a tiny stack on its main thread,
+	so ensure the tests do not recurse too deeply.
+
+	* 0_slc/1_create/crrec.c,
+	* 0_slc/4_vlas/bigarray.c,
+	* 0_slc/4_vlas/bigarray2.c,
+	* 0_slc/4_vlas/bigarray3.c,
+	* 0_slc/4_vlas/bigarray4.c: Do it.
+
+2015-07-25  Raphael 'kena' Poss  <r.poss@uva.nl>
+
 	Kill a compiler warning.
 
 	* 2_lib/sac1.c: `sac_helpers.h' is obsolete. Use standard
@@ -153,7 +166,7 @@ _
 	* tests/0_slc/3_index/inf1.c,
 	* tests/0_slc/3_index/inf2.c,
 	* tests/0_slc/3_index/inf3.c,
-	* tests/0_slc/3_index/inf4.c,	
+	* tests/0_slc/3_index/inf4.c,
 	* tests/0_slc/3_index/inf5.c: Remove. Families with unbounded
 	index sequences are now malformed.
 
@@ -174,7 +187,7 @@ _
 
 	Fix some tests for the `ptl' target.
 
-	* 0_slc/1_create/fiduse.c,	
+	* 0_slc/1_create/fiduse.c,
 	* 0_slc/1_create/fiduse2.c: Use `void*' instead of `long' to
 	define the family identifier.
 
@@ -220,7 +233,7 @@ _
 	* 0_slc/3_break/x_invbreak3.ut.c,
 	* 0_slc/3_break/x_invbreak4.ut.c,
 	* 0_slc/3_break/x_invbreak5.ut.c: Remove obsolete tests.
-	
+
 	* 0_slc/3_break/br.ut.c: Rename to...
 	* 0_slc/3_index/br.c: ...here.
 
@@ -277,12 +290,12 @@ _
 	* 0_slc/3_index/pos9.c: ...here. Use new syntax.
 
 	* 0_slc/3_index/clobber.c: Add copyright header.
-	
+
 2010-07-20  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
 	Extend the test suite.
 
-	* 0_slc/1_createargs/shfloat.c. New. 
+	* 0_slc/1_createargs/shfloat.c. New.
 
 2010-07-12  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
@@ -354,7 +367,7 @@ _
 
 2010-05-28  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
-	Fix one unit test.	
+	Fix one unit test.
 
 	* 0_slc/1_createargs/useexit2.c: Use the new `delegate.h' and
 	constant names. Remove reference to family ID.
@@ -468,7 +481,7 @@ _
 2009-12-20  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
 	Avoid a false positive in the test suite.
-	
+
 	* 0_slc/1_createargs/1_shared_empty.c: Ignore results, as the
 	behavior of reading a shared after a family that does not write to
 	it is undefined.
@@ -484,7 +497,7 @@ _
 2009-10-14  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
 	Extend the unit test suite.
-	
+
 	* 1_slr/multiargs.c: Exercise multiple uses of `sl_decl'.
 
 2009-10-10  Raphael 'kena' Poss  <r.c.poss@uva.nl>
@@ -497,36 +510,36 @@ _
 2009-10-10  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
 	Extend the unit test suite.
-	
+
 	* 0_slc/1_createargs/args1.c: Use whitespace in argument
 	definitions to strain whitespace handling.
 
 2009-10-09  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
 	Extend the unit test suite.
-	
+
 	* 0_slc/0_trivial/c99loop.c: New.
 
 2009-10-01  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
 	Extend the unit test suite.
-	
+
 	* 2_lib/perf.c,
 	* 2_lib/clock.c: Test the new APIs.
 
 2009-09-27  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
 	Check C99 math more.
-	
+
 	* 2_lib/math/avail.c: Test `float_t' and `double_t' as well.
 
 2009-09-27  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
 	Extend the unit test suite.
-	
+
 	* 2_lib/math/avail.c,
 	* 2_lib/math/tgamma.c: New.
-	
+
 2009-09-24  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
 	Extend the unit test suite.
@@ -535,7 +548,7 @@ _
 	or local arrays with large sizes, the compiler would emit invalid
 	code due to the stack probing logic emitted by GCC. (Reported by
 	Carl Joslin).
-	
+
 	* 0_slc/4_vlas/bigvla.c,
 	* 0_slc/4_vlas/idxvla.c: New.
 
@@ -547,14 +560,14 @@ _
 	floating-point shared parameters; and function calls with
 	heterogenous register classes as arguments would not be called
 	properly.
-	
+
 	* 0_slc/1_createargs/delaysharedf.c,
-	* 0_slc/4_funcalls/f11.c: New. 
+	* 0_slc/4_funcalls/f11.c: New.
 
 2009-09-15  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
 	Add test for `slr' bug.
-	
+
 	* 1_slr/bigdata.c,
 	* 1_slr/bigdata.c.d: New.
 
@@ -563,7 +576,7 @@ _
 2009-08-28  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
 	Add tests for `alloca'.
-	
+
 	* 2_lib/alloca/a1.c,
 	* 2_lib/alloca/a2.c,
 	* 2_lib/alloca/a3.c: New.
@@ -573,13 +586,13 @@ _
 2009-08-26  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
 	Minor packaging fix.
-	
-	* build-aux/mkalltests.sh: Be more verbose. 
+
+	* build-aux/mkalltests.sh: Be more verbose.
 
 2009-08-26  Raphael 'kena' Poss  <r.c.poss@uva.nl>
 
 	Make package less dependent on the base tree.
-	
+
 	* bootstrap: Make less verbose. Use the new `sl-init-autoconf'.
 
 2009-08-25  Raphael 'kena' Poss  <r.c.poss@uva.nl>
@@ -587,4 +600,3 @@ _
 	* ChangeLog: initialize.
 
 See `slc/ChangeLog.1' for earlier changes.
-
