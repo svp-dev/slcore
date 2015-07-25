@@ -1,3 +1,10 @@
+2015-07-25  Raphael 'kena' Poss  <r.poss@uva.nl>
+
+	Kill a compiler warning.
+
+	* 2_lib/sac1.c: `sac_helpers.h' is obsolete. Use standard
+	includes.
+
 2015-07-23  Raphael 'kena' Poss  <r.poss@uva.nl>
 
 	Avoid testing for FP on MIPS* targets.
