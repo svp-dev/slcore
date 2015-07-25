@@ -82,12 +82,12 @@ class Create_2_MTSCreate(ScopedVisitor):
                 thestruct = thestruct + (Opaque(loc = d['loc']) + d['ctype'] + ' ' + d['name'] + ';')
             thestruct = thestruct + '}'
 
-            thetype = CTypeDecl(loc = cr.loc,
+            matype = CTypeDecl(loc = cr.loc,
                                 name = mat,
                                 ctype = thestruct)
 
-            self.cur_scope.decls += thetype
-            mavar = CVarDecl(loc = cr.loc, name = maname, ctype = CTypeUse(tdecl = thetype))
+            self.cur_scope.decls += matype
+            mavar = CVarDecl(loc = cr.loc, name = maname, ctype = CTypeUse(tdecl = matype))
             self.cur_scope.decls += mavar
             mavar = CVarUse(decl = mavar)
             lc.mavar = mavar
@@ -187,9 +187,9 @@ class Create_2_MTSCreate(ScopedVisitor):
         if c['gl_mem_offset'] is not None:
             # one extra global var
             r = regmagic.vname_to_legacy("l%d" % aregn)
-            var = CVarDecl(loc = cr.loc, 
-                           name = 'C$aR$%s$%s' % (cr.label, name), 
-                           ctype = mat + '*',
+            var = CVarDecl(loc = cr.loc,
+                           name = 'C$aR$%s$%s' % (cr.label, name),
+                           ctype = CTypeUse(tdecl=matype) + Opaque('*'),
                            init = Opaque(text = '&') + mavar,
                            reg = (not self.newisa) and r or None)
             crc.decls += var

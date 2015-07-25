@@ -1,5 +1,12 @@
 2015-07-25  Raphael 'kena' Poss  <r.poss@uva.nl>
 
+	Fix a code generation bug for MT-SPARC.
+
+	* tools/slc/mt/mtsparc/gencreate.py: Ensure the right type name is
+	used to define the pointer for memory-passed global arguments.
+
+2015-07-25  Raphael 'kena' Poss  <r.poss@uva.nl>
+
 	Simplify the MIPSel crt.
 
 	* tools/lib/mt/mipsel/slrt.s: Remove the unused definition of
