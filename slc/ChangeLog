@@ -1,5 +1,12 @@
 2015-07-25  Raphael 'kena' Poss  <r.poss@uva.nl>
 
+	Fix the declaration of library functions on MT targets.
+
+	* lib/libc/include/stdlib.h: Fix the prototype for `strtold'. Add
+	the missing prototypes for `strtod' and `strtof'.
+
+2015-07-25  Raphael 'kena' Poss  <r.poss@uva.nl>
+
 	Add missing objects to the SL library of host targets.
 
 	* lib/host-host-seqc/Makefile.am,

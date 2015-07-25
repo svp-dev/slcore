@@ -35,7 +35,8 @@ long long atoll(const char *);
 
 /* missing: atof */
 
-double strtold(const char*restrict, char **restrict);
+long double strtold(const char*restrict, char **restrict);
+double strtod(const char*restrict, char **restrict);
 float strtof(const char*restrict, char**restrict);
 
 long strtol(const char *restrict, char **restrict, int);
