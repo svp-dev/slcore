@@ -59,7 +59,7 @@ def compress(fundata, items):
     if not fundata['hasjumps']:
         # Compress integer locals
         lastfound = None
-        for i in xrange(30, -1, -1):
+        for i in xrange(31, -1, -1):
             if rmask[i]:
                 lastfound = i
                 break
@@ -98,7 +98,7 @@ def compress(fundata, items):
     # Compress FP locals
     if not fundata['hasjumps']:
         lastfound = None
-        for i in xrange(30, -1, -1):
+        for i in xrange(31, -1, -1):
             if rfmask[i]:
                 lastfound = i
                 break

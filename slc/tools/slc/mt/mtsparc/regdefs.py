@@ -3,7 +3,7 @@ from ..common.regmagic import RegMagic
 class RegDefs:
 
     iargregs = 8
-    ilocalregs = 24
+    ilocalregs = 23
 
     # There is not FP support for now, but we define this to keep the
     # common implementation happy.

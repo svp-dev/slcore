@@ -2,6 +2,17 @@
 
 	Fix a code generation bug for MT-SPARC.
 
+	* tools/slc/mt/mtsparc/regdefs.py: There are up to 23 local
+	integer registers, not 24 (%g0 doesn't count).
+	* tools/slc/mt/common/compress.py: There may be up to 32 FP
+	locals to compress. In general it is a good idea to scan all
+	32 register positions, not only the first 31, so as not to assume
+	the ISA always has special register indices.
+
+2015-07-25  Raphael 'kena' Poss  <r.poss@uva.nl>
+
+	Fix a code generation bug for MT-SPARC.
+
 	* tools/slc/mt/mtsparc/gencreate.py: Ensure the right type name is
 	used to define the pointer for memory-passed global arguments.
 
