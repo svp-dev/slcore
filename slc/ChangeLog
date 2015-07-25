@@ -1,5 +1,17 @@
 2015-07-25  Raphael 'kena' Poss  <r.poss@uva.nl>
 
+	Add missing objects to the SL library of host targets.
+
+	* lib/host-host-seqc/Makefile.am,
+	* lib/host-host-ptld/Makefile.am,
+	* lib/host-host-ptl/Makefile.am,
+	* lib/host-host-hlsim/Makefile.am,
+	* lib/host-host-hlsimd/Makefile.am: Use `LIBSL_SRC' to ensure the
+	legacy SL library modules (incl. roman) are available in the
+	produced library.
+
+2015-07-25  Raphael 'kena' Poss  <r.poss@uva.nl>
+
 	Enhance the usability of derived packages.
 
 	* build-aux/sl.mk: Simplify the target generation rules. This also
