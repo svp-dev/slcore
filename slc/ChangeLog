@@ -1,5 +1,12 @@
 2015-07-25  Raphael 'kena' Poss  <r.poss@uva.nl>
 
+	Simplify the MIPSel crt.
+
+	* tools/lib/mt/mipsel/slrt.s: Remove the unused definition of
+	`__stack'.
+
+2015-07-25  Raphael 'kena' Poss  <r.poss@uva.nl>
+
 	Fix the declaration of library functions on MT targets.
 
 	* lib/libc/include/stdlib.h: Fix the prototype for `strtold'. Add

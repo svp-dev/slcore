@@ -67,8 +67,6 @@ __argv_ptr:
 	.word	__pseudo_argv
 
 	.comm	environ,4,4
-	.local	__stack
-	.comm	__stack,2097152,4
 	.section	.rodata.str1.4,"aMS",@progbits,1
 	.align	2
 $LC1:
@@ -80,8 +78,4 @@ $LC1:
 __pseudo_argv:
 	.word	$LC1
 	.word	0
-	.section	.data.rel.ro.local,"aw",@progbits
-	.align	2
-$LC0:
-	.word	__stack+16777216
 	.ident	"GCC: (GNU) 4.7.1"
