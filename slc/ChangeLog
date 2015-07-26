@@ -1,5 +1,12 @@
 2015-07-26  Raphael 'kena' Poss  <r.poss@uva.nl>
 
+	Minor documentation updates.
+
+	* doc/README.rst: Recommend using the SL installer.
+	* doc/HACKING.rst: Do not mention `svn' any more.
+
+2015-07-26  Raphael 'kena' Poss  <r.poss@uva.nl>
+
 	Update the documentation for version 3.9.
 
 	* doc/NEWS.rst: Do it.
