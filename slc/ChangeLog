@@ -1,5 +1,11 @@
 2015-07-26  Raphael 'kena' Poss  <r.poss@uva.nl>
 
+	Update the documentation for version 3.9.
+
+	* doc/NEWS.rst: Do it.
+
+2015-07-26  Raphael 'kena' Poss  <r.poss@uva.nl>
+
 	Update the MT Gfx library code to the new MGSim 3.5 interface.
 
 	* lib/mgos/gfx/mtgfx.c: Use the new command queue interface from
