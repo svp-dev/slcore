@@ -1,3 +1,9 @@
+2015-07-26  Raphael 'kena' Poss  <r.poss@uva.nl>
+
+	Document the latest test suite changes.
+
+	* NEWS: Do it.
+
 2015-07-25  Raphael 'kena' Poss  <r.poss@uva.nl>
 
 	Fix a test check.
