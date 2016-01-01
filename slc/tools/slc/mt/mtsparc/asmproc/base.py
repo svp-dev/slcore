@@ -542,7 +542,7 @@ def markaligned(fundata, items):
     argfmask = [False] * 32
     arsfmask = [False] * 32
     for (type, content, comment) in items:
-        if type == 'other' and content not in ['swch', 'end']:
+        if type == 'other' and content not in ['swch', 'end'] and content.metadata is not None:
             db = content.metadata.double_regs
             for dreg in db:
                 treg = content.operands[dreg]

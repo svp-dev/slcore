@@ -1,5 +1,12 @@
 2016-01-01  Raphael 'kena' Poss  <r.poss@uva.nl>
 
+	Fix a MT-SPARC code generation bug.
+
+	* tools/slc/mt/mtsparc/asmproc/base.py (markaligned): Only
+	consider lines for which instruction metadata is available.
+
+2016-01-01  Raphael 'kena' Poss  <r.poss@uva.nl>
+
 	Assembly portability fix.
 
 	* tools/include/svp/compiler.h: Ensure that the no-op inline
