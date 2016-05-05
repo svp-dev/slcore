@@ -2,7 +2,7 @@
 # -*- mode: shell-script -*-
 # cce: This file is part of the SL toolchain.
 #
-copyright="Copyright (C) 2009-2015 The SL project."
+copyright="Copyright (C) 2009-2016 The SL project."
 #
 # This program is free software; you can redistribute it and/or
 # modify it under the terms of the GNU General Public License
@@ -38,6 +38,10 @@ RANLIB_MTALPHA=${RANLIB_MTALPHA_OVERRIDE:-@RANLIB_MTALPHA@}
 CC_MTSPARC=${CC_MTSPARC_OVERRIDE:-@CC_MTSPARC@}
 AR_MTSPARC=${AR_MTSPARC_OVERRIDE:-@AR_MTSPARC@}
 RANLIB_MTSPARC=${RANLIB_MTSPARC_OVERRIDE:-@RANLIB_MTSPARC@}
+
+CC_LEON2MT=${CC_LEON2MT_OVERRIDE:-@CC_LEON2MT@}
+AR_LEON2MT=${AR_LEON2MT_OVERRIDE:-@AR_LEON2MT@}
+RANLIB_LEON2MT=${RANLIB_LEON2MT_OVERRIDE:-@RANLIB_LEON2MT@}
 
 CC_MIPSEL=${CC_MIPSEL_OVERRIDE:-@CC_MIPSEL@}
 AR_MIPSEL=${AR_MIPSEL_OVERRIDE:-@AR_MIPSEL@}
@@ -165,6 +169,10 @@ case $alias in
     mtsn_n)       alias=spr-mtsn_naked-mtsparc-sim ;;
     mtsn_s)       alias=spr-seq_naked-mtsparc-sim ;;
 
+    leon2mt|l2mt) alias=spr-l2mt_hybrid-leon2mt-fpga ;;
+    l2mt_n)       alias=spr-l2mt_naked-leon2mt-fpga ;;
+    l2mt_s)       alias=spr-seq_naked-leon2mt-fpga ;;
+
     mipsel_s)     alias=spr-seq_naked-mipsel-sim ;;
 
     hrt)          alias=spr-hrt_hybrid-host-host-hrt ;;
@@ -241,6 +249,8 @@ case $slc_dialect in
             mts_hybrid)  target=mts+seq ;;
             mtsn_naked)  target=mtsn ;;
             mtsn_hybrid) target=mtsn+seq ;;
+            l2mt_naked)  target=l2mt ;;
+            l2mt_hybrid) target=l2mt+seq ;;
             hrt_naked)   target=hrt ;;
             hrt_hybrid)  target=hrt+seq ;;
             *) echo "unknown variant: $slc_dialect-$slc_variant" >&2 ;;
@@ -358,7 +368,7 @@ esac
 
 # Disable debugging for the MT targets
 case $slc_arch in
-    mt*)
+    mt*|leon2mt*)
 	if test "x$slc_debug_flags" != "x"; then
 	    echo "$basename: warning: flags unsupported by $slc_arch-$slc_os: ${slc_debug_flags[*]}" >&2
 	fi
@@ -383,26 +393,10 @@ esac
 
 # Ar and ranlib selection
 case $slc_arch in
-    host)
-              slc_ar=($AR_HOST)
-              slc_ranlib=($RANLIB_HOST)
-	      ;;
-    mtalpha)
-              slc_ar=($AR_MTALPHA)
-              slc_ranlib=($RANLIB_MTALPHA)
-	      ;;
-    mtsparc)
-              slc_ar=($AR_MTSPARC)
-              slc_ranlib=($RANLIB_MTSPARC)
-	      ;;
-    mipsel)
-              slc_ar=($AR_MIPSEL)
-              slc_ranlib=($RANLIB_MIPSEL)
-	      ;;
     *)
-              slc_ar=("$scu_helper" archive)
-              slc_ranlib=("$scu_helper" ranlib)
-	      ;;
+	slc_ar=$(eval "echo \${AR_$archvar:-\"$scu_helper\" archive}")
+	slc_ranlib=$(eval "echo \${RANLIB_$archvar:-\"$scu_helper\" ranlib}")
+	;;
 esac
 
 
@@ -443,16 +437,21 @@ case $slc_arch in
         slc_ppflags+=(-D__slc_short_double__)
         slc_cflags+=(-mcpu=v8 -fno-math-errno -fno-trapping-math -fshort-double -fno-delayed-branch -falign-functions=64)
         ;;
+    leon2mt)
+        slc_ppflags+=(-D__slc_short_double__)
+        slc_cflags+=(-mcpu=leon -fno-math-errno -fno-trapping-math -fshort-double -fno-delayed-branch -falign-functions=128 -mflat -masync-y -fomit-frame-pointer -fgcse-sm -fgcse-las -fgcse-after-reload -flive-range-shrinkage)
+        ;;
     *)
 	;;
 esac
+
 slc_ppflags+=(-DUSE_C_DIVIDE)
 
 case $slc_arch in
     mtalpha)
         slc_ppflags+=(-D__mt_freestanding__ -D__WORDSIZE=64)
 	;;
-    mtsparc|mips*)
+    mtsparc|mips*|leon2mt)
         slc_ppflags+=(-D__mt_freestanding__ -D__WORDSIZE=32)
 	;;
 esac

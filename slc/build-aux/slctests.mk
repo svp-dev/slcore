@@ -37,6 +37,12 @@ EXTRA_TEST_IMPL += mtsn_n
 EXTRA_TEST_IMPL += mtsn_s
 endif
 
+if ENABLE_CHECK_L2MT
+EXTRA_TEST_IMPL += l2mt
+EXTRA_TEST_IMPL += l2mt_n
+EXTRA_TEST_IMPL += l2mt_s
+endif
+
 if ENABLE_CHECK_MIPSEL
 EXTRA_TEST_IMPL += mipsel_s
 endif

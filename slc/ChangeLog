@@ -1,3 +1,31 @@
+2016-05-05  Raphael 'kena' Poss  <r.poss@uva.nl>
+
+	Initial support for LEON2-MT targets.
+
+	* tools/bin/cce.in: Recognize `l2mt' targets.
+
+	* build-aux/mgbinutils.m4: Search for the SPARC binary utilities.
+	* build-aux/mgsim.m4: Search for the LEON2-MT MGSim.
+	* build-aux/slctests.mk,
+	* build-aux/sl.mk: Also build for `l2mt'.
+	* configure.ac,
+	* build-aux/slc.m4: Add flags to support `leon2mt' targets.
+	* build-aux/slctests.m4: Check whether the LEON2-MT targets are
+	being built.
+
+	* tools/bin/Makefile.am: Substitute the tool paths for LEON2-MT.
+	* tools/bin/cce.in: Preliminary support for various LEON2-MT targets.
+	* tools/slc/front/chains.py: Define LEON2-MT chains based on
+	existing SPARC chains.
+
+	* tools/slc/mt/leon2mt/__init__.py,
+	* tools/slc/mt/leon2mt/asmproc/__init__.py: New.
+	* tools/slc/mt/leon2mt/compile.py,
+	* tools/slc/mt/leon2mt/asmproc/base.py,
+	* tools/slc/mt/leon2mt/asmproc/opt.py,
+	* tools/slc/mt/leon2mt/regdefs.py: Initial implementation, based
+	on the existing SPARC targets.
+
 2016-01-01  Raphael 'kena' Poss  <r.poss@uva.nl>
 
 	Fix a MT-SPARC code generation bug.

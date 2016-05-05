@@ -33,6 +33,10 @@ if ENABLE_SLC_MTSPARC
 SL_TARGET_LIST += mtsn mtsn_s mtsn_n
 endif
 
+if ENABLE_SLC_LEON2MT
+SL_TARGET_LIST += l2mt l2mt_s l2mt_n
+endif
+
 if ENABLE_SLC_MIPSEL
 SL_TARGET_LIST += mipsel_s
 endif

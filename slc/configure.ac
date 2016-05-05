@@ -172,6 +172,15 @@ if test "x$enable_mtsparc" = "xyes"; then
   fi
 fi
 
+if test "x$enable_leon2mt" = "xyes"; then
+  if test "x$CC_SPARC" = "xno" \
+     -o "x$AR_SPARC" = "xno" \
+     -o "x$RANLIB_SPARC" = "xno"; then
+   AC_MSG_WARN([Some SPARC utilities are missing; LEON2MT support disabled.])
+   enable_leon2mt=no
+  fi
+fi
+
 if test "x$enable_mipsel" = "xyes"; then
   if test "x$UTCC_MIPSEL" = "xno" \
      -o "x$CC_MIPSEL" = "xno" \
@@ -188,6 +197,10 @@ fi
 
 if test "x$MGSIM_SPARC" = "xno"; then
    AC_MSG_WARN([Cannot find the MT-Sparc Microgrid simulator. `slr' may not run MT-Sparc programs.])
+fi
+
+if test "x$MGSIM_LEON2MT" = "xno"; then
+   AC_MSG_WARN([Cannot find the LEON2-MT Microgrid simulator. `slr' may not run LEON2-MT programs.])
 fi
 
 if test "x$MGSIM_MIPSEL" = "xno"; then
@@ -212,6 +225,7 @@ cat <<EOF
 *
 * Support for MT-Alpha:   $enable_mtalpha
 * Support for MT-SPARC:   $enable_mtsparc
+* Support for LEON2-MT:   $enable_leon2mt
 * Support for MIPSel:     $enable_mipsel
 * Support for utc-ptl:    $enable_ptl
 * Support for hlsim:      $enable_hlsim
