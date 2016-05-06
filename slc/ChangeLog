@@ -1,3 +1,11 @@
+2016-05-06  Raphael 'kena' Poss  <r.poss@uva.nl>
+
+	Preliminary support for the LEON2-MT ISA.
+
+	* tools/slc/mt/mtsparc/asmproc/opc/formats.db,
+	* tools/slc/mt/mtsparc/asmproc/opc/mtsparc.py: Update to support
+	the new LEON2-MT mnemonics.
+
 2016-05-05  Raphael 'kena' Poss  <r.poss@uva.nl>
 
 	Initial support for LEON2-MT targets.

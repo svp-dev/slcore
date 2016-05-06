@@ -653,3 +653,47 @@ fcmps	e,f	ll
 fcmpes	e,f	ll
 cpop1	[1+2],d
 cpop2	[1+2],d
+f_alloc	d
+f_allocsrb	2,d
+f_allocsrb	i,d
+f_break
+f_break	1
+f_create	1,2	ll
+f_create	1,2,d	ll
+f_create	1,i	ll
+f_create	1,i,d	ll
+f_fence	1,2
+f_fence	1,2,d
+f_fence	1,i
+f_fence	1,i,d
+f_fence	2
+f_fence	i
+f_freesrb	1
+f_get_blockindex	1,d
+f_get_blockindex	d
+f_get_blocksize	1,d
+f_get_blocksize	d
+f_get_gridsize	1,d
+f_get_gridsize	d
+f_mapg	1,2,d
+f_mapg	1,i,d
+f_maphtg	1,2,d
+f_maphtg	1,i,d
+f_set_blocksize	1,2
+f_set_blocksize	1,i
+f_set_gridsize	1,2
+f_set_gridsize	1,i
+r_read	1,d	ll
+r_write	1,2	ll
+r_write	1,2,d	ll
+r_write	1,i	ll
+r_write	1,i,d	ll
+t_allochtg	1,2,d	ll
+t_allochtg	1,i,d	ll
+t_end
+t_freehtg	1
+t_get_fid	d
+t_get_pindex	d
+t_get_tid	d
+t_wait
+t_wait	1
