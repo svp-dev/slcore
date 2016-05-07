@@ -1,5 +1,11 @@
 2016-05-08  Raphael 'kena' Poss  <r.poss@uva.nl>
 
+	Packaging fix.
+
+	* tools/slc.mk (nobase_python_PYTHON): List the new files.
+
+2016-05-08  Raphael 'kena' Poss  <r.poss@uva.nl>
+
 	Optimize further for LEON2-MT assembly.
 
 	* tools/slc/mt/common/asmproc/remdefaults.py (remdefaults): Also
