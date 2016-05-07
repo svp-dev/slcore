@@ -5,6 +5,10 @@ from ..ast import *
 
 class Create_2_LowCreate(DefaultVisitor):
 
+    def __init__(self, signed_ix):
+        super(Create_2_LowCreate, self).__init__()
+        self.signed_ix = signed_ix
+
     def visit_create(self, cr):
 
         lc = LowCreate(loc = cr.loc,
@@ -19,8 +23,16 @@ class Create_2_LowCreate(DefaultVisitor):
         cr.cvar_fid = CVarDecl(loc = cr.loc, name = 'C$F$%s' % cr.label, ctype = 'long')
         decls += cr.cvar_fid
 
+        smod = ''
+        if not self.signed_ix:
+            smod = 'unsigned'
         for item in ('place', 'start', 'limit', 'step', 'block'):
-            var = CVarDecl(loc = cr.loc, name = 'C$%s$%s' % (item, cr.label), ctype = 'long')
+            if item != 'place':
+                ctype = smod + ' long'
+            else:
+                ctype = 'long'
+                
+            var = CVarDecl(loc = cr.loc, name = 'C$%s$%s' % (item, cr.label), ctype = ctype)
 
             decls += var
 

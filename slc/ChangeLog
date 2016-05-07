@@ -1,5 +1,45 @@
 2016-05-07  Raphael 'kena' Poss  <r.poss@uva.nl>
 
+	Initial support for family creation on LEON2-MT.
+
+	Items worthy of interest:
+	- LEON2-MT uses unsigned range parameters for families.
+	- LEON2-MT uses 4-dimensional indexing.
+	- The MT `start' parameter is ignored; `limit' sets the
+	block size, `step' sets the grid size.
+	- `sl_index' causes the appearance of CUDA-like thread/block/grid
+	range variables `threadIdx', `blockIdx', `blockDim', `gridDim'.
+
+	* tools/slc/lower/seq.py: Ensure that the visitor attributes are
+	not hidden (prefixed with `__'), so that the visitors can be
+	derived.
+	* tools/slc/mt/leon2mt/seq.py: New, deriving the visitor in
+	`lower/seq.py'. This implements 4-dimensional indexing, assumes
+	the range parameters are declared unsigned.
+	* tools/slc/lower/lowercreate.py: Introduce a new constructor
+	parameter for `Create_2_LowCreate' to indicate whether range
+	parameters should be declared signed or unsigned.
+	* tools/slc/front/chains.py: Pass the parameter to
+	`Create_2_LowCreate' in `_common_prefix'. Adapt all chains
+	accordingly. Use the new sequential flattener for the LEON2-MT
+	targets. Create a new `l2mtseq' target for LEON2-MT's special
+	"naked seq" mode.
+	* tools/bin/cce.in: Adapt the `l2mt_s' target alias to use the new
+	spr `l2mtseq' target.
+
+	* tools/slc/mt/leon2mt/gencreate.py: Preliminary support for
+	LEON2-MT creation.
+	* tools/slc/mt/front/chains.py: Remove the now-irrelevant
+	constructor parameter `newisa' for the create transformer.
+	* tools/bin/cce.in: Disable placement strategy computations when
+	compiling for LEON2-MT, since LEON2-MT is not multi-core yet.
+
+	* tools/slc/mt/leon2mt/gentfun.py,
+	* tools/slc/mt/leon2mt/seq.py: Automatically instantiate
+	`threadIdx', `blockIdx', `blockDim', `gridDim' upon `sl_index'.
+
+2016-05-07  Raphael 'kena' Poss  <r.poss@uva.nl>
+
 	Fix some LEON2-MT instruction formats.
 
 	* tools/slc/mt/mtsparc/asmproc/opc/formats.db,

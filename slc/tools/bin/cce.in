@@ -171,7 +171,7 @@ case $alias in
 
     leon2mt|l2mt) alias=spr-l2mt_hybrid-leon2mt-fpga ;;
     l2mt_n)       alias=spr-l2mt_naked-leon2mt-fpga ;;
-    l2mt_s)       alias=spr-seq_naked-leon2mt-fpga ;;
+    l2mt_s)       alias=spr-l2mtseq_naked-leon2mt-fpga ;;
 
     mipsel_s)     alias=spr-seq_naked-mipsel-sim ;;
 
@@ -249,6 +249,7 @@ case $slc_dialect in
             mts_hybrid)  target=mts+seq ;;
             mtsn_naked)  target=mtsn ;;
             mtsn_hybrid) target=mtsn+seq ;;
+            l2mtseq_naked)   target=l2mtseq ;;
             l2mt_naked)  target=l2mt ;;
             l2mt_hybrid) target=l2mt+seq ;;
             hrt_naked)   target=hrt ;;
@@ -440,6 +441,7 @@ case $slc_arch in
     leon2mt)
         slc_ppflags+=(-D__slc_short_double__)
         slc_cflags+=(-mcpu=leon -fno-math-errno -fno-trapping-math -fshort-double -fno-delayed-branch -falign-functions=128 -mflat -masync-y -fomit-frame-pointer -fgcse-sm -fgcse-las -fgcse-after-reload -flive-range-shrinkage)
+        extra_tflags+=(-x no-create-strategies)
         ;;
     *)
 	;;

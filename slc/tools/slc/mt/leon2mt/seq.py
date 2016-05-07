@@ -1,31 +1,14 @@
-from ..visitors import DefaultVisitor, ScopedVisitor, flatten
-from ..ast import *
-from ..msg import warn
+from ...visitors import DefaultVisitor, ScopedVisitor, flatten
+from ...ast import *
+from ...msg import warn
+from ...lower.seq import Create_2_Loop, TFun_2_CFun
 
 #### Sequential transforms ####
 
-class SSync_2_CSSync(DefaultVisitor):
+class Create_2_L2MTLoop(Create_2_Loop):
 
-    def visit_spawnsync(self, ss):
-        return []
-
-class Create_2_Loop(ScopedVisitor):
-
-    def visit_seta(self, seta):
-        b = seta.rhs.accept(self)
-        return CVarSet(loc = seta.loc, decl = seta.decl.cvar, rhs = b) 
-
-    def visit_createarg(self, arg):
-        # prepare proto and uses
-        if arg.type.startswith("sh"):
-            self.callist.append(flatten(None, ', &'))
-            self.callist.append(CVarUse(decl = arg.cvar))
-            self.protolist += flatten(None, ', ') + arg.ctype + flatten(None, ' *')
-        else:
-            self.callist.append(flatten(None, ', '))
-            self.callist.append(CVarUse(decl = arg.cvar))
-            self.protolist += flatten(None, ', ') + arg.ctype
-        return arg
+    def __init__(self, *args, **kwargs):
+        super(Create_2_L2MTLoop, self).__init__(*args, **kwargs)
 
     def visit_lowcreate(self, lc):
         
@@ -90,68 +73,54 @@ class Create_2_Loop(ScopedVisitor):
         newbl.append(lc.body.accept(self))
 
         # here we expand the loop
-        indexvar = CVarDecl(loc = cr.loc_end, name = 'C$Si$%s' % lbl, ctype = 'long')
+        indexvar_x = CVarDecl(loc = cr.loc_end, name = 'C$Six$%s' % lbl, ctype = 'unsigned short')
+        self.cur_scope.decls += indexvar_x
+        indexvar_y = CVarDecl(loc = cr.loc_end, name = 'C$Siy$%s' % lbl, ctype = 'unsigned short')
+        self.cur_scope.decls += indexvar_y
+        indexvar = CVarDecl(loc = cr.loc_end, name = 'C$Si$%s' % lbl, ctype = 'unsigned long')
         self.cur_scope.decls += indexvar
+        blockvar_x = CVarDecl(loc = cr.loc_end, name = 'C$Sbx$%s' % lbl, ctype = 'unsigned short')
+        self.cur_scope.decls += blockvar_x
+        blockvar_y = CVarDecl(loc = cr.loc_end, name = 'C$Sby$%s' % lbl, ctype = 'unsigned short')
+        self.cur_scope.decls += blockvar_y
+        blockvar = CVarDecl(loc = cr.loc_end, name = 'C$Sb$%s' % lbl, ctype = 'unsigned long')
+        self.cur_scope.decls += blockvar
+        
+        ix = CVarUse(decl = indexvar_x)
+        iy = CVarUse(decl = indexvar_y)
+        iv = CVarUse(decl = indexvar)
+        bx = CVarUse(decl = blockvar_x)
+        by = CVarUse(decl = blockvar_y)
+        bv = CVarUse(decl = blockvar)
 
-        ix = CVarUse(decl = indexvar)
-        start = CVarUse(decl = cr.cvar_start)
+        endloop = CLabel(loc = cr.loc_end, name = 'Cle$%s' % cr.label)
+        
         limit = CVarUse(decl = cr.cvar_limit)
         step = CVarUse(decl = cr.cvar_step)
         docall = CVarSet(decl = cr.cvar_exitcode,
-                         rhs = funvar + '(' + ix + callist + ')')
+                         rhs = funvar + '(' + iv + callist + ',' + bv + ',' + limit + ',' + step + ')')
 
-        newbl.append(flatten(cr.loc_end, "if (") + step + " > 0) " + 
-                     "for (" + ix + " = " + start + "; " + 
-                     ix + " < " + limit + "; " +
-                     ix + " += " + step + ") " +
-                     "{ if (0 != (" + docall + ")) break; }" +
-                     "else "
-                     "for (" + ix + " = " + start + "; " + 
-                     ix + " > " + limit + "; " +
-                     ix + " += " + step + ") " +
-                     "{ if (0 != (" + docall + ")) break; };")
-
+        newbl.append(flatten(cr.loc_end,
+                             ' if((') + limit + ' >> 16) == 0) ' + limit + ' |= 0x10000;' +
+                     'if ((' + step + ' >>16) == 0) ' + step + ' |= 0x10000;')
+        newbl.append(flatten(cr.loc_end, 
+                             "for (") + by + " = 0; " + by + " < (" + step + ">>16); " + by + "++)" +
+                     "for (" + bx + " = 0; " + bx + " < (" + step + "&0xffff); " + by + "++) { " +
+                     bv + " = ((unsigned)" + by + "<<16) | " + bx + ";" +
+                     "for (" + iy + " = 0; " + iy + " < (" + limit + ">>16); " + iy + "++)" +
+                     "for (" + ix + " = 0; " + ix + " < (" + limit + "&0xffff); " + ix + "++) {" +
+                     iv + " = ((unsigned)" + iy + "<<16) | " + ix + ";" +
+                     "if (0 != (" + docall + ")) " + CGoto(loc = cr.loc_end, target = endloop) + "; }}" + endloop)
+        
         return newbl
 
 
-class TFun_2_CFun(DefaultVisitor):
+class TFun_2_L2MTCFun(TFun_2_CFun):
 
     def __init__(self, *args, **kwargs):
-        super(TFun_2_CFun, self).__init__(*args, **kwargs)
+        super(TFun_2_L2MTCFun, self).__init__(*args, **kwargs)
         self.shlist = None
         self.gllist = None
-
-    def visit_getp(self, getp):
-        if getp.name in self.shlist:
-            format = "(*__slP_%s)"
-        else:
-            format = " __slP_%s "
-        return flatten(getp.loc, format % getp.name)
-
-    def visit_setp(self, getp):
-        b = getp.rhs.accept(self)
-        if getp.name in self.shlist:
-            format = "(*__slP_%s) = "
-        else:
-            format = " __slP_%s = "
-        return [flatten(getp.loc, format % getp.name), b]
-
-    def visit_funparm(self, parm):
-        if parm.type.startswith("sh"):
-            self.shlist.append(parm.name)
-            self.buffer += (Opaque(', register ') + parm.ctype + 
-                              ' * const __restrict__ __slP_%s ' % parm.name)
-        else:
-            self.gllist.append(parm.name)
-            if parm.type.endswith('_mutable'):
-                reg = ""
-                const = ""
-            else:
-                reg = "register"
-                const = "const"
-            self.buffer += (Opaque(', %s ' % reg) + parm.ctype + 
-                              ' %s __slP_%s ' % (const, parm.name))
-        return parm
 
     def visit_fundecl(self, fundecl, infundef = False):
         old_shlist = self.shlist
@@ -167,11 +136,12 @@ class TFun_2_CFun(DefaultVisitor):
         else:
             qual = "extern"
         self.buffer = flatten(fundecl.loc, 
-                                " %s long %s(const long __slI%s" 
+                                " %s long %s(const unsigned long __slI%s" 
                                 % (qual, fundecl.name, iattr))
         for parm in fundecl.parms:
             parm.accept(self)
-        self.buffer += ')'
+        self.buffer += flatten(fundecl.loc,
+                                 ', const unsigned long __slB%s, const unsigned long __slBS%s, const unsigned long __slGS%s)' % (iattr, iattr, iattr))
         ret = self.buffer
         self.buffer = None
         if not infundef:
@@ -193,33 +163,26 @@ class TFun_2_CFun(DefaultVisitor):
         self.buffer = flatten(fundecl.loc, 
                                 " %s long (*%s)(const long __slI" 
                                 % (qual, fundecl.name))
+                         
         for parm in fundecl.parms:
             parm.accept(self)
-        self.buffer += ')'
+        self.buffer += flatten(fundecl,loc,
+                                 ', const long __slB, const long __slBS, const long __slGS)')
         ret = self.buffer
         self.buffer = None
         self.shlist = old_shlist
         self.gllist = old_gllist
         return ret
 
-    def visit_fundef(self, fundef):
-        newitems = self.dispatch(fundef, seen_as = FunDecl, infundef = True)
-        newitems += flatten(fundef.loc, "{")
-        newitems += fundef.body.accept(self)
-        newitems += flatten(fundef.loc_end, " return 0; }")
-        self.shlist = self.gllist = None
-        return newitems
-
     def visit_indexdecl(self, idecl):
-        return flatten(idecl.loc, 
-                       " register const long %s = __slI " 
-                       % idecl.indexname) 
+        b = []
+        b.append(super(TFun_2_L2MTCFun, self).visit_indexdecl(idecl))
+        b.append(flatten(idecl.loc,
+                         '; register union { struct { unsigned y : 16; unsigned x : 16; }; unsigned __slI; } threadIdx; threadIdx.__slI = __slI;'
+                         ' register union { struct { unsigned y : 16; unsigned x : 16; }; unsigned __slB; } blockIdx; blockIdx.__slB = __slB;'
+                         ' register union { struct { unsigned y : 16; unsigned x : 16; }; unsigned __slS; } blockDim; blockDim.__slS = __slBS;'
+                         ' register union { struct { unsigned y : 16; unsigned x : 16; }; unsigned __slS; } gridDim; gridDim.__slS = __slGS'))
+        return b
 
-    def visit_break(self, br):
-        return flatten(br.loc, " return 1 ")
 
-    def visit_endthread(self, et):
-        return flatten(et.loc, " return 0 ")
-
-
-__all__ = ['Create_2_Loop', 'TFun_2_CFun', 'SSync_2_CSSync']
+__all__ = ['Create_2_L2MTLoop', 'TFun_2_L2MTCFun']
