@@ -136,7 +136,9 @@ def xjoin2(fundata, items):
     if lpt == 0:
         lpt = 1
     tpb = lrbsz // lpt
-    yield ('directive', '.long %d' % (tpb * lrbsz + lpt), 'MT: LAYOUT %d %d %d' % (lpt, tpb, regs[0]))
+    layout = (tpb * lrbsz + lpt)
+    yield ('empty', '', 'MT: LAYOUT %s %d %d %d %d' % (name, layout, lpt, tpb, regs[0]))
+    yield ('directive', '.long %d' % layout, 'MT: preserve layout')
     yield ('label', '%s:' % name, '')
 
     p = fundata['presets']
@@ -164,7 +166,36 @@ def replacebreakend(fundata, items):
             continue
         yield (type, content, comment)
 
-# FIXME: re-implement xjoin2 here
+funparams = {}
+        
+def scanparams(items):
+    for (type, content, comment) in items:
+        if comment.startswith("MT: LAYOUT"):
+            _, _, fn, lp = comment.split(' ')[:4]
+            funparams[fn] = lp
+        yield (type, content, comment)
+
+_re_allochtg = re.compile(r't_allochtg\s+(%[^0-9]*\d+),\s*(%[^0-9]*\d+),\s+(%[^0-9]*\d+)')
+_re_mapfun = re.compile(r'\s*MT: CREATE \S+ FUN ([^ ]+) (.*)')
+def replparams(items):
+    # need to force the list so that all
+    # contexts are scanned once.
+    l = list(items)
+    for (type, content, comment) in l:
+        if type == 'other':
+            m = _re_allochtg.match(content)
+            m2 = _re_mapfun.match(comment)
+            if m is not None and m2 is not None:
+                fn = m2.group(2)
+                if fn in funparams:
+                    layout = funparams[fn]
+                    yield('other', 't_allochtg\t' + m.group(1) + ', ' + layout + ', ' + m.group(3), comment)
+                    continue
+                else:                        
+                    yield ('other', 'ld\t[' + m2.group(1) + '-4], '+m.group(2), comment)
+                pass
+        yield (type, content, comment)
+    
 
 
 _filter_begin = [reader, lexer, splitsemi, parser, grouper]
@@ -236,7 +267,7 @@ _filter_inner = [canonregs,
                  
                  zerog0,
                  phyregs]
-_filter_end = [ctlbits, flattener, printer]
+_filter_end = [ctlbits, flattener, scanparams, replparams, printer]
 
 
 from ...common.asmproc import fixup

@@ -1,5 +1,19 @@
 2016-05-08  Raphael 'kena' Poss  <r.poss@uva.nl>
 
+	Optimize further for LEON2-MT assembly.
+
+	* tools/slc/mt/common/asmproc/remdefaults.py (remdefaults): Also
+	recognize the LEON2-MT mnemonics for default elimination.
+
+	* tools/slc/mt/leon2mt/asmproc/base.py (xjoin2): Annotate
+	the layout parameters in a parseable comment.
+	* tools/slc/mt/leon2mt/asmproc/base.py (scanparams, replparams)
+	(_filter_end): Implement a two-pass traversal of the assembly code
+	to gather the layout parameters for all functions and then
+	optimize `t_allochtg' accordingly.
+
+2016-05-08  Raphael 'kena' Poss  <r.poss@uva.nl>
+
 	Compile for small code by default on LEON2-MT.
 
 	* tools/bin/cce.in: Default to `-Os' when compiling for LEON2-MT.
