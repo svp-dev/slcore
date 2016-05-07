@@ -317,6 +317,8 @@ esac
 case $slc_dialect-$slc_arch in
     spr-mt*|spr-mips*)
 	slc_cflags+=(-O2) ;;
+    spr-leon2mt)
+	slc_cflags+=(-Os) ;;
     spr-host)
         slc_cflags+=(-O2) ;;
     spp-*)

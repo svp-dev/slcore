@@ -113,6 +113,7 @@ def initspfp(fundata, items):
 def ctlbits(items):
     for (type, content, comment) in items:
         if type in ["fun", "cfun"]:
+            yield ('directive', '.align 128', '')
             yield ('directive', '.ctlbits 128 0', '')
         yield (type, content, comment)
         

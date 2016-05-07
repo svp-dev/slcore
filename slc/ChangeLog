@@ -1,3 +1,11 @@
+2016-05-08  Raphael 'kena' Poss  <r.poss@uva.nl>
+
+	Compile for small code by default on LEON2-MT.
+
+	* tools/bin/cce.in: Default to `-Os' when compiling for LEON2-MT.
+	* tools/slc/mt/leon2mt/asmproc/base.py (ctlbits): Force function
+	alignment, since `-Os' will disable the command-line flag to set it.
+
 2016-05-07  Raphael 'kena' Poss  <r.poss@uva.nl>
 
 	Initial support for family creation on LEON2-MT.
