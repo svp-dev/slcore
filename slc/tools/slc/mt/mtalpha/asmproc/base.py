@@ -375,7 +375,7 @@ def findcalls(fundata, items):
         yield (type, content, comment)
     fundata['hasjumps'] = hasjumps
 
-_re_fspill = re.compile('st. \$lf?\d+')
+_re_fspill = re.compile('st.?\s+\$lf?\d+')
 def avoidframespills(fundata, items):
     """
     Remove spills of "protected" registers inserted

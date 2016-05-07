@@ -1,3 +1,47 @@
+2016-05-07  Raphael 'kena' Poss  <r.poss@uva.nl>
+
+	Polish the assembly post-processing for LEON2-MT.
+
+	* tools/slc/mt/common/gentfun.py: Declare the initial `__slI'
+	index holders as `unsigned' if the concrete visitor demands so.
+	* tools/slc/mt/leon2mt/gentfun.py: New; derive from the MT-SPARC
+	code, and add a 2-dimensional threadIdx definition. Demand `__slI'
+	to be unsigned.
+	* tools/slc/mt/leon2mt/gencreate.py: New; simply copy from
+	MT-SPARC. Still needs to be re-written.
+	* tools/slc/front/chains.py: Use the two new classes for the
+	`l2mt' chains.
+
+	* tools/slc/mt/mtsparc/asmproc/base.py (grouper): initialize
+	`prologue' and `pprologue'.
+	* tools/slc/mt/common/asmproc/regextract.py (regextract): mark the
+	position of the removed `.registers' directive.
+	* tools/slc/mt/mtsparc/asmproc/base.py (xsplit): Actually extract
+	the function prologue, using the marked position of `.registers'
+	as final boundary.
+	* tools/slc/mt/mtsparc/asmproc/base.py (detectregs): Detect
+	register usage also in the prologue (now that there is one) and
+	mark SP adjustements.
+	* tools/slc/mt/mtalpha/asmproc/base.py (avoidframespills): Ensure
+	that any spaces are valid in the frame spill regexp, since SPARC
+	uses tabs.
+	* tools/slc/mt/leon2mt/asmproc/base.py (_filter_inner): Import the
+	filters `avoidframespills' and `killspadjusts' from the `mtalpha'
+	target and use them to remove unnecessary SP traffic from the prologue.
+	* tools/slc/mt/leon2mt/asmproc/base.py (munchret, killrasave):
+	New. More cleanup of the function prologue and also epilogue
+	(frame activity just before `ret').
+	* tools/slc/mt/leon2mt/asmproc/base.py (killnoregs): Remove the
+	`.noregisters' directive potentially added by the `mtsparc' filters.
+	* tools/slc/mt/leon2mt/asmproc/base.py (initspfp): Import and
+	modify from the `mtsparc' target to use the new ISA.
+
+	* tools/slc/mt/mtsparc/asmproc/base.py (replacebreakend): Update
+	the special MT mnemonics `end' and `break' to the new ISA format.
+
+	* tools/slc/mt/mtsparc/asmproc/base.py (ctlbits): Ensure that all
+	procedures are emitted with control bits.
+
 2016-05-06  Raphael 'kena' Poss  <r.poss@uva.nl>
 
 	Preliminary support for the LEON2-MT ISA.

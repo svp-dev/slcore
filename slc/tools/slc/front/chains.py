@@ -18,6 +18,8 @@ from ..mt.mtalpha.gencreate import *
 from ..mt.mtalpha.genssync import *
 from ..mt.mtsparc.gentfun import *
 from ..mt.mtsparc.gencreate import *
+from ..mt.leon2mt.gentfun import *
+from ..mt.leon2mt.gencreate import *
 from ..mt.common.strategy import *
 from ..lower.spawndecl import *
 from ..lower.lowerspawnsync import *
@@ -89,20 +91,20 @@ _chains = {
         ('autores', AutoResolve()),
 #        ('autoresss', AutoResolveSpawnSync()),
         ('makestrategy', CreateMTStrategy()),
-        ('flattencr', Create_2_MTSCreate()), 
-        ('flattenfun',TFun_2_MTSTFun()),
+        ('flattencr', Create_2_L2MTCreate(newisa=True)), 
+        ('flattenfun',TFun_2_L2MTTFun()),
 #        ('flattenss',SSync_2_MTSSSync()),
         ] + _common_suffix,
     'l2mt+seq' : _common_prefix + [
         ('makestrategy', CreateMTStrategy()),
-        ('splitcr', SplitCreates(oracle=make_mt_oracle('mts'))),
+        ('splitcr', SplitCreates(oracle=make_mt_oracle('l2mt'))),
 #        ('splitss', SplitSpawnSync(oracle=make_mt_oracle('mts'))),
         ('lseta', LinkSetA()),
         ('flseta', FlavorSetA()),
-        ('splitfun', SplitFuns(oracle=make_mt_oracle('mts'))),
-        ('flattencr', ScopedVisitor(Dispatcher({'cmts':Create_2_MTSCreate(),
+        ('splitfun', SplitFuns(oracle=make_mt_oracle('l2mt'))),
+        ('flattencr', ScopedVisitor(Dispatcher({'cl2mt':Create_2_L2MTCreate(newisa=True),
                                                 'cseq':Create_2_Loop()}))),
-        ('flattenfun', DefaultVisitor(Dispatcher({'fmts':TFun_2_MTSTFun(),
+        ('flattenfun', DefaultVisitor(Dispatcher({'fl2mt':TFun_2_L2MTTFun(),
                                                   'fseq':TFun_2_CFun()}))),
 #        ('flattenss', DefaultVisitor(Dispatcher({'smta':SSync_2_MTSSSync(),
 #                                                 'sseq':SSync_2_CSSync()}))),

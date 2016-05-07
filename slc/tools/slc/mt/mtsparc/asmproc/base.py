@@ -6,6 +6,7 @@ from ....msg import die
 _spreg = regmagic.legacy_to_canon('sp')
 _fpreg = regmagic.legacy_to_canon('fp')
 
+_re_regs = re.compile(r'\$[gsld]f?\d+')
 _re_call = re.compile(r'call\s')
 _re_saverest = re.compile(r'(save|restore)\s')
 def detectregs(fundata, items):
@@ -31,6 +32,23 @@ def detectregs(fundata, items):
             if fpreg in content and not content.startswith('save') and not content.startswith('restore'):
                 use_fp = True
         yield (type, content, comment)
+        
+    p = []
+    for (type, content, comment) in fundata['prologue']:
+        if type == 'other':
+                allregs = _re_regs.findall(content)
+                #print "XX", content, allregs
+                if spreg in allregs:
+                    others = [x for x in allregs if x != spreg]
+                    if len(others) != 0:
+                        # some other reg than SP involved, assume needed
+                        use_sp = True
+                    else:
+                        # mark for killspadjusts below
+                        comment = comment + ' SP_ADJUST'
+        p.append((type, content, comment))
+    fundata['prologue'] = p
+
     fundata['use_sp'] = use_sp
     fundata['use_fp'] = use_fp
     fundata['hasjumps'] = hasjumps
@@ -197,7 +215,8 @@ def xsplit(fundata, items):
     name = fundata['name']
     lbl = '__slf_%s:' % name
     szdir = '.size\t__slf_%s' % name
-
+    inprologue = 0
+    
     for (type, content, comment) in items:
         if content.startswith('.type') \
                 or content.startswith('.proc') \
@@ -205,11 +224,15 @@ def xsplit(fundata, items):
                 or content.startswith(szdir):
             continue
         elif type == 'label' and content == lbl:
+            inprologue = 1
+            continue
+        if inprologue == 1:
+            if type == 'empty' and 'MT: END PROLOGUE' in comment:
+                inprologue = 0
+                continue
+            fundata['prologue'].append((type,  content, comment))
             continue
         yield (type, content, comment)
-
-    fundata['prologue'] = []
-
 
 def initspfp(fundata, items):
     """
@@ -337,6 +360,8 @@ def grouper(items):
             yield (funtype, {'name':name,
                              'body':queue,
                              'global':globl,
+                             'prologue':[],
+                             'pprologue':[],
                              'specials':{},
                              'presets':_presets.copy()}, '')
             globl = False
