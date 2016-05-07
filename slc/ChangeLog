@@ -1,5 +1,13 @@
 2016-05-07  Raphael 'kena' Poss  <r.poss@uva.nl>
 
+	Fix some LEON2-MT instruction formats.
+
+	* tools/slc/mt/mtsparc/asmproc/opc/formats.db,
+	* tools/slc/mt/mtsparc/asmproc/opc/mtsparc.py: Update the formats
+	for `f_mapg', `f_maphtg', `r_allocsrb' and `t_allochtg'.
+
+2016-05-07  Raphael 'kena' Poss  <r.poss@uva.nl>
+
 	Polish the assembly post-processing for LEON2-MT.
 
 	* tools/slc/mt/common/gentfun.py: Declare the initial `__slI'

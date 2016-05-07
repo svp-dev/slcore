@@ -480,10 +480,6 @@ insninfo = {
 'f_alloc' : [
       (re018, form018),
       ],
-'f_allocsrb' : [
-      (re017, form017),
-      (re020, form006),
-      ],
 'f_break' : [
       (re002, form002),
       (re018, form027),
@@ -520,10 +516,14 @@ insninfo = {
 'f_mapg' : [
       (re001, form001),
       (re003, form003),
+      (re017, form030),
+      (re031, form031),
       ],
 'f_maphtg' : [
       (re001, form001),
       (re003, form003),
+      (re017, form030),
+      (re031, form031),
       ],
 'f_set_blocksize' : [
       (re017, form030),
@@ -1066,6 +1066,10 @@ insninfo = {
 'puts' : [
       (re090, form038),
       ],
+'r_allocsrb' : [
+      (re017, form017),
+      (re020, form006),
+      ],
 'r_read' : [
       (re017, form005),
       ],
@@ -1364,6 +1368,8 @@ insninfo = {
       (re017, form005),
       ],
 't_allochtg' : [
+      (re001, form001),
+      (re003, form003),
       (re001, form004),
       (re003, form024),
       ],

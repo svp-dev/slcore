@@ -654,8 +654,10 @@ fcmpes	e,f	ll
 cpop1	[1+2],d
 cpop2	[1+2],d
 f_alloc	d
-f_allocsrb	2,d
-f_allocsrb	i,d
+r_allocsrb	2,d
+r_allocsrb	i,d
+t_allochtg	1,2,d
+t_allochtg	1,i,d
 f_break
 f_break	1
 f_create	1,2	ll
@@ -677,8 +679,12 @@ f_get_gridsize	1,d
 f_get_gridsize	d
 f_mapg	1,2,d
 f_mapg	1,i,d
+f_mapg	1,2
+f_mapg	1,i
 f_maphtg	1,2,d
 f_maphtg	1,i,d
+f_maphtg	1,2
+f_maphtg	1,i
 f_set_blocksize	1,2
 f_set_blocksize	1,i
 f_set_gridsize	1,2
