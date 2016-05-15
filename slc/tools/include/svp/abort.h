@@ -17,8 +17,26 @@
 
 #ifdef __mt_freestanding__
 
+#ifdef __slc_os_sim__
 #include <svp/mgsim.h>
 #define svp_abort() mgsim_control(0, MGSCTL_TYPE_STATACTION, MGSCTL_SA_EXCEPTION, 0)
+
+#elif defined(__slc_arch_leon2mt__) && defined(__slc_os_fpga__)
+
+#include <svp/testoutput.h>
+
+#define svp_abort() do { \
+	__dbg_exit_status = -1; \
+	__asm__ __volatile__("t_end"); \
+	while(1) ;; \
+    } while(0)
+
+#else
+
+#error Unsupported arch/os combination
+
+#endif
+
 
 #else
 # include <stdlib.h>

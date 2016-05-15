@@ -9,6 +9,9 @@ endif
 if ENABLE_SLC_MIPSEL
 SUBDIRS += mipsel-sim
 endif
+if ENABLE_SLC_LEON2MT
+SUBDIRS += leon2mt-fpga
+endif
 
 if ENABLE_SLC_PTL
 SUBDIRS += \

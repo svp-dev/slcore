@@ -19,6 +19,21 @@
 
 #include <svp/compiler.h>
 
+# define output_string(S, Stream)                                       \
+    do {								\
+        const unsigned char *__ptr = (const unsigned char*)(const void*)(S);  \
+        while(likely(*__ptr)) output_char(*__ptr++, Stream);            \
+    } while(0)
+
+# define output_bytes(S, L, Stream)					\
+    do {                                                                \
+        const unsigned char *__ptr = (const unsigned char*)(const void*)(S);  \
+        unsigned long __i = 0, __max = (unsigned long)(L);              \
+        while(likely(__i < __max)) output_char(__ptr[__i++], Stream);	\
+    } while(0)
+
+#ifdef __slc_os_sim__
+
 #ifndef __MGSIM_DEBUG_STDOUT
 #define __MGSIM_DEBUG_STDOUT 0x200UL
 #endif
@@ -63,18 +78,72 @@
         __asm__ __volatile__("" : : : "memory");                        \
     } while(0)
 
-# define output_string(S, Stream)                                       \
-    do {								\
-        const unsigned char *__ptr = (const unsigned char*)(const void*)(S);  \
-        while(likely(*__ptr)) output_char(*__ptr++, Stream);            \
-    } while(0)
+#elif defined(__slc_arch_leon2mt__) && defined(__slc_os_fpga__)
 
-# define output_bytes(S, L, Stream)					\
-    do {                                                                \
-        const unsigned char *__ptr = (const unsigned char*)(const void*)(S);  \
-        unsigned long __i = 0, __max = (unsigned long)(L);              \
-        while(likely(__i < __max)) output_char(__ptr[__i++], Stream);	\
-    } while(0)
+extern const char __dbgfmt_digits[];
+extern char __dbgout_bytes;
+extern char __dbgerr_bytes;
+extern char __dbgbuf[];
+extern volatile int __dbg_exit_status;
+#define __DBGBUF_SIZE 1024
+extern unsigned long __dbgbuf_p;
+
+alwaysinline unused
+void output_char(int byte, int chan) {
+    volatile char * __restrict__ c = (chan == 1 ? &__dbgout_bytes : &__dbgerr_bytes);
+    *c = byte;
+    unsigned long p = __dbgbuf_p;
+    __dbgbuf[p++] = byte;
+    p %= __DBGBUF_SIZE;
+    __dbgbuf[p] = 0;
+    __dbgbuf_p = p;
+}
+
+alwaysinline unused
+void output_fmt_uint(unsigned long x, int chan, const unsigned long base)
+{
+    if (x < base) output_char(__dbgfmt_digits[x], chan);
+    else {
+	unsigned long root = 1;
+	while ((x/root) >= base)
+	    root *= base;
+	while (root) {
+	    unsigned long rs = x / root;
+	    x = x % root;
+	    root = root / base;
+	    output_char(__dbgfmt_digits[rs], chan);	
+	}
+    }
+}
+
+alwaysinline unused
+void output_fmt_int(long x, int chan, const unsigned long base) {
+    if (!x) output_char('0', chan);
+    else {
+	long root;
+	if (x < 0) {
+	    root = -1;
+	    output_char('-', chan);
+	} else root = 1;
+	while ((x/root) >= base)
+	    root *= base;
+	while (root) {
+	    long rs = x / root;
+	    x = x % root;
+	    root = root / base;
+	    output_char(__dbgfmt_digits[rs], chan);	
+	}
+    }
+}
+
+#define output_uint(N, Stream) output_fmt_uint((unsigned long)(N), Stream, 10)
+#define output_hex(N, Stream) output_fmt_uint((unsigned long)(N), Stream, 16)
+#define output_int(N, Stream) output_fmt_int((long)(N), Stream, 10)
+
+#else
+#error Unsupported arch/os back-end
+
+#endif
 
 #else
 

@@ -1,5 +1,24 @@
 2016-05-15  Raphael 'kena' Poss  <r.poss@uva.nl>
 
+	Preliminary library support for LEON2-MT.
+
+	* tools/lib/mt/l2mt/slrt.s: New.
+	* tools/include/svp/testoutput.h: On LEON2-MT, only use byte
+	output. This requires to resurrect some code (borrowed from
+	`lib/slsys/deprectated/io.c') to print numbers.
+	* tools/lib/mt/l2mt/dbgout.c: Declare the global symbols that will
+	serve as interface for debug output.
+
+	* tools/lib/leon2mt-fpga/Makefile.am: New. List the new files.
+	* tools/lib/configure.ac,
+	* tools/lib/Makefile.am: List the new sub-directory.
+
+	* tools/include/svp/abort.h: Adapt for use with LEON2-MT.
+	* tools/lib/mt/mgsim.c: Only include code when not compiling for
+	MGSim.
+
+2016-05-15  Raphael 'kena' Poss  <r.poss@uva.nl>
+
 	Miscellaneous LEON2-MT code generation improvements.
 
 	* tools/slc/mt/leon2mt/asmproc/base.py (_cfilter_inner)

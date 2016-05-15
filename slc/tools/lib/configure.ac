@@ -43,6 +43,7 @@ AC_CONFIG_FILES([Makefile
                  mipsel-sim/Makefile
                  mtsparc-sim/Makefile
                  mtsparc-fpga/Makefile
+                 leon2mt-fpga/Makefile
                  ])
 
 AC_OUTPUT
