@@ -10,7 +10,7 @@
 #endif
 
 #ifndef forceinline
-#define forceinline __attribute__((__always_inline__))
+#define forceinline __attribute__((__always_inline__)) inline
 #endif
 
 #else /* ! __GNUC__ */

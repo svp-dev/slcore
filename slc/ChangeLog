@@ -1,5 +1,13 @@
 2016-05-15  Raphael 'kena' Poss  <r.poss@uva.nl>
 
+	Kill some compiler warnings.
+
+	* tools/include/svp/compiler.h,
+	* lib/mgos/tlsmalloc/tricks.h: Use the `inline' keyword
+	so that GCC avoids complaining the function may not be inlinable.
+
+2016-05-15  Raphael 'kena' Poss  <r.poss@uva.nl>
+
 	Extend the library support for LEON2-MT.
 
 	* lib/leon2mt-fpga/Makefile.am: New.
