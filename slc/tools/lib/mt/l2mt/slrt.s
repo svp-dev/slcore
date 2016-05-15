@@ -21,8 +21,9 @@
 
 ! PROGRAM ENTRY POINT
 	.section ".init"
-        .align 64
-        .global _start
+        .align 128
+	.ctlbits 128 0
+	.global _start
         .type _start, #function
         .proc 010
 _start:

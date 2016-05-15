@@ -1,5 +1,11 @@
 2016-05-15  Raphael 'kena' Poss  <r.poss@uva.nl>
 
+	Fix a bug in the LEON2-MT bootstrap code.
+
+	* tools/lib/mt/l2mt/slrt.s: Ensure that control bits are generated.
+
+2016-05-15  Raphael 'kena' Poss  <r.poss@uva.nl>
+
 	Kill some compiler warnings.
 
 	* tools/include/svp/compiler.h,
