@@ -91,11 +91,11 @@ _chains = {
     'l2mt' : _common_prefix(False) + [
         ('lseta', LinkSetA()),
         ('autores', AutoResolve()),
-#        ('autoresss', AutoResolveSpawnSync()),
+        ('autoresss', AutoResolveSpawnSync()),
         ('makestrategy', CreateMTStrategy()),
         ('flattencr', Create_2_L2MTCreate()), 
         ('flattenfun',TFun_2_L2MTTFun()),
-#        ('flattenss',SSync_2_MTSSSync()),
+        ('flattenss',SSync_2_L2MTSSync()),
         ] + _common_suffix,
     'l2mtseq' : _common_prefix(False) + [
         ('lseta', LinkSetA()),
@@ -108,7 +108,7 @@ _chains = {
     'l2mt+seq' : _common_prefix(False) + [
         ('makestrategy', CreateMTStrategy()),
         ('splitcr', SplitCreates(oracle=make_mt_oracle('l2mt'))),
-#        ('splitss', SplitSpawnSync(oracle=make_mt_oracle('mts'))),
+        ('splitss', SplitSpawnSync(oracle=make_mt_oracle('l2mt'))),
         ('lseta', LinkSetA()),
         ('flseta', FlavorSetA()),
         ('splitfun', SplitFuns(oracle=make_mt_oracle('l2mt'))),
@@ -116,8 +116,8 @@ _chains = {
                                                 'cseq':Create_2_L2MTLoop()}))),
         ('flattenfun', DefaultVisitor(Dispatcher({'fl2mt':TFun_2_L2MTTFun(),
                                                   'fseq':TFun_2_L2MTCFun()}))),
-#        ('flattenss', DefaultVisitor(Dispatcher({'smta':SSync_2_MTSSSync(),
-#                                                 'sseq':SSync_2_CSSync()}))),
+        ('flattenss', DefaultVisitor(Dispatcher({'sl2mt':SSync_2_L2MTSSync(),
+                                                 'sseq':SSync_2_CSSync()}))),
         ] + _common_suffix,
 
 

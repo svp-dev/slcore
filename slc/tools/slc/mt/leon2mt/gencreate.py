@@ -213,22 +213,35 @@ class Create_2_L2MTCreate(ScopedVisitor):
                       '   "r"(' + gblvar + '+%d)' % c['gl_mem_offset'] +
                       ', "r"(&' + mavar + '));')
 
+        # actually create the family
+        newbl += (flatten(cr.loc_end,
+                          '__asm__ __volatile__("f_create %%0, %%2, %%0\\t! MT: CREATE %s"' % lbl) +
+                  ' : "=r"(' + usefvar + ') : "0"(' + usefvar + '),' +
+                  '   "r"(' + funvar + ') : "memory");')
+        
         # now, on to the sync.
         if cr.sync_type == 'normal':
-            # normal, synchronized create
-            newbl += (flatten(cr.loc_end,
-                  '__asm__ __volatile__("f_create %%0, %%2, %%0\\t! MT: CREATE %s"' % lbl) +
-                      ' : "=r"(' + usefvar + ') : "0"(' + usefvar + '),' +
-                      '   "r"(' + funvar + ') : "memory");')
             # then wait for child family to terminate.
             newbl += (flatten(cr.loc_end, 
-                              '__asm__ __volatile__("f_fence %%0, 31; '
+                              '__asm__ __volatile__("f_fence %%0, 31; nop;'
                               ' t_wait\\t! MT: SYNC %s"' % lbl) +
-                      ' : "=r"(' + usefvar + ') : "0"(' + usefvar + ') : "memory");')
-                                          
+                      ' : "=r"(' + usefvar + ') : "0"(' + usefvar + ') : "memory");') 
+        elif cr.sync_type == 'detach':
+            # automatically release resources upon termination
+            newbl += (flatten(cr.loc_end, 
+                              '__asm__ __volatile__("f_fence %%0, 30; nop;') +
+                      ' : "=r"(' + usefvar + ') : "0"(' + usefvar + '));')
 
         return newbl
 
 
+class SSync_2_L2MTSSync(DefaultVisitor):
 
-__all__ = ['Create_2_L2MTCreate']
+    def visit_spawnsync(self, ss):
+        return (flatten(ss.loc, 
+                        '__asm__ __volatile__("f_fence %%1, 31; nop; '
+                        ' t_wait\\t! MT: SYNC %s"' % ss.label) +
+                ' : "=r"(' + ss.rhs + ') : "0"(' + ss.rhs + ') : "memory");')
+                
+
+__all__ = ['Create_2_L2MTCreate', 'SSync_2_L2MTSSync']

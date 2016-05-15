@@ -207,8 +207,7 @@ _cfilter_inner = [canonregs,
                   # creplsave,
                   # creplrestore,
 
-                  # FIXME: is this useful?
-                  #fillannulnop,
+                  fillannulnop,
 
                   decode,
                   makedataflow(addswch = False, drainargs = True),
@@ -254,10 +253,10 @@ _filter_inner = [canonregs,
 
                  xjoin2,
 
-                 #fillannulnop,
+                 fillannulnop,
 
                  decode,
-                 makedataflow(addswch = False, drainargs = True),
+                 makedataflow(addswch = False, drainargs = False),
 
                  markdelay,
                  #protectend,

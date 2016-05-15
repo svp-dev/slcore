@@ -1,3 +1,18 @@
+2016-05-15  Raphael 'kena' Poss  <r.poss@uva.nl>
+
+	Miscellaneous LEON2-MT code generation improvements.
+
+	* tools/slc/mt/leon2mt/asmproc/base.py (_cfilter_inner)
+	(_filter_inner): Ensure that delayed "annul" slots are nops.
+
+	* tools/slc/mt/leon2mt/gencreate.py
+	(Create_2_L2MTCreate.visit_lowcreate): Support detached and
+	spawned families. Ensure there is a `nop' between `fence' and
+	`wait'.
+
+	* tools/slc/front/chains.py: Add the spawn visitors to the
+	LEON2-MT chains.
+
 2016-05-08  Raphael 'kena' Poss  <r.poss@uva.nl>
 
 	Packaging fix.
