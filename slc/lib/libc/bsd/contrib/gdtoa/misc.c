@@ -84,6 +84,7 @@ __Balloc
 	return rv;
 	}
 
+#if !defined(__slc_os_fpga__)
 sl_def(t_Balloc, sl__static, sl_shparm(Bigint*, ret), sl_glparm(int, k))
 {
     int k = sl_getp(k);
@@ -93,6 +94,7 @@ sl_def(t_Balloc, sl__static, sl_shparm(Bigint*, ret), sl_glparm(int, k))
 sl_enddef
 
 extern sl_place_t __dtoa_place_id;
+#endif
 
 Bigint *Balloc(int k)
 {
@@ -129,11 +131,13 @@ __Bfree
 		}
 	}
 
+#if !defined(__slc_os_fpga__)
 sl_def(t_Bfree, sl__static, sl_glparm(Bigint*, v))
 {
     __Bfree(sl_getp(v));
 }
 sl_enddef
+#endif
 
 void Bfree(Bigint* v)
 {

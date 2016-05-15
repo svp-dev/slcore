@@ -1,5 +1,38 @@
 2016-05-15  Raphael 'kena' Poss  <r.poss@uva.nl>
 
+	Extend the library support for LEON2-MT.
+
+	* lib/leon2mt-fpga/Makefile.am: New.
+	* lib/configure.ac,
+	* lib/Makefile.am: List the new sub-directory.
+
+	* lib/common.mk: Really remove the long-deprecated `io.c' and
+	`div.c' from the standard build.
+
+	* lib/libc/malloc/malloc_excl.c,
+	* lib/libc/malloc/mtmalloc.h,
+	* lib/libc/bsd/contrib/gdtoa/misc.c,
+	* lib/libc/bsd/libc/stdio/vfprintf.c: Avoid compiling exclusive
+	delegates on LEON2-MT.
+
+	* lib/libc/include/assert.h: Avoid using a comma expression since
+	`svp_abort()' may be a statement.
+
+	* lib/libc/include/limits.h,
+	* lib/libc/include/stddef.h,
+	* lib/libc/include/stdint.h,
+	* lib/libc/include/time.h: Support LEON2-MT.
+
+	* lib/mgos/tlsmalloc/tls_arch_leon2mt_fpga.h: New.
+	* lib/mgos/tlsmalloc/tlsconfig.h: Make the slot size smaller.
+	* lib/mgos/tlsmalloc/tlsmalloc.c: Avoid emitting MGSim debug output.
+	* lib/mgos/tlsmalloc/Makefile.am: List the new file.
+
+	* lib/mgos/posix-compat/exit.c: Use the new interface (although
+	this code is not yet linked in).
+
+2016-05-15  Raphael 'kena' Poss  <r.poss@uva.nl>
+
 	Preliminary library support for LEON2-MT.
 
 	* tools/lib/mt/l2mt/slrt.s: New.

@@ -6,7 +6,7 @@
 /*** Configuration ***/
 
 #if defined(__slc_os_fpga__)
-#define SLOT_SIZE 256
+#define SLOT_SIZE 128
 #else
 #define SLOT_SIZE 8192
 #endif

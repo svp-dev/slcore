@@ -1102,6 +1102,7 @@ error:
 	/* NOTREACHED */
 }
 
+#if !(defined(__slc_os_fpga__) || (defined(__slc_os_sim__) && defined(__mips__)))
 sl_def(t_vfprintf,sl__static,sl_glparm(FILE*,fp), sl_glparm(const char*,fmt0), sl_glparm(va_list*,ap), sl_shparm(int,ret))
 {
     sl_setp(ret, __vfprintf(sl_getp(fp), sl_getp(fmt0), *sl_getp(ap)));
@@ -1110,6 +1111,7 @@ sl_enddef
 
 
 extern sl_place_t __stdio_place_id;
+#endif
 
 int
 vfprintf(FILE * restrict fp, const char * restrict fmt0, va_list ap)

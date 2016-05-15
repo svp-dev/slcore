@@ -22,9 +22,10 @@ AM_CPPFLAGS = \
 	-I$(srcdir)/../slsys/include
 
 LIBSL_SRC = \
-	../slsys/deprecated/roman.c \
-	../slsys/deprecated/div.c \
-	../slsys/deprecated/io.c
+	../slsys/deprecated/roman.c
+
+#	../slsys/deprecated/div.c \
+#	../slsys/deprecated/io.c
 
 noinst_LIBRARIES = libslcommon.a 
 

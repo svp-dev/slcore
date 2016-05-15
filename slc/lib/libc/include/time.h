@@ -50,7 +50,7 @@ clock_t __inline_clock(void)
     __asm__ __volatile__ ("rpcc %0" : "=r"(c) : : "memory");
 #elif defined(__mips__)
     c = (clock_t)mtperf_sample1(MTPERF_CORE_CYCLES);
-#elif defined(__mtsparc__)
+#elif defined(__mtsparc__) || defined(__sparc__)
     __asm__ __volatile__("rd %%asr4, %0" : "=r"(c) : : "memory");
 #else
 # error no clock definition for this target.

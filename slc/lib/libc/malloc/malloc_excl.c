@@ -12,6 +12,8 @@
 // `COPYING' file in the root directory.
 //
 
+#if !defined(__slc_os_fpga__)
+
 #include <stdlib.h>
 #include "mtmalloc.h"
 
@@ -42,3 +44,4 @@ sl_def(t_dlrealloc,,sl_glparm(void*, ptr), sl_shparm(void*, szret))
 }
 sl_enddef
 
+#endif

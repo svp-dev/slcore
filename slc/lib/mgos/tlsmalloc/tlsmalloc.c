@@ -710,7 +710,7 @@ void *tls_realloc(void *ptr, size_t ns)
                 ptr, osz, ns);
 #endif
 #ifdef DEBUG_MGSIM
-        mgsim_control(0x726575736500ULL, MGSCTL_TYPE_STATACTION, MGSCTL_SA_CONTINUE, MGSCTL_CHAN_DEBUG);
+//        mgsim_control(0x726575736500ULL, MGSCTL_TYPE_STATACTION, MGSCTL_SA_CONTINUE, MGSCTL_CHAN_DEBUG);
 #endif        
         // nothing to do
         return ptr;
