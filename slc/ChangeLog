@@ -1,3 +1,10 @@
+2016-06-18  Raphael 'kena' Poss  <r.poss@uva.nl>
+
+	Enhance the layout of generated LEON2-MT binaries.
+
+	* tools/bin/cce.in: Make the .init section start at address 0, so
+	that `_start' gets there too.
+
 2016-05-15  Raphael 'kena' Poss  <r.poss@uva.nl>
 
 	Fix a bug in the LEON2-MT bootstrap code.

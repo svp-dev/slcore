@@ -481,7 +481,7 @@ case $slc_arch-$slc_os in
 	;;
     *-fpga)
         extra_f1flags+=(-x tls-via-gettid -x clear-local-regs)
-	slc_ldflags+=(-Wl,-Ttext -Wl,0 -nostdlib)
+	slc_ldflags+=( -Wl,--section-start -Wl,.init=0 -nostdlib)
 	;;
     host-host-hrt)
         slc_ldflags+=($PTHREAD_LIBS -static)
