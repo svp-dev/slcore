@@ -17,7 +17,7 @@
         .global __first_tls_top
         .align 1024
         .lcomm __tls_base,1024
-        .lcomm __first_tls_top,261120
+        .lcomm __first_tls_top,31744 ! space for 32 threads
 
 ! PROGRAM ENTRY POINT
 	.section ".init"

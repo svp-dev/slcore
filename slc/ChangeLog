@@ -1,5 +1,12 @@
 2016-06-18  Raphael 'kena' Poss  <r.poss@uva.nl>
 
+	Reduce the TLS area for LEON2-MT binaries.
+
+	* tools/lib/mt/l2mt/slrt.s: Hardware supports up to 32 threads at
+	this point, not 256.
+
+2016-06-18  Raphael 'kena' Poss  <r.poss@uva.nl>
+
 	Enhance the layout of generated LEON2-MT binaries.
 
 	* tools/bin/cce.in: Make the .init section start at address 0, so
