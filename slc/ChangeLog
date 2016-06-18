@@ -1,5 +1,13 @@
 2016-06-18  Raphael 'kena' Poss  <r.poss@uva.nl>
 
+	Fix a bug in LEON2-MT code generation.
+
+	* tools/slc/mt/leon2mt/gencreate.py
+	(Create_2_L2MTCreate.visit_lowcreate): Ensure the gmask is
+	computed according to SPEC.
+
+2016-06-18  Raphael 'kena' Poss  <r.poss@uva.nl>
+
 	Reduce the TLS area for LEON2-MT binaries.
 
 	* tools/lib/mt/l2mt/slrt.s: Hardware supports up to 32 threads at

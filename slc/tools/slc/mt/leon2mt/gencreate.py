@@ -89,12 +89,12 @@ class Create_2_L2MTCreate(ScopedVisitor):
 
         if has_globals:
             mask = 0
-            if nr_globals > 4:
-                mask = 7
-            elif nr_globals > 2:
-                mask = 3
+            if nr_globals > 8:
+                mask = 4 # binary 100
+            elif nr_globals > 4:
+                mask = 6 # binary 110
             else:
-                mask = 1
+                mask = 7 # binary 111
             newbl += (flatten(cr.loc,
                               '__asm__ __volatile__("r_allocsrb %%1, %%0\\t! MT: CREATE %s"'
                               ' : "=r"(' % lbl) + 
