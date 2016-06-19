@@ -35,6 +35,7 @@ AC_CHECK_PROG([SLRANLIB], [set-by-parent-makefile])
 
 AC_CONFIG_FILES([Makefile
                  host-host-seqc/Makefile
+                 host-host-l2mtseq/Makefile
                  host-host-ptl/Makefile
                  host-host-ptld/Makefile
                  host-host-hlsim/Makefile

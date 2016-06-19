@@ -156,6 +156,8 @@ if test -z "$alias"; then do_usage; fi
 case $alias in
     seqc)         alias=spr-seq_naked-host-host-seqc ;;
     seqc_o)       alias=seqc-seqc_o-host-host-seqc ;;
+    seqc_l2mt)    alias=spr-l2mtseq_naked-host-host-l2mtseq ;;
+
     mtalpha|mta)  alias=spr-mta_hybrid-mtalpha-sim ;;
     mta_n)        alias=spr-mta_naked-mtalpha-sim ;;
     mta_on)       alias=spp-mta_naked-mtalpha-sim ;;

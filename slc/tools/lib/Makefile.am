@@ -11,6 +11,7 @@ SUBDIRS += mipsel-sim
 endif
 if ENABLE_SLC_LEON2MT
 SUBDIRS += leon2mt-fpga
+SUBDIRS += host-host-l2mtseq
 endif
 
 if ENABLE_SLC_PTL

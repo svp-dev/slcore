@@ -1,5 +1,23 @@
 2016-06-19  Raphael 'kena' Poss  <r.poss@uva.nl>
 
+	Fix/extend the sequential execution targets for LEON2-MT.
+
+	* slc/lib/leon2mt-fpga/Makefile.am,
+	* tools/lib/leon2mt-fpga/Makefile.am: The sub-directory is called
+	`l2mtseq_naked', not `seq_naked'.
+
+	* tools/bin/cce.in: New alias `seqc_l2mt'.
+
+	* tools/lib/host-host-l2mtseq/Makefile.am: New.
+	* tools/lib/Makefile.am,
+	* tools/lib/configure.ac: Add the new sub-target.
+
+	* slc/lib/host-host-l2mtseq/Makefile.am: New.
+	* slc/lib/Makefile.am,
+	* slc/lib/configure.ac: Add the new sub-target.
+
+2016-06-19  Raphael 'kena' Poss  <r.poss@uva.nl>
+
 	Various LEON2-MT code generation fixes.
 
 	* tools/slc/mt/leon2mt/seq.py (Create_2_L2MTLoop.visit_lowcreate):
