@@ -43,6 +43,7 @@ __FBSDID("$FreeBSD: src/lib/libc/string/strerror.c,v 1.16.10.1 2009/08/03 08:13:
 #include <errno.h>
 #include <string.h>
 #include <stdio.h>
+#include <svp/divide.h>
 
 #define	UPREFIX		"Unknown error"
 
@@ -69,8 +70,17 @@ errstr(int num, char *uprefix, char *buf, size_t len)
 	*--t = '\0';
 	uerr = (num >= 0) ? num : -num;
 	do {
-		*--t = "0123456789"[uerr % 10];
-	} while (uerr /= 10);
+#if defined(__slc_arch_leon2mt__) && defined(__slc_os_fpga__)
+		    uint32_t d, m;
+		    __divmodu_uint32_t(uerr, 10, &d, &m);
+#else
+		    long d, m;
+		    d = uerr / 10;
+		    m = uerr % 10;
+#endif
+		*--t = "0123456789"[m];
+		uerr = d;
+	} while (uerr != 0);
 	if (num < 0)
 		*--t = '-';
 	*--t = ' ';

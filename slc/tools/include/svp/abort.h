@@ -23,7 +23,7 @@
 
 #elif defined(__slc_arch_leon2mt__) && defined(__slc_os_fpga__)
 
-#include <svp/testoutput.h>
+extern volatile int __dbg_exit_status;
 
 #define svp_abort() do { \
 	__dbg_exit_status = -1; \

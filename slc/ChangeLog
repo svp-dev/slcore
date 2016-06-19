@@ -1,5 +1,34 @@
 2016-06-19  Raphael 'kena' Poss  <r.poss@uva.nl>
 
+	Introduce software division routines for LEON2-MT.
+
+	* tools/lib/include/svp/divide.h: New.
+	* tools/slc.mk (nobase_dist_pkgdata_DATA): List the new file.
+
+	* tools/lib/common/divide.c: New.
+	* tools/lib/mt.mk (LIBSLC_SRC),
+	* tools/lib/host.mk (LIBSLC_SRC): List the new file.
+
+	* tools/lib/include/svp/testoutput.h: Use the new division
+	functions when compiling for LEON2-MT. Declare the functions as
+	`gnu_inline' to merge the instances during linking.
+
+	* tools/lib/common/testoutput.c: New.
+	* tools/lib/leon2mt-fpga/Makefile.am: List the new file.
+
+	* lib/libc/bsd/libc/stdio/printfcommon.h,
+	* lib/libc/bsd/libc/stdlib/strtol.c,
+	* lib/libc/bsd/libc/stdlib/strtoul.c,
+	* lib/libc/bsd/libc/string/strerror.c,
+	* lib/libc/misc/rand.c,
+	* lib/libc/stdio/fwrite.c,
+	* lib/slsys/perf/perf.c: Modify to use the new division functions.
+
+	* tools/include/svp/abort.h: Avoid a circular dependency with
+	`divide.h' and `testoutput.h'.
+
+2016-06-19  Raphael 'kena' Poss  <r.poss@uva.nl>
+
 	Fix/extend the sequential execution targets for LEON2-MT.
 
 	* slc/lib/leon2mt-fpga/Makefile.am,

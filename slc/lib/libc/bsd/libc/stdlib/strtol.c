@@ -39,6 +39,7 @@ __FBSDID("$FreeBSD: src/lib/libc/stdlib/strtol.c,v 1.20.10.1 2009/08/03 08:13:06
 #include <ctype.h>
 #include <errno.h>
 #include <string.h>
+#include <svp/divide.h>
 
 /*
  * Convert a string to a long integer.
@@ -106,8 +107,15 @@ strtol(const char * restrict nptr, char ** restrict endptr, int base)
 	 */
 	cutoff = neg ? (unsigned long)-(LONG_MIN + LONG_MAX) + LONG_MAX
 	    : LONG_MAX;
+#if defined(__slc_arch_leon2mt__) && defined(__slc_os_fpga__)
+	uint32_t rd, rm;
+	__divmodu_uint32_t(cutoff, base, &rd, &rm);
+	cutoff = (unsigned long) rd;
+	cutlim = (int) rm;
+#else  
 	cutlim = cutoff % base;
 	cutoff /= base;
+#endif
 	for ( ; ; c = *s++) {
 		if (c >= '0' && c <= '9')
 			c -= '0';

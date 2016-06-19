@@ -89,9 +89,11 @@ const char* mtperf_counter_names[] = {
 
 #if defined(__mt_freestanding__) && (defined(__slc_os_fpga__) || defined(__slc_arch_mipsel__))
 #define ARITH long
+#define DIV(X, Y) __divs_int32_t(X, Y)
 #define pf(Num) output_int((Num), stream)
 #else
 #define ARITH float
+#define DIV(X, Y) (X / Y)
 #define pf(Num) output_float((Num), stream, 6)
 #endif
 
@@ -132,8 +134,8 @@ ARITH mtperf_compute_extra(const counter_t* before, const counter_t* after, unsi
     case 0:
     {
         ARITH itotal = after[MTPERF_EXECUTED_INSNS] - before[MTPERF_EXECUTED_INSNS];
-        itotal /= ncores;
-        if (elapsed) return itotal * core_rate / elapsed;
+        itotal = DIV(itotal, ncores);
+        if (elapsed) return itotal * DIV(core_rate, elapsed);
         break;
     }
 #if defined(__slc_os_sim__)
@@ -141,26 +143,26 @@ ARITH mtperf_compute_extra(const counter_t* before, const counter_t* after, unsi
     {
         // thread table occupancy
         ARITH ttotal = after[MTPERF_CUMUL_TT_OCCUPANCY] - before[MTPERF_CUMUL_TT_OCCUPANCY];
-        ttotal /= ncores;
-        ttotal /= mgconf_ttes_per_core;
-        if (elapsed) return ttotal /= elapsed;
+        ttotal = DIV(ttotal, ncores);
+	ttotal = DIV(ttotal, mgconf_ttes_per_core);
+        if (elapsed) return DIV(ttotal, elapsed);
         break;
     }
     case 2:
     {
         // family table occupancy
         ARITH ttotal = after[MTPERF_CUMUL_FT_OCCUPANCY] - before[MTPERF_CUMUL_FT_OCCUPANCY];
-        ttotal /= ncores;
-        ttotal /= mgconf_ftes_per_core;
-        if (elapsed) return ttotal /= elapsed;
+        ttotal = DIV(ttotal, ncores);
+	ttotal = DIV(ttotal, mgconf_ftes_per_core);
+        if (elapsed) return DIV(ttotal, elapsed);
         break;
     }
     case 3:
     {
         // exclusive allocate queue size
         ARITH ttotal = after[MTPERF_CUMUL_ALLOC_EX_QSIZE] - before[MTPERF_CUMUL_ALLOC_EX_QSIZE];
-        ttotal /= ncores;
-        if (elapsed) return ttotal /= elapsed;
+        ttotal = DIV(ttotal, ncores);
+        if (elapsed) return DIV(ttotal, elapsed);
         break;
     }
 #define N_EXTRA_COLUMNS 4

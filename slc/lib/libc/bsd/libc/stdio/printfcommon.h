@@ -195,13 +195,29 @@ __ultoa(u_long val, CHAR *endp, int base, int octzero, const char *xdigs)
 		 * the incoming value to where signed arithmetic works.
 		 */
 		if (val > LONG_MAX) {
-			*--cp = to_char(val % 10);
-			sval = val / 10;
+#if defined(__slc_arch_leon2mt__) && defined(__slc_os_fpga__)
+		    uint32_t d, m;
+		    __divmodu_uint32_t(val, 10, &d, &m);
+#else
+		    u_long d, m;
+		    d = val / 10;
+		    m = val % 10;
+#endif
+			*--cp = to_char(m);
+			sval = d;
 		} else
 			sval = val;
 		do {
-			*--cp = to_char(sval % 10);
-			sval /= 10;
+#if defined(__slc_arch_leon2mt__) && defined(__slc_os_fpga__)
+		    int32_t d, m;
+		    __divmods_int32_t(sval, 10, &d, &m);
+#else
+		    long d, m;
+		    d = sval / 10;
+		    m = sval % 10;
+#endif
+			*--cp = to_char(m);
+			sval = d;
 		} while (sval != 0);
 		break;
 
@@ -241,17 +257,33 @@ __ujtoa(uintmax_t val, CHAR *endp, int base, int octzero, const char *xdigs)
 	switch (base) {
 	case 10:
 		if (val < 10) {
-			*--cp = to_char(val % 10);
+			*--cp = to_char(val);
 			return (cp);
 		}
 		if (val > INTMAX_MAX) {
-			*--cp = to_char(val % 10);
-			sval = val / 10;
+#if defined(__slc_arch_leon2mt__) && defined(__slc_os_fpga__)
+		    int32_t d, m;
+		    __divmods_int32_t(sval, 10, &d, &m);
+#else
+		    long d, m;
+		    d = sval / 10;
+		    m = sval % 10;
+#endif
+			*--cp = to_char(m);
+			sval = d;
 		} else
 			sval = val;
 		do {
-			*--cp = to_char(sval % 10);
-			sval /= 10;
+#if defined(__slc_arch_leon2mt__) && defined(__slc_os_fpga__)
+		    int32_t d, m;
+		    __divmods_int32_t(sval, 10, &d, &m);
+#else
+		    long d, m;
+		    d = sval / 10;
+		    m = sval % 10;
+#endif
+			*--cp = to_char(m);
+			sval = d;
 		} while (sval != 0);
 		break;
 
@@ -296,8 +328,17 @@ exponent(CHAR *p0, int exp, CHAR fmtch)
 	t = expbuf + MAXEXPDIG;
 	if (exp > 9) {
 		do {
-			*--t = to_char(exp % 10);
-		} while ((exp /= 10) > 9);
+#if defined(__slc_arch_leon2mt__) && defined(__slc_os_fpga__)
+		    int32_t d, m;
+		    __divmods_int32_t(exp, 10, &d, &m);
+#else
+		    long d, m;
+		    d = exp / 10;
+		    m = exp % 10;
+#endif
+			*--t = to_char(m);
+			exp = d;
+		} while (exp > 9);
 		*--t = to_char(exp);
 		for (; t < expbuf + MAXEXPDIG; *p++ = *t++);
 	}

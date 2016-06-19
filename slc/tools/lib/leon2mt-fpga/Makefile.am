@@ -19,4 +19,4 @@ l2mtseq_naked_libslmain_a_SOURCES = $(MAIN_SRC)
 SLRT_SRC = ../mt/l2mt/slrt.s
 include ../mt.mk
 
-LIBSLC_SRC += ../mt/l2mt/dbgout.c
+LIBSLC_SRC += ../mt/l2mt/dbgout.c ../common/testoutput.c

@@ -39,6 +39,8 @@ __FBSDID("$FreeBSD: src/lib/libc/stdlib/strtoul.c,v 1.19.10.1 2009/08/03 08:13:0
 #include <errno.h>
 #include <stddef.h>
 
+#include <svp/divide.h>
+
 /*
  * Convert a string to an unsigned long integer.
  *
@@ -84,8 +86,15 @@ strtoul(const char * restrict nptr, char ** restrict endptr, int base)
 	if (base < 2 || base > 36)
 		goto noconv;
 
+#if defined(__slc_arch_leon2mt__) && defined(__slc_os_fpga__)
+	uint32_t rd, rm;
+	__divmodu_uint32_t(ULONG_MAX, base, &rd, &rm);
+	cutoff = (unsigned long) rd;
+	cutlim = (int) rm;
+#else  
 	cutoff = ULONG_MAX / base;
 	cutlim = ULONG_MAX % base;
+#endif
 	for ( ; ; c = *s++) {
 		if (c >= '0' && c <= '9')
 			c -= '0';

@@ -88,7 +88,15 @@ extern volatile int __dbg_exit_status;
 #define __DBGBUF_SIZE 1024
 extern unsigned long __dbgbuf_p;
 
-alwaysinline unused
+#include <svp/divide.h>
+
+#if !defined(TESTOUTPUT_IMPL)
+#define EXTERNTO extern
+#else
+#define EXTERNTO /*nothing*/
+#endif
+
+__attribute__((gnu_inline,optimize(3))) EXTERNTO inline
 void output_char(int byte, int chan) {
     volatile char * __restrict__ c = (chan == 1 ? &__dbgout_bytes : &__dbgerr_bytes);
     *c = byte;
@@ -99,38 +107,40 @@ void output_char(int byte, int chan) {
     __dbgbuf_p = p;
 }
 
-alwaysinline unused
-void output_fmt_uint(unsigned long x, int chan, const unsigned long base)
+__attribute__((gnu_inline,optimize(3))) EXTERNTO inline
+void output_fmt_uint(uint32_t x, int chan, const uint32_t base)
 {
     if (x < base) output_char(__dbgfmt_digits[x], chan);
     else {
-	unsigned long root = 1;
-	while ((x/root) >= base)
+	uint32_t root = 1;
+	while (__divu_uint32_t(x, root) >= base)
 	    root *= base;
 	while (root) {
-	    unsigned long rs = x / root;
-	    x = x % root;
-	    root = root / base;
+	    uint32_t rs, rm;
+	    __divmodu_uint32_t(x, root, &rs, &rm);
+	    x = rm;
+	    root = __divu_uint32_t(root, base);
 	    output_char(__dbgfmt_digits[rs], chan);	
 	}
     }
 }
 
-alwaysinline unused
-void output_fmt_int(long x, int chan, const unsigned long base) {
+__attribute__((gnu_inline,optimize(3))) EXTERNTO inline
+void output_fmt_int(int32_t x, int chan, const int32_t base) {
     if (!x) output_char('0', chan);
     else {
-	long root;
+	int32_t root;
 	if (x < 0) {
 	    root = -1;
 	    output_char('-', chan);
 	} else root = 1;
-	while ((x/root) >= base)
+	while (__divs_int32_t(x,root) >= base)
 	    root *= base;
 	while (root) {
-	    long rs = x / root;
-	    x = x % root;
-	    root = root / base;
+	    int32_t rs, rm;
+	    __divmods_int32_t(x, root, &rs, &rm);
+	    x = rm;
+	    root = __divs_int32_t(root, base);
 	    output_char(__dbgfmt_digits[rs], chan);	
 	}
     }
