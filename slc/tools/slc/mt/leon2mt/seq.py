@@ -105,7 +105,7 @@ class Create_2_L2MTLoop(Create_2_Loop):
                      'if ((' + step + ' >>16) == 0) ' + step + ' |= 0x10000;')
         newbl.append(flatten(cr.loc_end, 
                              "for (") + by + " = 0; " + by + " < (" + step + ">>16); " + by + "++)" +
-                     "for (" + bx + " = 0; " + bx + " < (" + step + "&0xffff); " + by + "++) { " +
+                     "for (" + bx + " = 0; " + bx + " < (" + step + "&0xffff); " + bx + "++) { " +
                      bv + " = ((unsigned)" + by + "<<16) | " + bx + ";" +
                      "for (" + iy + " = 0; " + iy + " < (" + limit + ">>16); " + iy + "++)" +
                      "for (" + ix + " = 0; " + ix + " < (" + limit + "&0xffff); " + ix + "++) {" +

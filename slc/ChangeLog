@@ -1,3 +1,20 @@
+2016-06-19  Raphael 'kena' Poss  <r.poss@uva.nl>
+
+	Various LEON2-MT code generation fixes.
+
+	* tools/slc/mt/leon2mt/seq.py (Create_2_L2MTLoop.visit_lowcreate):
+	Increase bx in the inner sequential loop, not by.
+
+	* tools/slc/mt/leon2mt/asmproc/opt.py: Remove `remdefaults' from
+	the chain, since LEON2-MT does not initialize family entries at
+	this point.
+
+	* tools/slc/mt/leon2mt/gencreate.py
+	(Create_2_L2MTCreate.visit_seta): Ensure that the global register
+	offsets are properly computed.
+	(Create_2_L2MTCreate.visit_lowcreate): Mark `allochtg' as volatile
+	to prevent the compiler from re-ordering it.
+
 2016-06-18  Raphael 'kena' Poss  <r.poss@uva.nl>
 
 	Fix a bug in LEON2-MT code generation.

@@ -36,10 +36,10 @@ class Create_2_L2MTCreate(ScopedVisitor):
             else: rspec = 'rI'
             regnr = a['regnr']
             newbl.append(flatten(seta.loc, 
-                                 ' __asm__ ("%(insn)s %%0, %%4\\t! MT: set %(cat)sarg"'
+                                 ' __asm__ ("%(insn)s %%2, %%3\\t! MT: set %(cat)sarg"'
                                  ' : "=r"(' % locals()) +
-                         gblvar + '), "=r"(' + fidvar + ') : "0"(' + gblvar + '+%d' % regnr +
-                         '), "1"(' + fidvar + '), "%s"((' % rspec + ctype + ')(' +
+                         fidvar + ') : "0"(' + fidvar  +
+                         '), "r"(' + gblvar+ '+%d' % regnr + '), "%s"((' % rspec + ctype + ')(' +
                          assign + ')))')
         return newbl
                   
@@ -152,7 +152,7 @@ class Create_2_L2MTCreate(ScopedVisitor):
                   block + '), 1)) ' + block + ' = -1;')
 
         newbl += (flatten(cr.loc,
-                          '__asm__ ("t_allochtg %%1, %%0, %%0\\t! MT: CREATE %s FUN %%2 ' % lbl) + funvar +
+                          '__asm__ __volatile__ ("t_allochtg %%1, %%0, %%0\\t! MT: CREATE %s FUN %%2 ' % lbl) + funvar +
                   '": "=&r"(' + tgvar + ') : "r"(' + block + '), ' + 
                   '"r"(' + funvar + '));')
         if lc.target_next is not None:

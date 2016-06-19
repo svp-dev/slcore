@@ -18,7 +18,7 @@ _filter_begin = [common.reader,
                  grouper]
 _filter_stages = [
         vnametocanon,
-        remdefaults,
+        # remdefaults, # no defaults in LEON2-MT
 
         findlabels,
         killunusedlabels,
