@@ -483,7 +483,23 @@ case $slc_arch-$slc_os in
 	;;
     *-fpga)
         extra_f1flags+=(-x tls-via-gettid -x clear-local-regs)
-	slc_ldflags+=( -Wl,--section-start -Wl,.init=0 -nostdlib)
+	slc_ldflags+=(-nostdlib )
+        save_IFS=$IFS
+        IFS=:
+        found=
+        for d in $slc_libdir; do
+  	    osdir=$d/$slc_arch-$slc_os
+            if test -r "$osdir/linkrom"; then
+                found=$osdir/linkrom
+		break
+	    fi
+        done
+	if test -z "$found"; then
+	    echo "$basename: warning: linker script not found for $slc_variant-$slc_arch-$slc_os in $slc_libdir" >&2
+        else
+	    slc_ldflags+=(-Wl,-T -Wl,"$found")
+	fi
+	IFS=$save_IFS
 	;;
     host-host-hrt)
         slc_ldflags+=($PTHREAD_LIBS -static)

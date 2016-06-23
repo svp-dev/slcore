@@ -1,3 +1,17 @@
+2016-06-24  Raphael 'kena' Poss  <r.poss@uva.nl>
+
+	Polish the linking and loading process for LEON2-MT.
+
+	* tools/lib/leon2mt-fpga/linkrom.in: New (linker script).
+	* tools/lib/leon2mt-fpga/Makefile.am (nobase_sllib_DATA): List it.
+	* tools/lib/configure.ac: Generate it.
+	* tools/bin/cce.in: Use it.
+
+	* tools/lib/mt/l2mt/bootstrap.c: New. This copies the data section
+	to RAM.
+	* tools/lib/leon2mt-fpga/Makefile.am (LIBSLC_SRC): List it.
+	* tools/lib/mt/l2mt/slrt.s (_start): Use it.
+
 2016-06-19  Raphael 'kena' Poss  <r.poss@uva.nl>
 
 	Introduce software division routines for LEON2-MT.

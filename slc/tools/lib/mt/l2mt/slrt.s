@@ -12,15 +12,18 @@
 #
 
 ! TLS RESERVATION AREA
-        .section ".tls"
+        .section ".tls", "", @nobits
         .global __tls_base
         .global __first_tls_top
+	.global __tls_end
         .align 1024
-        .lcomm __tls_base,1024
-        .lcomm __first_tls_top,31744 ! space for 32 threads
-
+__tls_base:
+	.space 1024
+__first_tls_top:
+	.space 31744 ! space for 32 threads
+	
 ! PROGRAM ENTRY POINT
-	.section ".init"
+	.section ".start", "x", @progbits
         .align 128
 	.ctlbits 128 0
 	.global _start
@@ -35,6 +38,9 @@ _start:
 
         sub     %o6, 64, %o6
 
+	call __copyram, 0
+	nop
+	
         ! FIXME: fibre data, env data
 	! clr     %o0 ! fibre
         ! clr     %o1 ! initenv

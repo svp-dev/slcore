@@ -16,7 +16,9 @@ l2mt_naked_libslmain_a_SOURCES = $(MAIN_SRC)
 l2mtseq_naked_libslmain_a_CFLAGS = -b l2mt_s
 l2mtseq_naked_libslmain_a_SOURCES = $(MAIN_SRC)
 
-SLRT_SRC = ../mt/l2mt/slrt.s
+nobase_sllib_DATA += linkrom
+
+SLRT_SRC = ../mt/l2mt/slrt.s 
 include ../mt.mk
 
-LIBSLC_SRC += ../mt/l2mt/dbgout.c ../common/testoutput.c
+LIBSLC_SRC += ../mt/l2mt/dbgout.c ../common/testoutput.c ../mt/l2mt/bootstrap.c
