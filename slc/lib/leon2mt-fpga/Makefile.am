@@ -6,25 +6,25 @@ nobase_pkglib_LIBRARIES += \
 	libc.a \
 	l2mtseq_naked/libsl.a \
 	l2mt_naked/libsl.a \
-	l2mt_hybrid/libsl.a
+	l2mt_hybrid/libsl.a 
 
-#	libmgos.a 
+# 	libmgos.a 
 #	libm.a 
 
 l2mtseq_naked_libsl_a_CFLAGS = -b l2mt_s
 l2mtseq_naked_libsl_a_SOURCES = $(LIBSL_SRC)
 l2mtseq_naked_libsl_a_LIBADD = $(libslcommon_a_OBJECTS)
-l2mtseq_naked_libsl_a_DEPENDENCIES = $(seq_naked_libsl_a_LIBADD)
+l2mtseq_naked_libsl_a_DEPENDENCIES = $(l2mtseq_naked_libsl_a_LIBADD)
 
 l2mt_naked_libsl_a_CFLAGS = -b l2mt_n
 l2mt_naked_libsl_a_SOURCES = $(LIBSL_SRC)
 l2mt_naked_libsl_a_LIBADD = $(libslcommon_a_OBJECTS)
-l2mt_naked_libsl_a_DEPENDENCIES = $(mts_naked_libsl_a_LIBADD)
+l2mt_naked_libsl_a_DEPENDENCIES = $(l2mt_naked_libsl_a_LIBADD)
 
 l2mt_hybrid_libsl_a_CFLAGS = -b l2mt
 l2mt_hybrid_libsl_a_SOURCES = $(LIBSL_SRC)
 l2mt_hybrid_libsl_a_LIBADD = $(libslcommon_a_OBJECTS)
-l2mt_hybrid_libsl_a_DEPENDENCIES = $(mts_hybrid_libsl_a_LIBADD)
+l2mt_hybrid_libsl_a_DEPENDENCIES = $(l2mt_hybrid_libsl_a_LIBADD)
 
 # include ../mgos.mk
 include ../libc.mk

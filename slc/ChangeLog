@@ -1,5 +1,12 @@
 2016-06-27  Raphael 'kena' Poss  <r.poss@uva.nl>
 
+	Packaging fix.
+
+	* lib/leon2mt-fpga/Makefile.am (*_libsl_a_DEPENDENCIES): Ensure
+	the dependencies refer to the proper source variables.
+
+2016-06-27  Raphael 'kena' Poss  <r.poss@uva.nl>
+
 	Enhance the interface with the LEON2-MT RTL simulator.
 
 	* tools/slc/mt/mtsparc/asmproc/opc/decode.py: Support the assembly
