@@ -28,7 +28,7 @@ formats = \
 8 %fcc2
 9 %fcc3
 > imm4
-A #asi
+A (\dx(\d|[a-f])+|\d+)
 B $fsx2
 C %csr
 D %c\d+

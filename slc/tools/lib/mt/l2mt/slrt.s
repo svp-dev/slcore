@@ -60,8 +60,10 @@ _start:
         ! call    sys_cleanup, 0
         ! nop
 
-	sethi   %hi(__dbg_exit_status), %r1
-	st      %o0, [%r1+%lo(__dbg_exit_status)]
+	sta     %o0, [%r0] 0x80 ! exit code
+	nop
+	nop
+	nop
 	t_end
 .L2:
 	b,a     .L2

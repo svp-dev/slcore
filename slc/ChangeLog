@@ -1,3 +1,25 @@
+2016-06-27  Raphael 'kena' Poss  <r.poss@uva.nl>
+
+	Enhance the interface with the LEON2-MT RTL simulator.
+
+	* tools/slc/mt/mtsparc/asmproc/opc/decode.py: Support the assembly
+	syntax for address space identifiers (ASIs).
+	* tools/slc/mt/mtsparc/asmproc/opc/mtsparc.py: Regenerate.
+
+	* tools/include/svp/abort.h,
+	* tools/include/svp/testoutput.h: Use a new ASI-based output
+	protocol.
+	* tools/lib/mt/l2mt/slrt.s,
+	* tools/lib/mt/l2mt/dbgout.c: Simplify accordingly.
+
+	* tools/r-leon2mt-fpga.sh.in,
+	* tools/leon2mt-sim-ctl.in: New.
+	* tools/runscripts.mk: List the new files; generate their derived
+	targets.
+
+	* tools/bin/slr.in: Export the original PWD for use by runner
+	scripts.
+
 2016-06-24  Raphael 'kena' Poss  <r.poss@uva.nl>
 
 	Polish the linking and loading process for LEON2-MT.

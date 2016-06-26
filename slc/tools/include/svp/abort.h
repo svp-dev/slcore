@@ -23,13 +23,9 @@
 
 #elif defined(__slc_arch_leon2mt__) && defined(__slc_os_fpga__)
 
-extern volatile int __dbg_exit_status;
-
-#define svp_abort() do { \
-	__dbg_exit_status = -1; \
-	__asm__ __volatile__("t_end"); \
-	while(1) ;; \
-    } while(0)
+#define svp_abort() do {						\
+	__asm__ __volatile__("sta %%r0, [%0] 0x80; t_end" : : "r"(4));	\
+    } while(1)
 
 #else
 

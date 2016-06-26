@@ -1,0 +1,207 @@
+#! @python@
+#
+# leon2mt-sim-ctl: This file is part of the SL toolchain.
+#
+# Copyright (C) 2016 The SL project.
+#
+# This program is free software; you can redistribute it and/or
+# modify it under the terms of the GNU General Public License
+# as published by the Free Software Foundation; either version 3
+# of the License, or (at your option) any later version.
+#
+# The complete GNU General Public Licence Notice can be found as the
+# `COPYING' file in the root directory.
+#
+
+import sys
+import os
+import subprocess
+import re
+
+if len(sys.argv) < 2:
+    print >>sys.stderr, "usage: %s <simulator> <sim-args>..." % sys.argv[0]
+    exit(1)
+
+sim = ['/usr/bin/stdbuf', '-oL'] + sys.argv[1:]
+    
+if not os.path.exists(sim[0]):
+    print >>sys.stderr, "%s not found" % sim[0]
+    exit(1)
+    
+if not os.path.exists('rom.dat'):
+    print >>sys.stderr, "rom.dat not found in current directory"
+    exit(1)
+
+runsim = subprocess.Popen(sim, bufsize=1, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
+tfile = open('transcript', 'wt', 1)
+r_ins = re.compile(r'^(\d+)\s+cpu0:\s+\S+\s+\S+\s+(\S+)\s+(.*)$')
+r_cycle = re.compile(r'^(\d+).*$')
+r_mem = re.compile(r'^(\d+)\s+dcache\s+:\s+enaddr\s+,\s+(read|write):\s+'
+                   r'asi (\S+) addr (\S+) reg \S+ signed \S+ size \S+(?: data (\S+))')
+
+class SoftProgramTermination(Exception):
+    pass
+
+class Console(object):
+    def __init__(self):
+        self.tty = open('/dev/tty', 'wb')
+        # What do we want?
+        # [control]                                                  1
+        # <cycle number> <last instruction>                          2
+        # X <line addr>   WWWW WWWW WWWW WWWW WWWW WWWW WWWW WWWW    3
+        # R <line addr>   WWWW WWWW WWWW WWWW WWWW WWWW WWWW WWWW    4
+        # W <line addr>   WWWW WWWW WWWW WWWW WWWW WWWW WWWW WWWW    5
+        # [transcript]                                               6
+        # <line>                                                     7
+        # <line>                                                     8
+        # <line>                                                     9
+        # <line>                                                    10
+        # <line>                                                    11
+        # [output]                                                  12
+        # ....                                                      13
+        self.tty.write("\033[2J\033[H[overview]\033[6H[transcript]\033[13r\033[12H[output]\n")
+        self.tty.flush()
+        self.pos_ctl = '\033[2H'
+        self.pos_transcript = '\033[7H'
+        self.pos_out = '\033[13H'
+        self.cycle = ''
+        self.lastwrite = 0
+        self.lastexec = 0
+        self.lastread = 0
+        self.lastinsn = ''
+        self.xlinesize = 128
+        self.dlinesize = 128
+        self.blocksize = 1024
+        self.last = []
+
+    def event(self, event):
+        self.last.append(event[:80])
+        if len(self.last) > 5:
+            self.last = self.last[1:6]
+            
+        m = r_ins.match(line)
+        if m is not None:
+            self.cpu(*m.groups())
+            return
+        
+        m = r_mem.match(line)
+        if m is not None:
+            self.mem(*m.groups())
+            return
+        
+        m = r_cycle.match(line)
+        if m is not None:
+            self.docycle(m.group(1))
+            return
+
+        self.tty.write("UNRECOGNIZED: %s\n" % line)
+        self.tty.flush()
+
+    def control(self, addr, data):
+        global exitcode
+        if addr == 0:
+            self.tty.write("\n== program requested exit with code %d ==\n" % data)
+            exitcode = data
+            raise SoftProgramTermination()
+        elif addr == 4:
+            sys.stderr.write("\n== system aborted by program ==\n")
+            exitcode = 1
+            raise SoftProgramTermination()
+        channel = sys.stdout
+        if (addr / 16) == 2:
+            channel = sys.stderr
+        fmt = addr % 16
+        if fmt == 0:
+            channel.write("%c" % data)
+        elif fmt == 4:
+            if data >= 0x80000000:
+                data = data - 4294967296
+            channel.write("%d" % data)
+        elif fmt == 8:
+            channel.write("%u" % data)
+        elif fmt == 12:
+            channel.write("%x" % data)
+        channel.flush()
+            
+    def mem(self, cycle, op, asi, addr, data='0'):
+        addr = int(addr, base=0)
+        data = int(data, base=0)
+        if asi == '0x80' and op == 'write':
+            self.control(addr, data)
+            return
+        if op == 'write':
+            self.lastwrite = addr
+        if op == 'read':
+            self.lastread = addr
+        self.render()
+            
+    def cpu(self, cycle, addr, insn):
+        self.cycle = int(cycle)
+        self.lastexec = int(addr, base=0)
+        self.lastinsn = insn
+        self.render()
+    def docycle(self, cycle):
+        self.cycle = int(cycle)
+        self.render()
+        
+    def reset(self):
+        self.tty.write('\033[1r')
+        self.tty.flush()
+        
+    def render(self):
+        self.tty.write("\0337") # save cursor
+        self.tty.write(self.pos_ctl)
+        self.tty.write("\033[K%10d %#010x %s" % (self.cycle, self.lastexec, self.lastinsn))
+        self.tty.write("\nX %#010x " % (self.lastexec & ~(self.xlinesize - 1)))
+        for i in xrange(self.xlinesize/4):
+            if i % 4 == 0:
+                self.tty.write(' ')
+            c = '.'
+            if (self.lastexec/4) % (self.xlinesize/4) == i:
+                c = 'X'
+            self.tty.write(c)
+        self.tty.write("\nR %#010x " % (self.lastread & ~(self.dlinesize - 1)))
+        for i in xrange(self.dlinesize/4):
+            if i % 4 == 0:
+                self.tty.write(' ')
+            c = '.'
+            if (self.lastread/4) % (self.dlinesize/4) == i:
+                c = 'R'
+            self.tty.write(c)
+        self.tty.write("\nW %#010x " % (self.lastwrite & ~(self.dlinesize - 1)))
+        for i in xrange(self.dlinesize/4):
+            if i % 4 == 0:
+                self.tty.write(' ')
+            c = '.'
+            if (self.lastwrite/4) % (self.dlinesize/4) == i:
+                c = 'W'
+            self.tty.write(c)
+        self.tty.write(self.pos_transcript)
+        for line in self.last:
+            self.tty.write("\033[K%s\n" % line)
+        self.tty.write("\0338") # restore cursor
+        self.tty.flush()
+
+try:
+    cons = Console()
+
+    while runsim.poll() is None:
+        line = runsim.stdout.readline().strip('\n\0')
+        
+        cons.event(line)
+        
+        print >>tfile, line
+        tfile.flush()
+
+    exitcode = runsim.returncode
+except SoftProgramTermination:
+    pass
+except KeyboardInterrupt:
+    cons.tty.write("interrupted!\n")
+    exitcode = 130
+finally:
+    if runsim.poll() is None:
+        runsim.kill()
+    #cons.reset()
+    
+exit(exitcode)

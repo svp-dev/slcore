@@ -447,6 +447,7 @@ if test -z "$runner_script"; then
 fi
 
 # Package program and data files
+export SLR_ORIGPWD=$PWD
 if test -n "$KEEP"; then
     ln "$program" "$SLR_RDIR/$baseout" 2>/dev/null || cp "$program" "$SLR_RDIR/$baseout"
     if test "x$fdatafile" != "x$SLR_RDIR/input/fdata"; then

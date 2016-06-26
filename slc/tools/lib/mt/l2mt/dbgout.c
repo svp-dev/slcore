@@ -1,10 +1,7 @@
 #include <svp/testoutput.h>
 
-char __dbgout_bytes;
-char __dbgerr_bytes;
-volatile int __dbg_exit_status;
-
+#ifdef DEBUG_COPY_OUTPUT_TO_BUFFER
 char __dbgbuf[__DBGBUF_SIZE];
 unsigned long __dbgbuf_p = 0;
+#endif
 
-const char __dbgfmt_digits[] = "0123456789abcdef";

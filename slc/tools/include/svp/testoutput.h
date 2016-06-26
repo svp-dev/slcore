@@ -80,14 +80,6 @@
 
 #elif defined(__slc_arch_leon2mt__) && defined(__slc_os_fpga__)
 
-extern const char __dbgfmt_digits[];
-extern char __dbgout_bytes;
-extern char __dbgerr_bytes;
-extern char __dbgbuf[];
-extern volatile int __dbg_exit_status;
-#define __DBGBUF_SIZE 1024
-extern unsigned long __dbgbuf_p;
-
 #include <svp/divide.h>
 
 #if !defined(TESTOUTPUT_IMPL)
@@ -96,59 +88,56 @@ extern unsigned long __dbgbuf_p;
 #define EXTERNTO /*nothing*/
 #endif
 
-__attribute__((gnu_inline,optimize(3))) EXTERNTO inline
-void output_char(int byte, int chan) {
-    volatile char * __restrict__ c = (chan == 1 ? &__dbgout_bytes : &__dbgerr_bytes);
-    *c = byte;
-    unsigned long p = __dbgbuf_p;
-    __dbgbuf[p++] = byte;
-    p %= __DBGBUF_SIZE;
-    __dbgbuf[p] = 0;
-    __dbgbuf_p = p;
-}
+#define DEBUG_STDOUT_ADDR 0x10
+#define DEBUG_STDERR_ADDR 0x20
+#define DEBUG_FMT_BYTE 0x00
+#define DEBUG_FMT_INT  0x04
+#define DEBUG_FMT_UINT 0x08
+#define DEBUG_FMT_HEX  0x0c
+#define DEBUG_CTL_ADDR  0x00
+#define DEBUG_CTL_EXIT  0x0  
+#define DEBUG_CTL_ABORT  0x4  
+#define DEBUG_CHAN_ADDR(C) (0x10 * (C))
 
-__attribute__((gnu_inline,optimize(3))) EXTERNTO inline
-void output_fmt_uint(uint32_t x, int chan, const uint32_t base)
-{
-    if (x < base) output_char(__dbgfmt_digits[x], chan);
-    else {
-	uint32_t root = 1;
-	while (__divu_uint32_t(x, root) >= base)
-	    root *= base;
-	while (root) {
-	    uint32_t rs, rm;
-	    __divmodu_uint32_t(x, root, &rs, &rm);
-	    x = rm;
-	    root = __divu_uint32_t(root, base);
-	    output_char(__dbgfmt_digits[rs], chan);	
-	}
-    }
-}
+#define DEBUG_OUTPUT(Addr, Value) do {					\
+	__asm__ __volatile__("sta %0, [%1] 0x80" : : "r"(Value), "r"(Addr));	\
+    } while(0)								\
+    
+#ifdef DEBUG_COPY_OUTPUT_TO_BUFFER
+extern char __dbgbuf[];
+#define __DBGBUF_SIZE 1024
+extern unsigned long __dbgbuf_p;
+#define DEBUG_COPY_TO_BUFFER(Char) do {		\
+	unsigned long p = __dbgbuf_p;		\
+	__dbgbuf[p++] = Char;			\
+	p %= __DBGBUF_SIZE;			\
+	__dbgbuf[p] = 0;			\
+	__dbgbuf_p = p;				\
+    } while(0)    
+#else
+#define DEBUG_COPY_TO_BUFFER(Char) (void)0
+#endif
 
-__attribute__((gnu_inline,optimize(3))) EXTERNTO inline
-void output_fmt_int(int32_t x, int chan, const int32_t base) {
-    if (!x) output_char('0', chan);
-    else {
-	int32_t root;
-	if (x < 0) {
-	    root = -1;
-	    output_char('-', chan);
-	} else root = 1;
-	while (__divs_int32_t(x,root) >= base)
-	    root *= base;
-	while (root) {
-	    int32_t rs, rm;
-	    __divmods_int32_t(x, root, &rs, &rm);
-	    x = rm;
-	    root = __divs_int32_t(root, base);
-	    output_char(__dbgfmt_digits[rs], chan);	
-	}
-    }
-}
+#define output_char(byte, chan) do {			      \
+	DEBUG_OUTPUT(DEBUG_CHAN_ADDR(chan)|DEBUG_FMT_BYTE, byte);	\
+	DEBUG_COPY_TO_BUFFER(byte);					\
+    } while(0)
 
-#define output_uint(N, Stream) output_fmt_uint((unsigned long)(N), Stream, 10)
-#define output_hex(N, Stream) output_fmt_uint((unsigned long)(N), Stream, 16)
-#define output_int(N, Stream) output_fmt_int((long)(N), Stream, 10)
+#define output_uint(val, chan) do {			     \
+	DEBUG_OUTPUT(DEBUG_CHAN_ADDR(chan)|DEBUG_FMT_UINT, val);	\
+	DEBUG_COPY_TO_BUFFER('%');					\
+    } while(0)
+
+#define output_int(val, chan) do {			    \
+	DEBUG_OUTPUT(DEBUG_CHAN_ADDR(chan)|DEBUG_FMT_INT, val); \
+	DEBUG_COPY_TO_BUFFER('%');				\
+    } while(0)
+
+#define output_hex(val, chan) do {				\
+	DEBUG_OUTPUT(DEBUG_CHAN_ADDR(chan)|DEBUG_FMT_HEX, val);	\
+	DEBUG_COPY_TO_BUFFER('%');				\
+    } while(0)
+
 
 #else
 #error Unsupported arch/os back-end
