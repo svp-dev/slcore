@@ -2,6 +2,13 @@
 
 	Packaging fix.
 
+	* tools/runscripts.mk (COMMON_SUBST): Properly substitute
+	`slc_libdir'.
+
+2016-06-27  Raphael 'kena' Poss  <r.poss@uva.nl>
+
+	Packaging fix.
+
 	* lib/leon2mt-fpga/Makefile.am (*_libsl_a_DEPENDENCIES): Ensure
 	the dependencies refer to the proper source variables.
 

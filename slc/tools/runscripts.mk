@@ -9,6 +9,7 @@ CLEANFILES += $(RUNSCRIPTS)
 COMMON_SUBST = \
  -e 's|@BASH[@]|$(BASH)|g' \
  -e 's|@slc_datadir[@]|$(pkgdatadir)|g' \
+ -e 's|@slc_libdir[@]|$(pkglibdir)|g' \
  -e 's|@spp_helper[@]|$(bindir)/spp|g' \
  -e 's|@python[@]|$(PYTHON)|g'
 
