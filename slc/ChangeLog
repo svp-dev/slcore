@@ -1,3 +1,11 @@
+2016-06-29  Raphael 'kena' Poss  <r.poss@uva.nl>
+
+	New code generation option for LEON2-MT.
+
+	* tools/slc/mt/mtsparc/asmproc/base.py (fillannulnop): Allow the
+	user to disable this fix using `slc
+	-fno-asmfix-clear-annuled-delay-slots'.
+
 2016-06-27  Raphael 'kena' Poss  <r.poss@uva.nl>
 
 	Packaging fix.

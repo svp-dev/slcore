@@ -543,9 +543,9 @@ def fillannulnop(fundata,items):
     This is necessary because we can't run the risk
     of placing a waiting instruction in those delay slots.
     """
-
+    dofix = fillannulnop.extra_options.get('clear-annuled-delay-slots', True)
     for (type, content, comment) in items:
-        if type == 'other' and _re_annul.match(content) is not None:
+        if type == 'other' and _re_annul.match(content) is not None and dofix:
             yield (type, content, comment)
             yield ('other', 'nop', 'MT: nop in annul slot')
             continue
