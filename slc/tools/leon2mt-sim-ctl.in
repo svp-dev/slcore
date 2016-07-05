@@ -18,11 +18,15 @@ import os
 import subprocess
 import re
 
-if len(sys.argv) < 2:
-    print >>sys.stderr, "usage: %s <simulator> <sim-args>..." % sys.argv[0]
+if len(sys.argv) < 3:
+    print >>sys.stderr, "usage: %s <simulator> <view> <sim-args>..." % sys.argv[0]
     exit(1)
 
-sim = ['/usr/bin/stdbuf', '-oL'] + sys.argv[1:]
+pretty = False
+if sys.argv[1] == '1':
+    pretty = True
+    
+sim = ['/usr/bin/stdbuf', '-oL'] + sys.argv[2:]
     
 if not os.path.exists(sim[0]):
     print >>sys.stderr, "%s not found" % sim[0]
@@ -37,14 +41,13 @@ tfile = open('transcript', 'wt', 1)
 r_ins = re.compile(r'^(\d+)\s+cpu0:\s+\S+\s+\S+\s+(\S+)\s+(.*)$')
 r_cycle = re.compile(r'^(\d+).*$')
 r_mem = re.compile(r'^(\d+)\s+dcache\s+:\s+enaddr\s+,\s+(read|write):\s+'
-                   r'asi (\S+) addr (\S+) reg \S+ signed \S+ size \S+(?: data (\S+))')
+                   r'asi (\S+) addr (\S+) reg \S+ signed \S+ size \S+(?: data (\S+))?')
 
 class SoftProgramTermination(Exception):
     pass
 
 class Console(object):
-    def __init__(self):
-        self.tty = open('/dev/tty', 'wb')
+    def __init__(self, pretty):
         # What do we want?
         # [control]                                                  1
         # <cycle number> <last instruction>                          2
@@ -59,11 +62,15 @@ class Console(object):
         # <line>                                                    11
         # [output]                                                  12
         # ....                                                      13
-        self.tty.write("\033[2J\033[H[overview]\033[6H[transcript]\033[13r\033[12H[output]\n")
-        self.tty.flush()
-        self.pos_ctl = '\033[2H'
-        self.pos_transcript = '\033[7H'
-        self.pos_out = '\033[13H'
+        self.pretty = pretty
+        self.tty = open('/dev/tty', 'wb')
+        if pretty:
+            self.tty.write("\033[2J\033[H[overview]\033[6H[transcript]\033[13r\033[12H[output]\n")
+            self.tty.flush()
+            self.pos_ctl = '\033[2H'
+            self.pos_transcript = '\033[7H'
+            self.pos_out = '\033[13H'
+            
         self.cycle = ''
         self.lastwrite = 0
         self.lastexec = 0
@@ -123,8 +130,10 @@ class Console(object):
             channel.write("%x" % data)
         channel.flush()
             
-    def mem(self, cycle, op, asi, addr, data='0'):
+    def mem(self, cycle, op, asi, addr, data):
         addr = int(addr, base=0)
+        if data is None:
+            data = '0'
         data = int(data, base=0)
         if asi == '0x80' and op == 'write':
             self.control(addr, data)
@@ -145,10 +154,13 @@ class Console(object):
         self.render()
         
     def reset(self):
-        self.tty.write('\033[1r')
-        self.tty.flush()
+        if self.pretty:
+            self.tty.write('\033[1r')
+            self.tty.flush()
         
     def render(self):
+        if not self.pretty:
+           return
         self.tty.write("\0337") # save cursor
         self.tty.write(self.pos_ctl)
         self.tty.write("\033[K%10d %#010x %s" % (self.cycle, self.lastexec, self.lastinsn))
@@ -183,7 +195,7 @@ class Console(object):
         self.tty.flush()
 
 try:
-    cons = Console()
+    cons = Console(pretty)
 
     while runsim.poll() is None:
         line = runsim.stdout.readline().strip('\n\0')
