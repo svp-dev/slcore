@@ -28,7 +28,7 @@
 #if defined(__slc_arch_leon2mt__) && defined(__slc_os_fpga__)
 
 #define DIVCODEU(Type)							\
-    __attribute__((gnu_inline,pure,optimize(3)))			\
+    __attribute__((gnu_inline,optimize(3)))				\
     EXTERNDIV inline void __divmodu_##Type(Type dividend, Type divisor, Type *result, Type*mod) \
     {									\
 	Type answer = 0;						\
@@ -69,7 +69,7 @@
     } 
 
 #define DIVCODES(Type)							\
-    __attribute__((gnu_inline,pure,optimize(3)))			\
+    __attribute__((gnu_inline,optimize(3)))				\
     EXTERNDIV inline void __divmods_##Type(Type dividend, Type divisor, Type *result, Type *mod) \
     {									\
 	Type answer = 0;						\
@@ -113,7 +113,7 @@
 #else
 
 #define __DIVCODE(L, Type)						\
-    __attribute__((gnu_inline,pure,optimize(3)))			\
+    __attribute__((gnu_inline,optimize(3)))				\
     EXTERNDIV inline void __divmod##L##_##Type(Type dividend, Type divisor, Type *result, Type *mod) \
     {									\
 	if(result) *result = dividend / divisor;			\
