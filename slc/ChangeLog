@@ -1,3 +1,10 @@
+2016-07-14  Alyssa Milburn  <amilburn@zall.org>
+
+	Copy LEON2-MT data segment starting from the (aligned) end of the
+	text data, not the end of the text segment.
+
+	* tools/lib/mt/l2mt/bootstrap.c: Use correct value for src.
+
 2016-07-14  Alyssa Milburn <amilburn@zall.org>
 
 	Remove pure attribute from non-pure divide functions.
