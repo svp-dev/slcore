@@ -1,3 +1,10 @@
+2016-07-28  Raphael 'kena' Poss  <r.poss@uva.nl>
+
+	Minor build fix.
+
+	* tools/include/svp/testoutput.h,
+	* tools/include/svp/abort.h: Ensure the code still compiles for UTLEON3.
+
 2016-07-14  Alyssa Milburn  <amilburn@zall.org>
 
 	Copy LEON2-MT data segment starting from the (aligned) end of the

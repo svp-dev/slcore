@@ -78,7 +78,7 @@
         __asm__ __volatile__("" : : : "memory");                        \
     } while(0)
 
-#elif defined(__slc_arch_leon2mt__) && defined(__slc_os_fpga__)
+#elif defined(__slc_os_fpga__)
 
 #include <svp/divide.h>
 

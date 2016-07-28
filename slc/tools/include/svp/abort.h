@@ -29,7 +29,10 @@
 
 #else
 
-#error Unsupported arch/os combination
+#warning svp_abort will not work properly here!
+#define svp_abort() do {						\
+	__asm__ __volatile__("end");	\
+    } while(1)
 
 #endif
 
