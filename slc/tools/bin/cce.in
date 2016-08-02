@@ -444,7 +444,7 @@ case $slc_arch in
         ;;
     leon2mt)
         slc_ppflags+=(-D__slc_short_double__)
-        slc_cflags+=(-mcpu=leon -fno-math-errno -fno-trapping-math -fshort-double -fno-delayed-branch -falign-functions=128 -mflat -masync-y -fomit-frame-pointer -fgcse-sm -fgcse-las -fgcse-after-reload -flive-range-shrinkage)
+        slc_cflags+=(-mcpu=leon -fno-math-errno -fno-trapping-math -fshort-double -fno-delayed-branch -falign-functions=128 -mflat -masync-y -malways-lib-div -fomit-frame-pointer -fgcse-sm -fgcse-las -fgcse-after-reload -flive-range-shrinkage)
         extra_tflags+=(-x no-create-strategies)
         ;;
     *)
