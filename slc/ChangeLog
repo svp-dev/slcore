@@ -1,3 +1,11 @@
+2016-08-02  Alyssa Milburn  <amilburn@zall.org>
+
+	Add wrapper functions which provide integer division, as called
+	by the gcc code generator, and force them to be called.
+
+	* tools/bin/cce.in: Always pass integer division flag to gcc.
+	* tools/lib/common/divide.c: Add wrapper functions.
+
 2016-07-28  Raphael 'kena' Poss  <r.poss@uva.nl>
 
 	Minor build fix.
