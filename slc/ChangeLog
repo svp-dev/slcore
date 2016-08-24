@@ -1,5 +1,31 @@
 2016-08-24  Alyssa Milburn  <amilburn@zall.org>
 
+	Add soft-fp support for LEON2-MT.
+
+	* lib/leon2mt-fpga/Makefile.am: Build libm, with sqrtf/roundf.
+	* lib/libc/math/e_sqrtf.c,
+	* lib/libc/math/s_roundf.c: Add (modified from musl).
+	* lib/libc/math/math_private.h: Add minimal math_private.h for libm.
+	* tools/bin/cce.in: Add soft-fp gcc flag.
+	* tools/lib/leon2mt-fpga/Makefile.am: Build soft-fp files.
+	* tools/lib/common/libgcc/soft-fp/sfp-machine.h: Add modified libgcc
+	sfp-machine.h.
+	* tools/lib/common/libgcc/clzsi2.c,
+	* tools/lib/common/libgcc/ctzsi2.c: Add clzsi2 and ctzsi2 functions
+	extracted from libgcc.
+	* tools/lib/common/libgcc/fp-bit.c,
+	* tools/lib/common/libgcc/fp-bit.h,
+	* tools/lib/common/libgcc/soft-fp/soft-fp.h,
+	* tools/lib/common/libgcc/soft-fp/longlong.h,
+	* tools/lib/common/libgcc/soft-fp/op-1.h,
+	* tools/lib/common/libgcc/soft-fp/op-2.h,
+	* tools/lib/common/libgcc/soft-fp/op-4.h,
+	* tools/lib/common/libgcc/soft-fp/op-8.h,
+	* tools/lib/common/libgcc/soft-fp/op-common.h: Add soft-fp support
+	from libgcc.
+
+2016-08-24  Alyssa Milburn  <amilburn@zall.org>
+
 	Include abort() in libslc.
 
 	* lib/mgos.mk: Remove abort.c.

@@ -4,6 +4,7 @@ include ../common.mk
 
 nobase_pkglib_LIBRARIES += \
 	libc.a \
+	libm.a \
 	l2mtseq_naked/libsl.a \
 	l2mt_naked/libsl.a \
 	l2mt_hybrid/libsl.a 
@@ -30,7 +31,8 @@ l2mt_hybrid_libsl_a_DEPENDENCIES = $(l2mt_hybrid_libsl_a_LIBADD)
 include ../libc.mk
 
 #include mtamathobjs.mk
-#libm_a_CFLAGS  = -b $(COMMON_TAG)
+libm_a_CFLAGS  = -b $(COMMON_TAG)
+libm_a_SOURCES = ../libc/math/e_sqrtf.c ../libc/math/s_roundf.c
 #libm_a_SOURCES = ../libc/math/missing_uclibc_math.c 
 #libm_a_LIBADD  = $(MTAMATHOBJS)
 #libm_a_DEPENDENCIES = $(libm_a_LIBADD)
