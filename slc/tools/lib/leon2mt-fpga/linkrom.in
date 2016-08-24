@@ -17,7 +17,7 @@ __DYNAMIC  =  0;
 /* orig _RAM_SIZE was 4M */
 
 /* _PROM_SIZE = 1M; */
-_RAM_SIZE = 32K;
+_RAM_SIZE = 128M;
 
 _RAM_START = 0x40000000;
 _RAM_END = _RAM_START + _RAM_SIZE;
@@ -97,6 +97,12 @@ SECTIONS
     . = ALIGN (16);
     _endtext = .;
   } > rom
+  .tls :
+  {
+    __tls_start = .;
+    *(.tls)
+    __tls_end = .;
+  } > tls
   .dynamic	  : { *(.dynamic) 	} >ram
   .got		  : { *(.got) 		} >ram
   .plt   	  : { *(.plt) 		} >ram
@@ -130,15 +136,9 @@ SECTIONS
     *(.bss)
     *(COMMON)
     end = .;
-    _end = ALIGN(0x8);
-    __end = ALIGN(0x8);
+    _end = ALIGN(0x40);
+    __end = ALIGN(0x40);
   } > ram
-  .tls :
-  {
-    __tls_start = .;
-    *(.tls)
-    __tls_end = .;
-  } > tls
   .stab . (NOLOAD) :
   {
     [ .stab ]

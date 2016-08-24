@@ -1,3 +1,15 @@
+2016-08-24  Raphael 'kena' Poss  <r.poss@uva.nl>
+
+	Implement a simple global heap for LEON2-MT.
+
+	* lib/mgos/smallmalloc/smallmalloc.c,
+	* lib/smallmalloc.mk: New.
+	* lib/leon2mt-fpga/Makefile.am: Do not use `tlsmalloc'. Use
+	`smallmalloc' instead.
+
+	* tools/lib/leon2mt-fpga/linkrom.in: Ensure the RAM section is big
+	enough for a heap.
+
 2016-08-02  Alyssa Milburn  <amilburn@zall.org>
 
 	Add wrapper functions which provide integer division, as called
