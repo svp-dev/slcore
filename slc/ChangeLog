@@ -1,5 +1,13 @@
 2016-08-24  Raphael 'kena' Poss  <r.poss@uva.nl>
 
+	Remove `dlmalloc' from LEON2-MT targets.
+
+	.. since it does not have all necessary dependencies anyways.
+
+	* lib/leon2mt-fpga/Makefile.am: Do it.
+
+2016-08-24  Raphael 'kena' Poss  <r.poss@uva.nl>
+
 	Implement a simple global heap for LEON2-MT.
 
 	* lib/mgos/smallmalloc/smallmalloc.c,

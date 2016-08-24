@@ -35,11 +35,8 @@ include ../libc.mk
 #libm_a_LIBADD  = $(MTAMATHOBJS)
 #libm_a_DEPENDENCIES = $(libm_a_LIBADD)
 
-MALLOC_DEFS_TARGET    = -DPAGESIZE=0x1000U
-include ../malloc.mk
 include ../smallmalloc.mk
 
 libc_a_LIBADD += \
-	$(libmalloc_a_OBJECTS) \
 	$(libsmallmalloc_a_OBJECTS)
 libc_a_DEPENDENCIES = $(libc_a_LIBADD)
