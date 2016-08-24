@@ -12,7 +12,6 @@ libmgos_a_SOURCES = \
 	../mgos/mgsim/mgsim.h \
 	../mgos/mgsim/mtconf.c \
 	../mgos/mgsim/mtconf.h \
-	../mgos/posix-compat/abort.c \
 	../mgos/posix-compat/exit.c \
 	../mgos/posix-compat/gtod.c \
 	../mgos/posix-compat/gtod_virtual.c \
