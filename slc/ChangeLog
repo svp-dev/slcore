@@ -1,5 +1,15 @@
 2016-09-13  Raphael 'kena' Poss  <knz@thaumogen.net>
 
+	Fix `svp_abort()' and its uses on LEON2.
+
+	* tools/include/svp/abort.h: Avoid using `t_end' directly. Instead
+	jump to `__stop'.
+
+	* tools/lib/mt/l2/slrt.s,
+	* tools/lib/mt/l2mt/slrt.s: Define `__stop'.
+
+2016-09-13  Raphael 'kena' Poss  <knz@thaumogen.net>
+
 	Bootstrap the perf code on LEON2/LEON2-MT.
 
 	* lib/libc/include/time.h: Use the %wim register to obtain the

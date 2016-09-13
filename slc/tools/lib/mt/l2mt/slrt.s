@@ -16,6 +16,7 @@
         .global __tls_base
         .global __first_tls_top
 	.global __tls_end
+	.global __stop
         .align 1024
 __tls_base:
 	.space 1024
@@ -67,9 +68,9 @@ _start:
 	nop
 	nop
 	nop
+__stop:
 	t_end
-.L2:
-	b,a     .L2
+	b,a     __stop
 
         .size   _start, .-_start
 
