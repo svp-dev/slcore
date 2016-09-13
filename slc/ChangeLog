@@ -1,5 +1,13 @@
 2016-09-13  Raphael 'kena' Poss  <knz@thaumogen.net>
 
+	Fix a bug with `slr -p' for LEON2/LEON2-MT.
+
+	* tools/r-leon2mt-fpga.sh.in: Resolve the path to `tbdef' before
+	checking whether it exists. This ensures that relative paths are
+	properly looked up from `$SLR_ORIGPWD'.
+
+2016-09-13  Raphael 'kena' Poss  <knz@thaumogen.net>
+
 	Fix a RAM initialization bug.
 
 	* tools/lib/leon2mt-fpga/linkrom.in: Define `_bss_end'.

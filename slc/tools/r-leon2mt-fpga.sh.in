@@ -44,14 +44,13 @@ dv=$(cd "$dv" && pwd -P)
 view_script=$dv/${view_script##*/}
 
 # Extract absolute location of simulator
+dTBDEF=$(dirname "$TBDEF")
+dTBDEF=$(cd "$SLR_ORIGPWD" && cd "$dTBDEF" && pwd -P)
+TBDEF=$dTBDEF/${TBDEF##*/}
 if ! test -x "$TBDEF"; then
     echo "$TBDEF (\$TBDEF) not found or not executable" >&2
     exit 1
 fi
-dTBDEF=$(dirname "$TBDEF")
-dTBDEF=$(cd "$SLR_ORIGPWD" && cd "$dTBDEF" && pwd -P)
-TBDEF=$dTBDEF/${TBDEF##*/}
-
 
 # extract basename and directory of input ELF file
 b=${program##*/}
