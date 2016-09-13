@@ -29,18 +29,5 @@ l2mt_hybrid_libsl_a_DEPENDENCIES = $(l2mt_hybrid_libsl_a_LIBADD)
 
 # include ../mgos.mk
 include ../libc.mk
-libc_a_SOURCES += \
-	../mgos/posix-compat/mtclock.c
 
-#include mtamathobjs.mk
-libm_a_CFLAGS  = -b $(COMMON_TAG)
-libm_a_SOURCES = ../libc/math/e_sqrtf.c ../libc/math/s_roundf.c
-#libm_a_SOURCES = ../libc/math/missing_uclibc_math.c 
-#libm_a_LIBADD  = $(MTAMATHOBJS)
-#libm_a_DEPENDENCIES = $(libm_a_LIBADD)
-
-include ../smallmalloc.mk
-
-libc_a_LIBADD += \
-	$(libsmallmalloc_a_OBJECTS)
-libc_a_DEPENDENCIES = $(libc_a_LIBADD)
+include leon2-common.mk

@@ -2,6 +2,16 @@
 
 	Minor packaging fix.
 
+	* lib/leon2mt-fpga/Makefile.am: Split common pieces to...
+	* lib/leon2mt-fpga/leon2-common.mk: ...here. Add a missing
+	reference to `math_private.h'.
+	* lib/leon2-fpga/Makefile.am,
+	* lib/leon2-fpga/Makefile.am: Use the new file.
+
+2016-09-13  Raphael 'kena' Poss  <knz@thaumogen.net>
+
+	Minor packaging fix.
+
 	* tools/lib/leon2mt-fpga/leon2-common.mk (LIBSLC_SRC): List the
 	missing files from `soft-fp/'.
 
