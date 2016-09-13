@@ -1,5 +1,12 @@
 2016-08-25  Raphael 'kena' Poss  <r.poss@uva.nl>
 
+	Fix a bootstrap issue on LEON2-MT.
+
+	* tools/lib/mt/l2mt/bootstrap.c: Avoid copying if the data already
+	sits in the right place.
+
+2016-08-25  Raphael 'kena' Poss  <r.poss@uva.nl>
+
 	Fix `slr' for LEON2-MT.
 
 	* tools/leon2mt-sim-ctl.in: Fix the handling of undefined values
