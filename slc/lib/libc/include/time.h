@@ -45,13 +45,17 @@ clock_t clock(void);
 alwaysinline unused
 clock_t __inline_clock(void)
 {
-    clock_t c;                                               
+    clock_t c;
 #if defined(__alpha__) || defined(__mtalpha__)
     __asm__ __volatile__ ("rpcc %0" : "=r"(c) : : "memory");
 #elif defined(__mips__)
     c = (clock_t)mtperf_sample1(MTPERF_CORE_CYCLES);
 #elif defined(__mtsparc__) || defined(__sparc__)
+#if defined(__slc_arch_leon2mt__) || defined(__slc_arch_leon2__)
+     __asm__ __volatile__("rd %%wim, %0" : "=r"(c) : : "memory");
+#else
     __asm__ __volatile__("rd %%asr4, %0" : "=r"(c) : : "memory");
+#endif
 #else
 # error no clock definition for this target.
 #endif

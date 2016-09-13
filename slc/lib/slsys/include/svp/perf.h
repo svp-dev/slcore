@@ -48,7 +48,11 @@ typedef long counter_t;
 #define MTPERF_NCOUNTERS 21
 #endif
 
-#if defined(__slc_os_fpga__)
+#if defined(__slc_arch_leon2mt__) || defined(__slc_arch_leon2__)
+#define MTPERF_CLOCKS       0
+#define MTPERF_NCOUNTERS    1
+
+#elif defined(__slc_os_fpga__)
 #define MTPERF_CLOCKS       0
 #define MTPERF_IC_HOLDN     1
 #define MTPERF_DC_HOLDN     2
@@ -163,6 +167,28 @@ void __inline_mtperf_free_intervals(struct s_interval* p)
 
 #if defined(__mt_freestanding__)
 
+#if defined(__slc_arch_leon2mt__) || defined(__slc_arch_leon2__)
+
+#include <time.h>
+
+alwaysinline unused
+void __inline_mtperf_sample(counter_t * array)
+{
+    array[0] = (counter_t)__inline_clock();
+}
+#define mtperf_sample(Array) __inline_mtperf_sample(Array)
+
+alwaysinline unused
+counter_t __inline_mtperf_sample1(int counter)
+{
+    return (counter_t)__inline_clock();
+}
+#define mtperf_sample1(Counter) __inline_mtperf_sample1(Counter)
+
+
+#else
+
+
 #ifdef __slc_os_fpga__
 // AppleCORE performance counters on uT-LEON3, as of April 2011
 #define __MTPERF_CT_BASE 0x80000810
@@ -223,6 +249,8 @@ counter_t __inline_mtperf_sample1(int counter)
     return ((volatile __counters_t*restrict)(void*)__MTPERF_CT_BASE)->ct[counter];
 }
 #define mtperf_sample1(Counter) __inline_mtperf_sample1(Counter)
+
+#endif
 
 #else /* !__mt_freestanding__ */
 

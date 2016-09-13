@@ -29,6 +29,8 @@ l2mt_hybrid_libsl_a_DEPENDENCIES = $(l2mt_hybrid_libsl_a_LIBADD)
 
 # include ../mgos.mk
 include ../libc.mk
+libc_a_SOURCES += \
+	../mgos/posix-compat/mtclock.c
 
 #include mtamathobjs.mk
 libm_a_CFLAGS  = -b $(COMMON_TAG)

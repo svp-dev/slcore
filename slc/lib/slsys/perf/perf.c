@@ -55,7 +55,8 @@ const char* mtperf_counter_names[] = {
     "ft_occp",
     "xq_avg",
 #endif
-#if defined(__slc_os_fpga__)
+#if defined(__slc_arch_leon2mt__) || defined(__slc_arch_leon2__)
+#elif defined(__slc_os_fpga__)
     "ic_holdn",
     "dc_holdn",
     "fp_holdn",
@@ -119,7 +120,7 @@ const char* mtperf_counter_names[] = {
 static 
 ARITH mtperf_compute_extra(const counter_t* before, const counter_t* after, unsigned extra)
 {
-#if defined(__mt_freestanding__)
+#if defined(__mt_freestanding__) && !(defined(__slc_arch_leon2mt__) || defined(__slc_arch_leon2__))
 #if defined(__slc_os_sim__)
     counter_t ncores = after[MTPERF_PLACE_SIZE];
     long core_rate = mgconf_master_freq / mgconf_core_freq;

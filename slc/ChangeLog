@@ -1,5 +1,20 @@
 2016-09-13  Raphael 'kena' Poss  <knz@thaumogen.net>
 
+	Bootstrap the perf code on LEON2/LEON2-MT.
+
+	* lib/libc/include/time.h: Use the %wim register to obtain the
+	cycle counter on LEON2/LEON2-MT.
+	* lib/slsys/include/svp/perf.h: Use `clock()' as only metric for
+	LEON2/LEON2-MT.
+
+	* lib/slsys/perf/perf.c: Adjust accordingly.
+
+	* lib/leon2mt-fpga/Makefile.am: Ensure that `mtclock.c' is linked
+	in, so that the function remains available even if inline versions
+	are disabled.
+
+2016-09-13  Raphael 'kena' Poss  <knz@thaumogen.net>
+
 	Fix a bug with `slr -p' for LEON2/LEON2-MT.
 
 	* tools/r-leon2mt-fpga.sh.in: Resolve the path to `tbdef' before
