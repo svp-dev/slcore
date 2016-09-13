@@ -1,3 +1,12 @@
+2016-08-24  Raphael 'kena' Poss  <r.poss@uva.nl>
+
+	Ensure mem* functions are available in libslc early for LEON2-MT.
+
+	* tools/lib/leon2mt-fpga/Makefile.am (LIBSLC_SRC): List them
+	here. This is redundant with `libc.a' but the linker will sort it
+	out. We need the functions early because the Soft-FP emulation
+	code uses them.
+
 2016-08-24  Alyssa Milburn  <amilburn@zall.org>
 
 	Add soft-fp support for LEON2-MT.

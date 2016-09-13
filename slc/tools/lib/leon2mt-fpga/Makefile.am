@@ -21,7 +21,11 @@ nobase_sllib_DATA += linkrom
 SLRT_SRC = ../mt/l2mt/slrt.s 
 include ../mt.mk
 
-LIBSLC_SRC += ../mt/l2mt/dbgout.c ../common/testoutput.c ../mt/l2mt/bootstrap.c
+LIBSLC_SRC += ../mt/l2mt/dbgout.c ../common/testoutput.c ../mt/l2mt/bootstrap.c \
+	$(top_srcdir)/../../lib/libc/bsd/libc/string/memset.c \
+	$(top_srcdir)/../../lib/libc/bsd/libc/string/memcpy.c \
+	$(top_srcdir)/../../lib/libc/bsd/libc/string/memcmp.c \
+	$(top_srcdir)/../../lib/libc/bsd/libc/string/memmove.c
 
 # softfloat
 # all of this is in libgcc's fp-bit.c
