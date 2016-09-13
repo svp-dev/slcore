@@ -106,9 +106,17 @@ class Console(object):
 
     def control(self, addr, data):
         global exitcode
+	if data == '0xXXXXXXXX':
+	    data = None
+	else:
+	    data = int(data, base=0)
         if addr == 0:
-            self.tty.write("\n== program requested exit with code %d ==\n" % data)
-            exitcode = data
+            code = '??'
+            exitcode = 126
+            if data is not None:
+                code = '%d' % data
+                exitcode = data
+            self.tty.write("\n== program requested exit with code %s ==\n" % code)
             raise SoftProgramTermination()
         elif addr == 4:
             sys.stderr.write("\n== system aborted by program ==\n")
@@ -119,22 +127,33 @@ class Console(object):
             channel = sys.stderr
         fmt = addr % 16
         if fmt == 0:
-            channel.write("%c" % data)
+            char = '<?>'
+            if data is not None:
+                char = '%c' % data
+            channel.write(char)
         elif fmt == 4:
-            if data >= 0x80000000:
-                data = data - 4294967296
-            channel.write("%d" % data)
+            val = '<UNDEF>'
+            if data is not None:
+                if data >= 0x80000000:
+                    data = data - 4294967296
+                val = '%d' % data
+            channel.write(val)
         elif fmt == 8:
-            channel.write("%u" % data)
+            val = '<UNDEF>'
+            if data is not None:
+                val = '%u' % data
+            channel.write(val)
         elif fmt == 12:
-            channel.write("%x" % data)
+            val = '<UNDEF>'
+            if data is not None:
+                val = '%x' % data
+            channel.write(val)
         channel.flush()
             
     def mem(self, cycle, op, asi, addr, data):
         addr = int(addr, base=0)
         if data is None:
             data = '0'
-        data = int(data, base=0)
         if asi == '0x80' and op == 'write':
             self.control(addr, data)
             return

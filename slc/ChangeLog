@@ -1,3 +1,10 @@
+2016-08-25  Raphael 'kena' Poss  <r.poss@uva.nl>
+
+	Fix `slr' for LEON2-MT.
+
+	* tools/leon2mt-sim-ctl.in: Fix the handling of undefined values
+	in the pipeline.
+
 2016-08-24  Raphael 'kena' Poss  <r.poss@uva.nl>
 
 	Work around a pipeline bug in LEON2-MT.
