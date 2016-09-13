@@ -1,3 +1,35 @@
+2016-09-13  Raphael 'kena' Poss  <knz@thaumogen.net>
+
+	Add support for compiling and running plain LEON2 programs.
+
+	Also enable running programs both from embedded BRAM or DDR.
+
+	* tools/bin/cce.in: New alias `leon2_s' for `spr-l2mtseq_naked-leon2-fpga'.
+	Define corresponding env vars for external tools. Extend the rules for
+	defining the toolchain for the new arch string `leon2'.
+
+	* tools/lib/leon2mt-fpga/linkram: New.
+	* tools/lib/leon2mt-fpga/Makefile.am: List and generate `linkram'.
+	* tools/bin/cce.in: Use it.
+
+	* tools/lib/mt/l2/slrt.s,
+	* tools/lib/leon2-fpga/Makefile.am: New.
+	* tools/lib/Makefile.am: List the new sub-dir.
+	* tools/lib/configure.ac: Generate the new Makefile.
+
+	* tools/lib/leon2mt-fpga/Makefile.am: Move common definitions to...
+	* tools/lib/leon2mt-fpga/leon2-common.mk: ...here.
+	* tools/lib/leon2-fpga/Makefile.am: Reuse them.
+
+	* tools/r-leon2mt-fpga.sh.in: Alias ddr.dat to rom.dat. (May need
+	later to generate one or the other).
+	* tools/runscripts.mk: Generate `r-leon2-fpga.sh' as alias to
+	`r-leon2mt-fpga.sh'.
+
+	* lib/leon2-fpga/Makefile.am: New.
+	* lib/Makefile.am: List the new sub-dir.
+	* lib/configure.ac: Generate the new Makefile.
+
 2016-08-25  Raphael 'kena' Poss  <r.poss@uva.nl>
 
 	Fix a bootstrap issue on LEON2-MT.

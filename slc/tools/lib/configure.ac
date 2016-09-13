@@ -44,8 +44,10 @@ AC_CONFIG_FILES([Makefile
                  mipsel-sim/Makefile
                  mtsparc-sim/Makefile
                  mtsparc-fpga/Makefile
+                 leon2-fpga/Makefile
                  leon2mt-fpga/Makefile
 		 leon2mt-fpga/linkrom
+		 leon2mt-fpga/linkram
                  ])
 
 AC_OUTPUT

@@ -43,6 +43,10 @@ CC_LEON2MT=${CC_LEON2MT_OVERRIDE:-@CC_LEON2MT@}
 AR_LEON2MT=${AR_LEON2MT_OVERRIDE:-@AR_LEON2MT@}
 RANLIB_LEON2MT=${RANLIB_LEON2MT_OVERRIDE:-@RANLIB_LEON2MT@}
 
+CC_LEON2=${CC_LEON2_OVERRIDE:-@CC_LEON2MT@}
+AR_LEON2=${AR_LEON2_OVERRIDE:-@AR_LEON2MT@}
+RANLIB_LEON2=${RANLIB_LEON2_OVERRIDE:-@RANLIB_LEON2MT@}
+
 CC_MIPSEL=${CC_MIPSEL_OVERRIDE:-@CC_MIPSEL@}
 AR_MIPSEL=${AR_MIPSEL_OVERRIDE:-@AR_MIPSEL@}
 RANLIB_MIPSEL=${RANLIB_MIPSEL_OVERRIDE:-@RANLIB_MIPSEL@}
@@ -171,6 +175,7 @@ case $alias in
     mtsn_n)       alias=spr-mtsn_naked-mtsparc-sim ;;
     mtsn_s)       alias=spr-seq_naked-mtsparc-sim ;;
 
+    leon2_s)      alias=spr-l2mtseq_naked-leon2-fpga ;;
     leon2mt|l2mt) alias=spr-l2mt_hybrid-leon2mt-fpga ;;
     l2mt_n)       alias=spr-l2mt_naked-leon2mt-fpga ;;
     l2mt_s)       alias=spr-l2mtseq_naked-leon2mt-fpga ;;
@@ -319,7 +324,7 @@ esac
 case $slc_dialect-$slc_arch in
     spr-mt*|spr-mips*)
 	slc_cflags+=(-O2) ;;
-    spr-leon2mt)
+    spr-leon2*)
 	slc_cflags+=(-Os) ;;
     spr-host)
         slc_cflags+=(-O2) ;;
@@ -348,6 +353,11 @@ case $slc_dialect-$slc_arch in
 	slc_filter1=(cp)
 	slc_filter2=(cp)
 	;;
+    spr-leon2)
+	slc_compiler=($(eval "echo \${CC_$archvar:-$scu_helper} -std=gnu99"))
+	slc_filter1=(cp)
+	slc_filter2=(cp)
+	;;
     spr-mips*)
 	slc_compiler=($(eval "echo \${CC_$archvar:-$scu_helper} -std=gnu99"))
 	slc_filter1=(cp)
@@ -373,7 +383,7 @@ esac
 
 # Disable debugging for the MT targets
 case $slc_arch in
-    mt*|leon2mt*)
+    mt*|leon2*)
 	if test "x$slc_debug_flags" != "x"; then
 	    echo "$basename: warning: flags unsupported by $slc_arch-$slc_os: ${slc_debug_flags[*]}" >&2
 	fi
@@ -444,8 +454,13 @@ case $slc_arch in
         ;;
     leon2mt)
         slc_ppflags+=(-D__slc_short_double__)
-        slc_cflags+=(-mcpu=leon -fno-math-errno -fno-trapping-math -fshort-double -fno-delayed-branch -falign-functions=128 -mflat -masync-y -malways-lib-div -fomit-frame-pointer -fgcse-sm -fgcse-las -fgcse-after-reload -flive-range-shrinkage -msoft-float)
         extra_tflags+=(-x no-create-strategies)
+        slc_cflags+=(-mcpu=leon -fno-math-errno -fno-trapping-math -fshort-double -mflat -fomit-frame-pointer -fgcse-sm -fgcse-las -fgcse-after-reload -flive-range-shrinkage -msoft-float)
+	case $slc_arch in
+	    leon2mt)
+		slc_cflags+=(-falign-functions=128 -mflat -masync-y -malways-lib-div)
+		;;
+	esac
         ;;
     *)
 	;;
@@ -457,7 +472,7 @@ case $slc_arch in
     mtalpha)
         slc_ppflags+=(-D__mt_freestanding__ -D__WORDSIZE=64)
 	;;
-    mtsparc|mips*|leon2mt)
+    mtsparc|mips*|leon2*)
         slc_ppflags+=(-D__mt_freestanding__ -D__WORDSIZE=32)
 	;;
 esac
@@ -483,23 +498,7 @@ case $slc_arch-$slc_os in
 	;;
     *-fpga)
         extra_f1flags+=(-x tls-via-gettid -x clear-local-regs)
-	slc_ldflags+=(-nostdlib )
-        save_IFS=$IFS
-        IFS=:
-        found=
-        for d in $slc_libdir; do
-  	    osdir=$d/$slc_arch-$slc_os
-            if test -r "$osdir/linkrom"; then
-                found=$osdir/linkrom
-		break
-	    fi
-        done
-	if test -z "$found"; then
-	    echo "$basename: warning: linker script not found for $slc_variant-$slc_arch-$slc_os in $slc_libdir" >&2
-        else
-	    slc_ldflags+=(-Wl,-T -Wl,"$found")
-	fi
-	IFS=$save_IFS
+	slc_ldflags+=(-nostdlib -Wl,-dT -Wl,linkram)
 	;;
     host-host-hrt)
         slc_ldflags+=($PTHREAD_LIBS -static)

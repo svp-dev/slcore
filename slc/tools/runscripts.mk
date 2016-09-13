@@ -1,5 +1,5 @@
 RUNSCRIPTS = r-host.sh r-mtalpha-sim.sh r-mtsparc-sim.sh r-mtsparc-fpga.sh r-mipsel-sim.sh \
-	r-leon2mt-fpga.sh leon2mt-sim-ctl
+	r-leon2mt-fpga.sh leon2mt-sim-ctl  r-leon2-fpga.sh
 EXTRA_DIST += r-host.sh.in r-mt-sim.sh.in r-mtsparc-fpga.sh.in r-leon2mt-fpga.sh.in \
 	leon2mt-sim-ctl.in
 
@@ -74,4 +74,5 @@ r-leon2mt-fpga.sh: r-leon2mt-fpga.sh.in Makefile
 	$(AM_V_at)chmod +x,a-w $@.out
 	$(AM_V_at)mv -f $@.out $@
 
-
+r-leon2-fpga.sh: r-leon2mt-fpga.sh
+	$(LN_S) $^ $@

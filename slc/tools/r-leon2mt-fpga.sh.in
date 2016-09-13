@@ -65,6 +65,7 @@ if test -n "${VERBOSE:-}"; then echo "$basename: creating ROM image" >&2; fi
 ln "$d/$b" a.elf
 sparc-linux-gnu-objcopy -O binary a.elf a.bin
 sparc-linux-gnu-objdump -s -b binary a.bin >rom.dat
+cp rom.dat ddr.dat
 
 runner_cmdline=("$view_script" "$SIMGFX" "$TBDEF" $SIMARGS)
 
