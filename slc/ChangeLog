@@ -2,6 +2,13 @@
 
 	Minor packaging fix.
 
+	* tools/lib/leon2mt-fpga/leon2-common.mk (LIBSLC_SRC): List the
+	missing files from `soft-fp/'.
+
+2016-09-13  Raphael 'kena' Poss  <knz@thaumogen.net>
+
+	Minor packaging fix.
+
 	* tools/lib/leon2mt-fpga/leon2-common.mk (LIBSLC_SRC): List
 	`fp-bit.h' too.
 

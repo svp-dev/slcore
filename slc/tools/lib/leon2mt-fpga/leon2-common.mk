@@ -16,4 +16,16 @@ FPBIT_FUNCS = _pack_sf _unpack_sf _addsub_sf _mul_sf _div_sf \
     _lt_sf _le_sf _unord_sf _si_to_sf _sf_to_si _negate_sf _make_sf \
     _sf_to_df _sf_to_tf _thenan_sf _sf_to_usi _usi_to_sf
 AM_CPPFLAGS += -DFLOAT -DBITS_PER_UNIT=8 -DFLOAT_ONLY
-LIBSLC_SRC += ../common/libgcc/fp-bit.c ../common/libgcc/fp-bit.h ../common/libgcc/clzsi2.c ../common/libgcc/ctzsi2.c
+LIBSLC_SRC += \
+	../common/libgcc/fp-bit.c \
+	../common/libgcc/fp-bit.h \
+	../common/libgcc/clzsi2.c \
+	../common/libgcc/ctzsi2.c \
+	../common/libgcc/soft-fp/soft-fp.h \
+	../common/libgcc/soft-fp/op-1.h \
+	../common/libgcc/soft-fp/op-2.h \
+	../common/libgcc/soft-fp/op-4.h \
+	../common/libgcc/soft-fp/op-8.h \
+	../common/libgcc/soft-fp/op-common.h \
+	../common/libgcc/soft-fp/sfp-machine.h \
+	../common/libgcc/soft-fp/longlong.h
