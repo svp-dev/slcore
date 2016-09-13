@@ -16,4 +16,4 @@ FPBIT_FUNCS = _pack_sf _unpack_sf _addsub_sf _mul_sf _div_sf \
     _lt_sf _le_sf _unord_sf _si_to_sf _sf_to_si _negate_sf _make_sf \
     _sf_to_df _sf_to_tf _thenan_sf _sf_to_usi _usi_to_sf
 AM_CPPFLAGS += -DFLOAT -DBITS_PER_UNIT=8 -DFLOAT_ONLY
-LIBSLC_SRC += ../common/libgcc/fp-bit.c ../common/libgcc/clzsi2.c ../common/libgcc/ctzsi2.c
+LIBSLC_SRC += ../common/libgcc/fp-bit.c ../common/libgcc/fp-bit.h ../common/libgcc/clzsi2.c ../common/libgcc/ctzsi2.c

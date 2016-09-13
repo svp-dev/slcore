@@ -1,5 +1,12 @@
 2016-09-13  Raphael 'kena' Poss  <knz@thaumogen.net>
 
+	Minor packaging fix.
+
+	* tools/lib/leon2mt-fpga/leon2-common.mk (LIBSLC_SRC): List
+	`fp-bit.h' too.
+
+2016-09-13  Raphael 'kena' Poss  <knz@thaumogen.net>
+
 	Fix `svp_abort()' and its uses on LEON2.
 
 	* tools/include/svp/abort.h: Avoid using `t_end' directly. Instead
