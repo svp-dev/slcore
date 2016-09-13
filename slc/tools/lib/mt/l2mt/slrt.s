@@ -53,6 +53,9 @@ _start:
         ld      [%g1+%lo(__argv_ptr)], %o1
         sethi   %hi(environ), %g1
         ld      [%g1+%lo(environ)], %o2
+	mov     %o0, %o0
+	mov     %o1, %o1
+	mov     %o2, %o2
         call    main, 0
          nop
 

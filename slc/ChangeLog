@@ -1,5 +1,13 @@
 2016-08-24  Raphael 'kena' Poss  <r.poss@uva.nl>
 
+	Work around a pipeline bug in LEON2-MT.
+
+	* tools/lib/mt/l2mt/slrt.s (_start): Ensure that %o0-%o2 are ready
+	for use before entering main, which may not use its arguments and
+	reuse the regs before the loads are complete.
+
+2016-08-24  Raphael 'kena' Poss  <r.poss@uva.nl>
+
 	Ensure mem* functions are available in libslc early for LEON2-MT.
 
 	* tools/lib/leon2mt-fpga/Makefile.am (LIBSLC_SRC): List them
