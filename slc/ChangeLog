@@ -1,5 +1,13 @@
 2016-09-13  Raphael 'kena' Poss  <knz@thaumogen.net>
 
+	Fix a RAM initialization bug.
+
+	* tools/lib/leon2mt-fpga/linkrom.in: Define `_bss_end'.
+	* tools/lib/mt/l2mt/bootstrap.c (__copyram): Ensure that the BSS
+	section is always initialized.
+
+2016-09-13  Raphael 'kena' Poss  <knz@thaumogen.net>
+
 	Add support for compiling and running plain LEON2 programs.
 
 	Also enable running programs both from embedded BRAM or DDR.
