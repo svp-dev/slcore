@@ -12,6 +12,8 @@ void _exit(int status)
 #elif defined(__slc_arch_leon2mt__) && defined(__slc_os_fpga__)
     __dbg_exit_status = status;
     __asm__ __volatile__("t_end");
+#elif defined(__slc_arch_leon2__) && defined(__slc_os_fpga__)
+    __dbg_exit_status = status;
 #endif
     while(1);
 }

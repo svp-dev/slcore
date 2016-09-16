@@ -107,7 +107,7 @@ strtol(const char * restrict nptr, char ** restrict endptr, int base)
 	 */
 	cutoff = neg ? (unsigned long)-(LONG_MIN + LONG_MAX) + LONG_MAX
 	    : LONG_MAX;
-#if defined(__slc_arch_leon2mt__) && defined(__slc_os_fpga__)
+#if (defined(__slc_arch_leon2mt__) || defined(__slc_arch_leon2__)) && defined(__slc_os_fpga__)
 	uint32_t rd, rm;
 	__divmodu_uint32_t(cutoff, base, &rd, &rm);
 	cutoff = (unsigned long) rd;

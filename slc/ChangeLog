@@ -1,3 +1,15 @@
+2016-09-16  Raphael 'kena' Poss  <knz@thaumogen.net>
+
+	Extend the library to better support LEON2.
+
+	* lib/libc/bsd/libc/stdio/printfcommon.h,
+	* lib/libc/bsd/libc/stdlib/strtol.c,
+	* lib/libc/bsd/libc/stdlib/strtoul.c,
+	* lib/libc/bsd/libc/string/strerror.c,
+	* lib/mgos/posix-compat/exit.c,
+	* tools/include/svp/divide.h: Test for `__slc_arch_leon2__' in
+	addition to `__slc_arch_leon2mt__'.
+
 2016-09-13  Raphael 'kena' Poss  <knz@thaumogen.net>
 
 	Minor packaging fix.

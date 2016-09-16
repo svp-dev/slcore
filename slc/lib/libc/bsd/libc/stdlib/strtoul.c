@@ -86,7 +86,7 @@ strtoul(const char * restrict nptr, char ** restrict endptr, int base)
 	if (base < 2 || base > 36)
 		goto noconv;
 
-#if defined(__slc_arch_leon2mt__) && defined(__slc_os_fpga__)
+#if (defined(__slc_arch_leon2mt__) || defined(__slc_arch_leon2__)) && defined(__slc_os_fpga__)
 	uint32_t rd, rm;
 	__divmodu_uint32_t(ULONG_MAX, base, &rd, &rm);
 	cutoff = (unsigned long) rd;

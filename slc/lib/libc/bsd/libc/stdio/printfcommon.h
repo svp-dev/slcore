@@ -195,7 +195,7 @@ __ultoa(u_long val, CHAR *endp, int base, int octzero, const char *xdigs)
 		 * the incoming value to where signed arithmetic works.
 		 */
 		if (val > LONG_MAX) {
-#if defined(__slc_arch_leon2mt__) && defined(__slc_os_fpga__)
+#if (defined(__slc_arch_leon2mt__) || defined(__slc_arch_leon2__)) && defined(__slc_os_fpga__)
 		    uint32_t d, m;
 		    __divmodu_uint32_t(val, 10, &d, &m);
 #else
@@ -208,7 +208,7 @@ __ultoa(u_long val, CHAR *endp, int base, int octzero, const char *xdigs)
 		} else
 			sval = val;
 		do {
-#if defined(__slc_arch_leon2mt__) && defined(__slc_os_fpga__)
+#if (defined(__slc_arch_leon2mt__) || defined(__slc_arch_leon2__)) && defined(__slc_os_fpga__)
 		    int32_t d, m;
 		    __divmods_int32_t(sval, 10, &d, &m);
 #else
@@ -261,7 +261,7 @@ __ujtoa(uintmax_t val, CHAR *endp, int base, int octzero, const char *xdigs)
 			return (cp);
 		}
 		if (val > INTMAX_MAX) {
-#if defined(__slc_arch_leon2mt__) && defined(__slc_os_fpga__)
+#if (defined(__slc_arch_leon2mt__) || defined(__slc_arch_leon2__)) && defined(__slc_os_fpga__)
 		    int32_t d, m;
 		    __divmods_int32_t(sval, 10, &d, &m);
 #else
@@ -274,7 +274,7 @@ __ujtoa(uintmax_t val, CHAR *endp, int base, int octzero, const char *xdigs)
 		} else
 			sval = val;
 		do {
-#if defined(__slc_arch_leon2mt__) && defined(__slc_os_fpga__)
+#if (defined(__slc_arch_leon2mt__) || defined(__slc_arch_leon2__)) && defined(__slc_os_fpga__)
 		    int32_t d, m;
 		    __divmods_int32_t(sval, 10, &d, &m);
 #else
@@ -328,7 +328,7 @@ exponent(CHAR *p0, int exp, CHAR fmtch)
 	t = expbuf + MAXEXPDIG;
 	if (exp > 9) {
 		do {
-#if defined(__slc_arch_leon2mt__) && defined(__slc_os_fpga__)
+#if (defined(__slc_arch_leon2mt__) || defined(__slc_arch_leon2__)) && defined(__slc_os_fpga__)
 		    int32_t d, m;
 		    __divmods_int32_t(exp, 10, &d, &m);
 #else

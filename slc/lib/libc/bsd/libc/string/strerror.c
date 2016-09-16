@@ -70,7 +70,7 @@ errstr(int num, char *uprefix, char *buf, size_t len)
 	*--t = '\0';
 	uerr = (num >= 0) ? num : -num;
 	do {
-#if defined(__slc_arch_leon2mt__) && defined(__slc_os_fpga__)
+#if (defined(__slc_arch_leon2mt__) || defined(__slc_arch_leon2__)) && defined(__slc_os_fpga__)
 		    uint32_t d, m;
 		    __divmodu_uint32_t(uerr, 10, &d, &m);
 #else
