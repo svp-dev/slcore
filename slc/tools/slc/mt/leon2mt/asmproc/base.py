@@ -96,7 +96,7 @@ def initspfp(fundata, items):
                     ('other', 'sll %s,10,%s' % (spreg,spreg), 'MT: init SP'),
                     ('other', 'add %s,$l1,%s' % (spreg,spreg), 'MT: init SP'),
                     ]
-        if fundata['use_fp'] and fundata['killedsave']:
+        if fundata['use_fp']:
                 if fundata['use_sp']:
                     newp.append(('other', 'mov %s, %s' % (spreg, fpreg), 'MT: init FP'))
                 else:

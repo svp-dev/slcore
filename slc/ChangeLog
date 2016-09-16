@@ -1,5 +1,12 @@
 2016-09-16  Raphael 'kena' Poss  <knz@thaumogen.net>
 
+	Fix a LEON2-MT code generation bug.
+
+	* tools/slc/mt/leon2mt/asmproc/base.py (initspfp): Avoid using
+	`killedsave' which is not defined any more.
+
+2016-09-16  Raphael 'kena' Poss  <knz@thaumogen.net>
+
 	Fix a code generation bug on LEON2.
 
 	* tools/bin/cce.in: Ensure that the arch-specific compilation
