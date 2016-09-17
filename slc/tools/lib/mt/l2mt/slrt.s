@@ -111,3 +111,48 @@ __argc:
         .long   1
         .common __main_place_id,4,4
         .common environ,4,4
+	.section ".startfill"
+	.global __filler
+	.align 0
+__filler:
+	.word 0x42424242
+	.word 0x42424242
+	.word 0x42424242
+	.word 0x42424242
+	
+	.word 0x42424242
+	.word 0x42424242
+	.word 0x42424242
+	.word 0x42424242
+	
+	.word 0x42424242
+	.word 0x42424242
+	.word 0x42424242
+	.word 0x42424242
+	
+	.word 0x42424242
+	.word 0x42424242
+	.word 0x42424242
+	.word 0x42424242
+
+	.word 0x42424242
+	.word 0x42424242
+	.word 0x42424242
+	.word 0x42424242
+	
+	.word 0x42424242
+	.word 0x42424242
+	.word 0x42424242
+	.word 0x42424242
+	
+	.word 0x42424242
+	.word 0x42424242
+	.word 0x42424242
+	.word 0x42424242
+	
+	.word 0x42424242
+	.word 0x42424242
+	.word 0x42424242
+	.word 0x42424242
+        .type   __filler, #object
+        .size   __filler, 128

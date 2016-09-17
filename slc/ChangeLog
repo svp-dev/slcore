@@ -1,5 +1,14 @@
 2016-09-17  Raphael 'kena' Poss  <knz@thaumogen.net>
 
+	Fix the link on LEON2-MT/LEON2.
+
+	* tools/lib/mt/l2/slrt.s,
+	* tools/lib/mt/l2mt/slrt.s: new padding data.
+
+	* tools/lib/leon2mt-fpga/linkram.in: Start the RAM at 0x40000000, and pad the initial 128 bytes.
+
+2016-09-17  Raphael 'kena' Poss  <knz@thaumogen.net>
+
 	Fix the RAM start address for LEON2/LEON2-MT.
 
 	* tools/lib/leon2mt-fpga/linkram.in: Do it.
