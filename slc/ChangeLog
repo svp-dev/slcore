@@ -1,3 +1,9 @@
+2016-09-17  Raphael 'kena' Poss  <knz@thaumogen.net>
+
+	Fix the RAM start address for LEON2/LEON2-MT.
+
+	* tools/lib/leon2mt-fpga/linkram.in: Do it.
+
 2016-09-16  Raphael 'kena' Poss  <knz@thaumogen.net>
 
 	Fix a LEON2-MT code generation bug.
