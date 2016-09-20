@@ -56,6 +56,12 @@ const char* mtperf_counter_names[] = {
     "xq_avg",
 #endif
 #if defined(__slc_arch_leon2mt__) || defined(__slc_arch_leon2__)
+    "n_exec_insns",
+    "n_annuled_insns",
+    "n_stalled_insns",
+    "sw_active_aq",
+    "sw_waiting_wq",
+    "sw_tt_reg_pending",
 #elif defined(__slc_os_fpga__)
     "ic_holdn",
     "dc_holdn",

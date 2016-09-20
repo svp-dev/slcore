@@ -49,8 +49,14 @@ typedef long counter_t;
 #endif
 
 #if defined(__slc_arch_leon2mt__) || defined(__slc_arch_leon2__)
-#define MTPERF_CLOCKS       0
-#define MTPERF_NCOUNTERS    1
+#define MTPERF_CLOCKS         0
+#define MTPERF_EXECUTED_INSNS 1
+#define MTPERF_ANNULED_INSNS  2
+#define MTPERF_STALLED_INSNS  3
+#define MTPERF_SW_ACTIVE_AQ   4
+#define MTPERF_SW_WAITING_WQ  5
+#define MTPERF_SW_TT_REG_PENDING 6
+#define MTPERF_NCOUNTERS      7
 
 #elif defined(__slc_os_fpga__)
 #define MTPERF_CLOCKS       0
@@ -167,28 +173,6 @@ void __inline_mtperf_free_intervals(struct s_interval* p)
 
 #if defined(__mt_freestanding__)
 
-#if defined(__slc_arch_leon2mt__) || defined(__slc_arch_leon2__)
-
-#include <time.h>
-
-alwaysinline unused
-void __inline_mtperf_sample(counter_t * array)
-{
-    array[0] = (counter_t)__inline_clock();
-}
-#define mtperf_sample(Array) __inline_mtperf_sample(Array)
-
-alwaysinline unused
-counter_t __inline_mtperf_sample1(int counter)
-{
-    return (counter_t)__inline_clock();
-}
-#define mtperf_sample1(Counter) __inline_mtperf_sample1(Counter)
-
-
-#else
-
-
 #ifdef __slc_os_fpga__
 // AppleCORE performance counters on uT-LEON3, as of April 2011
 #define __MTPERF_CT_BASE 0x80000810
@@ -207,6 +191,14 @@ void __inline_mtperf_sample(counter_t * array)
 {
         __asm__ __volatile__("");
         __counters_t* restrict __dst = (__counters_t*)(void*)(array);
+#if defined(__slc_arch_leon2__) || defined(__slc_arch_leon2mt__)
+#define __read_cnt(i)                                                   \
+    if ((i + 1) <= MTPERF_NCOUNTERS) {					\
+	counter_t __ct ## i;						\
+	__asm__ __volatile__("rd %%wim, %1, %0" : "=r"(__ct ## i) : "I"(i)); \
+	__dst->ct[i] = __ct ## i;					\
+    }
+#else
         volatile __counters_t* restrict __src = (volatile __counters_t*)(void*)__MTPERF_CT_BASE;
 #define __read_cnt(i)                                                   \
         if ((i + 1) <= MTPERF_NCOUNTERS) {                              \
@@ -214,7 +206,8 @@ void __inline_mtperf_sample(counter_t * array)
             __asm__("" : "=r"(__ct ## i) : "0"(__src->ct[i])); \
             __dst->ct[i] = __ct ## i;                                   \
         }
-
+#endif
+	
         __read_cnt(0);
         __read_cnt(1);
         __read_cnt(2);
@@ -249,8 +242,6 @@ counter_t __inline_mtperf_sample1(int counter)
     return ((volatile __counters_t*restrict)(void*)__MTPERF_CT_BASE)->ct[counter];
 }
 #define mtperf_sample1(Counter) __inline_mtperf_sample1(Counter)
-
-#endif
 
 #else /* !__mt_freestanding__ */
 

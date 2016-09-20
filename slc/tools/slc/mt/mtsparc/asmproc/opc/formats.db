@@ -400,6 +400,7 @@ rd	M,d
 rd	y,d
 rd	p,d
 rd	w,d
+rd	w,i,d
 rd	t,d
 launch	1	br
 allocate	d	ll

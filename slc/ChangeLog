@@ -1,3 +1,15 @@
+2016-09-20  Raphael 'kena' Poss  <knz@thaumogen.net>
+
+	Support new LEON2-MT performance counters.
+
+	* tools/slc/mt/mtsparc/asmproc/opc/formats.db: New instruction
+	format for `rd %wim, imm, reg'.
+	* tools/slc/mt/mtsparc/asmproc/opc/mtsparc.py: Re-generate
+	accordingly.
+	* lib/slsys/include/svp/perf.h: Use it to extract the new LEON2-MT
+	performance counters.
+	* lib/slsys/perf/perf.c: Report the new counters too.
+
 2016-09-17  Raphael 'kena' Poss  <knz@thaumogen.net>
 
 	Fix the link on LEON2-MT/LEON2.

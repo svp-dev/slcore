@@ -114,6 +114,7 @@ re102 = re.compile(r'''\s*%cq\S*\s*,\s*\[\s*''' + reg + r'''\s*\]\s*$''')
 re103 = re.compile(r'''\s*%cq\S*\s*,\s*\[\s*''' + reg + r'''\s*[+-]\s*''' + imm + r'''\s*\]\s*$''')
 re104 = re.compile(r'''\s*%cq\S*\s*,\s*\[\s*''' + imm + r'''\s*[+-]\s*''' + reg + r'''\s*\]\s*$''')
 re105 = re.compile(r'''\s*%cq\S*\s*,\s*\[\s*''' + imm + r'''\s*\]\s*$''')
+re106 = re.compile(r'''\s*%wim\S*\s*,\s*''' + imm + r'''\s*,\s*''' + reg + r'''\s*$''')
 form000 = insn_metadata(([], [], [], False, True, [], [], [0], False, True))
 form001 = insn_metadata(([0, 1], [2], [], False, False, [], [], [], False, False))
 form002 = insn_metadata(([], [], [], False, False, [], [], [], False, False))
@@ -1084,6 +1085,7 @@ insninfo = {
       (re043, form018),
       (re044, form018),
       (re045, form018),
+      (re106, form006),
       (re046, form018),
       ],
 'release' : [
