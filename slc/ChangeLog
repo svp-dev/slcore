@@ -1,3 +1,12 @@
+2016-10-02  Raphael 'kena' Poss  <knz@thaumogen.net>
+
+	Fix a MTSPARC/LEON2-MT optimization bug.
+
+	* tools/slc/mt/mtsparc/regdefs.py (RegDefs.post_init_regmagic):
+	Ensure that %r0 (phy zero register) is not part of the `allregs'
+	array. This avoids considering it as potentially empty during
+	computation of swch annotations.
+
 2016-09-20  Raphael 'kena' Poss  <knz@thaumogen.net>
 
 	Support new LEON2-MT performance counters.
