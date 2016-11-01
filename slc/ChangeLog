@@ -1,3 +1,10 @@
+2016-11-01  Alyssa Milburn  <amilburn@zall.org>
+
+	Fix overlooked perf sample function on LEON2/LEON2-MT.
+
+	* lib/slsys/include/svp/perf.h (__inline_mtperf_sample1):
+	Add support for reading LEON2/LEON2-MT counters.
+
 2016-10-02  Raphael 'kena' Poss  <knz@thaumogen.net>
 
 	Fix a MTSPARC/LEON2-MT optimization bug.
