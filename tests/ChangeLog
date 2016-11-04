@@ -1,3 +1,17 @@
+2016-11-04  Raphael 'kena' Poss  <r.poss@uva.nl>
+
+	Define some preliminary unit tests for LEON2-MT.
+
+	* l2mt/README,
+	* 0_base/c99loop.c, 0_base/emptymain.c, 0_base/if.c, 0_base/if2.c,
+	0_base/if3.c, 0_base/nop.c, 0_base/ret.c, 1_create/argshadow.c,
+	1_create/cr1.c, 1_create/crif.c, 1_create/crif3.c,
+	1_create/crnop.c, 1_create/crnop2.c, 1_create/crnop3.c,
+	1_create/crnopdefs.c, 1_create/crrec.c, 1_create/endth.c,
+	1_create/fptr.c, 1_create/globpass.c, 1_create/indcreate.c,
+	1_create/int_2_10.c, 1_create/mutable.c, 1_create/sp1.c,
+	1_create/sprec.c: New.
+
 2016-01-01  Raphael 'kena' Poss  <r.poss@uva.nl>
 
 	Extend the test suite.

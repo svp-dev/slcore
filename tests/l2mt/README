@@ -1,0 +1,7 @@
+The tests in this directory are tweaked for LEON2-MT targets
+
+Example run:
+
+slt foo.c seqc_l2mt l2mt_n l2mt_s l2mt
+SLT_IMPL_LIST="seqc_l2mt l2mt_n l2mt_s l2mt" slt-many foo.c
+
