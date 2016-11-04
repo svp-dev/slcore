@@ -239,7 +239,24 @@ void __inline_mtperf_sample(counter_t * array)
 alwaysinline unused
 counter_t __inline_mtperf_sample1(int counter)
 {
+#if defined(__slc_arch_leon2__) || defined(__slc_arch_leon2mt__)
+    counter_t ct;
+    switch(counter) {
+#define rcnt(ci) case ci:  __asm__ __volatile__("rd %%wim, %1, %0" : "=r"(ct) : "I"(ci)); break
+    rcnt(0);
+    rcnt(1);
+    rcnt(2);
+    rcnt(3);
+    rcnt(4);
+    rcnt(5);
+    rcnt(6);
+#undef rcnt
+    default: svp_abort();
+}
+    return ct;
+#else
     return ((volatile __counters_t*restrict)(void*)__MTPERF_CT_BASE)->ct[counter];
+#endif
 }
 #define mtperf_sample1(Counter) __inline_mtperf_sample1(Counter)
 
