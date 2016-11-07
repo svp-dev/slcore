@@ -1,5 +1,12 @@
 2016-11-07  Alyssa Milburn  <amilburn@zall.org>
 
+	Avoid incorrect expansion of (early) escapes in source code.
+
+	* tools/slc/input/cm4.py: Use raw strings to avoid backslash
+	escapes being expanded.
+
+2016-11-07  Alyssa Milburn  <amilburn@zall.org>
+
 	Fix asm snippet for LEON2-MT thread creation (memargs offset).
 
 	* tools/slc/mt/leon2mt/gencreate.py: remove 'wmb'.
