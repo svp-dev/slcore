@@ -17,10 +17,14 @@ import sys
 import os
 import subprocess
 import re
+import textwrap
 
 if len(sys.argv) < 3:
     print >>sys.stderr, "usage: %s <simulator> <view> <sim-args>..." % sys.argv[0]
     exit(1)
+
+textwidth = 120
+filterWarnings = True
 
 pretty = False
 if sys.argv[1] == '1':
@@ -43,6 +47,8 @@ r_cycle = re.compile(r'^(\d+).*$')
 r_mem = re.compile(r'^(\d+)\s+dcache\s+:\s+enaddr\s+,\s+(read|write):\s+'
                    r'asi (\S+) addr (\S+) reg \S+ signed \S+ size \S+(?: data (\S+))?')
 
+startingUp = False
+
 class SoftProgramTermination(Exception):
     pass
 
@@ -60,18 +66,26 @@ class Console(object):
         # <line>                                                     9
         # <line>                                                    10
         # <line>                                                    11
-        # [output]                                                  12
-        # ....                                                      13
+        # [info/warnings]                                           12
+        # <line>                                                    13
+        # <line>                                                    14
+        # <line>                                                    15
+        # <line>                                                    16
+        # <line>                                                    17
+        # <line>                                                    18
+        # [output]                                                  19
+        # ....                                                      20
         self.pretty = pretty
         self.tty = open('/dev/tty', 'wb')
         if pretty:
-            self.tty.write("\033[2J\033[H[overview]\033[6H[transcript]\033[13r\033[12H[output]\n")
+            self.tty.write("\033[2J\033[H[overview]\033[6H[transcript]\033[13r\033[12H[info/warnings]\033[19H[output]\n")
             self.tty.flush()
             self.pos_ctl = '\033[2H'
             self.pos_transcript = '\033[7H'
-            self.pos_out = '\033[13H'
+            self.pos_warnings = '\033[13H'
+            self.pos_out = '\033[20H'
             
-        self.cycle = ''
+        self.cycle = 0
         self.lastwrite = 0
         self.lastexec = 0
         self.lastread = 0
@@ -80,28 +94,48 @@ class Console(object):
         self.dlinesize = 128
         self.blocksize = 1024
         self.last = []
+        self.lastwarns = []
 
     def event(self, event):
-        self.last.append(event[:80])
+        for line in textwrap.wrap(event, textwidth):
+            self.last.append(line)
         if len(self.last) > 5:
-            self.last = self.last[1:6]
+            self.last = self.last[-5:]
             
-        m = r_ins.match(line)
+        m = r_ins.match(event)
         if m is not None:
             self.cpu(*m.groups())
             return
         
-        m = r_mem.match(line)
+        m = r_mem.match(event)
         if m is not None:
             self.mem(*m.groups())
             return
         
-        m = r_cycle.match(line)
+        m = r_cycle.match(event)
         if m is not None:
             self.docycle(m.group(1))
             return
 
-        self.tty.write("UNRECOGNIZED: %s\n" % line)
+        # redirect startup messages into warnings section
+        global startingUp
+        if ("LEON2-MT mig7 generic testbench" in event):
+            startingUp = True
+        # also catch simulator warnings
+        if filterWarnings and (startingUp or (".vhd" in event) or ("CLKA" in event)):
+            if ("Testbench configuration:" in event):
+                startingUp = False
+            for line in textwrap.wrap(event, textwidth):
+                self.lastwarns.append(line)
+            if len(self.lastwarns) > 6:
+                self.lastwarns = self.lastwarns[-6:]
+            self.render()
+            return
+        # if we're filtering warnings, also filter empty lines
+        if filterWarnings and event == "":
+            return
+
+        self.tty.write("UNRECOGNIZED: %s\n" % event)
         self.tty.flush()
 
     def control(self, addr, data):
@@ -154,7 +188,7 @@ class Console(object):
         addr = int(addr, base=0)
         if data is None:
             data = '0'
-        if asi == '0x80' and op == 'write':
+        if asi == '0x84' and op == 'write':
             self.control(addr, data)
             return
         if op == 'write':
@@ -207,6 +241,9 @@ class Console(object):
             if (self.lastwrite/4) % (self.dlinesize/4) == i:
                 c = 'W'
             self.tty.write(c)
+        self.tty.write(self.pos_warnings)
+        for line in self.lastwarns:
+            self.tty.write("\033[K%s\n" % line)
         self.tty.write(self.pos_transcript)
         for line in self.last:
             self.tty.write("\033[K%s\n" % line)
@@ -219,10 +256,9 @@ try:
     while runsim.poll() is None:
         line = runsim.stdout.readline().strip('\n\0')
         
-        cons.event(line)
-        
         print >>tfile, line
-        tfile.flush()
+
+        cons.event(line)
 
     exitcode = runsim.returncode
 except SoftProgramTermination:
@@ -231,6 +267,7 @@ except KeyboardInterrupt:
     cons.tty.write("interrupted!\n")
     exitcode = 130
 finally:
+    tfile.flush()
     if runsim.poll() is None:
         runsim.kill()
     #cons.reset()
