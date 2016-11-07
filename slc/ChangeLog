@@ -1,5 +1,13 @@
 2016-11-07  Alyssa Milburn  <amilburn@zall.org>
 
+	Suppress/redirect warnings when running LEON2-MT simulator.
+
+	* tools/leon2mt-sim-ctl.in: Add info/warnings section, and
+	try to redirect simulator debug/warning output there. Also,
+	print last line before a failure, and wrap at 120 lines.
+
+2016-11-07  Alyssa Milburn  <amilburn@zall.org>
+
 	Avoid incorrect expansion of (early) escapes in source code.
 
 	* tools/slc/input/cm4.py: Use raw strings to avoid backslash
