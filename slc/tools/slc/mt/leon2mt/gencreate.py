@@ -208,7 +208,7 @@ class Create_2_L2MTCreate(ScopedVisitor):
         
         if c['gl_mem_offset'] is not None:
             newbl += (flatten(cr.loc_end, 
-                             ' __asm__ ("wmb; r_write %%2, %%3\\t!MT: set offset for memargs in %%0"') + 
+                             ' __asm__ ("r_write %%2, %%3\\t!MT: set offset for memargs in %%0"') + 
                       ' : "=r"(' + usefvar + ') : "0"(' + usefvar + '),' +
                       '   "r"(' + gblvar + '+%d)' % c['gl_mem_offset'] +
                       ', "r"(&' + mavar + '));')
