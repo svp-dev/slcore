@@ -1,3 +1,10 @@
+2016-11-07  Alyssa Milburn  <amilburn@zall.org>
+
+	Include COMMON section in BSS in LEON2-MT binaries.
+
+	* tools/lib/leon2mt-fpga/linkram.in,
+	* tools/lib/leon2mt-fpga/linkrom.in: include COMMON in BSS.
+
 2016-11-01  Alyssa Milburn  <amilburn@zall.org>
 
 	Fix overlooked perf sample function on LEON2/LEON2-MT.
