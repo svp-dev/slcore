@@ -1,3 +1,23 @@
+2016-11-07  Alyssa Milburn  <amilburn@zall.org>
+
+	Avoid incorrect expansion of (early) escapes in source code.
+
+	* tools/slc/input/cm4.py: Use raw strings to avoid backslash
+	escapes being expanded.
+
+2016-11-07  Alyssa Milburn  <amilburn@zall.org>
+
+	Fix asm snippet for LEON2-MT thread creation (memargs offset).
+
+	* tools/slc/mt/leon2mt/gencreate.py: remove 'wmb'.
+
+2016-11-07  Alyssa Milburn  <amilburn@zall.org>
+
+	Include COMMON section in BSS in LEON2-MT binaries.
+
+	* tools/lib/leon2mt-fpga/linkram.in,
+	* tools/lib/leon2mt-fpga/linkrom.in: include COMMON in BSS.
+
 2016-11-01  Alyssa Milburn  <amilburn@zall.org>
 
 	Fix overlooked perf sample function on LEON2/LEON2-MT.
