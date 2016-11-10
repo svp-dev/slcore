@@ -534,7 +534,7 @@ def protectend(fundata, items):
         yield (type, content, comment)
         
 
-_re_annul = re.compile(r'\S+,a(\s+.*|\s*)$')
+_re_annul = re.compile(r'b[na]?,a(\s+.*|\s*)$')
 def fillannulnop(fundata,items):
     """
     Fill a "nop" in the delay slot of branch-and-annul

@@ -1,3 +1,11 @@
+2016-11-10  Alyssa Milburn  <amilburn@zall.org>
+
+	Only clear (SPARC) annulled delay slots for unconditional
+	branches, where the delay slot instruction will never be
+	executed.
+
+	* tools/slc/mt/mtsparc/asmproc/base.py: Only match b[n|a],a.
+
 2016-11-07  Alyssa Milburn  <amilburn@zall.org>
 
 	Suppress/redirect warnings when running LEON2-MT simulator.
