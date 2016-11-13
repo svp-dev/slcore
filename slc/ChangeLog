@@ -1,5 +1,14 @@
 2016-11-13  Raphael 'kena' Poss  <knz@thaumogen.net>
 
+	Fix a bug in the "small malloc()" implementation.
+
+	* lib/mgos/smallmalloc/smallmalloc.c (small_malloc): Ensure that
+	the size is always a multiple of 4 bytes. Also avoid aligning the
+	HEAP pointer, as this is unneeded (the array being pointed to is
+	already aligned by the linker).
+
+2016-11-13  Raphael 'kena' Poss  <knz@thaumogen.net>
+
 	Fix a FP-related code generation bug on LEON2-MT.
 
 	* tools/bin/cce.in (slc_ppflags): alias sl_glfparm/sl_glfarg to

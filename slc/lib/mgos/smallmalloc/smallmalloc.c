@@ -3,13 +3,13 @@
 
 extern char __end;
 extern char _RAM_END;
-__attribute__((aligned(64)))
 char *HEAP = &__end;
 #define HEAP_SIZE (&_RAM_END - &__end)
 size_t HEAP_ALLOCATED = 0;
 
 void *small_malloc(size_t s) {
     if (s < 4) s = 4;
+    s = (s + 3) & ~3; // ensure size is multiple of 4
 
     size_t cur_alloc = HEAP_ALLOCATED;
     if (cur_alloc >= HEAP_SIZE - s) {
