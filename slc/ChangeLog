@@ -1,3 +1,58 @@
+2016-11-13  Raphael 'kena' Poss  <knz@thaumogen.net>
+
+	Configuration fixes for LEON2-MT.
+
+	- on the FPGA board the PC start address can be 0x40000000 whereas
+	it is 0x40000080 in simulation. Ensure that generated binaries can
+	work on both.
+
+	- the RAM size is 256KB in simulation, 128M on FPGA. This patch
+	makes `slc' generate binaries that use the simulator RAM size by
+	default. To make the binary use the entire RAM, use
+	`-Wl,--defsym=_RAM_SIZE=128M-256K' when linking.
+
+	* tools/lib/mt/l2/slrt.s (_start),
+	* tools/lib/mt/l2mt/slrt.s (_start): Set the initial SP pointer to
+	the end of the RAM area. Ensure that the filler bytes start
+	with a useful instruction.
+
+	* tools/lib/leon2mt-fpga/linkrom.in,
+	* tools/lib/leon2mt-fpga/linkram.in: Set _RAM_SIZE as 256K away
+	from whatever value is already set. Make the per-thread TLS space
+	1KB again.
+
+2016-11-13  Raphael 'kena' Poss  <knz@thaumogen.net>
+
+	Fix a bug in the "small malloc()" implementation.
+
+	* lib/mgos/smallmalloc/smallmalloc.c (small_malloc): Ensure that
+	the size is always a multiple of 4 bytes. Also avoid aligning the
+	HEAP pointer, as this is unneeded (the array being pointed to is
+	already aligned by the linker).
+
+2016-11-13  Raphael 'kena' Poss  <knz@thaumogen.net>
+
+	Fix a FP-related code generation bug on LEON2-MT.
+
+	* tools/bin/cce.in (slc_ppflags): alias sl_glfparm/sl_glfarg to
+	sl_glparm/sl_glarg, since we are using soft float.
+
+	* tools/slc/mt/leon2mt/gencreate.py
+	(Create_2_L2MTCreate.visit_seta): Report a nice error message if
+	no arguments were defined.
+
+2016-11-13  Raphael 'kena' Poss  <knz@thaumogen.net>
+
+	Fix a code generation bug on LEON2-MT.
+
+	Prior to this patch every create would try to allocate all the
+	physical threads, even if fewer were needed.
+
+	* tools/slc/mt/leon2mt/gencreate.py
+	(Create_2_L2MTCreate.visit_lowcreate): Ensure the `block'
+	parameter is set to the number of threads if the default ("max")
+	value is used.
+
 2016-11-13  Alyssa Milburn  <amilburn@zall.org>
 
 	LEON2-MT: add preliminary support for UART output.

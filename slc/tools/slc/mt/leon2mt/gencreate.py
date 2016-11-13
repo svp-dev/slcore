@@ -14,6 +14,9 @@ class Create_2_L2MTCreate(ScopedVisitor):
         gblvar = seta.lowcreate.gblvar
         fidvar = seta.lowcreate.fidvar
 
+        if gblvar is None:
+            return flatten(seta.loc, "#error global %s not defined" % name)
+        
         # print "looking up %s in %r" % (name, self.__args)
         assert name in adic
         
@@ -63,6 +66,7 @@ class Create_2_L2MTCreate(ScopedVisitor):
 
         has_globals = False
         nr_globals = c['nrargregs']['gli']
+        lc.gblvar = None
         if nr_globals > 0:
             has_globals = True
             cr.cvar_rb = CVarDecl(loc = cr.loc, name = 'C$Fb$%s' % cr.label, ctype = 'long')
@@ -148,8 +152,8 @@ class Create_2_L2MTCreate(ScopedVisitor):
         tgvar = CVarUse(decl = tgdecl)
         self.cur_scope.decls += tgdecl
 
-        newbl += (flatten(cr.loc, ' if (!__builtin_expect(!!(') + 
-                  block + '), 1)) ' + block + ' = -1;')
+        newbl += (flatten(cr.loc, ' if (!__builtin_expect(!!(') +
+                  block + '), 1)) ' + block + ' = (' + limit + ' < 32 ? ' + limit + ' : -1);')
 
         newbl += (flatten(cr.loc,
                           '__asm__ __volatile__ ("t_allochtg %%1, %%0, %%0\\t! MT: CREATE %s FUN %%2 ' % lbl) + funvar +
