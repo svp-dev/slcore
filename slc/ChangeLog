@@ -1,5 +1,16 @@
 2016-11-13  Raphael 'kena' Poss  <knz@thaumogen.net>
 
+	Fix a FP-related code generation bug on LEON2-MT.
+
+	* tools/bin/cce.in (slc_ppflags): alias sl_glfparm/sl_glfarg to
+	sl_glparm/sl_glarg, since we are using soft float.
+
+	* tools/slc/mt/leon2mt/gencreate.py
+	(Create_2_L2MTCreate.visit_seta): Report a nice error message if
+	no arguments were defined.
+
+2016-11-13  Raphael 'kena' Poss  <knz@thaumogen.net>
+
 	Fix a code generation bug on LEON2-MT.
 
 	Prior to this patch every create would try to allocate all the
