@@ -31,19 +31,16 @@ __first_tls_top:
         .type _start, #function
         .proc 010
 _start:
-        ! make SP from TLS reservation
-        t_get_tid  %o6
-        sethi   %hi(__first_tls_top), %g1
-        sll     %o6,10,%o6
-        add     %o6,%g1,%o6
-
+        ! make SP from end of RAM area
+	sethi  %hi(_RAM_END), %o6
+	or      %o6, %lo(_RAM_END), %o6
         sub     %o6, 64, %o6
-
+	
 	call __copyram, 0
-	nop
+	 nop
 
 	call init_uart, 0
-	nop
+	 nop
 	
         ! FIXME: fibre data, env data
 	! clr     %o0 ! fibre
@@ -119,9 +116,10 @@ __argc:
 	.global __filler
 	.align 0
 __filler:
-	.word 0x42424242
-	.word 0x42424242
-	.word 0x42424242
+	nop
+	b,a _start
+	 nop
+	
 	.word 0x42424242
 	
 	.word 0x42424242
