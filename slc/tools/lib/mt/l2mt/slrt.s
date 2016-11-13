@@ -41,6 +41,9 @@ _start:
 
 	call __copyram, 0
 	nop
+
+	call init_uart, 0
+	nop
 	
         ! FIXME: fibre data, env data
 	! clr     %o0 ! fibre

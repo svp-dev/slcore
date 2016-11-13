@@ -1,3 +1,23 @@
+2016-11-13  Alyssa Milburn  <amilburn@zall.org>
+
+	LEON2-MT: add preliminary support for UART output.
+
+	* tools/lib/mt/l2mt/init_uart.s,
+	* tools/lib/mt/l2mt/putchar.s,
+	* tools/lib/mt/l2mt/uart_defs.inc: New.
+
+	* tools/lib/mt/l2/slrt.s,
+	* tools/lib/mt/l2mt/slrt.s: Invoke the UART initialization
+	routine.
+
+	* tools/lib/leon2mt-fpga/leon2-common.mk: Include and build the
+	new files.
+
+	* lib/libc/stdio/mtstdio.h: Enable output to the UART via the FILE
+	API.
+	* lib/libc/stdio/mtstdio.c: Bind a new global FILE* object
+	`stduart` to the UART.
+
 2016-11-13  Raphael 'kena' Poss  <knz@thaumogen.net>
 
 	LEON2-MT/UT-LEON3: new code generation option.
