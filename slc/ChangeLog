@@ -1,3 +1,17 @@
+2016-11-13  Raphael 'kena' Poss  <knz@thaumogen.net>
+
+	LEON2-MT/UT-LEON3: new code generation option.
+
+	* tools/slc/mt/mtsparc/asmproc/opt.py (makedataflow): On UT-LEON3,
+	we can't switch on a branch/delayed instruction that reads from a
+	waiting register, in which case we must ensure that every register
+	for which there is an uncertainy is full before the instruction is
+	reached. Previously the code to do that was used always; with
+	LEON2-MT this restriction is lifted so we now make this behavior
+	conditional. The protection is now *disabled* by default and can
+	be enabled from the command-line with
+	`-fasmopt-flush-before-delayed'.
+
 2016-11-13  Alyssa Milburn  <amilburn@zall.org>
 
 	LEON2-MT: Use ASI 0x84, not 0x80.
