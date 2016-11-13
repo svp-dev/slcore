@@ -1,3 +1,13 @@
+2016-11-13  Alyssa Milburn  <amilburn@zall.org>
+
+	LEON2-MT: Use ASI 0x84, not 0x80.
+
+	* tools/include/svp/abort.h,
+	* tools/include/svp/testoutput.h,
+	* tools/lib/mt/l2/slrt.s: Use ASI 0x84, not 0x80. This is needed
+	because LEON2-FT ignores the upper 4 bits of the ASI and thus
+	writes via ASI 0x80 would actually access memory.
+
 2016-11-10  Alyssa Milburn  <amilburn@zall.org>
 
 	Only clear (SPARC) annulled delay slots for unconditional

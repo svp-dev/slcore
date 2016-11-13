@@ -64,13 +64,14 @@ _start:
         ! call    sys_cleanup, 0
         ! nop
 
-	sta     %o0, [%r0] 0x80 ! exit code
+	sta     %o0, [%r0] 0x84 ! exit code
 	nop
 	nop
 	nop
 __stop:
 	t_end
 	b,a     __stop
+	nop
 
         .size   _start, .-_start
 
