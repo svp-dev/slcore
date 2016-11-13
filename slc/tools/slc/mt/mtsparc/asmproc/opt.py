@@ -102,6 +102,13 @@ def makedataflow(addswch, drainargs):
             locals_offset = regmagic.rd.mt_locals_offset
             swchenabled = True
 
+            # On UT-LEON3, we can't switch on a branch/delayed instruction that
+            # reads from a waiting register, in which case we must ensure that
+            # every register for which there is an uncertainy is full before the
+            # instruction is reached. This flag can be enabled from the command-line
+            # with -fasmopt-flush-before-delayed.
+            flushbeforedelayed = self.extra_options.get('flush-before-delayed',False)
+
             # initially exclude index
             maybell = allregs.copy()
             for (type, content, comment) in items:
@@ -192,7 +199,7 @@ def makedataflow(addswch, drainargs):
                                 test = 1
                                 q.add(rx)
 
-                    if test == 1 and md.delayed:
+                    if test == 1 and md.delayed and flushbeforedelayed:
                         # we can't suspend a delayed instruction,
                         # so we need to force all inputs beforehand
                         for r in q:

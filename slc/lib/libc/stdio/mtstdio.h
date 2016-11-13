@@ -9,8 +9,15 @@
 #include <svp/compiler.h>
 #include <svp/testoutput.h>
 
+#if defined(__slc_os_fpga__) && (defined(__slc_arch_leon2mt__)  || defined(__slc_arch_leon2__))
+extern void uart_putchar(char);
+#else
+#define uart_putchar(C) ((void)0)
+#endif
+
 enum file_kind {
     FK_OUT,
+    FK_UART,
     FK_STRING,
     FK_VIRTUAL
 };
@@ -43,6 +50,10 @@ __write(FILE *f, const void *bytes, size_t sz)
     case FK_OUT:
         output_bytes(bytes, sz, f->out.chan);
         return sz;
+    case FK_UART:
+        for (size_t n = 0; n < sz; ++n)
+            uart_putchar(((char *)bytes)[n]);
+        return sz;
     case FK_STRING:
     {
         size_t n = min(sz, f->out.str.end-f->out.str.cur);
@@ -67,6 +78,9 @@ __writes(FILE *f, const char * str)
         while (likely(*p)) output_char(*p++, chan);
     }
     break;
+    case FK_UART:
+        while (likely(*p)) uart_putchar(*p++);
+        break;
     case FK_STRING:
         while (likely(*p && f->out.str.end-f->out.str.cur))
             *f->out.str.cur++ = *p++;
@@ -91,6 +105,9 @@ __writec(FILE *f, int c)
     {
     case FK_OUT:
         output_char(c, f->out.chan);
+        return 1;
+    case FK_UART:
+        uart_putchar(c);
         return 1;
     case FK_STRING:
         if (f->out.str.end - f->out.str.cur) {

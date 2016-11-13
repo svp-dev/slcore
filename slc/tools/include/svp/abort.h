@@ -24,7 +24,8 @@
 #elif  defined(__slc_os_fpga__) && (defined(__slc_arch_leon2mt__)  || defined(__slc_arch_leon2__))
 
 #define svp_abort() do {						\
-	__asm__ __volatile__("sta %%r0, [%0] 0x80; b,a __stop" : : "r"(4));	\
+	__asm__ __volatile__("sta %%r0, [%0] 0x84; b,a __stop; nop" : : "r"(4));	\
+	__builtin_unreachable(); \
     } while(1)
 
 #else

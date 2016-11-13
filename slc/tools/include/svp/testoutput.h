@@ -100,7 +100,7 @@
 #define DEBUG_CHAN_ADDR(C) (0x10 * (C))
 
 #define DEBUG_OUTPUT(Addr, Value) do {					\
-	__asm__ __volatile__("sta %0, [%1] 0x80" : : "r"(Value), "r"(Addr));	\
+	__asm__ __volatile__("sta %0, [%1] 0x84" : : "r"(Value), "r"(Addr));	\
     } while(0)								\
     
 #ifdef DEBUG_COPY_OUTPUT_TO_BUFFER
