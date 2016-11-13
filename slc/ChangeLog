@@ -1,3 +1,15 @@
+2016-11-13  Raphael 'kena' Poss  <knz@thaumogen.net>
+
+	Fix a code generation bug on LEON2-MT.
+
+	Prior to this patch every create would try to allocate all the
+	physical threads, even if fewer were needed.
+
+	* tools/slc/mt/leon2mt/gencreate.py
+	(Create_2_L2MTCreate.visit_lowcreate): Ensure the `block'
+	parameter is set to the number of threads if the default ("max")
+	value is used.
+
 2016-11-13  Alyssa Milburn  <amilburn@zall.org>
 
 	LEON2-MT: add preliminary support for UART output.

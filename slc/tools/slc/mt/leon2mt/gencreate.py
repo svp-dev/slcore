@@ -148,8 +148,8 @@ class Create_2_L2MTCreate(ScopedVisitor):
         tgvar = CVarUse(decl = tgdecl)
         self.cur_scope.decls += tgdecl
 
-        newbl += (flatten(cr.loc, ' if (!__builtin_expect(!!(') + 
-                  block + '), 1)) ' + block + ' = -1;')
+        newbl += (flatten(cr.loc, ' if (!__builtin_expect(!!(') +
+                  block + '), 1)) ' + block + ' = (' + limit + ' < 32 ? ' + limit + ' : -1);')
 
         newbl += (flatten(cr.loc,
                           '__asm__ __volatile__ ("t_allochtg %%1, %%0, %%0\\t! MT: CREATE %s FUN %%2 ' % lbl) + funvar +
