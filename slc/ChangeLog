@@ -1,3 +1,10 @@
+2016-11-21  Raphael 'kena' Poss  <knz@thaumogen.net>
+
+	Ensure that `slr' cleans up upon termination.
+
+	* tools/bin/slr.in (SLR_RDIR): Ignore signals in the watchdog
+	process.
+
 2016-11-21  Alyssa Milburn  <amilburn@zall.org>
 
 	Implement stdio to a cyclic buffer.

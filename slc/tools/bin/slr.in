@@ -354,7 +354,8 @@ if test -n "$KEEP"; then
 else
     SLR_PID=$$
     (
-	    # start watchdog
+	# start watchdog
+	trap "" SIGINT SIGHUP
 	PS4='+ slr-wd($$)'
 	while true; do 
 	    if ! kill -0 $SLR_PID 2>/dev/null; then
