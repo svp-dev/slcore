@@ -9,7 +9,7 @@
 #include <svp/compiler.h>
 #include <svp/testoutput.h>
 
-#if defined(__slc_os_fpga__) && (defined(__slc_arch_leon2mt__)  || defined(__slc_arch_leon2__))
+#if defined(__slc_arch_leon2mt__)  || defined(__slc_arch_leon2__)
 extern void uart_putchar(char);
 #else
 #define uart_putchar(C) ((void)0)

@@ -62,7 +62,7 @@ const char* mtperf_counter_names[] = {
     "sw_active_aq",
     "sw_waiting_wq",
     "sw_tt_reg_pending",
-#elif defined(__slc_os_fpga__)
+#elif defined(__slc_os_fpga__) && defined(__slc_arch_mtsparc__)
     "ic_holdn",
     "dc_holdn",
     "fp_holdn",
@@ -94,7 +94,11 @@ const char* mtperf_counter_names[] = {
 #define pn(Num) output_int((Num), stream)
 #define pnl  output_char('\n', stream);
 
-#if defined(__mt_freestanding__) && (defined(__slc_os_fpga__) || defined(__slc_arch_mipsel__))
+#if defined(__mt_freestanding__) && \
+   (defined(__slc_arch_mipsel__) || \
+    defined(__slc_arch_mtsparc__) || \
+    defined(__slc_arch_leon2__) || \
+    defined(__slc_arch_leon2mt__))
 #define ARITH long
 #define DIV(X, Y) __divs_int32_t(X, Y)
 #define pf(Num) output_int((Num), stream)
@@ -126,7 +130,7 @@ const char* mtperf_counter_names[] = {
 static 
 ARITH mtperf_compute_extra(const counter_t* before, const counter_t* after, unsigned extra)
 {
-#if defined(__mt_freestanding__) && !(defined(__slc_arch_leon2mt__) || defined(__slc_arch_leon2__))
+#if defined(__mt_freestanding__)
 #if defined(__slc_os_sim__)
     counter_t ncores = after[MTPERF_PLACE_SIZE];
     long core_rate = mgconf_master_freq / mgconf_core_freq;

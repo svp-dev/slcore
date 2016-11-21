@@ -11,8 +11,8 @@
 # `COPYING' file in the root directory.
 #
 
-        .section        ".rodata"
-        .asciz  "\0slr_runner:leon2mt-fpga:"
+	.section        ".rodata"
+        .asciz  "\0slr_runner:leon2-tbdef:"
         .asciz  "slr_datatag:b32f:\0"
 	
 	.include "tls.inc"

@@ -1,4 +1,4 @@
-# slrt.s: this file is part of the SL toolchain.
+# tls.s: this file is part of the SL toolchain.
 #
 # Copyright (C) 2016 Universiteit van Amsterdam
 #
@@ -10,19 +10,15 @@
 # The complete GNU General Public Licence Notice can be found as the
 # `COPYING' file in the root directory.
 #
-
-        .section        ".rodata"
-        .asciz  "\0slr_runner:leon2mt-fpga:"
-        .asciz  "slr_datatag:b32f:\0"
-	
-	.include "tls.inc"
-	.include "start.inc"
-	! The following must immediately follow start.inc.
-__stop:
-	t_end
-	b,a     __stop
-	  nop
-	.size   _start, .-_start
-	
-	.include "globals.inc"
-	.include "filler.inc"
+	.file "tls.s"
+! TLS RESERVATION AREA
+        .section ".tls", "", @nobits
+        .global __tls_base
+        .global __first_tls_top
+	.global __tls_end
+	.global __stop
+        .align 1024
+__tls_base:
+	.space 1024
+__first_tls_top:
+	.space 31744 ! space for 32 threads

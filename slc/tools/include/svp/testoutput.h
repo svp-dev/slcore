@@ -78,15 +78,45 @@
         __asm__ __volatile__("" : : : "memory");                        \
     } while(0)
 
-#elif defined(__slc_os_fpga__)
+#elif defined(__slc_os_fpga__) && (defined(__slc_arch_leon2mt__) || defined(__slc_arch_leon2__))
 
-#include <svp/divide.h>
+# include <stdio.h>
+extern FILE* dbgstdout;
+extern FILE* dbgstderr;
 
-#if !defined(TESTOUTPUT_IMPL)
-#define EXTERNTO extern
-#else
-#define EXTERNTO /*nothing*/
-#endif
+#  define output_float(F, Stream, Precision) do { \
+        FILE * __s = (Stream) == 2 ? dbgstderr : dbgstdout; \
+        fprintf(__s, "%.*le", (Precision), (double)(F)); \
+    } while(0)
+#  define output_char(N, Stream) do { \
+        FILE * __s = (Stream) == 2 ? dbgstderr : dbgstdout; \
+        fprintf(__s, "%c", (char)(N)); \
+    } while(0)
+#  define output_hex(N, Stream) do { \
+        FILE * __s = (Stream) == 2 ? dbgstderr : dbgstdout; \
+        fprintf(__s, "%lx", (unsigned long)(N)); \
+    } while(0)
+#  define output_int(N, Stream) do { \
+        FILE * __s = (Stream) == 2 ? dbgstderr : dbgstdout; \
+        fprintf(__s, "%ld", (long)(N)); \
+    } while(0)
+#  define output_uint(N, Stream) do { \
+        FILE * __s = (Stream) == 2 ? dbgstderr : dbgstdout; \
+        fprintf(__s, "%lu", (unsigned long)(N)); \
+    } while(0)
+#  undef output_string
+#  define output_string(S, Stream) do { \
+        FILE * __s = (Stream) == 2 ? dbgstderr : dbgstdout; \
+        fprintf(__s, "%s", (const char*)(S)); \
+    } while(0)
+#  undef output_bytes
+#  define output_bytes(S, L, Stream) do { \
+        FILE * __s = (Stream) == 2 ? dbgstderr : dbgstdout; \
+        fwrite((const char*)(S), (L), 1, __s); \
+    } while(0)
+
+
+#elif defined(__slc_os_tbdef__) && (defined(__slc_arch_leon2mt__) || defined(__slc_arch_leon2__))
 
 #define DEBUG_STDOUT_ADDR 0x10
 #define DEBUG_STDERR_ADDR 0x20
@@ -102,40 +132,21 @@
 #define DEBUG_OUTPUT(Addr, Value) do {					\
 	__asm__ __volatile__("sta %0, [%1] 0x84" : : "r"(Value), "r"(Addr));	\
     } while(0)								\
-    
-#ifdef DEBUG_COPY_OUTPUT_TO_BUFFER
-extern char __dbgbuf[];
-#define __DBGBUF_SIZE 1024
-extern unsigned long __dbgbuf_p;
-#define DEBUG_COPY_TO_BUFFER(Char) do {		\
-	unsigned long p = __dbgbuf_p;		\
-	__dbgbuf[p++] = Char;			\
-	p %= __DBGBUF_SIZE;			\
-	__dbgbuf[p] = 0;			\
-	__dbgbuf_p = p;				\
-    } while(0)    
-#else
-#define DEBUG_COPY_TO_BUFFER(Char) (void)0
-#endif
 
 #define output_char(byte, chan) do {			      \
 	DEBUG_OUTPUT(DEBUG_CHAN_ADDR(chan)|DEBUG_FMT_BYTE, byte);	\
-	DEBUG_COPY_TO_BUFFER(byte);					\
     } while(0)
 
 #define output_uint(val, chan) do {			     \
 	DEBUG_OUTPUT(DEBUG_CHAN_ADDR(chan)|DEBUG_FMT_UINT, val);	\
-	DEBUG_COPY_TO_BUFFER('%');					\
     } while(0)
 
 #define output_int(val, chan) do {			    \
 	DEBUG_OUTPUT(DEBUG_CHAN_ADDR(chan)|DEBUG_FMT_INT, val); \
-	DEBUG_COPY_TO_BUFFER('%');				\
     } while(0)
 
 #define output_hex(val, chan) do {				\
 	DEBUG_OUTPUT(DEBUG_CHAN_ADDR(chan)|DEBUG_FMT_HEX, val);	\
-	DEBUG_COPY_TO_BUFFER('%');				\
     } while(0)
 
 

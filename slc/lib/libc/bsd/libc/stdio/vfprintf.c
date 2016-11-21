@@ -1102,7 +1102,7 @@ error:
 	/* NOTREACHED */
 }
 
-#if !(defined(__slc_os_fpga__) || (defined(__slc_os_sim__) && defined(__mips__)))
+#if defined(__slc_os_sim__) && (defined(__slc_arch_mtsparc__) || defined(__slc_arch_mtalpha__))
 sl_def(t_vfprintf,sl__static,sl_glparm(FILE*,fp), sl_glparm(const char*,fmt0), sl_glparm(va_list*,ap), sl_shparm(int,ret))
 {
     sl_setp(ret, __vfprintf(sl_getp(fp), sl_getp(fmt0), *sl_getp(ap)));
@@ -1116,13 +1116,12 @@ extern sl_place_t __stdio_place_id;
 int
 vfprintf(FILE * restrict fp, const char * restrict fmt0, va_list ap)
 {
-#if defined(__slc_os_fpga__) || (defined(__slc_os_sim__) && defined(__mips__))
-    // UTLEON3 does not support suspending allocate,
-    // but it does not matter because we are single core
-    return __vfprintf(fp, fmt0, ap);
-#else
+#if defined(__slc_os_sim__) && (defined(__slc_arch_mtsparc__) || defined(__slc_arch_mtalpha__))
     sl_create(,__stdio_place_id,,,,, sl__exclusive, t_vfprintf, sl_glarg(FILE*,,fp), sl_glarg(const char*,,fmt0), sl_glarg(va_list*,,&ap),sl_sharg(int,ret,0));
     sl_sync();
     return sl_geta(ret);
+#else
+    // Single-core here!
+    return __vfprintf(fp, fmt0, ap);
 #endif
 }

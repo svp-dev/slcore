@@ -48,6 +48,10 @@ AC_CONFIG_FILES([Makefile
                  leon2mt-fpga/Makefile
 		 leon2mt-fpga/linkrom
 		 leon2mt-fpga/linkram
+                 leon2-tbdef/Makefile
+                 leon2mt-tbdef/Makefile
+		 leon2mt-tbdef/linkrom
+		 leon2mt-tbdef/linkram
                  ])
 
 AC_OUTPUT

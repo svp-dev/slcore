@@ -84,7 +84,7 @@ __Balloc
 	return rv;
 	}
 
-#if !defined(__slc_os_fpga__)
+#if defined(__slc_os_sim__) && (defined(__slc_arch_mtalpha__) || defined(__slc_arch_mtsparc__))
 sl_def(t_Balloc, sl__static, sl_shparm(Bigint*, ret), sl_glparm(int, k))
 {
     int k = sl_getp(k);
@@ -98,14 +98,14 @@ extern sl_place_t __dtoa_place_id;
 
 Bigint *Balloc(int k)
 {
-#if defined(__slc_os_fpga__)
-    // UTLEON3 does not support suspending allocate,
-    // but it does not matter because we are single core
-    return __Balloc(k);
-#else
+#if defined(__slc_os_sim__) && (defined(__slc_arch_mtalpha__) || defined(__slc_arch_mtsparc__))
     sl_create(,__dtoa_place_id,,,,, sl__exclusive, t_Balloc, sl_sharg(Bigint*,ret,0), sl_glarg(int,,k));
     sl_sync();
     return sl_geta(ret);
+#else
+    // Other things don't support suspending allocate,
+    // but it does not matter because we are single core there.
+    return __Balloc(k);
 #endif
 }
 
@@ -131,7 +131,7 @@ __Bfree
 		}
 	}
 
-#if !defined(__slc_os_fpga__)
+#if defined(__slc_os_sim__) && (defined(__slc_arch_mtalpha__) || defined(__slc_arch_mtsparc__))
 sl_def(t_Bfree, sl__static, sl_glparm(Bigint*, v))
 {
     __Bfree(sl_getp(v));
@@ -141,13 +141,13 @@ sl_enddef
 
 void Bfree(Bigint* v)
 {
-#if defined(__slc_os_fpga__)
-    // UTLEON3 does not support suspending allocate,
-    // but it does not matter because we are single core
-    return __Bfree(v);
-#else
+#if defined(__slc_os_sim__) && (defined(__slc_arch_mtalpha__) || defined(__slc_arch_mtsparc__))
     sl_create(,__dtoa_place_id,,,,, sl__exclusive, t_Bfree, sl_glarg(Bigint*,,v));
     sl_sync();
+#else
+    // Other things don't support suspending allocate,
+    // but it does not matter because we are single core there.
+    return __Bfree(v);
 #endif
 }
 

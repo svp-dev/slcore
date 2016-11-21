@@ -175,10 +175,15 @@ case $alias in
     mtsn_n)       alias=spr-mtsn_naked-mtsparc-sim ;;
     mtsn_s)       alias=spr-seq_naked-mtsparc-sim ;;
 
-    leon2_s)      alias=spr-l2mtseq_naked-leon2-fpga ;;
-    leon2mt|l2mt) alias=spr-l2mt_hybrid-leon2mt-fpga ;;
-    l2mt_n)       alias=spr-l2mt_naked-leon2mt-fpga ;;
-    l2mt_s)       alias=spr-l2mtseq_naked-leon2mt-fpga ;;
+    leon2_s)      alias=spr-l2mtseq_naked-leon2-tbdef ;;
+    leon2mt|l2mt) alias=spr-l2mt_hybrid-leon2mt-tbdef ;;
+    l2mt_n)       alias=spr-l2mt_naked-leon2mt-tbdef ;;
+    l2mt_s)       alias=spr-l2mtseq_naked-leon2mt-tbdef ;;
+
+    leon2_sf)         alias=spr-l2mtseq_naked-leon2-fpga ;;
+    leon2mt_f|l2mt_f) alias=spr-l2mt_hybrid-leon2mt-fpga ;;
+    l2mt_nf)          alias=spr-l2mt_naked-leon2mt-fpga ;;
+    l2mt_sf)          alias=spr-l2mtseq_naked-leon2mt-fpga ;;
 
     mipsel_s)     alias=spr-seq_naked-mipsel-sim ;;
 
@@ -496,7 +501,7 @@ case $slc_arch-$slc_os in
                 ;;
         esac
 	;;
-    *-fpga)
+    *-fpga|*-tbdef)
         extra_f1flags+=(-x tls-via-gettid -x clear-local-regs)
 	slc_ldflags+=(-nostdlib -Wl,-dT -Wl,linkram)
 	;;

@@ -25,7 +25,7 @@
 #define EXTERNDIV /*nothing*/
 #endif
 
-#if (defined(__slc_arch_leon2mt__) || defined(__slc_arch_leon2__)) && defined(__slc_os_fpga__)
+#if defined(__slc_arch_leon2mt__) || defined(__slc_arch_leon2__)
 
 #define DIVCODEU(Type)							\
     __attribute__((gnu_inline,optimize(3)))				\

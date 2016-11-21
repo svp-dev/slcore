@@ -5,11 +5,14 @@ include ../mt.mk
 
 LIBSLC_SRC += ../mt/l2mt/dbgout.c ../common/testoutput.c ../mt/l2mt/bootstrap.c \
 	../mt/l2mt/init_uart.s ../mt/l2mt/putchar.s ../mt/l2mt/uart_defs.inc \
+	../mt/l2mt/tls.inc ../mt/l2mt/start.inc ../mt/l2mt/filler.inc \
+	../mt/l2mt/globals.inc \
 	$(top_srcdir)/../../lib/libc/bsd/libc/string/memset.c \
 	$(top_srcdir)/../../lib/libc/bsd/libc/string/memcpy.c \
 	$(top_srcdir)/../../lib/libc/bsd/libc/string/memcmp.c \
 	$(top_srcdir)/../../lib/libc/bsd/libc/string/memmove.c
 AM_CCASFLAGS = -Wa,-I$(srcdir)/../mt/l2mt/
+libslrt_a_CCASFLAGS = $(AM_CCASFLAGS)
 
 # softfloat
 # all of this is in libgcc's fp-bit.c

@@ -58,7 +58,7 @@ typedef long counter_t;
 #define MTPERF_SW_TT_REG_PENDING 6
 #define MTPERF_NCOUNTERS      7
 
-#elif defined(__slc_os_fpga__)
+#elif defined(__slc_os_fpga__) && defined(__slc_arch_mtsparc__)
 #define MTPERF_CLOCKS       0
 #define MTPERF_IC_HOLDN     1
 #define MTPERF_DC_HOLDN     2
@@ -173,7 +173,7 @@ void __inline_mtperf_free_intervals(struct s_interval* p)
 
 #if defined(__mt_freestanding__)
 
-#ifdef __slc_os_fpga__
+#if defined(__slc_os_fpga__) && defined(__slc_arch_mtsparc__)
 // AppleCORE performance counters on uT-LEON3, as of April 2011
 #define __MTPERF_CT_BASE 0x80000810
 #endif

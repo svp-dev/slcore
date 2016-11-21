@@ -10,9 +10,8 @@
 # The complete GNU General Public Licence Notice can be found as the
 # `COPYING' file in the root directory.
 #
-
         .section        ".rodata"
-        .asciz  "\0slr_runner:leon2mt-fpga:"
+        .asciz  "\0slr_runner:leon2mt-tbdef:"
         .asciz  "slr_datatag:b32f:\0"
 	
 	.include "tls.inc"

@@ -195,29 +195,13 @@ __ultoa(u_long val, CHAR *endp, int base, int octzero, const char *xdigs)
 		 * the incoming value to where signed arithmetic works.
 		 */
 		if (val > LONG_MAX) {
-#if (defined(__slc_arch_leon2mt__) || defined(__slc_arch_leon2__)) && defined(__slc_os_fpga__)
-		    uint32_t d, m;
-		    __divmodu_uint32_t(val, 10, &d, &m);
-#else
-		    u_long d, m;
-		    d = val / 10;
-		    m = val % 10;
-#endif
-			*--cp = to_char(m);
-			sval = d;
+		    *--cp = to_char(sval % 10);
+		    sval = sval / 10;
 		} else
 			sval = val;
 		do {
-#if (defined(__slc_arch_leon2mt__) || defined(__slc_arch_leon2__)) && defined(__slc_os_fpga__)
-		    int32_t d, m;
-		    __divmods_int32_t(sval, 10, &d, &m);
-#else
-		    long d, m;
-		    d = sval / 10;
-		    m = sval % 10;
-#endif
-			*--cp = to_char(m);
-			sval = d;
+			*--cp = to_char(sval % 10);
+			sval = sval / 10;
 		} while (sval != 0);
 		break;
 
@@ -250,6 +234,11 @@ __ujtoa(uintmax_t val, CHAR *endp, int base, int octzero, const char *xdigs)
 	CHAR *cp = endp;
 	intmax_t sval;
 
+#if defined(__slc_arch_leon2__) || defined(__slc_arch_leon2mt__)
+// No support for 64-bit int arith here.
+	abort();
+#endif
+
 	/* quick test for small values; __ultoa is typically much faster */
 	/* (perhaps instead we should run until small, then call __ultoa?) */
 	if (val <= ULONG_MAX)
@@ -261,29 +250,13 @@ __ujtoa(uintmax_t val, CHAR *endp, int base, int octzero, const char *xdigs)
 			return (cp);
 		}
 		if (val > INTMAX_MAX) {
-#if (defined(__slc_arch_leon2mt__) || defined(__slc_arch_leon2__)) && defined(__slc_os_fpga__)
-		    int32_t d, m;
-		    __divmods_int32_t(sval, 10, &d, &m);
-#else
-		    long d, m;
-		    d = sval / 10;
-		    m = sval % 10;
-#endif
-			*--cp = to_char(m);
-			sval = d;
+			*--cp = to_char(sval % 10);
+			sval = sval / 10;
 		} else
 			sval = val;
 		do {
-#if (defined(__slc_arch_leon2mt__) || defined(__slc_arch_leon2__)) && defined(__slc_os_fpga__)
-		    int32_t d, m;
-		    __divmods_int32_t(sval, 10, &d, &m);
-#else
-		    long d, m;
-		    d = sval / 10;
-		    m = sval % 10;
-#endif
-			*--cp = to_char(m);
-			sval = d;
+			*--cp = to_char(sval % 10);
+			sval = sval / 10;
 		} while (sval != 0);
 		break;
 
@@ -328,16 +301,8 @@ exponent(CHAR *p0, int exp, CHAR fmtch)
 	t = expbuf + MAXEXPDIG;
 	if (exp > 9) {
 		do {
-#if (defined(__slc_arch_leon2mt__) || defined(__slc_arch_leon2__)) && defined(__slc_os_fpga__)
-		    int32_t d, m;
-		    __divmods_int32_t(exp, 10, &d, &m);
-#else
-		    long d, m;
-		    d = exp / 10;
-		    m = exp % 10;
-#endif
-			*--t = to_char(m);
-			exp = d;
+			*--t = to_char(exp % 10);
+			exp = exp / 10;
 		} while (exp > 9);
 		*--t = to_char(exp);
 		for (; t < expbuf + MAXEXPDIG; *p++ = *t++);

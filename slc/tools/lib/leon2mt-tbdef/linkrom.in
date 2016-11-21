@@ -17,7 +17,7 @@ __DYNAMIC  =  0;
 /* orig _RAM_SIZE was 4M */
 
 /* _PROM_SIZE = 1M; */
-_RAM_SIZE = 128M;
+_RAM_SIZE = 256K;
 
 _RAM_START = 0x40000000;
 _RAM_END = _RAM_START + _RAM_SIZE;
@@ -59,7 +59,7 @@ MEMORY
 {
   rom     : ORIGIN = 0x00000000, LENGTH = 1M
   tls     : ORIGIN = 0x20000000, LENGTH = 32K
-  ram     : ORIGIN = 0x40000000, LENGTH = 128M
+  ram     : ORIGIN = 0x40000000, LENGTH = 256K
 }
 
 /*
@@ -72,7 +72,6 @@ SECTIONS
     CREATE_OBJECT_SYMBOLS
     text_start = .;
     _text_start = .;
-    *(.startfill)
     *(.start)
     *(.text)
     *(.text.*)
@@ -97,7 +96,7 @@ SECTIONS
     *(.shdata)
     . = ALIGN (16);
     _endtext = .;
-  } > ram
+  } > rom
   .tls :
   {
     __tls_start = .;
@@ -113,6 +112,7 @@ SECTIONS
   .dynstr	  : { *(.dynstr)	} >ram
   .hash		  : { *(.hash)		} >ram
   .data :
+  AT ( ADDR(.text) + SIZEOF ( .text ) )
   {
     data_start = .;
     _data_start = .;

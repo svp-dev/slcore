@@ -12,7 +12,7 @@
 // `COPYING' file in the root directory.
 //
 
-#if !defined(__slc_os_fpga__)
+#if defined(__slc_os_sim__) && (defined(__slc_arch_mtsparc__) || defined(__slc_arch_mtalpha__))
 
 #include <stdlib.h>
 #include "mtmalloc.h"

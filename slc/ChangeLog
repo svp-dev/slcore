@@ -1,5 +1,73 @@
 2016-11-21  Raphael 'kena' Poss  <knz@thaumogen.net>
 
+	Split the FPGA and simulator back-ends for LEON2-MT.
+
+	* tools/bin/cce.in: Split target between `-fpga' and `-tbdef'
+	(simulation).
+	* tools/lib/leon2-fpga/Makefile.am,
+	* tools/lib/leon2mt-fpga/Makefile.am: Use the new `cce' tags.
+	* tools/lib/leon2-tbdef/Makefile.am,
+	* tools/lib/leon2mt-tbdef/Makefile.am: New.
+	* tools/lib/configure.ac,
+	* tools/lib/Makefile.am: List the new sub-directories.
+
+	* tools/lib/mt/l2mt/slrt.s: Extract common part into...
+	* tools/lib/mt/l2mt/filler.inc,
+	* tools/lib/mt/l2mt/globals.inc,
+	* tools/lib/mt/l2mt/tls.inc,
+	* tools/lib/mt/l2mt/start.inc: these new files.
+	* tools/lib/mt/l2/slrt.s: Rewrite to use the new files.
+	* tools/lib/mt/l2mt-sim/slrt.s: New.
+	* tools/lib/mt/l2-sim/slrt.s: New.
+	* tools/lib/leon2mt-fpga/leon2-common.mk: List the new files.
+	Ensure that the assembler include path is also passed for `slrt.o'.
+
+	* tools/lib/leon2mt-fpga/linkrom.in,
+	* tools/lib/leon2mt-fpga/linkram.in: Copy to...
+	* tools/lib/leon2mt-tbdef/linkrom.in,
+	* tools/lib/leon2mt-tbdef/linkram.in: ...here. Fix the RAM size.
+	* tools/lib/configure.ac: Generate the new linker scripts.
+
+	* tools/include/svp/abort.h,
+	* tools/include/svp/divide.h: Use the new os/arch tags.
+
+	* tools/include/svp/testoutput.h: Use printf on debug streams
+	for test output on FPGA.
+
+	* lib/leon2-fpga/Makefile.am,
+	* lib/leon2mt-fpga/Makefile.am: Use the new `cce' tags.
+	* lib/leon2-tbdef/Makefile.am,
+	* lib/leon2mt-tbdef/Makefile.am: New.
+	* lib/configure.ac,
+	* lib/Makefile.am: List the new sub-directories.
+
+	* lib/libc/bsd/contrib/gdtoa/misc.c,
+	* lib/libc/bsd/libc/stdio/printfcommon.h,
+	* lib/libc/bsd/libc/stdio/vfprintf.c,
+	* lib/libc/bsd/libc/stdlib/strtol.c,
+	* lib/libc/bsd/libc/stdlib/strtoul.c,
+	* lib/libc/bsd/libc/string/strerror.c,
+	* lib/libc/malloc/malloc_excl.c,
+	* lib/libc/malloc/mtmalloc.h,
+	* lib/libc/stdio/mtstdio.h,
+	* lib/mgos/posix-compat/exit.c,
+	* lib/mgos/posix-compat/gtod.c,
+	* lib/mgos/tlsmalloc/tlsconfig.h,
+	* lib/slsys/include/svp/perf.h,
+	* lib/slsys/perf/perf.c: Use the new os/arch macros.
+
+	* lib/libc/bsd/libc/stdlib/strtol.c,
+	* lib/libc/bsd/libc/stdlib/strtoul.c,
+	* lib/libc/bsd/libc/string/strerror.c,
+	* lib/libc/bsd/libc/stdio/vfprintf.c: Remove the special casing
+	for integer division.
+
+	* lib/mgos/posix-compat/exit.c,
+	* tools/include/svp/abort.h: Ensure the global `__exit_code' is
+	properly written to.
+
+2016-11-21  Raphael 'kena' Poss  <knz@thaumogen.net>
+
 	Small LEON2-MT startup fix.
 
 	* tools/lib/mt/l2/slrt.s (__filler),
