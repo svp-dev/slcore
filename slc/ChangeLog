@@ -1,5 +1,13 @@
 2016-11-21  Raphael 'kena' Poss  <knz@thaumogen.net>
 
+	Break a dependency on stdio in the boot code.
+
+	* tools/lib/mt/l2mt/bootstrap.c: Remove uses of the `output_'
+	macros, which on FPGA are redirected to the stdio routines, which
+	during the boot code are not initialized yet.
+
+2016-11-21  Raphael 'kena' Poss  <knz@thaumogen.net>
+
 	Improve `slr' to drive both simulator and FPGA executions.
 
 	* tools/r-leon2mt-fpga.sh.in: Rename to...
