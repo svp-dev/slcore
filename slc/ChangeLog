@@ -1,3 +1,10 @@
+2016-11-21  Alyssa Milburn  <amilburn@zall.org>
+
+	Implement stdio to a cyclic buffer.
+
+	* lib/libc/stdio/mtstdio.c: Add buffer, and dbgstdout/dbgstderr.
+	* lib/libc/stdio/mtstdio.h: Support new FK_BUFFER type.
+
 2016-11-21  Raphael 'kena' Poss  <knz@thaumogen.net>
 
 	Split the FPGA and simulator back-ends for LEON2-MT.
