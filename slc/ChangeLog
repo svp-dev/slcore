@@ -1,3 +1,12 @@
+2016-11-21  Raphael 'kena' Poss  <knz@thaumogen.net>
+
+	Small LEON2-MT startup fix.
+
+	* tools/lib/mt/l2/slrt.s (__filler),
+	* tools/lib/mt/l2mt/slrt.s (__filler): implement the filler using
+	pre-assembled word values, so that slc/gas don't try to modify the
+	code and thus break the alignment.
+
 2016-11-13  Raphael 'kena' Poss  <knz@thaumogen.net>
 
 	Configuration fixes for LEON2-MT.
