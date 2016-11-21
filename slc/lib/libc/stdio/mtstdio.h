@@ -19,8 +19,11 @@ enum file_kind {
     FK_OUT,
     FK_UART,
     FK_STRING,
-    FK_VIRTUAL
+    FK_VIRTUAL,
+    FK_BUFFER
 };
+
+#define STDIO_OUT_BUFFER_SIZE 256
 
 struct __sl_FILE {
     enum file_kind kind;
@@ -35,6 +38,11 @@ struct __sl_FILE {
             size_t (*output)(const void* bytes, size_t sz, void* extra);
             void *extra;
         } virt;
+        struct {
+            int chan;
+            char *ptr;
+            size_t *pos;
+        } buf;
     } out;
 };
 
@@ -63,6 +71,18 @@ __write(FILE *f, const void *bytes, size_t sz)
     }
     case FK_VIRTUAL:
         return f->out.virt.output(bytes, sz, f->out.virt.extra);
+    case FK_BUFFER:
+    {
+        size_t pos = (*f->out.buf.pos) % STDIO_OUT_BUFFER_SIZE;
+        for (size_t n = 0; n < sz; ++n)
+        {
+            f->out.buf.ptr[pos++] = ((char *)bytes)[n];
+            f->out.buf.ptr[pos++] = f->out.buf.chan;
+            pos = pos % STDIO_OUT_BUFFER_SIZE;
+        }
+        *f->out.buf.pos = (*f->out.buf.pos) + (sz*2);
+        return sz;
+    }
     }  
 }
 
@@ -94,6 +114,18 @@ __writes(FILE *f, const char * str)
         }
     }      
     break;
+    case FK_BUFFER:
+    {
+        size_t pos = (*f->out.buf.pos) % STDIO_OUT_BUFFER_SIZE;
+        while (likely(*p))
+        {
+            f->out.buf.ptr[pos++] = *p++;
+            f->out.buf.ptr[pos++] = f->out.buf.chan;
+            pos = pos % STDIO_OUT_BUFFER_SIZE;
+        }
+        *f->out.buf.pos = (*f->out.buf.pos) + ((size_t)(p - str)*2);
+    }
+    break;
     }
     return p - str;
 }
@@ -120,7 +152,14 @@ __writec(FILE *f, int c)
         char b = c;
         return f->out.virt.output(&b, 1, f->out.virt.extra);
     }
-    break;
+    case FK_BUFFER:
+    {
+        size_t pos = (*f->out.buf.pos) % STDIO_OUT_BUFFER_SIZE;
+        f->out.buf.ptr[pos++] = c;
+        f->out.buf.ptr[pos++] = f->out.buf.chan;
+        *f->out.buf.pos = (*f->out.buf.pos) + 2;
+        return 1;
+    }
     }
 }
 
