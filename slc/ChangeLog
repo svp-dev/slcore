@@ -1,5 +1,17 @@
 2016-11-21  Raphael 'kena' Poss  <knz@thaumogen.net>
 
+	Improve `slr' to drive both simulator and FPGA executions.
+
+	* tools/r-leon2mt-fpga.sh.in: Rename to...
+	* tools/r-leon2mt-tbdef.sh.in: ...this. Simplify. Fix to enable
+	running when TMPDIR is not on the same filesystem as the program
+	binary.
+	* tools/r-leon2mt-fpga.sh.in,
+	* tools/leon2mt-fpga-ctl.in: New.
+	* tools/runscripts.mk: List and build the new files.
+
+2016-11-21  Raphael 'kena' Poss  <knz@thaumogen.net>
+
 	Ensure that `slr' cleans up upon termination.
 
 	* tools/bin/slr.in (SLR_RDIR): Ignore signals in the watchdog

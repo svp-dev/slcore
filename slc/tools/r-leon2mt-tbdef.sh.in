@@ -1,6 +1,6 @@
 #! @BASH@
 # Run script for LEON2-MT binaries.
-PS4='+ r-leon2mt-fpga($$): '
+PS4='+ r-leon2mt-tbdef($$): '
 if test -n "${TRACE:-}"; then set -x; fi
 set -eu
 basename=${0##*/}
@@ -34,19 +34,37 @@ view_script=
 saveIFS=$IFS
 IFS=:
 for l in $slc_libdir; do
-    if test -r "$l/leon2mt-fpga-ctl"; then
-	view_script=$l/leon2mt-fpga-ctl
+    if test -r "$l/leon2mt-sim-ctl"; then
+	view_script=$l/leon2mt-sim-ctl
 	break
     fi
 done
 IFS=$saveIFS
 if test -z "$view_script"; then
-    echo "cannot find leon2mt-fpga-ctl in $slc_libdir" >&2
+    echo "cannot find leon2mt-sim-ctl in $slc_libdir" >&2
     exit 1
 fi
 dv=$(dirname "$view_script")
 dv=$(cd "$dv" && pwd -P)
 view_script=$dv/${view_script##*/}
+
+# Extract absolute location of simulator
+dTBDEF=$(dirname "$TBDEF")
+dTBDEF=$(cd "$SLR_ORIGPWD" && cd "$dTBDEF" && pwd -P)
+TBDEF=$dTBDEF/${TBDEF##*/}
+if ! test -x "$TBDEF"; then
+    echo "$TBDEF (\$TBDEF) not found or not executable" >&2
+    exit 1
+fi
+
+# Convert program binary
+if test -n "${VERBOSE:-}"; then echo "$basename: creating ROM/RAM image" >&2; fi
+sparc-linux-gnu-objcopy -O binary "$d/$b" "$wdir/a.bin"
+sparc-linux-gnu-objdump -s -b binary "$wdir/a.bin" >"$wdir/rom.dat"
+ln "$wdir/rom.dat" "$wdir/ddr.dat"
+
+echo "Running from $wdir..." >/dev/tty
+cd "$wdir"
 
 runner_cmdline=("$view_script" "$SIMGFX" "$TBDEF" $SIMARGS)
 
