@@ -130,7 +130,9 @@ while True:
 
     output = splitBuffer(mybuf)
     sys.stdout.write(output[0])
+    sys.stdout.flush()
     sys.stderr.write(output[1])
+    sys.stderr.flush()
     lastbufloc = buflength
 
     if state[0] != 0x65786974:

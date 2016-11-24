@@ -1,5 +1,11 @@
 2016-11-24  Alyssa Milburn  <amilburn@zall.org>
 
+	Flush stdout/stderr when outputting from FPGA buffer.
+
+	* tools/leon2mt-fpga-ctl.in: Flush after writing.
+
+2016-11-24  Alyssa Milburn  <amilburn@zall.org>
+
 	Add uart_getchar function.
 
 	* tools/lib/mt/l2mt/getchar.s: New.
