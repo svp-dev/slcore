@@ -1,5 +1,11 @@
 2016-11-24  Alyssa Milburn  <amilburn@zall.org>
 
+	Fix extra IPC statistic when using integer math.
+
+	* lib/slsys/perf/perf.c: Multiply before dividing.
+
+2016-11-24  Alyssa Milburn  <amilburn@zall.org>
+
 	Fix printing large unsigned integers.
 
 	* lib/libc/bsd/libc/stdio/printfcommon.h: Initialize svar.
