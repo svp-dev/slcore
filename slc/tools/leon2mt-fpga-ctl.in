@@ -13,4 +13,127 @@
 # `COPYING' file in the root directory.
 #
 
-exit(42)
+import socket
+import sys
+from time import sleep
+
+binaryfilename = sys.argv[2]
+
+ocdsock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+ocdsock.connect(('localhost', 4444))
+ocdfile = ocdsock.makefile('rw', 0)
+ocdfile.readline() # intro line
+
+ocdsock.sendall('l2cpu run __stop\n')
+ocdfile.readline() # eat input line
+ocdfile.readline() # eat warning
+ocdsock.sendall('load ' + binaryfilename + '\n')
+ocdfile.readline() # eat input line
+ocdsock.sendall('\n') # use prompt to detect ready state
+while True:
+    l = ocdfile.readline()
+    if l[:2] == '\r>':
+        break
+
+ocdsock.sendall('restart\n')
+ocdfile.readline() # eat input line
+
+dbgbuffersize = 256 # STDIO_OUT_BUFFER_SIZE
+
+lastbufloc = 0
+
+def getNextGoodOCDLine():
+    l = None
+    while (not l) or ("returned bad response" in l) or ("bad CRC" in l):
+        l = ocdfile.readline()
+    return l
+
+def getCPUstate():
+    exitcode = 0
+    bufcontents = ""
+    buflength = 0
+
+    ocdsock.sendall('mem __exit_code\n')
+    ocdfile.readline() # eat input line
+    exitcode = getNextGoodOCDLine().split(" ")
+    exitcode = int(exitcode[3], 16)
+
+    ocdsock.sendall('mem dbgbuf_pos\n')
+    ocdfile.readline() # eat input line
+    buflength = getNextGoodOCDLine()
+    if 'Unknown symbol' in buflength:
+        # no buffer in this binary
+        return (exitcode, bufcontents, 0)
+    buflength = buflength.split(" ")
+    buflength = int(buflength[3], 16)
+
+    # workaround: read is unreliable if you read all at once
+    ocdsock.sendall('mem dbgbuf_buf 1\n')
+    ocdfile.readline() # eat input line
+    getNextGoodOCDLine()
+    sleep(0.1)
+
+    # 'mem' reads words
+    ocdsock.sendall('mem dbgbuf_buf ' + hex(dbgbuffersize/4) + '\n')
+    ocdfile.readline() # eat input line
+    # each output line contains 4 words
+    for i in range((dbgbuffersize + 3) / 16):
+        bufferinfo = getNextGoodOCDLine().split(" ")
+        bufferinfo = bufferinfo[3] + bufferinfo[5] + bufferinfo[7] + bufferinfo[9]
+        bufcontents = bufcontents + bufferinfo.decode('hex')
+
+    return (exitcode, bufcontents, buflength)
+
+def splitBuffer(s):
+    stdout = ""
+    stderr = ""
+    for i in range(len(s)/2):
+        data = s[i*2]
+        channel = ord(s[i*2+1])
+        if channel==1: stdout = stdout + data
+        elif channel==2: stderr = stderr + data
+        else: assert False, channel
+    return (stdout, stderr)
+
+while True:
+    try:
+        state = getCPUstate()
+    except Exception as e:
+        # lazy way to handle bad CRC errors from openocd
+        #sys.stderr.write("WARNING: failed to parse CPU info\n")
+	#print e
+
+        # eat impending data
+        d = 1
+        ocdsock.setblocking(False)
+        while d:
+            try:
+                sleep(0.1)
+                d = ocdsock.recv(4096)
+            except:
+                break
+        ocdsock.setblocking(True)
+        continue
+    buflength = state[2]
+
+    if (buflength - lastbufloc > dbgbuffersize):
+        # TODO: should we try doing something sane in this case?
+        sys.stderr.write("WARNING: lost %d bytes from debug buffer\n" % (buflength - lastbufloc - dbgbuffersize))
+
+    if buflength/dbgbuffersize == lastbufloc/dbgbuffersize:
+        # no wrapping: take the new section
+        mybuf = state[1][lastbufloc%dbgbuffersize:buflength%dbgbuffersize]
+    else:
+        # wrapped: concaternate two sections
+        mybuf = state[1][lastbufloc%dbgbuffersize:]
+        mybuf = mybuf + state[1][:buflength%dbgbuffersize]
+
+    output = splitBuffer(mybuf)
+    sys.stdout.write(output[0])
+    sys.stderr.write(output[1])
+    lastbufloc = buflength
+
+    if state[0] != 0x65786974:
+        sys.stderr.write("\n== program terminated with code %d ==\n" % state[0])
+        sys.exit(state[0])
+    sleep(0.1)
