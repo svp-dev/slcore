@@ -1,5 +1,11 @@
 2016-11-24  Alyssa Milburn  <amilburn@zall.org>
 
+	Fix printing large unsigned integers.
+
+	* lib/libc/bsd/libc/stdio/printfcommon.h: Initialize svar.
+
+2016-11-24  Alyssa Milburn  <amilburn@zall.org>
+
 	Support starting/monitoring FPGA execution using openocd.
 
 	* tools/leon2mt-fpga-ctl.in: Implement control script.

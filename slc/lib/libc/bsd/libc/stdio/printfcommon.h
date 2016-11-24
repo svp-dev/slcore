@@ -195,8 +195,8 @@ __ultoa(u_long val, CHAR *endp, int base, int octzero, const char *xdigs)
 		 * the incoming value to where signed arithmetic works.
 		 */
 		if (val > LONG_MAX) {
-		    *--cp = to_char(sval % 10);
-		    sval = sval / 10;
+		    *--cp = to_char(val % 10);
+		    sval = val / 10;
 		} else
 			sval = val;
 		do {
@@ -250,8 +250,8 @@ __ujtoa(uintmax_t val, CHAR *endp, int base, int octzero, const char *xdigs)
 			return (cp);
 		}
 		if (val > INTMAX_MAX) {
-			*--cp = to_char(sval % 10);
-			sval = sval / 10;
+			*--cp = to_char(val % 10);
+			sval = val / 10;
 		} else
 			sval = val;
 		do {
