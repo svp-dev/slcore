@@ -146,7 +146,7 @@ ARITH mtperf_compute_extra(const counter_t* before, const counter_t* after, unsi
     {
         ARITH itotal = after[MTPERF_EXECUTED_INSNS] - before[MTPERF_EXECUTED_INSNS];
         itotal = DIV(itotal, ncores);
-        if (elapsed) return itotal * DIV(core_rate, elapsed);
+        if (elapsed) return DIV(itotal * core_rate, elapsed);
         break;
     }
 #if defined(__slc_os_sim__)
