@@ -1,3 +1,11 @@
+2016-11-24  Alyssa Milburn  <amilburn@zall.org>
+
+	Support starting/monitoring FPGA execution using openocd.
+
+	* tools/leon2mt-fpga-ctl.in: Implement control script.
+	* tools/lib/mt/l2mt/globals.inc: Initialize __exit_code.
+	* tools/r-leon2mt-fpga.sh.in: Pass binary path onward.
+
 2016-11-21  Raphael 'kena' Poss  <knz@thaumogen.net>
 
 	Break a dependency on stdio in the boot code.

@@ -3,7 +3,6 @@
         .section ".bss"
         .common __pseudo_stdout,4,4
         .common __pseudo_stderr,4,4
-        .common __exit_code,4,4
         .section        ".rodata"
         .align 8
 .LLC1:
@@ -27,5 +26,11 @@ __argv_ptr:
         .size   __argc, 4
 __argc:
         .long   1
+        .global __exit_code
+        .align 4
+        .type   __exit_code, #object
+        .size   __exit_code, 4
+__exit_code:
+        .long   0x65786974
         .common __main_place_id,4,4
         .common environ,4,4

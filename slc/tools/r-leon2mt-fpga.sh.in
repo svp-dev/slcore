@@ -48,7 +48,7 @@ dv=$(dirname "$view_script")
 dv=$(cd "$dv" && pwd -P)
 view_script=$dv/${view_script##*/}
 
-runner_cmdline=("$view_script" "$SIMGFX" "$TBDEF" $SIMARGS)
+runner_cmdline=("$view_script" "$SIMGFX" "$d/$b" $SIMARGS)
 
 if test -n "${VERBOSE:-}"; then
     echo "$basename: cwd=$PWD" >&2
