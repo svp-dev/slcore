@@ -62,6 +62,8 @@ const char* mtperf_counter_names[] = {
     "sw_active_aq",
     "sw_waiting_wq",
     "sw_tt_reg_pending",
+// computed columns
+    "pl_eff_x100",
 #elif defined(__slc_os_fpga__) && defined(__slc_arch_mtsparc__)
     "ic_holdn",
     "dc_holdn",

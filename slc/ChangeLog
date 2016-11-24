@@ -1,5 +1,12 @@
 2016-11-24  Alyssa Milburn  <amilburn@zall.org>
 
+	Sync perf column names for LEON2(-MT).
+
+	* lib/slsys/perf/perf.c: Add "pl_eff_x100" to mtperf_column_names
+	for LEON2/LEON2-MT.
+
+2016-11-24  Alyssa Milburn  <amilburn@zall.org>
+
 	Flush stdout/stderr when outputting from FPGA buffer.
 
 	* tools/leon2mt-fpga-ctl.in: Flush after writing.
