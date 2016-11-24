@@ -1,3 +1,10 @@
+2016-11-24  Raphael 'kena' Poss  <knz@thaumogen.net>
+
+	Packaging fix.
+
+	* tools/runscripts.mk (EXTRA_DIST): Add the missing
+	r-leon2mt-tbdef.sh.in.
+
 2016-11-24  Alyssa Milburn  <amilburn@zall.org>
 
 	Sync perf column names for LEON2(-MT).

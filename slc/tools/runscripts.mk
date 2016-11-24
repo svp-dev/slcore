@@ -2,8 +2,13 @@ RUNSCRIPTS = r-host.sh r-mtalpha-sim.sh r-mtsparc-sim.sh r-mtsparc-fpga.sh r-mip
 	r-leon2mt-tbdef.sh leon2mt-sim-ctl  r-leon2-tbdef.sh \
 	r-leon2mt-fpga.sh leon2mt-fpga-ctl r-leon2-fpga.sh
 
-EXTRA_DIST += r-host.sh.in r-mt-sim.sh.in r-mtsparc-fpga.sh.in r-leon2mt-fpga.sh.in \
-	leon2mt-sim-ctl.in leon2mt-fpga-ctl.in
+EXTRA_DIST += r-host.sh.in \
+	r-mt-sim.sh.in \
+	r-mtsparc-fpga.sh.in \
+	r-leon2mt-fpga.sh.in \
+	r-leon2mt-tbdef.sh.in \
+	leon2mt-sim-ctl.in \
+	leon2mt-fpga-ctl.in
 
 sllib_SCRIPTS += $(RUNSCRIPTS)
 CLEANFILES += $(RUNSCRIPTS)
