@@ -18,6 +18,9 @@ from ..mt.mtalpha.gencreate import *
 from ..mt.mtalpha.genssync import *
 from ..mt.mtsparc.gentfun import *
 from ..mt.mtsparc.gencreate import *
+from ..mt.leon2mt.gentfun import *
+from ..mt.leon2mt.gencreate import *
+from ..mt.leon2mt.seq import *
 from ..mt.common.strategy import *
 from ..lower.spawndecl import *
 from ..lower.lowerspawnsync import *
@@ -25,10 +28,11 @@ from ..am.visitors import *
 from ..ptl.gentfun import *
 from ..ptl.genptlcreate import *
 
-_common_prefix = [
+def _common_prefix(signed_ix=True):
+    return [
     ('walk', DefaultVisitor()),
     ('check', CheckVisitor()),
-    ('cr2lc', Create_2_LowCreate()),
+    ('cr2lc', Create_2_LowCreate(signed_ix)),
     ('lss', LowerSpawnSync()),
     ('lsd', LowerSpawnDecl()),
     ]
@@ -44,7 +48,7 @@ _common_suffix = [
 ]
 
 _chains = {
-    'seq' : _common_prefix + [
+    'seq' : _common_prefix() + [
         ('lseta', LinkSetA()),
         ('autores', AutoResolve()),
         ('autoresss', AutoResolveSpawnSync()),
@@ -52,7 +56,7 @@ _chains = {
         ('flattenfun',TFun_2_CFun()),
         ('flattenss',SSync_2_CSSync()),
         ] + _common_suffix,
-    'hrt' : _common_prefix + [
+    'hrt' : _common_prefix() + [
         ('lseta', LinkSetA()),
         ('autores', AutoResolve()),
         ('autoresss', AutoResolveSpawnSync()),
@@ -61,7 +65,7 @@ _chains = {
         # ('flattenss',SSync_2_HydraSSync()),
         ] + _common_suffix,
     # FIXME: support hrt+seq here
-    'mta' : _common_prefix + [
+    'mta' : _common_prefix() + [
         ('lseta', LinkSetA()),
         ('autores', AutoResolve()),
         ('autoresss', AutoResolveSpawnSync()),
@@ -70,7 +74,7 @@ _chains = {
         ('flattenfun',TFun_2_MTATFun()),
         ('flattenss',SSync_2_MTASSync()),
         ] + _common_suffix,
-    'mta+seq' : _common_prefix + [
+    'mta+seq' : _common_prefix() + [
         ('makestrategy', CreateMTStrategy(newisa=True)),
         ('splitcr', SplitCreates(oracle=make_mt_oracle('mta'))),
         ('splitss', SplitSpawnSync(oracle=make_mt_oracle('mta'))),
@@ -84,7 +88,40 @@ _chains = {
         ('flattenss', DefaultVisitor(Dispatcher({'smta':SSync_2_MTASSync(),
                                                  'sseq':SSync_2_CSSync()}))),
         ] + _common_suffix,
-    'mts' : _common_prefix + [
+    'l2mt' : _common_prefix(False) + [
+        ('lseta', LinkSetA()),
+        ('autores', AutoResolve()),
+        ('autoresss', AutoResolveSpawnSync()),
+        ('makestrategy', CreateMTStrategy()),
+        ('flattencr', Create_2_L2MTCreate()), 
+        ('flattenfun',TFun_2_L2MTTFun()),
+        ('flattenss',SSync_2_L2MTSSync()),
+        ] + _common_suffix,
+    'l2mtseq' : _common_prefix(False) + [
+        ('lseta', LinkSetA()),
+        ('autores', AutoResolve()),
+        ('autoresss', AutoResolveSpawnSync()),
+        ('flattencr',Create_2_L2MTLoop()),
+        ('flattenfun',TFun_2_L2MTCFun()),
+        ('flattenss',SSync_2_CSSync()),
+        ] + _common_suffix,
+    'l2mt+seq' : _common_prefix(False) + [
+        ('makestrategy', CreateMTStrategy()),
+        ('splitcr', SplitCreates(oracle=make_mt_oracle('l2mt'))),
+        ('splitss', SplitSpawnSync(oracle=make_mt_oracle('l2mt'))),
+        ('lseta', LinkSetA()),
+        ('flseta', FlavorSetA()),
+        ('splitfun', SplitFuns(oracle=make_mt_oracle('l2mt'))),
+        ('flattencr', ScopedVisitor(Dispatcher({'cl2mt':Create_2_L2MTCreate(),
+                                                'cseq':Create_2_L2MTLoop()}))),
+        ('flattenfun', DefaultVisitor(Dispatcher({'fl2mt':TFun_2_L2MTTFun(),
+                                                  'fseq':TFun_2_L2MTCFun()}))),
+        ('flattenss', DefaultVisitor(Dispatcher({'sl2mt':SSync_2_L2MTSSync(),
+                                                 'sseq':SSync_2_CSSync()}))),
+        ] + _common_suffix,
+
+
+    'mts' : _common_prefix() + [
         ('lseta', LinkSetA()),
         ('autores', AutoResolve()),
 #        ('autoresss', AutoResolveSpawnSync()),
@@ -93,7 +130,7 @@ _chains = {
         ('flattenfun',TFun_2_MTSTFun()),
 #        ('flattenss',SSync_2_MTSSSync()),
         ] + _common_suffix,
-    'mts+seq' : _common_prefix + [
+    'mts+seq' : _common_prefix() + [
         ('makestrategy', CreateMTStrategy()),
         ('splitcr', SplitCreates(oracle=make_mt_oracle('mts'))),
 #        ('splitss', SplitSpawnSync(oracle=make_mt_oracle('mts'))),
@@ -107,7 +144,7 @@ _chains = {
 #        ('flattenss', DefaultVisitor(Dispatcher({'smta':SSync_2_MTSSSync(),
 #                                                 'sseq':SSync_2_CSSync()}))),
         ] + _common_suffix,
-    'mtsn' : _common_prefix + [
+    'mtsn' : _common_prefix() + [
         ('lseta', LinkSetA()),
         ('autores', AutoResolve()),
 #        ('autoresss', AutoResolveSpawnSync()),
@@ -116,7 +153,7 @@ _chains = {
         ('flattenfun',TFun_2_MTSTFun()),
 #        ('flattenss',SSync_2_MTSSSync()),
         ] + _common_suffix,
-    'mtsn+seq' : _common_prefix + [
+    'mtsn+seq' : _common_prefix() + [
         ('makestrategy', CreateMTStrategy(newisa=True)),
         ('splitcr', SplitCreates(oracle=make_mt_oracle('mts'))),
 #        ('splitss', SplitSpawnSync(oracle=make_mt_oracle('mts'))),
@@ -130,7 +167,7 @@ _chains = {
 #        ('flattenss', DefaultVisitor(Dispatcher({'smts':SSync_2_MTSSSync(),
 #                                                 'sseq':SSync_2_CSSync()}))),
         ] + _common_suffix,
-    'ptl' : _common_prefix + [
+    'ptl' : _common_prefix() + [
         ('makestrategy', CreateMTStrategy(newisa=True)),
         ('lseta', LinkSetA()),
         ('autores', AutoResolve()),
@@ -139,7 +176,7 @@ _chains = {
         ('flattenfun',TFun_2_ptlTFun()),
         #('flattenss',SSync_2_ptlSSync()), # not supported in ptl (yet)
         ] + _common_suffix,
-    'ptl+seq' : _common_prefix + [
+    'ptl+seq' : _common_prefix() + [
         ('makestrategy', CreateMTStrategy(newisa=True)),
         ('splitcr', SplitCreates(oracle=make_mt_oracle('ptl'))), 
 #        ('splitss', SplitSpawnSync(oracle=make_mt_oracle('ptl'))), # not supported in ptl (yet)

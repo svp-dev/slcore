@@ -12,6 +12,7 @@
 // `COPYING' file in the root directory.
 //
 
+#if defined(__slc_os_sim__)
 #include <svp/mgsim.h>
 
 #undef mgsim_control
@@ -20,3 +21,4 @@ void mgsim_control(unsigned long val, unsigned int type, unsigned int command, u
     __inline_mgsim_control(val, type, command, flags);
 }
 
+#endif

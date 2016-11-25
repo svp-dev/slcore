@@ -19,7 +19,6 @@ libslrt_a_SOURCES = $(SLRT_SRC)
 libslc_a_CFLAGS = -b $(COMMON_TAG)
 libslc_a_SOURCES = $(LIBSLC_SRC)
 
-
 .SECONDARY: libslrt_a-slrt.o
 slrt.o: libslrt_a-slrt.o
 	$(AM_V_at)rm -f $@

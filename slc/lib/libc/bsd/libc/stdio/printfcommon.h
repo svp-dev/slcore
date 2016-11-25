@@ -195,13 +195,13 @@ __ultoa(u_long val, CHAR *endp, int base, int octzero, const char *xdigs)
 		 * the incoming value to where signed arithmetic works.
 		 */
 		if (val > LONG_MAX) {
-			*--cp = to_char(val % 10);
-			sval = val / 10;
+		    *--cp = to_char(val % 10);
+		    sval = val / 10;
 		} else
 			sval = val;
 		do {
 			*--cp = to_char(sval % 10);
-			sval /= 10;
+			sval = sval / 10;
 		} while (sval != 0);
 		break;
 
@@ -234,6 +234,11 @@ __ujtoa(uintmax_t val, CHAR *endp, int base, int octzero, const char *xdigs)
 	CHAR *cp = endp;
 	intmax_t sval;
 
+#if defined(__slc_arch_leon2__) || defined(__slc_arch_leon2mt__)
+// No support for 64-bit int arith here.
+	abort();
+#endif
+
 	/* quick test for small values; __ultoa is typically much faster */
 	/* (perhaps instead we should run until small, then call __ultoa?) */
 	if (val <= ULONG_MAX)
@@ -241,7 +246,7 @@ __ujtoa(uintmax_t val, CHAR *endp, int base, int octzero, const char *xdigs)
 	switch (base) {
 	case 10:
 		if (val < 10) {
-			*--cp = to_char(val % 10);
+			*--cp = to_char(val);
 			return (cp);
 		}
 		if (val > INTMAX_MAX) {
@@ -251,7 +256,7 @@ __ujtoa(uintmax_t val, CHAR *endp, int base, int octzero, const char *xdigs)
 			sval = val;
 		do {
 			*--cp = to_char(sval % 10);
-			sval /= 10;
+			sval = sval / 10;
 		} while (sval != 0);
 		break;
 
@@ -297,7 +302,8 @@ exponent(CHAR *p0, int exp, CHAR fmtch)
 	if (exp > 9) {
 		do {
 			*--t = to_char(exp % 10);
-		} while ((exp /= 10) > 9);
+			exp = exp / 10;
+		} while (exp > 9);
 		*--t = to_char(exp);
 		for (; t < expbuf + MAXEXPDIG; *p++ = *t++);
 	}

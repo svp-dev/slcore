@@ -34,6 +34,7 @@ AC_ARG_ENABLE([check-mt],
 
 if test "x$enable_check_mt" != xyes; then
   enable_mtalpha=no
+  enable_leon2mt=no
   enable_mtsparc=no
   enable_mipsel=no
 fi
@@ -41,6 +42,7 @@ AM_CONDITIONAL([ENABLE_CHECK_MT], [test "x$enable_check_mt" = "xyes"])
 
 AM_CONDITIONAL([ENABLE_CHECK_MTA], [test "x$enable_mtalpha" = "xyes"])
 AM_CONDITIONAL([ENABLE_CHECK_MTS], [test "x$enable_mtsparc" = "xyes"])
+AM_CONDITIONAL([ENABLE_CHECK_L2MT], [test "x$enable_leon2mt" = "xyes"])
 AM_CONDITIONAL([ENABLE_CHECK_MIPSEL], [test "x$enable_mipsel" = "xyes"])
 
 ])

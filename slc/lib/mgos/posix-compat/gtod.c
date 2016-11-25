@@ -47,13 +47,12 @@ int gettimeofday(struct timeval* t, struct timezone *tz)
         return -1;
     }
 
-#if defined(__slc_os_fpga__)
-    // UTLEON3 does not support suspending allocate,
-    // but it does not matter because we are single core
-    return rtc_gettime(t);
-#else
+#if defined(__slc_os_sim__) && (defined(__slc_arch_mtsparc__) || defined(__slc_arch_mtalpha__))
     sl_create(, mg_io_place_id,,,,,sl__forcewait, get_time, sl_glarg(struct timeval*,,t), sl_sharg(int, ret, 0));
     sl_sync();
     return sl_geta(ret);
+#else
+    // Single core, no bother.
+    return rtc_gettime(t);
 #endif
 }

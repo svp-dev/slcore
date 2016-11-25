@@ -86,7 +86,7 @@ When pushing your changes to a remote directory:
       ChangeLog. (see previous ChangeLog entries and follow the
       pattern).
 
-3. save the output of ``svn diff`` or ``git format-patch`` to a file.
+3. save the output of ``git format-patch`` to a file.
 
 4. commit your set(s) of changes, one per software package. The
    content of the commit message should be the latest ``ChangeLog``

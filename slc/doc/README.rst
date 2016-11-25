@@ -1,5 +1,5 @@
 slc, a SVP language compiler.
-Copyright (C) 2008, 2009, 2010, 2011, 2012   The SL project.
+Copyright (C) 2008-2015   The SL project.
 
 =====================
  Introduction to SLC
@@ -14,6 +14,9 @@ SLC, a generic SVP_ compiler.
 Installation
 ============
 
+.. note:: The separate "SL installer" is highly recommended to automate
+   installation. See: http://svp-dev.github.io/
+
 To install slc on your system, type in the classical sequence at the
 command prompt::
 
@@ -27,9 +30,6 @@ Between ``make`` and ``make install``, you may also want to run::
 
 This will ensure that the demo programs can be compiled with various
 slc targets.
-
-Alternatively, the separate "SL installer" can be used to automate
-installation. Check the separate CSA note [sl13] for details.
 
 Requirements
 ============

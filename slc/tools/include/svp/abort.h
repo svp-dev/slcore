@@ -17,8 +17,29 @@
 
 #ifdef __mt_freestanding__
 
+#ifdef __slc_os_sim__
 #include <svp/mgsim.h>
 #define svp_abort() mgsim_control(0, MGSCTL_TYPE_STATACTION, MGSCTL_SA_EXCEPTION, 0)
+
+#elif defined(__slc_arch_leon2mt__)  || defined(__slc_arch_leon2__)
+
+extern volatile int __exit_code;
+
+#define svp_abort() do {						\
+	__exit_code = 134; \
+	__asm__ __volatile__("sta %%r0, [%0] 0x84; b,a __stop; nop" : : "r"(4));	\
+	__builtin_unreachable(); \
+    } while(1)
+
+#else
+
+#warning svp_abort will not work properly here!
+#define svp_abort() do {						\
+	__asm__ __volatile__("end");	\
+    } while(1)
+
+#endif
+
 
 #else
 # include <stdlib.h>

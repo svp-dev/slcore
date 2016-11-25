@@ -14,6 +14,7 @@ def regextract(fundata, items):
         if m is not None:
             assert not fundata.has_key('regs')
             fundata['regs'] = [int(x) for x in m.groups()]
+            yield ('empty', '', 'MT: END PROLOGUE')
             continue
 
         yield (type, content, comment)

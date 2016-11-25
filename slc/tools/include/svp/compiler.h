@@ -20,10 +20,12 @@
 #if defined(__GNUC__) && !defined(__AVOID_GNUISMS)
 
 #if defined(__mtsparc__) || defined(__sparc__)
-# define barrier() __asm__ __volatile__("!MB" : : : "memory")
+#define __ASM_COMMENT_CHAR "!"
 #else
-# define barrier() __asm__ __volatile__("#MB" : : : "memory")
+#define __ASM_COMMENT_CHAR "#"
 #endif
+
+# define barrier() __asm__ __volatile__(__ASM_COMMENT_CHAR "MB" : : : "memory")
 
 #else
 # ifdef __INTEL_COMPILER
@@ -60,7 +62,7 @@
 
 #if defined (__GNUC__) && !defined(__AVOID_GNUISMS)
 # define noinline __attribute__((__noinline__))
-# define alwaysinline __attribute__((__always_inline__)) static
+# define alwaysinline __attribute__((__always_inline__)) static inline
 # define unused __attribute__((__unused__))
 #else
 # warning "No definition for noinline/alwaysinline on this target."
@@ -70,7 +72,9 @@
 #endif
 
 #if defined(__mt_freestanding__) && defined(__GNUC__) && !defined(__AVOID_GNUISMS)
-# define use(X) __asm__ __volatile__("#USE %0" : "=rf"(X) : "0"(X))
+
+# define use(X) __asm__ __volatile__(__ASM_COMMENT_CHAR "USE %0" : "=rf"(X) : "0"(X))
+
 #else
 # define use(X) do { (X) = (X); } while(0)
 #endif

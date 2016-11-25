@@ -414,7 +414,7 @@ class RegDefs:
                   ['$gf%d' % x for x in xrange(self.fargregs)] + \
                   ['$d%d' % x for x in xrange(self.iargregs / 2)] + \
                   ['$df%d' % x for x in xrange(self.fargregs / 2)] + \
-                  ['$%d' % x for x in xrange(31)])
+                  ['$%d' % x for x in xrange(1,32)])
 
         ### Register lists for the compile commands ###
         rm.fixed_registers = []

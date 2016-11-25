@@ -19,6 +19,21 @@
 
 #include <svp/compiler.h>
 
+# define output_string(S, Stream)                                       \
+    do {								\
+        const unsigned char *__ptr = (const unsigned char*)(const void*)(S);  \
+        while(likely(*__ptr)) output_char(*__ptr++, Stream);            \
+    } while(0)
+
+# define output_bytes(S, L, Stream)					\
+    do {                                                                \
+        const unsigned char *__ptr = (const unsigned char*)(const void*)(S);  \
+        unsigned long __i = 0, __max = (unsigned long)(L);              \
+        while(likely(__i < __max)) output_char(__ptr[__i++], Stream);	\
+    } while(0)
+
+#ifdef __slc_os_sim__
+
 #ifndef __MGSIM_DEBUG_STDOUT
 #define __MGSIM_DEBUG_STDOUT 0x200UL
 #endif
@@ -63,18 +78,82 @@
         __asm__ __volatile__("" : : : "memory");                        \
     } while(0)
 
-# define output_string(S, Stream)                                       \
-    do {								\
-        const unsigned char *__ptr = (const unsigned char*)(const void*)(S);  \
-        while(likely(*__ptr)) output_char(*__ptr++, Stream);            \
+#elif defined(__slc_os_fpga__) && (defined(__slc_arch_leon2mt__) || defined(__slc_arch_leon2__))
+
+# include <stdio.h>
+extern FILE* dbgstdout;
+extern FILE* dbgstderr;
+
+#  define output_float(F, Stream, Precision) do { \
+        FILE * __s = (Stream) == 2 ? dbgstderr : dbgstdout; \
+        fprintf(__s, "%.*le", (Precision), (double)(F)); \
+    } while(0)
+#  define output_char(N, Stream) do { \
+        FILE * __s = (Stream) == 2 ? dbgstderr : dbgstdout; \
+        fprintf(__s, "%c", (char)(N)); \
+    } while(0)
+#  define output_hex(N, Stream) do { \
+        FILE * __s = (Stream) == 2 ? dbgstderr : dbgstdout; \
+        fprintf(__s, "%lx", (unsigned long)(N)); \
+    } while(0)
+#  define output_int(N, Stream) do { \
+        FILE * __s = (Stream) == 2 ? dbgstderr : dbgstdout; \
+        fprintf(__s, "%ld", (long)(N)); \
+    } while(0)
+#  define output_uint(N, Stream) do { \
+        FILE * __s = (Stream) == 2 ? dbgstderr : dbgstdout; \
+        fprintf(__s, "%lu", (unsigned long)(N)); \
+    } while(0)
+#  undef output_string
+#  define output_string(S, Stream) do { \
+        FILE * __s = (Stream) == 2 ? dbgstderr : dbgstdout; \
+        fprintf(__s, "%s", (const char*)(S)); \
+    } while(0)
+#  undef output_bytes
+#  define output_bytes(S, L, Stream) do { \
+        FILE * __s = (Stream) == 2 ? dbgstderr : dbgstdout; \
+        fwrite((const char*)(S), (L), 1, __s); \
     } while(0)
 
-# define output_bytes(S, L, Stream)					\
-    do {                                                                \
-        const unsigned char *__ptr = (const unsigned char*)(const void*)(S);  \
-        unsigned long __i = 0, __max = (unsigned long)(L);              \
-        while(likely(__i < __max)) output_char(__ptr[__i++], Stream);	\
+
+#elif defined(__slc_os_tbdef__) && (defined(__slc_arch_leon2mt__) || defined(__slc_arch_leon2__))
+
+#define DEBUG_STDOUT_ADDR 0x10
+#define DEBUG_STDERR_ADDR 0x20
+#define DEBUG_FMT_BYTE 0x00
+#define DEBUG_FMT_INT  0x04
+#define DEBUG_FMT_UINT 0x08
+#define DEBUG_FMT_HEX  0x0c
+#define DEBUG_CTL_ADDR  0x00
+#define DEBUG_CTL_EXIT  0x0  
+#define DEBUG_CTL_ABORT  0x4  
+#define DEBUG_CHAN_ADDR(C) (0x10 * (C))
+
+#define DEBUG_OUTPUT(Addr, Value) do {					\
+	__asm__ __volatile__("sta %0, [%1] 0x84" : : "r"(Value), "r"(Addr));	\
+    } while(0)								\
+
+#define output_char(byte, chan) do {			      \
+	DEBUG_OUTPUT(DEBUG_CHAN_ADDR(chan)|DEBUG_FMT_BYTE, byte);	\
     } while(0)
+
+#define output_uint(val, chan) do {			     \
+	DEBUG_OUTPUT(DEBUG_CHAN_ADDR(chan)|DEBUG_FMT_UINT, val);	\
+    } while(0)
+
+#define output_int(val, chan) do {			    \
+	DEBUG_OUTPUT(DEBUG_CHAN_ADDR(chan)|DEBUG_FMT_INT, val); \
+    } while(0)
+
+#define output_hex(val, chan) do {				\
+	DEBUG_OUTPUT(DEBUG_CHAN_ADDR(chan)|DEBUG_FMT_HEX, val);	\
+    } while(0)
+
+
+#else
+#error Unsupported arch/os back-end
+
+#endif
 
 #else
 

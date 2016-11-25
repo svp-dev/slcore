@@ -32,7 +32,8 @@
             output_string(file ":", 2);                                 \
             output_uint(line, 2);                                       \
             output_string(": failed assertion `" e "'\n", 2);           \
-        }), svp_abort())
+	    svp_abort();						\
+        }))
 
 #endif
 

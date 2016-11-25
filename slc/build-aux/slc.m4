@@ -45,11 +45,14 @@ AC_DEFUN([SLC_PATH_USER],
 
 AC_DEFUN([_SLC_WITH_CROSS_GCC],
 [dnl
- AC_ARG_VAR([CC_MTALPHA], [Location of the GCC/Alpha cross-compiler.])
+ AC_ARG_VAR([CC_MTALPHA], [Location of the GCC/MT-Alpha cross-compiler.])
  AC_PATH_PROG([CC_MTALPHA], [mtalpha-linux-gnu-gcc], [no], [$prefix/bin$PATH_SEPARATOR$PATH])
 
- AC_ARG_VAR([CC_MTSPARC], [Location of the GCC/Sparc cross-compiler.])
+ AC_ARG_VAR([CC_MTSPARC], [Location of the GCC/MT-Sparc cross-compiler.])
  AC_PATH_PROG([CC_MTSPARC], [mtsparc-linux-gnu-gcc], [no], [$prefix/bin$PATH_SEPARATOR$PATH])
+
+ AC_ARG_VAR([CC_LEON2MT], [Location of the GCC/Sparc cross-compiler.])
+ AC_PATH_PROG([CC_LEON2MT], [sparc-linux-gnu-gcc], [no], [$prefix/bin$PATH_SEPARATOR$PATH])
 
  AC_ARG_VAR([CC_MIPSEL], [Location of the GCC/MIPSel cross-compiler.])
  AC_PATH_PROG([CC_MIPSEL], [mipsel-linux-gnu-gcc], [no], [$prefix/bin$PATH_SEPARATOR$PATH])
@@ -80,6 +83,11 @@ AC_DEFUN([SLC_TARGET_FLAGS],
                                 [disable support for MT-Sparc compilation (default is try to enable)])],
                 [], [enable_mtsparc=yes])
 
+  AC_ARG_ENABLE([leon2mt], 
+                [AC_HELP_STRING([--disable-leon2mt], 
+                                [disable support for LEON2-MT compilation (default is try to enable)])],
+                [], [enable_leon2mt=yes])
+
   AC_ARG_ENABLE([mipsel], 
                 [AC_HELP_STRING([--disable-mipsel], 
                                 [disable support for MIPSel compilation (default is try to enable)])],
@@ -90,6 +98,7 @@ AC_DEFUN([SLC_TARGET_FLAGS],
   AC_CONFIG_COMMANDS_PRE([AM_CONDITIONAL([ENABLE_SLC_PTL], [test "x$enable_ptl" = "xyes"])])
   AC_CONFIG_COMMANDS_PRE([AM_CONDITIONAL([ENABLE_SLC_HLSIM], [test "x$enable_hlsim" = "xyes"])])
   AC_CONFIG_COMMANDS_PRE([AM_CONDITIONAL([ENABLE_SLC_HRT], [test "x$enable_hrt" = "xyes"])])
+  AC_CONFIG_COMMANDS_PRE([AM_CONDITIONAL([ENABLE_SLC_LEON2MT], [test "x$enable_leon2mt" = xyes])])
   AC_CONFIG_COMMANDS_PRE([AM_CONDITIONAL([ENABLE_SLC_MTALPHA], [test "x$enable_mtalpha" = xyes])])
   AC_CONFIG_COMMANDS_PRE([AM_CONDITIONAL([ENABLE_SLC_MTSPARC], [test "x$enable_mtsparc" = xyes])])
   AC_CONFIG_COMMANDS_PRE([AM_CONDITIONAL([ENABLE_SLC_MIPSEL], [test "x$enable_mipsel" = xyes])])

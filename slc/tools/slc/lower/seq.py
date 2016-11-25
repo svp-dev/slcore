@@ -18,21 +18,21 @@ class Create_2_Loop(ScopedVisitor):
     def visit_createarg(self, arg):
         # prepare proto and uses
         if arg.type.startswith("sh"):
-            self.__callist.append(flatten(None, ', &'))
-            self.__callist.append(CVarUse(decl = arg.cvar))
-            self.__protolist += flatten(None, ', ') + arg.ctype + flatten(None, ' *')
+            self.callist.append(flatten(None, ', &'))
+            self.callist.append(CVarUse(decl = arg.cvar))
+            self.protolist += flatten(None, ', ') + arg.ctype + flatten(None, ' *')
         else:
-            self.__callist.append(flatten(None, ', '))
-            self.__callist.append(CVarUse(decl = arg.cvar))
-            self.__protolist += flatten(None, ', ') + arg.ctype
+            self.callist.append(flatten(None, ', '))
+            self.callist.append(CVarUse(decl = arg.cvar))
+            self.protolist += flatten(None, ', ') + arg.ctype
         return arg
 
     def visit_lowcreate(self, lc):
         
         cr = self.cur_scope.creates[lc.label]
 
-        self.__callist = []
-        self.__protolist = Block()
+        self.callist = []
+        self.protolist = Block()
 
         if lc.target_next is not None:
             warn("alternative %s not used (sequential execution always succeeds)" %
@@ -41,8 +41,8 @@ class Create_2_Loop(ScopedVisitor):
         for a in cr.args:
             a.accept(self) # accumulate the call/protolists
 
-        callist = self.__callist
-        protolist = self.__protolist
+        callist = self.callist
+        protolist = self.protolist
 
         newbl = []
         lbl = cr.label
@@ -118,11 +118,11 @@ class TFun_2_CFun(DefaultVisitor):
 
     def __init__(self, *args, **kwargs):
         super(TFun_2_CFun, self).__init__(*args, **kwargs)
-        self.__shlist = None
-        self.__gllist = None
+        self.shlist = None
+        self.gllist = None
 
     def visit_getp(self, getp):
-        if getp.name in self.__shlist:
+        if getp.name in self.shlist:
             format = "(*__slP_%s)"
         else:
             format = " __slP_%s "
@@ -130,7 +130,7 @@ class TFun_2_CFun(DefaultVisitor):
 
     def visit_setp(self, getp):
         b = getp.rhs.accept(self)
-        if getp.name in self.__shlist:
+        if getp.name in self.shlist:
             format = "(*__slP_%s) = "
         else:
             format = " __slP_%s = "
@@ -138,26 +138,26 @@ class TFun_2_CFun(DefaultVisitor):
 
     def visit_funparm(self, parm):
         if parm.type.startswith("sh"):
-            self.__shlist.append(parm.name)
-            self.__buffer += (Opaque(', register ') + parm.ctype + 
+            self.shlist.append(parm.name)
+            self.buffer += (Opaque(', register ') + parm.ctype + 
                               ' * const __restrict__ __slP_%s ' % parm.name)
         else:
-            self.__gllist.append(parm.name)
+            self.gllist.append(parm.name)
             if parm.type.endswith('_mutable'):
                 reg = ""
                 const = ""
             else:
                 reg = "register"
                 const = "const"
-            self.__buffer += (Opaque(', %s ' % reg) + parm.ctype + 
+            self.buffer += (Opaque(', %s ' % reg) + parm.ctype + 
                               ' %s __slP_%s ' % (const, parm.name))
         return parm
 
     def visit_fundecl(self, fundecl, infundef = False):
-        old_shlist = self.__shlist
-        old_gllist = self.__gllist
-        self.__shlist = []
-        self.__gllist = []
+        old_shlist = self.shlist
+        old_gllist = self.gllist
+        self.shlist = []
+        self.gllist = []
         qual = ""
         iattr = ""
         if fundecl.extras.get_attr('static', None) is not None:
@@ -166,40 +166,40 @@ class TFun_2_CFun(DefaultVisitor):
             iattr = " __attribute__((unused))"
         else:
             qual = "extern"
-        self.__buffer = flatten(fundecl.loc, 
+        self.buffer = flatten(fundecl.loc, 
                                 " %s long %s(const long __slI%s" 
                                 % (qual, fundecl.name, iattr))
         for parm in fundecl.parms:
             parm.accept(self)
-        self.__buffer += ')'
-        ret = self.__buffer
-        self.__buffer = None
+        self.buffer += ')'
+        ret = self.buffer
+        self.buffer = None
         if not infundef:
-            self.__shlist = old_shlist
-            self.__gllist = old_gllist
+            self.shlist = old_shlist
+            self.gllist = old_gllist
         return ret
  
     def visit_fundeclptr(self, fundecl):
-        old_shlist = self.__shlist
-        old_gllist = self.__gllist
-        self.__shlist = []
-        self.__gllist = []
+        old_shlist = self.shlist
+        old_gllist = self.gllist
+        self.shlist = []
+        self.gllist = []
         if fundecl.extras.get_attr('typedef', None) is not None:
             qual = "typedef"
         elif fundecl.extras.get_attr('static', None) is not None:
             qual = "static"
         else:
             qual = ''
-        self.__buffer = flatten(fundecl.loc, 
+        self.buffer = flatten(fundecl.loc, 
                                 " %s long (*%s)(const long __slI" 
                                 % (qual, fundecl.name))
         for parm in fundecl.parms:
             parm.accept(self)
-        self.__buffer += ')'
-        ret = self.__buffer
-        self.__buffer = None
-        self.__shlist = old_shlist
-        self.__gllist = old_gllist
+        self.buffer += ')'
+        ret = self.buffer
+        self.buffer = None
+        self.shlist = old_shlist
+        self.gllist = old_gllist
         return ret
 
     def visit_fundef(self, fundef):
@@ -207,7 +207,7 @@ class TFun_2_CFun(DefaultVisitor):
         newitems += flatten(fundef.loc, "{")
         newitems += fundef.body.accept(self)
         newitems += flatten(fundef.loc_end, " return 0; }")
-        self.__shlist = self.__gllist = None
+        self.shlist = self.gllist = None
         return newitems
 
     def visit_indexdecl(self, idecl):

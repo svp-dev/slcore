@@ -39,6 +39,8 @@ __FBSDID("$FreeBSD: src/lib/libc/stdlib/strtoul.c,v 1.19.10.1 2009/08/03 08:13:0
 #include <errno.h>
 #include <stddef.h>
 
+#include <svp/divide.h>
+
 /*
  * Convert a string to an unsigned long integer.
  *

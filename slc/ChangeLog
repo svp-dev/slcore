@@ -1,3 +1,997 @@
+2016-11-24  Raphael 'kena' Poss  <knz@thaumogen.net>
+
+	Packaging fix.
+
+	* tools/runscripts.mk (EXTRA_DIST): Add the missing
+	r-leon2mt-tbdef.sh.in.
+
+2016-11-24  Alyssa Milburn  <amilburn@zall.org>
+
+	Sync perf column names for LEON2(-MT).
+
+	* lib/slsys/perf/perf.c: Add "pl_eff_x100" to mtperf_column_names
+	for LEON2/LEON2-MT.
+
+2016-11-24  Alyssa Milburn  <amilburn@zall.org>
+
+	Flush stdout/stderr when outputting from FPGA buffer.
+
+	* tools/leon2mt-fpga-ctl.in: Flush after writing.
+
+2016-11-24  Alyssa Milburn  <amilburn@zall.org>
+
+	Add uart_getchar function.
+
+	* tools/lib/mt/l2mt/getchar.s: New.
+	* tools/lib/leon2mt-fpga/leon2-common.mk: Use the new file.
+
+2016-11-24  Alyssa Milburn  <amilburn@zall.org>
+
+	Fix extra IPC statistic when using integer math.
+
+	* lib/slsys/perf/perf.c: Multiply before dividing.
+
+2016-11-24  Alyssa Milburn  <amilburn@zall.org>
+
+	Fix printing large unsigned integers.
+
+	* lib/libc/bsd/libc/stdio/printfcommon.h: Initialize svar.
+
+2016-11-24  Alyssa Milburn  <amilburn@zall.org>
+
+	Support starting/monitoring FPGA execution using openocd.
+
+	* tools/leon2mt-fpga-ctl.in: Implement control script.
+	* tools/lib/mt/l2mt/globals.inc: Initialize __exit_code.
+	* tools/r-leon2mt-fpga.sh.in: Pass binary path onward.
+
+2016-11-21  Raphael 'kena' Poss  <knz@thaumogen.net>
+
+	Break a dependency on stdio in the boot code.
+
+	* tools/lib/mt/l2mt/bootstrap.c: Remove uses of the `output_'
+	macros, which on FPGA are redirected to the stdio routines, which
+	during the boot code are not initialized yet.
+
+2016-11-21  Raphael 'kena' Poss  <knz@thaumogen.net>
+
+	Improve `slr' to drive both simulator and FPGA executions.
+
+	* tools/r-leon2mt-fpga.sh.in: Rename to...
+	* tools/r-leon2mt-tbdef.sh.in: ...this. Simplify. Fix to enable
+	running when TMPDIR is not on the same filesystem as the program
+	binary.
+	* tools/r-leon2mt-fpga.sh.in,
+	* tools/leon2mt-fpga-ctl.in: New.
+	* tools/runscripts.mk: List and build the new files.
+
+2016-11-21  Raphael 'kena' Poss  <knz@thaumogen.net>
+
+	Ensure that `slr' cleans up upon termination.
+
+	* tools/bin/slr.in (SLR_RDIR): Ignore signals in the watchdog
+	process.
+
+2016-11-21  Alyssa Milburn  <amilburn@zall.org>
+
+	Implement stdio to a cyclic buffer.
+
+	* lib/libc/stdio/mtstdio.c: Add buffer, and dbgstdout/dbgstderr.
+	* lib/libc/stdio/mtstdio.h: Support new FK_BUFFER type.
+
+2016-11-21  Raphael 'kena' Poss  <knz@thaumogen.net>
+
+	Split the FPGA and simulator back-ends for LEON2-MT.
+
+	* tools/bin/cce.in: Split target between `-fpga' and `-tbdef'
+	(simulation).
+	* tools/lib/leon2-fpga/Makefile.am,
+	* tools/lib/leon2mt-fpga/Makefile.am: Use the new `cce' tags.
+	* tools/lib/leon2-tbdef/Makefile.am,
+	* tools/lib/leon2mt-tbdef/Makefile.am: New.
+	* tools/lib/configure.ac,
+	* tools/lib/Makefile.am: List the new sub-directories.
+
+	* tools/lib/mt/l2mt/slrt.s: Extract common part into...
+	* tools/lib/mt/l2mt/filler.inc,
+	* tools/lib/mt/l2mt/globals.inc,
+	* tools/lib/mt/l2mt/tls.inc,
+	* tools/lib/mt/l2mt/start.inc: these new files.
+	* tools/lib/mt/l2/slrt.s: Rewrite to use the new files.
+	* tools/lib/mt/l2mt-sim/slrt.s: New.
+	* tools/lib/mt/l2-sim/slrt.s: New.
+	* tools/lib/leon2mt-fpga/leon2-common.mk: List the new files.
+	Ensure that the assembler include path is also passed for `slrt.o'.
+
+	* tools/lib/leon2mt-fpga/linkrom.in,
+	* tools/lib/leon2mt-fpga/linkram.in: Copy to...
+	* tools/lib/leon2mt-tbdef/linkrom.in,
+	* tools/lib/leon2mt-tbdef/linkram.in: ...here. Fix the RAM size.
+	* tools/lib/configure.ac: Generate the new linker scripts.
+
+	* tools/include/svp/abort.h,
+	* tools/include/svp/divide.h: Use the new os/arch tags.
+
+	* tools/include/svp/testoutput.h: Use printf on debug streams
+	for test output on FPGA.
+
+	* lib/leon2-fpga/Makefile.am,
+	* lib/leon2mt-fpga/Makefile.am: Use the new `cce' tags.
+	* lib/leon2-tbdef/Makefile.am,
+	* lib/leon2mt-tbdef/Makefile.am: New.
+	* lib/configure.ac,
+	* lib/Makefile.am: List the new sub-directories.
+
+	* lib/libc/bsd/contrib/gdtoa/misc.c,
+	* lib/libc/bsd/libc/stdio/printfcommon.h,
+	* lib/libc/bsd/libc/stdio/vfprintf.c,
+	* lib/libc/bsd/libc/stdlib/strtol.c,
+	* lib/libc/bsd/libc/stdlib/strtoul.c,
+	* lib/libc/bsd/libc/string/strerror.c,
+	* lib/libc/malloc/malloc_excl.c,
+	* lib/libc/malloc/mtmalloc.h,
+	* lib/libc/stdio/mtstdio.h,
+	* lib/mgos/posix-compat/exit.c,
+	* lib/mgos/posix-compat/gtod.c,
+	* lib/mgos/tlsmalloc/tlsconfig.h,
+	* lib/slsys/include/svp/perf.h,
+	* lib/slsys/perf/perf.c: Use the new os/arch macros.
+
+	* lib/libc/bsd/libc/stdlib/strtol.c,
+	* lib/libc/bsd/libc/stdlib/strtoul.c,
+	* lib/libc/bsd/libc/string/strerror.c,
+	* lib/libc/bsd/libc/stdio/vfprintf.c: Remove the special casing
+	for integer division.
+
+	* lib/mgos/posix-compat/exit.c,
+	* tools/include/svp/abort.h: Ensure the global `__exit_code' is
+	properly written to.
+
+2016-11-21  Raphael 'kena' Poss  <knz@thaumogen.net>
+
+	Small LEON2-MT startup fix.
+
+	* tools/lib/mt/l2/slrt.s (__filler),
+	* tools/lib/mt/l2mt/slrt.s (__filler): implement the filler using
+	pre-assembled word values, so that slc/gas don't try to modify the
+	code and thus break the alignment.
+
+2016-11-13  Raphael 'kena' Poss  <knz@thaumogen.net>
+
+	Configuration fixes for LEON2-MT.
+
+	- on the FPGA board the PC start address can be 0x40000000 whereas
+	it is 0x40000080 in simulation. Ensure that generated binaries can
+	work on both.
+
+	- the RAM size is 256KB in simulation, 128M on FPGA. This patch
+	makes `slc' generate binaries that use the simulator RAM size by
+	default. To make the binary use the entire RAM, use
+	`-Wl,--defsym=_RAM_SIZE=128M-256K' when linking.
+
+	* tools/lib/mt/l2/slrt.s (_start),
+	* tools/lib/mt/l2mt/slrt.s (_start): Set the initial SP pointer to
+	the end of the RAM area. Ensure that the filler bytes start
+	with a useful instruction.
+
+	* tools/lib/leon2mt-fpga/linkrom.in,
+	* tools/lib/leon2mt-fpga/linkram.in: Set _RAM_SIZE as 256K away
+	from whatever value is already set. Make the per-thread TLS space
+	1KB again.
+
+2016-11-13  Raphael 'kena' Poss  <knz@thaumogen.net>
+
+	Fix a bug in the "small malloc()" implementation.
+
+	* lib/mgos/smallmalloc/smallmalloc.c (small_malloc): Ensure that
+	the size is always a multiple of 4 bytes. Also avoid aligning the
+	HEAP pointer, as this is unneeded (the array being pointed to is
+	already aligned by the linker).
+
+2016-11-13  Raphael 'kena' Poss  <knz@thaumogen.net>
+
+	Fix a FP-related code generation bug on LEON2-MT.
+
+	* tools/bin/cce.in (slc_ppflags): alias sl_glfparm/sl_glfarg to
+	sl_glparm/sl_glarg, since we are using soft float.
+
+	* tools/slc/mt/leon2mt/gencreate.py
+	(Create_2_L2MTCreate.visit_seta): Report a nice error message if
+	no arguments were defined.
+
+2016-11-13  Raphael 'kena' Poss  <knz@thaumogen.net>
+
+	Fix a code generation bug on LEON2-MT.
+
+	Prior to this patch every create would try to allocate all the
+	physical threads, even if fewer were needed.
+
+	* tools/slc/mt/leon2mt/gencreate.py
+	(Create_2_L2MTCreate.visit_lowcreate): Ensure the `block'
+	parameter is set to the number of threads if the default ("max")
+	value is used.
+
+2016-11-13  Alyssa Milburn  <amilburn@zall.org>
+
+	LEON2-MT: add preliminary support for UART output.
+
+	* tools/lib/mt/l2mt/init_uart.s,
+	* tools/lib/mt/l2mt/putchar.s,
+	* tools/lib/mt/l2mt/uart_defs.inc: New.
+
+	* tools/lib/mt/l2/slrt.s,
+	* tools/lib/mt/l2mt/slrt.s: Invoke the UART initialization
+	routine.
+
+	* tools/lib/leon2mt-fpga/leon2-common.mk: Include and build the
+	new files.
+
+	* lib/libc/stdio/mtstdio.h: Enable output to the UART via the FILE
+	API.
+	* lib/libc/stdio/mtstdio.c: Bind a new global FILE* object
+	`stduart` to the UART.
+
+2016-11-13  Raphael 'kena' Poss  <knz@thaumogen.net>
+
+	LEON2-MT/UT-LEON3: new code generation option.
+
+	* tools/slc/mt/mtsparc/asmproc/opt.py (makedataflow): On UT-LEON3,
+	we can't switch on a branch/delayed instruction that reads from a
+	waiting register, in which case we must ensure that every register
+	for which there is an uncertainy is full before the instruction is
+	reached. Previously the code to do that was used always; with
+	LEON2-MT this restriction is lifted so we now make this behavior
+	conditional. The protection is now *disabled* by default and can
+	be enabled from the command-line with
+	`-fasmopt-flush-before-delayed'.
+
+2016-11-13  Alyssa Milburn  <amilburn@zall.org>
+
+	LEON2-MT: Use ASI 0x84, not 0x80.
+
+	* tools/include/svp/abort.h,
+	* tools/include/svp/testoutput.h,
+	* tools/lib/mt/l2/slrt.s: Use ASI 0x84, not 0x80. This is needed
+	because LEON2-FT ignores the upper 4 bits of the ASI and thus
+	writes via ASI 0x80 would actually access memory.
+
+2016-11-10  Alyssa Milburn  <amilburn@zall.org>
+
+	Only clear (SPARC) annulled delay slots for unconditional
+	branches, where the delay slot instruction will never be
+	executed.
+
+	* tools/slc/mt/mtsparc/asmproc/base.py: Only match b[n|a],a.
+
+2016-11-07  Alyssa Milburn  <amilburn@zall.org>
+
+	Suppress/redirect warnings when running LEON2-MT simulator.
+
+	* tools/leon2mt-sim-ctl.in: Add info/warnings section, and
+	try to redirect simulator debug/warning output there. Also,
+	print last line before a failure, and wrap at 120 lines.
+
+2016-11-07  Alyssa Milburn  <amilburn@zall.org>
+
+	Avoid incorrect expansion of (early) escapes in source code.
+
+	* tools/slc/input/cm4.py: Use raw strings to avoid backslash
+	escapes being expanded.
+
+2016-11-07  Alyssa Milburn  <amilburn@zall.org>
+
+	Fix asm snippet for LEON2-MT thread creation (memargs offset).
+
+	* tools/slc/mt/leon2mt/gencreate.py: remove 'wmb'.
+
+2016-11-07  Alyssa Milburn  <amilburn@zall.org>
+
+	Include COMMON section in BSS in LEON2-MT binaries.
+
+	* tools/lib/leon2mt-fpga/linkram.in,
+	* tools/lib/leon2mt-fpga/linkrom.in: include COMMON in BSS.
+
+2016-11-01  Alyssa Milburn  <amilburn@zall.org>
+
+	Fix overlooked perf sample function on LEON2/LEON2-MT.
+
+	* lib/slsys/include/svp/perf.h (__inline_mtperf_sample1):
+	Add support for reading LEON2/LEON2-MT counters.
+
+2016-10-02  Raphael 'kena' Poss  <knz@thaumogen.net>
+
+	Fix a MTSPARC/LEON2-MT optimization bug.
+
+	* tools/slc/mt/mtsparc/regdefs.py (RegDefs.post_init_regmagic):
+	Ensure that %r0 (phy zero register) is not part of the `allregs'
+	array. This avoids considering it as potentially empty during
+	computation of swch annotations.
+
+2016-09-20  Raphael 'kena' Poss  <knz@thaumogen.net>
+
+	Support new LEON2-MT performance counters.
+
+	* tools/slc/mt/mtsparc/asmproc/opc/formats.db: New instruction
+	format for `rd %wim, imm, reg'.
+	* tools/slc/mt/mtsparc/asmproc/opc/mtsparc.py: Re-generate
+	accordingly.
+	* lib/slsys/include/svp/perf.h: Use it to extract the new LEON2-MT
+	performance counters.
+	* lib/slsys/perf/perf.c: Report the new counters too.
+
+2016-09-17  Raphael 'kena' Poss  <knz@thaumogen.net>
+
+	Fix the link on LEON2-MT/LEON2.
+
+	* tools/lib/mt/l2/slrt.s,
+	* tools/lib/mt/l2mt/slrt.s: new padding data.
+
+	* tools/lib/leon2mt-fpga/linkram.in: Start the RAM at 0x40000000, and pad the initial 128 bytes.
+
+2016-09-17  Raphael 'kena' Poss  <knz@thaumogen.net>
+
+	Fix the RAM start address for LEON2/LEON2-MT.
+
+	* tools/lib/leon2mt-fpga/linkram.in: Do it.
+
+2016-09-16  Raphael 'kena' Poss  <knz@thaumogen.net>
+
+	Fix a LEON2-MT code generation bug.
+
+	* tools/slc/mt/leon2mt/asmproc/base.py (initspfp): Avoid using
+	`killedsave' which is not defined any more.
+
+2016-09-16  Raphael 'kena' Poss  <knz@thaumogen.net>
+
+	Fix a code generation bug on LEON2.
+
+	* tools/bin/cce.in: Ensure that the arch-specific compilation
+	flags are enabled for LEON2, not just LEON2-MT.
+
+2016-09-16  Raphael 'kena' Poss  <knz@thaumogen.net>
+
+	Extend the library to better support LEON2.
+
+	* lib/libc/bsd/libc/stdio/printfcommon.h,
+	* lib/libc/bsd/libc/stdlib/strtol.c,
+	* lib/libc/bsd/libc/stdlib/strtoul.c,
+	* lib/libc/bsd/libc/string/strerror.c,
+	* lib/mgos/posix-compat/exit.c,
+	* tools/include/svp/divide.h: Test for `__slc_arch_leon2__' in
+	addition to `__slc_arch_leon2mt__'.
+
+2016-09-13  Raphael 'kena' Poss  <knz@thaumogen.net>
+
+	Minor packaging fix.
+
+	* lib/leon2mt-fpga/Makefile.am: Split common pieces to...
+	* lib/leon2mt-fpga/leon2-common.mk: ...here. Add a missing
+	reference to `math_private.h'.
+	* lib/leon2-fpga/Makefile.am,
+	* lib/leon2-fpga/Makefile.am: Use the new file.
+
+2016-09-13  Raphael 'kena' Poss  <knz@thaumogen.net>
+
+	Minor packaging fix.
+
+	* tools/lib/leon2mt-fpga/leon2-common.mk (LIBSLC_SRC): List the
+	missing files from `soft-fp/'.
+
+2016-09-13  Raphael 'kena' Poss  <knz@thaumogen.net>
+
+	Minor packaging fix.
+
+	* tools/lib/leon2mt-fpga/leon2-common.mk (LIBSLC_SRC): List
+	`fp-bit.h' too.
+
+2016-09-13  Raphael 'kena' Poss  <knz@thaumogen.net>
+
+	Fix `svp_abort()' and its uses on LEON2.
+
+	* tools/include/svp/abort.h: Avoid using `t_end' directly. Instead
+	jump to `__stop'.
+
+	* tools/lib/mt/l2/slrt.s,
+	* tools/lib/mt/l2mt/slrt.s: Define `__stop'.
+
+2016-09-13  Raphael 'kena' Poss  <knz@thaumogen.net>
+
+	Bootstrap the perf code on LEON2/LEON2-MT.
+
+	* lib/libc/include/time.h: Use the %wim register to obtain the
+	cycle counter on LEON2/LEON2-MT.
+	* lib/slsys/include/svp/perf.h: Use `clock()' as only metric for
+	LEON2/LEON2-MT.
+
+	* lib/slsys/perf/perf.c: Adjust accordingly.
+
+	* lib/leon2mt-fpga/Makefile.am: Ensure that `mtclock.c' is linked
+	in, so that the function remains available even if inline versions
+	are disabled.
+
+2016-09-13  Raphael 'kena' Poss  <knz@thaumogen.net>
+
+	Fix a bug with `slr -p' for LEON2/LEON2-MT.
+
+	* tools/r-leon2mt-fpga.sh.in: Resolve the path to `tbdef' before
+	checking whether it exists. This ensures that relative paths are
+	properly looked up from `$SLR_ORIGPWD'.
+
+2016-09-13  Raphael 'kena' Poss  <knz@thaumogen.net>
+
+	Fix a RAM initialization bug.
+
+	* tools/lib/leon2mt-fpga/linkrom.in: Define `_bss_end'.
+	* tools/lib/mt/l2mt/bootstrap.c (__copyram): Ensure that the BSS
+	section is always initialized.
+
+2016-09-13  Raphael 'kena' Poss  <knz@thaumogen.net>
+
+	Add support for compiling and running plain LEON2 programs.
+
+	Also enable running programs both from embedded BRAM or DDR.
+
+	* tools/bin/cce.in: New alias `leon2_s' for `spr-l2mtseq_naked-leon2-fpga'.
+	Define corresponding env vars for external tools. Extend the rules for
+	defining the toolchain for the new arch string `leon2'.
+
+	* tools/lib/leon2mt-fpga/linkram: New.
+	* tools/lib/leon2mt-fpga/Makefile.am: List and generate `linkram'.
+	* tools/bin/cce.in: Use it.
+
+	* tools/lib/mt/l2/slrt.s,
+	* tools/lib/leon2-fpga/Makefile.am: New.
+	* tools/lib/Makefile.am: List the new sub-dir.
+	* tools/lib/configure.ac: Generate the new Makefile.
+
+	* tools/lib/leon2mt-fpga/Makefile.am: Move common definitions to...
+	* tools/lib/leon2mt-fpga/leon2-common.mk: ...here.
+	* tools/lib/leon2-fpga/Makefile.am: Reuse them.
+
+	* tools/r-leon2mt-fpga.sh.in: Alias ddr.dat to rom.dat. (May need
+	later to generate one or the other).
+	* tools/runscripts.mk: Generate `r-leon2-fpga.sh' as alias to
+	`r-leon2mt-fpga.sh'.
+
+	* lib/leon2-fpga/Makefile.am: New.
+	* lib/Makefile.am: List the new sub-dir.
+	* lib/configure.ac: Generate the new Makefile.
+
+2016-08-25  Raphael 'kena' Poss  <r.poss@uva.nl>
+
+	Fix a bootstrap issue on LEON2-MT.
+
+	* tools/lib/mt/l2mt/bootstrap.c: Avoid copying if the data already
+	sits in the right place.
+
+2016-08-25  Raphael 'kena' Poss  <r.poss@uva.nl>
+
+	Fix `slr' for LEON2-MT.
+
+	* tools/leon2mt-sim-ctl.in: Fix the handling of undefined values
+	in the pipeline.
+
+2016-08-24  Raphael 'kena' Poss  <r.poss@uva.nl>
+
+	Work around a pipeline bug in LEON2-MT.
+
+	* tools/lib/mt/l2mt/slrt.s (_start): Ensure that %o0-%o2 are ready
+	for use before entering main, which may not use its arguments and
+	reuse the regs before the loads are complete.
+
+2016-08-24  Raphael 'kena' Poss  <r.poss@uva.nl>
+
+	Ensure mem* functions are available in libslc early for LEON2-MT.
+
+	* tools/lib/leon2mt-fpga/Makefile.am (LIBSLC_SRC): List them
+	here. This is redundant with `libc.a' but the linker will sort it
+	out. We need the functions early because the Soft-FP emulation
+	code uses them.
+
+2016-08-24  Alyssa Milburn  <amilburn@zall.org>
+
+	Add soft-fp support for LEON2-MT.
+
+	* lib/leon2mt-fpga/Makefile.am: Build libm, with sqrtf/roundf.
+	* lib/libc/math/e_sqrtf.c,
+	* lib/libc/math/s_roundf.c: Add (modified from musl).
+	* lib/libc/math/math_private.h: Add minimal math_private.h for libm.
+	* tools/bin/cce.in: Add soft-fp gcc flag.
+	* tools/lib/leon2mt-fpga/Makefile.am: Build soft-fp files.
+	* tools/lib/common/libgcc/soft-fp/sfp-machine.h: Add modified libgcc
+	sfp-machine.h.
+	* tools/lib/common/libgcc/clzsi2.c,
+	* tools/lib/common/libgcc/ctzsi2.c: Add clzsi2 and ctzsi2 functions
+	extracted from libgcc.
+	* tools/lib/common/libgcc/fp-bit.c,
+	* tools/lib/common/libgcc/fp-bit.h,
+	* tools/lib/common/libgcc/soft-fp/soft-fp.h,
+	* tools/lib/common/libgcc/soft-fp/longlong.h,
+	* tools/lib/common/libgcc/soft-fp/op-1.h,
+	* tools/lib/common/libgcc/soft-fp/op-2.h,
+	* tools/lib/common/libgcc/soft-fp/op-4.h,
+	* tools/lib/common/libgcc/soft-fp/op-8.h,
+	* tools/lib/common/libgcc/soft-fp/op-common.h: Add soft-fp support
+	from libgcc.
+
+2016-08-24  Alyssa Milburn  <amilburn@zall.org>
+
+	Include abort() in libslc.
+
+	* lib/mgos.mk: Remove abort.c.
+	* tools/lib/mt.mk: Add abort.c.
+	* lib/mgos/posix-compat/abort.c: Move..
+	* tools/lib/common/abort.c: .. to here.
+
+2016-08-24  Raphael 'kena' Poss  <r.poss@uva.nl>
+
+	Remove `dlmalloc' from LEON2-MT targets.
+
+	.. since it does not have all necessary dependencies anyways.
+
+	* lib/leon2mt-fpga/Makefile.am: Do it.
+
+2016-08-24  Raphael 'kena' Poss  <r.poss@uva.nl>
+
+	Implement a simple global heap for LEON2-MT.
+
+	* lib/mgos/smallmalloc/smallmalloc.c,
+	* lib/smallmalloc.mk: New.
+	* lib/leon2mt-fpga/Makefile.am: Do not use `tlsmalloc'. Use
+	`smallmalloc' instead.
+
+	* tools/lib/leon2mt-fpga/linkrom.in: Ensure the RAM section is big
+	enough for a heap.
+
+2016-08-02  Alyssa Milburn  <amilburn@zall.org>
+
+	Add wrapper functions which provide integer division, as called
+	by the gcc code generator, and force them to be called.
+
+	* tools/bin/cce.in: Always pass integer division flag to gcc.
+	* tools/lib/common/divide.c: Add wrapper functions.
+
+2016-07-28  Raphael 'kena' Poss  <r.poss@uva.nl>
+
+	Minor build fix.
+
+	* tools/include/svp/testoutput.h,
+	* tools/include/svp/abort.h: Ensure the code still compiles for UTLEON3.
+
+2016-07-14  Alyssa Milburn  <amilburn@zall.org>
+
+	Copy LEON2-MT data segment starting from the (aligned) end of the
+	text data, not the end of the text segment.
+
+	* tools/lib/mt/l2mt/bootstrap.c: Use correct value for src.
+
+2016-07-14  Alyssa Milburn <amilburn@zall.org>
+
+	Remove pure attribute from non-pure divide functions.
+
+	* tools/lib/include/svp/divide.h: Removed attributes.
+
+2016-07-05  Raphael 'kena' Poss  <r.poss@uva.nl>
+
+	Packaging fix.
+
+	* tools/leon2mt-sim-ctl.in: Properly check in the file.
+
+2016-06-29  Raphael 'kena' Poss  <r.poss@uva.nl>
+
+	New code generation option for LEON2-MT.
+
+	* tools/slc/mt/mtsparc/asmproc/base.py (fillannulnop): Allow the
+	user to disable this fix using `slc
+	-fno-asmfix-clear-annuled-delay-slots'.
+
+2016-06-27  Raphael 'kena' Poss  <r.poss@uva.nl>
+
+	Packaging fix.
+
+	* tools/runscripts.mk (COMMON_SUBST): Properly substitute
+	`slc_libdir'.
+
+2016-06-27  Raphael 'kena' Poss  <r.poss@uva.nl>
+
+	Packaging fix.
+
+	* lib/leon2mt-fpga/Makefile.am (*_libsl_a_DEPENDENCIES): Ensure
+	the dependencies refer to the proper source variables.
+
+2016-06-27  Raphael 'kena' Poss  <r.poss@uva.nl>
+
+	Enhance the interface with the LEON2-MT RTL simulator.
+
+	* tools/slc/mt/mtsparc/asmproc/opc/decode.py: Support the assembly
+	syntax for address space identifiers (ASIs).
+	* tools/slc/mt/mtsparc/asmproc/opc/mtsparc.py: Regenerate.
+
+	* tools/include/svp/abort.h,
+	* tools/include/svp/testoutput.h: Use a new ASI-based output
+	protocol.
+	* tools/lib/mt/l2mt/slrt.s,
+	* tools/lib/mt/l2mt/dbgout.c: Simplify accordingly.
+
+	* tools/r-leon2mt-fpga.sh.in,
+	* tools/leon2mt-sim-ctl.in: New.
+	* tools/runscripts.mk: List the new files; generate their derived
+	targets.
+
+	* tools/bin/slr.in: Export the original PWD for use by runner
+	scripts.
+
+2016-06-24  Raphael 'kena' Poss  <r.poss@uva.nl>
+
+	Polish the linking and loading process for LEON2-MT.
+
+	* tools/lib/leon2mt-fpga/linkrom.in: New (linker script).
+	* tools/lib/leon2mt-fpga/Makefile.am (nobase_sllib_DATA): List it.
+	* tools/lib/configure.ac: Generate it.
+	* tools/bin/cce.in: Use it.
+
+	* tools/lib/mt/l2mt/bootstrap.c: New. This copies the data section
+	to RAM.
+	* tools/lib/leon2mt-fpga/Makefile.am (LIBSLC_SRC): List it.
+	* tools/lib/mt/l2mt/slrt.s (_start): Use it.
+
+2016-06-19  Raphael 'kena' Poss  <r.poss@uva.nl>
+
+	Introduce software division routines for LEON2-MT.
+
+	* tools/lib/include/svp/divide.h: New.
+	* tools/slc.mk (nobase_dist_pkgdata_DATA): List the new file.
+
+	* tools/lib/common/divide.c: New.
+	* tools/lib/mt.mk (LIBSLC_SRC),
+	* tools/lib/host.mk (LIBSLC_SRC): List the new file.
+
+	* tools/lib/include/svp/testoutput.h: Use the new division
+	functions when compiling for LEON2-MT. Declare the functions as
+	`gnu_inline' to merge the instances during linking.
+
+	* tools/lib/common/testoutput.c: New.
+	* tools/lib/leon2mt-fpga/Makefile.am: List the new file.
+
+	* lib/libc/bsd/libc/stdio/printfcommon.h,
+	* lib/libc/bsd/libc/stdlib/strtol.c,
+	* lib/libc/bsd/libc/stdlib/strtoul.c,
+	* lib/libc/bsd/libc/string/strerror.c,
+	* lib/libc/misc/rand.c,
+	* lib/libc/stdio/fwrite.c,
+	* lib/slsys/perf/perf.c: Modify to use the new division functions.
+
+	* tools/include/svp/abort.h: Avoid a circular dependency with
+	`divide.h' and `testoutput.h'.
+
+2016-06-19  Raphael 'kena' Poss  <r.poss@uva.nl>
+
+	Fix/extend the sequential execution targets for LEON2-MT.
+
+	* slc/lib/leon2mt-fpga/Makefile.am,
+	* tools/lib/leon2mt-fpga/Makefile.am: The sub-directory is called
+	`l2mtseq_naked', not `seq_naked'.
+
+	* tools/bin/cce.in: New alias `seqc_l2mt'.
+
+	* tools/lib/host-host-l2mtseq/Makefile.am: New.
+	* tools/lib/Makefile.am,
+	* tools/lib/configure.ac: Add the new sub-target.
+
+	* slc/lib/host-host-l2mtseq/Makefile.am: New.
+	* slc/lib/Makefile.am,
+	* slc/lib/configure.ac: Add the new sub-target.
+
+2016-06-19  Raphael 'kena' Poss  <r.poss@uva.nl>
+
+	Various LEON2-MT code generation fixes.
+
+	* tools/slc/mt/leon2mt/seq.py (Create_2_L2MTLoop.visit_lowcreate):
+	Increase bx in the inner sequential loop, not by.
+
+	* tools/slc/mt/leon2mt/asmproc/opt.py: Remove `remdefaults' from
+	the chain, since LEON2-MT does not initialize family entries at
+	this point.
+
+	* tools/slc/mt/leon2mt/gencreate.py
+	(Create_2_L2MTCreate.visit_seta): Ensure that the global register
+	offsets are properly computed.
+	(Create_2_L2MTCreate.visit_lowcreate): Mark `allochtg' as volatile
+	to prevent the compiler from re-ordering it.
+
+2016-06-18  Raphael 'kena' Poss  <r.poss@uva.nl>
+
+	Fix a bug in LEON2-MT code generation.
+
+	* tools/slc/mt/leon2mt/gencreate.py
+	(Create_2_L2MTCreate.visit_lowcreate): Ensure the gmask is
+	computed according to SPEC.
+
+2016-06-18  Raphael 'kena' Poss  <r.poss@uva.nl>
+
+	Reduce the TLS area for LEON2-MT binaries.
+
+	* tools/lib/mt/l2mt/slrt.s: Hardware supports up to 32 threads at
+	this point, not 256.
+
+2016-06-18  Raphael 'kena' Poss  <r.poss@uva.nl>
+
+	Enhance the layout of generated LEON2-MT binaries.
+
+	* tools/bin/cce.in: Make the .init section start at address 0, so
+	that `_start' gets there too.
+
+2016-05-15  Raphael 'kena' Poss  <r.poss@uva.nl>
+
+	Fix a bug in the LEON2-MT bootstrap code.
+
+	* tools/lib/mt/l2mt/slrt.s: Ensure that control bits are generated.
+
+2016-05-15  Raphael 'kena' Poss  <r.poss@uva.nl>
+
+	Kill some compiler warnings.
+
+	* tools/include/svp/compiler.h,
+	* lib/mgos/tlsmalloc/tricks.h: Use the `inline' keyword
+	so that GCC avoids complaining the function may not be inlinable.
+
+2016-05-15  Raphael 'kena' Poss  <r.poss@uva.nl>
+
+	Extend the library support for LEON2-MT.
+
+	* lib/leon2mt-fpga/Makefile.am: New.
+	* lib/configure.ac,
+	* lib/Makefile.am: List the new sub-directory.
+
+	* lib/common.mk: Really remove the long-deprecated `io.c' and
+	`div.c' from the standard build.
+
+	* lib/libc/malloc/malloc_excl.c,
+	* lib/libc/malloc/mtmalloc.h,
+	* lib/libc/bsd/contrib/gdtoa/misc.c,
+	* lib/libc/bsd/libc/stdio/vfprintf.c: Avoid compiling exclusive
+	delegates on LEON2-MT.
+
+	* lib/libc/include/assert.h: Avoid using a comma expression since
+	`svp_abort()' may be a statement.
+
+	* lib/libc/include/limits.h,
+	* lib/libc/include/stddef.h,
+	* lib/libc/include/stdint.h,
+	* lib/libc/include/time.h: Support LEON2-MT.
+
+	* lib/mgos/tlsmalloc/tls_arch_leon2mt_fpga.h: New.
+	* lib/mgos/tlsmalloc/tlsconfig.h: Make the slot size smaller.
+	* lib/mgos/tlsmalloc/tlsmalloc.c: Avoid emitting MGSim debug output.
+	* lib/mgos/tlsmalloc/Makefile.am: List the new file.
+
+	* lib/mgos/posix-compat/exit.c: Use the new interface (although
+	this code is not yet linked in).
+
+2016-05-15  Raphael 'kena' Poss  <r.poss@uva.nl>
+
+	Preliminary library support for LEON2-MT.
+
+	* tools/lib/mt/l2mt/slrt.s: New.
+	* tools/include/svp/testoutput.h: On LEON2-MT, only use byte
+	output. This requires to resurrect some code (borrowed from
+	`lib/slsys/deprectated/io.c') to print numbers.
+	* tools/lib/mt/l2mt/dbgout.c: Declare the global symbols that will
+	serve as interface for debug output.
+
+	* tools/lib/leon2mt-fpga/Makefile.am: New. List the new files.
+	* tools/lib/configure.ac,
+	* tools/lib/Makefile.am: List the new sub-directory.
+
+	* tools/include/svp/abort.h: Adapt for use with LEON2-MT.
+	* tools/lib/mt/mgsim.c: Only include code when not compiling for
+	MGSim.
+
+2016-05-15  Raphael 'kena' Poss  <r.poss@uva.nl>
+
+	Miscellaneous LEON2-MT code generation improvements.
+
+	* tools/slc/mt/leon2mt/asmproc/base.py (_cfilter_inner)
+	(_filter_inner): Ensure that delayed "annul" slots are nops.
+
+	* tools/slc/mt/leon2mt/gencreate.py
+	(Create_2_L2MTCreate.visit_lowcreate): Support detached and
+	spawned families. Ensure there is a `nop' between `fence' and
+	`wait'.
+
+	* tools/slc/front/chains.py: Add the spawn visitors to the
+	LEON2-MT chains.
+
+2016-05-08  Raphael 'kena' Poss  <r.poss@uva.nl>
+
+	Packaging fix.
+
+	* tools/slc.mk (nobase_python_PYTHON): List the new files.
+
+2016-05-08  Raphael 'kena' Poss  <r.poss@uva.nl>
+
+	Optimize further for LEON2-MT assembly.
+
+	* tools/slc/mt/common/asmproc/remdefaults.py (remdefaults): Also
+	recognize the LEON2-MT mnemonics for default elimination.
+
+	* tools/slc/mt/leon2mt/asmproc/base.py (xjoin2): Annotate
+	the layout parameters in a parseable comment.
+	* tools/slc/mt/leon2mt/asmproc/base.py (scanparams, replparams)
+	(_filter_end): Implement a two-pass traversal of the assembly code
+	to gather the layout parameters for all functions and then
+	optimize `t_allochtg' accordingly.
+
+2016-05-08  Raphael 'kena' Poss  <r.poss@uva.nl>
+
+	Compile for small code by default on LEON2-MT.
+
+	* tools/bin/cce.in: Default to `-Os' when compiling for LEON2-MT.
+	* tools/slc/mt/leon2mt/asmproc/base.py (ctlbits): Force function
+	alignment, since `-Os' will disable the command-line flag to set it.
+
+2016-05-07  Raphael 'kena' Poss  <r.poss@uva.nl>
+
+	Initial support for family creation on LEON2-MT.
+
+	Items worthy of interest:
+	- LEON2-MT uses unsigned range parameters for families.
+	- LEON2-MT uses 4-dimensional indexing.
+	- The MT `start' parameter is ignored; `limit' sets the
+	block size, `step' sets the grid size.
+	- `sl_index' causes the appearance of CUDA-like thread/block/grid
+	range variables `threadIdx', `blockIdx', `blockDim', `gridDim'.
+
+	* tools/slc/lower/seq.py: Ensure that the visitor attributes are
+	not hidden (prefixed with `__'), so that the visitors can be
+	derived.
+	* tools/slc/mt/leon2mt/seq.py: New, deriving the visitor in
+	`lower/seq.py'. This implements 4-dimensional indexing, assumes
+	the range parameters are declared unsigned.
+	* tools/slc/lower/lowercreate.py: Introduce a new constructor
+	parameter for `Create_2_LowCreate' to indicate whether range
+	parameters should be declared signed or unsigned.
+	* tools/slc/front/chains.py: Pass the parameter to
+	`Create_2_LowCreate' in `_common_prefix'. Adapt all chains
+	accordingly. Use the new sequential flattener for the LEON2-MT
+	targets. Create a new `l2mtseq' target for LEON2-MT's special
+	"naked seq" mode.
+	* tools/bin/cce.in: Adapt the `l2mt_s' target alias to use the new
+	spr `l2mtseq' target.
+
+	* tools/slc/mt/leon2mt/gencreate.py: Preliminary support for
+	LEON2-MT creation.
+	* tools/slc/mt/front/chains.py: Remove the now-irrelevant
+	constructor parameter `newisa' for the create transformer.
+	* tools/bin/cce.in: Disable placement strategy computations when
+	compiling for LEON2-MT, since LEON2-MT is not multi-core yet.
+
+	* tools/slc/mt/leon2mt/gentfun.py,
+	* tools/slc/mt/leon2mt/seq.py: Automatically instantiate
+	`threadIdx', `blockIdx', `blockDim', `gridDim' upon `sl_index'.
+
+2016-05-07  Raphael 'kena' Poss  <r.poss@uva.nl>
+
+	Fix some LEON2-MT instruction formats.
+
+	* tools/slc/mt/mtsparc/asmproc/opc/formats.db,
+	* tools/slc/mt/mtsparc/asmproc/opc/mtsparc.py: Update the formats
+	for `f_mapg', `f_maphtg', `r_allocsrb' and `t_allochtg'.
+
+2016-05-07  Raphael 'kena' Poss  <r.poss@uva.nl>
+
+	Polish the assembly post-processing for LEON2-MT.
+
+	* tools/slc/mt/common/gentfun.py: Declare the initial `__slI'
+	index holders as `unsigned' if the concrete visitor demands so.
+	* tools/slc/mt/leon2mt/gentfun.py: New; derive from the MT-SPARC
+	code, and add a 2-dimensional threadIdx definition. Demand `__slI'
+	to be unsigned.
+	* tools/slc/mt/leon2mt/gencreate.py: New; simply copy from
+	MT-SPARC. Still needs to be re-written.
+	* tools/slc/front/chains.py: Use the two new classes for the
+	`l2mt' chains.
+
+	* tools/slc/mt/mtsparc/asmproc/base.py (grouper): initialize
+	`prologue' and `pprologue'.
+	* tools/slc/mt/common/asmproc/regextract.py (regextract): mark the
+	position of the removed `.registers' directive.
+	* tools/slc/mt/mtsparc/asmproc/base.py (xsplit): Actually extract
+	the function prologue, using the marked position of `.registers'
+	as final boundary.
+	* tools/slc/mt/mtsparc/asmproc/base.py (detectregs): Detect
+	register usage also in the prologue (now that there is one) and
+	mark SP adjustements.
+	* tools/slc/mt/mtalpha/asmproc/base.py (avoidframespills): Ensure
+	that any spaces are valid in the frame spill regexp, since SPARC
+	uses tabs.
+	* tools/slc/mt/leon2mt/asmproc/base.py (_filter_inner): Import the
+	filters `avoidframespills' and `killspadjusts' from the `mtalpha'
+	target and use them to remove unnecessary SP traffic from the prologue.
+	* tools/slc/mt/leon2mt/asmproc/base.py (munchret, killrasave):
+	New. More cleanup of the function prologue and also epilogue
+	(frame activity just before `ret').
+	* tools/slc/mt/leon2mt/asmproc/base.py (killnoregs): Remove the
+	`.noregisters' directive potentially added by the `mtsparc' filters.
+	* tools/slc/mt/leon2mt/asmproc/base.py (initspfp): Import and
+	modify from the `mtsparc' target to use the new ISA.
+
+	* tools/slc/mt/mtsparc/asmproc/base.py (replacebreakend): Update
+	the special MT mnemonics `end' and `break' to the new ISA format.
+
+	* tools/slc/mt/mtsparc/asmproc/base.py (ctlbits): Ensure that all
+	procedures are emitted with control bits.
+
+2016-05-06  Raphael 'kena' Poss  <r.poss@uva.nl>
+
+	Preliminary support for the LEON2-MT ISA.
+
+	* tools/slc/mt/mtsparc/asmproc/opc/formats.db,
+	* tools/slc/mt/mtsparc/asmproc/opc/mtsparc.py: Update to support
+	the new LEON2-MT mnemonics.
+
+2016-05-05  Raphael 'kena' Poss  <r.poss@uva.nl>
+
+	Initial support for LEON2-MT targets.
+
+	* tools/bin/cce.in: Recognize `l2mt' targets.
+
+	* build-aux/mgbinutils.m4: Search for the SPARC binary utilities.
+	* build-aux/mgsim.m4: Search for the LEON2-MT MGSim.
+	* build-aux/slctests.mk,
+	* build-aux/sl.mk: Also build for `l2mt'.
+	* configure.ac,
+	* build-aux/slc.m4: Add flags to support `leon2mt' targets.
+	* build-aux/slctests.m4: Check whether the LEON2-MT targets are
+	being built.
+
+	* tools/bin/Makefile.am: Substitute the tool paths for LEON2-MT.
+	* tools/bin/cce.in: Preliminary support for various LEON2-MT targets.
+	* tools/slc/front/chains.py: Define LEON2-MT chains based on
+	existing SPARC chains.
+
+	* tools/slc/mt/leon2mt/__init__.py,
+	* tools/slc/mt/leon2mt/asmproc/__init__.py: New.
+	* tools/slc/mt/leon2mt/compile.py,
+	* tools/slc/mt/leon2mt/asmproc/base.py,
+	* tools/slc/mt/leon2mt/asmproc/opt.py,
+	* tools/slc/mt/leon2mt/regdefs.py: Initial implementation, based
+	on the existing SPARC targets.
+
+2016-01-01  Raphael 'kena' Poss  <r.poss@uva.nl>
+
+	Fix a MT-SPARC code generation bug.
+
+	* tools/slc/mt/mtsparc/asmproc/base.py (markaligned): Only
+	consider lines for which instruction metadata is available.
+
+2016-01-01  Raphael 'kena' Poss  <r.poss@uva.nl>
+
+	Assembly portability fix.
+
+	* tools/include/svp/compiler.h: Ensure that the no-op inline
+	assembly expansions always use the correct comment prefix.
+
+2015-07-26  Raphael 'kena' Poss  <r.poss@uva.nl>
+
+	Minor documentation updates.
+
+	* doc/README.rst: Recommend using the SL installer.
+	* doc/HACKING.rst: Do not mention `svn' any more.
+
+2015-07-26  Raphael 'kena' Poss  <r.poss@uva.nl>
+
+	Update the documentation for version 3.9.
+
+	* doc/NEWS.rst: Do it.
+
+2015-07-26  Raphael 'kena' Poss  <r.poss@uva.nl>
+
+	Update the MT Gfx library code to the new MGSim 3.5 interface.
+
+	* lib/mgos/gfx/mtgfx.c: Use the new command queue interface from
+	MGSim 3.5. User programs are unaffected.
+
 2015-07-25  Raphael 'kena' Poss  <r.poss@uva.nl>
 
 	Fix a code generation bug for MT-SPARC.

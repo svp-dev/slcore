@@ -1,0 +1,57 @@
+#! @BASH@
+# Run script for LEON2-MT binaries.
+PS4='+ r-leon2mt-fpga($$): '
+if test -n "${TRACE:-}"; then set -x; fi
+set -eu
+basename=${0##*/}
+program=${1:?}
+fdatafile=${2:?}
+shift
+shift
+
+SLR_ORIGPWD=${SLR_ORIGPWD:-.}
+TBDEF=${TBDEF:-./tbdef}
+SIMARGS=${SIMARGS:---ieee-asserts=disable}
+slc_datadir=${SLC_DATADIR:-@slc_datadir@}
+slc_libdir=${SLC_LIBDIR:-@slc_libdir@}
+SIMARGS=${SIMARGS:-}
+SIMGFX=${SIMGFX:-}
+python=${PYTHON:-@python@}
+simargs_base=()
+
+b=${program##*/}
+d=$(dirname "$program")
+if test -z "${SLR_RDIR:-}"; then d=$(cd "$d" && pwd -P); fi
+tmpdir=${SLR_RDIR:-${TMPDIR:-/tmp}}
+wdir=$tmpdir/$b.$$
+mkdir -p "$wdir"
+if ! test -d "$wdir" -a -w "$wdir"; then
+    echo "$wdir (\$wdir) not found, not writable or not a directory" >&2
+fi
+
+# Search for viewing utility
+view_script=
+saveIFS=$IFS
+IFS=:
+for l in $slc_libdir; do
+    if test -r "$l/leon2mt-fpga-ctl"; then
+	view_script=$l/leon2mt-fpga-ctl
+	break
+    fi
+done
+IFS=$saveIFS
+if test -z "$view_script"; then
+    echo "cannot find leon2mt-fpga-ctl in $slc_libdir" >&2
+    exit 1
+fi
+dv=$(dirname "$view_script")
+dv=$(cd "$dv" && pwd -P)
+view_script=$dv/${view_script##*/}
+
+runner_cmdline=("$view_script" "$SIMGFX" "$d/$b" $SIMARGS)
+
+if test -n "${VERBOSE:-}"; then
+    echo "$basename: cwd=$PWD" >&2
+    echo "$basename: running: ${runner_cmdline[*]}" >&2
+fi
+exec "${runner_cmdline[@]}"

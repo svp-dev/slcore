@@ -35,6 +35,7 @@ AC_CHECK_PROG([SLRANLIB], [set-by-parent-makefile])
 
 AC_CONFIG_FILES([Makefile
                  host-host-seqc/Makefile
+                 host-host-l2mtseq/Makefile
                  host-host-ptl/Makefile
                  host-host-ptld/Makefile
                  host-host-hlsim/Makefile
@@ -43,6 +44,14 @@ AC_CONFIG_FILES([Makefile
                  mipsel-sim/Makefile
                  mtsparc-sim/Makefile
                  mtsparc-fpga/Makefile
+                 leon2-fpga/Makefile
+                 leon2mt-fpga/Makefile
+		 leon2mt-fpga/linkrom
+		 leon2mt-fpga/linkram
+                 leon2-tbdef/Makefile
+                 leon2mt-tbdef/Makefile
+		 leon2mt-tbdef/linkrom
+		 leon2mt-tbdef/linkram
                  ])
 
 AC_OUTPUT

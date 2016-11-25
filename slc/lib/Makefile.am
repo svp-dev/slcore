@@ -18,6 +18,11 @@ endif
 if ENABLE_SLC_MTSPARC
 SUBDIRS += mtsparc-sim mtsparc-fpga
 endif
+if ENABLE_SLC_LEON2MT
+SUBDIRS += leon2mt-fpga leon2-fpga
+SUBDIRS += leon2mt-tbdef leon2-tbdef
+SUBDIRS += host-host-l2mtseq
+endif
 
 if ENABLE_SLC_PTL
 SUBDIRS += \

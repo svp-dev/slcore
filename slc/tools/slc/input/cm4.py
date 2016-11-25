@@ -255,7 +255,7 @@ def process(input_files):
     dump('massage', d)
     d = c.do_m4(d, m4_args = ['-I%s' % x for x in opts.resolved.includes] + opts.resolved.m4_args, 
                 tracefile = get_dump_fname('m4trace'))
-    d = ''.join(['["""', d, '"""]'])
+    d = ''.join(['[r"""', d, '"""]'])
     dump('m4out', d)
     return d
 

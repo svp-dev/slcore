@@ -1,7 +1,7 @@
 //
-// abort.c: this file is part of the SL toolchain.
+// emptymain.c: this file is part of the SL toolchain.
 //
-// Copyright (C) 2009,2010 The SL project.
+// Copyright (C) 2009 The SL project.
 //
 // This program is free software; you can redistribute it and/or
 // modify it under the terms of the GNU General Public License
@@ -12,12 +12,8 @@
 // `COPYING' file in the root directory.
 //
 
-#include <svp/abort.h>
-#include <stdlib.h>
-
-void
-abort(void)
+int main(void)
 {
-    svp_abort();
-    while(1);
+    return 0;
 }
+

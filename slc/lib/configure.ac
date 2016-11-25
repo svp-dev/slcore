@@ -44,6 +44,11 @@ AC_CONFIG_FILES([Makefile
                  mtsparc-sim/Makefile
                  mipsel-sim/Makefile
                  mtsparc-fpga/Makefile
+                 leon2mt-fpga/Makefile
+                 leon2-fpga/Makefile
+                 leon2mt-tbdef/Makefile
+                 leon2-tbdef/Makefile
+                 host-host-l2mtseq/Makefile
                  ])
 
 #

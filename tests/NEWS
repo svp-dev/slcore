@@ -4,10 +4,24 @@
 
 This document describes major updates to the SL unit test suite.
 
-Version 2.2.x
-=============
+Version 2.4, July 2015
+======================
 
-- Development version only.
+- Remove tests for unbounded families, which are now invalid SL.
+
+- Some new tests.
+
+- Adapt the tests to check the MT-SPARC and MIPSel back-ends more
+  thoroughly.
+
+Version 2.3, March 2011
+=======================
+
+- Multiple new tests.
+
+- The test cases now use the standard C header includes.
+
+- Upgrade the tests to the latest SL language changes.
 
 Version 2.2, December 2009
 ==========================

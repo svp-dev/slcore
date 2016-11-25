@@ -1,0 +1,151 @@
+OUTPUT_ARCH(sparc)
+__DYNAMIC  =  0;
+
+/*
+ * User modifiable values:
+ *
+ * _CLOCK_SPEED               in Mhz (used to program the counter/timers)
+ *
+ * _PROM_SIZE                 size of PROM (permissible values are 128K, 256K,
+ *                               512K, 1M, 2M, 4M, 8M and 16M)
+ * _RAM_SIZE                  size of RAM (permissible values are 256K, 512K,
+ *                               1M, 2M, 4M, 8M, 16M, and 32M)
+ *
+ */
+
+/* Default values, can be overridden */
+/* orig _RAM_SIZE was 4M */
+
+/* _PROM_SIZE = 1M; */
+_RAM_SIZE = 128M;
+
+_RAM_START = 0x40000000;
+_RAM_END = _RAM_START + _RAM_SIZE;
+
+_TLS_SIZE = 1024 * 32;
+_TLS_START = 0x20000000;
+_TLS_END = _TLS_START + _TLS_SIZE;
+
+/*
+_PROM_START = 0x00000000;
+_PROM_END = _PROM_START + _PROM_SIZE;
+*/
+
+/*
+ *  Alternate names without leading _.
+ */
+/*
+PROM_START = _PROM_START;
+PROM_SIZE = _PROM_SIZE;
+PROM_END = _PROM_END;
+
+RAM_START = _RAM_START;
+RAM_SIZE = _RAM_SIZE;
+RAM_END = _RAM_END;
+*/
+
+/*
+ *  Base address of the on-CPU peripherals
+ */
+
+_LEON_REG = 0x80000000;
+/* 
+LEON_REG = 0x80000000;
+*/
+
+/* these are the maximum values */
+
+MEMORY
+{
+  rom     : ORIGIN = 0x00000000, LENGTH = 1M
+  tls     : ORIGIN = 0x20000000, LENGTH = 32K
+  ram     : ORIGIN = 0x40000000, LENGTH = 256K
+}
+
+/*
+ * stick everything in ram (of course)
+ */
+SECTIONS
+{
+  .text :
+  {
+    CREATE_OBJECT_SYMBOLS
+    text_start = .;
+    _text_start = .;
+    *(.start)
+    *(.text)
+    *(.text.*)
+    . = ALIGN (16);
+
+    *(.eh_frame)
+    . = ALIGN (16);
+
+    *(.gnu.linkonce.t*)
+
+    _rodata_start = . ;
+    *(.rodata)
+    *(.rodata*)
+    *(.gnu.linkonce.r*)
+    _erodata = ALIGN( 0x10 ) ;
+
+    etext = ALIGN(0x10);
+    _etext = .;
+    *(.init)
+    *(.fini)
+    *(.lit)
+    *(.shdata)
+    . = ALIGN (16);
+    _endtext = .;
+  } > rom
+  .tls :
+  {
+    __tls_start = .;
+    *(.tls)
+    __tls_end = .;
+  } > tls
+  .dynamic	  : { *(.dynamic) 	} >ram
+  .got		  : { *(.got) 		} >ram
+  .plt   	  : { *(.plt) 		} >ram
+  .hash		  : { *(.hash)		} >ram
+  .dynrel	  : { *(.dynrel)	} >ram
+  .dynsym	  : { *(.dynsym)	} >ram
+  .dynstr	  : { *(.dynstr)	} >ram
+  .hash		  : { *(.hash)		} >ram
+  .data :
+  AT ( ADDR(.text) + SIZEOF ( .text ) )
+  {
+    data_start = .;
+    _data_start = .;
+    _sdata = . ;
+    *(.data)
+    *(.gnu.linkonce.d*)
+    *(.gcc_except_table)
+    . = ALIGN(0x10);
+    edata = .;
+    _edata = .;
+  } > ram
+  .shbss :
+  {
+    *(.shbss)
+  } > ram
+  .bss :
+  {
+    __bss_start = ALIGN(0x8);
+    _bss_start = .;
+    bss_start = .;
+    *(.bss)
+    *(COMMON)
+    _bss_end = ALIGN(8);
+    end = .;
+    _end = ALIGN(0x40);
+    __end = ALIGN(0x40);
+  } > ram
+  .stab . (NOLOAD) :
+  {
+    [ .stab ]
+  }
+  .stabstr . (NOLOAD) :
+  {
+    [ .stabstr ]
+  }
+}

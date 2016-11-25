@@ -8,6 +8,10 @@ AC_DEFUN([AC_WITH_MGSIM],
   AC_PATH_PROGS([MGSIM_SPARC], [mtsparc-mgsim mgsim-sparc MGSparc], [no], 
                [$prefix/bin$PATH_SEPARATOR$PATH])
 
+  AC_ARG_VAR([MGSIM_LEON2MT], [Location of the LEON2MT-based Microgrid simulator.])
+  AC_PATH_PROGS([MGSIM_LEON2MT], [leon2mt-mgsim], [no], 
+               [$prefix/bin$PATH_SEPARATOR$PATH])
+
   AC_ARG_VAR([MGSIM_MIPSEL], [Location of the MIPSel-based Microgrid simulator.])
   AC_PATH_PROGS([MGSIM_MIPSEL], [mipsel-mgsim mgsim-mipsel], [no], 
                [$prefix/bin$PATH_SEPARATOR$PATH])

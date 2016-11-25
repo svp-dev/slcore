@@ -38,18 +38,26 @@ class TFun_2_MTFun(DefaultVisitor):
                                             c['nrargregs']['shf'])
         idxreg = regmagic.vname_to_legacy("idx_init")
 
+        itype = ''
+        if getattr(self, 'unsigned_ix', False):
+            itype = 'unsigned'
+        
         newitems.append(flatten(fundef.loc,
                                 ' extern void %(name)s(void); '
                                 'void __slf_%(name)s(void) {'
-                                ' register long __slI_ __asm__("%(idxreg)s");'
+                                ' register %(itype)s long __slI_ __asm__("%(idxreg)s");'
                                 ' __asm__("%(cp)s MT: index in %%0"'
                                 '   : "=r"(__slI_));'
-                                ' register const long __slI __attribute__((unused)) = __slI_;'
+                                ' register const %(itype)s long __slI __attribute__((unused)) = __slI_;'
                                 ' __asm__ __volatile__("%(regdir)s");'
                                 % { 'cp' : cp, 
                                     'name': fundef.name, 
                                     'regdir' : regdir,
+                                    'itype': itype,
                                     'idxreg' : idxreg }))
+
+        if hasattr(self, 'visit_indexdef'):
+            newitems.append(self.visit_indexdef(fundef))
         
         # analyze the parameter list
         self.gllist = []

@@ -1,9 +1,9 @@
 import re
 
-_re_sb = re.compile(r'setstart \$l?\d+,\s*0\s*$')
-_re_sl = re.compile(r'setlimit \$l?\d+,\s*1\s*$')
-_re_ss = re.compile(r'setstep \$l?\d+,\s*1\s*$')
-_re_sbl = re.compile(r'setblock \$l?\d+,\s*0\s*$')
+_re_sb = re.compile(r'setstart\s+\$l?\d+,\s*0\s*$')
+_re_sl = re.compile(r'(setlimit|f_set_gridsize|f_set_blocksize)\s+\$l?\d+,\s*1\s*$')
+_re_ss = re.compile(r'setstep\s+\$l?\d+,\s*1\s*$')
+_re_sbl = re.compile(r'setblock\s+\$l?\d+,\s*0\s*$')
 def remdefaults(fundata, items):
     """
     Remove MT control instructions that configure default

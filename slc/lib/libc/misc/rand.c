@@ -13,6 +13,7 @@
 //
 
 #include <stdlib.h>
+#include <svp/divide.h>
 
 static int do_rand(unsigned long *ctx)
 {
@@ -24,11 +25,10 @@ static int do_rand(unsigned long *ctx)
      * Park and Miller, Communications of the ACM, vol. 31, no. 10,
      * October 1988, p. 1195.
      */
-    long hi, lo, x;
+    int32_t hi, lo, x;
 
     /* Must be in [1, 0x7ffffffe] range at this point. */
-    hi = *ctx / 127773;
-    lo = *ctx % 127773;
+    __divmods_int32_t(*ctx, 127773, &hi, &lo);
     x = 16807 * lo - 2836 * hi;
     if (x < 0)
         x += 0x7fffffff;
@@ -49,5 +49,5 @@ void srand(unsigned seed)
 {
     next = seed;
     /* Transform to [1, 0x7ffffffe] range. */
-    next = (next % 0x7ffffffe) + 1;
+    next = __modu_uint32_t(next, 0x7ffffffe) + 1;
 }

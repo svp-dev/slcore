@@ -12,8 +12,8 @@ re000 = re.compile(r'''\s*''' + imm + r'''\s*$''')
 re001 = re.compile(r'''\s*''' + reg + r'''\s*,\s*''' + reg + r'''\s*,\s*''' + reg + r'''\s*$''')
 re002 = re.compile(r'''\s*$''')
 re003 = re.compile(r'''\s*''' + reg + r'''\s*,\s*''' + imm + r'''\s*,\s*''' + reg + r'''\s*$''')
-re004 = re.compile(r'''\s*\[\s*''' + reg + r'''\s*[+-]\s*''' + reg + r'''\s*\]\s*#asi\S*\s*,\s*''' + reg + r'''\s*$''')
-re005 = re.compile(r'''\s*\[\s*''' + reg + r'''\s*\]\s*#asi\S*\s*,\s*''' + reg + r'''\s*$''')
+re004 = re.compile(r'''\s*\[\s*''' + reg + r'''\s*[+-]\s*''' + reg + r'''\s*\]\s*(\dx(\d|[a-f])+|\d+)\s*,\s*''' + reg + r'''\s*$''')
+re005 = re.compile(r'''\s*\[\s*''' + reg + r'''\s*\]\s*(\dx(\d|[a-f])+|\d+)\s*,\s*''' + reg + r'''\s*$''')
 re006 = re.compile(r'''\s*(?:)\s*''' + imm + r'''\s*,\s*''' + reg + r'''\s*$''')
 re007 = re.compile(r'''\s*\[\s*''' + reg + r'''\s*[+-]\s*''' + reg + r'''\s*\]\s*,\s*''' + reg + r'''\s*$''')
 re008 = re.compile(r'''\s*\[\s*''' + reg + r'''\s*\]\s*,\s*''' + reg + r'''\s*$''')
@@ -25,20 +25,20 @@ re013 = re.compile(r'''\s*\[\s*''' + reg + r'''\s*\]\s*,\s*%c\d+\S*\s*$''')
 re014 = re.compile(r'''\s*\[\s*''' + reg + r'''\s*[+-]\s*''' + imm + r'''\s*\]\s*,\s*%c\d+\S*\s*$''')
 re015 = re.compile(r'''\s*\[\s*''' + imm + r'''\s*[+-]\s*''' + reg + r'''\s*\]\s*,\s*%c\d+\S*\s*$''')
 re016 = re.compile(r'''\s*\[\s*''' + imm + r'''\s*\]\s*,\s*%c\d+\S*\s*$''')
-re017 = re.compile(r'''\s*''' + imm + r'''\s*,\s*''' + reg + r'''\s*,\s*''' + reg + r'''\s*$''')
-re018 = re.compile(r'''\s*''' + reg + r'''\s*,\s*''' + reg + r'''\s*$''')
-re019 = re.compile(r'''\s*''' + imm + r'''\s*,\s*''' + reg + r'''\s*$''')
-re020 = re.compile(r'''\s*\[\s*''' + reg + r'''\s*[+-]\s*''' + reg + r'''\s*\]\s*,\s*%fsr\S*\s*$''')
-re021 = re.compile(r'''\s*\[\s*''' + reg + r'''\s*\]\s*,\s*%fsr\S*\s*$''')
-re022 = re.compile(r'''\s*\[\s*''' + reg + r'''\s*[+-]\s*''' + imm + r'''\s*\]\s*,\s*%fsr\S*\s*$''')
-re023 = re.compile(r'''\s*\[\s*''' + imm + r'''\s*[+-]\s*''' + reg + r'''\s*\]\s*,\s*%fsr\S*\s*$''')
-re024 = re.compile(r'''\s*\[\s*''' + imm + r'''\s*\]\s*,\s*%fsr\S*\s*$''')
-re025 = re.compile(r'''\s*\[\s*''' + reg + r'''\s*[+-]\s*''' + reg + r'''\s*\]\s*,\s*%csr\S*\s*$''')
-re026 = re.compile(r'''\s*\[\s*''' + reg + r'''\s*\]\s*,\s*%csr\S*\s*$''')
-re027 = re.compile(r'''\s*\[\s*''' + reg + r'''\s*[+-]\s*''' + imm + r'''\s*\]\s*,\s*%csr\S*\s*$''')
-re028 = re.compile(r'''\s*\[\s*''' + imm + r'''\s*[+-]\s*''' + reg + r'''\s*\]\s*,\s*%csr\S*\s*$''')
-re029 = re.compile(r'''\s*\[\s*''' + imm + r'''\s*\]\s*,\s*%csr\S*\s*$''')
-re030 = re.compile(r'''\s*''' + reg + r'''\s*$''')
+re017 = re.compile(r'''\s*''' + reg + r'''\s*,\s*''' + reg + r'''\s*$''')
+re018 = re.compile(r'''\s*''' + reg + r'''\s*$''')
+re019 = re.compile(r'''\s*''' + imm + r'''\s*,\s*''' + reg + r'''\s*,\s*''' + reg + r'''\s*$''')
+re020 = re.compile(r'''\s*''' + imm + r'''\s*,\s*''' + reg + r'''\s*$''')
+re021 = re.compile(r'''\s*\[\s*''' + reg + r'''\s*[+-]\s*''' + reg + r'''\s*\]\s*,\s*%fsr\S*\s*$''')
+re022 = re.compile(r'''\s*\[\s*''' + reg + r'''\s*\]\s*,\s*%fsr\S*\s*$''')
+re023 = re.compile(r'''\s*\[\s*''' + reg + r'''\s*[+-]\s*''' + imm + r'''\s*\]\s*,\s*%fsr\S*\s*$''')
+re024 = re.compile(r'''\s*\[\s*''' + imm + r'''\s*[+-]\s*''' + reg + r'''\s*\]\s*,\s*%fsr\S*\s*$''')
+re025 = re.compile(r'''\s*\[\s*''' + imm + r'''\s*\]\s*,\s*%fsr\S*\s*$''')
+re026 = re.compile(r'''\s*\[\s*''' + reg + r'''\s*[+-]\s*''' + reg + r'''\s*\]\s*,\s*%csr\S*\s*$''')
+re027 = re.compile(r'''\s*\[\s*''' + reg + r'''\s*\]\s*,\s*%csr\S*\s*$''')
+re028 = re.compile(r'''\s*\[\s*''' + reg + r'''\s*[+-]\s*''' + imm + r'''\s*\]\s*,\s*%csr\S*\s*$''')
+re029 = re.compile(r'''\s*\[\s*''' + imm + r'''\s*[+-]\s*''' + reg + r'''\s*\]\s*,\s*%csr\S*\s*$''')
+re030 = re.compile(r'''\s*\[\s*''' + imm + r'''\s*\]\s*,\s*%csr\S*\s*$''')
 re031 = re.compile(r'''\s*''' + reg + r'''\s*,\s*''' + imm + r'''\s*$''')
 re032 = re.compile(r'''\s*''' + reg + r'''\s*,\s*''' + reg + r'''\s*,\s*%asr\S*\s*$''')
 re033 = re.compile(r'''\s*''' + reg + r'''\s*,\s*''' + imm + r'''\s*,\s*%asr\S*\s*$''')
@@ -90,8 +90,8 @@ re078 = re.compile(r'''\s*\[\s*''' + reg + r'''\s*\]\s*$''')
 re079 = re.compile(r'''\s*\[\s*''' + reg + r'''\s*[+-]\s*''' + imm + r'''\s*\]\s*$''')
 re080 = re.compile(r'''\s*\[\s*''' + imm + r'''\s*[+-]\s*''' + reg + r'''\s*\]\s*$''')
 re081 = re.compile(r'''\s*\[\s*''' + imm + r'''\s*\]\s*$''')
-re082 = re.compile(r'''\s*''' + reg + r'''\s*,\s*\[\s*''' + reg + r'''\s*[+-]\s*''' + reg + r'''\s*\]\s*#asi\S*\s*$''')
-re083 = re.compile(r'''\s*''' + reg + r'''\s*,\s*\[\s*''' + reg + r'''\s*\]\s*#asi\S*\s*$''')
+re082 = re.compile(r'''\s*''' + reg + r'''\s*,\s*\[\s*''' + reg + r'''\s*[+-]\s*''' + reg + r'''\s*\]\s*(\dx(\d|[a-f])+|\d+)\s*$''')
+re083 = re.compile(r'''\s*''' + reg + r'''\s*,\s*\[\s*''' + reg + r'''\s*\]\s*(\dx(\d|[a-f])+|\d+)\s*$''')
 re084 = re.compile(r'''\s*''' + reg + r'''\s*[+-]\s*''' + reg + r'''\s*,\s*''' + reg + r'''\s*$''')
 re085 = re.compile(r'''\s*''' + reg + r'''\s*[+-]\s*''' + imm + r'''\s*,\s*''' + reg + r'''\s*$''')
 re086 = re.compile(r'''\s*''' + imm + r'''\s*[+-]\s*''' + reg + r'''\s*,\s*''' + reg + r'''\s*$''')
@@ -114,6 +114,7 @@ re102 = re.compile(r'''\s*%cq\S*\s*,\s*\[\s*''' + reg + r'''\s*\]\s*$''')
 re103 = re.compile(r'''\s*%cq\S*\s*,\s*\[\s*''' + reg + r'''\s*[+-]\s*''' + imm + r'''\s*\]\s*$''')
 re104 = re.compile(r'''\s*%cq\S*\s*,\s*\[\s*''' + imm + r'''\s*[+-]\s*''' + reg + r'''\s*\]\s*$''')
 re105 = re.compile(r'''\s*%cq\S*\s*,\s*\[\s*''' + imm + r'''\s*\]\s*$''')
+re106 = re.compile(r'''\s*%wim\S*\s*,\s*''' + imm + r'''\s*,\s*''' + reg + r'''\s*$''')
 form000 = insn_metadata(([], [], [], False, True, [], [], [0], False, True))
 form001 = insn_metadata(([0, 1], [2], [], False, False, [], [], [], False, False))
 form002 = insn_metadata(([], [], [], False, False, [], [], [], False, False))
@@ -131,22 +132,22 @@ form013 = insn_metadata(([0], [], [], True, False, [], [], [], False, False))
 form014 = insn_metadata(([0], [], [], True, False, [], [], [1], False, False))
 form015 = insn_metadata(([1], [], [], True, False, [], [], [0], False, False))
 form016 = insn_metadata(([], [], [], True, False, [], [], [0], False, False))
-form017 = insn_metadata(([0, 1], [2], [0, 1, 2], True, False, [], [], [], False, False))
-form018 = insn_metadata(([1], [2], [], False, False, [], [], [0], False, False))
-form019 = insn_metadata(([0, 1], [], [0], False, False, [], [], [], False, False))
-form020 = insn_metadata(([0, 1], [1], [], False, False, [], [], [], False, False))
-form021 = insn_metadata(([1], [1], [], False, False, [], [], [0], False, False))
-form022 = insn_metadata(([0], [2], [], True, False, [], [], [1], False, False))
-form023 = insn_metadata(([1], [2], [], True, False, [], [], [0], False, False))
-form024 = insn_metadata(([], [1], [], True, False, [], [], [0], False, False))
-form025 = insn_metadata(([0], [], [], False, False, [], [], [], False, False))
-form026 = insn_metadata(([], [0], [], True, False, [], [], [], False, False))
-form027 = insn_metadata(([0, 1], [2], [1, 2], True, False, [], [], [], False, False))
-form028 = insn_metadata(([0, 1], [], [], False, False, [], [], [], False, False))
-form029 = insn_metadata(([0], [], [], False, False, [], [], [1], False, False))
-form030 = insn_metadata(([], [0], [], False, False, [], [], [], False, False))
-form031 = insn_metadata(([], [], [], False, False, [], [], [0], False, False))
-form032 = insn_metadata(([0], [1], [], False, False, [], [], [], False, False))
+form017 = insn_metadata(([0], [1], [], False, False, [], [], [], False, False))
+form018 = insn_metadata(([], [0], [], False, False, [], [], [], False, False))
+form019 = insn_metadata(([0, 1], [2], [0, 1, 2], True, False, [], [], [], False, False))
+form020 = insn_metadata(([1], [2], [], False, False, [], [], [0], False, False))
+form021 = insn_metadata(([0, 1], [], [0], False, False, [], [], [], False, False))
+form022 = insn_metadata(([0, 1], [1], [], False, False, [], [], [], False, False))
+form023 = insn_metadata(([1], [1], [], False, False, [], [], [0], False, False))
+form024 = insn_metadata(([0], [2], [], True, False, [], [], [1], False, False))
+form025 = insn_metadata(([1], [2], [], True, False, [], [], [0], False, False))
+form026 = insn_metadata(([], [1], [], True, False, [], [], [0], False, False))
+form027 = insn_metadata(([0], [], [], False, False, [], [], [], False, False))
+form028 = insn_metadata(([], [0], [], True, False, [], [], [], False, False))
+form029 = insn_metadata(([0, 1], [2], [1, 2], True, False, [], [], [], False, False))
+form030 = insn_metadata(([0, 1], [], [], False, False, [], [], [], False, False))
+form031 = insn_metadata(([0], [], [], False, False, [], [], [1], False, False))
+form032 = insn_metadata(([], [], [], False, False, [], [], [0], False, False))
 form033 = insn_metadata(([0], [1], [0, 1], True, False, [], [], [], False, False))
 form034 = insn_metadata(([0, 1], [2], [], True, False, [], ['y'], [], False, False))
 form035 = insn_metadata(([0], [2], [], True, False, [], ['y'], [1], False, False))
@@ -191,47 +192,47 @@ insninfo = {
 'add' : [
       (re001, form001),
       (re003, form003),
-      (re017, form018),
+      (re019, form020),
       ],
 'addcc' : [
       (re001, form001),
       (re003, form003),
-      (re017, form018),
+      (re019, form020),
       ],
 'addx' : [
       (re001, form001),
       (re003, form003),
-      (re017, form018),
+      (re019, form020),
       ],
 'addxcc' : [
       (re001, form001),
       (re003, form003),
-      (re017, form018),
+      (re019, form020),
       ],
 'allocate' : [
-      (re030, form026),
-      (re018, form005),
-      (re019, form024),
+      (re018, form028),
+      (re017, form005),
+      (re020, form026),
       ],
 'allocates' : [
-      (re030, form026),
-      (re018, form005),
-      (re019, form024),
+      (re018, form028),
+      (re017, form005),
+      (re020, form026),
       ],
 'allocatex' : [
-      (re030, form026),
-      (re018, form005),
-      (re019, form024),
+      (re018, form028),
+      (re017, form005),
+      (re020, form026),
       ],
 'and' : [
       (re001, form001),
       (re003, form003),
-      (re017, form018),
+      (re019, form020),
       ],
 'andcc' : [
       (re001, form001),
       (re003, form003),
-      (re017, form018),
+      (re019, form020),
       ],
 'andn' : [
       (re001, form001),
@@ -260,8 +261,8 @@ insninfo = {
       (re000, form000),
       ],
 'bclr' : [
-      (re018, form020),
-      (re019, form021),
+      (re017, form022),
+      (re020, form023),
       ],
 'bcs' : [
       (re000, form000),
@@ -372,20 +373,20 @@ insninfo = {
       (re000, form000),
       ],
 'break' : [
-      (re030, form025),
-      (re000, form031),
+      (re018, form027),
+      (re000, form032),
       ],
 'bset' : [
-      (re018, form020),
-      (re019, form021),
+      (re017, form022),
+      (re020, form023),
       ],
 'btog' : [
-      (re018, form020),
-      (re019, form021),
+      (re017, form022),
+      (re020, form023),
       ],
 'btst' : [
-      (re018, form028),
-      (re019, form040),
+      (re017, form030),
+      (re020, form040),
       ],
 'bvc' : [
       (re000, form000),
@@ -410,7 +411,7 @@ insninfo = {
       (re091, form059),
       (re087, form060),
       (re092, form060),
-      (re030, form061),
+      (re018, form061),
       (re093, form061),
       (re088, form062),
       (re094, form062),
@@ -418,38 +419,38 @@ insninfo = {
       (re095, form063),
       (re000, form059),
       (re091, form059),
-      (re030, form061),
+      (re018, form061),
       (re093, form061),
       ],
 'clr' : [
-      (re030, form030),
-      (re030, form030),
-      (re077, form028),
-      (re078, form025),
-      (re079, form029),
+      (re018, form018),
+      (re018, form018),
+      (re077, form030),
+      (re078, form027),
+      (re079, form031),
       (re080, form040),
-      (re081, form031),
-      (re078, form025),
+      (re081, form032),
+      (re078, form027),
       ],
 'clrb' : [
-      (re077, form028),
-      (re078, form025),
-      (re079, form029),
+      (re077, form030),
+      (re078, form027),
+      (re079, form031),
       (re080, form040),
-      (re081, form031),
-      (re078, form025),
+      (re081, form032),
+      (re078, form027),
       ],
 'clrh' : [
-      (re077, form028),
-      (re078, form025),
-      (re079, form029),
+      (re077, form030),
+      (re078, form027),
+      (re079, form031),
       (re080, form040),
-      (re081, form031),
-      (re078, form025),
+      (re081, form032),
+      (re078, form027),
       ],
 'cmp' : [
-      (re018, form028),
-      (re031, form029),
+      (re017, form030),
+      (re031, form031),
       ],
 'cpop1' : [
       (re007, form001),
@@ -458,39 +459,95 @@ insninfo = {
       (re007, form001),
       ],
 'create' : [
-      (re018, form005),
+      (re017, form005),
       ],
 'cred' : [
-      (re019, form015),
+      (re020, form015),
       ],
 'crei' : [
-      (re018, form012),
+      (re017, form012),
       ],
 'dec' : [
-      (re030, form041),
-      (re019, form021),
+      (re018, form041),
+      (re020, form023),
       ],
 'deccc' : [
-      (re030, form041),
-      (re019, form021),
+      (re018, form041),
+      (re020, form023),
       ],
 'detach' : [
-      (re030, form025),
+      (re018, form027),
+      ],
+'f_alloc' : [
+      (re018, form018),
+      ],
+'f_break' : [
+      (re002, form002),
+      (re018, form027),
+      ],
+'f_create' : [
+      (re017, form012),
+      (re001, form004),
+      (re031, form014),
+      (re003, form024),
+      ],
+'f_fence' : [
+      (re017, form030),
+      (re001, form001),
+      (re031, form031),
+      (re003, form003),
+      (re018, form027),
+      (re000, form032),
+      ],
+'f_freesrb' : [
+      (re018, form027),
+      ],
+'f_get_blockindex' : [
+      (re017, form017),
+      (re018, form018),
+      ],
+'f_get_blocksize' : [
+      (re017, form017),
+      (re018, form018),
+      ],
+'f_get_gridsize' : [
+      (re017, form017),
+      (re018, form018),
+      ],
+'f_mapg' : [
+      (re001, form001),
+      (re003, form003),
+      (re017, form030),
+      (re031, form031),
+      ],
+'f_maphtg' : [
+      (re001, form001),
+      (re003, form003),
+      (re017, form030),
+      (re031, form031),
+      ],
+'f_set_blocksize' : [
+      (re017, form030),
+      (re031, form031),
+      ],
+'f_set_gridsize' : [
+      (re017, form030),
+      (re031, form031),
       ],
 'fabss' : [
-      (re018, form032),
+      (re017, form017),
       ],
 'faddd' : [
-      (re001, form027),
+      (re001, form029),
       ],
 'faddq' : [
-      (re001, form017),
+      (re001, form019),
       ],
 'fadds' : [
       (re001, form004),
       ],
 'faddx' : [
-      (re001, form017),
+      (re001, form019),
       ],
 'fb' : [
       (re000, form000),
@@ -607,102 +664,102 @@ insninfo = {
       (re000, form000),
       ],
 'fcmpd' : [
-      (re018, form068),
+      (re017, form068),
       ],
 'fcmped' : [
-      (re018, form068),
+      (re017, form068),
       ],
 'fcmpeq' : [
-      (re018, form042),
+      (re017, form042),
       ],
 'fcmpes' : [
-      (re018, form012),
+      (re017, form012),
       ],
 'fcmpex' : [
-      (re018, form042),
+      (re017, form042),
       ],
 'fcmpq' : [
-      (re018, form042),
+      (re017, form042),
       ],
 'fcmps' : [
-      (re018, form012),
+      (re017, form012),
       ],
 'fcmpx' : [
-      (re018, form042),
+      (re017, form042),
       ],
 'fdivd' : [
-      (re001, form027),
+      (re001, form029),
       ],
 'fdivq' : [
-      (re001, form017),
+      (re001, form019),
       ],
 'fdivs' : [
       (re001, form004),
       ],
 'fdivx' : [
-      (re001, form017),
+      (re001, form019),
       ],
 'fdmulq' : [
-      (re001, form027),
+      (re001, form029),
       ],
 'fdmulx' : [
-      (re001, form027),
+      (re001, form029),
       ],
 'fdtoi' : [
-      (re018, form054),
+      (re017, form054),
       ],
 'fdtoq' : [
-      (re018, form057),
+      (re017, form057),
       ],
 'fdtos' : [
-      (re018, form054),
+      (re017, form054),
       ],
 'fgets' : [
-      (re003, form022),
+      (re003, form024),
       ],
 'fitod' : [
-      (re018, form051),
+      (re017, form051),
       ],
 'fitoq' : [
-      (re018, form051),
+      (re017, form051),
       ],
 'fitos' : [
-      (re018, form032),
+      (re017, form017),
       ],
 'flush' : [
       (re087, form012),
-      (re030, form013),
-      (re030, form013),
+      (re018, form013),
+      (re018, form013),
       (re000, form016),
       (re088, form014),
       (re089, form015),
       ],
 'fmovs' : [
-      (re018, form032),
+      (re017, form017),
       ],
 'fmuld' : [
-      (re001, form027),
+      (re001, form029),
       ],
 'fmulq' : [
-      (re001, form017),
+      (re001, form019),
       ],
 'fmuls' : [
       (re001, form004),
       ],
 'fmulx' : [
-      (re001, form017),
+      (re001, form019),
       ],
 'fnegs' : [
-      (re018, form032),
+      (re017, form017),
       ],
 'fprintd' : [
-      (re018, form028),
+      (re017, form030),
       ],
 'fprintq' : [
-      (re018, form019),
+      (re017, form021),
       ],
 'fprints' : [
-      (re018, form028),
+      (re017, form030),
       ],
 'fputg' : [
       (re090, form038),
@@ -711,138 +768,138 @@ insninfo = {
       (re090, form038),
       ],
 'fqtod' : [
-      (re018, form057),
+      (re017, form057),
       ],
 'fqtoi' : [
-      (re018, form054),
+      (re017, form054),
       ],
 'fqtos' : [
-      (re018, form054),
+      (re017, form054),
       ],
 'fsmuld' : [
       (re001, form007),
       ],
 'fsqrtd' : [
-      (re018, form033),
+      (re017, form033),
       ],
 'fsqrtq' : [
-      (re018, form033),
+      (re017, form033),
       ],
 'fsqrts' : [
-      (re018, form005),
+      (re017, form005),
       ],
 'fsqrtx' : [
-      (re018, form033),
+      (re017, form033),
       ],
 'fstod' : [
-      (re018, form051),
+      (re017, form051),
       ],
 'fstoi' : [
-      (re018, form032),
+      (re017, form017),
       ],
 'fstoq' : [
-      (re018, form051),
+      (re017, form051),
       ],
 'fsubd' : [
-      (re001, form027),
+      (re001, form029),
       ],
 'fsubq' : [
-      (re001, form017),
+      (re001, form019),
       ],
 'fsubs' : [
       (re001, form004),
       ],
 'fsubx' : [
-      (re001, form017),
+      (re001, form019),
       ],
 'getcid' : [
-      (re030, form030),
+      (re018, form018),
       ],
 'getfid' : [
-      (re030, form030),
+      (re018, form018),
       ],
 'getpid' : [
-      (re030, form030),
+      (re018, form018),
       ],
 'gets' : [
-      (re003, form022),
+      (re003, form024),
       ],
 'gettid' : [
-      (re030, form030),
+      (re018, form018),
       ],
 'iflush' : [
       (re087, form012),
-      (re030, form013),
-      (re030, form013),
+      (re018, form013),
+      (re018, form013),
       (re000, form016),
       (re088, form014),
       (re089, form015),
       ],
 'inc' : [
-      (re030, form041),
-      (re019, form021),
+      (re018, form041),
+      (re020, form023),
       ],
 'inccc' : [
-      (re030, form041),
-      (re019, form021),
+      (re018, form041),
+      (re020, form023),
       ],
 'jmp' : [
       (re087, form064),
-      (re030, form065),
+      (re018, form065),
       (re088, form066),
       (re089, form067),
       (re000, form052),
-      (re030, form065),
+      (re018, form065),
       ],
 'jmpl' : [
       (re084, form046),
-      (re018, form047),
-      (re018, form047),
-      (re019, form048),
+      (re017, form047),
+      (re017, form047),
+      (re020, form048),
       (re085, form049),
       (re086, form050),
       ],
 'launch' : [
-      (re030, form072),
+      (re018, form072),
       ],
 'ld' : [
       (re007, form004),
       (re008, form005),
-      (re009, form022),
-      (re010, form023),
-      (re011, form024),
+      (re009, form024),
+      (re010, form025),
+      (re011, form026),
       (re008, form005),
       (re007, form004),
       (re008, form005),
-      (re009, form022),
-      (re010, form023),
-      (re011, form024),
+      (re009, form024),
+      (re010, form025),
+      (re011, form026),
       (re008, form005),
-      (re020, form012),
-      (re021, form013),
-      (re022, form014),
-      (re023, form015),
-      (re024, form016),
-      (re021, form013),
+      (re021, form012),
+      (re022, form013),
+      (re023, form014),
+      (re024, form015),
+      (re025, form016),
+      (re022, form013),
       (re012, form012),
       (re013, form013),
       (re014, form014),
       (re015, form015),
       (re016, form016),
       (re013, form013),
-      (re025, form012),
-      (re026, form013),
-      (re027, form014),
-      (re028, form015),
-      (re029, form016),
-      (re026, form013),
+      (re026, form012),
+      (re027, form013),
+      (re028, form014),
+      (re029, form015),
+      (re030, form016),
+      (re027, form013),
       ],
 'lda' : [
       (re004, form004),
       (re005, form005),
       ],
 'ldbp' : [
-      (re030, form030),
+      (re018, form018),
       ],
 'ldd' : [
       (re007, form007),
@@ -869,14 +926,14 @@ insninfo = {
       (re005, form005),
       ],
 'ldfp' : [
-      (re030, form030),
+      (re018, form018),
       ],
 'ldsb' : [
       (re007, form004),
       (re008, form005),
-      (re009, form022),
-      (re010, form023),
-      (re011, form024),
+      (re009, form024),
+      (re010, form025),
+      (re011, form026),
       (re008, form005),
       ],
 'ldsba' : [
@@ -886,9 +943,9 @@ insninfo = {
 'ldsh' : [
       (re008, form005),
       (re007, form004),
-      (re009, form022),
-      (re010, form023),
-      (re011, form024),
+      (re009, form024),
+      (re010, form025),
+      (re011, form026),
       (re008, form005),
       ],
 'ldsha' : [
@@ -898,9 +955,9 @@ insninfo = {
 'ldstub' : [
       (re007, form004),
       (re008, form005),
-      (re009, form022),
-      (re010, form023),
-      (re011, form024),
+      (re009, form024),
+      (re010, form025),
+      (re011, form026),
       (re008, form005),
       ],
 'ldstuba' : [
@@ -910,9 +967,9 @@ insninfo = {
 'ldub' : [
       (re007, form004),
       (re008, form005),
-      (re009, form022),
-      (re010, form023),
-      (re011, form024),
+      (re009, form024),
+      (re010, form025),
+      (re011, form026),
       (re008, form005),
       ],
 'lduba' : [
@@ -922,9 +979,9 @@ insninfo = {
 'lduh' : [
       (re007, form004),
       (re008, form005),
-      (re009, form022),
-      (re010, form023),
-      (re011, form024),
+      (re009, form024),
+      (re010, form025),
+      (re011, form026),
       (re008, form005),
       ],
 'lduha' : [
@@ -932,65 +989,65 @@ insninfo = {
       (re005, form005),
       ],
 'mov' : [
-      (re032, form028),
-      (re033, form029),
-      (re034, form028),
-      (re035, form029),
-      (re036, form028),
-      (re037, form029),
-      (re038, form028),
-      (re039, form029),
-      (re040, form028),
-      (re041, form029),
-      (re042, form030),
-      (re043, form030),
-      (re044, form030),
-      (re045, form030),
-      (re046, form030),
-      (re047, form025),
-      (re048, form031),
-      (re047, form025),
-      (re049, form025),
-      (re050, form031),
-      (re049, form025),
-      (re051, form025),
-      (re052, form031),
-      (re051, form025),
-      (re053, form025),
-      (re054, form031),
-      (re053, form025),
-      (re055, form025),
-      (re056, form031),
-      (re055, form025),
-      (re018, form032),
-      (re019, form006),
-      (re018, form032),
-      (re018, form032),
+      (re032, form030),
+      (re033, form031),
+      (re034, form030),
+      (re035, form031),
+      (re036, form030),
+      (re037, form031),
+      (re038, form030),
+      (re039, form031),
+      (re040, form030),
+      (re041, form031),
+      (re042, form018),
+      (re043, form018),
+      (re044, form018),
+      (re045, form018),
+      (re046, form018),
+      (re047, form027),
+      (re048, form032),
+      (re047, form027),
+      (re049, form027),
+      (re050, form032),
+      (re049, form027),
+      (re051, form027),
+      (re052, form032),
+      (re051, form027),
+      (re053, form027),
+      (re054, form032),
+      (re053, form027),
+      (re055, form027),
+      (re056, form032),
+      (re055, form027),
+      (re017, form017),
+      (re020, form006),
+      (re017, form017),
+      (re017, form017),
       ],
 'mulscc' : [
       (re001, form043),
       (re003, form044),
       ],
 'neg' : [
-      (re018, form032),
-      (re030, form041),
+      (re017, form017),
+      (re018, form041),
       ],
 'nop' : [
       (re002, form002),
       ],
 'not' : [
-      (re018, form032),
-      (re030, form041),
+      (re017, form017),
+      (re018, form041),
       ],
 'or' : [
       (re001, form001),
       (re003, form003),
-      (re017, form018),
+      (re019, form020),
       ],
 'orcc' : [
       (re001, form001),
       (re003, form003),
-      (re017, form018),
+      (re019, form020),
       ],
 'orn' : [
       (re001, form001),
@@ -1001,8 +1058,8 @@ insninfo = {
       (re003, form003),
       ],
 'print' : [
-      (re018, form028),
-      (re031, form029),
+      (re017, form030),
+      (re031, form031),
       ],
 'putg' : [
       (re090, form038),
@@ -1010,15 +1067,29 @@ insninfo = {
 'puts' : [
       (re090, form038),
       ],
+'r_allocsrb' : [
+      (re017, form017),
+      (re020, form006),
+      ],
+'r_read' : [
+      (re017, form005),
+      ],
+'r_write' : [
+      (re017, form012),
+      (re001, form004),
+      (re031, form014),
+      (re003, form024),
+      ],
 'rd' : [
-      (re042, form030),
-      (re043, form030),
-      (re044, form030),
-      (re045, form030),
-      (re046, form030),
+      (re042, form018),
+      (re043, form018),
+      (re044, form018),
+      (re045, form018),
+      (re106, form006),
+      (re046, form018),
       ],
 'release' : [
-      (re030, form025),
+      (re018, form027),
       ],
 'restore' : [
       (re001, form001),
@@ -1034,12 +1105,12 @@ insninfo = {
       ],
 'rett' : [
       (re087, form064),
-      (re030, form065),
+      (re018, form065),
       (re088, form066),
       (re089, form067),
       (re000, form052),
       (re000, form052),
-      (re030, form065),
+      (re018, form065),
       ],
 'save' : [
       (re001, form001),
@@ -1049,38 +1120,38 @@ insninfo = {
 'sdiv' : [
       (re001, form043),
       (re003, form044),
-      (re017, form045),
+      (re019, form045),
       ],
 'sdivcc' : [
       (re001, form043),
       (re003, form044),
-      (re017, form045),
+      (re019, form045),
       ],
 'set' : [
       (re006, form006),
       ],
 'setblock' : [
-      (re018, form028),
-      (re031, form029),
+      (re017, form030),
+      (re031, form031),
       ],
 'sethi' : [
-      (re019, form006),
+      (re020, form006),
       ],
 'setlimit' : [
-      (re018, form028),
-      (re031, form029),
+      (re017, form030),
+      (re031, form031),
       ],
 'setstart' : [
-      (re018, form028),
-      (re031, form029),
+      (re017, form030),
+      (re031, form031),
       ],
 'setstep' : [
-      (re018, form028),
-      (re031, form029),
+      (re017, form030),
+      (re031, form031),
       ],
 'setthread' : [
-      (re018, form028),
-      (re031, form029),
+      (re017, form030),
+      (re031, form031),
       ],
 'sll' : [
       (re001, form001),
@@ -1089,28 +1160,28 @@ insninfo = {
 'smul' : [
       (re001, form034),
       (re003, form035),
-      (re017, form036),
+      (re019, form036),
       ],
 'smulcc' : [
       (re001, form034),
       (re003, form035),
-      (re017, form036),
+      (re019, form036),
       ],
 'spill' : [
       (re057, form037),
-      (re058, form028),
+      (re058, form030),
       (re059, form038),
       (re060, form039),
-      (re061, form029),
-      (re058, form028),
+      (re061, form031),
+      (re058, form030),
       ],
 'spilld' : [
       (re057, form053),
-      (re058, form019),
+      (re058, form021),
       (re059, form069),
       (re060, form070),
       (re061, form071),
-      (re058, form019),
+      (re058, form021),
       ],
 'sra' : [
       (re001, form001),
@@ -1122,150 +1193,150 @@ insninfo = {
       ],
 'st' : [
       (re057, form037),
-      (re058, form028),
+      (re058, form030),
       (re059, form038),
       (re060, form039),
-      (re061, form029),
-      (re058, form028),
+      (re061, form031),
+      (re058, form030),
       (re057, form037),
-      (re058, form028),
+      (re058, form030),
       (re059, form038),
       (re060, form039),
-      (re061, form029),
-      (re058, form028),
-      (re062, form028),
-      (re063, form025),
-      (re064, form029),
+      (re061, form031),
+      (re058, form030),
+      (re062, form030),
+      (re063, form027),
+      (re064, form031),
       (re065, form040),
-      (re066, form031),
-      (re063, form025),
-      (re067, form028),
-      (re068, form025),
-      (re069, form029),
+      (re066, form032),
+      (re063, form027),
+      (re067, form030),
+      (re068, form027),
+      (re069, form031),
       (re070, form040),
-      (re071, form031),
-      (re068, form025),
-      (re072, form028),
-      (re073, form025),
-      (re074, form029),
+      (re071, form032),
+      (re068, form027),
+      (re072, form030),
+      (re073, form027),
+      (re074, form031),
       (re075, form040),
-      (re076, form031),
-      (re073, form025),
+      (re076, form032),
+      (re073, form027),
       ],
 'sta' : [
       (re082, form037),
-      (re083, form028),
+      (re083, form030),
       ],
 'stb' : [
       (re057, form037),
-      (re058, form028),
+      (re058, form030),
       (re059, form038),
       (re060, form039),
-      (re061, form029),
-      (re058, form028),
+      (re061, form031),
+      (re058, form030),
       ],
 'stba' : [
       (re082, form037),
-      (re083, form028),
+      (re083, form030),
       ],
 'stbar' : [
       (re002, form056),
       ],
 'std' : [
       (re057, form053),
-      (re058, form019),
+      (re058, form021),
       (re059, form069),
       (re060, form070),
       (re061, form071),
-      (re058, form019),
-      (re096, form028),
-      (re097, form025),
-      (re098, form029),
+      (re058, form021),
+      (re096, form030),
+      (re097, form027),
+      (re098, form031),
       (re099, form040),
-      (re100, form031),
-      (re097, form025),
+      (re100, form032),
+      (re097, form027),
       (re057, form053),
-      (re058, form019),
+      (re058, form021),
       (re059, form069),
       (re060, form070),
       (re061, form071),
-      (re058, form019),
-      (re101, form028),
-      (re102, form025),
-      (re103, form029),
+      (re058, form021),
+      (re101, form030),
+      (re102, form027),
+      (re103, form031),
       (re104, form040),
-      (re105, form031),
-      (re102, form025),
-      (re062, form028),
-      (re063, form025),
-      (re064, form029),
+      (re105, form032),
+      (re102, form027),
+      (re062, form030),
+      (re063, form027),
+      (re064, form031),
       (re065, form040),
-      (re066, form031),
-      (re063, form025),
+      (re066, form032),
+      (re063, form027),
       ],
 'stda' : [
       (re082, form053),
-      (re083, form019),
+      (re083, form021),
       ],
 'sth' : [
       (re057, form037),
-      (re058, form028),
+      (re058, form030),
       (re059, form038),
       (re060, form039),
-      (re061, form029),
-      (re058, form028),
+      (re061, form031),
+      (re058, form030),
       ],
 'stha' : [
       (re082, form037),
-      (re083, form028),
+      (re083, form030),
       ],
 'stsb' : [
       (re057, form037),
-      (re058, form028),
+      (re058, form030),
       (re059, form038),
       (re060, form039),
-      (re061, form029),
-      (re058, form028),
+      (re061, form031),
+      (re058, form030),
       ],
 'stsba' : [
       (re082, form037),
-      (re083, form028),
+      (re083, form030),
       ],
 'stsh' : [
       (re057, form037),
-      (re058, form028),
+      (re058, form030),
       (re059, form038),
       (re060, form039),
-      (re061, form029),
-      (re058, form028),
+      (re061, form031),
+      (re058, form030),
       ],
 'stsha' : [
       (re082, form037),
-      (re083, form028),
+      (re083, form030),
       ],
 'stub' : [
       (re057, form037),
-      (re058, form028),
+      (re058, form030),
       (re059, form038),
       (re060, form039),
-      (re061, form029),
-      (re058, form028),
+      (re061, form031),
+      (re058, form030),
       ],
 'stuba' : [
       (re082, form037),
-      (re083, form028),
+      (re083, form030),
       ],
 'stuh' : [
       (re057, form037),
-      (re058, form028),
+      (re058, form030),
       (re059, form038),
       (re060, form039),
-      (re061, form029),
-      (re058, form028),
+      (re061, form031),
+      (re058, form030),
       ],
 'stuha' : [
       (re082, form037),
-      (re083, form028),
+      (re083, form030),
       ],
 'sub' : [
       (re001, form001),
@@ -1286,9 +1357,9 @@ insninfo = {
 'swap' : [
       (re007, form004),
       (re008, form005),
-      (re009, form022),
-      (re010, form023),
-      (re011, form024),
+      (re009, form024),
+      (re010, form025),
+      (re011, form026),
       (re008, form005),
       ],
 'swapa' : [
@@ -1296,22 +1367,47 @@ insninfo = {
       (re005, form005),
       ],
 'sync' : [
-      (re018, form005),
+      (re017, form005),
+      ],
+'t_allochtg' : [
+      (re001, form001),
+      (re003, form003),
+      (re001, form004),
+      (re003, form024),
+      ],
+'t_end' : [
+      (re002, form002),
+      ],
+'t_freehtg' : [
+      (re018, form027),
+      ],
+'t_get_fid' : [
+      (re018, form018),
+      ],
+'t_get_pindex' : [
+      (re018, form018),
+      ],
+'t_get_tid' : [
+      (re018, form018),
+      ],
+'t_wait' : [
+      (re002, form002),
+      (re018, form027),
       ],
 'taddcc' : [
       (re001, form001),
       (re003, form003),
-      (re017, form018),
+      (re019, form020),
       ],
 'taddcctv' : [
       (re001, form001),
       (re003, form003),
-      (re017, form018),
+      (re019, form020),
       ],
 'tst' : [
-      (re030, form025),
-      (re030, form025),
-      (re030, form025),
+      (re018, form027),
+      (re018, form027),
+      (re018, form027),
       ],
 'tsubcc' : [
       (re001, form001),
@@ -1324,61 +1420,61 @@ insninfo = {
 'udiv' : [
       (re001, form043),
       (re003, form044),
-      (re017, form045),
+      (re019, form045),
       ],
 'udivcc' : [
       (re001, form043),
       (re003, form044),
-      (re017, form045),
+      (re019, form045),
       ],
 'umul' : [
       (re001, form034),
       (re003, form035),
-      (re017, form036),
+      (re019, form036),
       ],
 'umulcc' : [
       (re001, form034),
       (re003, form035),
-      (re017, form036),
+      (re019, form036),
       ],
 'unimp' : [
-      (re000, form031),
+      (re000, form032),
       ],
 'wr' : [
-      (re032, form028),
-      (re033, form029),
-      (re047, form025),
-      (re034, form028),
-      (re035, form029),
-      (re049, form025),
-      (re036, form028),
-      (re037, form029),
-      (re051, form025),
-      (re038, form028),
-      (re039, form029),
-      (re053, form025),
-      (re040, form028),
-      (re041, form029),
-      (re055, form025),
+      (re032, form030),
+      (re033, form031),
+      (re047, form027),
+      (re034, form030),
+      (re035, form031),
+      (re049, form027),
+      (re036, form030),
+      (re037, form031),
+      (re051, form027),
+      (re038, form030),
+      (re039, form031),
+      (re053, form027),
+      (re040, form030),
+      (re041, form031),
+      (re055, form027),
       ],
 'xnor' : [
       (re001, form001),
       (re003, form003),
-      (re017, form018),
+      (re019, form020),
       ],
 'xnorcc' : [
       (re001, form001),
       (re003, form003),
-      (re017, form018),
+      (re019, form020),
       ],
 'xor' : [
       (re001, form001),
       (re003, form003),
-      (re017, form018),
+      (re019, form020),
       ],
 'xorcc' : [
       (re001, form001),
       (re003, form003),
-      (re017, form018),
+      (re019, form020),
       ],
 }
