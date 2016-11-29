@@ -101,15 +101,15 @@ class Create_2_L2MTLoop(Create_2_Loop):
                          rhs = funvar + '(' + iv + callist + ',' + bv + ',' + limit + ',' + step + ')')
 
         newbl.append(flatten(cr.loc_end,
-                             ' if((') + limit + ' >> 16) == 0) ' + limit + ' |= 0x10000;' +
-                     'if ((' + step + ' >>16) == 0) ' + step + ' |= 0x10000;')
+                             ' if((') + limit + ' >> 9) == 0) ' + limit + ' |= 0x200;' +
+                     'if ((' + step + ' >>9) == 0) ' + step + ' |= 0x200;')
         newbl.append(flatten(cr.loc_end, 
-                             "for (") + by + " = 0; " + by + " < (" + step + ">>16); " + by + "++)" +
-                     "for (" + bx + " = 0; " + bx + " < (" + step + "&0xffff); " + bx + "++) { " +
-                     bv + " = ((unsigned)" + by + "<<16) | " + bx + ";" +
-                     "for (" + iy + " = 0; " + iy + " < (" + limit + ">>16); " + iy + "++)" +
-                     "for (" + ix + " = 0; " + ix + " < (" + limit + "&0xffff); " + ix + "++) {" +
-                     iv + " = ((unsigned)" + iy + "<<16) | " + ix + ";" +
+                             "for (") + by + " = 0; " + by + " < (" + step + ">>9); " + by + "++)" +
+                     "for (" + bx + " = 0; " + bx + " < (" + step + "&0x1ff); " + bx + "++) { " +
+                     bv + " = ((unsigned)" + by + "<<9) | " + bx + ";" +
+                     "for (" + iy + " = 0; " + iy + " < (" + limit + ">>9); " + iy + "++)" +
+                     "for (" + ix + " = 0; " + ix + " < (" + limit + "&0x1ff); " + ix + "++) {" +
+                     iv + " = ((unsigned)" + iy + "<<9) | " + ix + ";" +
                      "if (0 != (" + docall + ")) " + CGoto(loc = cr.loc_end, target = endloop) + "; }}" + endloop)
         
         return newbl
@@ -178,10 +178,10 @@ class TFun_2_L2MTCFun(TFun_2_CFun):
         b = []
         b.append(super(TFun_2_L2MTCFun, self).visit_indexdecl(idecl))
         b.append(flatten(idecl.loc,
-                         '; register union { struct { unsigned y : 16; unsigned x : 16; }; unsigned __slI; } threadIdx; threadIdx.__slI = __slI;'
-                         ' register union { struct { unsigned y : 16; unsigned x : 16; }; unsigned __slB; } blockIdx; blockIdx.__slB = __slB;'
-                         ' register union { struct { unsigned y : 16; unsigned x : 16; }; unsigned __slS; } blockDim; blockDim.__slS = __slBS;'
-                         ' register union { struct { unsigned y : 16; unsigned x : 16; }; unsigned __slS; } gridDim; gridDim.__slS = __slGS'))
+                         '; register union { struct { unsigned y : 9; unsigned x : 9; }; unsigned __slI; } threadIdx; threadIdx.__slI = __slI;'
+                         ' register union { struct { unsigned y : 9; unsigned x : 9; }; unsigned __slB; } blockIdx; blockIdx.__slB = __slB;'
+                         ' register union { struct { unsigned y : 9; unsigned x : 9; }; unsigned __slS; } blockDim; blockDim.__slS = __slBS;'
+                         ' register union { struct { unsigned y : 9; unsigned x : 9; }; unsigned __slS; } gridDim; gridDim.__slS = __slGS'))
         return b
 
 

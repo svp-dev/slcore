@@ -1,3 +1,11 @@
+2016-11-30  Raphael 'kena' Poss  <knz@thaumogen.net>
+
+	Fix indexing of sequential families for LEON2-MT.
+
+	* tools/slc/mt/leon2mt/seq.py (Create_2_L2MTLoop.visit_lowcreate)
+	(TFun_2_L2MTCFun.visit_indexdecl): LEON2-MT uses 9-bit dimensions
+	for now, not 16.
+
 2016-11-24  Raphael 'kena' Poss  <knz@thaumogen.net>
 
 	Packaging fix.
