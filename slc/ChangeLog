@@ -1,5 +1,12 @@
 2016-11-30  Raphael 'kena' Poss  <knz@thaumogen.net>
 
+	LEON2: fix the slrts.
+
+	* tools/lib/mt/l2/slrt.s,
+	* tools/lib/mt/l2-sim/slrt.s: Remove the stale reference to `tls.inc'.
+
+2016-11-30  Raphael 'kena' Poss  <knz@thaumogen.net>
+
 	LEON2-MT: Avoid scanning the FGPA board for data too often.
 
 	* tools/leon2mt-fpga-ctl.in: Increase the scan delay in the main
