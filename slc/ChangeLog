@@ -1,5 +1,11 @@
 2016-11-30  Raphael 'kena' Poss  <knz@thaumogen.net>
 
+	LEON2/LEON2-MT: enable use of the hardware divide instruction.
+
+	* tools/bin/cce.in (slc_cflags): Remove `-malways-lib-div'.
+
+2016-11-30  Raphael 'kena' Poss  <knz@thaumogen.net>
+
 	LEON2/LEON2-MT: Simplify the addressing of thread stacks.
 
 	With this change the thread stack addresses are prepared by
