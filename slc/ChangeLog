@@ -1,5 +1,12 @@
 2016-11-30  Raphael 'kena' Poss  <knz@thaumogen.net>
 
+	LEON2/LEON2-MT: Simplify the initialization code.
+
+	* tools/lib/mt/l2mt/bootstrap.c (__copyram): Use `bzero'
+	(`memset') instead of a custom loop to initialize the BSS segment.
+
+2016-11-30  Raphael 'kena' Poss  <knz@thaumogen.net>
+
 	LEON2/LEON2-MT: enable use of the hardware divide instruction.
 
 	* tools/bin/cce.in (slc_cflags): Remove `-malways-lib-div'.

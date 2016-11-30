@@ -16,7 +16,5 @@ void __copyram(void) {
 	    *dst++ = d;
 	}
     }
-    for (dst = &_bss_start; dst != &_bss_end; ++dst) {
-	*dst = 0;
-    }
+    bzero(&_bss_start, &_bss_end-&_bss_start);
 }
