@@ -38,10 +38,10 @@
  * You must define CHAR to either char or wchar_t prior to including this.
  */
 
+#include <sys/types.h>
 
 #ifndef NO_FLOATING_POINT
 
-#include <sys/types.h>
 #include <stdlib.h>
 #include <float.h>
 #include <math.h>
@@ -52,14 +52,15 @@
 #define	freedtoa	__freedtoa
 #include "gdtoa/gdtoa.h"
 
-#include "stdio/mtstdio.h"
-
 #define	DEFPREC		6
 
 static int exponent(CHAR *, int, CHAR);
 
 #endif /* !NO_FLOATING_POINT */
 
+#include "stdio/mtstdio.h"
+
+ 
 static CHAR	*__ujtoa(uintmax_t, CHAR *, int, int, const char *);
 static CHAR	*__ultoa(u_long, CHAR *, int, int, const char *);
 

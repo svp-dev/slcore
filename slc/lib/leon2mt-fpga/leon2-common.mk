@@ -9,6 +9,8 @@ libm_a_SOURCES = \
 
 include ../smallmalloc.mk
 
+libc_a_CFLAGS += -DNO_FLOATING_POINT
+
 libc_a_LIBADD += \
 	$(libsmallmalloc_a_OBJECTS)
 libc_a_DEPENDENCIES = $(libc_a_LIBADD)

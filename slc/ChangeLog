@@ -1,5 +1,17 @@
 2016-11-30  Raphael 'kena' Poss  <knz@thaumogen.net>
 
+	LEON2/LEON2-MT: Disable FP in `printf'.
+
+	This reduces memory usage.
+
+	* lib/leon2mt-fpga/leon2-common.mk (libc_a_CFLAGS): Compile the C
+	library with FP support in `printf' disabled.
+	* lib/libc/bsd/libc/stdio/printfcommon.h: Ensure that the headers
+	are properly included when FP support is disabled.
+
+
+2016-11-30  Raphael 'kena' Poss  <knz@thaumogen.net>
+
 	Fix indexing of sequential families for LEON2-MT.
 
 	* tools/slc/mt/leon2mt/seq.py (Create_2_L2MTLoop.visit_lowcreate)
