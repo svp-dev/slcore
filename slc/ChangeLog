@@ -1,5 +1,12 @@
 2016-11-30  Raphael 'kena' Poss  <knz@thaumogen.net>
 
+	LEON2-MT: Avoid scanning the FGPA board for data too often.
+
+	* tools/leon2mt-fpga-ctl.in: Increase the scan delay in the main
+	loop from 100 to 500ms.
+
+2016-11-30  Raphael 'kena' Poss  <knz@thaumogen.net>
+
 	LEON2/LEON2-MT: Simplify the initialization code.
 
 	* tools/lib/mt/l2mt/bootstrap.c (__copyram): Use `bzero'
