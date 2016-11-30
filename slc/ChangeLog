@@ -1,5 +1,28 @@
 2016-11-30  Raphael 'kena' Poss  <knz@thaumogen.net>
 
+	LEON2/LEON2-MT: Simplify the addressing of thread stacks.
+
+	With this change the thread stack addresses are prepared by
+	symbols in the linker script, instead of pre-allocated space.  The
+	size for each thread can also be configured with `_TLS_NBITS'.
+
+	* tools/lib/mt/l2mt/tls.inc: Remove.
+	* tools/lib/leon2mt-fpga/leon2-common.mk (LIBSLC_SRC),
+	* tools/lib/mt/l2mt-sim/slrt.s,
+	* tools/lib/mt/l2mt/slrt.s: Remove references to `tls.inc'.
+
+	* tools/lib/leon2mt-fpga/linkram.in,
+	* tools/lib/leon2mt-fpga/linkrom.in,
+	* tools/lib/leon2mt-tbdef/linkram.in,
+	* tools/lib/leon2mt-tbdef/linkrom.in: Define _TLS_NBITS.
+
+	* tools/lib/mt/l2mt/start.inc: Ensure `__stop' is exported.
+
+	* tools/slc/mt/leon2mt/asmproc/base.py: Use `_TLS_NBITS' and
+	`_TLS_END' to compute TLS stack addresses.
+
+2016-11-30  Raphael 'kena' Poss  <knz@thaumogen.net>
+
 	Fix indexing of sequential families for LEON2-MT.
 
 	* tools/slc/mt/leon2mt/gentfun.py

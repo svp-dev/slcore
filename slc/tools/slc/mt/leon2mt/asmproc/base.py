@@ -92,9 +92,9 @@ def initspfp(fundata, items):
         if fundata['use_sp']:
                 newp += [
                     ('other', 't_get_tid %s' % spreg, 'MT: init SP'),
-                    ('other', 'sethi %hi(__first_tls_top), $l1', 'MT: init SP'),
-                    ('other', 'sll %s,10,%s' % (spreg,spreg), 'MT: init SP'),
-                    ('other', 'add %s,$l1,%s' % (spreg,spreg), 'MT: init SP'),
+                    ('other', 'sethi %hi(_TLS_END), $l1', 'MT: init SP'),
+                    ('other', 'sll %s,_TLS_NBITS,%s' % (spreg,spreg), 'MT: init SP'),
+                    ('other', 'sub $l1,%s,%s' % (spreg,spreg), 'MT: init SP'),
                     ]
         if fundata['use_fp']:
                 if fundata['use_sp']:
@@ -102,9 +102,9 @@ def initspfp(fundata, items):
                 else:
                     newp += [
                     ('other', 't_get_tid %s' % fpreg, 'MT: init FP'),
-                    ('other', 'sethi %hi(__first_tls_top), $l1', 'MT: init FP'),
-                    ('other', 'sll %s,10,%s' % (fpreg,fpreg), 'MT: init FP'),
-                    ('other', 'add %s,$l1,%s' % (fpreg,fpreg), 'MT: init FP'),
+                    ('other', 'sethi %hi(_TLS_END), $l1', 'MT: init FP'),
+                    ('other', 'sll %s,_TLS_NBITS,%s' % (fpreg,fpreg), 'MT: init FP'),
+                    ('other', 'sub $l1,%s,%s' % (fpreg,fpreg), 'MT: init FP'),
                     ] 
     fundata['prologue'] = newp + fundata['prologue']
     return items

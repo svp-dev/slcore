@@ -15,6 +15,7 @@
 	.section ".start", "x", @progbits
         .align 128
 	.ctlbits 128 0
+	.global __stop
 	.global _start
         .type _start, #function
         .proc 010
