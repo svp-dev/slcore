@@ -1,3 +1,10 @@
+2016-12-01  Raphael 'kena' Poss  <knz@thaumogen.net>
+
+	LEON2/LEON2-MT: fix the memory initialization code.
+
+	* tools/lib/mt/l2mt/bootstrap.c: Properly type the pointers so
+	that the full range gets initialized.
+
 2016-11-30  Raphael 'kena' Poss  <knz@thaumogen.net>
 
 	LEON2: fix the slrts.
