@@ -233,7 +233,7 @@ _filter_inner = [canonregs,
                  findlabels,
                  killunusedlabels,
 
-                 protectallcallregs,
+                 #protectallcallregs,
                  initspfp,
 
                  xjoin1,
@@ -259,7 +259,7 @@ _filter_inner = [canonregs,
                  makedataflow(addswch = False, drainargs = False),
 
                  markdelay,
-                 #protectend,
+                 protectend,
                  replacebreakend,
                  
                  killnoregs,

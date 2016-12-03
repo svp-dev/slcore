@@ -12,10 +12,11 @@ class TFun_2_L2MTTFun(TFun_2_MTFun):
         b = []
         b.append(super(TFun_2_L2MTTFun, self).visit_indexdecl(idecl))
         b.append(flatten(idecl.loc,
-                         '; register union { struct { unsigned y : 9; unsigned x : 9; }; unsigned i; } threadIdx; threadIdx.i = __slI;'
-                         ' register union { struct { unsigned y : 9; unsigned x : 9; }; unsigned i; } blockIdx; blockIdx.i = __slB;'
-                         ' register union { struct { unsigned y : 9; unsigned x : 9; }; unsigned n; } blockDim; blockDim.n = __slBS;'
-                         ' register union { struct { unsigned y : 9; unsigned x : 9; }; unsigned n; } gridDim; gridDim.n = __slGS'))
+                         ';'
+                         ' register union { struct { unsigned y : 23; unsigned x : 9; }; unsigned i; } threadIdx; threadIdx.i = __slI;'
+                         ' register union { struct { unsigned y : 23; unsigned x : 9; }; unsigned i; } blockIdx; blockIdx.i = __slB;'
+                         ' register union { struct { unsigned y : 23; unsigned x : 9; }; unsigned n; } blockDim; blockDim.n = __slBS;'
+                         ' register union { struct { unsigned y : 23; unsigned x : 9; }; unsigned n; } gridDim; gridDim.n = __slGS'))
         return b
         
     def visit_indexdef(self, fundef):

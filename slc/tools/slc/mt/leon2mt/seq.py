@@ -178,10 +178,20 @@ class TFun_2_L2MTCFun(TFun_2_CFun):
         b = []
         b.append(super(TFun_2_L2MTCFun, self).visit_indexdecl(idecl))
         b.append(flatten(idecl.loc,
-                         '; register union { struct { unsigned y : 9; unsigned x : 9; }; unsigned i; } threadIdx; threadIdx.i = __slI;'
-                         ' register union { struct { unsigned y : 9; unsigned x : 9; }; unsigned i; } blockIdx; blockIdx.i = __slB;'
-                         ' register union { struct { unsigned y : 9; unsigned x : 9; }; unsigned n; } blockDim; blockDim.n = __slBS;'
-                         ' register union { struct { unsigned y : 9; unsigned x : 9; }; unsigned n; } gridDim; gridDim.n = __slGS'))
+                         ';\n'
+                         '#if __BYTE_ORDER__ == __ORDER_BIG_ENDIAN__\n'
+                         ' register union { struct {  unsigned y : 23; unsigned x : 9; }; unsigned i; } threadIdx; threadIdx.i = __slI;'
+                         ' register union { struct {  unsigned y : 23; unsigned x : 9; }; unsigned i; } blockIdx; blockIdx.i = __slB;'
+                         ' register union { struct {  unsigned y : 23; unsigned x : 9; }; unsigned n; } blockDim; blockDim.n = __slBS;'
+                         ' register union { struct {  unsigned y : 23; unsigned x : 9; }; unsigned n; } gridDim; gridDim.n = __slGS\n'
+                         '#else\n'
+                         ' register union { struct { unsigned x : 9; unsigned y : 9; }; unsigned i; } threadIdx; threadIdx.i = __slI;'
+                         ' register union { struct { unsigned x : 9; unsigned y : 9; }; unsigned i; } blockIdx; blockIdx.i = __slB;'
+                         ' register union { struct { unsigned x : 9; unsigned y : 9; }; unsigned n; } blockDim; blockDim.n = __slBS;'
+                         ' register union { struct { unsigned x : 9; unsigned y : 9; }; unsigned n; } gridDim; gridDim.n = __slGS\n'
+                         '#endif\n'
+        ))
+        b.append(flatten(idecl.loc, ''))
         return b
 
 

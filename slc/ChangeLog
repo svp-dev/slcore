@@ -1,3 +1,22 @@
+2016-12-03  Raphael 'kena' Poss  <knz@thaumogen.net>
+
+	Code generation fixes for LEON2-MT.
+
+	* tools/slc/mt/common/gentfun.py (TFun_2_MTFun.visit_fundef):
+	Ensure that the declaration of the index register appears after
+	the end of the prologue, so that spills of the index do not get
+	eliminated during post-processing.
+
+	* tools/slc/mt/leon2mt/asmproc/base.py: Do not initialize
+	callee-save registers (`protectallcallregs') since the
+	implementation now pre-initializes registers. Do ensure that
+	`t_end' does not appear just after a delayed instruction.
+
+	* tools/slc/mt/leon2mt/seq.py (TFun_2_L2MTCFun.visit_indexdecl),
+	* tools/slc/mt/leon2mt/gentfun.py
+	(TFun_2_L2MTTFun.visit_indexdecl): Fix the layout of index
+	registers.
+
 2016-12-01  Raphael 'kena' Poss  <knz@thaumogen.net>
 
 	LEON2/LEON2-MT: fix the memory initialization code.

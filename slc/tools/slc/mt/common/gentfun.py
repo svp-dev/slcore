@@ -45,11 +45,11 @@ class TFun_2_MTFun(DefaultVisitor):
         newitems.append(flatten(fundef.loc,
                                 ' extern void %(name)s(void); '
                                 'void __slf_%(name)s(void) {'
+                                ' __asm__ __volatile__("%(regdir)s");'
                                 ' register %(itype)s long __slI_ __asm__("%(idxreg)s");'
-                                ' __asm__("%(cp)s MT: index in %%0"'
+                                ' __asm__ __volatile__("%(cp)s MT: index in %%0"'
                                 '   : "=r"(__slI_));'
                                 ' register const %(itype)s long __slI __attribute__((unused)) = __slI_;'
-                                ' __asm__ __volatile__("%(regdir)s");'
                                 % { 'cp' : cp, 
                                     'name': fundef.name, 
                                     'regdir' : regdir,

@@ -525,7 +525,7 @@ def protectend(fundata, items):
     indelayslot = False
     for (type, content, comment) in items:
         if type == 'other':
-            if 'DELAYSLOT' in comment:
+            if 'DELAYED' in comment:
                 indelayslot = True
             else:
                 if indelayslot == True and content == 'end':
