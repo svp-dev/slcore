@@ -463,7 +463,7 @@ case $slc_arch in
         slc_cflags+=(-mcpu=leon -fno-math-errno -fno-trapping-math -fshort-double -mflat -fomit-frame-pointer -fgcse-sm -fgcse-las -fgcse-after-reload -flive-range-shrinkage -msoft-float)
 	case $slc_arch in
 	    leon2mt)
-		slc_cflags+=(-falign-functions=128 -mflat -masync-y -malways-lib-div)
+		slc_cflags+=(-falign-functions=128 -masync-y) # -malways-lib-div
 		;;
 	esac
         ;;

@@ -102,7 +102,7 @@ const char* mtperf_counter_names[] = {
     defined(__slc_arch_leon2__) || \
     defined(__slc_arch_leon2mt__))
 #define ARITH long
-#define DIV(X, Y) __divs_int32_t(X, Y)
+#define DIV(X, Y) (X / Y)
 #define pf(Num) output_int((Num), stream)
 #else
 #define ARITH float

@@ -22,9 +22,16 @@ _RAM_SIZE = 256K;
 _RAM_START = 0x40000000;
 _RAM_END = _RAM_START + _RAM_SIZE;
 
+
 _TLS_SIZE = 1024 * 32;
 _TLS_START = 0x20000000;
 _TLS_END = _TLS_START + _TLS_SIZE;
+_TLS_NBITS = 10;
+
+/*
+_TLS_END = _RAM_END - 4096;
+_TLS_NBITS = 12;
+*/
 
 /*
 _PROM_START = 0x00000000;
@@ -98,12 +105,6 @@ SECTIONS
     . = ALIGN (16);
     _endtext = .;
   } > ram
-  .tls :
-  {
-    __tls_start = .;
-    *(.tls)
-    __tls_end = .;
-  } > tls
   .dynamic	  : { *(.dynamic) 	} >ram
   .got		  : { *(.got) 		} >ram
   .plt   	  : { *(.plt) 		} >ram

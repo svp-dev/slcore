@@ -138,4 +138,4 @@ while True:
     if state[0] != 0x65786974:
         sys.stderr.write("\n== program terminated with code %d ==\n" % state[0])
         sys.exit(state[0])
-    sleep(0.1)
+    sleep(0.5)

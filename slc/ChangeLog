@@ -1,3 +1,112 @@
+2016-12-03  Raphael 'kena' Poss  <knz@thaumogen.net>
+
+	Code generation fixes for LEON2-MT.
+
+	* tools/slc/mt/common/gentfun.py (TFun_2_MTFun.visit_fundef):
+	Ensure that the declaration of the index register appears after
+	the end of the prologue, so that spills of the index do not get
+	eliminated during post-processing.
+
+	* tools/slc/mt/leon2mt/asmproc/base.py: Do not initialize
+	callee-save registers (`protectallcallregs') since the
+	implementation now pre-initializes registers. Do ensure that
+	`t_end' does not appear just after a delayed instruction.
+
+	* tools/slc/mt/leon2mt/seq.py (TFun_2_L2MTCFun.visit_indexdecl),
+	* tools/slc/mt/leon2mt/gentfun.py
+	(TFun_2_L2MTTFun.visit_indexdecl): Fix the layout of index
+	registers.
+
+2016-12-01  Raphael 'kena' Poss  <knz@thaumogen.net>
+
+	LEON2/LEON2-MT: fix the memory initialization code.
+
+	* tools/lib/mt/l2mt/bootstrap.c: Properly type the pointers so
+	that the full range gets initialized.
+
+2016-11-30  Raphael 'kena' Poss  <knz@thaumogen.net>
+
+	LEON2: fix the slrts.
+
+	* tools/lib/mt/l2/slrt.s,
+	* tools/lib/mt/l2-sim/slrt.s: Remove the stale reference to `tls.inc'.
+
+2016-11-30  Raphael 'kena' Poss  <knz@thaumogen.net>
+
+	LEON2-MT: Avoid scanning the FGPA board for data too often.
+
+	* tools/leon2mt-fpga-ctl.in: Increase the scan delay in the main
+	loop from 100 to 500ms.
+
+2016-11-30  Raphael 'kena' Poss  <knz@thaumogen.net>
+
+	LEON2/LEON2-MT: Simplify the initialization code.
+
+	* tools/lib/mt/l2mt/bootstrap.c (__copyram): Use `bzero'
+	(`memset') instead of a custom loop to initialize the BSS segment.
+
+2016-11-30  Raphael 'kena' Poss  <knz@thaumogen.net>
+
+	LEON2/LEON2-MT: enable use of the hardware divide instruction.
+
+	* tools/bin/cce.in (slc_cflags): Remove `-malways-lib-div'.
+
+2016-11-30  Raphael 'kena' Poss  <knz@thaumogen.net>
+
+	LEON2/LEON2-MT: Simplify the addressing of thread stacks.
+
+	With this change the thread stack addresses are prepared by
+	symbols in the linker script, instead of pre-allocated space.  The
+	size for each thread can also be configured with `_TLS_NBITS'.
+
+	* tools/lib/mt/l2mt/tls.inc: Remove.
+	* tools/lib/leon2mt-fpga/leon2-common.mk (LIBSLC_SRC),
+	* tools/lib/mt/l2mt-sim/slrt.s,
+	* tools/lib/mt/l2mt/slrt.s: Remove references to `tls.inc'.
+
+	* tools/lib/leon2mt-fpga/linkram.in,
+	* tools/lib/leon2mt-fpga/linkrom.in,
+	* tools/lib/leon2mt-tbdef/linkram.in,
+	* tools/lib/leon2mt-tbdef/linkrom.in: Define _TLS_NBITS.
+
+	* tools/lib/mt/l2mt/start.inc: Ensure `__stop' is exported.
+
+	* tools/slc/mt/leon2mt/asmproc/base.py: Use `_TLS_NBITS' and
+	`_TLS_END' to compute TLS stack addresses.
+
+2016-11-30  Raphael 'kena' Poss  <knz@thaumogen.net>
+
+	Fix indexing of sequential families for LEON2-MT.
+
+	* tools/slc/mt/leon2mt/gentfun.py
+	(TFun_2_L2MTTFun.visit_indexdecl): LEON2-MT uses 9-bit dimensions
+	for now, not 16.
+
+	* tools/slc/mt/leon2mt/gentfun.py (TFun_2_L2MTTFun.visit_indexdecl),
+	* tools/slc/mt/leon2mt/seq.py (TFun_2_L2MTCFun.visit_indexdecl):
+	Expose the 1D index via new fields `i' and `n' in the Idx and Dim
+	structs.
+
+2016-11-30  Raphael 'kena' Poss  <knz@thaumogen.net>
+
+	LEON2/LEON2-MT: Disable FP in `printf'.
+
+	This reduces memory usage.
+
+	* lib/leon2mt-fpga/leon2-common.mk (libc_a_CFLAGS): Compile the C
+	library with FP support in `printf' disabled.
+	* lib/libc/bsd/libc/stdio/printfcommon.h: Ensure that the headers
+	are properly included when FP support is disabled.
+
+
+2016-11-30  Raphael 'kena' Poss  <knz@thaumogen.net>
+
+	Fix indexing of sequential families for LEON2-MT.
+
+	* tools/slc/mt/leon2mt/seq.py (Create_2_L2MTLoop.visit_lowcreate)
+	(TFun_2_L2MTCFun.visit_indexdecl): LEON2-MT uses 9-bit dimensions
+	for now, not 16.
+
 2016-11-24  Raphael 'kena' Poss  <knz@thaumogen.net>
 
 	Packaging fix.

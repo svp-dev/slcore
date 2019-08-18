@@ -14,7 +14,6 @@
         .asciz  "\0slr_runner:leon2mt-tbdef:"
         .asciz  "slr_datatag:b32f:\0"
 	
-	.include "tls.inc"
 	.include "start.inc"
 	! The following must immediately follow start.inc.
 __stop:
