@@ -58,9 +58,10 @@ PTHREAD_LIBS=${PTHREAD_LIBS_OVERRIDE:-@PTHREAD_LIBS@}
 PTL_LIBDIR=${PTL_LIBDIR_OVERRIDE:-@PTL_LIBDIR@}
 PTL_INCLUDEDIR=${PTL_INCLUDEDIR_OVERRIDE:-@PTL_INCLUDEDIR@}
 
-# pre-populated by `slc' 
+# pre-populated by `slc'
 slc_debug_flags=(${slc_debug_flags:+$slc_debug_flags})
 extra_f1flags=(${extra_f1flags:+$extra_f1flags})
+extra_f2flags=(${extra_f2flags:+$extra_f2flags})
 
 version=@slc_version@
 bugreports=@bugreports@
@@ -502,9 +503,20 @@ case $slc_arch-$slc_os in
         esac
 	;;
     *-fpga|*-tbdef)
-        extra_f1flags+=(-x tls-via-gettid -x clear-local-regs)
-	slc_ldflags+=(-nostdlib -Wl,-dT -Wl,linkram)
-	;;
+		case $slc_arch in
+			mtsparc)
+				# UT-LEON3 has this restriction.
+				extra_f2flags+=(-x flush-before-delayed)
+		esac
+		# LEON2-MT and UT-LEON3 address TLS via "gettid".
+		# UT-LEON3 and (perhaps?) LEON2-MT don't clear their local registers.
+		extra_f1flags+=(-x tls-via-gettid -x clear-local-regs)
+		# The hardware platforms are single cores and don't support alloc/
+		# create strategies yet.
+        extra_tflags+=(-x no-create-strategies)
+		# Hardware uses a special layout, can't rely on ELF sections.
+		slc_ldflags+=(-nostdlib -Wl,-dT -Wl,linkram)
+		;;
     host-host-hrt)
         slc_ldflags+=($PTHREAD_LIBS -static)
         ;;

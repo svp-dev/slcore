@@ -1,6 +1,14 @@
 2019-08-21  Raphael 'kena' Poss  <knz@thaumogen.net>
 
-	Make UT-LEON3 also use the ram-based debug interface
+	Add missing UT-LEON3 / LEON2-MT compile flags.
+
+	* tools/bin/cce.in: Document the special flag usage,
+	pass `-x flush-before-delayed' for UT-LEON3 and
+	`-x no-create-strategies' for both UT-LEON3 and LEON2-MT.
+
+2019-08-21  Raphael 'kena' Poss  <knz@thaumogen.net>
+
+	Make UT-LEON3 also use the ram-based debug interface.
 
 	* tools/include/svp/testoutput.h: Also use the memory-based `dbg` file
 	descriptors when building for `fpga' + arch `mtsparc'.
