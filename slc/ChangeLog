@@ -1,3 +1,9 @@
+2019-08-21  Raphael 'kena' Poss  <knz@thaumogen.net>
+
+	Make the python version configurable during bootstrap
+
+	* tests/build-aux/mkalltests.sh: Use `$PYTHON' if defined.
+
 2016-12-03  Raphael 'kena' Poss  <knz@thaumogen.net>
 
 	Code generation fixes for LEON2-MT.
