@@ -173,7 +173,7 @@ void __inline_mtperf_free_intervals(struct s_interval* p)
 
 #if defined(__mt_freestanding__)
 
-#if defined(__slc_os_fpga__) && defined(__slc_arch_mtsparc__)
+#if defined(__slc_os_fpga__) || defined(__slc_os_tbdef__) // && defined(__slc_arch_mtsparc__)
 // AppleCORE performance counters on uT-LEON3, as of April 2011
 #define __MTPERF_CT_BASE 0x80000810
 #endif
@@ -191,7 +191,7 @@ void __inline_mtperf_sample(counter_t * array)
 {
         __asm__ __volatile__("");
         __counters_t* restrict __dst = (__counters_t*)(void*)(array);
-#if defined(__slc_arch_leon2__) || defined(__slc_arch_leon2mt__)
+#if false // defined(__slc_arch_leon2__) || defined(__slc_arch_leon2mt__)
 #define __read_cnt(i)                                                   \
     if ((i + 1) <= MTPERF_NCOUNTERS) {					\
 	counter_t __ct ## i;						\
@@ -239,7 +239,7 @@ void __inline_mtperf_sample(counter_t * array)
 alwaysinline unused
 counter_t __inline_mtperf_sample1(int counter)
 {
-#if defined(__slc_arch_leon2__) || defined(__slc_arch_leon2mt__)
+#if false // defined(__slc_arch_leon2__) || defined(__slc_arch_leon2mt__)
     counter_t ct;
     switch(counter) {
 #define rcnt(ci) case ci:  __asm__ __volatile__("rd %%wim, %1, %0" : "=r"(ct) : "I"(ci)); break

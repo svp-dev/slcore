@@ -1,5 +1,14 @@
 2019-08-21  Raphael 'kena' Poss  <knz@thaumogen.net>
 
+	Un-break the build for LEON2-MT.
+
+	* lib/slsys/include/svp/perf.h (__inline_mtperf_sample)
+	(__inline_mtperf_sample1): Avoid using the `rd %wim' code for
+	LEON2-MT as this seems to not work with the newest assembler any
+	more.
+
+2019-08-21  Raphael 'kena' Poss  <knz@thaumogen.net>
+
 	Add missing UT-LEON3 / LEON2-MT compile flags.
 
 	* tools/bin/cce.in: Document the special flag usage,
