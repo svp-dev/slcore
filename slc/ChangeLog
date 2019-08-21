@@ -1,5 +1,12 @@
 2019-08-21  Raphael 'kena' Poss  <knz@thaumogen.net>
 
+	Make UT-LEON3 also use the ram-based debug interface
+
+	* tools/include/svp/testoutput.h: Also use the memory-based `dbg` file
+	descriptors when building for `fpga' + arch `mtsparc'.
+
+2019-08-21  Raphael 'kena' Poss  <knz@thaumogen.net>
+
 	Make the python version configurable during bootstrap
 
 	* tests/build-aux/mkalltests.sh: Use `$PYTHON' if defined.
