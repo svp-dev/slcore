@@ -169,7 +169,12 @@ class Create_2_MTSCreate(ScopedVisitor):
         newbl += lc.body.accept(self)
 
         # On to the real stuff.
-
+        if cr.extras.has_attr('extra'):
+            if self.newisa:
+                die("sl__extra not supported on this target", cr)
+            xtravar = CVarUse(decl = cr.cvar_extra)
+            newbl += (Opaque('__asm__ ("setarg %%0, %%2\\t! MT: CREATE %s"' % lbl) +
+                      ' : "=r"(' + usefvar + ') : "0"(' + usefvar  + '), "rP"(' + xtravar + ')); ')
 
         argregs = set()
         crc = Scope()

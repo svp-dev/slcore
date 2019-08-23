@@ -39,7 +39,8 @@ def parse_create(item):
 
 def parse_indexdecl(item):
       return IndexDecl(loc = item['loc'],
-                       indexname = item['name'].strip())
+                       indexname = item['name'].strip(),
+                       extraarg = item['extra'])
 
 def parse_spawndecl(item):
       return SpawnDecl(loc = item['loc'],

@@ -124,6 +124,8 @@ class CheckVisitor(DefaultVisitor):
             self.err("index declaration outside of thread function body", idecl)
         idecl.fun = self.cur_fun
         idecl.scope = self.cur_scope
+        if idecl.extraarg and not self.cur_fun.extras.has_attr('extra'):
+            self.err("cannot use extra parameter in thread function declared without sl__extra", idecl)
         return idecl
 
     def visit_scope(self, scope):
@@ -213,6 +215,10 @@ class CheckVisitor(DefaultVisitor):
 
         assert self.cur_create is not None
         assert self.cur_scope is not None
+
+        if arg.type == 'xarg' and not self.cur_create.extras.has_attr('extra'):
+            self.err("can only use sl_xarg with sl__extra")
+            return arg
 
         scope = self.cur_scope
 

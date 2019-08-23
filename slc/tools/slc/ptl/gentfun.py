@@ -1,6 +1,6 @@
 from ..visitors import DefaultVisitor, ScopedVisitor, flatten
 from ..ast import *
-from ..msg import warn
+from ..msg import warn,die
 
 class TFun_2_ptlTFun(DefaultVisitor):
 
@@ -95,6 +95,8 @@ class TFun_2_ptlTFun(DefaultVisitor):
         return newitems
 
     def visit_indexdecl(self, idecl):
+        if idecl.extraarg:
+            die("extra parameters not supported for this target")
         return flatten(idecl.loc, 
                        " uTC::index __tmp_index; long int %s = __tmp_index" 
                        % idecl.indexname) 

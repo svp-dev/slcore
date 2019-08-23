@@ -37,6 +37,7 @@ class TFun_2_MTFun(DefaultVisitor):
                                             c['nrargregs']['glf'],
                                             c['nrargregs']['shf'])
         idxreg = regmagic.vname_to_legacy("idx_init")
+        extrareg = regmagic.vname_to_legacy("extra_init")
 
         itype = ''
         if getattr(self, 'unsigned_ix', False):
@@ -54,7 +55,17 @@ class TFun_2_MTFun(DefaultVisitor):
                                     'name': fundef.name, 
                                     'regdir' : regdir,
                                     'itype': itype,
-                                    'idxreg' : idxreg }))
+                                    'idxreg' : idxreg,
+                                    'extrareg' : extrareg }))
+        if fundef.extras.has_attr('extra'):
+            newitems.append(flatten(fundef.loc,
+                                ' register %(itype)s long __slX_ __asm__("%(extrareg)s");'
+                                ' __asm__ __volatile__("%(cp)s MT: extra in %%0"'
+                                '   : "=r"(__slX_));'
+                                ' register const %(itype)s long __slX __attribute__((unused)) = __slX_;'
+                                % { 'cp' : cp, 
+                                    'itype': itype,
+                                    'extrareg' : extrareg }))
 
         if hasattr(self, 'visit_indexdef'):
             newitems.append(self.visit_indexdef(fundef))
@@ -221,6 +232,11 @@ class TFun_2_MTFun(DefaultVisitor):
         return CGoto(loc = et.loc, target = self.cur_fun.lbl_end)
 
     def visit_indexdecl(self, idecl):
-        return flatten(idecl.loc, 
-                       " register const long %s = __slI " 
-                       % idecl.indexname) 
+        if idecl.extraarg:
+            return flatten(idecl.loc,
+                       " register const long %s = __slX "
+                       % idecl.indexname)
+        else:
+            return flatten(idecl.loc,
+                       " register const long %s = __slI "
+                       % idecl.indexname)

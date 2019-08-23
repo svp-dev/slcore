@@ -150,7 +150,7 @@ _chains = {
         ('autoresss', AutoResolveSpawnSync()),
         ('makestrategy', CreateMTStrategy(newisa=True)),
         ('flattencr', Create_2_MTSCreate(newisa=True)), 
-        ('flattenfun',TFun_2_MTSTFun()),
+        ('flattenfun',TFun_2_MTSTFun(newisa=True)),
         ('flattenss',SSync_2_MTSSSync(newisa=True)),
         ] + _common_suffix,
     'mtsn+seq' : _common_prefix() + [
@@ -162,7 +162,7 @@ _chains = {
         ('splitfun', SplitFuns(oracle=make_mt_oracle('mts'))),
         ('flattencr', ScopedVisitor(Dispatcher({'cmts':Create_2_MTSCreate(newisa=True),
                                                 'cseq':Create_2_Loop()}))),
-        ('flattenfun', DefaultVisitor(Dispatcher({'fmts':TFun_2_MTSTFun(),
+        ('flattenfun', DefaultVisitor(Dispatcher({'fmts':TFun_2_MTSTFun(newisa=True),
                                                   'fseq':TFun_2_CFun()}))),
         ('flattenss', DefaultVisitor(Dispatcher({'smts':SSync_2_MTSSSync(newisa=True),
                                                  'sseq':SSync_2_CSSync()}))),

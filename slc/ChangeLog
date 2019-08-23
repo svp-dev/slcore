@@ -1,5 +1,87 @@
 2019-08-23  Raphael 'kena' Poss  <knz@thaumogen.net>
 
+	New "extra parameter" language feature for create/thread programs.
+
+	Supported for UT-LEON3 and the seqC targets only.
+	Example use:
+	    int y;
+	    sl_def(foo, sl__extra) {
+	    	sl_extra_parameter(x);
+	    	y = x;
+	    }
+	    sl_enddef
+	    int main(void) {
+	    	sl_create(,,,,,,sl__extra, foo, sl_xarg(123));
+	    	sl_sync();
+	    	printf("%d\n", y);
+	    	return 0;
+	    }
+
+	* tools/t-spr/slimpl.m4: New function/create attribute
+	`sl__extra'. New predefined variable declaration
+	`sl_extra_parameter' (akin to `sl_index', reuses the same AST
+	node).
+	* tools/slc/ast.py (IndexDecl.__init__): distinguish
+	`sl_extra_parameter' with an `extraarg' boolean attribute.
+	* tools/slc/input/parse.py (parse_indexdecl): connect the M4 output
+	to the IndexDecl AST node.
+	* tools/slc/input/check.py (visit_indexdecl): Verify that
+	`sl_extra_parameter' is only used when `sl__extra' is also
+	specified.
+
+	* tools/slc/am/visitors.py (visit_indexdecl),
+	* tools/slc/mt/leon2mt/gentfun.py (visit_indexdecl),
+	* tools/slc/mt/mtalpha/gentfun.py (visit_indexdecl),
+	* tools/slc/ptl/gentfun.py (visit_indexdecl): Reject
+	`sl_extra_parameter' as not supported.
+
+	* tools/slc/mt/mtsparc/gentfun.py (TFun_2_MTSTFun.__init__): Also
+	accept the `newisa' flag.
+	* tools/slc/front/chains.py (_chains): Provide it.
+	* tools/slc/mt/mtsparc/gentfun.py (visit_indexdecl): Reject
+	`sl_extra_parameter' as not supported when not compiling for
+	UT-LEON3.
+
+	* tools/slc/lower/seq.py (visit_fundecl, visit_fundeclptr): When
+	`sl__extra' is specified in the function flags, also define an
+	incoming argument `__slX`.
+
+	* tools/slc/mt/leon2mt/regdefs.py,
+	* tools/slc/mt/mtsparc/regdefs.py,
+	* tools/slc/mt/mtalpha/regdefs.py: define the pre-reserved
+	register for the extra parameter.
+	* tools/slc/mt/common/gentfun.py (visit_fundef): When `sl__extra'
+	is specified in the function flags, also declare a pre-defined
+	variable `__slX'.
+
+	* tools/slc/lower/seq.py (visit_indexdecl),
+	* tools/slc/mt/common/gentfun.py (visit_indexdecl): Expand
+	`sl_extra_parameter' as a use of `__slX`.
+
+	* tools/slc/ptl/genptlcreate.py (visit_lowcreate),
+	* tools/slc/mt/leon2mt/gencreate.py (visit_lowcreate),
+	* tools/slc/mt/mtalpha/gencreate.py (visit_lowcreate),
+	* tools/slc/am/visitors.py (visit_lowcreate): Reject `sl__extra'
+	as not supported.
+
+	* tools/t-spr/slimpl.m4: New create pseudo-argument type
+	`sl_xarg', takes an expression.
+	* tools/slc/input/check.py (visit_createarg): Verify that
+	`sl_xarg' is only used when `sl__extra' is also
+	specified.
+	* tools/slc/lower/lowercreate.py (visit_create): Lower uses
+	of `sl_xarg' as an assignment to a family configuration variable,
+	and remove it from the create argument list so that it
+	becomes invisible to the lower passes.
+	* tools/slc/lower/seq.py (visit_lowcreate): Pass the extra family
+	parameter as extra argument to calls when `sl__extra' is
+	specified.
+	* tools/slc/mt/mtsparc/gencreate.py (visit_lowcreate): Pass
+	the extra family parameter using the `setarg' instruction
+	when compiling for UT-LEON3, reject for other targets.
+
+2019-08-23  Raphael 'kena' Poss  <knz@thaumogen.net>
+
 	Enable assembly post-processing of the new UT-LEON3 `setarg' instruction.
 
 	* tools/slc/mt/mtsparc/asmproc/opc/formats.db,

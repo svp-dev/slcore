@@ -244,6 +244,7 @@ class RegDefs:
        'fp' : 'l16',
        'rv' : 'l1',
        'idx_init' : 'l0',
+       'extra_init' : 'l1',
        'basearg' : 'l1',
        'zero' : 'l31',
        'frv' : 'lf3',

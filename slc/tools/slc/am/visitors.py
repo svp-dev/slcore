@@ -74,6 +74,9 @@ class Create_2_HydraCall(ScopedVisitor):
     def visit_lowcreate(self, lc):
         cr = self.cur_scope.creates[lc.label]
 
+        if cr.extras.has_attr('extra'):
+            die("sl__extra not supported on this target", cr)
+
         if lc.target_next is not None:
             warn("alternative %s not used)" %
                  lc.target_next.name, lc)
@@ -381,9 +384,9 @@ class TFun_2_HydraCFunctions(DefaultVisitor):
 
         return newitems
 
-
-
     def visit_indexdecl(self, idecl):
+        if idecl.extraarg:
+            warn("extra parameters not supported for this target")
         return flatten(idecl.loc, "register const long %s = __index" %
                        idecl.indexname)
 

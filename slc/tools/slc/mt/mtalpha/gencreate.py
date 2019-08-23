@@ -53,6 +53,8 @@ class Create_2_MTACreate(ScopedVisitor):
         #print "IN LOWC (v = %x, d = %x, lc = %x)" % (id(self), id(self.__dict__), id(lc))
         cr = self.cur_scope.creates[lc.label]
 
+        if cr.extras.has_attr('extra'):
+            die("sl__extra not supported on this target", cr)
 
 
         # compute the calling convention

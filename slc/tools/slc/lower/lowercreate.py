@@ -22,6 +22,8 @@ class Create_2_LowCreate(DefaultVisitor):
         decls += cr.cvar_exitcode
         cr.cvar_fid = CVarDecl(loc = cr.loc, name = 'C$F$%s' % cr.label, ctype = 'long')
         decls += cr.cvar_fid
+        cr.cvar_extra = CVarDecl(loc = cr.loc, name = 'C$X$%s' % cr.label, ctype = 'long')
+        decls += cr.cvar_extra
 
         smod = ''
         if not self.signed_ix:
@@ -52,28 +54,36 @@ class Create_2_LowCreate(DefaultVisitor):
             assert cr.funtype == cr.FUN_ID
 
         newbody = Block(loc = cr.body.loc, loc_end = cr.body.loc_end)
+        newargs = []
         for a in cr.args:
-            argvar = CVarDecl(loc = a.loc, name = 'C$a$%s' % a.name, ctype = a.ctype)
-            
-            decls += argvar
+            if a.type == 'xarg':
+                argvar = cr.cvar_extra
+            else:
+                argvar = CVarDecl(loc = a.loc, name = 'C$a$%s' % a.name, ctype = a.ctype)
+                decls += argvar
+                newargs.append(a)
             a.cvar = argvar
 
             if a.init is not None:
-                initvar = CVarDecl(loc = a.loc, name = 'C$ai$%s' % a.name, ctype = a.ctype)
+                if a.type == 'xarg':
+                    newbl.append(CVarSet(loc = a.loc, decl = cr.cvar_extra,
+                                         rhs = a.init.accept(self)) + ';')
+                else:
+                    initvar = CVarDecl(loc = a.loc, name = 'C$ai$%s' % a.name, ctype = a.ctype)
 
-                decls += initvar
-                a.cvar_init = initvar
+                    decls += initvar
+                    a.cvar_init = initvar
 
-                newbl.append(CVarSet(loc = a.loc, decl = initvar, 
+                    newbl.append(CVarSet(loc = a.loc, decl = initvar, 
                                      rhs = a.init.accept(self)) + ';')
 
-                seta = SetA(loc = a.loc, name = a.name, 
-                            rhs = CVarUse(decl = initvar))
-                seta.decl = a
-                seta.scope = cr.scope
-                a.seen_set = True
-                
-                newbody += (Opaque(';') + seta)
+                    seta = SetA(loc = a.loc, name = a.name, 
+                                rhs = CVarUse(decl = initvar))
+                    seta.decl = a
+                    seta.scope = cr.scope
+                    a.seen_set = True
+                    newbody += (Opaque(';') + seta)
+        cr.args = newargs
 
         if cr.fid_lvalue is not None:
             newbody += (flatten(cr.loc, "; (") + cr.fid_lvalue.accept(self) + ') = ' +

@@ -551,9 +551,10 @@ class Break(Item):
     pass
 
 class IndexDecl(Item):
-    def __init__(self, indexname = None, *args, **kwargs):
+    def __init__(self, indexname = None, extraarg = False, *args, **kwargs):
         super(IndexDecl, self).__init__(*args, **kwargs)
         self.indexname = indexname
+        self.extraarg = extraarg
 
 class SpawnDecl(Item):
     def __init__(self, spawnname = None, *args, **kwargs):

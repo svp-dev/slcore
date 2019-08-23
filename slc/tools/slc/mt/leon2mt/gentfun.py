@@ -1,6 +1,7 @@
 from regdefs import regmagic
 from ..common.gentfun import TFun_2_MTFun
 from ...visitors import flatten
+from ...msg import die
 
 class TFun_2_L2MTTFun(TFun_2_MTFun):
 
@@ -9,6 +10,8 @@ class TFun_2_L2MTTFun(TFun_2_MTFun):
         super(TFun_2_L2MTTFun, self).__init__(regmagic, *args, **kwargs)
 
     def visit_indexdecl(self, idecl):
+        if idecl.extraarg:
+            die("sl__extra not supported for this target", idecl)
         b = []
         b.append(super(TFun_2_L2MTTFun, self).visit_indexdecl(idecl))
         b.append(flatten(idecl.loc,

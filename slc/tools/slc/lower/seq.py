@@ -94,11 +94,15 @@ class Create_2_Loop(ScopedVisitor):
         self.cur_scope.decls += indexvar
 
         ix = CVarUse(decl = indexvar)
+        extra = CVarUse(decl = cr.cvar_extra)
         start = CVarUse(decl = cr.cvar_start)
         limit = CVarUse(decl = cr.cvar_limit)
         step = CVarUse(decl = cr.cvar_step)
+        baseparm = ix
+        if cr.extras.get_attr('extra', None) is not None:
+            baseparm += Opaque(', ') + extra
         docall = CVarSet(decl = cr.cvar_exitcode,
-                         rhs = funvar + '(' + ix + callist + ')')
+                         rhs = funvar + '(' + baseparm + callist + ')')
 
         newbl.append(flatten(cr.loc_end, "if (") + step + " > 0) " + 
                      "for (" + ix + " = " + start + "; " + 
@@ -169,6 +173,8 @@ class TFun_2_CFun(DefaultVisitor):
         self.buffer = flatten(fundecl.loc, 
                                 " %s long %s(const long __slI%s" 
                                 % (qual, fundecl.name, iattr))
+        if fundecl.extras.get_attr('extra', None) is not None:
+            self.buffer += flatten(fundecl.loc, ", const long __slX%s" % (iattr))
         for parm in fundecl.parms:
             parm.accept(self)
         self.buffer += ')'
@@ -193,6 +199,8 @@ class TFun_2_CFun(DefaultVisitor):
         self.buffer = flatten(fundecl.loc, 
                                 " %s long (*%s)(const long __slI" 
                                 % (qual, fundecl.name))
+        if fundecl.extras.get_attr('extra', None) is not None:
+            self.buffer += flatten(fundecl.loc, ", const long __slX")
         for parm in fundecl.parms:
             parm.accept(self)
         self.buffer += ')'
@@ -211,9 +219,14 @@ class TFun_2_CFun(DefaultVisitor):
         return newitems
 
     def visit_indexdecl(self, idecl):
-        return flatten(idecl.loc, 
-                       " register const long %s = __slI " 
-                       % idecl.indexname) 
+        if idecl.extraarg:
+            return flatten(idecl.loc,
+                       " register const long %s = __slX "
+                       % idecl.indexname)
+        else:
+            return flatten(idecl.loc,
+                       " register const long %s = __slI "
+                       % idecl.indexname)
 
     def visit_break(self, br):
         return flatten(br.loc, " return 1 ")

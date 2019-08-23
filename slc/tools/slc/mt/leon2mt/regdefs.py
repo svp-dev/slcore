@@ -342,6 +342,7 @@ class RegDefs:
         'tlsp' : 'l13',
         'fp' : 'l21',
         'idx_init' : 'l0',
+        'extra_init' : 'l1',
         'zero' : 'l31',
         'ra' : 'l22',
         'ra_leaf' : 'l14',

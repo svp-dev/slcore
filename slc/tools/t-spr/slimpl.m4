@@ -48,6 +48,7 @@ m4_define([[sl__forceseq]], [[[[""", {'type':'attr', 'name':'forceseq'}, r"""]]]
 m4_define([[sl__forcewait]], [[[[""", {'type':'attr', 'name':'forcewait'}, r"""]]]])
 m4_define([[sl__nowait]], [[[[""", {'type':'attr', 'name':'nowait'}, r"""]]]])
 m4_define([[sl__strategy]], [[[[""", {'type':'attr', 'name':'strategy', 'strategy':r""" $1 """}, r"""]]]])
+m4_define([[sl__extra]], [[[[""", {'type':'attr', 'name':'extra'}, r"""]]]])
 
 m4_define([[sl_def]],[[m4_dnl
 m4_pushdef([[return]],[[sl_end_thread]])m4_dnl
@@ -92,7 +93,10 @@ m4_shift2($@)m4_dnl
 ]])
 
 m4_define([[sl_index]], [[m4_dnl
-[[""", {'loc':r"""]]__file__:__line__[[""",'type':'indexdecl','name':"""$1"""}, r"""]]m4_dnl
+[[""", {'loc':r"""]]__file__:__line__[[""",'type':'indexdecl','name':"""$1""",'extra':False}, r"""]]m4_dnl
+]])
+m4_define([[sl_extra_parameter]], [[m4_dnl
+[[""", {'loc':r"""]]__file__:__line__[[""",'type':'indexdecl','name':"""$1""",'extra':True}, r"""]]m4_dnl
 ]])
 
 m4_define([[sl_spawndecl]], [[m4_dnl
@@ -134,6 +138,7 @@ m4_define([[sl_glarg]], [[_sl_doarg([[glarg]],[[$1]],[[$2]],[[$3]])]])
 m4_define([[sl_glfarg]], [[_sl_doarg([[glfarg]],[[$1]],[[$2]],[[$3]])]])
 m4_define([[sl_sharg]], [[_sl_doarg([[sharg]],[[$1]],[[$2]],[[$3]])]])
 m4_define([[sl_shfarg]], [[_sl_doarg([[shfarg]],[[$1]],[[$2]],[[$3]])]])
+m4_define([[sl_xarg]], [[_sl_doarg([[xarg]],[[long]],[[__extra]],[[$1]])]])
 
 # Pass transparently the sync construct.
 m4_define([[sl_sync]],[[m4_dnl
