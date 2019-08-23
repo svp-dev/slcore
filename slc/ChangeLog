@@ -1,3 +1,15 @@
+2019-08-23  Raphael 'kena' Poss  <knz@thaumogen.net>
+
+	Ensure that -fdump-xxx works properly.
+
+	* tools/bin/cce.in (extra_tflags): Properly capture `extra_tflags'
+	passed by the caller, so that an override appends, instead of
+	replaces.
+	* tools/bin/slc.in: when invoking `cce', pass `extra_f2flags' and
+	`extra_tflags' alongside `extra_f1flags' to ensure the pre-set
+	values from command line parsing (e.g. `-fdump-spr-...') are
+	preserved.
+
 2019-08-21  Raphael 'kena' Poss  <knz@thaumogen.net>
 
 	Un-break the build for LEON2-MT.

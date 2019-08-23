@@ -62,6 +62,7 @@ PTL_INCLUDEDIR=${PTL_INCLUDEDIR_OVERRIDE:-@PTL_INCLUDEDIR@}
 slc_debug_flags=(${slc_debug_flags:+$slc_debug_flags})
 extra_f1flags=(${extra_f1flags:+$extra_f1flags})
 extra_f2flags=(${extra_f2flags:+$extra_f2flags})
+extra_tflags=(${extra_tflags:+$extra_tflags})
 
 version=@slc_version@
 bugreports=@bugreports@
