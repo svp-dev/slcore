@@ -1137,6 +1137,10 @@ insninfo = {
 'sethi' : [
       (re020, form006),
       ],
+'setarg' : [
+      (re017, form030),
+      (re031, form031),
+      ],
 'setlimit' : [
       (re017, form030),
       (re031, form031),

@@ -1,5 +1,12 @@
 2019-08-23  Raphael 'kena' Poss  <knz@thaumogen.net>
 
+	Enable assembly post-processing of the new UT-LEON3 `setarg' instruction.
+
+	* tools/slc/mt/mtsparc/asmproc/opc/formats.db,
+	* tools/slc/mt/mtsparc/asmproc/opc/mtsparc.py: Recognize the new `setarg' instruction.
+
+2019-08-23  Raphael 'kena' Poss  <knz@thaumogen.net>
+
 	Teach the UT-LEON3 target (and MT-SPARC in general) about spawn/sync.
 
 	* tools/slc/lower/split.py (flavors_for_spawnsync): Use the arch

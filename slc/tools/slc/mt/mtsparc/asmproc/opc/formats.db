@@ -420,6 +420,8 @@ getpid	d
 getcid	d
 ldbp	d
 ldfp	d
+setarg	1,2
+setarg	1,^
 setstart	1,2
 setstart	1,^
 setlimit	1,2
