@@ -1,5 +1,25 @@
 2019-08-23  Raphael 'kena' Poss  <knz@thaumogen.net>
 
+	Teach the UT-LEON3 target (and MT-SPARC in general) about spawn/sync.
+
+	* tools/slc/lower/split.py (flavors_for_spawnsync): Use the arch
+	name for the seq flavor, not just `mta'.
+	* tools/slc/front/chains.py (_chains): Enable spawn/spawnsync
+	logic for the `mts' targets.
+
+	* tools/slc/mt/mtsparc/gencreate.py (Create_2_MTSCreate): Emit the
+	allocate/configure phase early, where `sl_create' is placed,
+	instead of deferring until `sl_sync'/`sl_detach'. This is because
+	the spawn logic needs to assign the family variable just after
+	`sl_create' and thus needs a FID ready by then.
+	Avoid emitting a strategy or populating a place ID in `allocate'
+	if compiling for UT-LEON3.
+	Refuse shared/global arguments if using spawn/detach and the
+	UT-LEON3 ISA.
+	Use the new `sync' instruction for `sl_spawnsync' on UT-LEON3.
+
+2019-08-23  Raphael 'kena' Poss  <knz@thaumogen.net>
+
 	Ensure that -fdump-xxx works properly.
 
 	* tools/bin/cce.in (extra_tflags): Properly capture `extra_tflags'

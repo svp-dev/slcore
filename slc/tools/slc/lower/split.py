@@ -10,7 +10,7 @@ class ExampleOracle(object):
         self.mapping = {'c'+archname:(0,'f'+archname), 'cseq':(1,'fseq')}
 
     def flavors_for_spawnsync(self, ss):
-        return ['smta']
+        return ['s'+self.archname]
 
     def flavors_for_create(self, cr):
         if cr.extras.has_attr('forceseq'):

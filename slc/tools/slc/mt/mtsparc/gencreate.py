@@ -92,15 +92,11 @@ class Create_2_MTSCreate(ScopedVisitor):
             mavar = CVarUse(decl = mavar)
             lc.mavar = mavar
 
-        # Now handle body between create..sync
-
-        newbl += lc.body.accept(self)
-
-        # On to the real stuff. First try allocate
-
         fidvar = cr.cvar_fid
-        
         usefvar = CVarUse(decl = fidvar)
+        lc.fidvar = usefvar
+
+        # Prepare the family.
 
         if cr.extras.has_attr('exclusive'):
             if not self.newisa:
@@ -125,18 +121,20 @@ class Create_2_MTSCreate(ScopedVisitor):
         limit = CVarUse(decl = cr.cvar_limit)
         step = CVarUse(decl = cr.cvar_step)
         block = CVarUse(decl = cr.cvar_block)
-        
 
-
-        strategyuse = CVarUse(cr.cvar_strategy)
-
-
-        newbl += (flatten(cr.loc,
+        if self.newisa:
+            strategyuse = CVarUse(cr.cvar_strategy)
+            newbl += (flatten(cr.loc,
                           '__asm__ __volatile__("%s %%2, %%0\\t! MT: CREATE %s"'
                           ' : "=r"(' % (allocinsn,lbl)) + 
                   usefvar + ') : "0"(' + CVarUse(decl = cr.cvar_place) + 
                   '), "rP"(' + strategyuse + '));')
-        
+        else:
+            newbl += (flatten(cr.loc,
+                          '__asm__ __volatile__("%s %%0\\t! MT: CREATE %s"'
+                          ' : "=r"(' % (allocinsn,lbl)) + 
+                  usefvar + '));')
+
         if lc.target_next is not None:
             if self.newisa:
                 failval = 0
@@ -165,6 +163,12 @@ class Create_2_MTSCreate(ScopedVisitor):
                       ' : "=r"(' + usefvar + ') : "0"(' + usefvar  + '), "rP"((' + limit + ')-1)); '
                       '__asm__ ("setthread %%0, %%2\\t! MT: CREATE %s"' % lbl +
                       ' : "=r"(' + usefvar + ') : "0"(' + usefvar + '), "rP"(' + funvar + ')); ')
+
+        # Now handle body between create..sync
+
+        newbl += lc.body.accept(self)
+
+        # On to the real stuff.
 
 
         argregs = set()
@@ -266,13 +270,18 @@ class Create_2_MTSCreate(ScopedVisitor):
             for v in fgargs:
                 ilist +=  Opaque(', "f"(') + v + ')'
 
-            crc += (flatten(cr.loc, 
+            if cr.sync_type == 'normal':
+               crc += (flatten(cr.loc,
                             ' __asm__ __volatile__("create %%0, %%0\\t! MT: CREATE %s DRAIN(%s)'
                             '\\n\\tmov %%0, %%0\\t! MT: SYNC %s" : ' % (lbl, ','.join(argregs).replace('%','%%'), lbl)) +
                     olist + ' : ' + ilist + ' : "memory");')
+            else: # detach
+               if len(sargs) > 0 or len(fsargs) > 0 or len(gargs) > 0 or len(fgargs) > 0:
+                   die("cannot pass global/shared argument with detached creates on this target")
 
-            if cr.sync_type != 'normal':
-                warn('detached create not supported on this target, using normal sync instead', cr)
+               crc += (flatten(cr.loc,
+                            ' __asm__ __volatile__("create %%0, %%%%g0\\t! MT: CREATE %s" : ' % lbl) +
+                   olist + ' : ' + ilist + ' : "memory");')
 
         else:
             crc += (flatten(cr.loc_end,
@@ -347,5 +356,20 @@ class Create_2_MTSCreate(ScopedVisitor):
 
         return newbl
 
+class SSync_2_MTSSSync(DefaultVisitor):
 
-__all__ = ['Create_2_MTSCreate']
+    def __init__(self, newisa = False, *args, **kwargs):
+        self.newisa = newisa
+        super(SSync_2_MTSSSync, self).__init__(*args, **kwargs)
+
+    def visit_spawnsync(self, ss):
+        newbl = Block(loc = ss.loc)
+        newbl += (flatten(ss.loc,
+                        '__asm__ __volatile__("sync %%1, %%0; '
+                        'mov %%0, %%%%g0\\t! MT: SYNC %s"' % ss.label) +
+                ' : "=&r"(' + ss.rhs + ') : "r"(' + ss.rhs + ') : "memory");')
+        if self.newisa:
+            newbl += flatten(ss.loc, '__asm__ __volatile__("release %0" : : "r"(') + ss.rhs + '));'
+        return newbl
+
+__all__ = ['SSync_2_MTSSSync', 'Create_2_MTSCreate']
